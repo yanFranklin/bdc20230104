@@ -1,0 +1,144 @@
+# 综合大屏展示
+zhp:
+  cleartime: "0 30 17 * * ?"
+
+# 住房查询：规划用途（房屋用途）类型配置
+# 查询接口根据这里配置的类型来过滤指定的房屋类型，例如有房证明只查询住房类型的数据
+zfcx:
+  # 登记系统
+  djxt: 10,11
+  # 自助查询机（为空则不做类型过滤）
+  zzcxj: 10,11
+  # 排除指定规划用途（false展示所有的；true指定类型不展示；不配置即空的时候默认查询指定类型数据）
+  pcghyt:
+  #合肥大数据局
+  hfBigDataCompany: 10,11
+  # 海门需要过滤掉宅基地数据，则设置为true；没有此设置或false，例如南通默认的是照常展示
+  glzjdsj: false
+  # 南通有房无房证明需要根据权利类型过滤
+  qllx: 4,99,125
+  #合肥要求dyfs为1时，取bdbzzqse,2取zgzqe
+  dyfsForbdbzzqse: hefei
+
+# 自助打证要过滤掉不打证的流程，这些流程不出证书，不能在自助打证机上被查询出来
+zzdz:
+  # 保证自主打证能打证的流程必须是配置的节点
+  kdzjdmc: 受理,审核,发证,登簿制证,缮证
+  # 合肥
+  excludeDjxl: 1000401,7000403,7000405,9000406,5000403,7000406,9000403,7000401,6009901
+  # 南通
+  excludeGzldyid: ACRxPhtQPyBEpx6r,Bt6tTBjF4TRh5HhH,NkPAJ3a2nnkTSwNh,P2ZaKpMMjtNGkG5k,PsS8iTE4KBE8YNmh
+  # 自助打证机角色
+  roleName: zzdzj
+  # 自助打证机查询时需要过滤 lzfs
+  lzfs: 3
+  # 舒城 过滤掉不出证流程的证书信息
+  excludeDjxlSc:
+  # 舒城 过滤掉不出证的工作流定义id
+  gzldyidSc:
+  # 南通 只在缮证节点返回数据
+  zzszfhsj:
+  #是否需要先认领
+  sfrl: false
+  #不需要验证证书印制号是否为空的gzldyid(舒城是预告预抵押)
+  verify-yzh: fdsadfsfasf
+  #自动办结只查询的证书类型
+  zdbj:
+    zslx: 1
+
+zhcx:
+  # 综合查询不展示的流程登记小类代码配置
+  djxldm:
+  # 综合查询过滤的登记类型配置（多个英文逗号分隔；为空默认查询所有登记类型）
+  djlx: 100,200,300,500,600,700
+  # 海门有房无房证明查询排序需要按照不动产权证号排序
+  yfwfzm:
+    bdcqzhpx: true
+    # 综合查询有房无房证明是程序获取数据，默认fr3打印
+    # 现为支持pdf打印，房产信息子表可设置字体等，子表ID可配置
+    zfxxtable: ZfxxList_RowHeight450
+    # 综合查询有房无房证明是程序获取数据，默认fr3打印
+    # 现为支持pdf打印，权利人子表可设置字体等，子表ID可配置
+    qlrxxtable: ZfxxQlrxx_RowHeight450
+    # 综合查询有房无房证明：房产信息行政区域配置
+    xzqy: "{'320800':'淮安市','320805':'淮安市','320802':'淮安市','320811':'淮安市','320831':'金湖县', '340104':'合肥市'}"
+    # 默认部门名称
+    mrbmmc: 淮安全市
+  # 无产权证书信息时，查询限制状态（默认false：不查询，true：查询）
+  wcqcxzt: true
+  # 是否查询权利附记
+  qlfj: true
+  sfdyxzsj: true
+
+certificate:
+  #电子证照主体代码配置对应表（港澳台不需要配置，代码自行控制）
+  eZzztdm:
+    1: 111,公民身份号码
+    8: 001,统一社会信用代码
+    99: 099,其他法人或其他组织有效证件代码
+    3: 414,护照
+
+# 不动产单元查询过滤权利类型
+bdcdycx:
+  # 默认值
+  # qllx: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,93,94
+  # 蚌埠和标准版添加95,96,98
+  qllx: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,93,94,95,96,98
+
+#盐城综合查询有房无房打印证明流水号配置
+#流水号位数配置，默认4位
+yancheng.yfwfzm.lshws: 4
+#模板中受理编号模板，中间分隔符号正式生成会去除：yfwf代表有房无房，程序会自动判断；nf代表查询年份；qwm代表区位码；lsh代表流水号
+yancheng.yfwfzm.slbhmb: yfwf-nf-区号07-lsh
+
+# 盐城综合查询打印清单编号格式
+yancheng.dyqd.bhmb: 公开-nf-区号-lsh
+# 盐城综合查询打印清单编号流水号位数，默认6位
+yancheng.dyqd.lshws: 6
+
+# 盐城综合查询打印有无土地信息证明受理编号格式
+yancheng.ywtdxxzm.bhmb: 公开-nf-区号-lsh
+# 盐城综合查询打印有无土地信息证明编号流水号位数，默认6位
+yancheng.ywtdxxzm.lshwss: 6
+
+# 盐城综合查询打印权属证明受理编号格式
+yancheng.qszm.bhmb:
+# 盐城综合查询打印权属证明编号流水号位数，默认6位
+yancheng.qszm.lshwss: 6
+
+# 盐城综合查询有房无房（历史）：注销产权查询年限
+yancheng.yfwfzmls.zxcqcxnx: 3
+#盐城综合查询有房无房（历史）：注销产权下一手流程定义ID
+yancheng.yfwfzmls.zxcqxyslc: BFtkjEpwxj3eTrTx,4C7I3158AVY6501F,WR3msbJr8P335c8H
+#自助打证机版本
+zzdzj.version: shucheng
+
+
+sdq.fjts.fjmcdz.测试: "00"
+sdq.fjts.fjmcdz.测试1: "10"
+sdq.fjts.fjmcdz.测试2: "20"
+sdq.fjts.fjmcdz.测试3: "21"
+sdq.fjts.fjmcdz.测试4: "22"
+
+gddwdm.320826: 111
+#淮安供气单位名称:
+gqdwdm.320826: 涟水天达
+#淮安供水单位名称:
+gsdwdm.320826: 涟缘水务
+gsdwdm.320804: 3240101
+gsdwdm.340104: 3240101
+#过户是否需要单位信息，默认false
+sdqgh.sfxydwxx: true
+#水过户前是否进行查询
+shuicxgh.sfcx: false
+#淮安淮阴区水过户接口名称
+sdq.shuigh.beanname.320804: hy_shuigh
+sdq.shuigh.beanname.340104: hy_shuigh
+
+#打印增加可编辑权限的角色
+print:
+  edit:
+    role: buda
+
+#摩科打证二维码地址
+mokeEwm.url: http://60.170.255.43:8014/estateplat-wechat-page/html/my_archive_zdtAndhst.html?zsid=

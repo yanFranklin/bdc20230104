@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>家庭成员资源页面</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <!--popup.css放到form-tab.css，防止样式冲突-->
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/slymForm.css"/>
+    <link rel="stylesheet" href="../../static/css/slymjyq.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/slymzh.css"/>
+</head>
+<body>
+<div class="bdc-form-div bdc-not-full-bg">
+    <!--全局 标题和操作按钮 开始-->
+    <form class="layui-form sl-from bdc-form-table" id="all">
+        <div class="bdc-content-fix">
+            <div class="content-title layui-clear">
+                <p>家庭成员信息</p>
+                <div id="buttonArea">
+                    <div class="title-btn-area">
+                        <button class="layui-btn bdc-major-btn" lay-submit="" lay-filter="saveJtcy" id="saveJtcy" >保存
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--表单信息-->
+        <div class="layui-tab fixed-content" lay-filter="tabFilter">
+            <div class="layui-tab-content" id="contentTable">
+                <div class="layui-tab-item layui-show">
+                    <div class="form-margin-area">
+                        <div class="basic-info" id="jtcyxx"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--新增家庭成员模板-->
+<script type="text/html" id="addJtcyTpl">
+    <tr>
+        <input type="hidden" name="hkbbm" id="hkbbm" value="{{d.hkbbm || ''}}">
+        <input type="hidden" name="jtcyid" id="jtcyid" value="{{jtcyxx.jtcyid || ''}}">
+        <td class="bdc-jtcy-xh">
+            <input type="checkbox"  name="checkbox{{d.sjclNumber || ''}}"  class='sjcl' lay-skin="primary">
+        </td>
+        <td>
+            <input type="text" lay-verify="" id="jtcymc" name="jtcymc" value=""
+                   class="layui-input jtcy" title="">
+        </td>
+        <td>
+            <select name="xb" lay-search="" lay-filter="xb" class="jtcy" id="xb">
+                <option value="">请选择</option>
+                {{# layui.each(d.zd.xb, function(index, item){ }}
+                <option value="{{item.DM || ''}}" >{{item.MC || ''}}</option>
+                {{# }); }}
+            </select>
+        </td>
+        <td>
+            <input type="text" lay-verify="" id="jtcyzjzlMc" name="jtcyzjzlMc" value="身份证"
+                   class="layui-input" title="身份证" disabled="off">
+        </td>
+        <td>
+            <input type="text" lay-verify="" id="jtcyzjh" name="jtcyzjh" value=""
+                   class="layui-input jtcy" title="">
+        </td>
+        <td>
+            <select name="yhzgx" lay-search="" lay-filter="yhzgx" class="jtcy" id="yhzgx">
+                <option value="">请选择</option>
+                {{# layui.each(d.zd.yhzgx, function(index, item){ }}
+                <option value="{{item.DM || ''}}" >{{item.MC || ''}}</option>
+                {{# }); }}
+            </select>
+        </td>
+        <td align="center">
+            <button type="button" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn"
+                    onclick="delJtcy('{{jtcyxx.jtcyid || \'\'}}',this)"
+                    id="deleteJtcy"
+                    name="deleteJtcy">
+                删除
+            </button>
+        </td>
+    </tr>
+</script>
+<!--家庭成员信息展示-->
+<script type="text/html" id="jtcyxxTpl">
+    {{# if(d.jtcyList && d.jtcyList.length != 0) { }}
+    {{# layui.each(d.jtcyList, function(i, qrlJtcy){ }}
+    {{# var jtcyList = qrlJtcy.jtcyList;}}
+    {{# var qrlId = qrlJtcy.qlrId; }}
+    <div class="bdc-form-add layui-form addjtcy" lay-filter="{{qrlJtcy.qlrId || ''}}">
+        <div class="bdc-form-btn">
+            <button type="button" href="javascript:;" class="layui-btn layui-btn-sm bdc-major-btn bdc-item-add"
+                    id="addjtcy" onclick="addBdcJtcy(this,'{{qrlJtcy.qlrId || \'\'}}')">新增
+            </button>
+        </div>
+        <div class="layui-form-item">
+            <input type="hidden" autocomplete="off"  class="layui-input no-modify qlrid" value="{{qrlJtcy.qlrId || ''}}"
+                   id="qlrid" title="{{qrlJtcy.qlrId || ''}}">
+        </div>
+        <div class="layui-form-item bdc-more-item  showsjcl{{qrlJtcy.qlrId || ''}}"
+             data-djxl="{{qrlJtcy.qlrId || ''}}">
+
+            <div class="bdc-jt-table">
+                <table class="layui-table jtcy-table" border="1" name="addjtcy{{qrlJtcy.qlrId || ''}}"
+                       id="addJtcyTable">
+                    <colgroup>
+                        <col width="30">
+                        <col width="400">
+                        <col width="100">
+                        <col width="100">
+                        <col width="200">
+                        <col width="200">
+                        <col width="100">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <td width="30px">
+                            <input type="checkbox" lay-filter="qxCheckbox" name="qxTable" style="width: 30px;" title=""
+                                   lay-skin="primary">
+                        </td>
+                        <th>家庭成员名称</th>
+                        <th width="70px">性别</th>
+                        <th style="min-width: 100px">证件种类</th>
+                        <th style="min-width: 150px">证件号</th>
+                        <th>与户主关系</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{# if(jtcyList.length==0) { }}
+                    <tr class="bdc-table-none">
+                        <td colspan="10">
+                            <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据
+                            </div>
+                        </td>
+                    </tr>
+                    {{# } else { }}
+                    {{# layui.each(jtcyList, function(i, jtcyxx){ }}
+                    <tr>
+                        <input type="hidden" name="hkbbm" id="hkbbm" class = 'jtcy' value="{{jtcyxx.hkbbm || ''}}">
+                        <input type="hidden" name="jtcyid" id="jtcyid" class = 'jtcy' value="{{jtcyxx.jtcyid || ''}}">
+                        <td>
+                            <input type="checkbox" lay-filter="yxCheckbox" class="jtcy" name="yxTable"
+                                   value="{{jtcyxx.jtcyid || ''}}" data-sfbc="{{jtcyxx.jtcyid || ''}}" title=""
+                                   lay-skin="primary">
+                        </td>
+                        <td>
+                            <input type="text" lay-verify="" id="jtcymc" name="jtcymc" value="{{jtcyxx.jtcymc || ''}}"
+                                   class="layui-input jtcy" title="{{jtcyxx.jtcymc || ''}}">
+                        </td>
+                        <td>
+                            <select name="xb" lay-search="" lay-filter="xb" class="jtcy" id="xb">
+                                <option value="">请选择</option>
+                                {{# layui.each(d.zd.xb, function(index, item){ }}
+                                <option value="{{item.DM || ''}}" {{# if(jtcyxx.xb==item.DM ){ }} selected="selected" {{#
+                                        } }}>{{item.MC || ''}}</option>
+                                {{# }); }}
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" lay-verify="" id="jtcyzjzlMc" name="jtcyzjzlMc" value="身份证"
+                                   class="layui-input jtcy" title="身份证" disabled="off">
+                        </td>
+                        <td>
+                            <input type="text" lay-verify="" id="jtcyzjh" name="jtcyzjh" value="{{jtcyxx.jtcyzjh || ''}}"
+                                   class="layui-input jtcy" title="{{jtcyxx.jtcyzjh || ''}}">
+                        </td>
+                        <td>
+                            <select name="yhzgx" lay-search="" lay-filter="yhzgx" class="jtcy" id="yhzgx">
+                                <option value="">请选择</option>
+                                {{# layui.each(d.zd.yhzgx, function(index, item){ }}
+                                <option value="{{item.DM || ''}}" {{# if(jtcyxx.yhzgx==item.DM ){ }} selected="selected" {{#
+                                        } }}>{{item.MC || ''}}</option>
+                                {{# }); }}
+                            </select>
+                        </td>
+                        <td>
+                            <button type="button" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn"
+                                    onclick="delJtcy('{{jtcyxx.jtcyid || \'\'}}',this)"
+                                    id="deleteJtcy"
+                                    name="deleteJtcy">
+                                删除
+                            </button>
+                        </td>
+                    </tr>
+                    {{# }); }}
+                    {{# } }}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {{# });  }}
+    {{# } else { }}
+    <div class="bdc-form-add layui-form addjtcy" lay-filter="{{qrlJtcy.qlrId || ''}}">
+        <div class="bdc-form-btn">
+            <button type="button" class="layui-btn layui-btn-sm bdc-secondary-btn" onclick="addBdcJtcy(this,'{{qrlJtcy.qlrId || \'\'}}')"
+                    id="addJtcy">新增
+            </button>
+        </div>
+        <div class="layui-form-item">
+            <input type="hidden" autocomplete="off"  class="layui-input no-modify" value="{{qrlJtcy.qlrId || ''}}"
+                   id="qlrid" title="{{qrlJtcy.qlrId || ''}}">
+        </div>
+    <form class="common-form sl-from layui-form bdc-form-table" name="sjclForm">
+        <div class="layui-form-item">
+            <div class="sjclForm" id="sjclForm">
+                <table class="slym layui-table bdc-jt-table" border="1" name="addjtcy" id="addSjclTable">
+                    <thead>
+                    <tr class="gray-tr">
+                        <td width="30px">
+                            <input type="checkbox" lay-filter="qxCheckbox" name="qxTable" style="width: 30px;" title=""
+                                   lay-skin="primary">
+                        </td>
+                        <th>家庭成员名称</th>
+                        <th width="70px">性别</th>
+                        <th style="min-width: 100px">证件种类</th>
+                        <th style="min-width: 150px">证件号</th>
+                        <th>与户主关系</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tr class="bdc-table-none">
+                        <td colspan="8">
+                            <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </form>
+    </div>
+    {{# } }}
+</script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<!--小数计算防精度缺失-->
+<script src="../../static/lib/mathjs/math.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src='../../static/js/jtcy/jtcy.js'></script>
+
+<script src='../../static/js/formCenter.js'></script>
+</body>
+</html>

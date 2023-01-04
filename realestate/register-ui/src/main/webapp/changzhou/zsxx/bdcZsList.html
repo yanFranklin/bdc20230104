@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>不动产证书列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/common.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+
+    <style type="text/css">
+        #zslxTipOne {
+            padding-left: 28px;
+        }
+
+        #zslxTipTwo {
+            padding-left: 28px;
+            font-size: smaller;
+            color: red;
+        }
+
+        .bdc-tips-right .bdc-right-tips-box > .tsxx p {
+            font-size: 14px;
+            line-height: 28px;
+            padding-left: 26px;
+            position: relative;
+        }
+
+        .bdc-tips-right .bdc-right-tips-box > .tsxx p img {
+            width: 16px;
+            position: absolute;
+            top: 50%;
+            left: 5px;
+            transform: translateY(-50%);
+        }
+
+        .bdc-tips-right .bdc-right-tips-box > .tsxx p > a {
+            color: #1d87d1;
+            padding-left: 5px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="bdc-percentage-container">
+    <!--查询条件 八个-->
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <form class="layui-form" action="">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">不动产权证号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="bdcqzh" name="bdcqzh" autocomplete="off" placeholder="请输入" class="layui-input">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">不动产单元号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="bdcdyh" name="bdcdyh" autocomplete="off" placeholder="请输入" class="layui-input">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">坐落</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="zl" name="zl" autocomplete="off" placeholder="请输入" class="layui-input">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">权利人</label>
+                        <div class="layui-input-inline">
+                            <input type="text" lay-verify="title" autocomplete="off" placeholder="请输入" class="layui-input" id="bdcQlr" name="qlr">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline bdc-button-box-four">
+                        <button lay-submit="" lay-filter="search" class="layui-btn layui-btn-normal bdc-major-btn" id="search">
+                            查询
+                        </button>
+                        <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="bdc-table-box">
+        <div class="bdc-select-all-box bdc-hide">
+            <p>当前数据</p>
+            <p class="bdc-select-all">全部数据</p>
+            <div class="bdc-sjx"></div>
+        </div>
+        <table id="bdcZsTable" lay-data="{id: 'bdcZsTable'}" lay-filter="dataTable"></table>
+    </div>
+</div>
+<!--单选框弹层-->
+<div id="bdc-popup-radio" class="bdc-hide">
+    <form class="layui-form" action="">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <!--<label class="layui-form-label">一次只允许打印一种类型的证书，请选择。</label>-->
+                <p id="zslxTipOne">一次只允许打印一种类型的证书，请选择！</p>
+                <p id="zslxTipTwo">* 未关闭提示前，可重复选择</p>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">证书类型：</label>
+                <div class="layui-input-inline">
+                    <input type="radio" name="zslxRadio" value="1" title="证书" lay-filter="zslxRadio" class="zs-radio">
+                    <input type="radio" name="zslxRadio" value="2" title="证明" lay-filter="zslxRadio" class="zm-radio">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!--验证异常提示信息-->
+<div class="layui-hide">
+    <div lay-filter="tsxx" id="tsxx">
+        <a class="layui-btn layui-btn-sm bdc-ignore-btn" id="ignoreAll" onclick="removeAll(this)">忽略全部</a>
+        <div class="bdc-right-tips-box" id="bottomTips">
+            <!--<h3>提示信息<i class="layui-icon layui-icon-close"></i></h3>-->
+            <div class="tsxx" id="alertInfo"></div>
+            <div class="tsxx" id="confirmInfo"></div>
+        </div>
+    </div>
+</div>
+<!--表格上面功能按钮-->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="getBatchYzh" id="getBatchYzh">获取印制号</button>
+        <!--<button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="jhddcx" id="jhddcx" style="display: none">-->
+        <!--建行订单查询-->
+        <!--</button>-->
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="db" id="batchDb">登簿</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="batchPrint" id="batchPrint" name="printBtn">打印</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="exportPdf" id="exportPdf" name="printBtn">导出PDF</button>
+    </div>
+    <div class="layui-btn-container bdc-export-tools">
+        <!--<span id="export" title="导出"><img src="../../static/lib/bdcui/images/export.png" alt=""></span>-->
+    </div>
+</script>
+
+<!--表格内部操作按钮-->
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="info">详情</a>
+</script>
+<!--提示信息-->
+<script type="text/html" id="tsxxTpl">
+    <a class="layui-btn layui-btn-sm bdc-ignore-btn" id="ignoreAll" onclick="removeAll(this)">忽略全部</a>
+    <div class="bdc-right-tips-box" id="bottomTips">
+        <!--<h3>提示信息<i class="layui-icon layui-icon-close"></i></h3>-->
+        <div class="tsxx" id="alertInfo"></div>
+        <div class="tsxx" id="confirmInfo"></div>
+    </div>
+</script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/table.js"></script>
+<script src="../../static/js/formCenter.js"></script>
+<script src="../../static/js/zsxx/zsTsxx.js"></script>
+<script src="../../static/js/changzhou/zsxx/bdcZsCommon.js"></script>
+<script src="../../static/js/zsxx/bdcZszmPrivate_hf.js"></script>
+
+<script src="../../static/js/zsxx/bdcZsList.js"></script>
+</body>
+</html>

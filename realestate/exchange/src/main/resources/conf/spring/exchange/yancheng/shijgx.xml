@@ -1,0 +1,965 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <!-- 盐城市级共享接口 -->
+
+    <!-- 盐城 获取token-->
+    <ex:bean id="shijjk_token">
+        <ex:service-info request-type="httpPostForShij">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="dealWithResponseSwitch" value="false"/>
+            <ex:property name="url" value="${shijgx.token.url}"/>
+        </ex:service-info>
+        <ex:log dsfFlag="BDC" logEventName="获取市级共享token" requester="BDC" responser="BDC"/>
+<!--        <ex:response resultKey="token">-->
+<!--            <ex:element dozerXml="conf/dozer/yancheng/shijgx/token/response/data.xml"/>-->
+<!--        </ex:response>-->
+
+    </ex:bean>
+
+    <!-- 盐城 获取sign-->
+    <ex:bean id="shijjk_sign">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="shijgxServiceImpl"/>
+            <ex:property name="methodName" value="getSign"/>
+            <ex:property name="noArgs" value="true" />
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 盐城 获取sign-->
+    <ex:bean id="shijjk_rtime">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="shijgxServiceImpl"/>
+            <ex:property name="methodName" value="getRtime"/>
+            <ex:property name="noArgs" value="true" />
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 盐城 市银保监分局—金融许可证信息-->
+    <ex:bean id="shijjk_jrxkz">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.jrxkz.url}" />
+            <ex:property name="logEventName" value="使用统一社会信用代码分页查询事业单位法人信息查询服务"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/jrxkz/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/jrxkz/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="市银保监分局—金融许可证信息" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 综合法人库-司法判决信息-案件当事人信息接口-->
+    <ex:bean id="shijjk_zhfrksfpjxxajxx">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.zhfrksfpjxxajxx.url}" />
+            <ex:property name="logEventName" value="综合法人库--司法判决信息-案件当事人信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhfrksfpjxxajxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhfrksfpjxxajxx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="综合法人库-司法判决信息-案件当事人信息接口" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 综合法人库-事业单位基本信息-->
+    <ex:bean id="shijjk_zhfrksydwjbxx">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.zhfrksydwjbxx.url}" />
+            <ex:property name="logEventName" value="综合法人库----事业单位基本信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhfrksydwjbxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhfrksydwjbxx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="综合法人库-事业单位基本信息" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 委托权公证书信息-->
+    <ex:bean id="shijjk_wtqgzsxx">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.wtqgzsxx.url}" />
+            <ex:property name="logEventName" value="委托权公证书信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/wtqgzsxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/wtqgzsxx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="委托权公证书信息" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 继承权公证书信息-->
+    <ex:bean id="shijjk_jcqgzsxx">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.jcqgzsxx.url}" />
+            <ex:property name="logEventName" value="继承权公证书信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/jcqgzsxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/jcqgzsxx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="继承权公证书信息" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 民政部_涉外婚姻登记信息核验(单人)接口-->
+    <ex:bean id="shijjk_swhydjxxdrhy">
+        <ex:service-info request-type="httpPostForShij">
+            <ex:property name="url" value="${shijjk.swhydjxxdrhy.url}" />
+            <ex:property name="logEventName" value="民政部_涉外婚姻登记信息核验(单人)"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/swhydjxxdrhy/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/swhydjxxdrhy/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="民政部_涉外婚姻登记信息核验(单人)接口" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 民政部_社会团体名称变更登记记录查询接口-->
+    <ex:bean id="shijjk_shttmcbgdjjlcx">
+        <ex:service-info request-type="httpPostForShij">
+            <ex:property name="url" value="${shijjk.shttmcbgdjjlcx.url}" />
+            <ex:property name="logEventName" value="民政部_社会团体名称变更登记记录查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/shttmcbgdjjlcx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/shttmcbgdjjlcx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="民政部_社会团体名称变更登记记录查询接口" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 民政部_收养登记证信息（国内）查询接口-->
+    <ex:bean id="shijjk_sydjzxxcx">
+        <ex:service-info request-type="httpPostForShij">
+            <ex:property name="url" value="${shijjk.sydjzxxcx.url}" />
+            <ex:property name="logEventName" value="民政部_收养登记证信息（国内）查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/sydjzxxcx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/sydjzxxcx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="民政部_收养登记证信息（国内）查询接口" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 民政部_民办非企业单位登记证书接口-->
+    <ex:bean id="shijjk_mbfqydwdjzscx">
+        <ex:service-info request-type="httpPostForShij">
+            <ex:property name="url" value="${shijjk.mbfqydwdjzscx.url}" />
+            <ex:property name="logEventName" value="民政部_民办非企业单位登记证书接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/mbfqydwdjzscx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/mbfqydwdjzscx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="民政部_民办非企业单位登记证书接口" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 民政部基金会法人登记证书接口-->
+    <ex:bean id="shijjk_jjhfrdjzscx">
+        <ex:service-info request-type="httpPostForShij">
+            <ex:property name="url" value="${shijjk.jjhfrdjzscx.url}" />
+            <ex:property name="logEventName" value="民政部基金会法人登记证书"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/jjhfrdjzscx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/jjhfrdjzscx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="民政部基金会法人登记证书接口" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 综合人口库-户籍人口信息接口-->
+    <ex:bean id="shijjk_zhrkkhjrkxx">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.zhrkkhjrkxx.url}" />
+            <ex:property name="logEventName" value="综合人口库-户籍人口信息接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhrkkhjrkxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhrkkhjrkxx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="综合人口库-户籍人口信息接口" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 国家公安部—人口库基准信息查询接口-->
+    <ex:bean id="shijjk_rkkjzxxcx">
+        <ex:service-info request-type="httpPostForShij">
+            <ex:property name="url" value="${shijjk.rkkjzxxcx.url}" />
+            <ex:property name="logEventName" value="国家公安部—人口库基准信息查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/rkkjzxxcx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/rkkjzxxcx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="国家公安部—人口库基准信息查询接口" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 综合人口库-户口迁移证信息-->
+    <ex:bean id="shijjk_zhrkkhkqyzxx">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.zhrkkhkqyzxx.url}" />
+            <ex:property name="logEventName" value="综合人口库-户口迁移证信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhrkkhkqyzxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhrkkhkqyzxx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="综合人口库-户口迁移证信息" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 综合法人库-科技小巨人企业认定信息-->
+    <ex:bean id="shijjk_zhfrkkjxjrqyrdxx">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.zhfrkkjxjrqyrdxx.url}" />
+            <ex:property name="logEventName" value="综合法人库-科技小巨人企业认定信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhfrkkjxjrqyrdxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhfrkkjxjrqyrdxx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="综合法人库-科技小巨人企业认定信息" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 民政部涉外婚姻登记信息查询接口-->
+    <ex:bean id="shijjk_swhydjxxcx">
+        <ex:service-info request-type="httpPostForShij">
+            <ex:property name="url" value="${shijjk.swhydjxxcx.url}" />
+            <ex:property name="logEventName" value="民政部涉外婚姻登记信息查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/swhydjxxcx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/swhydjxxcx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="民政部涉外婚姻登记信息查询接口" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 民政部_涉外婚姻登记信息核验（双方）接口-->
+    <ex:bean id="shijjk_swhydjxxsfhy">
+        <ex:service-info request-type="httpPostForShij">
+            <ex:property name="url" value="${shijjk.swhydjxxsfhy.url}" />
+            <ex:property name="logEventName" value="民政部_涉外婚姻登记信息核验（双方）接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/swhydjxxsfhy/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/swhydjxxsfhy/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="民政部_涉外婚姻登记信息核验（双方）接口" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 市自然规划局—建设工程规划许可证接口-->
+    <ex:bean id="shijjk_yztgcxk">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.yztgcxk.url}" />
+            <ex:property name="logEventName" value="市自然规划局—建设工程规划许可证 "/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/yztgcxk/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/yztgcxk/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="市自然规划局—建设工程规划许可证接口" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 综合法人库-全市社会组织登记信息-->
+    <ex:bean id="shijjk_zhfrkqsshzzdjxx">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.zhfrkqsshzzdjxx.url}" />
+            <ex:property name="logEventName" value="综合法人库-全市社会组织登记信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhfrkqsshzzdjxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhfrkqsshzzdjxx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="综合法人库-全市社会组织登记信息" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 综合法人库-社会组织基本信息-->
+    <ex:bean id="shijjk_zhfrkshzzjbxx">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.zhfrkshzzjbxx.url}" />
+            <ex:property name="logEventName" value="综合法人库-社会组织基本信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhfrkshzzjbxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhfrkshzzjbxx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="综合法人库-社会组织基本信息" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 综合人口库-人口基本信息-->
+    <ex:bean id="shijjk_zhrkkrkjbxx">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.zhrkkrkjbxx.url}" />
+            <ex:property name="logEventName" value="综合人口库-人口基本信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhrkkrkjbxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhrkkrkjbxx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="综合人口库-人口基本信息" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 综合人口库-家庭成员关系-->
+    <ex:bean id="shijjk_zhrkkjtcygx">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.zhrkkjtcygx.url}" />
+            <ex:property name="logEventName" value="综合人口库-家庭成员关系"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhrkkjtcygx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhrkkjtcygx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="综合人口库-家庭成员关系" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 市公安局—户籍信息-->
+    <ex:bean id="shijjk_gzhjxx">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.gzhjxx.url}" />
+            <ex:property name="logEventName" value="市公安局—户籍信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/gzhjxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/gzhjxx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="市公安局—户籍信息" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 市编办—事业单位法人信息-->
+    <ex:bean id="shijjk_sydwfrxx">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.sydwfrxx.url}" />
+            <ex:property name="logEventName" value="市编办—事业单位法人信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/sydwfrxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/sydwfrxx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="市编办—事业单位法人信息" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 市编办—行政机关法人信息-->
+    <ex:bean id="shijjk_xzjgfrxx">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.xzjgfrxx.url}" />
+            <ex:property name="logEventName" value="市编办—行政机关法人信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/xzjgfrxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/xzjgfrxx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="市编办—行政机关法人信息" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 中央编办—党群机关信息查询接口-->
+    <ex:bean id="shijjk_dqjgcx">
+        <ex:service-info request-type="httpPostForShij">
+            <ex:property name="url" value="${shijjk.dqjgcx.url}" />
+            <ex:property name="logEventName" value="中央编办—党群机关信息查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/dqjgcx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/dqjgcx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="中央编办—党群机关信息查询接口" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 中央编办—事业单位信息查询-->
+    <ex:bean id="shijjk_sydwcx">
+        <ex:service-info request-type="httpPostForShij">
+            <ex:property name="url" value="${shijjk.sydwcx.url}" />
+            <ex:property name="logEventName" value="中央编办—事业单位信息查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/sydwcx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/sydwcx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="中央编办—事业单位信息查询" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 民政厅—婚姻资源服务查询接口(整体授权)-->
+    <ex:bean id="shijjk_hyzyfw">
+        <ex:service-info request-type="httpPostForShij">
+            <ex:property name="url" value="${shijjk.hyzyfw.url}" />
+            <ex:property name="logEventName" value="民政厅—婚姻资源服务查询接口(整体授权)"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/hyzyfw/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/hyzyfw/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="民政厅—婚姻资源服务查询接口(整体授权)" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 企业注册登记信息-->
+    <ex:bean id="shijjk_ycsjgjqyzcdjxx">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.ycsjgjqyzcdjxx.url}" />
+            <ex:property name="logEventName" value="企业注册登记信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/ycsjgjqyzcdjxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/ycsjgjqyzcdjxx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="企业注册登记信息" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 国家公安部—人口库身份核查接口-->
+    <ex:bean id="shijjk_rkksfhc">
+        <ex:service-info request-type="httpPostForShij">
+            <ex:property name="url" value="${shijjk.rkksfhc.url}" />
+            <ex:property name="logEventName" value="国家公安部—人口库身份核查接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/rkksfhc/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/rkksfhc/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="国家公安部—人口库身份核查接口" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 综合法人库-企业纳税明细信息-->
+    <ex:bean id="shijjk_zhfrkqynsmxxx">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.zhfrkqynsmxxx.url}" />
+            <ex:property name="logEventName" value="综合法人库-企业纳税明细信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhfrkqynsmxxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhfrkqynsmxxx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="综合法人库-企业纳税明细信息" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!--综合人口库-农村留守儿童信息 -->
+    <ex:bean id="shijjk_zhrkknclset">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.zhrkknclset.url}" />
+            <ex:property name="logEventName" value="综合人口库-农村留守儿童信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhrkknclset/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhrkknclset/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="综合人口库-农村留守儿童信息" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!--审批局-投资项目基本信息表 -->
+    <ex:bean id="shijjk_spjtzxmjbxx">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.spjtzxmjbxx.url}" />
+            <ex:property name="logEventName" value="审批局-投资项目基本信息表"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhrkk/spj/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhrkk/spj/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="审批局-投资项目基本信息表" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!--综合人口库-救助信息 -->
+    <ex:bean id="shijjk_zhrkkjzxx">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.zhrkkjzxx.url}" />
+            <ex:property name="logEventName" value="综合人口库-救助信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhrkk/jzxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhrkk/jzxx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="综合人口库-救助信息" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!--综合人口库-死亡医学证明 -->
+    <ex:bean id="shijjk_zhrkkswyxzm">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.zhrkkswyxzm.url}" />
+            <ex:property name="logEventName" value="综合人口库-死亡医学证明"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhrkk/swyxzm/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhrkk/swyxzm/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="综合人口库-死亡医学证明" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+
+    <!--综合人口库-低收入人口信息 -->
+    <ex:bean id="shijjk_zhrkkdsrrkxx">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.zhrkkdsrrkxx.url}" />
+            <ex:property name="logEventName" value="综合人口库-低收入人口信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhrkk/dsrrkxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhrkk/dsrrkxx/response/data.xml"/>
+        </ex:response>
+<!--        <ex:log dsfFlag="ZWGX" logEventName="综合人口库-低收入人口信息" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 居民户口簿_证照获取和下载接口-->
+    <ex:bean id="shijjk_jmhkbxz">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.jmhkbxz.url}" />
+            <ex:property name="logEventName" value="居民户口簿_证照获取和下载接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/jmhkbxz/request/param.xml"/>
+        </ex:request>
+       <!-- <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/jmhkbxz/response/data.xml"/>
+        </ex:response>-->
+    </ex:bean>
+
+    <!-- 盐城 营业执照-获取证照信息获取和下载接口-->
+    <ex:bean id="shijjk_yyzzxz">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.yyzzxz.url}" />
+            <ex:property name="logEventName" value="营业执照-获取证照信息获取和下载接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/yyzzxz/request/param.xml"/>
+        </ex:request>
+       <!-- <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/yyzzxz/response/data.xml"/>
+        </ex:response>-->
+    </ex:bean>
+
+    <!-- 盐城 婚姻登记_证照获取和下载接口-->
+    <ex:bean id="shijjk_hydjzzxz">
+        <ex:service-info request-type="httpPostForShij">
+            <ex:property name="url" value="${shijjk.hydjzzxz.url}" />
+            <ex:property name="logEventName" value="婚姻登记_证照获取和下载接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/hydjzz/request/param.xml"/>
+        </ex:request>
+        <!-- <ex:response>
+             <ex:element dozerXml="conf/dozer/yancheng/shijgx/hydjzz/response/data.xml"/>
+         </ex:response>-->
+    </ex:bean>
+
+    <!-- 盐城 身份证_证照获取和下载接口-->
+    <ex:bean id="shijjk_sfz_zzxz">
+        <ex:service-info request-type="httpPostForShij">
+            <ex:property name="url" value="${shijjk.sfzzzxz.url}"/>
+            <ex:property name="logEventName" value="身份证_证照获取和下载接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/sfz/request/param.xml"/>
+        </ex:request>
+        <!-- <ex:response>
+             <ex:element dozerXml="conf/dozer/yancheng/shijgx/hydjzz/response/data.xml"/>
+         </ex:response>-->
+    </ex:bean>
+
+    <ex:bean id="shijjk_zzxz">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="bdcShijiServiceImpl"/>
+            <ex:property name="methodName" value="dealWithZzxzResponse"/>
+        </ex:service-info>
+        <ex:log dsfFlag="SJPT" logEventName="市级证照相关接口" requester="BDC" responser="SJPT"/>
+
+    </ex:bean>
+
+
+    <!-- 盐城 盐城自然资源和规划局-建设用地规划许可证-->
+    <ex:bean id="shijjk_jsydghxkz">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.jsydghxkz.url}" />
+            <ex:property name="logEventName" value="自然资源和规划局-建设用地规划许可证"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/jsydghxkz/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/jsydghxkz/response/data.xml"/>
+        </ex:response>
+        <!--        <ex:log dsfFlag="ZWGX" logEventName="综合人口库-家庭成员关系" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 司法局-民事特别程序案件裁判信息 -->
+    <ex:bean id="shijjk_mstbcxajcjxx">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.mstbcxajcjxx.url}" />
+            <ex:property name="logEventName" value="司法局-民事特别程序案件裁判信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/mstbcxajcjxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/mstbcxajcjxx/response/data.xml"/>
+        </ex:response>
+        <!--        <ex:log dsfFlag="ZWGX" logEventName="综合人口库-家庭成员关系" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 市民政局-市民政局地名 -->
+    <ex:bean id="shijjk_smzjdm">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.smzjdm.url}" />
+            <ex:property name="logEventName" value="市民政局-市民政局地名"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/smzjdm/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/smzjdm/response/data.xml"/>
+        </ex:response>
+        <!--        <ex:log dsfFlag="ZWGX" logEventName="综合人口库-家庭成员关系" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 卫健委-死亡医学证明 -->
+    <ex:bean id="shijjk_wjwsmyxzm">
+        <ex:service-info request-type="httpPostForShij">
+            <ex:property name="url" value="${shijjk.wjwsmyxzm.url}" />
+            <ex:property name="logEventName" value="卫健委-死亡医学证明"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/wjwsmyxzm/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/wjwsmyxzm/response/data.xml"/>
+        </ex:response>
+        <!--        <ex:log dsfFlag="ZWGX" logEventName="综合人口库-家庭成员关系" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 住房和城乡建设局-建筑工程竣工验收备案表 -->
+    <ex:bean id="shijjk_jzgcjgysba">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.jzgcjgysba.url}" />
+            <ex:property name="logEventName" value="住房和城乡建设局-建筑工程竣工验收备案表"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/jzgcjgysba/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/jzgcjgysba/response/data.xml"/>
+        </ex:response>
+        <!--        <ex:log dsfFlag="ZWGX" logEventName="综合人口库-家庭成员关系" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 盐城 建筑工程竣工验收备案表_证照获取和下载接口-->
+    <ex:bean id="shijjk_jzgcjgysbazzxz">
+        <ex:service-info request-type="httpPostForShij">
+            <ex:property name="url" value="${shijjk.jzgcjgysbazzxz.url}" />
+            <ex:property name="logEventName" value="建筑工程竣工验收备案表_证照获取和下载接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/jzgcjgysbazz/request/param.xml"/>
+        </ex:request>
+        <!-- <ex:response>
+             <ex:element dozerXml="conf/dozer/yancheng/shijgx/hydjzz/response/data.xml"/>
+         </ex:response>-->
+    </ex:bean>
+
+
+    <!-- 工信局-出生医学证明 -->
+    <ex:bean id="shijjk_csyxzm">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.csyxzm.url}" />
+            <ex:property name="logEventName" value="工信局-出生医学证明"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/csyxzm/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/csyxzm/response/data.xml"/>
+        </ex:response>
+        <!--        <ex:log dsfFlag="ZWGX" logEventName="综合人口库-家庭成员关系" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+
+    <!-- 综合人口库-出生医学证明 -->
+    <ex:bean id="shijjk_zhrkkcsyxzm">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.zhrkkcsyxzm.url}" />
+            <ex:property name="logEventName" value="综合人口库-出生医学证明"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhrkkcsyxzm/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/zhrkkcsyxzm/response/data.xml"/>
+        </ex:response>
+        <!--        <ex:log dsfFlag="ZWGX" logEventName="综合人口库-家庭成员关系" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+
+    <!-- 省-出生医学证明 -->
+    <ex:bean id="shijjk_shengcsyxzm">
+        <ex:service-info request-type="httpGetForShij">
+            <ex:property name="url" value="${shijjk.shengcsyxzm.url}" />
+            <ex:property name="logEventName" value="省-出生医学证明"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="contentType" value="application/json" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/shengcsyxzm/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/shijgx/shengcsyxzm/response/data.xml"/>
+        </ex:response>
+        <!--        <ex:log dsfFlag="ZWGX" logEventName="综合人口库-家庭成员关系" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+</beans>

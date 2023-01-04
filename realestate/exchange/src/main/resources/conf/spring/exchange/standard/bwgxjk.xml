@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <!-- 2.7 司法部公正文书服务接口 -->
+    <ex:bean id="bwgxjk_sfgzws">
+        <ex:service-info request-type="hfyctbPostService">
+            <ex:property name="logEventName" value="司法部公正文书服务接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="BWGXJK"/>
+            <ex:property name="dsfFlag" value="BWGXJK"/>
+            <ex:property name="csjm" value="false"/>
+            <ex:property name="url" value="${bwgxjk.sfgzws.url}"/>
+            <ex:property name="method" value="${bwgxjk.sfgzws.method}"/>
+            <ex:property name="qxdm" value="${bwgxjk.sfgzws.qxdm}"/>
+        </ex:service-info>
+        <ex:log dsfFlag="BWGXJK" logEventName="司法部公正文书服务接口" requester="BDC" responser="BWGXJK"/>
+    </ex:bean>
+
+    <!-- 2.8 卫健委_出生医学证明 -->
+    <ex:bean id="bwgxjk_wjwcsyxzm">
+        <ex:service-info request-type="hfyctbPostService">
+            <ex:property name="logEventName" value="卫健委_出生医学证明"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="BWGXJK"/>
+            <ex:property name="dsfFlag" value="BWGXJK"/>
+            <ex:property name="csjm" value="false"/>
+            <ex:property name="url" value="${bwgxjk.wjwcsyxzm.url}"/>
+            <ex:property name="method" value="${bwgxjk.wjwcsyxzm.method}"/>
+            <ex:property name="qxdm" value="${bwgxjk.wjwcsyxzm.qxdm}"/>
+        </ex:service-info>
+        <ex:log dsfFlag="BWGXJK" logEventName="卫健委_出生医学证明" requester="BDC" responser="BWGXJK"/>
+    </ex:bean>
+
+
+    <ex:bean id="swQxzf_dk">
+        <!-- 请求结构体 -->
+        <ex:service-info request-type="httpGet">
+            <ex:property name="logEventName" value="税务申报取消作废接口-德宽"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SW"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="httpsRequest" value="true"/>
+            <ex:property name="getUseNameValuePair" value="true"/>
+            <ex:property name="xPlatToken" value="${dksw.token}"/>
+            <ex:property name="url" value="${dksw.qxzf.url}"/>
+        </ex:service-info>
+        <!-- 输入结构体 -->
+        <ex:request>
+            <ex:element name="params" dozerXml="conf/dozer/hefei/dksw/qxzf/req/swcx_req_mode.xml"/>
+        </ex:request>
+        <!-- 输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/hefei/dksw/qxzf/resp/swcx_resp_head.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 市公安局获取token接口-->
+    <ex:bean id="ga_token">
+        <ex:service-info request-type="httpGet">
+            <ex:property name="logEventName" value="公安获取token接口"/>
+            <ex:property name="httpsRequest" value="true"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="baselibrary"/>
+            <ex:property name="dsfFlag" value="baselibrary"/>
+            <ex:property name="url" value="${baselibrary.token.url}"/>
+        </ex:service-info>
+
+        <ex:response resultKey="token">
+            <ex:element dozerXml="conf/dozer/huaian/czrkxx_token/resp/data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!--  市公安局_常住人口信息查询接口 -姓名（精确—）+户籍地址（模糊）查询个人信息 -->
+    <ex:bean id="ha_czrkxx">
+        <ex:service-info request-type="httpTokenGetForHuaian">
+            <ex:property name="logEventName" value="市公安局_常住人口信息查询" />
+            <ex:property name="httpsRequest" value="true"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="baselibrary"/>
+            <ex:property name="dsfFlag" value="baselibrary"/>
+            <ex:property name="contentType" value="application/json" />
+            <ex:property name="url" value="${baselibrary.czrkcx.url}" />
+            <ex:property name="appKey" value="${baselibrary.appkey}"/>
+            <ex:property name="workspaceId" value="${baselibrary.id}"/>
+            <ex:property name="tokenInterface" value="gaToken"/>
+        </ex:service-info>
+
+        <!-- 输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/huaian/czrkxx/resp/czrkxx.xml"/>
+        </ex:response>
+        <ex:log dsfFlag="BASELIBRARY" logEventName="市公安局_常住人口信息查询" requester="BDC" responser="BASELIBRARY"/>
+    </ex:bean>
+
+    <!--  市公安局_常住人口信息查询接口 -姓名（精确）+证件号（精确）查询个人信息 -->
+    <ex:bean id="ha_czrkgrxx">
+        <ex:service-info request-type="httpTokenGetForHuaian">
+            <ex:property name="logEventName" value="市公安局_常住人口个人信息查询" />
+            <ex:property name="httpsRequest" value="true"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="baselibrary"/>
+            <ex:property name="dsfFlag" value="baselibrary"/>
+            <ex:property name="contentType" value="application/json" />
+            <ex:property name="url" value="${baselibrary.czrkgrxxcx.url}" />
+            <ex:property name="appKey" value="${baselibrary.appkey}"/>
+            <ex:property name="workspaceId" value="${baselibrary.id}"/>
+            <ex:property name="tokenInterface" value="gaToken"/>
+        </ex:service-info>
+
+        <!-- 输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/huaian/czrkxx/resp/czrkxx.xml"/>
+        </ex:response>
+        <ex:log dsfFlag="BASELIBRARY" logEventName="市公安局_常住人口个人信息查询" requester="BDC" responser="BASELIBRARY"/>
+    </ex:bean>
+
+    <!--  市公安局_常住人口信息查询接口 -户号精确查询家庭信息 -->
+    <ex:bean id="ha_czrkxxhh">
+        <ex:service-info request-type="httpTokenGetForHuaian">
+            <ex:property name="logEventName" value="新人口库_常住人口家庭信息查询" />
+            <ex:property name="httpsRequest" value="true"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="baselibrary"/>
+            <ex:property name="contentType" value="application/json" />
+            <ex:property name="dsfFlag" value="baselibrary"/>
+            <ex:property name="url" value="${baselibrary.czrkcxhh.url}" />
+            <ex:property name="appKey" value="${baselibrary.appkey}"/>
+            <ex:property name="workspaceId" value="${baselibrary.id}"/>
+            <ex:property name="tokenInterface" value="gaToken"/>
+        </ex:service-info>
+
+        <!-- 输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/huaian/czrkxx/resp/czrkxx.xml"/>
+        </ex:response>
+        <ex:log dsfFlag="BASELIBRARY" logEventName="新人口库_常住人口家庭信息查询" requester="BDC" responser="BASELIBRARY"/>
+    </ex:bean>
+
+
+</beans>

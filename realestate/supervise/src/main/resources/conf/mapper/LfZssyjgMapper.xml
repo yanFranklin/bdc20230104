@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.supervise.core.mapper.LfZssyjgMapper">
+
+    <!--分页查询证书印制号模板配置-->
+    <select id="listZsyzhByPageOrder" parameterType="cn.gtmap.realestate.supervise.core.qo.LfYzhQO"
+            resultType="cn.gtmap.realestate.supervise.core.dto.BdcYzhDTO">
+        SELECT
+            T.YZHID,
+            T.NF,
+            T.QXDM,
+            T.ZSLX,
+            T.QZYSXLH,
+            T.SYQK,
+            T.CJR,
+            T.CJRID,
+            T.CJSJ,
+            T.ZSID,
+            T.BZ,
+            T.SCCS,
+            T.LQR,
+            T.LQRID,
+            T.LQBM,
+            T.LQBMID,
+            X.ZFYY as ZFYY,
+            X.SYYY as ZFXQMS
+        FROM
+            BDC_YZH T
+        LEFT JOIN
+            (SELECT YZHID,SYYY,BDC_ZD_YZHZFYY.MC AS ZFYY FROM BDC_YZHSYMX
+                LEFT JOIN BDC_ZD_YZHZFYY ON BDC_ZD_YZHZFYY.DM = BDC_YZHSYMX.ZFYY
+            WHERE SYQK = '2') X
+        ON
+            T.YZHID = X.YZHID
+        <where>
+            <if test="0 == syqk || syqk != null and syqk != ''">
+                AND T.SYQK = #{syqk}
+            </if>
+            <if test="nf != null and nf != ''">
+                AND T.NF = #{nf}
+            </if>
+            <if test="qxdm != null and qxdm != ''">
+                AND T.QXDM = #{qxdm}
+            </if>
+            <if test="zslx != null and zslx != ''">
+                AND T.ZSLX = #{zslx}
+            </if>
+            <if test="lqr != null and lqr != ''">
+                AND T.LQR like '%'|| #{lqr} || '%'
+            </if>
+            <if test="lqbm != null and lqbm != ''">
+                AND T.LQBM like '%'|| #{lqbm} || '%'
+            </if>
+            <if test="yzhq != null and yzhq != ''">
+                AND to_number(T.QZYSXLH) <![CDATA[ >= ]]>  to_number(#{yzhq,jdbcType=VARCHAR})
+            </if>
+            <if test="yzhz != null and yzhz != ''">
+                AND to_number(T.QZYSXLH) <![CDATA[ <= ]]>  to_number(#{yzhz,jdbcType=VARCHAR})
+            </if>
+            <if test="cjsjq != null and cjsjq !=''">
+                AND to_char(T.CJSJ ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{cjsjq}
+            </if>
+            <if test="cjsjz != null and cjsjz !=''">
+                AND to_char(T.CJSJ ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{cjsjz}
+            </if>
+            <if test="zfyy != null and zfyy !=''">
+                AND X.ZFYY = #{zfyy}
+            </if>
+        </where>
+
+        ORDER BY
+          T.QZYSXLH DESC
+    </select>
+
+    <select id="fqyzhtj" parameterType="cn.gtmap.realestate.supervise.core.qo.LfYzhQO"
+            resultType="cn.gtmap.realestate.supervise.core.dto.LfYzhtjDTO">
+        SELECT
+            count(distinct x.yzhid) as num, x.syr, x.syrid
+        FROM
+            bdc_yzh t
+        JOIN
+            bdc_yzhsymx x
+        ON
+            t.yzhid = x.yzhid
+        where
+            x.syqk = 2
+
+            <if test="nf != null and nf != ''">
+                AND T.NF = #{nf}
+            </if>
+            <if test="qxdm != null and qxdm != ''">
+                AND T.QXDM = #{qxdm}
+            </if>
+            <if test="zslx != null and zslx != ''">
+                AND T.ZSLX = #{zslx}
+            </if>
+            <if test="lqr != null and lqr != ''">
+                AND T.LQR like '%'|| #{lqr} || '%'
+            </if>
+            <if test="lqbm != null and lqbm != ''">
+                AND T.LQBM like '%'|| #{lqbm} || '%'
+            </if>
+            <if test="yzhq != null and yzhq != ''">
+                AND to_number(T.QZYSXLH) <![CDATA[ >= ]]>  to_number(#{yzhq,jdbcType=VARCHAR})
+            </if>
+            <if test="yzhz != null and yzhz != ''">
+                AND to_number(T.QZYSXLH) <![CDATA[ <= ]]>  to_number(#{yzhz,jdbcType=VARCHAR})
+            </if>
+
+            <if test="syr != null and syr != ''">
+                AND x.syr like '%'|| #{syr} || '%'
+            </if>
+            <if test="syrid != null and syrid != ''">
+                AND x.syrid = #{syrid}
+            </if>
+            <if test="sysjq != null and sysjq !=''">
+                AND to_char(x.sysj ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{sysjq}
+            </if>
+            <if test="sysjz != null and sysjz !=''">
+                AND to_char(x.sysj ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{sysjz}
+            </if>
+       GROUP BY
+            x.syr, x.syrid
+       ORDER BY
+            num asc
+    </select>
+</mapper>

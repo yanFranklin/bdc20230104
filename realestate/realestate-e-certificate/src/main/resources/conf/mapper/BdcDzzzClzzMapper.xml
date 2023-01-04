@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.certificate.core.mapper.BdcDzzzClzzMapper">
+
+    <select id="listDzzzClzzByPage" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+        d.BDCQZH,
+        d.STATUS,
+        d.MSG,
+        z.ZZBFRQ,
+        z.ZZQZSJ,
+        z.ZZQZLJ,
+        z.ZZBS,
+        y.ZL
+        FROM
+        BDC_DZZZ_CLZZ d
+        LEFT JOIN BDC_DZZZ_ZZXX z ON z.BDCQZH = d.BDCQZH
+        LEFT JOIN BDC_DZZZ_YWXX y ON y.BDCQZH = d.BDCQZH
+        <where>
+            <if test="bdcqzh != null and bdcqzh !=''">
+                AND d.bdcqzh = #{bdcqzh}
+            </if>
+            <if test="szrqStart != null and szrqStart !=''">
+                AND to_char(z.zzbfrq,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{szrqStart}
+            </if>
+            <if test="szrqEnd != null and szrqEnd !=''">
+                AND to_char(z.zzbfrq,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{szrqEnd}
+            </if>
+            <if test="qfrqStart != null and qfrqStart !=''">
+                AND to_char(z.zzqzsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{qfrqStart}
+            </if>
+            <if test="qfrqEnd != null and qfrqEnd !=''">
+                AND to_char(z.zzqzsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{qfrqEnd}
+            </if>
+            <if test="qfzt != null and qfzt !=''">
+                AND d.status = #{qfzt}
+            </if>
+            <if test="message != null and message !=''">
+                AND d.msg = #{message}
+            </if>
+        </where>
+        ORDER BY d.czrq DESC
+    </select>
+</mapper>

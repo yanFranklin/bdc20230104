@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>不动产发证记录列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/common.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css">
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+</head>
+<body>
+<div class="bdc-percentage-container bdc-line-search-container">
+    <!--查询条件 八个-->
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <form class="layui-form" action="">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">不动产单元号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="bdcdyh" name="bdcdyh" autocomplete="off" placeholder="请输入" class="layui-input">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">不动产权证号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="bdcqzh" name="bdcqzh" autocomplete="off" placeholder="请输入" class="layui-input">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">权利人</label>
+                        <div class="layui-input-inline">
+                            <input type="text" lay-verify="title" autocomplete="off" placeholder="请输入" class="layui-input" id="bdcQlr" name="qlr">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <button lay-submit="" lay-filter="search" class="layui-btn layui-btn-normal bdc-major-btn" id="search">
+                            查询
+                        </button>
+                        <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="bdc-table-box">
+        <div class="bdc-select-all-box bdc-hide">
+            <p>当前数据</p>
+            <p class="bdc-select-all">全部数据</p>
+            <div class="bdc-sjx"></div>
+        </div>
+        <table id="fzjlTable" lay-data="{id: 'fzjlTable'}" lay-filter="dataTable"></table>
+    </div>
+</div>
+<!--弹框表单-->
+<div id="bdc-popup-small" class="bdc-hide">
+    <form class="layui-form" action="" id="lzrForm">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label bdc-label-newline"><span class="required-span"><sub>*</sub></span>领证人</label>
+                <div class="layui-input-inline">
+                    <input id="lzr" name="lzr" type="text" autocomplete="off" lay-verify="required" placeholder="请输入" class="layui-input" ondblclick="lzrReadIdCard(this)">
+                </div>
+            </div>
+            <div class="layui-inline xzq-sele">
+                <label class="layui-form-label bdc-label-newline"><span class="required-span"><sub>*</sub></span>证件种类</label>
+                <div class="layui-input-inline bdc-radio">
+                    <select id="lzrzjzl" name="lzrzjzl" xm-select="select01" xm-select-radio xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label bdc-label-newline"><span class="required-span"><sub>*</sub></span>证件号码</label>
+                <div class="layui-input-inline">
+                    <input id="lzrzjh" name="lzrzjh" type="text" lay-verify="" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline lzrlxdh">
+                <label class="layui-form-label bdc-label-newline"><span class="required-span"><sub>*</sub></span>联系电话</label>
+                <!--<label class="layui-form-label">联系电话</label>-->
+                <div class="layui-input-inline">
+                    <input name="lzrdh" type="text" lay-verify="required|phone" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+
+<!--表格上面功能按钮-->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button type="button" id="plxg" class="layui-btn layui-btn-sm bdc-major-btn" lay-event="plxg">批量修改</button>
+        <button type="button" id="plPrint" name="printBtn" class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="plPrint">
+            打印全部
+        </button>
+    </div>
+</script>
+
+<!--表格内部操作按钮-->
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="info">详情</a>
+</script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<!--<script src="../../static/lib/jquery/jquery.validate.min.js"></script>-->
+<script src="../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/table.js"></script>
+<script src="../../static/js/formCenter.js"></script>
+<script src='../../static/lib/bdcui/js/readIdCard.js'></script>
+<script src="../../static/lib/bdcui/js/print/print-common.js"></script>
+<script src="../../static/js/fzjl/bdcFzjlList.js"></script>
+</html>

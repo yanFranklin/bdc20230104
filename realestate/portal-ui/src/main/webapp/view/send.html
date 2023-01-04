@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>转发列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link href="../static/lib/layui/css/layui.css" media="all" rel="stylesheet">
+    <link href="../static/lib/bdcui/css/mask.css" media="all" rel="stylesheet">
+    <link href="../static/lib/bdcui/css/search.css" media="all" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/new-page.css">
+    <link rel="stylesheet" href="../static/css/send.css">
+    <style type="text/css">
+        .layui-table .layui-icon-close {
+            position: absolute;
+            top: 0px;
+            right: 23px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="bdc-send-content" id="sendContainer">
+    <div class="layui-tab layui-tab-brief" lay-filter="sendFilter">
+        <ul class="layui-tab-title">
+            <li class="layui-this">任务转发</li>
+            <li>意见</li>
+        </ul>
+        <div class="layui-tab-content portal_send">
+            <!--任务转发-->
+            <div class="layui-tab-item layui-show">
+                <table id="checkboxTable" lay-filter="checkboxTableFilter"></table>
+                <!--签名-->
+                <table id="templateFatherDiv" class="layui-table shxx_table" border="1" lay-filter="shxxTable"></table>
+            </div>
+
+            <!--意见-->
+            <div class="layui-tab-item">
+                <textarea  lay-verify="required" placeholder="请输入转发意见" class="layui-textarea bdc-opinion"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="bdc-send-button">
+        <button class="layui-btn layui-btn-normal bdc-major-btn bdc-send-btn">转发</button>
+        <button class="layui-btn layui-btn-normal bdc-secondary-btn bdc-cancel-btn">取消</button>
+    </div>
+</div>
+
+
+<!--转发相关-->
+<!--参与角色-->
+<script type="text/html" id="roleTpl">
+    {{# if(d.forwardTaskDto.dispatchEnable ==true){ }}
+    <p>{{d.roleDtoList[0].alias ||''}}</p>
+    <input type="hidden" value="{{d.roleDtoList[0].id ||''}}">
+    {{# }else{ }}
+    <input type="hidden" id= "taskId" value="{{d.forwardTaskDto.taskId}}">
+    <input type="hidden" id= "activityId" value="{{d.forwardTaskDto.activityId}}">
+    <select name="role" lay-filter="roleFilter" id="roleSelect" lay-search="">
+        {{# layui.each(d.roleDtoList, function(index, item){ }}
+        <option value="{{item.id}}">{{item.alias}}</option>
+        {{# }); }}
+    </select>
+    {{# }}}
+</script>
+<!--参与人-->
+<script type="text/html" id="personTpl">
+    {{# if(d.isLock == true){ }}
+       {{# if(d.forwardTaskDto.defaultUserName && d.forwardTaskDto.defaultUserName.length > 0){ }}
+    <p>{{d.personList[0].alias}}</p>
+    <input type="hidden" value="{{d.personList[0].username}}">
+       {{# }else{ }}
+       <p></p>
+       {{# }}}
+    {{# }else{ }}
+    <div class="layui-form-select xzq-sele">
+        <select name="person" lay-verify="personFilter" id="personSelect" lay-search="">
+            <option value="">请选择</option>
+            <option value="allUser" selected>全部</option>
+            {{# layui.each(d.personList, function(index, item){ }}
+            <option value="{{item.username}}">{{item.alias}}</option>
+            {{# }); }}
+        </select>
+        <i class="layui-icon layui-icon-close"></i>
+    </div>
+    {{# }}}
+</script>
+
+<!--参与人-->
+<script type="text/html" id="personDefaultTpl">
+    {{# if(d.isLock == true){ }}
+    {{# if(d.forwardTaskDto.defaultUserName && d.forwardTaskDto.defaultUserName.length > 0){ }}
+    <p>{{d.personList[0].alias}}</p>
+    <input type="hidden" value="{{d.personList[0].username}}">
+    {{# }else{ }}
+    <p></p>
+    {{# }}}
+    {{# }else{ }}
+    <div class="layui-form-select xzq-sele">
+        <select name="person" lay-verify="personFilter" id="personSelect" lay-search="" lay-search="">
+            {{# layui.each(d.personList, function(index, item){ }}
+            <option value="{{item.username}}">{{item.alias}}</option>
+            {{# }); }}
+        </select>
+        <i class="layui-icon layui-icon-close"></i>
+    </div>
+    {{# }}}
+</script>
+
+<!--签名模板-->
+<script type="text/html" id="qmyjDivTpl">
+    <tbody>
+    {{# layui.each(d, function(index, item){ }}
+    <tr>
+    <td class="shxx_yj" colspan="4">
+            <div>
+            <div class="pre bdc-text" id="{{item.jdid}}_pre">{{item.shyj||""}}</div>
+    <textarea id="{{item.jdid}}_shyj" name="desc" class="layui-textarea bdc-text" oninput="changeContent(event)">{{item.shyj||""}}</textarea>
+    </div>
+    </td>
+    </tr>
+    <tr>
+    <td class="set-back-color qm_label">{{item.jdmc ||""}}人</td>
+    <td class="sign_img">
+            <img id="{{item.jdid}}_img" src="{{item.qmtpdz==undefined?'':item.qmtpdz}}"/></td>
+            <td class="set-back-color qm_label">
+            <p class="sign-p">
+                <a id="{{item.jdid}}_sign" class="{{item.jdid}}_sign" name="bdc-sign-name" href="javascript:void(0)"
+                   onclick="sign('{{item.jdmc}}','{{item.shxxid}}')">
+            <i class="layui-icon layui-icon-edit"></i>签名
+            </a>
+            </p>
+            <p class="delete-p">
+            <a id="{{item.jdid}}_deleteSign" class="{{item.jdid}}_deleteSign" href="javascript:void(0)" onclick="deleteSign('{{item.jdmc}}','{{item.shxxid}}')">
+            <i class="layui-icon layui-icon-delete"></i>
+            删除
+            </a>
+            </p>
+            </td>
+            <td class="sign_date" id="{{item.jdid}}_time">
+            {{item.qmsj ||""}}
+    </td>
+    </tr>
+    {{# }); }}
+    </tbody>
+</script>
+<script src="../static/lib/jquery/jquery.min.js"></script>
+<script src="../static/lib/layui/layui.js"></script>
+<script src="../static/lib/viewerjs/dist/viewer.js"></script>
+<script src="../static/js/common.js"></script>
+<script src="../static/js/send.js"></script>
+<script src="../static/js/bdcShxx.js"></script>
+<script>
+    layui.config({
+        base: '../static/' //静态资源所在路径
+    }).extend({
+        index: '/lib/index' //主入口模块
+    }).use('index').extend({
+        workflow:'js/workflow-handle'
+    }).use('workflow').extend({response:'lib/bdcui/js/response'}).use('response').extend({
+        moduleAuthority: 'js/moduleAuthority'
+    }).use('moduleAuthority');
+</script>
+</body>
+</html>

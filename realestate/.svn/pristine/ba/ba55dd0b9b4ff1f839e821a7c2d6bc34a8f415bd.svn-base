@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title class="bdc_subsystem">不动产电子证照应用信息</title>
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <link rel="stylesheet" href="../../static/thirdControl/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/thirdControl/bdcui/css/common.css">
+    <link rel="stylesheet" href="../../static/thirdControl/bdcui/css/form.css?v=1.0.2">
+    <link rel="stylesheet" href="../../static/thirdControl/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/thirdControl/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/thirdControl/layui/formSelects/formSelects-v4.css"/>
+    <script src="../../static/thirdControl/layui/layui.js"></script>
+    <script src="../../static/thirdControl/jquery/jquery.min.js"></script>
+    <script src="../../static/thirdControl/bdcui/js/table.js"></script>
+    <script src="../../static/js/common.js?v=1.1"></script>
+</head>
+<body>
+<div class="bdc-form-div">
+    <form class="layui-form setOverflow" lay-filter="form">
+        <div class="content-title layui-clear">
+            <div class="title-btn-area">
+                <button class="layui-btn bdc-major-btn" type="button" id="saveForm">提交</button>
+                <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+            </div>
+        </div>
+        <div class="layui-form-item" style="text-align: center">
+            <div class="layui-inline margin-top-ipt" style="width: 80%">
+                <label class="layui-form-label change-label-width">应用名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" lay-verify="required" name="yymc" id="yymc">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item" style="text-align: center">
+            <div class="layui-inline margin-top-ipt" style="width: 80%">
+                <label class="layui-form-label change-label-width">应用部门</label>
+                <div class="layui-input-inline">
+                    <select name="yybm" id = "yybm">
+                        <option value="">请选择</option>
+                        <!--<#list listDepart as depart>
+                            <option value="${depart.bmdm!''}">${depart.bmmc!''}</option>
+                        </#list>-->
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item" style="text-align: center">
+            <div class="layui-inline margin-top-ipt" style="width: 80%">
+                <label class="layui-form-label change-label-width">应用权限</label>
+                <div class="layui-input-inline">
+                    <select name="yyqx" id = "yyqx" xm-select="yyqx" xm-select-search="" xm-select-skin="normal"
+                            xm-select-height="38px">
+                        <option value="">请选择</option>
+                        <!--<#list yyqxMap?keys as key>
+                            <option value="${yyqxMap[key]}">${yyqxMap[key]}</option>
+                        </#list>-->
+                    </select>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="../../static/thirdControl/layui/formSelects/formSelects-v4.min.js"></script>
+<script>
+    var formSelects = layui.formSelects;
+    var yyid = getUrlParameter('yyid',window.location.href);
+
+    layui.use(['form', 'layer', 'jquery', 'laydate', 'table'], function(){
+        var form = layui.form;
+        var table = layui.table;
+        var layer = layui.layer;
+
+        $("#saveForm").click(function(){
+            var yymc = $('#yymc').val();
+            var yybm = $('#yybm').val();
+            var yyqx = formSelects.value('yyqx', 'valStr');
+            if (isNull(yymc)) {
+                layer.msg("应用名称不可为空！");
+                return;
+            }
+            if (isNull(yybm)) {
+                layer.msg("应用部门不可为空！");
+                return;
+            }
+            if (isNull(yyqx)) {
+                layer.msg("应用权限不可为空！");
+                return;
+            }
+            var data = JSON.stringify({
+                "yyid" : yyid
+                ,"yymc" : yymc
+                ,"yybm" : yybm
+                ,"yyqx" : yyqx
+            });
+            postDataToServer("/realestate-e-certificate/addDzzzToken", data, "post" , true, 'application/json;charset=utf-8');
+        });
+
+        initDict();
+        initData();
+
+        //字典项数据初始化
+        function initDict(){
+            //获取部门字典项 循环list
+            var departData = ajaxQuery("/realestate-e-certificate/getBdcDepartDict", null, "GET" , false,  'application/x-www-form-urlencoded');
+            if (notNull(departData)) {
+                $.each(departData, function (index, item) {
+                    $('#yybm').append(new Option(item.bmmc, item.bmdm));
+                });
+                form.render("select");
+            }
+            //获取应用权限 循环map
+            var yyqxData = ajaxQuery("/realestate-e-certificate/getBdcYyqx", null, "GET" , false,  'application/x-www-form-urlencoded');
+            if (notNull(yyqxData)) {
+                $.each(yyqxData, function (index, item) {
+                    $('#yyqx').append(new Option(item.value, item.value));
+                });
+                form.render("select");
+                formSelects.render('yyqx');
+            }
+        }
+
+        function initData(){
+            if (yyid && "" != yyid) {
+                var data = ajaxQuery("/realestate-e-certificate/getTokenByTokenId?yyid=" + yyid, null, "GET" , false, null);
+                if (notNull(data)) {
+                    $('#yymc').val(data.yymc);
+                    $("#yybm").find("option[value='"+data.yybm+"']").prop("selected",true);
+                    form.render();
+                    var yyqx = data.yyqx;
+                    var yyqxArr = yyqx.split(',');
+                    formSelects.value('yyqx', yyqxArr);
+                }
+            }
+        }
+    });
+
+</script>
+</body>
+</html>
+
+

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.accept.core.mapper.BdcSlXmLsgxMapper">
+
+    <!--删除不动产受理项目历史关系-->
+    <delete id="deleteBdcSlXmLsgx" parameterType="map">
+        DELETE FROM bdc_sl_xm_lsgx a
+        WHERE EXISTS (
+        SELECT 1 FROM bdc_sl_xm b
+        WHERE b.jbxxid = #{jbxxid} AND  b.xmid =a.xmid
+        <if test="qjids != null and qjids !=''">
+            and
+            <foreach collection="qjids" item="item" open="(" separator=" or " close=")">
+                b.qjid = #{item}
+            </foreach>
+        </if>
+        <if test="qjidList != null and qjidList.size() > 0">
+            and b.qjid IN
+            <foreach collection="qjidList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="dyhList != null and dyhList.size() > 0">
+            and b.bdcdyh IN
+            <foreach collection="dyhList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        )
+    </delete>
+
+    <select id="sxxBdcXx" parameterType="Map" resultType="Map">
+        select sqr.sqrmc yqlr,
+        sqr.zjh yqlrzjh,
+        a.ybdcqz ycqzh,
+        xm.bdcdyh,
+        a.zl,
+        a.qlr,
+        a.slbh,
+        a.qlrzjh
+        from bdc_sl_xm xm
+        inner join bdc_sl_sqr sqr
+        on xm.xmid = sqr.xmid
+        inner join (select b.zl,b.ybdcqz, b.bdcdyh, b.qlr, c.slbh, d.zjh qlrzjh
+        from bdc_sl_jbxx c
+        inner join bdc_sl_xm b
+        on b.jbxxid = c.jbxxid
+        inner join bdc_sl_sqr d
+        on b.xmid = d.xmid
+        where c.gzlslid = #{gzlslid}
+        and d.sqrlb = 1) a
+        on xm.bdcdyh = a.bdcdyh
+        where xm.xmid in
+        (select yxmid
+        from bdc_sl_xm_lsgx
+        where xmid in (select xmid
+        from bdc_sl_xm a
+        inner join bdc_sl_jbxx b
+        on a.jbxxid = b.jbxxid
+        where b.gzlslid = #{gzlslid}))
+    </select>
+
+    <!--删除不动产受理项目历史关系信息-->
+    <delete id="batchDeleteBdcSlXmLsgx" parameterType="cn.gtmap.realestate.common.core.dto.accept.BdcSlDeleteCsDTO">
+        <if test="xmidList != null and xmidList.size>0">
+            DELETE FROM bdc_sl_xm_lsgx a
+            <where>
+                <if test="xmidList != null">
+                    AND a.xmid IN
+                    <foreach collection="xmidList" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+        </if>
+
+    </delete>
+
+    <!--删除不动产受理项目历史关系信息-->
+    <delete id="deleteBdcSlXmlsgxByYxmid">
+        <if test="(yxmidList != null and yxmidList.size>0)">
+            DELETE FROM bdc_sl_xm_lsgx a
+            <where>
+                <if test="yxmidList != null and yxmidList.size>0">
+                    AND a.yxmid IN
+                    <foreach collection="yxmidList" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+        </if>
+
+    </delete>
+
+    <!--根据项目ID集合批量查询受理项目历史关系-->
+    <select id="listSlXmLsgxPl" resultType="cn.gtmap.realestate.common.core.domain.accept.BdcSlXmLsgxDO">
+        <if test="(xmidList != null and xmidList.size>0)">
+            SELECT * FROM bdc_sl_xm_lsgx a
+            <where>
+                <if test="xmidList != null and xmidList.size>0">
+                    AND a.xmid IN
+                    <foreach collection="xmidList" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="sfwlzs != null">
+                    AND nvl(a.sfwlzs,0)=#{sfwlzs}
+                </if>
+            </where>
+        </if>
+
+    </select>
+
+</mapper>

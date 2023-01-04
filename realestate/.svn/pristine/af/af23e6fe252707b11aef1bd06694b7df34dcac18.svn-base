@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--宗地变化情况-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.KtfZdbhqkMapper">
+
+    <select id="queryKtfZdbhqkList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.domain.exchange.KtfZdbhqkDO">
+        SELECT a.zddm,a.bhyy,a.bhnr,a.djsj,a.dbr,'' fj,SUBSTR(d.BDCDYH,0,6) qxdm FROM bdc_bdcdjb_zdjbxx_zdbhqk a
+        LEFT JOIN bdc_bdcdjb_zdjbxx b ON a.zddm=b.zddm
+        LEFT JOIN bdc_xm d ON b.bdcdyh=d.bdcdyh
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND d.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND d.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcdyXxMapper">
+    <select id="listBdcdyxxByPage" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcdyxxQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcdyxxDTO">
+        SELECT A.* FROM (
+        SELECT ROW_NUMBER() OVER(PARTITION BY T.bdcdyh order by jssj desc,slsj desc) CN,
+        T.XMID,T.BDCLX,T.BDCDYH, T.DJSJ, T.QSZT,T.ZL, T.QLR QLRMC,T.slbh,T.djyy,T.BDCDYWYBH QDH
+        FROM BDC_XM T
+        left join BDC_YG y on y.XMID = t.XMID
+        <if test="qlrmc != null and qlrmc != ''">
+            inner join bdc_qlr Q on q.XMID = t.XMID and q.QLRLB = '1'
+            AND Q.QLRMC like #{qlrmc,jdbcType=VARCHAR} || '%'
+        </if>
+        where t.bdcdyh is not null and t.ajzt != '6'
+        and (y.ygdjzl in (1, 2)
+            <if test="qllxListInt != null and qllxListInt.size>0">
+                OR t.qllx IN
+                <foreach collection="qllxListInt" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        )
+        <if test="qdh != null and qdh != ''">
+            AND T.BDCDYWYBH like '%' || #{qdh} || '%'
+        </if>
+        <if test="bdcdyh != null and bdcdyh != ''">
+            AND T.BDCDYH = #{bdcdyh}
+        </if>
+        <if test="zl != null and zl != ''">
+            AND T.zl like '%' || #{zl} || '%'
+        </if>
+        <if test="bdclx != null and bdclx != ''">
+            AND T.bdclx = #{bdclx}
+        </if>
+        <if test="qszt == 0 || qszt != null and qszt != ''">
+            AND T.qszt = #{qszt,jdbcType=INTEGER}
+        </if>
+        <if test="djqsrq != null and djqsrq != ''">
+            AND to_char(T.djsj,'yyyy-MM-dd') >= #{djqsrq}
+        </if>
+        <if test="djjsrq != null and djjsrq != ''">
+            AND to_char(T.djsj,'yyyy-MM-dd') <![CDATA[<=]]> #{djjsrq}
+        </if>
+        <if test="qxdmList != null and qxdmList.size() == 1 ">
+            AND T.qxdm=#{qxdmList[0]}
+        </if>
+        <if test="qxdmList != null and qxdmList.size() > 1 ">
+            AND T.qxdm IN
+            <foreach collection="qxdmList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        ) A where A.CN = 1 order by a.slbh desc
+
+    </select>
+
+    <select id="listDagxxByPage" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.DaxxQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.nantong.dazt.DaztDTO">
+        SELECT d.* from BDC_DAZTXX d
+        LEFT JOIN bdc_xm x on x.slbh = d.slbh
+        <where>
+            <if test="null != gzlslid and gzlslid != ''">
+                and x.gzlslid = #{gzlslid}
+
+            </if>
+            <if test="null != slbh and slbh != ''">
+                and d.slbh = #{slbh}
+
+            </if>
+        </where>
+
+    </select>
+</mapper>

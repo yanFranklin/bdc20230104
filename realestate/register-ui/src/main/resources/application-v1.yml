@@ -1,0 +1,108 @@
+info:
+  name: ${spring.application.name}
+  component: Register-ui Application
+
+app:
+  center: http://192.168.2.99:8000/eureka/
+  oauth: http://192.168.2.99:8002/account
+  bpm-url: http://192.168.2.99:18085/bpm-ui/
+  security:
+    moduleAuthPath: http://account/account
+    # 权限开放： 静态资源、打印接口
+    ignores: /image/**,/css/**,/js/**,/webjars/**,/static/printModel/**,/rest/v1.0/print/**,/rest/v1.0/zs/print/**
+    authorities:
+      permitAll: /index2
+      hasUrlAuthority('read'): /auth/users,/auth/orgs
+      hasModuleAuthority('yhgl:add'): /auth/user/create
+      hasAnyAuthority('ROLE_USER'): /resource1/**,/catalog1/**,/index
+      authenticated : true
+    resources:
+      authenticated: /resource/**
+      #hasScope('get_resource_info'): /resource/**
+#  services:
+#    accept-app: accept-app3
+#    init-app: init-app-xu
+#    certificate-app: certificate-app3
+#    register-app: register-app-xu
+
+spring:
+  rabbitmq:
+    host: 192.168.0.60
+    port: 5672
+    username: guest
+    password: guest
+  redis:
+    port: 6379
+    host: 192.168.0.60
+  messages:
+    basename: message/messages, message/errors
+  mvc:
+    static-path-pattern: /**
+  thymeleaf:
+      prefix: classpath:/view/
+      mode: LEGACYHTML5
+  profiles:
+      include: config  #引入配置文件 application-config.yml
+  http:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 1000MB
+server:
+  port: ${port:8671}
+  context-path: /realestate-register-ui
+  # 解除POST提交请求数据量限制，避免Excel导出数据量过大导出不了
+  tomcat:
+      max-http-post-size: -1
+
+management:
+  security:
+    enabled: true
+  context-path:
+
+endpoints:
+  enabled: true
+  shutdown:
+    enabled: true
+
+logging:
+  level:
+    org.springframework: WARN
+    cn.gtmap.gtc.plugins: DEBUG
+# 子系统地址
+url:
+  sign:
+    image: http://127.0.0.1:8030/storage/rest/files/download/
+  archive: http://127.0.0.1:8080/archive/gateway.action
+  portal-ui: http://127.0.0.1:8030/realestate-portal-ui
+  register: http://127.0.0.1:8030/realestate-register
+  register-ui: http://127.0.0.1:8671/realestate-register-ui
+  certificate: http://127.0.0.1:8030/realestate-certificate
+  # 档案调用地址
+  dady-url: http://192.168.188.87/neusoft/neusoft_index.aspx
+  td-dady-url: http://192.168.0.27:3000/dacx_nj/index
+  #打印模板是否展示预览界面，true 不展示
+  hideModel: false
+
+print:
+  # 打印fr3文件保存
+  path: /usr/local/bdc3/print/
+  # pdf文件导出模板位置
+  pdf: D:/print
+
+# 前端UI子系统设置
+html:
+  version: hefei
+# 抵押物面积计算方式配置
+config:
+  # 计算方式
+  jsfs:
+    #1:不区分bdclx，分别累计所有单元的土地抵押面积、房屋抵押面积
+    #2:区分bdclx，累计bdclx为房屋的房屋抵押面积，累计bdclx为土地的土地抵押面积
+    #3:根据djh分组，计算土地抵押面积和房屋抵押面积
+    #适用地区（标准版：3，合肥：2，南通：1）
+    dyawmj: 3
+
+djb:
+  xssjys: '#A9D08E'
+  
+  

@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+
+    <script type="text/javascript">
+
+        function savecallback(url){
+
+        }
+        function closecallback (url){
+            alert(1);
+
+        }
+
+    </script>
+</head>
+
+<body>
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+
+
+    <tr>
+        <td>&nbsp;</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td align="right">姓名：</td>
+        <td><input type="text" name="Name" size="49">(要求中间，两头都没有空格)</td>
+    </tr>
+
+    <tr>
+        <td align="right">性别：</td>
+        <td><input type="text" name="Sex" size="49">(取值为“1”（表示“男”）或“0”（表示“女”）)</td>
+    </tr>
+
+    <tr>
+        <td align="right">民族：</td>
+        <td><input type="text" name="Nation" size="49">(汉字即可)</td>
+    </tr>
+
+    <tr>
+        <td align="right">出生：</td>
+        <td><input type="text" name="Born" size="49">(要求格式为:yyyyMMdd，长度为8)</td>
+    </tr>
+
+    <tr>
+        <td align="right">地址：</td>
+        <td><input type="text" name="Address" size="49"></td>
+    </tr>
+
+
+    <tr>
+        <td align="right">身份证号：</td>
+        <td><input type="text" name="CardNo" size="49" style="color: #FF0000">(居民身份号码，长度18位)</td>
+    </tr>
+
+
+    <tr>
+        <td align="right">签发机关：</td>
+        <td><input type="text" name="Police" size="49"></td>
+    </tr>
+
+    <tr>
+        <td align="right">期限起始：</td>
+        <td><input type="text" name="ActivityLFrom" size="49">(要求格式为:yyyyMMdd，长度为8)</td>
+    </tr>
+
+
+    <tr>
+        <td align="right">期限失效：</td>
+        <td><input type="text" name="ActivityLTo" size="49">(要求格式为:yyyyMMdd，长度为8)</td>
+    </tr>
+
+    <tr>
+        <td align="right">照片：</td>
+        <td><input type="text" name="ActivityPthoto" size="49">(Base64String格式)</td>
+    </tr>
+
+    <tr>
+        <td align="right">照片：</td>
+        <td><img type="text" id="img" name="img" src="">(Base64String格式)</img></td>
+    </tr>
+
+    <tr>
+        <td></td>
+        <td><input type="button" value="读取身份证" onclick="ReadCard()">
+            <input type="button" value="设置身份证" onclick="SetCard()"></td>
+    </tr>
+</table>
+</body>
+
+<script>
+    function SetCard(){
+        try
+        {
+            alert("身份证读取功能目前仅支持IE8浏览器、360极速浏览器（兼容模式）、360安全浏览器（兼容模式）此三种浏览器！");
+            var objTest = new ActiveXObject("GtMap.GxFrameActiveX.IDCard.IDCard");
+            if (objTest.SetCard())
+            {
+                alert("设置成功！");
+            }
+        }
+        catch(objError)
+        {
+            alert("Fail to create object. error:" + objError.description);
+        }
+    }
+    function ReadCard(){
+        try
+        {
+            alert("身份证读取功能目前仅支持IE8浏览器、360极速浏览器（兼容模式）、360安全浏览器（兼容模式）此三种浏览器！");
+            var objTest = new ActiveXObject("GtMap.GxFrameActiveX.IDCard.IDCard");
+            if (objTest.ReadCard())
+            {
+                document.all['Name'].value = objTest.Name;
+                document.all['Sex'].value = objTest.Sex;
+                document.all['Nation'].value = objTest.Native;
+                document.all['Born'].value = objTest.BirthDate;
+                document.all['Address'].value = objTest.Address;
+                document.all['CardNo'].value = objTest.ID;
+                document.all['Police'].value = objTest.Organ;
+                document.all['ActivityLFrom'].value = objTest.Begin;
+                document.all['ActivityLTo'].value = objTest.End;
+                document.all['ActivityPthoto'].value = objTest.base64ofPicture;
+
+                document.getElementById('img').setAttribute( 'src',     'data:image/png;base64,'+objTest.base64ofPicture);
+
+            }
+        }
+        catch(objError)
+        {
+            alert("Fail to create object. error:" + objError.description);
+        }
+
+    }
+</script>
+
+</html>

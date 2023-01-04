@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="dbUnitDatabaseConfig" class="com.github.springtestdbunit.bean.DatabaseConfigBean">
+        <property name="skipOracleRecyclebinTables" value="true"/>
+        <property name="allowEmptyFields" value="true"/>
+    </bean>
+
+    <bean id="dbUnitDatabaseConnection"
+          class="com.github.springtestdbunit.bean.DatabaseDataSourceConnectionFactoryBean">
+        <property name="databaseConfig" ref="dbUnitDatabaseConfig"/>
+        <property name="dataSource" ref="DataSource"/>
+        <property name="schema" value="BDCDJ_3"/>
+    </bean>
+</beans>

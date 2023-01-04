@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>新增退费信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/ztree/metroStyle.css" />
+    <link rel="stylesheet" href="../../static/css/fph/editFph.css" />
+</head>
+<body>
+<!--************ 条件搜索 ************-->
+<div class="bdc-percentage-container">
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <form class="layui-form" action="" >
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">受理编号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" autocomplete="off" id="slbh" name="slbh" placeholder="请输入" class="layui-input search">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline bdc-button-box">
+                        <button lay-submit="" lay-filter="search" class="layui-btn layui-btn-normal bdc-major-btn searchBtn" id="search">查询</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="bdc-popup-large" id="tfxx">
+    </div>
+</div>
+
+
+<script type="text/html" id="tfxxTpl">
+    {{# if(d.bdctfxx.length==0) { }}
+    <div class="basic-info">
+        <form class="layui-form setOverflow bdcTfxxForm" lay-filter="bdcTfxx0">
+            <div class="title-sign bdc-title-sign-btn"> </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">部门</label>
+                    <div class="layui-input-inline" style="display: flex;">
+                        <input type="text" name="bmmc" autocomplete="off" placeholder="请选择" class="layui-input tfxx" style="width: 100%;">
+                        <div class="layui-btn layui-btn-sm bdc-table-second-btn org_select_show">选择</div>
+                    </div>
+                    <div class="org_select_tree">
+                        <ul id="select_tree0" class="ztree"></ul>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">受理编号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" class="layui-input tfxx" name="slbh" >
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">缴款书编码</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" class="layui-input tfxx" name="jfsbm" >
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">缴款人姓名</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" class="layui-input tfxx" name="jkrxm" >
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">不动产登记费</label>
+                    <div class="layui-input-inline">
+                        <input type="number" autocomplete="off" class="layui-input tfxx" name="djf" >
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width bdc-label-newline">土地使用权<br>交易服务费</label>
+                    <div class="layui-input-inline">
+                        <input type="number" autocomplete="off" class="layui-input tfxx" name="tdsyqjyfwf" >
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width bdc-label-newline">实际收费<br>总金额</label>
+                    <div class="layui-input-inline">
+                        <input type="number" autocomplete="off" class="layui-input tfxx" name="sjsfzje" >
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">收费时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" name="sfsj" placeholder="请输入" class="layui-input tfxx test-item">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width bdc-label-newline">实际退费<br>总金额</label>
+                    <div class="layui-input-inline">
+                        <input type="number" autocomplete="off" class="layui-input tfxx" name="sjtfzje" >
+                    </div>
+                </div>
+                <div class="layui-inline xzq-sele">
+                    <label class="layui-form-label">票据类型</label>
+                    <div class="layui-input-inline">
+                        <select lay-filter="pjlx" name="pjlx" lay-search="" class="tfxx">
+                            <option value="">请选择</option>
+                            <option value="1">纸质票</option>
+                            <option value="2">电子票</option>
+                        </select>
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width bdc-label-newline">申请退费<br>时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" name="sqtfsj" placeholder="请输入" class="layui-input tfxx test-item">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item change-textarea-margin">
+                <label class="layui-form-label change-label-width">申请退费<br>原因</label>
+                <div class="layui-input-inline">
+                    <textarea class="layui-textarea change-textarea-width tfxx" name="sqtfyy"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    {{# } else { }}
+    {{# layui.each(d.bdctfxx, function(i, tfxx){ }}
+    <div class="basic-info">
+        <form class="layui-form setOverflow bdcTfxxForm" lay-filter="bdcTfxx{{i}}">
+            <div class="title-sign bdc-title-sign-btn">
+            </div>
+            <div class="layui-form-item">
+                <input type="hidden" class="layui-input tfxx" name="sfxxid" value="{{tfxx.sfxxid|| ''}}" >
+                <div class="layui-inline">
+                    <label class="layui-form-label">部门</label>
+                    <div class="layui-input-inline" style="display: flex;">
+                        <input type="text" name="bmmc" autocomplete="off" placeholder="请选择" class="layui-input tfxx" style="width: 100%;">
+                        <div class="layui-btn layui-btn-sm bdc-table-second-btn org_select_show">选择</div>
+                    </div>
+                    <div class="org_select_tree">
+                        <ul id="select_tree{{ i }}" class="ztree"></ul>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">受理编号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" class="layui-input tfxx" name="slbh" value="{{tfxx.slbh|| ''}}" >
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">缴款书编码</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" class="layui-input tfxx" name="jfsbm" value="{{tfxx.jfsbm|| ''}}" >
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">缴款人姓名</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" class="layui-input tfxx" name="jkrxm" value="{{tfxx.jkrxm|| ''}}" >
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">不动产登记费</label>
+                    <div class="layui-input-inline">
+                        <input type="number" autocomplete="off" class="layui-input tfxx" name="djf" value="{{tfxx.djf}}" >
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width bdc-label-newline">土地使用权<br>交易服务费</label>
+                    <div class="layui-input-inline">
+                        <input type="number" autocomplete="off" class="layui-input tfxx" name="tdsyqjyfwf" value="{{tfxx.tdsyqjyfwf}}" >
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width bdc-label-newline">实际收费<br>总金额</label>
+                    <div class="layui-input-inline">
+                        <input type="number" autocomplete="off" class="layui-input tfxx" name="sjsfzje" value="{{tfxx.sjsfzje}}" >
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">收费时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" name="sfsj" placeholder="请输入" value="{{tfxx.sfsj|| ''}}" class="layui-input tfxx test-item">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width bdc-label-newline">实际退费<br>总金额</label>
+                    <div class="layui-input-inline">
+                        <input type="number" autocomplete="off" class="layui-input tfxx" name="sjtfzje" value="{{tfxx.sjtfzje|| ''}}" >
+                    </div>
+                </div>
+                <div class="layui-inline xzq-sele">
+                    <label class="layui-form-label">票据类型</label>
+                    <div class="layui-input-inline">
+                        <select lay-filter="pjlx" name="pjlx" lay-search="" class="tfxx">
+                            <option value="">请选择</option>
+                            <option value="1" {{# if(tfxx.pjlx =="1"){ }} selected="selected" {{# } }}>纸质票</option>
+                            <option value="2" {{# if(tfxx.pjlx =="2"){ }} selected="selected" {{# } }}>电子票</option>
+                        </select>
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">申请退费时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" name="sqtfsj" value="{{tfxx.sqtfsj || ''}}" class="layui-input tfxx test-item">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="change-textarea-margin layui-form-item ">
+                <label class="layui-form-label change-label-width">申请退费<br>原因</label>
+                <div class="layui-input-inline">
+                    <textarea class="layui-textarea change-textarea-width tfxx" name="sqtfyy">{{tfxx.sqtfyy || ''}}</textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    {{# }); }}
+    {{# } }}
+</script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.all.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/ztree/jquery.ztree.core.js"></script>
+<script src="../../static/ztree/jquery.ztree.excheck.js"></script>
+<script src="../../static/ztree/jquery.ztree.exedit.js"></script>
+<script src="../../static/js/fph/selectTree.js"></script>
+<script src="../../static/lib/bdcui/js/mask.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/nantong/fph/addTfxx.js"></script>
+
+</body>
+

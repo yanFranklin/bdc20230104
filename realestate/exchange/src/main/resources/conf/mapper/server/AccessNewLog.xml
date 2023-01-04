@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.accessLog.AccessNewLogMapper">
+
+    <select id="getDjsl" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT x.djlx nationalywdm
+        FROM bdc_xm x
+        <where>
+            <if test="qxdm != '' and qxdm != null">
+                AND substr(x.bdcdyh,0,6)=#{qxdm}
+            </if>
+            <if test="accessDate != null">
+                AND trunc(x.djsj) = trunc(#{accessDate})
+            </if>
+            <if test="filterGzldyIds != null and filterGzldyIds.size>0">
+                AND x.GZLDYID NOT IN
+                <foreach collection="filterGzldyIds" item="gzldyid" open="(" close=")" separator=",">
+                    #{gzldyid}
+                </foreach>
+            </if>
+            <if test="xnBdcdyhFlag != null and xnBdcdyhFlag ==true">
+                AND substr( x.BDCDYH, 7, 6 ) &lt;&gt; '000000'
+            </if>
+        </where>
+    </select>
+    <select id="getXnDjsl" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT x.djlx nationalywdm
+        FROM bdc_xm x
+        <where>
+            <if test="qxdm != '' and qxdm != null">
+                AND x.qxdm=#{qxdm}
+            </if>
+            <if test="accessDate != null">
+                AND trunc(x.djsj) = trunc(#{accessDate})
+            </if>
+        </where>
+    </select>
+    <select id="getRegisterDetails" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.bo.accessnewlog.Register">
+        SELECT distinct
+        x.xmid ywh,
+        <choose>
+            <when test="accessDataPartField == 1">
+                x.djlx,
+                x.qllx,
+                x.bdcdyh
+            </when>
+            <when test="accessDataPartField == 2">
+                a.djlx,
+                a.qllx,
+                a.bdcdyh
+            </when>
+            <otherwise>
+                a.djlx,
+                a.qllx,
+                a.bdcdyh
+            </otherwise>
+        </choose>
+        -- a.ywbwid bwid
+        FROM
+        bdc_xm x
+        LEFT JOIN bdc_jr_sjjl a ON a.ywlsh = x.xmid
+        <where>
+            <if test="qxdm != '' and qxdm != null">
+                AND substr(x.bdcdyh,0,6)=#{qxdm}
+            </if>
+            <if test="accessDate != null">
+                AND trunc(x.djsj) = trunc(#{accessDate})
+            </if>
+            <if test="filterGzldyIds != null and filterGzldyIds.size>0">
+                AND x.GZLDYID NOT IN
+                <foreach collection="filterGzldyIds" item="gzldyid" open="(" close=")" separator=",">
+                    #{gzldyid}
+                </foreach>
+            </if>
+            <if test="xnBdcdyhFlag != null and xnBdcdyhFlag ==true">
+                AND substr( x.BDCDYH, 7, 6 ) &lt;&gt; '000000'
+            </if>
+        </where>
+    </select>
+    <select id="getAccessSl" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT COUNT(t.ywdm) num, l.djlx
+        FROM (
+        SELECT case x.djlx when 901 then 900 when 902 then 900 else x.djlx end as ywdm
+        FROM ${logTable} a
+        left join bdc_xm x on x.XMID=a.ywlsh
+        <where>
+            a.ywdm is not null
+            <if test="cgbsList != null and cgbsList.size() > 0">
+                AND a.cgbs in
+                <foreach collection="cgbsList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <choose>
+                <when test="qxdmgl != null and qxdmgl == true">
+                    AND x.qxdm=#{qxdm}
+                </when>
+                <otherwise>
+                    <if test="qxdm != '' and qxdm != null">
+                        AND substr(a.bdcdyh,0,6)=#{qxdm}
+                    </if>
+                </otherwise>
+            </choose>
+            <if test="accessDate != null">
+                AND trunc(a.sjjrrq) = trunc(#{accessDate})
+            </if>
+        </where>
+        union all
+        SELECT 400 as ywdm
+        FROM bdc_jr_sjjl a
+        left join bdc_xm_lsgx l on l.gxid=a.ywlsh
+        left join bdc_xm x on x.XMID=l.yxmid
+        <where>
+            a.ywdm is not null
+            <if test="cgbsList != null and cgbsList.size() > 0">
+                AND a.cgbs in
+                <foreach collection="cgbsList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <choose>
+                <when test="qxdmgl != null and qxdmgl == true">
+                    AND x.qxdm=#{qxdm}
+                </when>
+                <otherwise>
+                    <if test="qxdm != '' and qxdm != null">
+                        AND substr(x.bdcdyh,0,6)=#{qxdm}
+                    </if>
+                </otherwise>
+            </choose>
+            <if test="accessDate != null">
+                AND trunc(a.sjjrrq) = trunc(#{accessDate})
+            </if>
+        </where>
+        ) t
+        RIGHT JOIN (<![CDATA[ SELECT (LEVEL-1)||'00' djlx FROM dual CONNECT BY  LEVEL < 11  ]]>) l ON l.djlx = t.ywdm
+        GROUP BY l.djlx ORDER BY l.djlx
+    </select>
+
+    <select id="getAccessJrYwdm" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT COUNT(t.ywdm) num, l.djlx
+        FROM (
+        SELECT CASE substr(a.ywdm,3)
+        WHEN '901' THEN '900000'
+        when '902' then '900000'
+        ELSE
+        a.ywdm end ywdm
+        FROM ${logTable} a
+        <where>
+            and a.ywdm is not null
+            <if test="cgbsList != null and cgbsList.size() > 0">
+                AND a.cgbs in
+                <foreach collection="cgbsList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="qxdm != '' and qxdm != null">
+                AND substr(a.bdcdyh,0,6)=#{qxdm}
+            </if>
+            <if test="accessDate != null">
+                AND trunc(a.sjjrrq) = trunc(#{accessDate})
+            </if>
+        </where>
+        ) t
+        RIGHT JOIN (<![CDATA[ SELECT (LEVEL-1)||'00' djlx FROM dual CONNECT BY  LEVEL < 11  ]]>) l ON l.djlx =
+        substr(t.ywdm,0,3)
+        GROUP BY l.djlx ORDER BY l.djlx
+    </select>
+    <select id="getXnAccessSl" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT COUNT(t.ywdm) num, l.djlx
+        FROM (
+        --区分抵押权和地役权，地役权仍为9000102，抵押权9000101用0000101代替
+        SELECT
+        case b.djlx when 901 then 900 when 902 then 900 else b.djlx end as ywdm
+        FROM ${logTable} a
+        left join bdc_xm b on b.xmid = a.ywlsh
+        --WHERE a.cgbs IN ( 0, 1, 2 )
+        <where>
+            <if test="cgbsList != null and cgbsList.size() > 0">
+                AND a.cgbs in
+                <foreach collection="cgbsList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="qxdm != '' and qxdm != null">
+                AND b.qxdm=#{qxdm}
+            </if>
+            <if test="accessDate != null">
+                AND trunc(a.sjjrrq) = trunc(#{accessDate})
+            </if>
+        </where>
+        ) t
+        RIGHT JOIN (<![CDATA[ SELECT (LEVEL-1)||'00' djlx FROM dual CONNECT BY  LEVEL < 11  ]]>) l ON l.djlx =t.ywdm
+        GROUP BY l.djlx ORDER BY l.djlx
+    </select>
+
+    <select id="getAccessDetails" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.bo.accessnewlog.Access">
+        SELECT a.ywlsh ywh,a.ywbwid bwid, a.bdcdyh FROM ${logTable} a
+        left join bdc_xm x on x.xmid=a.ywlsh
+        <where>
+            a.cgbs in (0,1,2)
+            <choose>
+                <when test="qxdmgl != null and qxdmgl == true">
+                    AND x.qxdm=#{qxdm}
+                </when>
+                <otherwise>
+                    <if test="qxdm != '' and qxdm != null">
+                        AND substr(a.bdcdyh,0,6)=#{qxdm}
+                    </if>
+                </otherwise>
+            </choose>
+            <if test="accessDate != null">
+                AND trunc(a.sjjrrq) = trunc(#{accessDate})
+            </if>
+        </where>
+        <if test="qxdmgl != null and qxdmgl == true" >
+            union all
+            SELECT a.ywlsh ywh,a.ywbwid bwid, a.bdcdyh FROM ${logTable} a
+            left join bdc_xm_lsgx l on l.gxid=a.ywlsh
+            left join bdc_xm x on x.xmid=l.yxmid
+            <where>
+                a.cgbs in (0,1,2)
+                <choose>
+                    <when test="qxdmgl != null and qxdmgl == true">
+                        AND x.qxdm=#{qxdm}
+                    </when>
+                    <otherwise>
+                        <if test="qxdm != '' and qxdm != null">
+                            AND substr(x.bdcdyh,0,6)=#{qxdm}
+                        </if>
+                    </otherwise>
+                </choose>
+                <if test="accessDate != null">
+                    AND trunc(a.sjjrrq) = trunc(#{accessDate})
+                </if>
+            </where>
+        </if>
+
+
+    </select>
+
+    <select id="getJrAccessDetails" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.bo.accessnewlog.Access" >
+        SELECT
+        a.ywlsh ywh,
+        a.ywbwid bwid,
+        a.bdcdyh
+        FROM
+        ${logTable} a
+        <where>
+            <if test="cgbsList != null and cgbsList.size() > 0">
+                AND a.cgbs in
+                <foreach collection="cgbsList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="qxdm != '' and qxdm != null">
+                AND substr(a.bdcdyh,0,6)=#{qxdm}
+            </if>
+            <if test="accessDate != null">
+                AND trunc(a.sjjrrq) = trunc(#{accessDate})
+            </if>
+        </where>
+    </select>
+
+    <select id="getXnAccessDetails" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.bo.accessnewlog.Access">
+        SELECT
+        a.ywlsh ywh,
+        a.ywbwid bwid,
+        a.bdcdyh
+        FROM
+        ${logTable} a left join bdc_xm b on b.xmid = a.ywlsh
+        <where>
+            <if test="cgbsList != null and cgbsList.size() > 0">
+                AND a.cgbs in
+                <foreach collection="cgbsList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="qxdm != '' and qxdm != null">
+                AND b.qxdm=#{qxdm}
+            </if>
+            <if test="accessDate != null">
+                AND trunc(a.sjjrrq) = trunc(#{accessDate})
+            </if>
+        </where>
+
+
+    </select>
+</mapper>

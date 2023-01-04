@@ -1,0 +1,66 @@
+info:
+  name: ${spring.application.name}
+  component: Portal UI Application
+
+app:
+  center: http://192.168.2.99:8000/eureka/
+  oauth: http://192.168.2.99:8002/account
+  security:
+    moduleAuthPath: http://account/account
+    ignores: /image/**,/css/**,/js/**,/webjars/**
+    authorities:
+      permitAll:
+      hasUrlAuthority('read'): /auth/users,/auth/orgs
+      hasModuleAuthority('yhgl:add'): /auth/user/create
+      hasAnyAuthority('ROLE_USER'): /resource1/**,/catalog1/**
+      hasAnyAuthority('ROLE_ADMIN_2'): /call
+      authenticated: true
+    resources:
+      authenticated: /realestate-portal-ui/rest/v1.0/**,/rest/v1.0/check/feign/gzyz/**,/rest/v1.0/workflow/process-instances/feign/**
+#  services:
+#    accept-app: accept-app3
+#    init-app: init-app3
+#    certificate-app: certificate-app3
+#    register-app: register-app3
+
+spring:
+  rabbitmq:
+    host: 192.168.0.60
+    port: 5672
+    username: guest
+    password: guest
+  redis:
+    port: 6379
+    host: 192.168.0.60
+  profiles:
+    include: params,simple
+  messages:
+    basename: messages
+  http:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 1000MB
+
+management:
+  security:
+    enabled: true
+  context-path:
+
+endpoints:
+  enabled: true
+  shutdown:
+    enabled: true
+
+server:
+  port: ${port:8567}
+  context-path: /realestate-portal-ui
+  session:
+    timeout: 3600
+
+logging:
+  classify:
+    # 表示除path之外的路径下默认的日志分类为platform
+    defaulted: platform
+#    /rest/**, /test/** 路径下的日志分类为 test， 如果不需要可以不配做
+#    path:
+#      test: /rest/**, /test/**

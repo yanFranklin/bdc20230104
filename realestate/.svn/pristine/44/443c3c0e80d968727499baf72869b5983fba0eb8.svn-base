@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.building.core.mapper.FwHstMapper">
+
+    <!-- 根据房屋主键查询 户室图 -->
+    <select id="queryFwHstByFwHsIndex" parameterType="String" resultType="cn.gtmap.realestate.common.core.domain.building.FwHstDO">
+        SELECT HST,A.FW_HST_INDEX,HSTCAD,HSTCADMC,HSTDOWNID,HSTMC,JLYHM,SCJQM,SCSJ,
+        HSTCADDOWNID,FWZDTMXD,FWZDT,FWZDTPATH,HSTBZ,HSTBZDOWNID,FWZDTMXDDOWNID,
+        FWZDTMC,FWZDTDOWNID,HSTBZMC FROM fw_hst A INNER JOIN
+        (SELECT B.FW_HST_INDEX FROM FW_HS B WHERE B.FW_HS_INDEX = #{fwHsIndex}
+         UNION ALL
+         SELECT C.FW_HST_INDEX FROM FW_YCHS C WHERE C.FW_HS_INDEX = #{fwHsIndex}) D
+        ON A.FW_HST_INDEX = D.FW_HST_INDEX
+    </select>
+
+    <select id="queryFwHstByIndex" parameterType="String" resultType="cn.gtmap.realestate.common.core.domain.building.FwHstDO" >
+        SELECT HST, FW_HST_INDEX,HSTCAD,HSTCADMC,HSTDOWNID,HSTMC,JLYHM,SCJQM,SCSJ,
+        HSTCADDOWNID,FWZDTMXD,FWZDT,FWZDTPATH,HSTBZ,HSTBZDOWNID,FWZDTMXDDOWNID,
+        FWZDTMC,FWZDTDOWNID,HSTBZMC FROM fw_hst
+        WHERE FW_HST_INDEX = #{index}
+    </select>
+</mapper>

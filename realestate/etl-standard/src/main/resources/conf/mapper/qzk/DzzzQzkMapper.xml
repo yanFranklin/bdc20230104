@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.etl.core.mapper.qzk.DzzzQzkMapper">
+
+    <select id="getQzkxxByKey" parameterType="String" resultType="cn.gtmap.realestate.common.core.domain.DzzzQzkDO">
+        select * from CERT_INFO_QZK where ROWGUID = #{rowguid}
+    </select>
+
+    <insert id="insertQzk" parameterType="cn.gtmap.realestate.common.core.domain.DzzzQzkDO">
+       insert into CERT_INFO_QZK (ROWGUID,CERTNO,CERTNAME,CERTLEVEL,CERTAWARDDEPT,CERTAWARDDEPTORGCODE,CERTOWNERNAME,CERTOWNERTYPE,
+       CERTOWNERCERTTYPE,CERTOWNERNO,AWARDDATE,CERTCATALOGID,CREATEDATE,CERTINFOEXTENSION,OPERATETYPE,ORGCODE)
+       values (#{rowguid,jdbcType=VARCHAR},#{certno,jdbcType=VARCHAR},#{certname,jdbcType=VARCHAR},
+       #{certlevel,jdbcType=VARCHAR},#{certawarddept,jdbcType=VARCHAR},#{certawarddeptorgcode,jdbcType=VARCHAR},
+       #{certownername,jdbcType=VARCHAR},#{certownertype,jdbcType=VARCHAR},#{certownercerttype,jdbcType=VARCHAR},
+       #{certownerno,jdbcType=VARCHAR},#{awarddate,jdbcType=DATE},#{certcatalogid,jdbcType=VARCHAR},
+       #{createdate,jdbcType=DATE},#{certinfoextension,jdbcType=VARCHAR},#{operatetype,jdbcType=VARCHAR},#{orgcode,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="updateQzkByZzid" parameterType="String">
+        update CERT_INFO_QZK set OPERATETYPE = "D" where ROWGUID = #{zzid}
+    </update>
+
+    <update id="updateQzk" parameterType="cn.gtmap.realestate.common.core.domain.DzzzQzkDO">
+        update CERT_INFO_QZK
+        set CERTNO = #{certno,jdbcType=VARCHAR},
+            CERTNAME = #{certname,jdbcType=VARCHAR},
+            CERTLEVEL = #{certlevel,jdbcType=VARCHAR},
+            CERTAWARDDEPT = #{certawarddept,jdbcType=VARCHAR},
+            CERTAWARDDEPTORGCODE = #{certawarddeptorgcode,jdbcType=VARCHAR},
+            CERTOWNERNAME = #{certownername,jdbcType=VARCHAR},
+            CERTOWNERTYPE = #{certownertype,jdbcType=VARCHAR},
+            CERTOWNERCERTTYPE = #{certownercerttype,jdbcType=VARCHAR},
+            CERTOWNERNO = #{certownerno,jdbcType=VARCHAR},
+            AWARDDATE = #{awarddate,jdbcType=DATE},
+            CERTCATALOGID = #{certcatalogid,jdbcType=VARCHAR},
+            CREATEDATE = #{createdate,jdbcType=DATE},
+            CERTINFOEXTENSION = #{certinfoextension,jdbcType=VARCHAR},
+            OPERATETYPE = #{operatetype,jdbcType=VARCHAR}
+        where ROWGUID = #{rowguid}
+    </update>
+
+
+</mapper>

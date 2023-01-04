@@ -1,0 +1,85 @@
+info:
+  name: ${spring.application.name}
+  component: accept application
+
+app:
+  center: http://192.168.2.52:8000/eureka/
+  oauth: http://192.168.2.52:8002/account
+  security:
+    moduleAuthPath: http://account/account
+    ignores: /image/**,/css/**,/js/**,/webjars/**,/realestate-accept/rest/v1.0/print/**,/realestate-accept/rest/v1.0/sjcl/sjclmc,/realestate-accept/rest/v1.0/xmlsgx/**,/realestate-accept/rest/v1.0/jyxx/list/**
+    authorities:
+      permitAll: /index2
+      hasUrlAuthority('read'): /auth/users,/auth/orgs
+      hasModuleAuthority('yhgl:add'): /auth/user/create
+      hasAnyAuthority('ROLE_USER'): /resource1/**,/catalog1/**,/index
+      hasAnyAuthority('ROLE_ADMIN_2'): /call
+      authenticated: true
+    resources:
+      authenticated: /resource/**,/catalog/**,/realestate-accept/rest/v1.0/**
+spring:
+  rabbitmq:
+    host: 192.168.0.60
+    port: 5672
+    username: guest
+    password: guest
+  redis:
+    port: 6379
+    host: 192.168.0.60
+  datasource:
+    url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+    username: bdcsl_hefei
+    password: e/lWYHJj7d9rXmgsItIxLw2oWP4XasfqoDXA0AKNYHgeSJQK8IKgU8/+ia1ax4mr9ki4QZbrQrCW9WMkHDOPAA==
+    publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK8ev+xi3qANIZpQGhndeKtc2EOlsPd48VIhphnl3OoOKqynJuQo7qZrJekk8iqXHgvze3bnFrFyTtf3vxGIamsCAwEAAQ==
+  messages:
+    basename: conf/message/messages, conf/message/errors
+  profiles:
+    #引入配置文件 application-config.yml
+    include: config
+  #--------- 大云版本V2.X liquibase 配置路径变动 ---------------#
+  liquibase:
+    #变更日志配置路径(默认值 classpath:/db/changelog/db.changelog-master.yaml)
+    change-log: classpath:changelog/master.xml
+     #开启liquibase支持(默认值 true)
+    enabled: true
+    #先删除数据库schema(默认值 false)
+    drop-first: false
+  #--------- 大云版本V2.X新增或变动配置 ---------------#
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 1000MB
+  zipkin:
+    #    base-url: http://localhost:8003
+    sender:
+      type: rabbit
+    service:
+      name: ${spring.application.name}
+  main:
+    allow-bean-definition-overriding: true
+
+server:
+  port: ${port:8686}
+
+logging:
+  level:
+    org.springframework: WARN
+    cn.gtmap.gtc.plugins: DEBUG
+url:
+  acceptUrl: http://127.0.0.1/realestate-accept
+
+#--------- 大云版本V2.X新增或变动配置 ---------------#
+management:
+  endpoint:
+    health:
+      show-details: always
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  metrics:
+    tags:
+      application: ${spring.application.name}
+

@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcHzdytjMapper">
+
+    <select id="listBdcHzdytj" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcHzdytjQO"
+            resultType="Map">
+        select dybdclx,
+        count(*) as count,
+        sum(bdbzzqse) as dyje,
+        sum(CASE WHEN dybdclx = 1 THEN tddymj ELSE fwdymj ENd)  as mj,
+        sum(bdbzzqse) / (sum(CASE WHEN dybdclx = 1 THEN tddymj ELSE fwdymj ENd)) as avgjemj
+        from
+             bdc_dyaq dya
+            <if test="bmmc != null and bmmc != ''">
+                left join BDC_XM xm on dya.xmid = xm.xmid
+            </if>
+        where dya.qszt = 1
+            and(
+            <!-- 纯土地 -->
+            (dya.dybdclx = 1 and dya.ZL NOT LIKE '%室%' and dya.tddymj>100  )
+            or
+            <!-- 在建工程 -->
+            (dya.DYBDCLX = 4 and dya.bdcdyh like '%F%'and dya.fwdymj >0)
+            or
+            <!-- 已建构筑物 -->
+            (dya.DYBDCLX = 2 and dya.bdcdyh like '%F%'and dya.fwdymj > 0
+            and dya.bdbzzqse<![CDATA[<=]]>100000 and dya.slbh not like 'T%' )
+            )
+
+            <if test="startTime != null and startTime != ''">
+                and dya.zwlxqssj >= to_date(#{startTime},'yyyy-MM-dd')
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and dya.zwlxqssj <![CDATA[<=]]> to_date(#{endTime},'yyyy-MM-dd')
+            </if>
+            <if test="bmmc != null and bmmc != ''">
+                and xm.djjg = #{bmmc,jdbcType=VARCHAR}
+            </if>
+        group by dybdclx
+        <!--having dybdclx in(1, 2, 4) -->
+    </select>
+
+    <select id="listBdcYbbdytj" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcHzdytjQO"
+            resultType="Map">
+        select substr(xm.zdzhyt, 1, 2) yt,
+        dya.dybdclx,
+        count(*) count,
+        sum(bdbzzqse) as dyje,
+        sum(CASE WHEN dybdclx = 1 THEN tddymj ELSE fwdymj ENd) mj
+        from (
+            select distinct dya.slbh, dya.xmid, dya.dybdclx, dya.bdbzzqse, dya.tddymj, dya.fwdymj
+        from bdc_dyaq dya where 1=1
+        <if test="startTime != null and startTime != ''">
+            and dya.djsj >= to_date(#{startTime},'yyyy-MM-dd')
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and dya.djsj <![CDATA[<=]]> to_date(#{endTime},'yyyy-MM-dd')
+        </if>
+        ) dya
+        left join bdc_xm xm
+        on dya.xmid = xm.xmid
+        where xm.qszt = 1
+        <if test="bmmc != null and bmmc != ''">
+            and xm.djjg = #{bmmc,jdbcType=VARCHAR}
+        </if>
+        group by substr(xm.zdzhyt, 1, 2), dya.dybdclx
+        having dya.dybdclx in(1, 2, 4) and (substr(xm.zdzhyt, 1, 2) = '06' or substr(xm.zdzhyt, 1, 2) = '07')
+
+    </select>
+
+    <select id="listBdcDytjCount" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcHzdytjQO"
+            resultType="Map">
+        select count(distinct(t.bdcdyh)) as count , 1 as dybdclx
+        ,t.qszt
+          from bdc_dyaq t
+            <if test="bmmc != null and bmmc != ''">
+                left join BDC_XM xm on t.xmid = xm.xmid
+            </if>
+         where t.zl NOT LIKE '%室%'
+           and t.tddymj > 100
+           and t.DYBDCLX = '1'
+        <if test="startTime != null and startTime != ''">
+            and t.zwlxqssj >= to_date(#{startTime},'yyyy-MM-dd')
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and t.zwlxqssj <![CDATA[<=]]> to_date(#{endTime},'yyyy-MM-dd')
+        </if>
+        <if test="bmmc != null and bmmc != ''">
+            and xm.djjg = #{bmmc,jdbcType=VARCHAR}
+        </if>
+        group by t.dybdclx,t.qszt
+
+        union all
+
+        select count(distinct(dya.slbh)) as count, dya.dybdclx, dya.qszt
+        from bdc_dyaq dya
+            <if test="bmmc != null and bmmc != ''">
+                left join BDC_XM xm on dya.xmid = xm.xmid
+            </if>
+        where dya.DYBDCLX = 4
+        and dya.bdcdyh like '%F%'
+        and dya.fwdymj > 0
+        <if test="startTime != null and startTime != ''">
+            and dya.zwlxqssj >= to_date(#{startTime},'yyyy-MM-dd')
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and dya.zwlxqssj <![CDATA[<=]]> to_date(#{endTime},'yyyy-MM-dd')
+        </if>
+        <if test="bmmc != null and bmmc != ''">
+            and xm.djjg = #{bmmc,jdbcType=VARCHAR}
+        </if>
+        group by dya.dybdclx, dya.qszt
+
+        union all
+
+        select count(distinct(dya.slbh)) as count, dya.dybdclx,  dya.qszt
+        from bdc_dyaq dya
+            <if test="bmmc != null and bmmc != ''">
+                left join BDC_XM xm on dya.xmid = xm.xmid
+            </if>
+        where  dya.DYBDCLX = 2
+        and dya.bdcdyh like '%F%'
+        and dya.fwdymj > 0
+        and dya.bdbzzqse<![CDATA[<=]]>100000
+        and dya.slbh not like 'T%'
+        <if test="startTime != null and startTime != ''">
+            and dya.zwlxqssj >= to_date(#{startTime},'yyyy-MM-dd')
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and dya.zwlxqssj <![CDATA[<=]]> to_date(#{endTime},'yyyy-MM-dd')
+        </if>
+        <if test="bmmc != null and bmmc != ''">
+            and xm.djjg = #{bmmc,jdbcType=VARCHAR}
+        </if>
+        group by dya.dybdclx, dya.qszt
+
+        union all
+        select count(distinct(dya.slbh)) as count, dya.dybdclx,  dya.qszt
+        from bdc_dyaq dya
+            <if test="bmmc != null and bmmc != ''">
+                left join BDC_XM xm on dya.xmid = xm.xmid
+            </if>
+        where dya.DYBDCLX = 3
+        and dya.tddymj > 0
+        <if test="startTime != null and startTime != ''">
+            and dya.zwlxqssj >= to_date(#{startTime},'yyyy-MM-dd')
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and dya.zwlxqssj <![CDATA[<=]]> to_date(#{endTime},'yyyy-MM-dd')
+        </if>
+        <if test="bmmc != null and bmmc != ''">
+            and xm.djjg = #{bmmc,jdbcType=VARCHAR}
+        </if>
+        group by dya.dybdclx, dya.qszt
+    </select>
+
+    <select id="listBdcDytjCountBb" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcHzdytjQO"
+            resultType="Map">
+        select count(distinct(t.bdcdyh)) as count , 1 as dybdclx,
+        t.qszt
+        from bdc_dyaq t
+        <if test="bmmc != null and bmmc != ''">
+            left join BDC_XM xm on t.xmid = xm.xmid
+        </if>
+        where t.tddymj > 0
+        and t.DYBDCLX = '1'
+        <if test="startTime != null and startTime != ''">
+            and t.djsj >= to_date(#{startTime},'yyyy-MM-dd')
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and t.djsj <![CDATA[<=]]> to_date(#{endTime},'yyyy-MM-dd')
+        </if>
+        <if test="bmmc != null and bmmc != ''">
+            and xm.djjg = #{bmmc,jdbcType=VARCHAR}
+        </if>
+        group by t.dybdclx,t.qszt
+
+        union all
+
+        select count(distinct(dya.slbh)) as count, dya.dybdclx,  dya.qszt
+        from bdc_dyaq dya
+        <if test="bmmc != null and bmmc != ''">
+            left join BDC_XM xm on dya.xmid = xm.xmid
+        </if>
+        where dya.DYBDCLX = 4
+
+        and dya.fwdymj > 0
+        <if test="startTime != null and startTime != ''">
+            and dya.djsj >= to_date(#{startTime},'yyyy-MM-dd')
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and dya.djsj <![CDATA[<=]]> to_date(#{endTime},'yyyy-MM-dd')
+        </if>
+        <if test="bmmc != null and bmmc != ''">
+            and xm.djjg = #{bmmc,jdbcType=VARCHAR}
+        </if>
+        group by dya.dybdclx, dya.qszt
+
+        union all
+
+        select count(distinct(dya.slbh)) as count, dya.dybdclx,  dya.qszt
+        from bdc_dyaq dya
+        <if test="bmmc != null and bmmc != ''">
+            left join BDC_XM xm on dya.xmid = xm.xmid
+        </if>
+        where  dya.DYBDCLX = 2
+
+        and dya.fwdymj > 0
+
+        <if test="startTime != null and startTime != ''">
+            and dya.djsj >= to_date(#{startTime},'yyyy-MM-dd')
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and dya.djsj <![CDATA[<=]]> to_date(#{endTime},'yyyy-MM-dd')
+        </if>
+        <if test="bmmc != null and bmmc != ''">
+            and xm.djjg = #{bmmc,jdbcType=VARCHAR}
+        </if>
+        group by dya.dybdclx, dya.qszt
+
+        union all
+        select count(distinct(dya.slbh)) as count, dya.dybdclx,  dya.qszt
+        from bdc_dyaq dya
+        <if test="bmmc != null and bmmc != ''">
+            left join BDC_XM xm on dya.xmid = xm.xmid
+        </if>
+        where dya.DYBDCLX = 3
+        and dya.tddymj > 0
+        <if test="startTime != null and startTime != ''">
+            and dya.djsj >= to_date(#{startTime},'yyyy-MM-dd')
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and dya.djsj <![CDATA[<=]]> to_date(#{endTime},'yyyy-MM-dd')
+        </if>
+        <if test="bmmc != null and bmmc != ''">
+            and xm.djjg = #{bmmc,jdbcType=VARCHAR}
+        </if>
+        group by dya.dybdclx, dya.qszt
+    </select>
+
+
+    <select id="listBdcHzdytjBb" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcHzdytjQO"
+            resultType="Map">
+        select
+        dybdclx,
+        0 as count,
+        0 as count_dy,
+        --sum(count) as count,
+        sum(bdbzzqse) as dyje,
+        sum(mj) as mj,
+        round(sum(bdbzzqse) / sum(mj) ,'4') as avgjemj
+        from (
+
+        select dybdclx, slbh, bdbzzqse,
+        --count(*) as count,
+        CASE
+        WHEN dybdclx = 1 or dybdclx = 3 THEN
+        sum(tddymj)
+        ELSE
+        sum(fwdymj)
+        ENd as mj
+        from bdc_dyaq dya
+        where ((dya.dybdclx = 1 and dya.tddymj > 0) or
+        (dya.DYBDCLX = 4 and dya.fwdymj > 0) or
+        (dya.DYBDCLX = 2 and dya.fwdymj > 0) or
+        (dya.dybdclx = 3 and dya.tddymj > 0))
+        <if test="startTime != null and startTime != ''">
+            and dya.djsj >= to_date(#{startTime},'yyyy-MM-dd')
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and dya.djsj <![CDATA[<=]]> to_date(#{endTime},'yyyy-MM-dd')
+        </if>
+        group by dybdclx, slbh, bdbzzqse
+        )
+        group by dybdclx order by dybdclx
+
+    </select>
+
+    <select id="listYjgCount" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcHzdytjQO"
+            resultType="Map">
+    select sum(BDBZZQSE)as count from (
+        select t.BDBZZQSE,t.SLBH
+        from bdc_dyaq t
+            <if test="bmmc != null and bmmc != ''">
+                left join BDC_XM xm on t.xmid = xm.xmid
+            </if>
+        where t.qszt = '1'
+        AND t.dybdclx = '2'
+        and t.slbh not like 'T%'
+        AND t.bdcdyh LIKE '%F%'
+        and t.fwdymj >0
+        and t.bdbzzqse <![CDATA[<=]]> 100000
+        <if test="startTime != null and startTime != ''">
+            and t.zwlxqssj >= to_date(#{startTime},'yyyy-MM-dd')
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and t.zwlxqssj <![CDATA[<=]]> to_date(#{endTime},'yyyy-MM-dd')
+        </if>
+        <if test="bmmc != null and bmmc != ''">
+            and xm.djjg = #{bmmc,jdbcType=VARCHAR}
+        </if>
+        group by t.SLBH,  t.BDBZZQSE
+    )
+
+    union
+
+    select sum(fwdymj) as count from (
+        select t.fwdymj, t.slbh
+        from bdc_dyaq t
+            <if test="bmmc != null and bmmc != ''">
+                left join BDC_XM xm on t.xmid = xm.xmid
+            </if>
+        where t.qszt = '1'
+        AND t.dybdclx = '2'
+        and t.slbh not like 'T%'
+        AND t.bdcdyh LIKE '%F%'
+        and t.fwdymj > 0
+        and t.bdbzzqse <![CDATA[<=]]> 100000
+        <if test="startTime != null and startTime != ''">
+            and t.zwlxqssj >= to_date(#{startTime},'yyyy-MM-dd')
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and t.zwlxqssj <![CDATA[<=]]> to_date(#{endTime},'yyyy-MM-dd')
+        </if>
+        <if test="bmmc != null and bmmc != ''">
+            and xm.djjg = #{bmmc,jdbcType=VARCHAR}
+        </if>
+        group by t.SLBH, t.fwdymj
+    )
+  </select>
+
+
+    <select id="listYjgCountBb" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcHzdytjQO"
+            resultType="Map">
+        select sum(BDBZZQSE)as count from (
+        select t.BDBZZQSE,t.SLBH
+        from bdc_dyaq t
+        <if test="bmmc != null and bmmc != ''">
+            left join BDC_XM xm on t.xmid = xm.xmid
+        </if>
+        where t.qszt = '1'
+        AND t.dybdclx = '2'
+        and t.fwdymj >0
+        <if test="startTime != null and startTime != ''">
+            and t.djsj >= to_date(#{startTime},'yyyy-MM-dd')
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and t.djsj <![CDATA[<=]]> to_date(#{endTime},'yyyy-MM-dd')
+        </if>
+        <if test="bmmc != null and bmmc != ''">
+            and xm.djjg = #{bmmc,jdbcType=VARCHAR}
+        </if>
+        group by t.SLBH,  t.BDBZZQSE
+        )
+
+        union
+
+        select sum(fwdymj) as count from (
+        select t.fwdymj, t.slbh
+        from bdc_dyaq t
+        <if test="bmmc != null and bmmc != ''">
+            left join BDC_XM xm on t.xmid = xm.xmid
+        </if>
+        where t.qszt = '1'
+        AND t.dybdclx = '2'
+
+        and t.fwdymj > 0
+
+        <if test="startTime != null and startTime != ''">
+            and t.djsj >= to_date(#{startTime},'yyyy-MM-dd')
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and t.djsj <![CDATA[<=]]> to_date(#{endTime},'yyyy-MM-dd')
+        </if>
+        <if test="bmmc != null and bmmc != ''">
+            and xm.djjg = #{bmmc,jdbcType=VARCHAR}
+        </if>
+        group by t.SLBH, t.fwdymj
+        )
+    </select>
+</mapper>

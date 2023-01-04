@@ -1,0 +1,116 @@
+info:
+  name: ${conf.spring.application.name}
+  component: Exchange Application
+
+app:
+  center: http://192.168.2.99:8000/eureka/
+  oauth: http://192.168.2.99:8002/account
+  portal-ui: http://127.0.0.1/realestate-portal-ui
+  security:
+    # 模块鉴权地址，用于hasUrlAuthority、 hasModuleAuthority表达式鉴权
+    moduleAuthPath: http://account/account
+    # 配置不需要权限控制的静态资源
+    ignores: /**,/image/**,/css/**,/js/**,/webjars/**,/realestate-exchange/wwsq/sl
+    # 配置页面访问的权限控制策略
+    authorities:
+      # 不需要权限控制的访问资源，策略如下
+      permitAll: /**,/realestate-exchange/rest/v1.0/sjpt/sscx,/test/**, /realestate-exchange/rest/v1.0/access/**,/realestate-exchange/rest/v1.0/gxww/getgrdacx
+      # 限定拥有可读的模块操作才能访问
+      hasUrlAuthority('read'): /auth/users,/auth/orgs
+      # 限定对模块编码 yhgl 拥有新增操作的用户可以访问
+      hasModuleAuthority('yhgl:add'): /auth/user/create
+      # 限定 ROLE_USER 角色的用户才能访问的资源
+      hasAnyAuthority('ROLE_USER'): /resource1/**,/catalog1/**
+      # 对未作配置的路径是否需要登陆认证后才能访问
+      authenticated: true
+    # 配置资源访问范围， 该配置下的资源路径页面无法直接访
+    resources:
+      # 限定拥有get_account_info 访问范围的客户端才能访问
+      authenticated: /realestate-exchange/rest/v1.01/**
+#  services:
+#    accept-app: accept-app3
+#    init-app: init-app3
+#    certificate-app: certificate-app3
+#    register-app: register-app3
+#    engine-app: engine-app3
+#    inquiry-app: inquiry-app3
+spring:
+  aop:
+    proxy-target-class: true
+  datasource:
+    server:
+      url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+      username: bdcdj_hefei
+      password: e/lWYHJj7d9rXmgsItIxLw2oWP4XasfqoDXA0AKNYHgeSJQK8IKgU8/+ia1ax4mr9ki4QZbrQrCW9WMkHDOPAA==
+      publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK8ev+xi3qANIZpQGhndeKtc2EOlsPd48VIhphnl3OoOKqynJuQo7qZrJekk8iqXHgvze3bnFrFyTtf3vxGIamsCAwEAAQ==
+    gx:
+      url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+      username: bdcdj_hefei
+      password: e/lWYHJj7d9rXmgsItIxLw2oWP4XasfqoDXA0AKNYHgeSJQK8IKgU8/+ia1ax4mr9ki4QZbrQrCW9WMkHDOPAA==
+      publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK8ev+xi3qANIZpQGhndeKtc2EOlsPd48VIhphnl3OoOKqynJuQo7qZrJekk8iqXHgvze3bnFrFyTtf3vxGIamsCAwEAAQ==
+    sjpt:
+      url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+      username: bdcdj_hefei
+      password: e/lWYHJj7d9rXmgsItIxLw2oWP4XasfqoDXA0AKNYHgeSJQK8IKgU8/+ia1ax4mr9ki4QZbrQrCW9WMkHDOPAA==
+      publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK8ev+xi3qANIZpQGhndeKtc2EOlsPd48VIhphnl3OoOKqynJuQo7qZrJekk8iqXHgvze3bnFrFyTtf3vxGIamsCAwEAAQ==
+    yzw:
+      url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+      username: bdcdj_nt
+      password: e/lWYHJj7d9rXmgsItIxLw2oWP4XasfqoDXA0AKNYHgeSJQK8IKgU8/+ia1ax4mr9ki4QZbrQrCW9WMkHDOPAA==
+      publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK8ev+xi3qANIZpQGhndeKtc2EOlsPd48VIhphnl3OoOKqynJuQo7qZrJekk8iqXHgvze3bnFrFyTtf3vxGIamsCAwEAAQ==
+  rabbitmq:
+    host: 192.168.0.60
+    port: 5672
+    username: guest
+    password: guest
+  redis:
+    port: 6379
+    host: 192.168.0.60
+  #引入配置文件 application-config.yml
+  profiles:
+    include: config,interface,HefeiInf,NantongInf,bengbuInf,yanchengInf
+  http:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 1000MB
+
+management:
+  security:
+    enabled: true
+  context-path:
+
+endpoints:
+  enabled: true
+  shutdown:
+    enabled: true
+
+server:
+  port: ${port:10008}
+
+logging:
+  level:
+    org.springframework: WARN
+    cn.gtmap.gtc: DEBUG
+
+# 第三方接口配置版本号
+data:
+  version: standard
+#  version: standard
+
+yzw:
+  version: standard
+
+# 是否需要保存共享库（gx数据源）默认不保存
+nationalAccessSaveGxDb: false
+
+# 省级上报方式及开关配置
+provinceAccess:
+  type: ftp
+  switch: true
+# 国家上报方式及开关配置
+nationalAccess:
+  type: sftp
+  switch: false
+cityAccess:
+  type: ftp
+  switch: true

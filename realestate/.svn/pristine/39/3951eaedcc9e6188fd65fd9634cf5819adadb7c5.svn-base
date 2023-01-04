@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <!-- 缴费平台 -->
+    <!-- 3.8 推送代缴费列表  返回缴费码 -->
+    <ex:bean id="jfpt_tsdjfxx">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="推送代缴费信息接口"/>
+            <ex:property name="url" value="${jfpt.tsdjfxx.url}" />
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="JFPT"/>
+            <ex:property name="dsfFlag" value="JFPT"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="prePayInfoJson" sourceService="jfpt_tsdjfxx_request"
+                        dozerXml="conf/dozer/hefei/jfpt/tsdjfxx/request/param.xml" objectToJsonString="true" />
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/hefei/jfpt/tsdjfxx/response/data.xml"/>
+        </ex:response>
+    </ex:bean>
+    <ex:bean id="jfpt_tsdjfxx_request"><!-- 构造推送信息的 请求参数 -->
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="jfptServiceImpl" />
+            <ex:property name="methodName" value="getRequestParam" />
+            <ex:property name="params" value="sfxxid" />
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 3.3 缴费状态查询接口 -->
+    <ex:bean id="jfpt_jfztcx">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="缴费状态查询接口"/>
+            <ex:property name="url" value="${jfpt.jfztcx.url}" />
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="JFPT"/>
+            <ex:property name="dsfFlag" value="JFPT"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/hefei/jfpt/jfztcx/response/data.xml" />
+        </ex:response>
+    </ex:bean>
+</beans>

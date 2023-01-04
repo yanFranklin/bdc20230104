@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>外网申请信息</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,no-cache">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/css/admin.css">
+<!--    <link rel="stylesheet" href="../../static/js/lsgx/viewerjs/dist/viewer.css">-->
+    <link rel="stylesheet" href="../../static/lib/viewerjs/dist/viewer.css">
+<!--    <link rel="stylesheet" href="../../static/css/lsgx/new-page.css">-->
+    <link rel="stylesheet" href="../../static/css/new-page.css">
+</head>
+<body class="layui-layout-body" >
+
+<div id="LAY_app">
+    <div class="layui-layout layui-layout-admin">
+
+
+        <!-- 侧边菜单 -->
+        <div class="layui-side layui-side-menu">
+
+            <div class="bdc-aside-title">项目菜单
+            </div>
+            <div class="layui-side-scroll">
+                <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu"></ul>
+
+            </div>
+        </div>
+        <!--侧边收缩按钮-->
+        <div class="bdc-aside-zoom bdc-aside-close">
+            <i class="layui-icon layui-icon-left"></i>
+        </div>
+        <div class="bdc-aside-zoom bdc-aside-open bdc-hide">
+            <i class="layui-icon layui-icon-right"></i>
+        </div>
+
+        <!--侧边栏底部固定-->
+        <div class="bdc-fj-default-content">
+            <!--默认展示内容-->
+            <p class="bdc-fj-title">
+                    <span class="bdc-fj-word">附件
+                    </span>
+                <span class="bdc-fj-show"><i aria-hidden="true"
+                                             class="fa fa-window-restore bdc-show-type bdc-show-popup"></i>
+                </span>
+            </p>
+        </div>
+
+        <!-- 页面标签 -->
+        <div class="layadmin-pagetabs" id="LAY_app_tabs">
+            <div class="layui-icon layadmin-tabs-control layui-icon-prev" layadmin-event="leftPage"></div>
+            <div class="layui-icon layadmin-tabs-control layui-icon-next" layadmin-event="rightPage"></div>
+            <div class="layui-icon layadmin-tabs-control layui-icon-set-sm">
+                <img src="../../static/image/new-page/gj.png" alt="">
+                <ul class="layui-nav layadmin-tabs-select" lay-filter="layadmin-pagetabs-nav">
+                    <li class="layui-nav-item" lay-unselect>
+                        <a href="javascript:"></a>
+                        <dl class="layui-nav-child layui-anim-fadein">
+                            <dd layadmin-event="closeThisTabs"><a href="javascript:">关闭当前标签页</a></dd>
+                            <dd layadmin-event="closeOtherTabs"><a href="javascript:">关闭其它标签页</a></dd>
+                            <dd layadmin-event="closeAllTabs"><a href="javascript:">关闭全部标签页</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+            <!--新增 操作按钮-->
+            <div class="layui-icon layadmin-tabs-control bdc-control-icon clear">
+            </div>
+            <div class="layui-tab bdc-aside-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
+                <ul class="layui-tab-title" id="LAY_app_tabsheader">
+                    <li lay-id="console.html"><i class="layui-icon layui-icon-home"></i></li>
+                    <li lay-id="" lay-attr="" class="layui-this">
+                        <span></span>
+                        <i class="layui-icon layui-unselect layui-tab-close bdc-tab-close">ဆ</i>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 主体内容 -->
+        <div class="layui-body" id="LAY_app_body">
+            <div class="layadmin-tabsbody-item">
+
+            </div>
+            <div class="layadmin-tabsbody-item layui-show">
+                <iframe src="" frameborder="0" class="layadmin-iframe"></iframe>
+            </div>
+
+            <!--不为空 提示信息-->
+            <div class="bdc-null-tips-box bdc-hide">
+                <div class="bdc-null-tips">
+                    <p>错误提示：<span class="bdc-close">不再提示</span></p>
+                    <div id="nullTips"></div>
+                </div>
+            </div>
+            <!--异常 提示信息-->
+            <div class="bdc-other-tips-box bdc-hide">
+                <div class="bdc-other-tips">
+                    <p>错误提示：<span class="bdc-close">不再提示</span></p>
+                    <div id="otherTips">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 辅助元素，一般用于移动设备下遮罩 -->
+        <div class="layadmin-body-shade" layadmin-event="shade"></div>
+    </div>
+</div>
+
+<!--侧边栏动态加载-->
+<script type="text/html" id="asideTpl">
+    {{#  layui.each(d, function(index, item){ }}
+    {{#  if(index == 0){ }}
+    <li data-name="{{item.mark}}" class="layui-nav-item layui-this">
+        <a lay-href="{{item.url}}" lay-tips="{{item.name}}" lay-direction="2">
+            <img src="../../static/image/file.png" alt="">
+            <cite>{{item.name}}</cite>
+        </a>
+    </li>
+    {{# }else{ }}
+    <li data-name="{{item.mark}}" class="layui-nav-item">
+        <a lay-href="{{item.url}}" id="asideTpl{{index}}" lay-tips="{{item.name}}" lay-direction="2">
+            <img src="../../static/image/file.png" alt="">
+            <cite>{{item.name}}</cite>
+        </a>
+    </li>
+    {{#  } }}
+    {{#  }); }}
+</script>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/viewerjs/dist/viewer.js"></script>
+<!--<script src="../../static/js/lsgx/viewerjs/dist/viewer.js"></script>-->
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/wwsq/new-page.js"></script>
+<script>
+    layui.config({
+        base: '../../static/js/wwsq/' //静态资源所在路径
+    }).extend({
+        index: 'index' //主入口模块
+    }).use('index');
+</script>
+</body>
+</html>
+
+

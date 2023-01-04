@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!-- 为大数据局提供 根据权利人信息查询住房信息 -->
+    <ex:bean id="dsjj_zfxxbyqlr">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.inquiry.BdcZfxxCxFeignService"/>
+            <ex:property name="methodName" value="listBdcZfxxDTO"/>
+        </ex:service-info>
+        <ex:log dsfFlag="DSJJ" requester="DSJJ"
+                responser="BDC" logEventName="为大数据局提供根据权利人信息查询住房信息"
+                reqCustom="{gxbmbz:cxdw}"/>
+    </ex:bean>
+
+    <!-- 3568_市司法局_公证案件基本信息 -->
+    <ex:bean id="dsjj_gzajjbxx">
+        <ex:service-info request-type="openApiClient">
+            <ex:property name="url" value="${dsjj.gzajjbxx.url}"/>
+            <ex:property name="logEventName" value="市司法局_公证案件基本信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="DSJJ"/>
+            <ex:property name="dsfFlag" value="DSJJ"/>
+            <ex:property name="appKey" value="${openapi.appkey}"/>
+            <ex:property name="userName" value="${openapi.username}"/>
+            <ex:property name="messageId" sourceClass="cn.gtmap.realestate.exchange.util.CommonUtil"
+                         sourceMethod="openApiUUID"/>
+            <ex:property name="status" value="1"/>
+            <ex:property name="contentType" value="application/json"/>
+            <ex:property name="requestType" value="POST"/>
+            <ex:property name="skprivateKeyPath" value="${openapi.skprivateKeyFile.path}"/>
+        </ex:service-info>
+    </ex:bean>
+
+
+    <!-- 3569_市司法局_公证案件附件信息 -->
+    <ex:bean id="dsjj_gzajfjxx">
+        <ex:service-info request-type="openApiClient">
+            <ex:property name="url" value="${dsjj.gzajfjxx.url}"/>
+            <ex:property name="logEventName" value="市司法局_公证案件附件信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="DSJJ"/>
+            <ex:property name="dsfFlag" value="DSJJ"/>
+            <ex:property name="appKey" value="${openapi.appkey}"/>
+            <ex:property name="userName" value="${openapi.username}"/>
+            <ex:property name="messageId" sourceClass="cn.gtmap.realestate.exchange.util.CommonUtil"
+                         sourceMethod="openApiUUID"/>
+            <ex:property name="status" value="1"/>
+            <ex:property name="contentType" value="application/json"/>
+            <ex:property name="requestType" value="POST"/>
+            <ex:property name="skprivateKeyPath" value="${openapi.skprivateKeyFile.path}"/>
+        </ex:service-info>
+    </ex:bean>
+</beans>

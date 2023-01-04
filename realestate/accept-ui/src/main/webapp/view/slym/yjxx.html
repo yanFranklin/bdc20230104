@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <title>邮寄信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form.css">
+    <link rel="stylesheet" href="../../static/css/common.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/yjxx.css"/>
+</head>
+<body>
+<div class="bdc-form-div bdc-form-not-full bdc-not-full-bg">
+    <form class="layui-form setOverflow" action="" id="yjxx" lay-filter="yjxx-form" >
+        <div class="bdc-content-fix">
+            <div class="content-title layui-clear">
+                <p>邮寄信息</p>
+                <div class="title-btn-area">
+                    <button class="layui-btn bdc-major-btn" lay-submit="" lay-filter="submitBtn" id="submitBtn">保存</button>
+                    <button class="layui-btn bdc-secondary-btn bdc-hide" lay-submit="" lay-filter="tsBtn" id="tsBtn">推送</button>
+                </div>
+            </div>
+        </div>
+        <div class="form-margin-area">
+            <input type="hidden" name="yjxxid" value />
+            <input type="hidden" name="slbh" value />
+            <div class="basic-info">
+                <div class="title-sign"><p><a id="jjrxx" href="javascript:;">寄件人信息</a></p></div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">寄件人名称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="jjrmc" autocomplete="off" class="layui-input"
+                                   lay-verify="required" placeholder="请输入" id="jjrmc">
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-three-combine" id="jjrszdz">
+                        <label class="layui-form-label">所在地址</label>
+                        <div id="jjrAddress">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">邮编</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="jjryb" autocomplete="off" class="layui-input"
+                                   lay-verify="required|postcode" placeholder="请输入" id="jjryb">
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-three-combine">
+                        <label class="layui-form-label">详细地址</label>
+                        <div class="layui-input-inline bdc-xxdz">
+                            <input type="text" name="jjrxxdz" autocomplete="off" class="layui-input"
+                                   lay-verify="required" placeholder="请输入" id="jjrxxdz">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">联系电话</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="jjrlxdh" autocomplete="off" class="layui-input"
+                                   lay-verify="required|phone" placeholder="请输入" id="jjrlxdh">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="basic-info bdc-jjr-info">
+                <div class="title-sign"><p><a id="sjrxx" href="javascript:;">收件人信息</a></p></div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">收件人名称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="sjrmc" autocomplete="off" class="layui-input"
+                                   lay-verify="required" placeholder="请输入" id="sjrmc">
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-three-combine" id="sjrszdz">
+                        <label class="layui-form-label">所在地址</label>
+                        <div id="sjrAddress">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">邮编</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="sjryb" autocomplete="off" class="layui-input"
+                                   lay-verify="required|postcode" placeholder="请输入" id="sjryb">
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-three-combine">
+                        <label class="layui-form-label">详细地址</label>
+                        <div class="layui-input-inline bdc-xxdz">
+                            <input type="text" name="sjrxxdz" autocomplete="off" class="layui-input"
+                                   lay-verify="required" placeholder="请输入" id="sjrxxdz">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">联系电话</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="sjrlxdh" autocomplete="off" class="layui-input"
+                                   lay-verify="required|phone" placeholder="请输入" id="sjrlxdh">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="basic-info bdc-ts-info">
+                <div class="title-sign"><p><a id="tsxx" href="javascript:;">推送信息</a></p></div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label"><img src="../../static/image/kddh.png" alt="">物流单号:</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="wlydh" name="wlydh" autocomplete="off" class="layui-input" value="">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label"><img src="../../static/image/wl.png" alt="">推送状态:</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="tsztmc" autocomplete="off" class="layui-input bdc-tszt none-border" value="未发货">
+                        </div>
+                    </div>
+                </div>
+                <ul id="wlxxul" class="layui-timeline"></ul>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<!--小数计算防精度缺失-->
+<script src="../../static/lib/mathjs/math.js"></script>
+<!--为了获取参数方便，将formCenter.js放在参数之后 -->
+<script src='../../static/js/formCenter.js'></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/slym/yjxx.js"></script>
+
+<script type="text/html" id="wlxxTpl">
+    {{#layui.each(d, function(index, item){ }}
+        {{# if(index==0){ }}
+        <li class="layui-timeline-item">
+            <i class="layui-timeline-axis bdc-new-msg">最新</i>
+            <div class="layui-timeline-content layui-text">
+                {{#if(item.acceptAddress == '') { }}
+                <p class="layui-timeline-title"><span>【{{item.acceptAddress}}】</span>{{item.remark}}</p>
+                {{# }else{ }}
+                <p class="layui-timeline-title">{{item.remark}}</p>
+                {{# } }}
+                <p class="bdc-timeline-time">{{item.acceptTime}}</p>
+            </div>
+        </li>
+        {{# }else{ }}
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis layui-icon-radio"></i>
+            <div class="layui-timeline-content layui-text">
+                <p class="layui-timeline-title"><span>【{{item.acceptAddress}}】</span>{{item.remark}}</p>
+                <p class="bdc-timeline-time">{{item.acceptTime}}</p>
+            </div>
+        </li>
+    {{# } }); }}
+</script>
+</html>

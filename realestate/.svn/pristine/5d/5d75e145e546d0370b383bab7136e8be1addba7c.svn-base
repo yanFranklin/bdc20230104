@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--登记业务信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.DjfDjYwxxMapper">
+
+    <select id="queryDjfDjYwxxList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.DjfDjYwxxDO">
+        SELECT A.xmid ywh,B.YXMID YYWH,A.SLBH SLH,A.DJSJ KSSJ,A.JSSJ,
+        substr(A.BDCDYH,0,6) as XZQDM,A.DJLX,A.QLLX,A.DJJG DJJGMC,A.DJXL DJZX,
+        A.BZ,A.YCQZH YBDCQZH,A.DJXL SQLX,A.SPXTYWH,A.AJZT XMZT,A.ZL,A.GZLJDMC LCJDMC
+        FROM BDC_XM A
+        LEFT JOIN BDC_XM_LSGX B ON A.XMID = B.XMID
+        <where>
+            <if test="ywh != null and ywh !=''">
+                and A.XMID = #{ywh}
+            </if>
+        </where>
+    </select>
+    <select id="queryDjfDjYwxxListOld" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.yancheng.yth.old.DjfDjYwxxOldDO">
+        SELECT A.xmid ywh,B.YXMID YYWH,A.SLBH SLH,A.DJSJ KSSJ,A.JSSJ,
+        substr(A.BDCDYH,0,6) as XZQDM,A.DJLX,A.QLLX,A.DJJG DJJGMC,A.DJXL DJZX,
+        A.BZ,A.YCQZH YBDCQZH,A.DJXL SQLX,A.SPXTYWH,A.AJZT XMZT,A.ZL,A.GZLJDMC LCJDMC
+        FROM BDC_XM A
+        LEFT JOIN BDC_XM_LSGX B ON A.XMID = B.XMID
+        <where>
+            <if test="ywh != null and ywh !=''">
+                and A.XMID = #{ywh}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,113 @@
+<!--
+    海门档案移交单
+-->
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>档案移交单</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <style type="text/css">
+        .search { /*用于查询标识*/}
+    </style>
+</head>
+<body>
+<div class="bdc-percentage-container">
+    <!--查询条件 八个-->
+    <div class="bdc-search-content">
+        <!--************ 条件搜索 ************-->
+        <div class="bdc-search-box">
+            <form id="form" class="layui-form" action="">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">移交单编号</label>
+                        <div class="layui-input-inline pf-start-time-box">
+                            <input type="text" id="yjdbh" name="yjdbh" placeholder="(精确)请输入" autocomplete="off" class="layui-input search">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">受理编号</label>
+                        <div class="layui-input-inline pf-start-time-box">
+                            <input type="text" id="slbh" name="slbh" placeholder="(精确)请输入" autocomplete="off" class="layui-input search">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">不动产权证号</label>
+                        <div class="layui-input-inline pf-start-time-box">
+                            <input type="text" id="bdcqzh" name="bdcqzh" placeholder="(模糊)请输入" autocomplete="off" class="layui-input search">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">移交状态</label>
+                        <div class="layui-input-inline">
+                            <select id='yjzt' name="yjzt" lay-filter="yjzt" placeholder="请选择移交状态" class="search">
+                                <option value="">请选择</option>
+                                <option value="4" class='source'>尚未交接</option>
+                                <option value="5" class='source'>已交接，尚未接受</option>
+                                <option value="6" class='source'>交接成功</option>
+                                <option value="7" class='source'>交接失败，退回</option>
+                            </select>
+                            <i class="layui-icon layui-icon-close bdc-hide reseticon" style="right: 29px!important;"></i>
+                        </div>
+                    </div>
+                    <div class="pf-senior-show bdc-hide">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">移交人</label>
+                            <div class="layui-input-inline pf-start-time-box">
+                                <input type="text" id="yjr" name="yjr" placeholder="(精确)请输入" autocomplete="off" class="layui-input search">
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">移交时间</label>
+                        <div class="layui-input-inline pf-start-time-box">
+                            <input type="text" id="yjdsj" name="yjdsj" placeholder="请选择" autocomplete="off" class="layui-input search test-item">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <button class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</button>
+                        <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--主表单-->
+    <div class="bdc-table-box">
+        <table id="yjdTable" lay-filter="yjdTable"></table>
+    </div>
+</div>
+<!--表格上面功能按钮-->
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="jjd">新增移交单</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="yj">移交</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="printYjd">打印移交单</button>
+
+    </div>
+</script>
+
+<script type="text/html" id="barAction">
+    <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="view">查看关联项目</a>
+</script>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/haimen/yjd/bdcGdxxYjd.js"></script>
+
+</body>
+</html>

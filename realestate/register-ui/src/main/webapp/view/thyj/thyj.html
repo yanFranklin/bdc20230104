@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>退回意见</title>
+    <link href="../../static/lib/layui/css/layui.css" media="all" rel="stylesheet" />
+    <link href="../../static/lib/bdcui/css/form.css" media="all" rel="stylesheet" />
+    <link href="../../static/lib/bdcui/css/application.css" media="all" rel="stylesheet" />
+    <link href="../../static/lib/bdcui/css/mask.css" rel="stylesheet"/>
+    <style>
+        table.layui-table .quarantine{
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="content-div">
+    <div class="bdc-content-box">
+        <form class="layui-form setOverflow" action="">
+            <div class="bdc-content-fix">
+                  <div class="content-title">
+                      <p>退件信息</p>
+                      <div class="title-btn-area .layui-layout-right">
+                      </div>
+                  </div>
+              </div>
+            <div class="content-main">
+                <div class="table-name"></div>
+                <div class="bdc-table-box">
+                    <table class="layui-table" border="1">
+                        <colgroup>
+                            <col width="80">
+                            <col width="150">
+                            <col width="80">
+                            <col width="150">
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <td class="set-back-color ">退件人</td>
+                            <td>
+                                <div class="bdc-td-box">
+                                    <input type="text" class="layui-table-edit" value="" disabled="off">
+                                </div>
+                            </td>
+                            <td class="set-back-color ">退件时间</td>
+                            <td>
+                                <div class="bdc-td-box">
+                                    <input type="text" class="layui-table-edit" value="" disabled="off">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="set-back-color">退回意见</td>
+                            <td colspan="3" style="text-align: left;"></td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="4" class="quarantine" ></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script type="text/html" id="thyjTpl">
+    {{#  layui.each(d, function(index, item){ }}
+    <tr>
+        <td class="set-back-color ">退件人</td>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" value="{{item.czr || ''}}" disabled="off">
+            </div>
+        </td>
+        <td class="set-back-color ">退件时间</td>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" value="{{item.czsj || ''}}" disabled="off">
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="set-back-color">退回意见</td>
+        <td colspan="3" style="text-align: left;">{{item.czyy || ''}}</td>
+    </tr>
+
+    <tr>
+        <td colspan="4" class="quarantine" ></td>
+    </tr>
+    {{#  }); }}
+</script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/thyj/thyj.js"></script>
+</html>

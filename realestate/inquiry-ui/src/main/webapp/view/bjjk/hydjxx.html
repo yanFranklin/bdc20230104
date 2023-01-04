@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>婚姻登记信息查询</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+    <link rel="stylesheet" href="../../static/css/common.css"/>
+    <link rel="stylesheet" href="../../static/css/bjjk/bjjk.css"/>
+</head>
+<body>
+<div class="bdc-percentage-container bdc-line-search-container">
+    <!--查询条件-->
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <!--默认两行的-->
+            <form class="layui-form" action="" lay-filter="searchform">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">受理编号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" autocomplete="off" placeholder="请输入" class="layui-input" name="slbh" id="slbh">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">权利人名称</label>
+                        <div class="layui-input-inline">
+                            <div class="layui-input-inline">
+                                <select name="qlrmc" id="qlrmc" lay-filter="qlrmc" class="search" lay-filter="qlrmc">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">证件号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" autocomplete="off" placeholder="请输入" class="layui-input" name="zjh" id="zjh">
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-secondary-btn" id="qtqlr">其他权利人</a>
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                        <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!--表格-->
+    <div class="bdc-table-box">
+        <table id="pageTable" lay-filter="pageTable"></table>
+    </div>
+
+    <!--婚姻详细，弹框表单-->
+    <div id="bdc-popup-small" class="bdc-hide">
+        <form class="layui-form" action="" id="hydjxxForm" lay-filter="hydjxxForm">
+            <div class="layui-form-item pf-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">婚姻登记业务类型</label>
+                    <div class="layui-input-inline">
+                        <input id="op_type" name="op_type" type="text" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">登记机关名称</label>
+                    <div class="layui-input-inline">
+                        <input id="oept_name" name="oept_name" type="text" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">登记日期</label>
+                    <div class="layui-input-inline">
+                        <input id="op_date" name="op_date" type="text" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">结婚证/离婚证字号</label>
+                    <div class="layui-input-inline">
+                        <input name="cert_no" type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">男方姓名</label>
+                    <div class="layui-input-inline">
+                        <input name="name_man" type="text" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">男方国籍</label>
+                    <div class="layui-input-inline">
+                        <input name="nation_man" type="text" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">男方出生日期</label>
+                    <div class="layui-input-inline">
+                        <input name="birth_man" type="text" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">男方身份证件号</label>
+                    <div class="layui-input-inline">
+                        <input name="cert_num_man" type="text" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">女方姓名</label>
+                    <div class="layui-input-inline">
+                        <input name="name_woman" type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">女方国籍</label>
+                    <div class="layui-input-inline">
+                        <input name="nation_woman" type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">女方出生日期</label>
+                    <div class="layui-input-inline">
+                        <input name="birth_woman" type="text" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">女方身份证件号</label>
+                    <div class="layui-input-inline">
+                        <input name="cert_num_woman" type="text" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!--表格上面功能按钮-->
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm bdc-table-second-btn upload-pdf" lay-event="upload-pdf">上传PDF</button>
+
+        </div>
+    </script>
+
+    <!--表格内部操作按钮-->
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="info">详细</a>
+    </script>
+
+    <script src="../../static/lib/jquery/jquery.min.js"></script>
+    <script src="../../static/lib/layui/layui.js"></script>
+    <script src="../../static/js/common.js"></script>
+    <script src="../../static/js/gxjklc/gxjkCommon.js"></script>
+    <script src="../../static/js/bjjk/hydjxx.js"></script>
+    <script src="../../static/lib/bdcui/js/common.js"></script>
+</div>
+</body>
+</html>

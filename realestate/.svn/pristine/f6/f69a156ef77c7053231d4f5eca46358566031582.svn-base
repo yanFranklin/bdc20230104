@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.supervise.core.mapper.LfYcbjyjMapper">
+    <!--查询超期办件最近同步统计数据时间-->
+    <select id="queryOverdueNewestSyncDataTime" resultType="java.util.Date">
+        SELECT MAX(SJTBSJ) FROM BDC_LF_YCBJYJ_CQBJ
+    </select>
+
+    <!--查询超快办件最近同步统计数据时间-->
+    <select id="queryFastProcessNewestSyncDataTime" resultType="java.util.Date">
+        SELECT MAX(SJTBSJ) FROM BDC_LF_YCBJYJ_CKBJ
+    </select>
+
+    <!--查询非工作时间办件最近同步统计数据时间-->
+    <select id="queryNonWorkDayNewestSyncDataTime" resultType="java.util.Date">
+        SELECT MAX(SJTBSJ) FROM BDC_LF_YCBJYJ_FGZSJBJ
+    </select>
+
+    <select id="listCqbjByPageOrder" parameterType="cn.gtmap.realestate.supervise.core.qo.LfCqbjQO"
+            resultType="cn.gtmap.realestate.supervise.core.dto.BdcLfYcbjyjCqbjDTO">
+        SELECT
+            MAX(T.ID) AS ID,
+            MAX(T.GZLDYMC) AS GZLDYMC,
+            MAX(T.GZLDYID) AS GZLDYID,
+            T.GZLSLID AS GZLSLID,
+            MAX(T.DQJDMC) AS DQJDMC,
+            MAX(T.GZLCQSJ) AS GZLCQSJ,
+            MAX(T.LCQDZ) AS LCQDZ,
+            MAX(T.LCXGRY) AS LCXGRY,
+            MAX(T.SJTBSJ) AS SJTBSJ,
+            MAX(T.SLBH) AS SLBH,
+            MAX(T.SLR) AS SLR,
+            MAX(T.GZLCQSC) AS GZLCQSC,
+            MAX(T.SHRY) AS SHRY ,
+            MAX(T.SHRID) AS SHRID,
+            MAX(T.SHSJ) AS SHSJ,
+            MAX(T.SHYJ) AS SHYJ,
+            MAX(T.SHZT) AS SHZT,
+            MAX(T.SLSJ) AS SLSJ,
+            MAX(T.GZLDQSJ) AS GZLDQSJ,
+            MAX(Z.MC) AS YCBJYY,
+            MAX(S.YYSM) AS YYSM,
+            MAX(S.ID) AS YCBJID
+        FROM
+            BDC_LF_YCBJYJ_CQBJ T
+        LEFT JOIN
+            BDC_LF_YCQKSB S ON T.GZLSLID = S.GZLSLID
+        LEFT JOIN
+            BDC_ZD_YCBJYY Z ON Z.DM = S.YCBJYY
+        <where>
+            <if test="gzldymc != null and gzldymc != ''">
+                AND T.GZLDYMC in
+                <foreach collection="gzldymc.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="lcxgry != null and lcxgry != ''">
+                AND T.LCXGRY like '%' || #{lcxgry} || '%'
+            </if>
+            <if test="gzlcqsjq != null and gzlcqsjq != ''">
+                AND T.GZLCQSJ <![CDATA[>=]]> #{gzlcqsjq}
+            </if>
+            <if test="gzlcqsjz != null and gzlcqsjz != ''">
+                AND T.GZLCQSJ <![CDATA[<=]]> #{gzlcqsjz}
+            </if>
+            <if test="slbh != null and slbh != ''">
+                AND T.slbh like '%' || #{slbh} || '%'
+            </if>
+            <if test="shry != null and shry != ''">
+                AND T.shry like '%' || #{shry} || '%'
+            </if>
+            <if test="ycbjyy != null and ycbjyy != ''">
+                AND S.YCBJYY = #{ycbjyy}
+            </if>
+            <if test="shsjq != null and shsjq != ''">
+                AND to_char(T.shsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{shsjq}
+            </if>
+            <if test="shsjz != null and shsjz != ''">
+                AND to_char(T.shsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{shsjz}
+            </if>
+            <if test="slkssj != null and slkssj != ''">
+                AND to_char(T.SLSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{slkssj}
+            </if>
+            <if test="sljssj != null and sljssj != ''">
+                AND to_char(T.SLSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{sljssj}
+            </if>
+            <if test="rymc != null and rymc != ''">
+                AND T.SLR IN
+                <foreach collection="rymc.split(',')" item="item" open="(" separator="," close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="pcGzldyid != null and pcGzldyid != ''">
+                AND NOT EXISTS (SELECT *
+                FROM BDC_LF_YCBJYJ_CQBJ T1 WHERE T1.GZLDYID = T.GZLDYID and T.GZLDYID in
+                <foreach collection="pcGzldyid.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+                )
+            </if>
+        </where>
+        GROUP BY
+            T.GZLSLID
+        ORDER BY
+            GZLCQSJ DESC
+    </select>
+
+    <select id="listCkbjByPageOrder" parameterType="cn.gtmap.realestate.supervise.core.qo.LfCkbjQO"
+            resultType="cn.gtmap.realestate.supervise.core.dto.BdcLfYcbjyjCkbjDTO">
+        SELECT
+            MAX(T.ID) AS ID,
+            MAX(T.GZLDYMC) AS GZLDYMC,
+            MAX(T.GZLDYID) AS GZLDYID,
+            T.GZLSLID,
+            MAX(T.LCKSSJ) AS LCKSSJ,
+            MAX(T.LCJSSJ) AS LCJSSJ,
+            MAX(T.LCQDZ) AS LCQDZ,
+            MAX(T.SJTBSJ) AS SJTBSJ,
+            MAX(T.BJSC) AS BJSC,
+            MAX(T.CKBJSCBZ) AS CKBJSCBZ,
+            MAX(T.SLBH) AS SLBH,
+            MAX(T.SLR) AS SLR,
+            MAX(T.SHRY) AS SHRY,
+            MAX(T.SHRID)AS SHRID,
+            MAX(T.SHSJ)AS SHSJ,
+            MAX(T.SHYJ)AS SHYJ,
+            MAX(T.SHZT)AS SHZT,
+            MAX(Z.MC) AS YCBJYY,
+            MAX(S.YYSM) AS YYSM,
+            MAX(S.ID) AS YCBJID
+        FROM
+            BDC_LF_YCBJYJ_CKBJ T
+        LEFT JOIN
+            BDC_LF_YCQKSB S ON T.GZLSLID = S.GZLSLID
+        LEFT JOIN
+            BDC_ZD_YCBJYY Z ON Z.DM = S.YCBJYY
+        <where>
+            <if test="gzldymc != null and gzldymc != ''">
+                AND T.GZLDYMC in
+                <foreach collection="gzldymc.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="pcGzldyid != null and pcGzldyid != ''">
+                AND NOT EXISTS (SELECT *
+                FROM BDC_LF_YCBJYJ_CKBJ T1 WHERE T1.GZLDYID = T.GZLDYID and T.GZLDYID in
+                <foreach collection="pcGzldyid.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+                    )
+            </if>
+            <if test="lcqdz != null and lcqdz != ''">
+                AND T.LCQDZ like '%' || #{lcqdz} || '%'
+            </if>
+            <if test="lckssj != null and lckssj != ''">
+                AND T.LCKSSJ <![CDATA[>=]]> #{lckssj}
+            </if>
+            <if test="lcjssj != null and lcjssj != ''">
+                AND T.LCJSSJ <![CDATA[<=]]> #{lcjssj}
+            </if>
+            <if test="shry != null and shry != ''">
+                AND T.shry like '%' || #{shry} || '%'
+            </if>
+            <if test="shsjq != null and shsjq != ''">
+                AND to_char(T.shsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{shsjq}
+            </if>
+            <if test="shsjz != null and shsjz != ''">
+                AND to_char(T.shsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{shsjz}
+            </if>
+            <if test="slbh != null and slbh != ''">
+                AND T.slbh like '%' || #{slbh} || '%'
+            </if>
+            <if test="ycbjyy != null and ycbjyy != ''">
+                AND S.YCBJYY = #{ycbjyy}
+            </if>
+            <if test="rymc != null and rymc != ''">
+                AND T.SLR IN
+                <foreach collection="rymc.split(',')" item="item" open="(" separator="," close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY T.GZLSLID
+        ORDER BY
+            LCJSSJ DESC
+    </select>
+
+    <select id="listFgsjbjByPageOrder" parameterType="cn.gtmap.realestate.supervise.core.qo.LfFgzsjbjQO"
+            resultType="cn.gtmap.realestate.supervise.core.dto.BdcLfYcbjyjFgzsjbjDTO">
+        SELECT
+            MAX(T.ID) AS ID,
+            MAX(T.GZLDYMC) AS GZLDYMC,
+            MAX(T.GZLDYID) AS GZLDYID,
+            T.GZLSLID,
+            MAX(T.GZLSLMC) AS GZLSLMC,
+            MAX(T.JDKSSJ) AS JDKSSJ,
+            MAX(T.JDJSSJ) AS JDJSSJ,
+            T.JDMC,
+            MAX(T.JDBJR) AS JDBJR,
+            MAX(T.SJTBSJ) AS SJTBSJ,
+            MAX(T.SLBH) AS SLBH,
+            MAX(T.SLR) AS SLR,
+            MAX(T.SHRY) AS SHRY,
+            MAX(T.SHRID) AS SHRID,
+            MAX(T.SHSJ) AS SHSJ,
+            MAX(T.SHYJ) AS SHYJ,
+            MAX(T.SHZT) AS SHZT,
+            MAX(Z.MC) AS YCBJYY,
+            MAX(S.YYSM) AS YYSM,
+            MAX(S.ID) AS YCBJID
+        FROM
+            BDC_LF_YCBJYJ_FGZSJBJ T
+        LEFT JOIN
+            BDC_LF_YCQKSB S ON T.GZLSLID = S.GZLSLID
+        LEFT JOIN
+            BDC_ZD_YCBJYY Z ON Z.DM = S.YCBJYY
+        <where>
+            <if test="gzldymc != null and gzldymc != ''">
+                AND T.GZLDYMC like '%' || #{gzldymc} || '%'
+            </if>
+            <if test="jdbjr != null and jdbjr != ''">
+                AND T.JDBJR like '%' || #{jdbjr} || '%'
+            </if>
+            <if test="jdkssj != null and jdkssj != ''">
+                AND T.JDKSSJ <![CDATA[>=]]> #{jdkssj}
+            </if>
+            <if test="jdjssj != null and jdjssj != ''">
+                AND T.JDJSSJ <![CDATA[<=]]> #{jdjssj}
+            </if>
+            <if test="shry != null and shry != ''">
+                AND T.shry like '%' || #{shry} || '%'
+            </if>
+            <if test="slbh != null and slbh != ''">
+                AND T.slbh like '%' || #{slbh} || '%'
+            </if>
+            <if test="ycbjyy != null and ycbjyy != ''">
+                AND S.YCBJYY = #{ycbjyy}
+            </if>
+            <if test="shsjq != null and shsjq != ''">
+                AND to_char(T.shsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{shsjq}
+            </if>
+            <if test="shsjz != null and shsjz != ''">
+                AND to_char(T.shsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{shsjz}
+            </if>
+            <if test="rymc != null and rymc != ''">
+                AND T.SLR IN
+                <foreach collection="rymc.split(',')" item="item" open="(" separator="," close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY
+            T.GZLSLID,
+            T.JDMC
+        ORDER BY
+            JDJSSJ DESC
+    </select>
+
+    <select id="listYcqksbByPageOrder" parameterType="cn.gtmap.realestate.supervise.core.qo.LfYcqksbQO"
+            resultType="cn.gtmap.realestate.supervise.core.domain.BdcLfYcqksbDO">
+        SELECT
+            ID, SLBH, SLSJ, GZLSLID, TBR, TBRID, TBRZH, TBSJ, YYSM
+        FROM
+            BDC_LF_YCQKSB T
+        <where>
+            <if test="slbh != null and slbh != ''">
+                AND T.slbh like '%' || #{slbh} || '%'
+            </if>
+            <if test="tbr != null and tbr != ''">
+                AND T.tbr like '%' || #{tbr} || '%'
+            </if>
+            <if test="tbsjq != null and tbsjq != ''">
+                AND to_char(T.tbsj,'yyyy-MM-dd hh24:mi:ss')  <![CDATA[>=]]> #{tbsjq}
+            </if>
+            <if test="tbsjz != null and tbsjz != ''">
+                AND to_char(T.tbsj,'yyyy-MM-dd hh24:mi:ss')  <![CDATA[<=]]> #{tbsjz}
+            </if>
+        </where>
+
+        ORDER BY
+            tbsj DESC
+    </select>
+
+    <update id="updateBdcXmSjToCqbj">
+        update BDC_LF_YCBJYJ_CQBJ a set (slbh, slr, slsj) = (select max(slbh) as slbh, max(slr) as slr, max(slsj) as slsj from bdc_xm b where b.gzlslid = a.gzlslid)
+    </update>
+
+    <update id="updateBdcXmSjToCkbj">
+        update BDC_LF_YCBJYJ_CKBJ a set (slbh, slr) = (select max(slbh) as slbh, max(slr) as slr from bdc_xm b where b.gzlslid = a.gzlslid)
+    </update>
+
+    <update id="updateBdcXmSjToFgzrbj">
+        update BDC_LF_YCBJYJ_FGZSJBJ a set (slbh, slr) = (select max(slbh) as slbh, max(slr) as slr from bdc_xm b where b.gzlslid = a.gzlslid)
+    </update>
+
+    <select id="listYcyyByPageOrder" parameterType="cn.gtmap.realestate.supervise.core.qo.LfYcyyQO"
+            resultType="cn.gtmap.realestate.supervise.core.domain.BdcLfYcbjyjYcyyDO">
+        SELECT
+            ID, GZLDYMC, GZLDYID, GZLSLID, SLBH, LRR, LRRID, LRSJ, YCBJYY
+        FROM
+            BDC_LF_YCBJYJ_YCYY T
+        <where>
+            <if test="gzldymc != null and gzldymc != ''">
+                AND T.GZLDYMC in
+                <foreach collection="gzldymc.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="slbh != null and slbh != ''">
+                AND T.slbh like '%' || #{slbh} || '%'
+            </if>
+            <if test="lrr != null and lrr != ''">
+                AND T.lrr like '%' || #{lrr} || '%'
+            </if>
+            <if test="lrsjq != null and lrsjq != ''">
+                AND to_char(T.lrsj,'yyyy-MM-dd hh24:mi:ss')  <![CDATA[>=]]> #{lrsjq}
+            </if>
+            <if test="lrsjz != null and lrsjz != ''">
+                AND to_char(T.lrsj,'yyyy-MM-dd hh24:mi:ss')  <![CDATA[<=]]> #{lrsjz}
+            </if>
+        </where>
+
+        ORDER BY
+            lrsj DESC
+    </select>
+
+    <select id="listXmxxByPageOrder" parameterType="cn.gtmap.realestate.common.core.qo.init.BdcXmQO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT
+            *
+        FROM
+            BDC_XM  A
+        <where>
+            <if test="slbh != null and slbh !=''">
+                AND A.slbh like '%' || #{slbh} || '%'
+            </if>
+            <if test="gzlslid != null and gzlslid !=''">
+                AND A.gzlslid like '%' || #{gzlslid} || '%'
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND A.bdcdyh  like '%' ||  #{bdcdyh} || '%'
+            </if>
+            <if test="qlr != null and qlr !=''">
+                AND A.qlr  like '%' ||  #{qlr} || '%'
+            </if>
+            <if test="ywr != null and ywr !=''">
+                AND A.ywr  like '%' ||  #{ywr} || '%'
+            </if>
+            <if test="slr != null and slr !=''">
+                AND A.slr  like '%' ||  #{slr} || '%'
+            </if>
+            <if test="bdcqzh != null and bdcqzh !=''">
+                AND A.bdcqzh  like '%' ||  #{bdcqzh} || '%'
+            </if>
+            <if test="zl != null and zl !=''">
+                AND  A.zl like '%' || #{zl}  || '%'
+            </if>
+        </where>
+        ORDER BY
+            A.SLSJ DESC
+    </select>
+
+    <select id="queryBdcXmByDjsj" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            parameterType="cn.gtmap.realestate.supervise.core.qo.LfBdcXmQO">
+    SELECT * FROM BDC_XM A
+    <where>
+        A.slsj <![CDATA[<=]]> A.djsj
+        <if test="djkssj != null and djkssj != ''">
+            AND to_char(A.DJSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{djkssj}
+        </if>
+        <if test="djjssj != null and djjssj != ''">
+            AND to_char(A.DJSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{djjssj}
+        </if>
+    </where>
+    ORDER BY A.DJSJ ASC
+    </select>
+</mapper>

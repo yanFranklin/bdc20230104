@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://dozer.sourceforge.net"
+          xsi:schemaLocation="http://dozer.sourceforge.net
+          http://dozer.sourceforge.net/schema/beanmapping.xsd">
+    <mapping type="one-way">
+        <class-a>com.alibaba.fastjson.JSONObject</class-a>
+        <class-b>cn.gtmap.realestate.exchange.core.dto.yancheng.wxjj.WxjjResponseDTO</class-b>
+        <field>
+            <a key="PaymentCount">this</a>
+            <b>paymentCount</b>
+        </field>
+        <field>
+            <a key="HourseCount">this</a>
+            <b>hourseCount</b>
+        </field>
+        <field custom-converter="cn.gtmap.realestate.exchange.core.dozer.converters.DsfZdToBdcDmCustomConvert"
+               custom-converter-param="BDC_ZD_WXJJ_SFZT,wxjj">
+            <a key="PaymentCount">this</a>
+            <b>sfzt</b>
+        </field>
+        <field custom-converter="cn.gtmap.realestate.common.core.dozer.converters.gtmap.StringToDateCustomConverter">
+            <a>Data[0].Date</a>
+            <b>sfsj</b>
+        </field>
+        <field>
+            <a>Data[0].Operator</a>
+            <b>wxjjjfr</b>
+        </field>
+        <field>
+            <a>Data[0].Money</a>
+            <b>hj</b>
+        </field>
+    </mapping>
+</mappings>

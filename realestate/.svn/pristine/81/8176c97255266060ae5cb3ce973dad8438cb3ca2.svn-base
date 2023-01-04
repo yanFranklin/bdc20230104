@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>一窗页面</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/hefei/ycym.css"/>
+</head>
+
+<body>
+<div class="bdc-form-div bdc-not-full-bg">
+    <!--全局 标题和操作按钮 开始-->
+    <form class="layui-form sl-from bdc-form-table">
+        <div class="bdc-content-fix">
+            <div class="content-title layui-clear">
+                <p>不动产登记一窗信息</p>
+                <div id="buttonArea"></div>
+            </div>
+        </div>
+        <!--全局 标题和操作按钮 结束-->
+        <div class="form-margin-area">
+            <div class="form-margin-area">
+                <div id="ycslzrfxx" class="basic-info"></div>
+                <div id="ycslzcfxx" class="basic-info"></div>
+                <div class="basic-info" id="ycsljyxx"></div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+
+<!--按钮显示-->
+<script type="text/html" id="buttonAreaTpl">
+    <div class="title-btn-area">
+        <button class="layui-btn bdc-major-btn" lay-submit="" lay-filter="saveData" id="saveData">保存
+        </button>
+        <button class="layui-btn bdc-secondary-btn" type="button" id="fwxxcx">房屋信息查询</button>
+        <button class="layui-btn bdc-secondary-btn tsSwxx" type="button" id="tsClfSwxx">推送税务</button>
+        <button class="layui-btn bdc-secondary-btn tsSwxx" type="button" id="tsSpfSwxx">推送税务</button>
+        <button class="layui-btn bdc-secondary-btn" type="button" id="querySwxx">查询税务</button>
+        <button class="layui-btn bdc-secondary-btn" type="button" id="qxzfSwxx">作废取消税务</button>
+
+    </div>
+</script>
+
+<!--一窗受理房产交易信息-->
+
+<!--合同信息展示-->
+<script type="text/html" id="htxxTpl">
+    {{# if(d.bdcSlJyxx){ }}
+    <div class="title-sign">
+        <p>合同信息</p>
+    </div>
+    <form class="layui-form" name="bdcFdcqForm">
+        <input type="hidden" name="jyxxid" value="{{d.bdcSlJyxx.jyxxid || ''}}" class="htxx">
+        <input type="hidden" name="fwxxid" value="{{d.bdcSlFwxx.fwxxid || ''}}" class="fwxx">
+        <input type="hidden" name="xmid" value="{{d.bdcSlJyxx.xmid || ''}}" class="htxx">
+        <div class="layui-form-item">
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">合同备案时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="htbasj"
+                           class="layui-input test-item htxx"
+                           name="htbasj" value="{{d.bdcSlJyxx.htbasj || ''}}">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">合同签订时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="htdjsj"
+                           class="layui-input test-item htxx"
+                           name="htdjsj" value="{{d.bdcSlJyxx.htdjsj || ''}}">
+                </div>
+            </div>
+
+            <!--added by cyc at 2019-07-29 16:23:00-->
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">房产证<br>发证时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="fczfzsj"
+                           class="layui-input test-item htxx"
+                           name="fczfzsj" value="{{d.bdcSlJyxx.fczfzsj || ''}}">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">上次交易<br>登记时间</label>
+                <div class="layui-input-inline">
+                    {{#  if(d.bdcSlJyxx.scjydjsj == null){ }}
+                    <input type="text" autocomplete="off" id="scjydjsj"
+                           class="layui-input test-item htxx"
+                           name="scjydjsj" value="{{d.bdcSlJyxx.fczfzsj || ''}}">
+                    {{#  }else{ }}
+                    <input type="text" autocomplete="off" id="scjydjsj"
+                           class="layui-input test-item htxx"
+                           name="scjydjsj" value="{{d.bdcSlJyxx.scjydjsj || ''}}">
+                    {{#  } }}
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">小区名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="xqmc"
+                           class="layui-input fwxx"
+                           name="xqmc" value="{{d.bdcSlFwxx.xqmc || ''}}" title="{{d.bdcSlFwxx.xqmc || ''}}">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">行政区划</label>
+                <div class="layui-input-inline">
+                    <select name="xzqh" lay-search="" lay-filter="xzqh" id="xzqh"
+                            class="fwxx">
+                        <option value="">  </option>
+                        {{# layui.each(d.zd.qx, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(d.bdcSlFwxx.xzqh==item.DM ){ }} selected="selected"
+                                {{#
+                                } }} title="{{item.MC || ''}}">{{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+
+            <!--added by cyc at 2019-07-29 16:23:00-->
+            <div class="layui-inline xzq-sele">
+                <label class="layui-form-label change-label-width">街道代码</label>
+                <div class="layui-input-inline select-height">
+                    <select name="jddm" lay-search="" lay-filter="jddm" id="jddm"
+                            class="fwxx">
+                        <option value="">  </option>
+                        {{# layui.each(d.zd.jddm, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(d.bdcSlFwxx.jddm==item.DM ){ }} selected="selected"
+                                {{#
+                                } }} title="{{item.MC || ''}}">{{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-inline xzq-sele">
+                <label class="layui-form-label change-label-width">建筑朝向</label>
+                <div class="layui-input-inline  select-height">
+                    <select name="jzcx" lay-search="" lay-filter="jzcx" id="jzcx"
+                            class="fwxx">
+                        <option value="">  </option>
+                        {{# layui.each(d.zd.cx, function(index, item){ }}
+                        <option value="{{item.DM || ''}}" {{# if(d.bdcSlFwxx.jzcx==item.DM ){ }} selected="selected" {{#
+                                } else if(item.DM=="12" ){ }} selected="selected"{{# } }}>
+                            {{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">含增值税金额</label>
+                <div class="layui-input-inline">
+                    <input type="number" autocomplete="off" id="hzzsje" class="layui-input htxx"
+                           name="hzzsje" value="{{d.bdcSlJyxx.hzzsje}}" oninput="changeZzsJe(this)">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">不含增值税<br>金额</label>
+                <div class="layui-input-inline">
+                    <input type="number" autocomplete="off" id="bhzzsje" class="layui-input htxx"
+                           name="bhzzsje" value="{{d.bdcSlJyxx.bhzzsje}}" oninput="changeZzsJe(this)">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">增值税金额</label>
+                <div class="layui-input-inline">
+                    <input type="number" autocomplete="off" id="zzsje" class="layui-input htxx"
+                           name="zzsje" value="{{d.bdcSlJyxx.zzsje}}">
+                </div>
+            </div>
+
+        </div>
+    </form>
+    {{# } }}
+</script>
+
+<!--申请人家庭成员信息展示-->
+<script type="text/html" id="sqrxxTpl">
+    <div class="title-sign bdc-title-sign-btn">
+        {{#if(d.sqrlb == "1"){}}
+        <p id="zrfxx">转入方信息</p>
+        {{# }else{ }}
+        <p id="zcfxx">转出方信息</p>
+        {{# } }}
+
+    </div>
+    <form class="common-form sl-from layui-form bdc-form-table" name="sqrForm">
+        <div class="layui-form-item">
+            <div class="sqrForm" id="sqrForm">
+                <table class="slym layui-table bdc-jt-table" border="1" name="sqrGroupDTOTable" id="sqrGroupDTOTable">
+                    <thead>
+                    <tr class="gray-tr">
+                        <th width="90px" name="mcTH">名称</th>
+                        <th width="90px" name="zjzlTH">证件类型</th>
+                        <th style="min-width: 125px" name="zjhTH">证件号</th>
+                        <th style="min-width: 30px" name="sfjmTH">税款减免</th>
+                        <th style="min-width: 50px" name="ysqrgxTH">与权利人关系</th>
+                        <th style="min-width: 30px" name="hyzkTH">婚姻状况</th>
+                        <th style="min-width: 30px" name="gyrsffqTH">是否夫妻</th>
+                        {{#if(d.sqrlb == "1"){}}
+                         <th style="min-width: 30px" name="sfbdhjTH">本地户籍</th>
+                         <th style="min-width: 30px" name="sfzxqsTH">直系亲属</th>
+                         {{# }else{ }}
+                         <th style="min-width: 60px" name="jtmwwyzzTH">家庭满五唯一住宅</th>
+                         {{# } }}
+                        <th style="min-width: 50px" name="fwtcTH">现有住房套数</th>
+                        <th style="min-width: 30px" name="sbfwtcTH">申报套次</th>
+                        <th width="100px">操作</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {{# if(d.bdcSqrGroupDTOLists && d.bdcSqrGroupDTOLists.length > 0){ }}
+                    {{# layui.each(d.bdcSqrGroupDTOLists, function(i,SqrGroupDTOList){ }}
+                    {{# layui.each(SqrGroupDTOList, function(j,sqrDTO){ }}
+                    {{# if (j == 0){ }}
+                    <!--每组第一行数据增加class标识-->
+                    <tr class="sqrgroup-first">
+                    {{# }else{ }}
+                    <tr>
+                    {{# } }}
+                        <input type="hidden" value="{{sqrDTO.id || ''}}" name="id">
+                        <input type="hidden" value="{{d.sqrlb|| ''}}" name="sqrlb">
+                        <td>
+                            <div class="bdc-td-box bdc-not-null">
+                                <input type="text" class="layui-input change-padding-right" lay-verify="required" value="{{sqrDTO.mc || ''}}"
+                                       name="mc"id="mc" title="{{sqrDTO.mc || ''}}" disabled="off">
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="bdc-td-box">
+                                <select name="zjzl" lay-search="" lay-filter="zjzl" id="zjzl" disabled="off">
+                                    <option value="">  </option>
+                                    {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                                    <option value="{{item.DM || ''}}" {{# if(sqrDTO.zjzl==item.DM ){ }} selected="selected" {{# }
+                                            }}>
+                                        {{item.MC || ''}}
+                                    </option>
+                                    {{# }); }}
+                                </select>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="bdc-td-box bdc-not-null">
+                                <input type="text" class="layui-input change-padding-right" lay-verify="required" value="{{sqrDTO.zjh || ''}}"
+                                       name="zjh" id="zjh" title="{{sqrDTO.zjh || ''}}" disabled="off">
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="bdc-td-box">
+                                <select name="sfjm" lay-search="" lay-filter="sfjm" id="sfjm"
+                                        {{# if(sqrDTO.ysqrgx !="本人" ){ }} disabled="off" {{# }
+                                        }}
+                                >
+                                    <option value="">请选择</option>
+                                    {{# layui.each(d.zd.sf, function(index, item){ }}
+                                    <option value="{{item.DM}}" {{# if(sqrDTO.sfjm==item.DM ){ }} selected="selected" {{# }
+                                            }}>
+                                        {{item.MC || ''}}
+                                    </option>
+                                    {{# }); }}
+                                </select>
+                            </div>
+                        </td>
+
+                        {{# if(sqrDTO.ysqrgx == "本人"){ }}
+                        <td>
+                            <div class="bdc-td-box">
+                                <select name="ysqrgx" lay-search="" lay-filter="" disabled="off" id="ysqrgx">
+                                    <option value=""></option>
+                                    <option value="{{sqrDTO.ysqrgx || ''}}" selected="selected">{{sqrDTO.ysqrgx || ''}}
+                                    </option>
+                                    {{# layui.each(d.zd.ysqrgx, function(index, item){ }}
+                                    <option value="{{item.MC || ''}}" {{# if(sqrDTO.ysqrgx==item.MC ){ }}
+                                            selected="selected" {{#
+                                            } }}>{{item.MC || ''}}
+                                    </option>
+                                    {{# }); }}
+                                </select>
+                            </div>
+                        </td>
+                        {{# }else{ }}
+                        <td>
+                            <div class="bdc-td-box">
+                                <select name="ysqrgx" lay-search="" lay-filter="" id="ysqrgx">
+                                    <option value=""></option>
+                                    <option value="{{sqrDTO.ysqrgx || ''}}" selected="selected">{{sqrDTO.ysqrgx || ''}}
+                                    </option>
+                                    {{# layui.each(d.zd.ysqrgx, function(index, item){ }}
+                                    <option value="{{item.MC || ''}}" {{# if(sqrDTO.ysqrgx==item.MC ){ }}
+                                            selected="selected" {{#
+                                            } }}>{{item.MC || ''}}
+                                    </option>
+                                    {{# }); }}
+                                </select>
+                            </div>
+                        </td>
+                        {{# } }}
+
+                        <td>
+                            <div class="bdc-td-box">
+                                <select name="hyzk" lay-search="" lay-filter="hyzk" id="hyzk"
+                                        {{# if(sqrDTO.ysqrgx !="本人" ){ }} disabled="off" {{# }
+                                        }}>
+                                    <option value="">请选择</option>
+                                    <option value="已婚" {{# if(sqrDTO.hyzk=="已婚" ){ }} selected="selected" {{# } }}>已婚</option>
+                                    <option value="未婚" {{# if(sqrDTO.hyzk=="未婚" ){ }} selected="selected" {{# } }}>未婚</option>
+                                    <option value="离婚" {{# if(sqrDTO.hyzk=="离婚" ){ }} selected="selected" {{# } }}>离婚</option>
+                                </select>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="bdc-td-box">
+                                <select name="gyrsffq" lay-search="" lay-filter="gyrsffq" id="gyrsffq"
+                                        {{# if(sqrDTO.ysqrgx !="本人" ){ }} disabled="off" {{# }
+                                        }}>
+                                    <option value="">请选择</option>
+                                    {{# layui.each(d.zd.sf, function(index, item){ }}
+                                    <option value="{{item.DM}}" {{# if(sqrDTO.gyrsffq==item.DM ){ }} selected="selected" {{# }
+                                            }}>
+                                        {{item.MC || ''}}
+                                    </option>
+                                    {{# }); }}
+                                </select>
+                            </div>
+                        </td>
+
+                        {{#if(d.sqrlb == "1"){}}
+                        <td>
+                            <div class="bdc-td-box">
+                                <select name="sfbdhj" lay-search="" lay-filter="sfbdhj" id="sfbdhj"
+                                        {{# if(sqrDTO.ysqrgx !="本人" ){ }} disabled="off" {{# }
+                                        }}>
+                                    <option value="">请选择</option>
+                                    {{# layui.each(d.zd.sf, function(index, item){ }}
+                                    <option value="{{item.DM}}" {{# if(sqrDTO.sfbdhj==item.DM ){ }} selected="selected" {{# }
+                                            }}>
+                                        {{item.MC || ''}}
+                                    </option>
+                                    {{# }); }}
+                                </select>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="bdc-td-box">
+                                <select name="sfzxqs" lay-search="" lay-filter="sfzxqs" id="sfzxqs"
+                                        {{# if(sqrDTO.ysqrgx !="本人" ){ }} disabled="off" {{# }
+                                        }}>
+                                    <option value="">请选择</option>
+                                    {{# layui.each(d.zd.sf, function(index, item){ }}
+                                    <option value="{{item.DM}}" {{# if(sqrDTO.sfzxqs==item.DM ){ }} selected="selected"
+                                            {{# } }}>{{item.MC || ''}}
+                                    </option>
+                                    {{# }); }}
+                                </select>
+                            </div>
+                        </td>
+
+                        {{# }else{ }}
+                        {{#if(sqrDTO.ysqrgx == "本人"){}}
+                        <td>
+                            <div class="bdc-td-box bdc-not-null">
+                                    <select name="jtmwwyzz" lay-search="" lay-filter="jtmwwyzz" lay-verify="required" id="jtmwwyzz">
+                                        <option value="">请选择</option>
+                                        <option value="1" {{# if(sqrDTO.jtmwwyzz==1 ){ }} selected="selected" {{# } }}>是</option>
+                                        <option value="0" {{# if(sqrDTO.jtmwwyzz==0 ){ }} selected="selected" {{# } }}>否</option>
+                                    </select>
+                            </div>
+                        </td>
+                        {{# }else{ }}
+                        <td>
+                            <div class="bdc-td-box">
+                                <select name="jtmwwyzz" lay-search="" lay-filter="jtmwwyzz" id="jtmwwyzz" disabled="off">
+                                    <option value="">请选择</option>
+                                    <option value="1" {{# if(sqrDTO.jtmwwyzz==1 ){ }} selected="selected" {{# } }}>是</option>
+                                    <option value="0" {{# if(sqrDTO.jtmwwyzz==0 ){ }} selected="selected" {{# } }}>否</option>
+                                </select>
+                            </div>
+                        </td>
+                        {{# } }}
+                        {{# } }}
+
+                        <!--取每组第一条数据-->
+                        {{# if (j == 0){ }}
+                        <!--存储房屋套次的值,用于监听修改时比较两者-->
+                        <input type="hidden" class="bdc-fwtc" value="{{sqrDTO.fwtc || ''}}">
+                        <td rowspan="{{SqrGroupDTOList.length}}">
+                            <div class="bdc-td-box">
+                                <select name="fwtc" lay-search="" lay-filter="fwtc" id="fwtc">
+                                    <option value="">请选择</option>
+                                    {{# layui.each(d.zd.fwtc, function(index, item){ }}
+                                    <option value="{{item.DM || '0'}}"{{# if(sqrDTO.fwtc==item.DM ){ }} selected="selected" {{# }
+                                            }}>
+                                        {{item.MC || ''}}
+                                    </option>
+                                    {{# }); }}
+                                </select>
+                            </div>
+                        </td>
+
+                        <td rowspan="{{SqrGroupDTOList.length}}">
+                            <div class="bdc-td-box">
+                                <select name="sbfwtc" lay-search="" lay-filter="sbfwtc" disabled="off" id="sbfwtc">
+                                    <option value="">请选择</option>
+                                    {{# layui.each(d.zd.fwtc, function(index, item){ }}
+                                    <option value="{{item.DM || '0'}}" {{# if(sqrDTO.sbfwtc==item.DM ){ }} selected="selected"
+                                            {{# } }}>{{item.MC || ''}}
+                                    </option>
+                                    {{# }); }}
+                                </select>
+                            </div>
+                        </td>
+
+                        {{# } }}
+                        {{#if(d.sqrlb == "1"){}}
+                        <td align="center">
+                            {{#if(sqrDTO.ysqrgx == "本人"){}}
+                            <button type="button"  class="layui-btn layui-btn-xs bdc-major-btn jtcy-add" id="jtcy-add" name="jtcy-add">增加</button>
+                            <button type="button"  class="layui-btn layui-btn-xs bdc-secondary-btn getJtcyxx" id="getJtcyxx" name="getJtcyxx">家庭成员查询</button>
+                            {{# }else{ }}
+                            <button type="button" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn jtcy-delete" id="jtcy-delete" name="jtcy-delete" data-jtcyid="{{sqrDTO.id ||''}}" onclick="deleteJtcy('{{sqrDTO.id ||\'\'}}',$(this),'{{sqrDTO.sqridList ||\'\'}}')">删除</button>
+                            {{# } }}
+                        </td>
+                        {{# }else{ }}
+                        <td align="center">
+                            {{#if(sqrDTO.ysqrgx == "本人"){}}
+                            <button type="button"  class="layui-btn layui-btn-xs bdc-major-btn jtcy-add" id="jtcy-add" name="jtcy-add">增加</button>
+                            <button type="button"  class="layui-btn layui-btn-xs bdc-secondary-btn getJtcyxx" id="getJtcyxx" name="getJtcyxx">家庭成员查询</button>
+                            {{# }else{ }}
+                            <button type="button" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn jtcy-delete" id="jtcy-delete" name="jtcy-delete" data-jtcyid="{{sqrDTO.id ||''}}" onclick="deleteJtcy('{{sqrDTO.id ||\'\'}}',$(this),'{{sqrDTO.sqridList ||\'\'}}')">删除</button>
+                            {{# } }}
+                        </td>
+                        {{# } }}
+
+                    </tr>
+                    {{# }); }}
+
+                    {{# }); }}
+                    {{# }else{ }}
+                    <tr class="bdc-table-none">
+                        {{#if(d.sqrlb == "1"){}}
+                        <td colspan="12">
+                        {{# }else{ }}
+                        <td colspan="11">
+                        {{# } }}
+                            <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据</div>
+                        </td>
+                    </tr>
+                    {{# } }}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+
+</script>
+
+<!--新增家庭成员信息-->
+<script type="text/html" id="addJtcyTpl">
+    {{# var sqrDTO=d.sqrDTO }}
+    <tr>
+        <input type="hidden" value="{{sqrDTO.id || ''}}" name="id">
+        <input type="hidden" value="{{d.sqrlb|| ''}}" name="sqrlb">
+        <td>
+            <div class="bdc-td-box bdc-not-null">
+                <input type="text" class="layui-input" lay-verify="required" value="{{sqrDTO.mc || ''}}"
+                       name="mc" title="{{sqrDTO.mc || ''}}" id="mc">
+            </div>
+        </td>
+
+        <td>
+            <div class="bdc-td-box">
+                <select name="zjzl" lay-search="" lay-filter="zjzl" id="zjzl">
+                    <option value="">  </option>
+                    {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                    <option value="{{item.DM || ''}}" {{# if(sqrDTO.zjzl==item.DM ){ }} selected="selected" {{# }
+                            }}>
+                        {{item.MC || ''}}
+                    </option>
+                    {{# }); }}
+                </select>
+            </div>
+        </td>
+
+        <td>
+            <div class="bdc-td-box bdc-not-null">
+                <input type="text" class="layui-input" lay-verify="required" value="{{sqrDTO.zjh || ''}}"
+                       name="zjh" id="zjh" title="{{sqrDTO.zjh || ''}}">
+            </div>
+        </td>
+
+        <td>
+            <div class="bdc-td-box">
+                <select name="sfjm" lay-search="" lay-filter="sfjm" id="sfjm" disabled="off">
+                    <option value="">请选择</option>
+                    {{# layui.each(d.zd.sf, function(index, item){ }}
+                    <option value="{{item.DM}}" {{# if(sqrDTO.sfjm==item.DM ){ }} selected="selected" {{# }
+                            }}>
+                        {{item.MC || ''}}
+                    </option>
+                    {{# }); }}
+                </select>
+            </div>
+        </td>
+
+        <td>
+            <div class="bdc-td-box">
+                <select name="ysqrgx" lay-search="" lay-filter="" id="ysqrgx">
+                    <option value=""></option>
+                    <option value="{{sqrDTO.ysqrgx || ''}}" selected="selected">{{sqrDTO.ysqrgx || ''}}
+                    </option>
+                    {{# layui.each(d.zd.ysqrgx, function(index, item){ }}
+                    <option value="{{item.MC || ''}}" {{# if(sqrDTO.ysqrgx==item.MC ){ }}
+                            selected="selected" {{#
+                            } }}>{{item.MC || ''}}
+                    </option>
+                    {{# }); }}
+                </select>
+            </div>
+        </td>
+
+        <td>
+            <div class="bdc-td-box">
+                <select name="hyzk" lay-search="" lay-filter="hyzk" disabled="off" id="hyzk">
+                    <option value="">请选择</option>
+                    <option value="已婚" {{# if(sqrDTO.hyzk=="已婚" ){ }} selected="selected" {{# } }}>已婚</option>
+                    <option value="未婚" {{# if(sqrDTO.hyzk=="未婚" ){ }} selected="selected" {{# } }}>未婚</option>
+                    <option value="离婚" {{# if(sqrDTO.hyzk=="离婚" ){ }} selected="selected" {{# } }}>离婚</option>
+                </select>
+            </div>
+        </td>
+
+        <td>
+            <div class="bdc-td-box">
+                <select name="gyrsffq" lay-search="" lay-filter="gyrsffq" disabled="off" id="gyrsffq">
+                    <option value="">请选择</option>
+                    {{# layui.each(d.zd.sf, function(index, item){ }}
+                    <option value="{{item.DM}}" {{# if(sqrDTO.gyrsffq==item.DM ){ }} selected="selected" {{# }
+                            }}>
+                        {{item.MC || ''}}
+                    </option>
+                    {{# }); }}
+                </select>
+            </div>
+        </td>
+
+        {{#if(sqrDTO.sqrlb == "1"){}}
+        <td>
+            <div class="bdc-td-box">
+                <select name="sfbdhj" lay-search="" lay-filter="sfbdhj" disabled="off" id="sfbdhj">
+                    <option value="">请选择</option>
+                    {{# layui.each(d.zd.sf, function(index, item){ }}
+                    <option value="{{item.DM}}" {{# if(sqrDTO.sfbdhj==item.DM ){ }} selected="selected" {{# }
+                            }}>
+                        {{item.MC || ''}}
+                    </option>
+                    {{# }); }}
+                </select>
+            </div>
+        </td>
+
+        <td>
+            <div class="bdc-td-box">
+                <select name="sfzxqs" lay-search="" lay-filter="sfzxqs" disabled="off" id="sfzxqs">
+                    <option value="">请选择</option>
+                    {{# layui.each(d.zd.sf, function(index, item){ }}
+                    <option value="{{item.DM}}" {{# if(sqrDTO.sfzxqs==item.DM ){ }} selected="selected"
+                            {{# } }}>{{item.MC || ''}}
+                    </option>
+                    {{# }); }}
+                </select>
+            </div>
+        </td>
+
+        {{# }else{ }}
+        <td>
+            <div class="bdc-td-box">
+                <select name="jtmwwyzz" lay-search="" lay-filter="jtmwwyzz" id="jtmwwyzz" disabled="off">
+                    <option value="">请选择</option>
+                    <option value="1" {{# if(sqrDTO.jtmwwyzz==1 ){ }} selected="selected" {{# } }}>是</option>
+                    <option value="0" {{# if(sqrDTO.jtmwwyzz==0 ){ }} selected="selected" {{# } }}>否</option>
+                </select>
+            </div>
+        </td>
+        {{# } }}
+        <td align="center">
+            <button type="button" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn jtcy-delete" id="jtcy-delete" name="jtcy-delete" data-jtcyid="{{sqrDTO.id ||''}}" onclick="deleteJtcy('{{sqrDTO.id ||\'\'}}',$(this),'{{sqrDTO.sqridList ||\'\'}}')">删除</button>
+        </td>
+    </tr>
+
+</script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<!--小数计算防精度缺失-->
+<script src="../../static/lib/mathjs/math.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<!--表单验证公共方法-->
+<script src='../../static/js/slymyz.js'></script>
+<script src="../../static/js/readCard.js"></script>
+<script src='../../static/js/ycsl/rhycym.js'></script>
+<script src='../../static/js/formCenter.js'></script>
+<!--规则验证公共方法-->
+<script src='../../static/js/gzyzCommon.js'></script>
+</html>

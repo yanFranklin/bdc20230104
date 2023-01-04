@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.register.core.mapper.BdcFdcqFdcqXmMapper">
+
+    <!--分页查询-->
+    <select id="listBdcFdcqFdcqxmByPage" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcFdcqFdcqxmDO">
+        SELECT FZID,QLID,XMMC,ZH,ZCS,GHYT,FWJG,JZMJ,JGSJ,ZTS,FWXZ,ZZDMJ,BDCDYWYBH,JZND
+        FROM BDC_FDCQ_FDCQXM t
+        <where>
+            <if test="qlid != null and qlid != ''">
+                AND t.QLID = #{qlid}
+            </if>
+        </where>
+        <choose>
+            <when test="sortParameter != null and sortParameter != ''">
+                ORDER BY ${sortParameter}
+            </when>
+            <otherwise>
+                ORDER BY t.FZID ASC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="countFdcqFdcqXm" parameterType="cn.gtmap.realestate.register.core.qo.BdcQlQO"
+            resultType="Integer">
+        SELECT count(*) FROM bdc_fdcq_fdcqxm a
+        INNER JOIN bdc_fdcq b ON a.qlid = b.qlid
+        <where>
+            b.bdcdyfwlx = 1
+            <if test="bdcdyh !=null and bdcdyh !=''">
+                AND b.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="xmid !=null and xmid !=''">
+                AND b.xmid = #{xmid}
+            </if>
+            <if test="qlid !=null and qlid !=''">
+                AND b.qlid = #{qlid}
+            </if>
+        </where>
+
+    </select>
+</mapper>

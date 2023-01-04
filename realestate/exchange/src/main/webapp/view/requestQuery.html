@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title class="bdc_subsystem"></title>
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <link href="../static/layui/css/layui.css" media="all" rel="stylesheet" />
+    <link href="../static/lib/bdcui/css/mask.css" media="all" rel="stylesheet" />
+    <link href="../static/lib/bdcui/css/table.css" rel="stylesheet"/>
+    <link href="../static/lib/bdcui/css/search.css" rel="stylesheet"/>
+    <link href="../static/css/percentage-layout.css" rel="stylesheet" />
+    <script src="../static/lib/jquery/jquery.min.js"></script>
+    <script src="../static/lib/layui/layui.js"></script>
+    <script src="../static/js/mask.js"></script>
+    <script src="../static/js/common.js"></script>
+    <script src="../static/js/commonSearch.js"></script>
+    <script src="../static/js/table.js"></script>
+</head>
+<body>
+<div class="bdc-percentage-container">
+<!--    查询条件输入div块-->
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <form class="layui-form" lay-filter="searchForm">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">查询单号</label>
+                        <div class="layui-input-inline">
+                            <input class="layui-input cxtj" name="cxsqdh" placeholder="请输入" type="text"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">查询机构</label>
+                        <div class="layui-input-inline">
+                            <input class="layui-input cxtj" name="cxjgbs" placeholder="请输入" type="text"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">查询业务</label>
+                        <div class="layui-input-inline">
+                            <input class="layui-input cxtj" name="cxywlb" placeholder="请输入" type="text"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">状态</label>
+                        <div class="layui-input-inline">
+                            <select name="zt" lay-search="" lay-filter="zt">
+                                <option value="">请选择</option>
+                                <option value="1">未查询</option>
+                                <option value="2">已查询未上报</option>
+                                <option value="3">已上报</option>
+                                <option value="4">部分查询</option>
+                                <option value="5">超时</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">获取时间起</label>
+                        <div class="layui-input-inline">
+                            <input type="text" placeholder="请选择" id="kssj" name="kssj" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">获取时间止</label>
+                        <div class="layui-input-inline">
+                            <input type="text" placeholder="请选择" id="jssj" name="jssj" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-inline bdc-button-box">
+                        <button class="layui-btn layui-btn-normal bdc-major-btn" id="query" lay-filter="query" lay-submit="query">查询
+                        </button>
+                        <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="resetBtn" lay-filter="resetBtn" lay-submit="resetBtn">重置
+                        </button>
+                        <button type="button" class="layui-btn layui-btn-normal bdc-secondary-btn" id="getQuery" lay-filter="getQuery" lay-submit="getQuery">获取请求
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+<!--    查询结果div块-->
+    <div class="bdc-table-box">
+        <table id="requestTable" lay-filter="dataTable"></table>
+    </div>
+</div>
+<!--外表格上面功能按钮-->
+<script type="text/html" id="toolbarSqxx">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="access">上报</button>
+        <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="plzxcx">批量查询</button>
+    </div>
+</script>
+<!--点击查询人按钮后展开的表格上面功能按钮-->
+<script type="text/html" id="toolbarCxrSqxx">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="access">上报</button>
+    </div>
+</script>
+<!--点击查询人按钮后展开的table-->
+<script type="text/html"  id="cxrDiv">
+    <div class="bdc-table-box bdc-table-cxrxx">
+        <table id="cxrTable" lay-filter="cxrTable"></table>
+    </div>
+</script>
+<!--操作列的功能按钮-->
+<script type="text/html" id="cz">
+        <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="sb">上报</a>
+        <a class="layui-btn layui-btn-xs bdc-secondary-btn" lay-event="cxr">查询人</a>
+        <a class="layui-btn layui-btn-xs bdc-secondary-btn bdc-more-btn">
+            更多<i class="layui-icon layui-icon-down"></i>
+        </a>
+        <div class="bdc-table-btn-more">
+            <a lay-event="zxcx">执行查询</a>
+            <a lay-event="cxjg">查询结果</a>
+        </div>
+</script>
+<!--点击查询人按钮后展开的table上面的操作列的功能按钮-->
+<script type="text/html" id="cxrcz">
+    <a class="layui-btn  layui-btn-xs bdc-major-btn" lay-event="ckwsxx">查看文书信息</a>
+    <a class="layui-btn  layui-btn-xs bdc-secondary-btn" lay-event="cxhqwsxx">重新获取文书信息</a>
+    <a class="layui-btn layui-btn-xs bdc-secondary-btn bdc-more-btn">
+        更多<i class="layui-icon layui-icon-down"></i>
+    </a>
+    <div class="bdc-table-btn-more">
+        <a  lay-event="cxrcxjg">查询结果</a>
+        <a  lay-event="cxrzxcx">执行查询</a>
+    </div>
+</script>
+<script src="../static/js/requestQuery.js"></script>
+</body>
+</html>
+
+

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--建筑物区分所有权业主共有部分信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.exchange.ShareDataMapper">
+    <select id="queryQlfFwFdcqQfsyqList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.QlfFwFdcqQfsyqDO">
+        SELECT DISTINCT t.ysdm,
+        t.ywh,
+        t.bdcdyh,
+        t.qxdm,
+        t.djjg,
+        t.dbr,
+        t.djsj,
+        t.fj,
+        t.qszt,
+        t.qllx,
+        t.jgzwbh,
+        t.jgzwmc,
+        t.jgzwsl,
+        t.jgzwmj,
+        t.fttdmj
+        FROM QLF_FW_FDCQ_QFSYQ t
+        <where>
+            <if test="YWH != null and YWH !=''">
+                AND t.ywh = #{YWH}
+            </if>
+            <if test="BDCDYH != null and BDCDYH !=''">
+                AND t.bdcdyh = #{BDCDYH}
+            </if>
+        </where>
+    </select>
+
+</mapper>

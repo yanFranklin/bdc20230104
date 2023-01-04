@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>税务信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/hefei/swxx.css">
+</head>
+<body>
+<div class="bdc-form-div bdc-not-full-bg">
+    <!--全局 标题和操作按钮 开始-->
+    <form class="layui-form sl-from bdc-form-table">
+        <div class="bdc-content-fix">
+            <div class="content-title layui-clear">
+                <p>税务信息</p>
+                <div id="buttonArea"></div>
+            </div>
+        </div>
+        <!--全局 标题和操作按钮 结束-->
+        <div class="form-margin-area">
+            <div class="basic-info" id="ycslzrfswxx">
+            </div>
+            <div class="basic-info" id="ycslzcfswxx">
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+
+<!--按钮显示-->
+<script type="text/html" id="buttonAreaTpl">
+    <div class="title-btn-area">
+        <button class="layui-btn bdc-secondary-btn" type="button" onclick="scfjqb()"
+                id="upload">上传完税审核通知单</button>
+    </div>
+</script>
+<!--一窗受理税务信息-->
+<!--税务信息展示-->
+<script type="text/html" id="swxxTpl">
+    <div class="title-sign bdc-title-sign-btn" style="height: 40px">
+        {{#if(d.sqrlb == "1"){}}
+        <p>转入方纳税信息</p>
+        {{# }else{ }}
+        <p>转出方纳税信息</p>
+        {{# } }}
+    </div>
+    <div class="bdc-sw-table">
+        <table class="layui-table" border="1" name="swxxTable">
+            <!--设立列宽度-->
+            <colgroup>
+                <col>
+                <col>
+                <col>
+                <col>
+            </colgroup>
+            <thead>
+            <tr class="gray-tr">
+                <td>核定计税价格</td>
+                <td colspan="1" style="background-color: #fff">{{d.bdcSlSwxxList.bdcSlHsxxDO.hdjsjg || '0'}}</td>
+                <td>完税状态</td>
+                <td style="background-color: #fff">
+                    <select name="wszt" lay-search="" lay-filter="wszt" disabled>
+                        {{# layui.each(d.zd.sf, function(index, item){ }}
+                        <option value="{{item.DM}}" {{# if(d.bdcSlSwxxList.bdcSlHsxxDO.wszt==item.DM ){ }}
+                                selected="selected" {{# }
+                                }}>
+                            {{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>税种</th>
+                <th>应纳税额(元)</th>
+                <th>减免税额(元)</th>
+                <th>实际纳税额(元)</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{# layui.each(d.bdcSlSwxxList.bdcSlHsxxMxDOList, function(i, bdcSlSwxxMx){ }}
+            <tr>
+                <td>
+                    <div class="bdc-td-box">
+                        <select name="mxzl" lay-search="" lay-filter="mxzl" disabled>
+                            {{# layui.each(d.zd.swzl, function(index, item){ }}
+                            <option value=""></option>
+                            <option value="{{item.DM || ''}}" {{# if(bdcSlSwxxMx.mxzl==item.DM ){ }} selected="selected"
+                                    {{#
+                                    } }}>{{item.MC || ''}}
+                            </option>
+                            {{# }); }}
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="number" name="ynse" value="{{bdcSlSwxxMx.ynse || '0'}}" class="layui-input"
+                               readonly>
+                    </div>
+                </td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="number" name="jmse" value="{{bdcSlSwxxMx.jmse || '0'}}" class="layui-input"
+                               readonly>
+                    </div>
+                </td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="number" name="sjnse" value="{{bdcSlSwxxMx.sjnse || '0'}}" class="layui-input"
+                               readonly>
+                    </div>
+                </td>
+            </tr>
+            {{# }); }}
+            <tr>
+                <td>
+                    <div class="bdc-td-box layui-form-select">
+                        <input type="text" value="合计" class="layui-input" readonly>
+                    </div>
+                </td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="number" name="ynsehj" value="{{d.bdcSlSwxxList.bdcSlHsxxDO.ynsehj || '0'}}" class="layui-input"
+                               readonly>
+                    </div>
+                </td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="number" name="jmsehj" value="{{d.bdcSlSwxxList.bdcSlHsxxDO.jmsehj || '0'}}" class="layui-input"
+                               readonly>
+                    </div>
+                </td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="number" name="sjyzhj" value="{{d.bdcSlSwxxList.bdcSlHsxxDO.sjyzhj || '0'}}" class="layui-input"
+                               readonly>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</script>
+
+<!--空的税务信息展示-->
+<script type="text/html" id="nullSwxxTpl">
+    <div class="title-sign bdc-title-sign-btn" style="height: 40px">
+        {{#if(d.sqrlb == "1"){}}
+        <p>转入方纳税信息</p>
+        {{# }else{ }}
+        <p>转出方纳税信息</p>
+        {{# } }}
+    </div>
+    <div class="bdc-sw-table">
+        <table class="layui-table" border="1" name="swxxTable">
+            <!--设立列宽度-->
+            <colgroup>
+                <col>
+                <col>
+                <col>
+                <col>
+            </colgroup>
+            <thead>
+            <tr class="gray-tr">
+                <td>核定计税价格</td>
+                <td colspan="1" style="background-color: #fff"></td>
+                <td>完税状态</td>
+                <td style="background-color: #fff">
+                    <select name="wszt" lay-search="" lay-filter="wszt" disabled>
+                        {{# layui.each(d.zd.sf, function(index, item){ }}
+                        <option value="{{item.DM}}">
+                            {{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>税种</th>
+                <th>应纳税额(元)</th>
+                <th>减免税额(元)</th>
+                <th>实际纳税额(元)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="bdc-table-none">
+                <td colspan="4">
+                    <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据</div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="bdc-td-box layui-form-select">
+                        <input type="text" value="合计" class="layui-input" readonly>
+                    </div>
+                </td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="number" name="" value="" class="layui-input"
+                               readonly>
+                    </div>
+                </td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="number" name="" value="" class="layui-input"
+                               readonly>
+                    </div>
+                </td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="number" name="" value="" class="layui-input"
+                               readonly>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</script>
+
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src='../../static/js/ycsl/swxx.js'></script>
+<script src='../../static/js/formCenter.js'></script>
+</html>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.register.core.mapper.BdcSdMapper">
+    <select id="queryBdcZssdByBdcdyh" resultType="cn.gtmap.realestate.common.core.domain.BdcZssdDO">
+        select
+        bdc_zssd.zssdid,
+        bdc_zssd.gzlslid,
+        bdc_zssd.xmid,
+        bdc_zssd.cqzh,
+        bdc_zssd.zsid,
+        bdc_zssd.bdclx,
+        bdc_zssd.sdzt,
+        bdc_zssd.sdyy,
+        bdc_zssd.sdr,
+        bdc_zssd.sdrid,
+        bdc_zssd.sdsj,
+        bdc_zssd.jsr,
+        bdc_zssd.jsrid,
+        bdc_zssd.jssj,
+        bdc_zssd.jsyy,
+        bdc_zssd.bz,
+        bdc_zssd.sdsqjg,
+        bdc_zssd.sdsqwh,
+        bdc_zssd.sdlx
+        from
+        bdc_xm
+        INNER JOIN BDC_XM_ZS_GX on bdc_xm.xmid = BDC_XM_ZS_GX.xmid
+        INNER JOIN bdc_zssd on bdc_zssd.zsid = BDC_XM_ZS_GX.zsid
+        where bdc_xm.bdcdyh = #{bdcdyh} and  bdc_xm.qszt = 1 and bdc_zssd.sdzt = #{sdzt}
+    </select>
+
+    <select id="queryBdcZssdBdcdyh" resultType="String">
+        select
+            xm.bdcdyh
+        from
+            bdc_xm
+                INNER JOIN BDC_XM_ZS_GX on bdc_xm.xmid = BDC_XM_ZS_GX.xmid
+                INNER JOIN bdc_zssd on bdc_zssd.zsid = BDC_XM_ZS_GX.zsid
+                INNER JOIN BDC_XM_ZS_GX gx ON gx.zsid = BDC_XM_ZS_GX.zsid
+                INNER JOIN bdc_xm xm ON gx.xmid = xm.xmid
+        where bdc_xm.qszt = 1
+        AND bdc_zssd.sdzt = #{sdzt}
+        AND bdc_xm.bdcdyh IN
+        <foreach collection="bdcdyhList" item="bdcdyh" open="(" close=")" separator=",">
+            #{bdcdyh}
+        </foreach>
+    </select>
+</mapper>

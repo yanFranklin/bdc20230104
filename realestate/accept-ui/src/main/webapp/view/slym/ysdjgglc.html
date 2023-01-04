@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>遗失登记公告流程</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/nantong/slymqjdc.css">
+</head>
+<body>
+<div class="bdc-form-div">
+    <!--全局 标题和操作按钮 开始-->
+    <form class="layui-form sl-from" id="all">
+        <div class="bdc-content-fix">
+            <div class="content-title layui-clear">
+                <p>遗失登记公告流程</p>
+                <div class="title-btn-area">
+                    <button class="layui-btn bdc-major-btn" lay-submit="" lay-filter="saveData" type="button" id="saveData">保存 </button>
+                    <button class="layui-btn bdc-secondary-btn print-btn" type="button" id="printSjd">打印收件单</button>
+                </div>
+            </div>
+        </div>
+        <!--表单信息-->
+        <div class="form-margin-area">
+            <div class="bdc-jbxx">
+                <!--基本信息-->
+                <div class="basic-info">
+                    <div class="title-sign bdc-title-sign-btn">
+                        <p>基本信息</p>
+                    </div>
+                    <div class="layui-form-item">
+                        <input type="hidden" class="bdc-smxx" name="jbxxid" value="{{d.jbxxid || ''}}">
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">收件编号</label>
+                            <div class="layui-input-inline bdc-one-icon">
+                                <input type="text" name="slbh" autocomplete="off" class="layui-input" value="" disabled="off">
+                                <img src="../../static/lib/bdcui/images/lock.png" alt="">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width ">承诺期限(天)</label>
+                            <div class="layui-input-inline bdc-one-icon">
+                                <input type="text" name="cnqx" autocomplete="off" class="layui-input" value="" disabled="off">
+                                <img src="../../static/lib/bdcui/images/lock.png" alt="">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">收件人</label>
+                            <div class="layui-input-inline bdc-one-icon">
+                                <input type="text" name="slr" autocomplete="off" class="layui-input" value="" disabled="off">
+                                <img src="../../static/lib/bdcui/images/lock.png" alt="">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">收件时间</label>
+                            <div class="layui-input-inline bdc-one-icon">
+                                <input type="text" name="slsj" autocomplete="off" class="layui-input" value="" disabled="off">
+                                <img src="../../static/lib/bdcui/images/lock.png" alt="">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">业务类型</label>
+                            <div class="layui-input-inline bdc-one-icon">
+                                <input type="text" name="lcmc" autocomplete="off" class="layui-input" value="" disabled="off">
+                                <img src="../../static/lib/bdcui/images/lock.png" alt="">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">登记原因</label>
+                            <div class="layui-input-inline">
+                                <select name="djyy" class="layui-input bdc-smxx">
+                                    <option value="">请选择</option>
+                                    <option value="100">原因1</option>
+                                    <option value="200">原因2</option>
+                                    <option value="300">原因3</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item change-textarea-margin">
+                        <label class="layui-form-label change-label-width">备注</label>
+                        <div class="layui-input-inline">
+                            <textarea class="layui-textarea change-textarea-width bdc-smxx" name="bz"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--权利人信息-->
+            <div class="basic-info">
+                <div class="title-sign bdc-title-sign-btn">
+                    <p>申请人</p>
+                    <div class="bdc-title-sign-btn-box">
+                        <button type="button"
+                                class="layui-btn layui-btn-sm bdc-secondary-btn"
+                                name="addSqr" id="addDyqr"
+                                onclick="addQlr('',true)">新增
+                        </button>
+                        <button type="button"
+                                class="layui-btn layui-btn-sm bdc-secondary-btn"
+                                name="readIdCard" id="readIdCard"
+                                onclick="readIdCardToQlr('','')">读卡
+                        </button>
+                    </div>
+                </div>
+                <input type="hidden" name="xmid" value="">
+                <div name="sqrForm" class="common-form sl-from layui-form bdc-form-table" lay-filter="sqrForm">
+                    <div class="layui-form-item" id="sqrForm">
+                        <table class="layui-table bdc-jt-table" border="1">
+                            <thead>
+                            <tr class="gray-tr">
+                                <th width="30px">序号</th>
+                                <th style="min-width: 80px">权利人类型</th>
+                                <th style="min-width: 140px">名称</th>
+                                <th style="min-width: 100px">证件类型</th>
+                                <th style="min-width: 150px">证件号</th>
+                                <th>类别</th>
+                                <th>共有方式</th>
+                                <th>共有比例</th>
+                                <th>联系电话</th>
+                            </tr>
+                            </thead>
+                            <input type="hidden" name="xmid" value="" class="qlr">
+                            <input type="hidden" name="qlrid" value="" class="qlr">
+                            <tr>
+                                <td>1</td>
+                                <td>
+                                    <div class="bdc-td-box">
+                                        <select name="qlrlx" lay-search="" lay-filter="qlrlx" class="qlr"
+                                                id="zhlc-qlrlx">
+                                            <option value="">请选择</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="bdc-td-box">
+                                        <input type="text" lay-verify="" title="" id="zhlc-qlrmc" name="qlrmc"
+                                               value="" class="layui-input qlr">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="bdc-td-box">
+                                        <select name="zjzl" lay-search="" id="zhlc-zjzl" lay-filter="zjhFilter" class="qlr">
+                                            <option value="">请选择</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="bdc-td-box">
+                                        <input type="text" lay-verify="identitynew" id="zhlc-zjh" name="zjh"
+                                               value="" class="layui-input qlr" title="">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="bdc-td-box">
+                                        <select name="qlrlb" lay-search="" id="zhlc-qlrlb" lay-filter="qlrlb"
+                                                class="qlrlb qlr">
+                                            <option value="">请选择</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="bdc-td-box">
+                                        <select name="gyfs" lay-search="" id="zhlc-gyfs" lay-filter="gyfs"
+                                                class="gyfs qlr">
+                                            <option value="">请选择</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="bdc-td-box">
+                                        <input type="text" lay-verify="" id="zhlc-qlbl" name="qlbl"
+                                               value="" class="layui-input qlr">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="bdc-td-box">
+                                        <input type="text" lay-verify="" id="zhlc-dh" name="dh"
+                                               value="" class="layui-input qlr" title="">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <input type="hidden" name="xmid" value="" class="ywr">
+                                <input type="hidden" name="qlrid" value="" class="ywr">
+                                <td>2</td>
+                                <td class="ywr">
+                                    <div class="bdc-td-box">
+                                        <select name="qlrlx" lay-search="" disabled="disabled" lay-filter="qlrlx">
+                                            <option value="">请选择</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td class="ywr">
+                                    <div class="bdc-td-box">
+                                        <input type="text" class="layui-input ywr ywrmc"
+                                               title="" value="" disabled="disabled" >
+                                    </div>
+
+                                </td>
+                                <td class="ywr">
+                                    <div class="bdc-td-box">
+                                        <select lay-search="" lay-filter="zjhFilter" disabled="disabled" class="qlr">
+                                            <option value="">请选择</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td class="ywr">
+                                    <div class="bdc-td-box">
+                                        <input type="text" class="layui-input" value="" disabled="disabled" title="">
+                                    </div>
+                                </td>
+                                <td class="ywr">
+                                    <div class="bdc-td-box">
+                                        <select name="qlrlb" lay-search="" lay-filter="qlrlb" disabled="disabled"
+                                                class="qlr">
+                                            <option value="">请选择</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td class="ywr">
+                                    <div class="bdc-td-box">
+                                        <select name="gyfs" lay-search="" lay-filter="gyfs" disabled="disabled"
+                                                class="gyfs qlr">
+                                            <option value="">请选择</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td class="ywr">
+                                    <div class="bdc-td-box">
+                                        <input type="text" class="layui-input ywr" value=""
+                                               disabled="disabled">
+                                    </div>
+                                </td>
+                                <td class="ywr">
+                                    <div class="bdc-td-box">
+                                        <input type="text" class="layui-input ywr" value=""
+                                               disabled="disabled" title="">
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!--遗失公告信息-->
+            <div class="basic-info" class="layui-form" id="bdcdyxxForm">
+                <div class="title-sign bdc-title-sign-btn">
+                    <p>遗失公告信息</p>
+                    <button type="button" value="readOnly"
+                            class="layui-btn layui-btn-sm bdc-secondary-btn"
+                            name="lsgx"
+                            onclick="showLsgx('')">登记历史
+                    </button>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline xzq-sele">
+                        <label class="layui-form-label change-label-width">宗地用途</label>
+                        <div class="layui-input-inline select-height bdc-search-by-dm">
+                            <select lay-search="" name="zdzhyt" id="zdzhyt" class="xmxx}">
+                                <option value="">请选择</option>
+                                <option value="001">农用</option>
+                                <option value="002">商用</option>
+                            </select>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline xzq-sele">
+                        <label class="layui-form-label change-label-width">宗地用途2</label>
+                        <div class="layui-input-inline select-height bdc-search-by-dm">
+                            <select lay-search="" name="zdzhyt2" id="zdzhyt2" class="xmxx">
+                                <option value="">请选择</option>
+                                <option value="001">农用</option>
+                                <option value="002">商用</option>
+                            </select>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline xzq-sele">
+                        <label class="layui-form-label change-label-width">宗地用途3</label>
+                        <div class="layui-input-inline select-height bdc-search-by-dm">
+                            <select lay-search="" name="zdzhyt3" id="zdzhyt3" class="xmxx{{d.index || ''}}">
+                                <option value="">请选择</option>
+                                <option value="001">农用</option>
+                                <option value="002">商用</option>
+                            </select>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label change-label-width bdc-label-newline">原土地用途<br>名称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" autocomplete="off" class="layui-input xmxx" name="ytdytmc"
+                                   id="ytdytmc" value="" title="">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label change-label-width">宗地面积</label>
+                        <div class="layui-input-inline">
+                            <input type="number" autocomplete="off" class="layui-input xmxx" name="zdzhmj"
+                                   id="zdzhmj" value="">
+                        </div>
+                    </div>
+                    <div class="layui-inline xzq-sele">
+                        <label class="layui-form-label change-label-width">权利性质</label>
+                        <div class="layui-input-inline">
+                            <select name="qlxz" lay-search="" id="qlxz" lay-filter="qlxz" class="xmxx">
+                                <option value="">请选择</option>
+                                <option value="11">11</option>
+                                <option value="22">22</option>
+                            </select>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label change-label-width">定着物面积</label>
+                        <div class="layui-input-inline">
+                            <input type="number" autocomplete="off" class="layui-input xmxx" id="dzwmj" name="dzwmj" value="">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label change-label-width">定着物用途</label>
+                        <div class="layui-input-inline">
+                            <select lay-search="" name="dzwyt" class="xmxx" id="dzwyt">
+                                <option value="">请选择</option>
+                                <option value="000">000</option>
+                                <option value="111">111</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label change-label-width">不动产类型</label>
+                        <div class="layui-input-inline">
+                            <select lay-search="" name="bdclx" id="bdclx" class="xmxx">
+                                <option value="">请选择</option>
+                                <option value="111">111</option>
+                                <option value="222">22</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label change-label-width">构筑物类型</label>
+                        <div class="layui-input-inline">
+                            <select name="gzwlx" lay-search="" lay-filter="gzwlx" id="gzwlx" class="xmxx">
+                                <option value="">请选择</option>
+                                <option value="111">111</option>
+                                <option value="222">22</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label change-label-width">用海类型</label>
+                        <div class="layui-input-inline">
+                            <select name="yhlxa" lay-search="" id="yhlx" lay-filter="yhlxa" class="xmxx">
+                                <option value="">请选择</option>
+                                <option value="111">111</option>
+                                <option value="222">22</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label change-label-width">林种</label>
+                        <div class="layui-input-inline">
+                            <select name="lz" lay-search="" id="lz" lay-filter="lz" class="xmxx">
+                                <option value="">请选择</option>
+                                <option value="111">111</option>
+                                <option value="222">22</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-two-column">
+                        <label class="layui-form-label change-label-width">不动产单元号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" disabled="off" name="bdcdyh" id="bdcdyh"
+                                   autocomplete="off" value="" title="">
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-two-column">
+                        <label class="layui-form-label change-label-width">坐落</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="zl" id="zl" class="layui-input xmxx"
+                                   autocomplete="off" value="" title="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="basic-info bdc-sjcl-view">
+                <div class="title-sign bdc-title-sign-btn">
+                    <p>收件材料</p>
+                    <div class="bdc-title-sign-btn-box">
+                        <button type="button" class="layui-btn layui-btn-sm bdc-secondary-btn" onclick="addSjcl()"
+                                id="addsjcl">新增
+                        </button>
+                        <button type="button" class="layui-btn layui-btn-sm sjclscbtn bdc-secondary-btn"
+                                onclick="scfjqb('')"
+                                id="clsc">材料上传
+                        </button>
+                        <button type="button" class="layui-btn layui-btn-sm bdc-secondary-btn" onclick="deletePl()"
+                                id="plsc">批量删除
+                        </button>
+                    </div>
+                </div>
+                <input type="hidden" name="xmid" value="">
+                <div class="layui-form-item bdc-form-table">
+                    <table class="slym layui-table bdc-jt-table" border="1" name="addsjcl" id="addSjclTable">
+                        <thead>
+                        <tr class="gray-tr">
+                            <td width="50px">
+                                <input type="checkbox" lay-filter="qxCheckbox" name="qxTable" style="width: 50px;" title=""
+                                       lay-skin="primary">
+                            </td>
+                            <th width="50px">序号</th>
+                            <th style="min-width: 200px">材料名称</th>
+                            <th>份数</th>
+                            <th>类型</th>
+                            <th width="200px">操作</th>
+                        </tr>
+                        </thead>
+                        <tr>
+                            <input type="hidden" name="xmid" value="" class="sjcl">
+                            <input type="hidden" name="gzlslid" value=""
+                                   class="sjcl{{d.index || ''}}">
+                            <input type="hidden" name="sjclid" value="" class="sjcl">
+                            <input type="hidden" name="wjzxid" value="" class="sjcl">
+                            <input type="hidden" name="xh" value="" class="sjcl">
+                            <td>
+                                <input type="checkbox" lay-filter="yxCheckbox" class="yx" name="yxTable"
+                                       value="" title="" lay-skin="primary">
+                            </td>
+                            <td>1</td>
+                            <td>
+                                <div class="bdc-td-box">
+                                    <input type="text" lay-verify="" id="clmc" name="clmc" value=""
+                                           class="layui-input sjcl" title="">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="bdc-td-box">
+                                    <input type="text" lay-verify="" id="fs" name="fs" value=""
+                                           class="layui-input sjcl">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="bdc-td-box">
+                                    <select name="sjlx" lay-search="" lay-filter="sjlx" class="sjcl" id="sjlx">
+                                        <option value="">请选择</option>
+                                        <option value="111">111</option>
+                                        <option value="222">222</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td align="center">
+                                <button type="button" class="layui-btn layui-btn-xs bdc-major-btn"
+                                        onclick="scfj(this)"
+                                        id="sjclsc" name="sjclsc">上传
+                                </button>
+                                <button type="button" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn"
+                                        onclick="deleteSjcl('{{bdcSlSjcl.sjclid || \'\'}}',this)" id="sjcldelete"
+                                        name="sjcldelete">
+                                    删除
+                                </button>
+                                <button type="button" class="layui-btn layui-btn-xs layui-btn-primary"
+                                        onclick="changeSjclSxh('{{bdcSlSjcl.sjclid || \'\'}}', 'up')" id="sjclup"
+                                        name="sjclup">
+                                    ↑
+                                </button>
+                                <button type="button" class="layui-btn layui-btn-xs layui-btn-primary"
+                                        onclick="changeSjclSxh('{{bdcSlSjcl.sjclid || \'\'}}', 'down')" id="sjcldown"
+                                        name="sjcldown">↓
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+
+<!--新增收件材料模板-->
+<script type="text/html" id="addSjclTpl">
+    <tr>
+        <input type="hidden" name="xmid" value="" class="sjcl">
+        <input type="hidden" name="gzlslid" value="{{d.gzlslid || ''}}" class="sjcl">
+        <input type="hidden" name="sjclid" value="" class="sjcl">
+        <input type="hidden" name="wjzxid" value="" class="sjcl">
+        <input type="hidden" name="xh" value="{{d.sjclNumber || ''}}" class="sjcl">
+        <td>
+            <input type="checkbox"  name="checkbox{{d.sjclNumber || ''}}"  class='sjcl' lay-skin="primary">
+        </td>
+        <td>
+            {{d.sjclNumber || ''}}
+        </td>
+        <td>
+            <input type="text" name="clmc" lay-verify="" class="sjcl">
+        <td>
+            <input type="text" name="fs" lay-verify="" class="sjcl">
+        </td>
+        <td>
+            <select  name="sjlx" class="sjcl">
+                <option value="">请选择</option>
+                {{# layui.each(d.zd.sjlx, function(index, item){ }}
+                <option value="{{item.DM || '0'}}" selected="selected">{{item.MC || ''}}
+                </option>
+                {{# }); }}
+            </select>
+        </td>
+        <td align="center">
+            <span class="layui-btn layui-btn-xs bdc-major-btn" onclick="scfj(this)">上传</span>
+            <span class="layui-btn layui-btn-xs layui-btn-danger bdc-delete-btn" onclick="deleteSjcl('',this)">删除</span>
+            <span class="layui-btn layui-btn-xs layui-btn-primary" onclick="changeSjclSxh('', 'up')">↑</span>
+            <span class="layui-btn layui-btn-xs layui-btn-primary" onclick="changeSjclSxh('', 'down')">↓</span>
+        </td>
+    </tr>
+</script>
+
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<!--小数计算防精度缺失-->
+<script src="../../static/lib/mathjs/math.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src='../../static/js/form-not-full.js'></script>
+<script src='../../static/js/formCenter.js'></script>
+<script src='../../static/js/slym/ysdjgglc.js'></script>
+<!--打印公共JS方法-->
+<script src='../../static/js/nantong/slym/print.js'></script>
+<!--收件材料公共JS方法-->
+<script src='../../static/js/slym/sjclCommon.js'></script>
+</html>

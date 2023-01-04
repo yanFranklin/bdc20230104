@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>已选信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/easyui/easyui.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/yztsxx.css">
+    <link rel="stylesheet" href="../../static/css/selected.css">
+    <style type="text/css">
+        /*用于调整下拉列表宽度*/
+        .layui-form-select dl {
+            max-height: 200px;
+        }
+
+        .layui-colla-item {
+            border: 0px;
+        }
+
+        .layui-collapse {
+            border: 0px;
+            margin-top: 10px;
+        }
+
+        .layui-colla-content{
+            border-bottom: 1px;
+        }
+
+        .layui-colla-content {
+            padding: 0px;
+        }
+        .layui-colla-title{
+            top:0px !important;
+            left:0px !important;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-hide">
+    <div lay-filter="tsxx" id="tsxx"></div>
+</div>
+<div class="all-container">
+    <!--下方内容-->
+    <div class="all-content-container">
+        <!--内容容器-->
+        <div class="second-all-content-container">
+            <!--下拉搜索框-->
+            <div class="search">
+                <form action="" class="layui-form">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">不动产单元号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" placeholder="请输入" class="layui-input" name="bdcdyh">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                        <label class="layui-form-label">坐落</label>
+                        <div class="layui-input-inline">
+                            <input type="text" placeholder="请输入" class="layui-input" name="zl">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                        <div class="layui-inline bdc-button-box">
+                            <input type="button" value="搜索" lay-submit="" id="queryBdcdyh" lay-filter="queryBdcdyh">
+                            <input type="reset" value="重置" class="">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!--最内层容器-->
+
+            <div class="third-all-content-container">
+                <!--筛选条件-->
+                <div class="third-all-content-container-condition">
+                    <form class="layui-form">
+                        <div class="layui-form-item">
+                            <a href="javascript:;" class="layui-btn layui-btn-sm bdc-major-btn"
+                               id="cshSelectedXx">创建</a>
+                            <a href="javascript:;" class="layui-btn layui-btn-sm bdc-delete-btn" id="deletePl">批量删除</a>
+                            <a href="javascript:;" class="layui-btn layui-btn-sm bdc-delete-btn" id="clearGwc">清空</a>
+                            <a href="javascript:;" class="layui-btn layui-btn-sm bdc-table-second-btn bdc-hide"
+                               id="zxSelectedXx">注销已选</a>
+                            <a href="javascript:;" class="layui-btn layui-btn-sm bdc-table-second-btn"
+                               id="wlzs">外联</a>
+
+                            <div class="bdc-right-operate">
+                                <div id="zjzmj" class="bdc-hide" style="position: absolute;right: 200px; width: 180px">
+                                    <span>总面积： <i id="sumjzmj"></i></span></div>
+                                <a href="javascript:;" class="layui-btn layui-btn-sm bdc-table-second-btn bdc-hide"
+                                   id="goBack">返回</a>
+                                <img id="openSearch" src="../../static/image/show-search.png" title="展开搜索框" alt="">
+                                <img class="expand-all" src="../../static/image/all-show.png" title="展开全部信息" alt="">
+                                <img class="expand-all bdc-hide" src="../../static/image/all-hide.png" title="隐藏全部信息"
+                                     alt="">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!--主体内容-->
+                <div class="main-content-container old-main-content-container layui-form" id="contentView">
+                    <!--按登记小类分组-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="alertFather" id="alertFather"></div>
+</body>
+<!--按登记小类展示列表-->
+<script type="text/html" id="classifyTpl">
+    {{#  layui.each(d.data, function(i, value){ }}
+    <div class="bdc-classify-container">
+        <div class="bdc-classify-title">
+            {{# layui.each(d.zdDjxl, function(list, name){ }}
+            {{# if(name.DM == value.djxl){ }}
+            <span class="bdc-ql-name" data-djxl="{{name.DM}}">{{name.MC}}</span>
+            {{# } }}
+            {{# }); }}
+            <div class="bdc-right-content">
+                {{# if(value.bdcdyKgDTO.zssl &&(value.zzhNum == 0
+                ||value.yxBdcdyAzfzDTOList[0].bdcYxYwxxDTOList[0].bdcSlYwxxDTO.qllx != 94)){ }}
+                <div class="bdc-num-box">
+                    <label name="zsxhpz">证书数量</label>
+                    <div class="layui-inline" name="zsxhpz">
+                        <select class="bdc-sczsfs" name="select" lay-verify="required" lay-filter="zsxh" id="sczsfs">
+                            {{# if(value.zzhNum <= 1){ }}
+                            {{# if(value.bdcdyKgDTO.zsslmrz == 1){ }}
+                            <option value="1">生成1本证</option>
+                            {{# }else{ }}
+                            <option value="2">生成{{value.zzhNum}}本证</option>
+                            {{# } }}
+                            {{# }else if(value.bdcdyKgDTO.zsslmrz == 1){ }}
+                            <!--配置默认生成一本证或者权利类型为抵押-->
+                            <option value="1">生成一本证</option>
+                            <option value="2">生成{{ value.zzhNum }}本证</option>
+                            <option value="3">任意组合</option>
+                            {{# }else{ }}
+                            <option value="2">生成{{ value.zzhNum}}本证</option>
+                            <option value="1">生成一本证</option>
+                            <option value="3">任意组合</option>
+                            {{# } }}
+                        </select>
+                    </div>
+                </div>
+                {{# } }}
+                <div class="bdc-operate-classify">
+                    <i class="layui-icon layui-icon-up"></i>
+                    <i class="layui-icon layui-icon-down bdc-hide"></i>
+                </div>
+            </div>
+        </div>
+        <!--主体内容顶部标题-->
+        <div class="main-content-container-toptitle clear">
+            <span class="bdc-yx-fx"><input type="checkbox" lay-filter="qsCheckbox" name="qxTable"
+                                           lay-skin="primary"></span>
+            <span class="bdc-yx-dyh">不动产单元号</span>
+            <span class="bdc-yx-zl">坐落</span>
+            <span class="bdc-yx-qlr bdc-yx-column">权利人</span>
+            <span class="bdc-yx-yt">用途</span>
+            <span class="bdc-yx-ybdcqz" style="display: none">原产权证号</span>
+            <span class="bdc-yx-cz">操作</span>
+        </div>
+        <!--主体内容-->
+        {{# if(value.yxBdcdyAzfzDTOList != null && value.yxBdcdyAzfzDTOList.length > 0){ }}
+        <div class="info-content-details" id="bdcdyList">
+            <div class="layui-collapse">
+                {{# layui.each(value.yxBdcdyAzfzDTOList, function(findex, yxvalue){ }}
+                <div class="layui-colla-item" data-findex="{{  findex+1 }}">
+                    <input type="hidden" value="{{  yxvalue.bdcYxYwxxDTOList.length }}" name="yxLength">
+                    <h2 class="layui-colla-title" style="display: none">{{yxvalue.zl}}</h2>
+                    {{# layui.each(yxvalue.bdcYxYwxxDTOList, function(index, item){ }}
+                    <div class="layui-colla-content layui-show" data-index="{{  index+1 }}" data-choose="false" >
+                        {{# var bdcSlYwxx=item.bdcSlYwxxDTO }}
+                        <div class="main-content-item" data-index="{{  index+1 }}" >
+                            <input type="hidden" value="{{  bdcSlYwxx.xmid }}" name="xmid">
+                            <!--主体内容标题-->
+                            <div class="main-content-item-title">
+                                <div class="todrag">
+                                    <!--复选-->
+                                    <div class="main-content-item-title-div bdc-yx-fx"><input type="checkbox"
+                                                                                              class="bdc-yx-checkbox"
+                                                                                              lay-filter="yxCheckbox"
+                                                                                              name="yxTable"
+                                                                                              lay-skin="primary"></div>
+                                    <!--不动产单元号-->
+                                    <div class="main-content-item-title-div bdc-yx-dyh"><input class="bdc-hide bdcdyh"
+                                                                                               value="{{bdcSlYwxx.bdcdyh || ''}}">{{#
+                                        if(bdcSlYwxx.bdcdyh){ }} {{
+                                        queryBdcdyh(bdcSlYwxx.bdcdyh)
+                                        }}{{# } }}
+                                    </div>
+                                    <!--坐落-->
+                                    <div class="main-content-item-title-div bdc-yx-zl">{{ bdcSlYwxx.zl|| ''}}</div>
+                                    <!--权利人-->
+                                    <div class="main-content-item-title-div bdc-yx-qlr bdc-yx-column">{{ bdcSlYwxx.qlr||
+                                        ''}}
+                                    </div>
+                                    <!--用途-->
+                                    <div class="main-content-item-title-div bdc-yx-yt">{{# if(bdcSlYwxx.yt){ }} {{
+                                        queryDzwyt(bdcSlYwxx.yt)
+                                        }}{{# } }}
+                                    </div>
+                                    <!-- 外联需要显示 证（明）书 -->
+                                    <div class="main-content-item-title-div bdc-yx-ybdcqz" style="display: none">{{
+                                        bdcSlYwxx.ybdcqz|| ''}}
+                                    </div>
+                                </div>
+                                <!--操作-->
+                                <div class="main-content-item-title-div bdc-yx-cz">
+                                    <!--删除-->
+                                    <input type="button" class="main-content-delete" value="删除">
+                                    <!--展开或收起-->
+                                    <input type="button" class="main-content-open" value="展开">
+                                </div>
+                            </div>
+                            <!--主体内容收起内容-->
+                            <div class="main-content-item-content">
+                                <!--权利人数据来源-->
+                                {{# if(value.bdcdyKgDTO.qlrsjly){ }}
+                                <div class="clickP" id="qlrsjly" data-findex="{{  findex+1 }}"
+                                     data-index="qlrsjly{{  index+1 }}">
+                                    <img src="../../static/image/powerPerson.png" alt="">
+                                    <span>权利人数据来源:</span>
+                                    <span class="confirm-content">{{ queryQlrsjly(bdcSlYwxx.qlrsjly)}}</span>
+                                </div>
+                                {{# } }}
+                                <!--义务人数据来源-->
+                                {{# if(value.bdcdyKgDTO.ywrsjly){ }}
+                                <div class="clickP" id="ywrsjly" data-findex="{{  findex+1 }}"
+                                     data-index="ywrsjly{{  index+1 }}">
+                                    <img src="../../static/image/dutyPerson.png" alt="">
+                                    <span>义务人数据来源:</span>
+                                    <span class="confirm-content">{{ queryQlrsjly(bdcSlYwxx.ywrsjly)}}</span>
+                                </div>
+                                {{# } }}
+                                {{# if(value.bdcdyKgDTO.qllx){ }}
+                                <!--权利类型-->
+                                <div class="clickP" id="qllx" data-findex="{{  findex+1 }}"
+                                     data-index="qllx{{  index+1 }}">
+                                    <img src="../../static/image/qllx.jpg" alt="">
+                                    <span>权利类型:</span>
+                                    <span class="confirm-content">{{ queryQllx(bdcSlYwxx.qllx)}}</span>
+                                </div>
+                                {{# } }}
+                                {{# if(value.bdcdyKgDTO.sfscql){ }}
+                                <!--是否生成权利-->
+                                <div class="clickP" id="sfscql" data-findex="{{  findex+1 }}"
+                                     data-index="sfscql{{  index+1 }}">
+                                    <img src="../../static/image/powerCome.png" alt="">
+                                    <span>是否生成权利:</span>
+                                    <span class="confirm-content">{{ querySf(bdcSlYwxx.sfscql,"是")}}</span>
+                                </div>
+                                {{# } }}
+                                {{# if(value.bdcdyKgDTO.sfscql){ }}
+                                <!--权利数据来源-->
+                                <div class="clickP" id="qlsjly" data-findex="{{  findex+1 }}"
+                                     data-index="qlsjly{{  index+1 }}">
+                                    <img src="../../static/image/powerCome.png" alt="">
+                                    <span>权利数据来源:</span>
+                                    <span class="confirm-content">{{ queryQlsjly(bdcSlYwxx.qlsjly)}}</span>
+                                </div>
+                                {{# } }}
+                                {{# if(value.bdcdyKgDTO.sfzf){ }}
+                                <!--显示到证书-->
+                                <div class="clickP" id="sfzf" data-findex="{{  findex+1 }}"
+                                     data-index="sfzf{{  index+1 }}">
+                                    <img src="../../static/image/whetherHouseOwner.png" alt="">
+                                    <span>是否显示到证书:</span>
+                                    <span class="confirm-content">{{ querySf(bdcSlYwxx.sfzf,"否")}}</span>
+                                </div>
+                                {{# } }}
+                                {{# if(value.bdcdyKgDTO.zszl){ }}
+                                <!--证书种类-->
+                                <div class="clickP" id="zszl" data-findex="{{  findex+1 }}"
+                                     data-index="zszl{{  index+1 }}">
+                                    <img src="../../static/image/credentialKind.png" alt="">
+                                    <span>证书种类:</span>
+                                    <span class="confirm-content">{{ queryZszl(bdcSlYwxx.zszl) || ''}}</span>
+                                </div>
+                                {{# } }}
+                                {{# if(value.bdcdyKgDTO.sfzx){ }}
+                                <!--是否注销-->
+                                <div class="clickP" id="sfzx" data-findex="{{  findex+1 }}"
+                                     data-index="sfzx{{  index+1 }}">
+                                    <img src="../../static/image/credentialKind.png" alt="">
+                                    <span>是否注销:</span>
+                                    <span class="confirm-content">{{ querySf(bdcSlYwxx.zszl,"否")}}</span>
+                                </div>
+                                {{# } }}
+                                <!--是否生成证书-->
+                                <div class="clickP" id="sfsczs" data-findex="{{  findex+1 }}"
+                                     data-index="sfsczs{{  index+1 }}">
+                                    <img src="../../static/image/credentialKind.png" alt="">
+                                    <span>是否生成证书:</span>
+                                    <span class="confirm-content">{{ querySf(bdcSlYwxx.sfsczs,"")}}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    {{# }); }}
+                </div>
+                {{# }); }}
+            </div>
+        </div>
+        {{# }else { }}
+        <div class="no-info" id="bdcdyList">无数据</div>
+        {{# } }}
+        <!--显示灰色部分-->
+        <div class="main-content-container-container">
+            <div class="drag-disabled-container" data-certificate-findex="1" data-certificate-index="1"></div>
+        </div>
+
+        <!--展开后右侧证书内容-->
+        <div class="main-content-container-right">
+            <!--标题-->
+            <p class="bdc-zh-title">任意组合</p>
+            <!--证书容器-->
+            <!--默认显示一个证书框以及添加按钮-->
+            <div class="main-content-container-right-item-container">
+                <div class="main-content-container-right-item bdc-ryzhzs" data-options="" data-certificate-index="1"
+                     name="zsxh">
+                    <div class="main-content-container-right-item-title">
+                        <!--标题-->
+                        <span>证书1</span>
+                        <!--删除按钮-->
+                        <input type="button" class="deleteZhengshu" value="删除">
+                    </div>
+                </div>
+            </div>
+            <div class="bdc-add-zs">
+                <input type="button" id="addZhengshu" value="添加证书">
+            </div>
+        </div>
+    </div>
+    {{#  }); }}
+</script>
+
+<!--权利人数据来源修改-->
+<script type="text/html" id="qlrsjlyTemplate">
+    <div class="click-show-select layui-form" lay-filter="qlrsjlyTemplate">
+        <div class="show-select-title">修改权利人数据来源</div>
+        <div class="show-select-content">
+            <select name="qlrsjlyedit" lay-verify="required" lay-filter="city">
+                <option value="1">权籍</option>
+                <option value="2">上一手权利人</option>
+                <option value="3">上一手义务人</option>
+            </select>
+        </div>
+        <div class="show-select-btn">
+            <a class="layui-btn layui-btn-sm main-btn sure-btn" id="qlrsjlysure">确定</a>
+            <a class="layui-btn layui-btn-sm minor-btn cancle-btn">取消</a>
+        </div>
+    </div>
+</script>
+
+<!--义务人数据来源修改-->
+<script type="text/html" id="ywrsjlyTemplate">
+    <div class="click-show-select layui-form" lay-filter="ywrsjlyTemplate">
+        <div class="show-select-title">修改义务人数据来源</div>
+        <div class="show-select-content">
+            <select name="ywrsjlyedit" lay-verify="required" lay-filter="city">
+                <option value="1">权籍</option>
+                <option value="2">上一手权利人</option>
+                <option value="3">上一手义务人</option>
+            </select>
+        </div>
+        <div class="show-select-btn">
+            <a class="layui-btn layui-btn-sm main-btn sure-btn" id="ywrsjlysure">确定</a>
+            <a class="layui-btn layui-btn-sm minor-btn cancle-btn">取消</a>
+        </div>
+    </div>
+</script>
+
+<!--权利类型修改-->
+<script type="text/html" id="qllxTemplate">
+    <div class="click-show-select layui-form" lay-filter="qllxTemplate">
+        <div class="show-select-title">修改权利类型</div>
+        <div class="show-select-content">
+            <select name="qllxedit" lay-verify="required" lay-filter="city">
+                {{# layui.each(d.zd.qllx, function(index, item){ }}
+                <option value="{{item.DM}}">{{item.MC}}</option>
+                {{# }); }}
+            </select>
+        </div>
+        <div class="show-select-btn">
+            <a class="layui-btn layui-btn-sm main-btn sure-btn" id="qllxsure">确定</a>
+            <a class="layui-btn layui-btn-sm minor-btn cancle-btn">取消</a>
+        </div>
+    </div>
+</script>
+<!--是否生成权利修改-->
+<script type="text/html" id="sfscqlTemplate">
+    <div class="click-show-select layui-form" lay-filter="sfscqlTemplate">
+        <div class="show-select-title">修改是否生成权利</div>
+        <div class="show-select-content">
+            <select name="sfscqledit" lay-verify="required" lay-filter="city">
+                <option value="0">否</option>
+                <option value="1">是</option>
+            </select>
+        </div>
+        <div class="show-select-btn">
+            <a class="layui-btn layui-btn-sm main-btn sure-btn" id="sfscqlsure">确定</a>
+            <a class="layui-btn layui-btn-sm minor-btn cancle-btn">取消</a>
+        </div>
+    </div>
+</script>
+<!--权利数据来源修改-->
+<script type="text/html" id="qlsjlyTemplate">
+    <div class="click-show-select layui-form" lay-filter="qlsjlyTemplate">
+        <div class="show-select-title">修改权利数据来源</div>
+        <div class="show-select-content">
+            <select name="qlsjlyedit" lay-verify="required" lay-filter="city">
+                <option value="1">权籍</option>
+                <option value="2">上一手</option>
+                <option value="1,2">权籍+上一手</option>
+            </select>
+        </div>
+        <div class="show-select-btn">
+            <a class="layui-btn layui-btn-sm main-btn sure-btn" id="qlsjlysure">确定</a>
+            <a class="layui-btn layui-btn-sm minor-btn cancle-btn">取消</a>
+        </div>
+    </div>
+</script>
+<!--是否主房修改-->
+<script type="text/html" id="sfzfTemplate">
+    <div class="click-show-select layui-form" lay-filter="sfzfTemplate">
+        <div class="show-select-title">修改是否显示到证书</div>
+        <div class="show-select-content">
+            <select name="sfzfedit" lay-verify="required" lay-filter="city">
+                <option value="0">否</option>
+                <option value="1">是</option>
+            </select>
+        </div>
+        <div class="show-select-btn">
+            <a class="layui-btn layui-btn-sm main-btn sure-btn" id="sfzfsure">确定</a>
+            <a class="layui-btn layui-btn-sm minor-btn cancle-btn">取消</a>
+        </div>
+    </div>
+</script>
+<!--证书种类修改-->
+<script type="text/html" id="zszlTemplate">
+    <div class="click-show-select layui-form" lay-filter="zszlTemplate">
+        <div class="show-select-title">修改证书种类</div>
+        <div class="show-select-content">
+            <select name="zszledit" lay-verify="required" lay-filter="city">
+                {{# layui.each(d.zd.zslx, function(index, item){ }}
+                <option value="{{item.DM}}">{{item.MC}}</option>
+                {{# }); }}
+            </select>
+        </div>
+        <div class="show-select-btn">
+            <a class="layui-btn layui-btn-sm main-btn sure-btn" id="zszlsure">确定</a>
+            <a class="layui-btn layui-btn-sm minor-btn cancle-btn">取消</a>
+        </div>
+    </div>
+</script>
+<!--是否注销修改-->
+<script type="text/html" id="sfzxTemplate">
+    <div class="click-show-select layui-form" lay-filter="sfzxTemplate">
+        <div class="show-select-title">修改是否注销</div>
+        <div class="show-select-content">
+            <select name="sfzxedit" lay-verify="required" lay-filter="city">
+                <option value="0">否</option>
+                <option value="1">是</option>
+            </select>
+        </div>
+        <div class="show-select-btn">
+            <a class="layui-btn layui-btn-sm main-btn sure-btn" id="sfzxsure">确定</a>
+            <a class="layui-btn layui-btn-sm minor-btn cancle-btn">取消</a>
+        </div>
+    </div>
+</script>
+
+<!--是否生成证书修改-->
+<script type="text/html" id="sfsczsTemplate">
+    <div class="click-show-select layui-form" lay-filter="sfsczsTemplate">
+        <div class="show-select-title">修改是否生成证书</div>
+        <div class="show-select-content">
+            <select name="sfsczsedit" lay-verify="required" lay-filter="city">
+                <option value="0">否</option>
+                <option value="1">是</option>
+            </select>
+        </div>
+        <div class="show-select-btn">
+            <a class="layui-btn layui-btn-sm main-btn sure-btn" id="sfsczssure">确定</a>
+            <a class="layui-btn layui-btn-sm minor-btn cancle-btn">取消</a>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="tsxxTpl">
+    <a class="layui-btn layui-btn-sm bdc-ignore-btn" id="ignoreAll" onclick="removeAll(this)">忽略全部</a>
+    <div class="bdc-right-tips-box" id="bottomTips">
+        <div class="tsxx" id="alertInfo"></div>
+        <div class="tsxx" id="confirmInfo"></div>
+    </div>
+</script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/easyui/jquery.easyui.min.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/query/gwcCommon.js"></script>
+<script src="../../static/js/query/gwc.js"></script>
+<script src="../../static/js/query/pplzzt.js"></script>
+<script src="../../static/js/query/yztsxx.js"></script>
+<script src="../../static/js/table.js"></script>
+</html>

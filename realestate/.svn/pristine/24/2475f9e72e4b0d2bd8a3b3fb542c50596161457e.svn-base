@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>大屏</title>
+    <link rel="stylesheet" href="../../public/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="../../public/css/big-screen.css">
+</head>
+<body>
+<!--头部开始-->
+<div class="bdc-header">
+    <h1><img src="../../public/images/logo.png" alt="">合肥市不动产登记中心</h1>
+    <!--时间-->
+    <div class="bdc-time">
+        <div class="bdc-time-word">排队信息综合屏</div>
+        <div class="bdc-time-details"><span class="bdc-time-date">2019-06-04</span><span
+                class="bdc-time-hour">10:30</span><span class="bdc-time-week">星期二</span></div>
+    </div>
+</div>
+<!--头部结束-->
+
+<!--主内容开始-->
+<div class="bdc-container">
+    <div class="bdc-table-header-box">
+        <table class="layui-table bdc-table-header">
+            <thead>
+            <tr>
+                <th>中心名称</th>
+                <th>办事类别</th>
+                <th>可办窗口数</th>
+                <th>等候人数</th>
+                <th>预计等候时间</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="layui-carousel" id="contentCarousel">
+        <div carousel-item id="zhdp">
+        </div>
+    </div>
+</div>
+<!--主内容结束-->
+
+<script id="zhdpmb" type="text/html">
+    {{# for(var i = 0;(i*12) < zhdpdata.length;i++){ }}
+    <div>
+        <table class="layui-table" lay-even>
+            <thead>
+            <tr>
+                <th>中心名称</th>
+                <th>办事类别</th>
+                <th>可办窗口数</th>
+                <th>等候人数</th>
+                <th>预计等候时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{# for(var j = (i*12);j < (i*12)+12 && j < zhdpdata.length ;j++){ }}
+            <tr>
+                <td class="bdc-td-title">{{ zhdpdata[j].ZXMC }}</td>
+                <td>{{ zhdpdata[j].YWMC }}</td>
+                <td>{{ zhdpdata[j].CKS }}</td>
+                <td>{{ zhdpdata[j].DHRS }}</td>
+                <td>{{ zhdpdata[j].DDSJ }}</td>
+            </tr>
+            {{# } }}
+            </tbody>
+        </table>
+    </div>
+    {{# } }}
+    {{# if(zhdpdata.length === 0){ }}
+    无数据
+    {{# } }}
+</script>
+<script type="text/javascript">
+    var zhdpdata;
+</script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../public/lib/layui/layui.js"></script>
+<script src="../../public/js/common.js"></script>
+<script src="../../public/js/big-screen.js"></script>
+</body>
+</html>

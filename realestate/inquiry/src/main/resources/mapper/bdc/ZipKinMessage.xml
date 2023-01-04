@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.ZipKinMapper">
+    <select id="listZipKin" parameterType="cn.gtmap.realestate.common.core.domain.inquiry.ZipKinDO"
+            resultType="cn.gtmap.realestate.common.core.domain.inquiry.ZipKinDO">
+        SELECT
+        ID AS ID,
+        DURATION AS DURATION,
+        SUM_DURATION AS SUMDURATION,
+        ERROR AS ERROR,
+        APP_SERVICE AS APPSERVICE,
+        APP_METHOD AS APPMETHOD,
+        CREATE_DATE AS CREATEDATE,
+        MONITOR_DATE AS MONITORDATE
+        from ZIPKIN
+        where 1=1
+        <if test="appService != '' and appService != null">
+            and appService = #{appService,jdbcType=VARCHAR}
+        </if>
+        ORDER BY CREATEDATE DESC NULLS LAST,SUMDURATION  DESC NULLS LAST
+    </select>
+
+    <select id="getTodayDatas" parameterType="java.lang.String" resultType="cn.gtmap.realestate.common.core.dto.inquiry.ZipKinDTO">
+        SELECT
+        Z.ID AS ID,
+        Z.DURATION AS DURATION,
+        Z.SUM_DURATION AS SUMDURATION,
+        Z.ERROR AS ERROR,
+        Z.APP_SERVICE AS APPSERVICE,
+        Z.APP_METHOD AS APPMETHOD,
+        Z.CREATE_DATE AS CREATEDATE,
+        Z.MONITOR_DATE AS MONITORDATE,
+        Z.URL AS URL,
+        Z.NAME AS NAME
+        from ZIPKIN Z
+        <where>
+            <if test="startDate == null">
+                trunc(Z.CREATE_DATE)=trunc(sysdate)
+            </if>
+            <if test="startDate != null and endDate == null">
+                to_char(Z.CREATE_DATE,'yyyy-MM-dd') = #{startDate}
+            </if>
+            <if test="startDate != null and endDate != null">
+                to_char(Z.CREATE_DATE,'yyyy-MM-dd') <![CDATA[>=]]> #{startDate,jdbcType=VARCHAR}
+                and  to_char(Z.CREATE_DATE,'yyyy-MM-dd')<![CDATA[<=]]> #{endDate,jdbcType=VARCHAR}
+            </if>
+        </where>
+
+
+    </select>
+</mapper>   

@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>自然状况信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/slzkxxbsxjgmsb.css"/>
+    <style>
+        .layui-table tbody tr td input{
+            text-align: center;
+        }
+        .layui-table table tbody tr td input{
+            text-align: center !important;
+        }
+
+        input{
+            text-align: center !important;
+        }
+
+        table  {
+            border:2px solid black !important;
+        }
+
+        tr td{
+            font-size: 8px !important;
+            /*border:1px solid black !important;*/
+        }
+
+        .content-div form {
+            width: 1100px;
+        }
+    </style>
+</head>
+<body>
+<div class="content-div">
+    <div class="bdc-content-box">
+        <form class="layui-form setOverflow" action="" id="zrzkxx" lay-filter="form">
+            <div class="bdc-content-fix">
+                <div class="content-title">
+                    <p>自然状况信息</p>
+                </div>
+            </div>
+
+            <div class="content-main">
+                <div class="bdc-table-box">
+                    <table class="layui-table" border="1" style="margin-top: 10px">
+                        <thead>
+                        <td colspan="24" class="set-center bdc-set-width" style="font-size: 12px !important;border-bottom: 2px solid black !important;"><h2>自然状况信息</h2></td>
+                        </thead>
+                        <tbody>
+                        <tr style="border-bottom: 2px solid black !important;">
+                            <td colspan="4" class="set-center bdc-set-width">登记单元<br/>总面积（公顷）</td>
+                            <td colspan="20">
+                                <input type="text" id="djdyzmj" name="djdyzmj" class="layui-table-edit zrzk">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" rowspan="6" class="set-center bdc-set-width">单元内自然资源<br/>总面积（公顷）
+                            </td>
+                            <td colspan="4" rowspan="6">
+                                <input type="text" id="dynzrzyzmj"  name="dynzrzyzmj" class="layui-table-edit zrzk">
+                            </td>
+                            <td colspan="1" rowspan="6">
+                                <input type="text" class="layui-table-edit zrzk" value="其中">
+                            </td>
+                            <td colspan="3" class="set-center bdc-set-width">水流</td>
+                            <td colspan="4">
+                                <input type="text" id="szymj" name="szymj" class="layui-table-edit zrzk">
+                            </td>
+                            <td colspan="2" rowspan="6" class="set-center bdc-set-width">
+                                单元内耕地、建设用地等非自然资源总面积（公顷）
+                            </td>
+                            <td colspan="6" rowspan="6">
+                                <input type="text" id="fzrzyzmj" name="fzrzyzmj" class="layui-table-edit zrzk">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="set-center bdc-set-width">湿地</td>
+                            <td colspan="4">
+                                <input type="text" id="sdmj" name="sdmj" class="layui-table-edit zrzk">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="set-center bdc-set-width">森林</td>
+                            <td colspan="4">
+                                <input type="text" id="slmj" name="slmj" class="layui-table-edit zrzk">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="set-center bdc-set-width">草原</td>
+                            <td colspan="4">
+                                <input type="text" id="cymj" name="cymj" class="layui-table-edit zrzk">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="set-center bdc-set-width">荒地</td>
+                            <td colspan="4">
+                                <input type="text" id="hdmj" name="hdmj" class="layui-table-edit zrzk">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="set-center bdc-set-width">其他</td>
+                            <td colspan="4">
+                                <input type="text" id="qtmj" name="qtmj" class="layui-table-edit zrzk">
+                            </td>
+                        </tr>
+                        <tr id="hytitle">
+                            <td colspan="2" rowspan="3" id="hynum" class="set-center bdc-set-width">海域<br/>登记<br/>单元
+                            </td>
+                            <td colspan="2" class="set-center bdc-set-width">海域面积<br/>（公顷）</td>
+                            <td colspan="3" class="set-center bdc-set-width">海域等别</td>
+                            <td colspan="6" class="set-center bdc-set-width">大陆海岸线长度（千米）</td>
+                            <td colspan="11" class="set-center bdc-set-width">有居民海岛海岸线长度（千米）</td>
+                        </tr>
+                        <script type="text/html" id="hyDataTpl">
+                            {{# if (d.zrzyHyDOList && d.zrzyHyDOList.length > 0 && d.zrzyHyDOList[0].hymj) { }}
+                            {{# layui.each(d.zrzyHyDOList, function(index, item){ }}
+                            <tr>
+                                <td colspan="2">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.hymj || '-'}}">
+                                </td>
+                                <td colspan="3">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.hydb || '-'}}">
+                                </td>
+                                <td colspan="6">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.dlhaxcd || '-'}}">
+                                </td>
+                                <td colspan="11">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.yjmhdhaxcd || '-'}}">
+                                </td>
+                            </tr>
+                            {{# }); }}
+                            {{# } else { }}
+                            <tr>
+                                <td colspan="2">
+                                    <input type="text" class="layui-table-edit zrzk" value="-">
+                                </td>
+                                <td colspan="3">
+                                    <input type="text" class="layui-table-edit zrzk" value="-">
+                                </td>
+                                <td colspan="6">
+                                    <input type="text" class="layui-table-edit zrzk" value="-">
+                                </td>
+                                <td colspan="11">
+                                    <input type="text" class="layui-table-edit zrzk" value="-">
+                                </td>
+                            </tr>
+                            {{# } }}
+                        </script>
+                        <tr id="wjmTitle">
+                            <td colspan="2" rowspan="2" id="wjmnum" class="set-center bdc-set-width">无居民海岛登记单元</td>
+                            <td colspan="2" class="set-center bdc-set-width">海岛名称</td>
+                            <td colspan="3" class="set-center bdc-set-width">海岛位置</td>
+                            <td colspan="3" class="set-center bdc-set-width">海岛面积（公顷）</td>
+                            <td colspan="3" class="set-center bdc-set-width">海岛类型</td>
+                            <td colspan="5" class="set-center bdc-set-width">海岛高程（最高点高程/平均高程）（米）</td>
+                            <td colspan="3" class="set-center bdc-set-width">植被覆盖情况</td>
+                            <td colspan="3" class="set-center bdc-set-width">岸线长度（千米）</td>
+                        </tr>
+                        <script type="text/html" id="wjmDataTpl">
+                            {{# if (d.zrzyWjmhdDOList && d.zrzyWjmhdDOList.length > 0) { }}
+                            {{# layui.each(d.zrzyWjmhdDOList, function(index, item){ }}
+                            <tr>
+                                <td colspan="2">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.hdmc || '-'}}">
+                                </td>
+                                <td colspan="3">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.hdwz || '-'}}">
+                                </td>
+                                <td colspan="3">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.hdmj || '-'}}">
+                                </td>
+                                <td colspan="3">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.hdlx || '-'}}">
+                                </td>
+                                <td colspan="5">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.hdgc || '-'}}">
+                                </td>
+                                <td colspan="3">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.zbfgqk || '-'}}">
+                                </td>
+                                <td colspan="3">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.axcd || '-'}}">
+                                </td>
+                            </tr>
+                            {{# }); }}
+                            {{# } else { }}
+                            <tr>
+                            <td colspan="2">
+                                <input type="text" class="layui-table-edit zrzk" value="-">
+                            </td>
+                            <td colspan="3">
+                                <input type="text" class="layui-table-edit zrzk" value="-">
+                            </td>
+                            <td colspan="3">
+                                <input type="text" class="layui-table-edit zrzk" value="-">
+                            </td>
+                            <td colspan="3">
+                                <input type="text" class="layui-table-edit zrzk" value="-">
+                            </td>
+                            <td colspan="5">
+                                <input type="text" class="layui-table-edit zrzk" value="-">
+                            </td>
+                            <td colspan="3">
+                                <input type="text" class="layui-table-edit zrzk" value="-">
+                            </td>
+                            <td colspan="3">
+                                <input type="text" class="layui-table-edit zrzk" value="-">
+                            </td>
+                            </tr>
+                            {{# } }}
+                        </script>
+                        <tr>
+                            <td colspan="2" rowspan="3" id="syNum" class="set-center bdc-set-width">水流</td>
+                            <td colspan="2" rowspan="2" class="set-center bdc-set-width">水流类型</td>
+                            <td colspan="3" rowspan="2" class="set-center bdc-set-width">名称</td>
+                            <td colspan="2" rowspan="2" class="set-center bdc-set-width">包含图斑数量</td>
+
+                            <td colspan="1" rowspan="2" class="set-center bdc-set-width">河流起点、讫点</td>
+                            <td colspan="1" rowspan="2" class="set-center bdc-set-width">河流长度（千米）</td>
+                            <td colspan="1" rowspan="2" class="set-center bdc-set-width">水面面积（公顷)</td>
+                            <td colspan="2" rowspan="2" class="set-center bdc-set-width">河道等级</td>
+                            <td colspan="2" rowspan="2" class="set-center bdc-set-width">多年平均径流量（亿立方米）</td>
+                            <td colspan="6" class="set-center bdc-set-width">水质</td>
+                            <td colspan="2" rowspan="2" class="set-center bdc-set-width">年初蓄水量（亿立方米）</td>
+                        </tr>
+                        <tr id="syTitle">
+                            <td colspan="1" class="set-center bdc-set-width">Ⅰ类</td>
+                            <td colspan="1" class="set-center bdc-set-width">Ⅱ类</td>
+                            <td colspan="1" class="set-center bdc-set-width">Ⅲ类</td>
+                            <td colspan="1" class="set-center bdc-set-width">Ⅳ类</td>
+                            <td colspan="1" class="set-center bdc-set-width">Ⅴ类</td>
+                            <td colspan="1" class="set-center bdc-set-width">劣Ⅵ类</td>
+                        </tr>
+
+                        <script type="text/html" id="syDataTpl">
+                            {{# if(d.zrzySzyDOList && d.zrzySzyDOList.length > 0) { }}
+                            {{# layui.each(d.zrzySzyDOList, function(index, item){ }}
+                            <tr>
+                                <td colspan="2" class="bdc-radio">
+                                    <select name="szylx" class="layui-table-edit zrzk" style="text-align: center" value="{{item.szylx || '-'}}">
+                                        <option value="">请选择</option>
+                                        {{# layui.each(d.zdList.szylx, function(zdIndex, zdItem) { }}
+                                        <option value="{{zdItem.DM}}" {{# if(item.szylx == zdItem.DM) { }} selected {{# } }}>{{zdItem.MC}}</option>
+                                        {{# }) }}
+                                    </select>
+                                </td>
+                                <td colspan="3">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.mc || '-'}}">
+                                </td>
+                                <td colspan="2">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.bhtbsl || '-'}}">
+                                </td>
+                                <td colspan="1">
+                                    {{# if(item.hlqqd) { }}
+                                    <textarea autoHeight="true" class="layui-table-edit zrzk">{{item.hlqqd || '-'}}</textarea>
+                                    {{# }else{ }}
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.hlqqd || '-'}}">
+                                    {{# } }}
+                                </td>
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.hlcd || '-'}}">
+                                </td>
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.smmj || '-'}}">
+                                </td>
+                                <td colspan="2">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.hddj || '-'}}">
+                                </td>
+                                <td colspan="2">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.dnpjjll || '-'}}">
+                                </td>
+
+                                <!--  水质   -->
+                                {{# if(item.sz == "Ⅰ类"){ }}
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="√">
+                                </td>
+                                {{# }else{ }}
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="-">
+                                </td>
+                                {{# }; }}
+
+                                {{# if(item.sz == "Ⅱ类"){ }}
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="√">
+                                </td>
+                                {{# }else{ }}
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="-">
+                                </td>
+                                {{# }; }}
+
+                                {{# if(item.sz == "III类"){ }}
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="√">
+                                </td>
+                                {{# }else{ }}
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="-">
+                                </td>
+                                {{# }; }}
+
+                                {{# if(item.sz == "Ⅳ类"){ }}
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="√">
+                                </td>
+                                {{# }else{ }}
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="-">
+                                </td>
+                                {{# }; }}
+
+                                {{# if(item.sz == "V类"){ }}
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="√">
+                                </td>
+                                {{# }else{ }}
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="-">
+                                </td>
+                                {{# }; }}
+
+                                {{# if(item.sz == "劣Ⅵ类"){ }}
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="√">
+                                </td>
+                                {{# }else{ }}
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="-">
+                                </td>
+                                {{# }; }}
+
+
+                                <td colspan="2">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.ncxsl || '-'}}">
+                                </td>
+                            </tr>
+                            {{# }); }}
+                            {{# } else { }}
+                            <tr>
+                                <td colspan="2" class="bdc-radio">
+                                    -
+                                </td>
+                                <td colspan="3">
+                                    <input type="text" class="layui-table-edit zrzk" value="-">
+                                </td>
+                                <td colspan="2">
+                                    <input type="text" class="layui-table-edit zrzk" value="-">
+                                </td>
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="-">
+                                </td>
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="-">
+                                </td>
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="-">
+                                </td>
+                                <td colspan="2">
+                                    <input type="text" class="layui-table-edit zrzk" value="-">
+                                </td>
+                                <td colspan="2">
+                                    <input type="text" class="layui-table-edit zrzk" value="-">
+                                </td>
+
+                                <!--  水质   -->
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="-">
+                                </td>
+
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="-">
+                                </td>
+
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="-">
+                                </td>
+
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="-">
+                                </td>
+
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="-">
+                                </td>
+
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="√">
+                                </td>
+
+
+                                <td colspan="2">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.ncxsl || '-'}}">
+                                </td>
+                            </tr>
+                            {{# } }}
+                        </script>
+                        <tr id="sdTitle">
+                            <td colspan="2" rowspan="2" id="sdNum" class="set-center bdc-set-width">湿地</td>
+                            <td colspan="2" class="set-center bdc-set-width">湿地类型</td>
+                            <td colspan="5" class="set-center bdc-set-width">包含图斑数量</td>
+
+                            <td colspan="1" class="set-center bdc-set-width">总面积（公顷）</td>
+                            <td colspan="1" class="set-center bdc-set-width">植被类型</td>
+                            <td colspan="1" class="set-center bdc-set-width">植被面积（公顷）</td>
+                            <td colspan="4" class="set-center bdc-set-width">主要优势植物种（建群种)</td>
+                            <td colspan="4" class="set-center bdc-set-width">国家及省级重点保护的主要湿地鸟类</td>
+                            <td colspan="2" class="set-center bdc-set-width">水质类别</td>
+                            <td colspan="2" class="set-center bdc-set-width">资源补给状况</td>
+                        </tr>
+                        <script type="text/html" id="sdDataTpl">
+                            {{# if(d.zrzySdDOList && d.zrzySdDOList.length > 0) { }}
+                            {{# layui.each(d.zrzySdDOList, function(index, item){ }}
+                            <tr>
+                                <td colspan="2">
+                                    <select name="sdlx" class="layui-table-edit zrzk" style="text-align: center" value="{{item.sdlx || '-'}}">
+                                        <option value="">请选择</option>
+                                        {{# layui.each(d.zdList.sdlx, function(zdIndex, zdItem) { }}
+                                        <option value="{{zdItem.DM}}" {{# if(item.sdlx == zdItem.DM) { }} selected {{# } }}>{{zdItem.MC}}</option>
+                                        {{# }) }}
+                                    </select>
+                                </td>
+                                <td colspan="5">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.bhtbsl || '-'}}">
+                                </td>
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.zmj || '-'}}">
+                                </td>
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.zblx || '-'}}">
+                                </td>
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.zbmj || '-'}}">
+                                </td>
+                                <td colspan="4">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.zyyszwz || '-'}}">
+                                </td>
+                                <td colspan="4">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.gjzdbhdzysdnl || '-'}}">
+                                </td>
+                                <td colspan="2">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.szlb || '-'}}">
+                                </td>
+                                <td colspan="2">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.sybjzk || '-'}}">
+                                </td>
+                            </tr>
+                            {{# }); }}
+                            {{# } else { }}
+                            <tr>
+                                <td colspan="22" align="center" style="text-align: center;
+    vertical-align: middle !important;">-</td>
+                            </tr>
+                            {{# } }}
+                        </script>
+
+                        <tr id="slTitle">
+                            <td colspan="2" rowspan="2" id="slNum" class="set-center bdc-set-width">森林</td>
+                            <td colspan="2" class="set-center bdc-set-width">森林类型</td>
+                            <td colspan="5" class="set-center bdc-set-width">包含图斑数量</td>
+                            <td colspan="1" class="set-center bdc-set-width">面积（公顷）</td>
+                            <td colspan="2" class="set-center bdc-set-width">主导功能</td>
+                            <td colspan="4" class="set-center bdc-set-width">主要树种</td>
+                            <td colspan="4" class="set-center bdc-set-width">林种</td>
+                            <td colspan="4" class="set-center bdc-set-width">总蓄积量（立方米）</td>
+                        </tr>
+                        <script type="text/html" id="slDataTpl">
+                            {{# if (d.zrzySlDOList && d.zrzySlDOList.length > 0) { }}
+                            {{# layui.each(d.zrzySlDOList, function(index, item){ }}
+                            <tr>
+                                <td colspan="2">
+                                    <select name="sllx" class="layui-table-edit zrzk" style="text-align: center" value="{{item.sllx || '-'}}">
+                                        <option value="">请选择</option>
+                                        {{# layui.each(d.zdList.sllx, function(zdIndex, zdItem) { }}
+                                        <option value="{{zdItem.DM}}" {{# if(item.sllx == zdItem.DM) { }} selected {{# } }}>{{zdItem.MC}}</option>
+                                        {{# }) }}
+                                    </select>
+                                </td>
+                                <td colspan="5">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.bhtbsl || '-'}}">
+                                </td>
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.mj || '-'}}">
+                                </td>
+                                <td colspan="2">
+                                    {{# if(item.zdgn) { }}
+                                    <textarea autoHeight="true" class="layui-table-edit zrzk" >
+                                        {{item.zdgn || '-'}}
+                                        </textarea>
+                                    {{# }else{ }}
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.zdgn || '-'}}">
+                                    {{# } }}
+                                </td>
+                                <td colspan="4">
+                                    {{# if(item.zysz) { }}
+                                    <textarea autoHeight="true" class="layui-table-edit zrzk">
+                                        {{item.zysz || '-'}}
+                                    </textarea>
+                                    {{# }else{ }}
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.zysz || '-'}}">
+                                    {{# } }}
+                                </td>
+                                <td colspan="4">
+                                    {{# if(item.lz) { }}
+                                    <textarea autoHeight="true" class="layui-table-edit zrzk">{{item.lz || '-'}}
+                                    </textarea>
+                                    {{# }else{ }}
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.lz || '-'}}">
+                                    {{# } }}
+                                </td>
+                                <td colspan="4">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.zxjl || '-'}}">
+                                </td>
+                            </tr>
+                            {{# }); }}
+                            {{# } else { }}
+                            <tr>
+                                <td colspan="22" align="center" style="text-align: center;
+    vertical-align: middle !important;">-</td>
+
+                            </tr>
+                            {{# } }}
+                        </script>
+                        <tr id="cyTitle">
+                            <td colspan="2" rowspan="2" id="cynum" class="set-center bdc-set-width">草原</td>
+                            <td colspan="2" class="set-center bdc-set-width">草地类型</td>
+                            <td colspan="5" class="set-center bdc-set-width">包含图斑数量</td>
+
+                            <td colspan="3" class="set-center bdc-set-width">面积（公顷）</td>
+                            <td colspan="8" class="set-center bdc-set-width">草原类型</td>
+                            <td colspan="4" class="set-center bdc-set-width">草原质量等级</td>
+                        </tr>
+                        <script type="text/html" id="cyDataTpl">
+                            {{# if (d.zrzyCyDOList && d.zrzyCyDOList.length > 0) { }}
+                            {{# layui.each(d.zrzyCyDOList, function(index, item){ }}
+                            <tr>
+                                <td colspan="2">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.cdlx || '-'}}">
+                                </td>
+                                <td colspan="5">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.bhtbsl || '-'}}">
+                                </td>
+                                <td colspan="3">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.mj || '-'}}">
+                                </td>
+                                <td colspan="8">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.cylx || '-'}}">
+                                </td>
+                                <td colspan="4">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.cyzldj || '-'}}">
+                                </td>
+                            </tr>
+                            {{# }); }}
+                            {{# } else { }}
+                            <tr>
+                                <td colspan="22" align="center" style="">-</td>
+                            </tr>
+                            {{# } }}
+                        </script>
+                        <tr id="hdTitle">
+                            <td colspan="2" rowspan="2" id="hdNum" class="set-center bdc-set-width">荒地</td>
+                            <td colspan="2" class="set-center bdc-set-width">荒地类型</td>
+                            <td colspan="8" class="set-center bdc-set-width">包含图斑数量</td>
+
+                            <td colspan="12" class="set-center bdc-set-width">面积（公顷）</td>
+                        </tr>
+                        <script type="text/html" id="hdDataTpl">
+                            {{# if (d.zrzyHdDOList && d.zrzyHdDOList.length > 0) { }}
+                            {{# layui.each(d.zrzyHdDOList, function(index, item){ }}
+                            <tr>
+                                <td colspan="2">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.hdlx || '-'}}">
+                                </td>
+                                <td colspan="8">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.bhtbsl || '-'}}">
+                                </td>
+                                <td colspan="12">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.mj || '-'}}">
+                                </td>
+                            </tr>
+                            {{# }); }}
+                            {{# } else { }}
+                            <tr>
+                                <td colspan="22" align="center" style="text-align: center;
+    vertical-align: middle !important;">-</td>
+                            </tr>
+                            {{# } }}
+                        </script>
+                        <tr>
+                            <td colspan="2" rowspan="3" id="kcNum" class="set-center bdc-set-width">探明储量的矿产资源</td>
+                            <td colspan="1" rowspan="2" class="set-center bdc-set-width">资源类型</td>
+                            <td colspan="3" rowspan="2" class="set-center bdc-set-width">区块编号</td>
+                            <td colspan="2" rowspan="2" class="set-center bdc-set-width">矿区地址</td>
+
+                            <td colspan="1" rowspan="2" class="set-center bdc-set-width">储量估算基准日</td>
+                            <td colspan="3" rowspan="2" class="set-center bdc-set-width">矿区/泊气田总面积（公顷）</td>
+                            <td colspan="4" rowspan="2" class="set-center bdc-set-width">储量估算范围面积（公顷)</td>
+                            <td colspan="2" rowspan="2" class="set-center bdc-set-width">矿产组合</td>
+                            <td colspan="3" class="set-center bdc-set-width">固体矿产</td>
+                            <td colspan="1" class="set-center bdc-set-width">油气</td>
+                            <td colspan="2" rowspan="2" class="set-center bdc-set-width">主要组分平均品位</td>
+                        </tr>
+                        <tr id="kcTitle">
+                            <td colspan="1" class="set-center bdc-set-width">推断资源量</td>
+                            <td colspan="1" class="set-center bdc-set-width">控制资源量</td>
+                            <td colspan="1" class="set-center bdc-set-width">探明资源量</td>
+                            <td colspan="1" class="set-center bdc-set-width">探明地质储量</td>
+                        </tr>
+                        <script type="text/html" id="kcDataTpl">
+                            {{# if (d.zrzyTmclkczyDOList && d.zrzyTmclkczyDOList.length > 0) { }}
+                            {{# layui.each(d.zrzyTmclkczyDOList, function(index, item){ }}
+                            <tr>
+                                <td colspan="2">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.zrlx || '-'}}">
+                                </td>
+                                <td colspan="3">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.qkbh || '-'}}">
+                                </td>
+                                <td colspan="2">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.kqdz || '-'}}">
+                                </td>
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.clgsjzr || '-'}}">
+                                </td>
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.kqyqtzmj || '-'}}">
+                                </td>
+                                <td colspan="1">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.clgsfwmj || '-'}}">
+                                </td>
+                                <td colspan="2">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.kczh || '-'}}">
+                                </td>
+
+
+                                <td colspan="2">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.gtkctdzyl || '-'}}">
+                                </td>
+                                <td colspan="2">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.gtkckzzyl || '-'}}">
+                                </td>
+                                <td colspan="2">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.gtkctmzyl || '-'}}">
+                                </td>
+                                <td colspan="2">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.yqtmdzcl || '-'}}">
+                                </td>
+
+
+                                <td colspan="2">
+                                    <input type="text" class="layui-table-edit zrzk" value="{{item.zyzfpjpw || '-'}}">
+                                </td>
+                            </tr>
+                            {{# }); }}
+                            {{# } else { }}
+                            <tr>
+                                <td colspan="22" align="center" style="text-align: center;
+    vertical-align: middle !important;">-</td>
+                            </tr>
+                            {{# } }}
+                        </script>
+                        <tr>
+                            <td colspan="24" class="set-center bdc-set-width">附记</td>
+                        </tr>
+                        <tr>
+                            <td colspan="24">
+                                <input type="text" id="hd" class="layui-table-edit zrzk">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--需要复选框时引用-->
+<script src="../../static/lib/easyui/jquery.min.js"></script>
+<script src="../../static/lib/easyui/jquery.easyui.min.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/ywxx/djbZrzkxx.js"></script>
+</html>

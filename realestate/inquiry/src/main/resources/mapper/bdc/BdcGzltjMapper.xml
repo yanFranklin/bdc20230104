@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcGzltjMapper">
+    <select id="listBdcGzltj" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="java.util.HashMap">
+        SELECT x.AJZT,
+        <if test="dimension == null or dimension == '' or dimension == 'wd-bm' ">
+            x.DJJG,
+        </if>
+        <if test="dimension == 'wd-lc'">
+            x.gzldymc,
+        </if>
+        <if test="dimension == 'wd-ry'">
+            x.slr,
+        </if>
+        COUNT(*) REALCOUNT
+        FROM (select distinct slbh,djjg,slr,gzldymc,ajzt,xmly from bdc_xm xm where 1=1
+
+        <if test="djjglist != null and djjglist.size() > 0">
+            AND xm.DJJG in
+            <foreach collection="djjglist" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="processnamelist != null and processnamelist.size() > 0">
+            AND xm.gzldymc in
+            <foreach collection="processnamelist" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="slrmclist != null and slrmclist.size() > 0">
+            AND xm.slr in
+            <foreach collection="slrmclist" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="kssj != null and kssj != ''">
+            AND to_char(xm.slsj,'yyyy-MM-dd hh24:mi:ss') >= #{kssj}
+        </if>
+        <if test="jzsj != null and jzsj != ''">
+            AND to_char(xm.slsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{jzsj}
+        </if>
+        ) X WHERE
+        DJJG IS NOT NULL
+        AND GZLDYMC IS NOT NULL
+        AND SLR IS NOT NULL
+        AND XMLY !=3
+        GROUP BY
+        <if test="dimension == null or dimension == '' or dimension == 'wd-bm' ">
+            DJJG
+        </if>
+        <if test="dimension == 'wd-lc'">
+            GZLDYMC
+        </if>
+        <if test="dimension == 'wd-ry'">
+            SLR
+        </if>
+          ,ajzt
+          ORDER BY
+           REALCOUNT  DESC
+    </select>
+
+    <select id="listBdcGzltjBmry" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="java.util.HashMap">
+        SELECT
+        X.SLR,
+        COUNT(*) REALCOUNT
+        FROM (select distinct slbh,djjg,slr,gzldymc,ajzt,xmly from bdc_xm xm
+        where 1=1
+        <if test="djjglist != null and djjglist.size() > 0">
+            AND xm.DJJG in
+            <foreach collection="djjglist" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="processnamelist != null and processnamelist.size() > 0">
+            AND xm.gzldymc in
+            <foreach collection="processnamelist" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="slrmclist != null and slrmclist.size() > 0">
+            AND xm.slr in
+            <foreach collection="slrmclist" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="kssj != null and kssj != ''">
+            AND to_char(xm.slsj,'yyyy-MM-dd hh24:mi:ss') >= #{kssj}
+        </if>
+        <if test="jzsj != null and jzsj != ''">
+            AND to_char(xm.slsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{jzsj}
+        </if>
+        <if test="kssj != null and kssj != ''">
+            AND to_char(xm.slsj,'yyyy-MM-dd hh24:mi:ss') >= #{kssj}
+        </if>
+        <if test="jzsj != null and jzsj != ''">
+            AND to_char(xm.slsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{jzsj}
+        </if>
+        ) X where x.xmly != 3
+        GROUP BY
+        SLR HAVING SLR IS NOT NULL AND COUNT(*) > 0
+        ORDER BY
+        REALCOUNT  DESC
+    </select>
+
+    <select id="listBdcGzltjBmmx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="java.util.HashMap">
+        SELECT
+        to_char(sysdate,'yyyy-MM-ss') xmid,
+        x.DJJG orgName,
+        x.gzldymc procDefName,
+        x.slr userName,
+        count(*) realCount
+        FROM (select distinct slbh,djjg,slr,gzldymc,ajzt,xmly from bdc_xm xm
+        where 1=1
+        <if test="djjglist != null and djjglist.size() > 0">
+            AND xm.DJJG in
+            <foreach collection="djjglist" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="processnamelist != null and processnamelist.size() > 0">
+            AND xm.gzldymc in
+            <foreach collection="processnamelist" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="slrmclist != null and slrmclist.size() > 0">
+            AND xm.slr in
+            <foreach collection="slrmclist" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="kssj != null and kssj != ''">
+            AND to_char(xm.slsj,'yyyy-MM-dd hh24:mi:ss') >= #{kssj}
+        </if>
+        <if test="jzsj != null and jzsj != ''">
+            AND to_char(xm.slsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{jzsj}
+        </if>
+        ) X
+        where X.DJJG IS NOT NULL
+        AND X.GZLDYMC IS NOT NULL
+        AND X.SLR IS NOT NULL
+        AND X.XMLY !=3
+        group by x.DJJG,
+        x.gzldymc,
+        x.slr
+        order by
+        <if test="dimension == null or dimension == '' or dimension == 'wd-bm' ">
+            x.DJJG
+        </if>
+        <if test="dimension == 'wd-lc'">
+            x.GZLDYMC
+        </if>
+        <if test="dimension == 'wd-ry'">
+            x.SLR
+        </if>
+
+    </select>
+
+    <select id="listBdcGzltjSjlmx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="java.util.HashMap">
+        select distinct slbh,slr,gzldymc,slsj from bdc_xm x
+        where 1=1
+        <if test="slbh != null and slbh != ''">
+            AND x.slbh = #{slbh}
+        </if>
+        <if test="djjg != null and djjg != ''">
+            AND x.djjg = #{djjg}
+        </if>
+        <if test="kssj != null and kssj != ''">
+            <![CDATA[   AND x.slsj >= to_date(#{kssj,jdbcType=TIMESTAMP},'yyyy-mm-dd hh24:mi:ss') ]]>
+        </if>
+        <if test="jzsj != null and jzsj != ''">
+            <![CDATA[   AND x.slsj <= to_date(#{jzsj,jdbcType=TIMESTAMP},'yyyy-mm-dd hh24:mi:ss') ]]>
+        </if>
+
+    </select>
+
+    <select id="listBdcGzltjBmmxPrint" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="java.util.Map">
+        SELECT
+        to_char(sysdate,'yyyy-MM-ss') xmid,
+        x.DJJG orgName,
+        x.gzldymc procDefName,
+        x.slr userName,
+        count(*) realCount
+        FROM BDC_XM X WHERE 1=1
+        <!--X.AJZT = 2-->
+
+        <if test="djjglist != null and djjglist.size() > 0">
+            AND xm.DJJG in
+            <foreach collection="djjglist" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="processnamelist != null and processnamelist.size() > 0">
+            AND xm.gzldymc in
+            <foreach collection="processnamelist" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="slrmclist != null and slrmclist.size() > 0">
+            AND xm.slr in
+            <foreach collection="slrmclist" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <!--<if test="djjg != null and djjg != ''">-->
+            <!--AND x.DJJG = #{djjg,jdbcType=VARCHAR}-->
+        <!--</if>-->
+        <!--<if test="processname != null and processname != ''">-->
+            <!--AND x.gzldymc = #{processname,jdbcType=VARCHAR}-->
+        <!--</if>-->
+        <!--<if test="slrmc != null and slrmc != ''">-->
+            <!--AND x.SLR = #{slrmc,jdbcType=VARCHAR}-->
+        <!--</if>-->
+        <if test="kssj != null and kssj != ''">
+            AND to_char(x.slsj,'yyyy-MM-dd hh24:mi:ss') >= #{kssj}
+        </if>
+        <if test="jzsj != null and jzsj != ''">
+            AND to_char(x.slsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{jzsj}
+        </if>
+        AND X.DJJG IS NOT NULL
+        AND X.GZLDYMC IS NOT NULL
+        AND X.SLR IS NOT NULL
+        AND X.XMLY !=3
+        group by x.DJJG,
+        x.gzldymc,
+        x.slr
+    </select>
+
+</mapper>

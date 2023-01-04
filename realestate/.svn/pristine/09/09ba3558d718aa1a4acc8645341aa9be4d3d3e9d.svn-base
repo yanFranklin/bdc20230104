@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <title>第三权利人</title>
+    <meta name="renderer" content="webkit">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <!--下拉框需要-->
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/common.css"/>
+    <link rel="stylesheet" href="../../static/css/slymForm.css"/>
+    <link rel="stylesheet" href="../../static/css/qlr.css"/>
+    <style type="text/css">
+        /*用于调整下拉列表高度*/
+        .select-height .layui-form-select dl {
+            max-height: 210px;
+        }
+    </style>
+</head>
+<body>
+<object id="CertCtl" TYPE="application/cert-reader" width=0 height=0"></object>
+<div lay-filter="qlrxx" id="bdc-popup-large"></div>
+</body>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<!--小数计算防精度缺失-->
+<script src="../../static/lib/mathjs/math.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<!--受理表单操作公共方法-->
+<script src='../../static/js/slymCommon.js'></script>
+<script src="../../static/js/slym/dsQlr.js"></script>
+<script src='../../static/js/formCenter.js'></script>
+<script src="../../static/js/readCard.js"></script>
+<!--表单验证公共方法-->
+<script src='../../static/js/slymyz.js'></script>
+<script type="text/javascript">
+    var qlrid = getQueryString("qlrid");
+    var xmid = getQueryString("xmid");
+    var xmidList = getQueryString("xmidList");
+    var lclx = getQueryString("lclx");
+    var processInsId = getQueryString("processInsId");
+    var formStateId = getQueryString("formStateId");
+    var qllx = getQueryString("qllx");
+    var readOnly = getQueryString("readOnly");
+    var zxlc = getQueryString("zxlc");
+    var dydj = getQueryString("dydj");
+</script>
+<script type="text/html" id="addQlrTmpl">
+    {{#  if(d.qlr){ }}
+    {{# var qlr=d.qlr }}
+    <form class="layui-form bdc-not-full-bg" id="qlrForm" lay-filter="qlrForm">
+        <input type="hidden" name="qlrid" value="{{qlr.qlrid || ''}}"/>
+        <input type="hidden" name="xmid" id="xmid" value="{{qlr.xmid || ''}}"/>
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" name="qlrmc" id="qlrmc" value="{{qlr.qlrmc || ''}}"
+                           title="{{qlr.qlrmc || ''}}" lay-verify="qlrmc"
+                           ondblclick="readxxByIdCard(this,'zjzl','zjh')">
+                </div>
+            </div>
+            <div class="layui-inline xzq-sele">
+                <label class="layui-form-label">身份证件种类</label>
+                <div class="layui-input-inline">
+                    <select name="zjzl" lay-search="" lay-filter="zjzl" id="zjzl">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                        <option value="{{item.DM || ''}}" {{# if(qlr.zjzl==item.DM ){ }} selected="selected" {{# } }}>
+                            {{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">证件号</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" name="zjh" id="zjh" value="{{qlr.zjh || ''}}"
+                           title="{{qlr.zjh || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>权利人类别</label>
+                <div class="layui-input-inline">
+                    <select name="qlrlb" id="qlrlb" lay-search="" lay-filter="qlrlb">
+                        {{# layui.each(d.zd.dsqlrlb, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(qlr.qlrlb==item.DM ){ }} selected="selected" {{# } }}>
+                            {{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">权利人类型</label>
+                <div class="layui-input-inline">
+                    <select name="qlrlx" id="qlrlx" lay-search="" lay-filter="qlrlx">
+                        {{# layui.each(d.zd.qlrlx, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(qlr.qlrlx==item.DM ){ }} selected="selected" {{# } }}>
+                            {{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>顺序号</label>
+                <div class="layui-input-inline bdc-one-icon">
+                    <input type="number" class="layui-input" name="sxh" id="sxh" value="{{qlr.sxh || ''}}"
+                           disabled="off">
+                </div>
+            </div>
+        </div>
+        <div class="pannel-form-btns">
+            <button class="layui-btn bdc-major-btn" lay-submit="" id="saveDsQlr" lay-filter="saveDsQlr">保存</button>
+            <button class="layui-btn bdc-secondary-btn" id="cancelEdit" onclick="cancel()">取消</button>
+            <span class="layui-btn bdc-secondary-btn nextBtn" id="next" onclick="nextForm()">新增</span>
+        </div>
+    </form>
+    {{#  } }}
+</script>
+</html>

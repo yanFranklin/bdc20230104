@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--收件信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.DjfDjSjMapper">
+
+    <select id="queryDjfDjSjList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.DjfDjSjDO">
+        SELECT c.xmid AS ywh, c.slsj sjsj,
+        nvl(a.sjlx, '1') sjlx,
+        a.clmc AS sjmc,
+        nvl(a.fs, '1') sjsl,
+        nvl(a.SFSJSY,'0') SFSJSY,
+        nvl(a.sfewsj,'0') sfewsj,
+        nvl(a.SFBCSJ,'0') SFBCSJ,
+        a.ys,
+        a.BZ,
+        a.WJZXID,
+        SUBSTR(c.BDCDYH,0,6) qxdm
+        FROM bdcsl_sjcl a
+        LEFT JOIN bdc_xm c ON a.gzlslid = c.gzlslid
+        <if test="ywh != null and ywh !=''">
+            WHERE c.xmid = #{ywh}
+        </if>
+    </select>
+
+</mapper>

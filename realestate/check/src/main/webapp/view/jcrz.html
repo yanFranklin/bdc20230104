@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>检查日志</title>
+    <link href="../static/lib/layui/css/layui.css" media="all" rel="stylesheet">
+    <link href="../static/lib/bdcui/css/search.css" media="all" rel="stylesheet">
+    <link href="../static/lib/bdcui/css/table.css" media="all" rel="stylesheet">
+    <link href="../static/lib/bdcui/css/popup.css" media="all" rel="stylesheet">
+    <link href="../static/lib/registerui/css/percentage-layout.css" media="all" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/gzxx.css">
+    <link href="../static/lib/bdcui/css/mask.css" media="all" rel="stylesheet">
+</head>
+<body>
+<div class="bdc-percentage-container">
+    <!--查询条件-->
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <form class="layui-form" action="" lay-filter="jcrzForm">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label id="slbhLabel"  class="layui-form-label">受理编号</label>
+                        <div id="slbhDiv"  class="layui-input-inline">
+                            <input type="text" name="slbh" autocomplete="off" placeholder="请输入" class="layui-input" class="search">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label id="gzlcLabel"  class="layui-form-label">规则流程</label>
+                        <div id="gzlcDiv"  class="layui-input-inline">
+                            <select name="gzldyid" id="lcs" lay-search class="search">
+                            </select>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label id="jcgzLabel"  class="layui-form-label">检查规则</label>
+                        <div id="jcgzDiv"  class="layui-input-inline">
+                            <select name="jcxx" id="jcxx" lay-search class="search">
+                            </select>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label id="fqsjqLabel"  class="layui-form-label">发现时间(起)</label>
+                        <div id="fqsjqDiv"  class="layui-input-inline">
+                            <input type="text" name="fxkssj" class="layui-input test-item search" id="fxsjq">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label id="fqsjzLabel"  class="layui-form-label">发现时间(止)</label>
+                        <div id="fqsjzDiv"  class="layui-input-inline">
+                            <input type="text" name="fxjssj" class="layui-input test-item search" id="fxsjz">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label id="sfjjLabel"  class="layui-form-label">是否解决</label>
+                        <div id="sfjjDiv"  class="layui-input-inline">
+                            <select name="jjzt" class="search">
+                                <option value="">请选择</option>
+                                <option value="0">否</option>
+                                <option value="1">是</option>
+                            </select>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label id="bdcdyhLabel"  class="layui-form-label">不动产单元号</label>
+                        <div id="bdcdyhDiv"  class="layui-input-inline">
+                            <input type="text" name="bdcdyh" autocomplete="off" placeholder="请输入" class="layui-input search">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="pf-senior-show bdc-hide">
+                        <div class="layui-inline">
+                            <label id="gqyyLabel"  class="layui-form-label">挂起原因</label>
+                            <div id="gqyyDiv"  class="layui-input-inline">
+                                <input type="text" name="gqyy" autocomplete="off" placeholder="请输入" class="layui-input search">
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label id="xzwhLabel"  class="layui-form-label">限制文号</label>
+                            <div id="xzwhDiv"  class="layui-input-inline">
+                                <input type="text" name="xzwh" autocomplete="off" placeholder="请输入" class="layui-input search">
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label id="jcztLabel"  class="layui-form-label">检查状态</label>
+                            <div id="jcztDiv"  class="layui-input-inline search">
+                                <select name="jczt">
+                                    <option value="">请选择</option>
+                                    <option value="0">正常</option>
+                                    <option value="1">异常</option>
+                                </select>
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label id="gzdjLabel"  class="layui-form-label">规则等级</label>
+                            <div id="gzdjDiv"  class="layui-input-inline">
+                                <select name="jcdj" class="search">
+                                    <option value="">请选择</option>
+                                    <option value="1">致命</option>
+                                    <option value="2">严重</option>
+                                    <option value="3">一般</option>
+                                    <option value="4">建议</option>
+                                </select>
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            </div>
+                        </div>
+
+
+                        <div class="layui-inline">
+                            <label id="gxsjqLabel"  class="layui-form-label">更新时间(起)</label>
+                            <div id="gxsjqDiv"  class="layui-input-inline">
+                                <input type="text" name="gxkssj" class="layui-input test-item search" id="gxsjq">
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label id="gxsjzLabel"  class="layui-form-label">更新时间(止)</label>
+                            <div id="gxsjzDiv"  class="layui-input-inline">
+                                <input type="text" name="gxjssj" class="layui-input test-item search" id="gxsjz">
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                        <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn">重置</button>
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-secondary-btn" id="seniorSearch">高级查询</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!--表格-->
+    <div class="bdc-table-box">
+        <table id="pageTable" lay-filter="test"></table>
+    </div>
+</div>
+</body>
+
+<!--表格上面功能按钮-->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <a href="javascript:;" class="layui-btn layui-btn-sm bdc-major-btn" lay-event="xxSolve">解决信息</a>
+        <a href="javascript:;" class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="cancelSolve">取消解决</a>
+        <a href="javascript:;" class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="xxGuaQi">挂起</a>
+        <a href="javascript:;" class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="xxQxGuaQi">取消挂起</a>
+        <a href="javascript:;" class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="retest">重检</a>
+        <a href="javascript:;" class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="retestTimes">时段检测</a>
+        <a href="javascript:;" class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="retestRule">规则检查</a>
+        <a href="javascript:;" class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="export">导出结果</a>
+        <a href="javascript:;" class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="jcqk">查看检查情况</a>
+        <a href="javascript:;" class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="createCheckplan">新增检查计划</a>
+        <a href="javascript:;" class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="viewCheckplan">查看检查计划</a>
+    </div>
+</script>
+
+<!--解决状态-->
+<script type="text/html" id="jjztTpl">
+    {{# if(d.JJZT == 0){  }}
+    <span class="bdc-red"> 未解决 </span>
+    {{# }else if(d.JJZT == 1){ }}
+    <span class="bdc-green"> 已解决 </span>
+    {{# } }}
+</script>
+<!--检查状态-->
+<script type="text/html" id="jcztTpl">
+    {{# if(d.JCZT == 0){  }}
+    <span class="bdc-green"> 正常 </span>
+    {{# }else if(d.JCZT == 1){ }}
+    <span class="bdc-red"> 异常 </span>
+    {{# } }}
+</script>
+<!--检查等级-->
+<script type="text/html" id="jcdjTpl">
+    {{# if(d.JCDJ == 1){  }}
+    <span class="bdc-red"> 致命 </span>
+    {{# }else if(d.JCDJ == 2){ }}
+    <span class="bdc-orange"> 严重 </span>
+    {{# }else if(d.JCDJ == 3){ }}
+    <span class="bdc-blue"> 一般 </span>
+    {{# }else if(d.JCDJ == 4){ }}
+    <span class="bdc-gray"> 建议 </span>
+    {{# } }}
+</script>
+<!--是否挂起-->
+<script type="text/html" id="sfgqTpl">
+    {{# if(d.SFGQ == 1){  }}
+    <span class="bdc-gray"> 已挂起 </span>
+    {{# }else { }}
+    <span class="bdc-green"> 未挂起 </span>
+    {{# } }}
+</script>
+
+<!--新增解决信息-->
+<div id="bdc-popup-jjxx" class="bdc-hide bdc-big-layer-css">
+    <form class="layui-form" action="#"  id="jjxxForm" lay-filter="jjxxFilter">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline bdc-complete-line">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>解决信息</label>
+                <div class="layui-input-inline">
+                    <textarea name="jjfs" id="jjfs" placeholder="请输入" class="layui-textarea"></textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--挂起-->
+<div id="bdc-popup-gq" class="bdc-hide bdc-big-layer-css">
+    <form class="layui-form" action="#"  id="gqForm" lay-filter="gqFilter">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline bdc-complete-line">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>挂起原因</label>
+                <div class="layui-input-inline">
+                    <textarea name="gqyy" id="gqyy" placeholder="请输入" class="layui-textarea"></textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--时段检测-->
+<div id="bdc-popup-sdjc" class="bdc-hide bdc-big-layer-css">
+    <form class="layui-form" action="#"  id="sdjcForm" lay-filter="sdjcFilter">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">起始时间(起)</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="qsrq" class="layui-input test-item" id="qsrq">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">结束时间(止)</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="jsrq" class="layui-input test-item" id="jsrq">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--规则检测-->
+<div id="bdc-popup-gzjc" class="bdc-hide bdc-big-layer-css">
+    <form class="layui-form" action="#"  id="gzForm" lay-filter="gzFilter">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>检查规则</label>
+                <div class="layui-input-inline">
+                    <select name="gzid" id="jcgz" lay-search>
+                    </select>
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">行政区划</label>
+                <div class="layui-input-inline">
+                    <select name="qxdm" id="qx" lay-search>
+                    </select>
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">起始时间(起)</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="qsrq" class="layui-input test-item" id="gz_qsrq">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">结束时间(止)</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="jsrq" class="layui-input test-item" id="gz_jsrq">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!--检查计划-->
+<div id="bdc-popup-plan" class="bdc-hide bdc-big-layer-css">
+    <form class="layui-form" action="#"  id="planForm" lay-filter="planFilter">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>起始时间(起)</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="qsrq" class="layui-input test-item" id="plan_qsrq">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>结束时间(止)</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="jsrq" class="layui-input test-item" id="plan_jsrq">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>单次检测条数</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="dcjcts" class="layui-input test-item" id="dcjcts">
+                </div>
+            </div>
+            <div id="planDiv" class="bdc-hide">
+                <div  class="layui-inline">
+                    <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>检查计划版本</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="version" class="layui-input test-item" id="version">
+                    </div>
+                </div>
+                <div  class="layui-inline">
+                    <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>总数据量</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="zsjl" class="layui-input test-item" id="zsjl">
+                    </div>
+                </div>
+                <div  class="layui-inline">
+                    <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>检查次数</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="jccs" class="layui-input test-item" id="jccs">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="planLayer" class="bdc-hide">
+    <div class="bdc-table-box">
+        <table id="planTable" lay-filter="planFilter"></table>
+    </div>
+</div>
+<form id="exportForm" method="post" action="#" target="_self">
+    <input type="hidden" id="exportslbh" name="slbh" />
+    <input type="hidden" id="exportjjzt" name="jjzt" />
+    <input type="hidden" id="exportjcxx" name="jcxx" />
+    <input type="hidden" id="exportjcdj" name="jcdj" />
+    <input type="hidden" id="exportgzldyid" name="gzldyid" />
+    <input type="hidden" id="exportbdcdyh" name="bdcdyh" />
+    <input type="hidden" id="exportxzwh" name="xzwh" />
+    <input type="hidden" id="exportlogids" name="logids" />
+    <input type="hidden" id="exportfxkssj" name="fxkssj" />
+    <input type="hidden" id="exportfxjssj" name="fxjssj" />
+    <input type="hidden" id="exportgxkssj" name="gxkssj" />
+    <input type="hidden" id="exportgxjssj" name="gxjssj" />
+    <input type="hidden" id="exportgqyy" name="gqyy" />
+</form>
+
+<script src="../static/lib/jquery/jquery.min.js"></script>
+<script src="../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../static/lib/bdcui/js/common.js"></script>
+<script src="../static/js/common.js"></script>
+<script src="../static/js/formCenter.js"></script>
+<script src="../static/js/jcrz.js"></script>
+</html>

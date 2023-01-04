@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.register.core.mapper.BdcGdxxFphhMapper">
+    <select id="listBdcGdxx" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.domain.certificate.BdcGdxxFphhDO">
+        select * from bdc_gdxx_fphh where 1=1 and instr(ajh, '-') > 0
+        <if test="mlh != null and mlh !=''">
+            and mlh = #{mlh, jdbcType=VARCHAR}
+        </if>
+        <if test="sxh != null">
+            and sxh = #{sxh}
+        </if>
+        <if test="ajhStart != null and ajhStart !=''">
+            and
+           ((ajh &gt;= #{ajhStart, jdbcType=VARCHAR} AND length(ajh) = length(#{ajhStart, jdbcType=VARCHAR})) or length(ajh) > length(#{ajhStart, jdbcType=VARCHAR}))
+        </if>
+        <if test="ajhEnd != null and ajhEnd !=''">
+            and
+            ((ajh &lt;= #{ajhEnd, jdbcType=VARCHAR} AND length(ajh) = length(#{ajhEnd, jdbcType=VARCHAR}) ) or length(ajh) &lt; length(#{ajhEnd, jdbcType=VARCHAR}))
+        </if>
+        <if test="xzdm != null and xzdm !=''">
+            and xzdm = #{xzdm}
+        </if>
+        <if test="nf != null and nf !=''">
+            AND nf = #{nf}
+        </if>
+    </select>
+
+    <!-- 这里查询最大的500条盒号待用户使用（简单起见不考虑分乡镇），历史盒号一般不再使用，避免整库查询 modified by zhuyong-->
+    <select id="listhh" resultType="String">
+        select mlh from
+        (
+            select mlh,  rownum as num from
+            (
+                select distinct(mlh) as mlh from bdc_gdxx_fphh
+                where mlh is not null and nf = to_char(sysdate,'yyyy')
+                order by mlh desc
+            )
+        )
+        where num &lt;= 500
+    </select>
+
+    <!-- 这里查询最大的500条盒号待用户使用（简单起见不考虑分乡镇），历史盒号一般不再使用，避免整库查询 modified by zhuyong-->
+    <select id="listXzhh" resultType="Integer">
+        select sxh from
+            (
+                select sxh,  rownum as num from
+                    (
+                        select distinct(sxh) as sxh from bdc_gdxx_fphh
+                        where sxh is not null and xzdm = #{xzdm}
+                        <choose>
+                            <when test="nf !=null and nf != '' ">
+                                and nf = #{nf}
+                            </when>
+                            <otherwise>
+                                and nf = to_char(sysdate,'yyyy')
+                            </otherwise>
+                        </choose>
+                        order by sxh desc
+                    )
+            )
+        where num &lt;= 500
+    </select>
+
+    <!--查询归档信息分配盒子列表 全参数 分页-->
+    <select id="listBdcGdxxFphhByPageOrder"
+            parameterType="cn.gtmap.realestate.common.core.qo.register.BdcGdxxDahQO"
+            resultType="cn.gtmap.realestate.common.core.domain.certificate.BdcGdxxFphhDO">
+        select * from bdc_gdxx_fphh where 1=1
+        <if test="sxh != null">
+            and sxh = #{sxh}
+        </if>
+        <if test="mlh != null and mlh !=''">
+            and mlh like '%' ||  #{mlh, jdbcType=VARCHAR} || '%'
+        </if>
+        <if test="gdxxid != null and gdxxid !=''">
+            and gdxxid = #{gdxxid, jdbcType=VARCHAR}
+        </if>
+        <if test="ajh != null and ajh !=''">
+            and ajh like '%' || #{ajh, jdbcType=VARCHAR} || '%'
+        </if>
+        <if test="gdrxm != null and gdrxm !=''">
+            and gdrxm like '%' || #{gdrxm, jdbcType=VARCHAR} || '%'
+        </if>
+        <if test="gdxx != null and gdxx !=''">
+            and gdxx = #{gdxx, jdbcType=VARCHAR}
+        </if>
+        <if test="qlr != null and qlr !=''">
+            and qlr = #{qlr, jdbcType=VARCHAR}
+        </if>
+        <if test="slbh != null and slbh !=''">
+            and slbh like '%' || #{slbh, jdbcType=VARCHAR} || '%'
+        </if>
+        order by
+            dahscsj desc nulls last
+    </select>
+
+    <!--查询归档信息列表 查看是否已经分配，并按案件号倒排序-->
+    <select id="listBdcGdxxFphhsffp" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.domain.certificate.BdcGdxxFphhDO">
+        select * from bdc_gdxx_fphh where 1=1 and instr(ajh, '-') > 0
+        <if test="ajhStart != null and ajhStart !=''">
+            and
+            ((ajh &gt;= #{ajhStart, jdbcType=VARCHAR} AND length(ajh) = length(#{ajhStart, jdbcType=VARCHAR})) or length(ajh) > length(#{ajhStart, jdbcType=VARCHAR}))
+        </if>
+        <if test="ajhEnd != null and ajhEnd !=''">
+            and
+            ((ajh &lt;= #{ajhEnd, jdbcType=VARCHAR} AND length(ajh) = length(#{ajhEnd, jdbcType=VARCHAR}) ) or length(ajh) &lt; length(#{ajhEnd, jdbcType=VARCHAR}))
+        </if>
+        <if test="xzdm != null and xzdm !=''">
+            and xzdm = #{xzdm}
+        </if>
+        <if test="nf != null and nf !=''">
+            AND nf = #{nf}
+        </if>
+        and sxh is not null
+        order by ajh desc
+    </select>
+
+    <select id="getCurrentMlhMaxSxh" parameterType="cn.gtmap.realestate.common.core.domain.certificate.BdcGdxxFphhDO" resultType="java.lang.Integer">
+        SELECT MAX(TO_NUMBER(sxh)) FROM BDC_GDXX_FPHH WHERE xzdm = #{xzdm} AND nf = #{nf}
+    </select>
+
+    <select id="getBdcGdxxFphhDOList"
+            parameterType="cn.gtmap.realestate.common.core.qo.register.BdcGdxxFphhQO"
+            resultType="cn.gtmap.realestate.common.core.domain.certificate.BdcGdxxFphhDO">
+        select gdxxid,
+            xmid,
+            slbh,
+            gzlslid,
+            daid,
+            xzdm,
+            xzmc,
+            nf,
+            sxh,
+            mlh,
+            ajh,
+            damx,
+            ajjs,
+            ajys,
+            dahscsj,
+            gdsj,
+            gdrxm,
+            gdxx,
+            bz,
+            qlr,
+            dahlx,
+            qzh,
+            fmajh
+         from bdc_gdxx_fphh
+        <where>
+            <if test="mlh != null and mlh !=''">
+                and mlh like '%' ||  #{mlh, jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="sxh != null">
+                and sxh = #{sxh}
+            </if>
+            <if test="xmid != null and xmid !=''">
+                and xmid = #{xmid, jdbcType=VARCHAR}
+            </if>
+            <if test="gzlslid != null and gzlslid !=''">
+                and gzlslid = #{gzlslid, jdbcType=VARCHAR}
+            </if>
+            <if test="dahlx != null and dahlx !=''">
+                and dahlx = #{dahlx, jdbcType=VARCHAR}
+            </if>
+            <if test="dahscsj != null">
+                and to_char(dahscsj,'yyyy-mm-dd') = to_char(#{dahscsj},'yyyy-mm-dd')
+            </if>
+        </where>
+        order by
+        dahscsj desc nulls last
+    </select>
+    <!--获取当日最大流水号-->
+    <select id="getMaxLsh" parameterType="cn.gtmap.realestate.common.core.qo.register.BdcGdxxFphhQO" resultType="java.lang.String">
+        select max(substr(ajh, -4)) from bdc_gdxx_fphh
+        <where>
+            <if test="dahscsj != null">
+                and to_char(dahscsj,'yyyy-mm-dd') = to_char(#{dahscsj},'yyyy-mm-dd') and LENGTH(ajh) >=19
+            </if>
+        </where>
+
+    </select>
+</mapper>

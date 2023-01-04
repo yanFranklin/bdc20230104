@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>详细信息展示</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+        body{
+            overflow: scroll;
+            overflow-x: auto;
+            overflow-y: hidden;
+
+        }
+
+        body {
+            margin: 0;
+        }
+        iframe {
+            display: block;
+            border: none;
+            height: 100vh;
+            width: 100vw;
+        }
+    </style>
+</head>
+<body>
+    <iframe id="frame" frameborder="0" scrolling="auto"></iframe>
+
+    <script src="../../static/lib/jquery/jquery.min.js"></script>
+    <script src="../../static/lib/layui/layui.js"></script>
+    <!--添加水印-->
+    <script src="../../static/lib/bdcui/js/common.js"></script>
+    <script src='../../static/js/bjjk/crypto-js.min.js'></script>
+    <script>
+        layui.use(['jquery'], function () {
+            var data = layui.sessionData('PJSNR');
+            if(data && data.HZXX){
+                var o = document.getElementById("frame");
+                ed = document.all ? o.contentWindow.document : o.contentDocument;
+                ed.open();
+                var str = data.HZXX.replace(/\r\n/g,"");
+                str = str.replace(/\n/g,"");
+                var html = CryptoJS.enc.Base64.parse(str);
+                var htmlData = CryptoJS.enc.Utf8.stringify(html);
+                ed.write(reverseString(htmlData));
+                ed.close();
+                ed.contentEditable = true;
+                ed.designMode = 'on';
+            }
+
+            function reverseString(str) {
+                str = str.replace(/&lt;/g, '<');
+                str = str.replace(/&gt;/g, '>');
+                return str;
+            }
+        });
+    </script>
+
+</body>
+</html>

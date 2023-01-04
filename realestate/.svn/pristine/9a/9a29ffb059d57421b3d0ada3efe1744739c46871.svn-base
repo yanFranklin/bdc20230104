@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.bdcdsflog.BdcDsfLogMapper">
+    <select id="listBdcDsfLogByPageOrder" parameterType="map" resultType="map">
+        SELECT r.JKMC,r.DSFDZ,r.BDCDZ,r.QQSJ,r.CZR,r.SLBH,r.GXBMBZ,r.QQF,r.XYF,r.YCXX,r.QQCS,r.XYJG,r.QXDM FROM BDC_DSF_RZ r
+        <where>
+            1 = 1
+            <if test="gxbmbz != null and gxbmbz.size > 0">
+                AND r.gxbmbz in
+                <foreach collection="gxbmbz" item="item" index="index" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="jkmc != null and jkmc.size > 0">
+                AND r.jkmc in
+                <foreach collection="jkmc" item="item" index="index" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="jkmcmh != null and jkmcmh !=''">
+                AND r.jkmc LIKE '%'|| #{jkmcmh} || '%'
+            </if>
+            <if test="slbh != null and slbh !=''">
+                AND r.slbh LIKE '%'|| #{slbh} || '%'
+            </if>
+            <if test="xmid != null and xmid !=''">
+                AND r.xmid LIKE '%'|| #{xmid} || '%'
+            </if>
+            <if test="bdcdz != null and bdcdz !=''">
+                AND r.bdcdz LIKE '%'|| #{bdcdz} || '%'
+            </if>
+            <if test="dsfdz != null and dsfdz !=''">
+                AND r.dsfdz LIKE '%'|| #{dsfdz} || '%'
+            </if>
+            <if test="kssj != null and kssj !=''">
+                AND r.qqsj >= to_date(#{kssj},'yyyy-mm-dd hh24:mi:ss')
+            </if>
+            <if test="jssj != null and jssj !=''">
+                AND to_date(#{jssj},'yyyy-mm-dd hh24:mi:ss') > r.qqsj
+            </if>
+            <if test="bdcjs != null and bdcjs !=''">
+                <if test="bdcjs == 'qqf'">
+                    AND r.QQF = 'BDC'
+                </if>
+                <if test="bdcjs == 'xyf'">
+                    AND r.XYF = 'BDC'
+                </if>
+            </if>
+            <if test="czr != null and czr !=''">
+                AND r.czr in
+                <foreach item="item" index="index" collection="czr.split(',')" open="(" separator="," close=")">
+                    #{item, jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="alias != null and alias !=''">
+                AND r.alias = #{alias}
+            </if>
+            <if test="qxdm != null and qxdm !=''">
+                AND r.qxdm = #{qxdm}
+            </if>
+        </where>
+        ORDER BY R.QQSJ desc
+    </select>
+
+    <select id="countBdcDsfLogByGxbmbz" parameterType="map" resultType="map">
+        SELECT t.gxbmbz,COUNT(*) AS zs
+        ,SUM(CASE WHEN t.ycxx IS NULL THEN 1 ELSE 0 END) AS cgzs
+        ,SUM(CASE WHEN t.ycxx IS NOT NULL THEN 1 ELSE 0 END) AS sbzs
+        ,TRUNC(SUM(t.jkys)/COUNT(*)) AS pjxysj
+        FROM BDC_DSF_RZ t
+        LEFT JOIN (SELECT DISTINCT t.slbh,t.djbmdm,t.gzldymc FROM BDC_XM t) x ON t.slbh = x.slbh
+        <where>
+            1=1
+            <if test="fzxmc != null and fzxmc !=''">
+                AND x.djbmdm = #{fzxmc}
+            </if>
+            <if test="gzldymc != null and gzldymc !=''">
+                AND x.gzldymc LIKE '%'|| #{gzldymc} || '%'
+            </if>
+            <if test="gxbmbz != null and gxbmbz !=''">
+                AND t.gxbmbz = #{gxbmbz}
+            </if>
+            <if test="jkmc != null and jkmc !='' and jkmcs == null">
+                AND t.jkmc LIKE '%'|| #{jkmc} || '%'
+            </if>
+            <if test="jkmcs != null and jkmcs.length>0">
+                AND t.jkmc IN
+                <foreach collection="jkmcs" item="jkmc" index="index" open="(" close=")" separator=",">
+                    #{jkmc}
+                </foreach>
+            </if>
+            <if test="kssj != null and kssj !=''">
+                AND t.qqsj >= to_date(#{kssj},'yyyy-mm-dd hh24:mi:ss')
+            </if>
+            <if test="jssj != null and jssj !=''">
+                AND to_date(#{jssj},'yyyy-mm-dd hh24:mi:ss') > t.qqsj
+            </if>
+            <if test="bdcjs != null and bdcjs !=''">
+                <if test="bdcjs == 'qqf'">
+                    AND t.QQF = 'BDC'
+                </if>
+                <if test="bdcjs == 'xyf'">
+                    AND t.XYF = 'BDC'
+                </if>
+            </if>
+        </where>
+        GROUP BY t.gxbmbz
+    </select>
+
+    <select id="countBdcDsfLogZj" parameterType="map" resultType="map">
+        SELECT COUNT(*) "gxbmgs",SUM(z.zs) "jkzs",SUM(z.cgzs) "cgzs",SUM(z.sbzs) "sbzs",TRUNC(SUM(z.jkys)/SUM(z.zs)) "pjxysj"
+        FROM (SELECT t.gxbmbz AS mc,COUNT(*) AS zs
+        ,SUM(CASE WHEN t.ycxx IS NULL THEN 1 ELSE 0 END) AS cgzs
+        ,SUM(CASE WHEN t.ycxx IS NOT NULL THEN 1 ELSE 0 END) AS sbzs
+        ,SUM(t.jkys) AS jkys
+        FROM BDC_DSF_RZ t
+        LEFT JOIN (select distinct t.slbh,t.djbmdm,t.gzldymc from BDC_XM t) x ON t.slbh = x.slbh
+        <where>
+            1=1
+            <if test="fzxmc != null and fzxmc !=''">
+                AND x.djbmdm = #{fzxmc}
+            </if>
+            <if test="gzldymc != null and gzldymc !=''">
+                AND x.gzldymc LIKE '%'|| #{gzldymc} || '%'
+            </if>
+            <if test="gxbmbz != null and gxbmbz !=''">
+                AND t.gxbmbz = #{gxbmbz}
+            </if>
+            <if test="jkmc != null and jkmc !='' and jkmcs == null">
+                AND t.jkmc LIKE '%'|| #{jkmc} || '%'
+            </if>
+            <if test="jkmcs != null and jkmcs.length>0">
+                AND t.jkmc IN
+                <foreach collection="jkmcs" item="jkmc" index="index" open="(" close=")" separator=",">
+                    #{jkmc}
+                </foreach>
+            </if>
+            <if test="kssj != null and kssj !=''">
+                AND t.qqsj >= to_date(#{kssj},'yyyy-mm-dd hh24:mi:ss')
+            </if>
+            <if test="jssj != null and jssj !=''">
+                AND to_date(#{jssj},'yyyy-mm-dd hh24:mi:ss') > t.qqsj
+            </if>
+            <if test="bdcjs != null and bdcjs !=''">
+                <if test="bdcjs == 'qqf'">
+                    AND t.QQF = 'BDC'
+                </if>
+                <if test="bdcjs == 'xyf'">
+                    AND t.XYF = 'BDC'
+                </if>
+            </if>
+        </where>
+        GROUP BY t.gxbmbz)z
+    </select>
+
+    <select id="countBdcDsfLogWeek" parameterType="map" resultType="map">
+        SELECT t.gxbmbz,COUNT(*) jkzs,to_char(sysdate-${sysQssj}, 'MM-DD') week
+        FROM  BDC_DSF_RZ t
+        LEFT JOIN (select distinct t.slbh,t.djbmdm,t.gzldymc from BDC_XM t) x ON t.slbh = x.slbh
+        <where>
+            t.qqsj > sysdate-${sysJssj} AND t.qqsj <![CDATA[ <= ]]> sysdate-${sysQssj}
+            <if test="fzxmc != null and fzxmc !=''">
+                AND x.djbmdm = #{fzxmc}
+            </if>
+            <if test="gzldymc != null and gzldymc !=''">
+                AND x.gzldymc LIKE '%'|| #{gzldymc} || '%'
+            </if>
+            <if test="gxbmbz != null and gxbmbz !=''">
+                AND t.gxbmbz = #{gxbmbz}
+            </if>
+            <if test="jkmc != null and jkmc !='' and jkmcs == null">
+                AND t.jkmc LIKE '%'|| #{jkmc} || '%'
+            </if>
+            <if test="jkmcs != null and jkmcs.length>0">
+                AND t.jkmc IN
+                <foreach collection="jkmcs" item="jkmc" index="index" open="(" close=")" separator=",">
+                    #{jkmc}
+                </foreach>
+            </if>
+            <if test="kssj != null and kssj !=''">
+                AND t.qqsj >= to_date(#{kssj},'yyyy-mm-dd hh24:mi:ss')
+            </if>
+            <if test="jssj != null and jssj !=''">
+                AND to_date(#{jssj},'yyyy-mm-dd hh24:mi:ss') > t.qqsj
+            </if>
+            <if test="bdcjs != null and bdcjs !=''">
+                <if test="bdcjs == 'qqf'">
+                    AND t.QQF = 'BDC'
+                </if>
+                <if test="bdcjs == 'xyf'">
+                    AND t.XYF = 'BDC'
+                </if>
+            </if>
+        </where>
+        GROUP BY t.gxbmbz
+    </select>
+
+    <select id="countWeek" resultType="map">
+        select
+        to_char(sysdate-6, 'MM-DD') week1
+        , to_char(sysdate-5, 'MM-DD') week2
+        , to_char(sysdate-4, 'MM-DD') week3
+        , to_char(sysdate-3, 'MM-DD') week4
+        , to_char(sysdate-2, 'MM-DD') week5
+        , to_char(sysdate-1, 'MM-DD') week6
+        , to_char(sysdate, 'MM-DD') week7
+        FROM dual t
+    </select>
+
+    <select id="countGxtMx" resultType="map" parameterType="map">
+        SELECT t.jkmc AS mc,COUNT(*) AS zs
+        ,SUM(CASE WHEN t.ycxx IS NULL THEN 1 ELSE 0 END) AS cgzs
+        ,SUM(CASE WHEN t.ycxx IS NOT NULL THEN 1 ELSE 0 END) AS sbzs
+        ,TRUNC(SUM(t.jkys)/COUNT(*)) AS pjxysj
+        FROM BDC_DSF_RZ t
+        LEFT JOIN (select distinct t.slbh,t.djbmdm,t.gzldymc from BDC_XM t) x ON t.slbh = x.slbh
+        <where>
+            1=1
+            <if test="gxbmbz != null and gxbmbz !=''">
+                AND t.gxbmbz = #{gxbmbz}
+            </if>
+            <if test="fzxmc != null and fzxmc !=''">
+                AND x.djbmdm = #{fzxmc}
+            </if>
+            <if test="gzldymc != null and gzldymc !=''">
+                AND x.gzldymc LIKE '%'|| #{gzldymc} || '%'
+            </if>
+            <if test="jkmc != null and jkmc !='' and jkmcs == null">
+                AND t.jkmc LIKE '%'|| #{jkmc} || '%'
+            </if>
+            <if test="jkmcs != null and jkmcs.length>0">
+                AND t.jkmc IN
+                <foreach collection="jkmcs" item="jkmc" index="index" open="(" close=")" separator=",">
+                    #{jkmc}
+                </foreach>
+            </if>
+            <if test="kssj != null and kssj !=''">
+                AND t.qqsj >= to_date(#{kssj},'yyyy-mm-dd hh24:mi:ss')
+            </if>
+            <if test="jssj != null and jssj !=''">
+                AND to_date(#{jssj},'yyyy-mm-dd hh24:mi:ss') > t.qqsj
+            </if>
+            <if test="bdcjs != null and bdcjs !=''">
+                <if test="bdcjs == 'qqf'">
+                    AND t.QQF = 'BDC'
+                </if>
+                <if test="bdcjs == 'xyf'">
+                    AND t.XYF = 'BDC'
+                </if>
+            </if>
+        </where>
+        GROUP BY t.jkmc
+    </select>
+
+    <select id="countBdcDsfLogByFzx" parameterType="map" resultType="map">
+        SELECT x.djbmdm,t.gxbmbz,COUNT(*) AS zs
+        FROM BDC_DSF_RZ t
+        LEFT JOIN (SELECT DISTINCT t.slbh,t.djbmdm,t.gzldymc FROM BDC_XM t) x ON t.slbh = x.slbh
+        <where>
+            1=1
+            <if test="fzxmc != null and fzxmc !=''">
+                AND x.djbmdm = #{fzxmc}
+            </if>
+            <if test="gzldymc != null and gzldymc !=''">
+                AND x.gzldymc LIKE '%'|| #{gzldymc} || '%'
+            </if>
+            <if test="gxbmbz != null and gxbmbz !=''">
+                AND t.gxbmbz = #{gxbmbz}
+            </if>
+            <if test="jkmc != null and jkmc !=''">
+                AND t.jkmc LIKE '%'|| #{jkmc} || '%'
+            </if>
+            <if test="kssj != null and kssj !=''">
+                AND t.qqsj >= to_date(#{kssj},'yyyy-mm-dd hh24:mi:ss')
+            </if>
+            <if test="jssj != null and jssj !=''">
+                AND to_date(#{jssj},'yyyy-mm-dd hh24:mi:ss') > t.qqsj
+            </if>
+            <if test="bdcjs != null and bdcjs !=''">
+                <if test="bdcjs == 'qqf'">
+                    AND t.QQF = 'BDC'
+                </if>
+                <if test="bdcjs == 'xyf'">
+                    AND t.XYF = 'BDC'
+                </if>
+            </if>
+        </where>
+        GROUP BY x.djbmdm,t.gxbmbz
+    </select>
+
+    <select id="countGxtMxFzx" resultType="map" parameterType="map">
+        SELECT t.jkmc AS mc,COUNT(*) AS zs
+        FROM BDC_DSF_RZ t
+        LEFT JOIN (select distinct t.slbh,t.djbmdm from BDC_XM t) x ON t.slbh = x.slbh
+        <where>
+            1=1
+            <if test="gxbmbz != null and gxbmbz !=''">
+                AND t.gxbmbz = #{gxbmbz}
+            </if>
+            <if test="fzxmc != null and fzxmc !=''">
+                AND x.djbmdm = #{fzxmc}
+            </if>
+            <if test="fzxmc == null or fzxmc ==''">
+                AND x.djbmdm is null
+            </if>
+        </where>
+        GROUP BY t.jkmc
+    </select>
+</mapper>

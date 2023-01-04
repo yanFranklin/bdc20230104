@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--查封信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.QlfQlCfdjMapper">
+
+    <select id="queryQlfQlCfdjList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.QlfQlCfdjDO">
+        SELECT DISTINCT a.bdcdyh,
+        ls.yxmid as ssywh,
+        fb.syqx as cfqx,
+        b.xmid ywh, nvl(a.cfjg,'//////') cfjg,
+        CASE WHEN a.cflx = 11 THEN
+        1 ELSE a.cflx END AS cflx,
+        nvl(a.cfwj,'//////') cfwj, a.cfwh, nvl(a.cfqssj,add_months(d.djsj,-36)) as cfqssj,
+        nvl(nvl(a.cfjssj,b.djsj),d.djsj) as cfjssj, nvl(a.cffw,'无') cffw, substr(b.bdcdyh,0,6) as qxdm, a.djjg,
+        nvl(nvl(a.dbr,b.dbr),d.dbr) dbr, nvl(nvl(a.djsj,b.djsj),d.djsj) djsj,
+        CASE WHEN a.jfywh IS NOT NULL THEN
+        r.xmid ELSE '' END AS jfywh, a.jfjg, a.jfwj, a.jfwh, a.jfdbr,
+        a.jfdjsj, a.fj, a.qszt FROM bdc_cf a
+        LEFT JOIN bdc_xm b ON a.xmid = b.xmid
+        LEFT JOIN bdc_xmfb fb ON b.xmid = fb.xmid
+        LEFT JOIN bdc_xm_lsgx ls ON ls.xmid=b.xmid and nvl(ls.WLXM,0) = 0
+        LEFT JOIN bdc_xm_lsgx r ON r.yxmid = b.xmid and nvl(r.WLXM,0) = 0
+        left join bdc_xm d on r.xmid=d.xmid
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND b.xmid = #{ywh}
+            </if>
+            <if test="yywh != null and yywh !=''">
+                AND r.xmid=#{yywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND b.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+    <select id="queryQlfQlCfdjListOld" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.yancheng.yth.old.QlfQlCfdjOldDO">
+        SELECT DISTINCT a.bdcdyh, b.xmid ywh, nvl(a.cfjg,'//////') cfjg,
+        CASE WHEN a.cflx = 11 THEN
+        1 ELSE a.cflx END AS cflx,
+        nvl(a.cfwj,'//////') cfwj, a.cfwh, nvl(a.cfqssj,add_months(d.djsj,-36)) as cfqssj,
+        nvl(nvl(a.cfjssj,b.djsj),d.djsj) as cfjssj, nvl(a.cffw,'无') cffw, substr(b.bdcdyh,0,6) as qxdm, a.djjg,
+        nvl(nvl(a.dbr,b.dbr),d.dbr) dbr, nvl(nvl(a.djsj,b.djsj),d.djsj) djsj,
+        CASE WHEN a.jfywh IS NOT NULL THEN
+        r.xmid ELSE '' END AS jfywh, a.jfjg, a.jfwj, a.jfwh, a.jfdbr,
+        a.jfdjsj, a.fj, a.qszt FROM bdc_cf a
+        LEFT JOIN bdc_xm b ON a.xmid = b.xmid
+        LEFT JOIN bdc_xm_lsgx r ON r.yxmid = b.xmid and nvl(r.WLXM,0) = 0
+        left join bdc_xm d on r.xmid=d.xmid
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND b.xmid = #{ywh}
+            </if>
+            <if test="yywh != null and yywh !=''">
+                AND r.xmid=#{yywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND b.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+</mapper>

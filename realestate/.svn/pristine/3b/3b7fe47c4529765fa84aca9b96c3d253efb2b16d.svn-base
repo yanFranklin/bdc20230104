@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!-- 2.1.1.2.1 EMS 订单接入 接口 -->
+    <ex:bean id="emsddjr">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${ems.ddjr.url}" />
+            <ex:property name="logEventName" value="EMS订单接入接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="EMS"/>
+            <ex:property name="dsfFlag" value="EMS"/>
+        </ex:service-info>
+        <ex:request dozerXml="conf/dozer/hefei/ems/ddjr/request/collect.xml">
+            <ex:element name="params" dozerXml="conf/dozer/hefei/ems/ddjr/request/param.xml" />
+            <ex:element name="orderNormal"  sourceService="emsddjr_getorders" objectToJsonString="true"/>
+            <ex:element name="sign" sourceService="emsddjr_getsign" />
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/hefei/ems/ddjr/response/data.xml" />
+        </ex:response>
+    </ex:bean>
+
+    <!--2.1.1.4.1 订单状态查询接口-->
+    <ex:bean id="emsddztcx">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${ems.ddztcx.url}" />
+            <ex:property name="logEventName" value="订单状态查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="EMS"/>
+            <ex:property name="dsfFlag" value="EMS"/>
+        </ex:service-info>
+        <ex:request dozerXml="conf/dozer/hefei/ems/ddztcx/request/collect.xml">
+            <ex:element name="params" dozerXml="conf/dozer/hefei/ems/ddztcx/request/param.xml" />
+            <ex:element name="sign" sourceService="emsddjr_getsign" />
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/hefei/ems/ddztcx/response/data.xml" />
+        </ex:response>
+    </ex:bean>
+
+    <!-- 获取订单 -->
+    <ex:bean id="emsddjr_getorders">
+        <ex:request>
+            <ex:element name="orderNormals" dozerXml="conf/dozer/hefei/ems/ddjr/request/order.xml" />
+        </ex:request>
+    </ex:bean>
+
+    <!-- 获取签名 -->
+    <ex:bean id="emsddjr_getsign">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="emsServiceImpl" />
+            <ex:property name="methodName" value="getSign" />
+            <ex:property name="params" value="params,orderNormal" />
+        </ex:service-info>
+    </ex:bean>
+</beans>

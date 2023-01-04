@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>退件量统计查询</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../static/ztree/metroStyle.css" />
+    <link rel="stylesheet" href="../../static/ztree/custom_tree.css" />
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css">
+    <link rel="stylesheet" href="../../static/css/common.css"/>
+    <link rel="stylesheet" href="../../static/css/tjltjcx.css"/>
+    <style>
+        .bdc-table-state-blz {
+            color: #1d87d1;
+        }
+    </style>
+</head>
+<body>
+<div class="bdc-percentage-container">
+    <!--查询条件-->
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <!--默认一行的-->
+            <form class="layui-form" action="">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">节点名称</label>
+                        <div class="layui-input-inline bdc-radio">
+                            <select class="bdc-jgry bdc-jdmc" name="thjdmc" xm-select="selectJdmc" xm-select-radio xm-select-height="34px">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">部门名称</label>
+<!--                        <div class="layui-input-inline bdc-radio">-->
+<!--                            <select class="bdc-jgry bdc-bmmc" name="bmmc" xm-select="selectBmmc" xm-select-radio xm-select-height="34px">-->
+<!--                            </select>-->
+<!--                        </div>-->
+                        <div class="layui-input-inline" style="display: flex;">
+                            <input type="text" name="bmmc" autocomplete="off" placeholder="请选择" class="layui-input" style="width: 100%;">
+                            <input type="hidden" name="bmid" class="search">
+                            <div class="layui-btn layui-btn-sm bdc-table-second-btn org_select_show">选择</div>
+                        </div>
+                        <div class="org_select_tree">
+                            <dd lay-value="" class="xm-select-tips divInput"> <i class="xm-iconfont icon-sousuo"></i><input type="text" name="selvalue" id="deptsel"  class="xm-input xm-select-input"  onkeyup="AutoMatch()" placeholder="请搜索" ></dd>
+                            <div class="menuContent">
+                                <dd class="xm-select-tips xm-select-none  xm-select-empty">无匹配项</dd>
+                                <ul id="select_tree" class="ztree"></ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-inline xzq-sele">
+                        <label class="layui-form-label">办件人员</label>
+                        <div class="layui-input-inline">
+                            <select id="bjry" lay-filter="bjry" lay-search=""
+                                    name="bjry" xm-select="selectBjry" xm-select-height="34px"
+                                    xm-select-search="" xm-select-search-type="dl"
+                                    xm-select-skin="default">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">开始时间</label>
+                        <div class="layui-input-inline">
+                            <input id="kssj" autocomplete="off" class="layui-input test-item bdc-jgry" type="text"
+                                   name="kssj" placeholder="请选择"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">截止时间</label>
+                        <div class="layui-input-inline">
+                            <input id="jzsj" autocomplete="off" class="layui-input test-item bdc-jgry" type="text"
+                                   name="jzsj" placeholder="请选择"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">受理人员</label>
+                        <div class="layui-input-inline">
+                            <input id="startUserName" autocomplete="off" class="layui-input" type="text"
+                                   name="startUserName" placeholder="请输入"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <a class="layui-btn layui-btn-normal bdc-major-btn" href="javascript:" id="search">查询</a>
+                        <button type="reset" id="reset" class="layui-btn bdc-secondary-btn reset-btn">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--表格-->
+    <div class="bdc-table-box">
+        <table class="layui-table" id="jgryTable" lay-filter="jgryFilter" lay-even=""></table>
+    </div>
+</div>
+<div class="layui-input-inline">
+    <input type="hidden" id='version' name="version" value="yancheng">
+</div>
+<!--隐藏form，为了Excel导出缓存数据使用-->
+<form style="display: none" action="/realestate-inquiry-ui/excel/export" method="POST" id="form">
+    <input type="hidden" id="fileName"   name="fileName"/>
+    <input type="hidden" id="sheetName"  name="sheetName"/>
+    <input type="hidden" id="cellTitle"  name="cellTitle"/>
+    <input type="hidden" id="cellWidth"  name="cellWidth"/>
+    <input type="hidden" id="cellKey"    name="cellKey"/>
+    <input type="hidden" id="mergeSameCell"  name="mergeSameCell"/>
+    <input type="hidden" id="mergeColumnCellKeyList"  name="mergeColumnCellKeyList"/>
+    <input type="hidden" id="mergeCellKey"  name="mergeCellKey"/>
+    <input type="hidden" id="mergeCellIdKey"  name="mergeCellIdKey"/>
+    <input type="hidden" id="addBorder"    name="addBorder"/>
+    <input type="hidden" id="data"       name="data"/>
+</form>
+
+<!--表格上面功能按钮-->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="exportExcel" id="exportExcel">导出Excel</button>
+    </div>
+</script>
+
+<!--状态模板-->
+<script id="stateTpl" type="text/html">
+    <span class="bdc-table-state-blz">退回</span>
+</script>
+<!-- 受理编号模板 -->
+<script id="slbhTpl" type="text/html">
+    {{#  if(d.slbh != undefined){ }}
+    <span style="color:#1d87d1;cursor:pointer">
+        {{d.slbh}}
+    </span>
+    {{#  } else { }}
+    <span></span>
+    {{#  } }}
+</script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/js/common.js"></script>
+<!-- ztree -->
+<script src="../../static/ztree/jquery.ztree.core.js"></script>
+<script src="../../static/ztree/jquery.ztree.excheck.js"></script>
+<script src="../../static/ztree/jquery.ztree.exhide.js"></script>
+<script src="../../static/js/yancheng/tjjg/tjltjcx.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+</body>
+</html>

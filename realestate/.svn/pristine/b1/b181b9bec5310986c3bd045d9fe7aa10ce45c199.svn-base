@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--房地产权权独幢信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.QltFwFdcqYzMapper">
+
+    <select id="queryQltFwFdcqYzList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.QltFwFdcqYzDO">
+        SELECT DISTINCT
+        t.bdcdyh,
+        l.yxmid as ssywh,
+        t.jedw,
+        t.ytmc,
+        t.pzyt,
+        t.sjyt,
+        c.zdzhyt yt,
+        t.fwxzmc,
+        t.SZMYC,
+        c.ZDZHYT,
+        fb.syqx tdsyqx,
+        c.xmid AS ywh,
+        t.qllx,
+        nvl(nvl(t.djlx,c.djlx),'900') djlx,
+        nvl(t.djyy, '/') djyy,
+        t.zl AS fdzl,
+        CASE
+        WHEN t.tdsyqr IS NULL THEN
+        '/'
+        WHEN LENGTH(t.tdsyqr) > 50 THEN
+        substr(t.tdsyqr, 0, 49) || '等'
+        ELSE
+        t.tdsyqr
+        END tdsyqr,
+        t.dytdmj,
+        t.fttdmj,
+        nvl(t.tdsyqssj,
+        to_date('1949-10-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss')) AS tdsyqssj,
+        nvl(t.tdsyjssj,
+        to_date('2999-12-31 00:00:00', 'yyyy-mm-dd hh24:mi:ss')) AS tdsyjssj,
+        trunc(t.jyjg/10000,4) AS fdcjyjg,
+        t.ghyt,
+        nvl(t.fwxz,'99') fwxz,
+        t.fwjg,
+        nvl(t.szmyc, t.szc) szmyc,
+        nvl(t.szc, 1) szc,
+        t.zcs,
+		nvl(trunc(t.jzmj,2),0) jzmj,
+        nvl(trunc(t.zyjzmj, 2), 0) AS zyjzmj,
+        nvl(trunc(t.ftjzmj, 2), 0) AS ftjzmj,
+        nvl(t.jgsj,'1949-10-01') jgsj,
+        -- replace(c.bdcqzh, '/', '、') bdcqzh,
+        substr(c.bdcdyh,0,6) as qxdm,
+        t.djjg,
+        nvl(t.dbr,'空') dbr,
+        t.djsj,
+        t.fj,
+        t.qszt,
+        case
+        when
+        c.bdcqzh is null then '/////'
+        else c.bdcqzh
+        end as bdcqzh
+        FROM bdc_fdcq t
+        LEFT JOIN bdc_xm c ON c.xmid = t.xmid
+        left join bdc_xmfb fb on t.xmid = fb.xmid
+        LEFT JOIN bdc_xm_lsgx l ON l.xmid=c.xmid and nvl(l.WLXM,0) = 0
+        <if test="yywh != null and yywh !=''">
+            LEFT JOIN bdc_xm_lsgx l ON l.yxmid=c.xmid and nvl(l.WLXM,0) = 0
+        </if>
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND t.xmid = #{ywh}
+            </if>
+            <if test="yywh != null and yywh !=''">
+                AND l.xmid=#{yywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND c.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+    <select id="queryQltFwFdcqYzListOld" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.yancheng.yth.old.QltFwFdcqYzOldDO">
+        SELECT DISTINCT
+        t.bdcdyh,
+        c.xmid AS ywh,
+        t.qllx,
+        nvl(nvl(t.djlx,c.djlx),'900') djlx,
+        nvl(t.djyy, '/') djyy,
+        t.zl AS fdzl,
+        CASE
+        WHEN t.tdsyqr IS NULL THEN
+        '/'
+        WHEN LENGTH(t.tdsyqr) > 50 THEN
+        substr(t.tdsyqr, 0, 49) || '等'
+        ELSE
+        t.tdsyqr
+        END tdsyqr,
+        t.dytdmj,
+        t.fttdmj,
+        nvl(t.tdsyqssj,
+        to_date('1949-10-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss')) AS tdsyqssj,
+        nvl(t.tdsyjssj,
+        to_date('2999-12-31 00:00:00', 'yyyy-mm-dd hh24:mi:ss')) AS tdsyjssj,
+        trunc(t.jyjg/10000,4) AS fdcjyjg,
+        t.ghyt,
+        nvl(t.fwxz,'99') fwxz,
+        t.fwjg,
+        nvl(t.szmyc, t.szc) szmyc,
+        nvl(t.szc, 1) szc,
+        t.zcs,
+        nvl(trunc(t.jzmj,2),0) jzmj,
+        nvl(trunc(t.zyjzmj, 2), 0) AS zyjzmj,
+        nvl(trunc(t.ftjzmj, 2), 0) AS ftjzmj,
+        nvl(t.jgsj,'1949-10-01') jgsj,
+        -- replace(c.bdcqzh, '/', '、') bdcqzh,
+        substr(c.bdcdyh,0,6) as qxdm,
+        t.djjg,
+        nvl(t.dbr,'空') dbr,
+        t.djsj,
+        t.fj,
+        t.qszt,
+        case
+        when
+        c.bdcqzh is null then '/////'
+        else c.bdcqzh
+        end as bdcqzh
+        FROM bdc_fdcq t
+        LEFT JOIN bdc_xm c ON c.xmid = t.xmid
+        <if test="yywh != null and yywh !=''">
+            LEFT JOIN bdc_xm_lsgx l ON l.yxmid=c.xmid and nvl(l.WLXM,0) = 0
+        </if>
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND t.xmid = #{ywh}
+            </if>
+            <if test="yywh != null and yywh !=''">
+                AND l.xmid=#{yywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND c.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+</mapper>

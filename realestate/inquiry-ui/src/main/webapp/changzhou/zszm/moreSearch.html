@@ -1,0 +1,310 @@
+<!--
+    综合查询：标准版高级查询条件页面
+-->
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>综合查询——高级查询条件</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css" />
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css" />
+    <link rel="stylesheet" href="../../static/css/common.css"/>
+</head>
+<body>
+<div id="popupTwoRows">
+    <form class="layui-form" action="" lay-filter="searchform">
+        <div class="layui-form-item pf-form-item">
+            <div id="zslxMoreSearch"  class="layui-inline xzq-sele">
+                <label class="layui-form-label">证书类型</label>
+                <div class="layui-input-inline">
+                    <select lay-filter="zslx" id="zslx" name="zslx" lay-search="" class="search">
+                        <option value="">请选择</option>
+                        <option value="1">证书</option>
+                        <option value="2">证明</option>
+                    </select>
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+            <div id="qsztMoreSearch"  class="layui-inline xzq-sele">
+                <label class="layui-form-label">权属状态</label>
+                <div class="layui-input-inline">
+                    <select lay-filter="qszt" id="qszt" name="qszt" lay-search="" class="search">
+                        <option value="">请选择</option>
+                        <option value="0">临时</option>
+                        <option value="1">现势</option>
+                        <option value="2">历史</option>
+                        <option value="3">终止</option>
+                    </select>
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+
+            <div id="bdcdyhMoreSearch"  class="layui-inline bdc-filter">
+                <label class="layui-form-label">不动产单元号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="bdcdyh" name="bdcdyh" autocomplete="off" placeholder="请输入" class="layui-input required other">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    <select id="bdcdyhmhlx" name="bdcdyhmhlx" class="bdc-filter-select">
+                        <option value="0">精确</option>
+                        <option value="2">左模糊</option>
+                        <option value="1">右模糊</option>
+                        <option value="3">全模糊</option>
+                    </select>
+                </div>
+            </div>
+            <div id="zlMoreSearch"  class="layui-inline bdc-filter">
+                <label class="layui-form-label">坐落</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="zl" name="zl" autocomplete="off" placeholder="请输入" class="layui-input required other">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    <select id="zlmhlx" name="zlmhlx" class="bdc-filter-select">
+                        <option value="0">精确</option>
+                        <option value="2">左模糊</option>
+                        <option value="1">右模糊</option>
+                        <option value="3">全模糊</option>
+                    </select>
+                </div>
+            </div>
+            <div id="bdcqzhMoreSearch"  class="layui-inline bdc-filter">
+                <label class="layui-form-label">不动产权证号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="bdcqzh" name="bdcqzh" autocomplete="off" placeholder="请输入" class="layui-input required other">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    <select id="bdcqzhmhlx" name="bdcqzhmhlx" class="bdc-filter-select">
+                        <option value="0">精确</option>
+                        <option value="2">左模糊</option>
+                        <option value="1">右模糊</option>
+                        <option value="3">全模糊</option>
+                    </select>
+                </div>
+            </div>
+            <div id="ycqzhMoreSearch"  class="layui-inline bdc-filter">
+                <label class="layui-form-label">原产权证号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="ycqzh" name="ycqzh" autocomplete="off" placeholder="请输入" class="layui-input required other">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    <select id="ycqzhmhlx" name="ycqzhmhlx" class="bdc-filter-select">
+                        <option value="0">精确</option>
+                        <option value="2">左模糊</option>
+                        <option value="1">右模糊</option>
+                        <option value="3">全模糊</option>
+                    </select>
+                </div>
+            </div>
+            <div class="bdc-add-box" id="qlrMoreSearch" >
+                <a href="javascript:;"
+                   class="layui-btn layui-btn-xs bdc-secondary-btn bdc-operate-qlr bdc-add-qlr">+</a>
+                <div class="bdc-add-qlr-box">
+                    <div class="layui-inline bdc-filter">
+                        <label class="layui-form-label">权利人名称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="qlrmc" name="qlrmc" autocomplete="off" placeholder="请输入"
+                                   ondblclick="onReadIdCard(1,this)" class="layui-input required">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            <select id="qlrmcmhlx" name="qlrmcmhlx" class="bdc-filter-select" lay-filter="qlrNameFilter">
+                                <option value="0">精确</option>
+                                <option value="2">左模糊</option>
+                                <option value="1">右模糊</option>
+                                <option value="3">全模糊</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-filter">
+                        <label class="layui-form-label">权利人证件号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="qlrzjh" name="qlrzjh" autocomplete="off" placeholder="请输入"
+                                   class="layui-input required" ondblclick="onReadIdCard(1,this)">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            <select id="qlrzjhmhlx" name="qlrzjhmhlx" class="bdc-filter-select" lay-filter="qlrZjhFilter">
+                                <option value="0">精确</option>
+                                <option value="2">左模糊</option>
+                                <option value="1">右模糊</option>
+                                <option value="3">全模糊</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="ywrMoreSearch"  class="layui-inline bdc-filter">
+                <label class="layui-form-label">义务人名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="ywrmc" name="ywrmc" autocomplete="off" placeholder="请输入" class="layui-input required other"
+                           ondblclick="onReadIdCard(2,this)">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    <select id="ywrmcmhlx" name="ywrmcmhlx" class="bdc-filter-select">
+                        <option value="0">精确</option>
+                        <option value="2">左模糊</option>
+                        <option value="1">右模糊</option>
+                        <option value="3">全模糊</option>
+                    </select>
+                </div>
+            </div>
+            <div id="ywrzjhMoreSearch"  class="layui-inline bdc-filter">
+                <label class="layui-form-label">义务人证件号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="ywrzjh" name="ywrzjh" autocomplete="off" placeholder="请输入"
+                           class="layui-input required other" ondblclick="onReadIdCard(2,this)">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    <select id="ywrzjhmhlx" name="ywrzjhmhlx" class="bdc-filter-select">
+                        <option value="0">精确</option>
+                        <option value="2">左模糊</option>
+                        <option value="1">右模糊</option>
+                        <option value="3">全模糊</option>
+                    </select>
+                </div>
+            </div>
+            <div id="zhMoreSearch"  class="layui-inline bdc-filter">
+                <label class="layui-form-label">幢号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="zh" name="zh" autocomplete="off" placeholder="请输入" class="layui-input required other">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    <select id="zhmhlx" name="zhmhlx" class="bdc-filter-select">
+                        <option value="0">精确</option>
+                        <option value="2">左模糊</option>
+                        <option value="1">右模糊</option>
+                        <option value="3">全模糊</option>
+                    </select>
+                </div>
+            </div>
+            <div id="fjhMoreSearch"  class="layui-inline bdc-filter">
+                <label class="layui-form-label">房间号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="fjh" name="fjh" autocomplete="off" placeholder="请输入" class="layui-input required other">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    <select id="fjhmhlx" name="fjhmhlx" class="bdc-filter-select">
+                        <option value="0">精确</option>
+                        <option value="2">左模糊</option>
+                        <option value="1">右模糊</option>
+                        <option value="3">全模糊</option>
+                    </select>
+                </div>
+            </div>
+            <div id="slbhMoreSearch"  class="layui-inline bdc-filter">
+                <label class="layui-form-label">受理编号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="slbh" name="slbh" autocomplete="off" placeholder="请输入" class="layui-input required other">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    <select id="slbhmhlx" name="slbhmhlx" class="bdc-filter-select">
+                        <option value="0">精确</option>
+                        <option value="2">左模糊</option>
+                        <option value="1">右模糊</option>
+                        <option value="3">全模糊</option>
+                    </select>
+                </div>
+            </div>
+            <div id="fwbhMoreSearch"  class="layui-inline bdc-filter">
+                <label class="layui-form-label">房屋编号</label>
+                <div class="layui-input-inline">
+                    <input searchformtype="text" id="fwbh" name="fwbh" autocomplete="off" placeholder="请输入"
+                           class="layui-input required other">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    <select id="fwbhmhlx" name="fwbhmhlx" class="bdc-filter-select">
+                        <option value="0">精确</option>
+                        <option value="2">左模糊</option>
+                        <option value="1">右模糊</option>
+                        <option value="3">全模糊</option>
+                    </select>
+                </div>
+            </div>
+            <div id="zhlshMoreSearch"  class="layui-inline bdc-filter">
+                <label class="layui-form-label">证号流水号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="zhlsh" name="zhlsh" autocomplete="off" placeholder="请输入"
+                           class="layui-input required other">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    <select id="zhlshmhlx" name="zhlshmhlx" class="bdc-filter-select">
+                        <option value="0">精确</option>
+                        <option value="2">左模糊</option>
+                        <option value="1">右模糊</option>
+                        <option value="3">全模糊</option>
+                    </select>
+                </div>
+            </div>
+            <div id="zsyzhMoreSearch" >
+                <div id="zsyzhid" class="layui-inline bdc-filter">
+                    <label class="layui-form-label">证书印制号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="zsyzh" name="zsyzh" autocomplete="off" placeholder="请输入"
+                               class="layui-input required other">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        <select id="zsyzhmhlx" name="zsyzhmhlx" class="bdc-filter-select">
+                            <option value="0">精确</option>
+                            <option value="2">左模糊</option>
+                            <option value="1">右模糊</option>
+                            <option value="3">全模糊</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div id="jtcyMoreSearch" >
+                <div id="jtcyid" class="layui-inline bdc-filter">
+                    <label class="layui-form-label">家庭成员名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="jtcymc" name="jtcymc" autocomplete="off" placeholder="请输入"
+                               class="layui-input required other">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        <select id="jtcymcmhlx" name="jtcymcmhlx" class="bdc-filter-select">
+                            <option value="0">精确</option>
+                            <option value="2">左模糊</option>
+                            <option value="1">右模糊</option>
+                            <option value="3">全模糊</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-inline bdc-frame-button-box">
+                <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" lay-submit="" lay-filter="submitBtn" id="submitBtn">查询</a>
+                <a href="javascript:;" class="layui-btn layui-btn-normal bdc-secondary-btn bdc-frame-close">取消</a>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+<script type="text/html" id="qlrTpl">
+    <div class="bdc-add-qlr-box">
+        <div class="layui-inline bdc-filter">
+            <label class="layui-form-label">权利人名称</label>
+            <div class="layui-input-inline bdc-one-icon">
+                <input type="text" name="qlrmc" autocomplete="off" placeholder="请输入" class="layui-input"
+                       ondblclick="onReadIdCard(1,this)">
+                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                <select name="qlrmcmhlx" disabled="disabled" class="bdc-filter-select">
+                    <option value="0">精确</option>
+                    <option value="2">左模糊</option>
+                    <option value="1">右模糊</option>
+                    <option value="3">全模糊</option>
+                </select>
+                <img src="../../static/lib/bdcui/images/lock.png" alt="">
+            </div>
+        </div>
+        <div class="layui-inline bdc-filter">
+            <label class="layui-form-label">权利人证件号</label>
+            <div class="layui-input-inline bdc-one-icon">
+                <input type="text" name="qlrzjh" autocomplete="off" placeholder="请输入" class="layui-input"
+                       ondblclick="onReadIdCard(1,this)">
+                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                <select name="qlrzjhmhlx" disabled="disabled" class="bdc-filter-select">
+                    <option value="0">精确</option>
+                    <option value="2">左模糊</option>
+                    <option value="1">右模糊</option>
+                    <option value="3">全模糊</option>
+                </select>
+                <img src="../../static/lib/bdcui/images/lock.png" alt="">
+            </div>
+        </div>
+        <a href="javascript:;" class="layui-btn layui-btn-xs bdc-secondary-btn bdc-operate-qlr bdc-delete-qlr">-</a>
+    </div>
+</script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/formCenter.js"></script>
+<script src="../../static/js/zszm/changzhou/moreSearch.js"></script>
+</html>

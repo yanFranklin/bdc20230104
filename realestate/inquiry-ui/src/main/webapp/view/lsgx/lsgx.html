@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>历史关系</title>
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/flow/css/vis.css">
+    <link rel="stylesheet" href="../../static/lib/registerui/css/topIndex.css">
+</head>
+<body>
+<div class="bdc-outer-box">
+    <!--<div class="bdc-container-box">-->
+    <div class="bdc-lc-container">
+        <div class="bdc-lc-title">
+            <p></p>
+            <div class="bdc-operate-show">
+                <i class="layui-icon layui-icon-up"></i>
+                <i class="layui-icon layui-icon-down bdc-hide"></i>
+            </div>
+        </div>
+        <div id="relationMap" style="height: 260px;"></div>
+    </div>
+
+    <div class="bdc-container-box">
+        <div class="bdc-container">
+            <!--收缩左侧列表-->
+            <div class="bdc-aside-zoom">
+                <a class="bdc-aside-close" href="javascript:;"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
+                <a class="bdc-aside-open bdc-hide" href="javascript:;"><i class="fa fa-chevron-right" aria-hidden="true"></i></a>
+            </div>
+
+            <div class="bdc-menu-aside" id="asideBox">
+                <div class="aside" id="asideCon">
+                    <h4>目录</h4>
+                    <div id="aside">
+                        <div class="bdc-search-box">
+                            <input type="text" id="qllxSearch" name="title" placeholder="请输入" autocomplete="off"
+                                   class="layui-input bdc-search">
+                            <i class="layui-icon layui-icon-search"></i>
+                            <i class="layui-icon layui-icon-close"></i>
+                        </div>
+                        <div class="layui-tab layui-tab-brief bdc-menu-tab" lay-filter="menuChangeFilter">
+                            <ul class="layui-tab-title">
+                                <li class="layui-this">
+                                    权利历史
+                                    <div class="border-up-empty">
+                                        <span></span>
+                                    </div>
+                                </li>
+                                <li>
+                                    登记历史
+                                    <div class="border-up-empty bdc-hide">
+                                        <span></span>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <ul id="accordion" class="accordion">
+
+                                    </ul>
+                                    <ul id="searchMenu" class="accordion bdc-hide">
+
+                                    </ul>
+                                </div>
+                                <div class="layui-tab-item">
+                                    <!--<a href="#" onclick="lsgx()">登记历史</a>-->
+                                    <ul class="accordion">
+                                        <li class="bdc-outer-li bdc-invented-li" data-num="230103001006GB00004">
+                                            <a class="link bdc-history">
+                                                <img src="../../static/lib/registerui/image/log.png" alt="图标"
+                                                     class="docu-icon">
+                                                登记历史
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="asideLine"></div>
+            <!--左侧菜单栏结束-->
+
+            <!--右侧主内容开始-->
+            <div class="bdc-right-content">
+                <!--内容存放开始-->
+                <div id="qlls" class="layui-tab layui-tab-brief" lay-filter="tabContentFilter">
+                    <ul class="layui-tab-title bdc-tab-title">
+                        <li class="layui-this" lay-id="qlxxTab">权利信息</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item layui-show">
+                            <iframe id="qlxxIframe" style="width: 100%; min-height: 100%; border: none;"></iframe>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div id="lsgx" class="bdc-hide" style="width: 100%;height: 100%;">
+                    <iframe id="lsgxIframe" style="width: 100%; min-height: 100%; border: none;"></iframe>
+                </div>
+            </div>
+            <!--右侧主内容结束-->
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/html" id="asideTpl">
+    {{#  layui.each(d, function(index, item){ }}
+    <li class="bdc-outer-li bdc-invented-li" key="{{item.id}}" title="{{defaultValue(item.mlxx)}}">
+        <a class="link" data-id="{{item.id}}" data-qllx="{{item.qllx}}" data-bdcdyfwlx="{{item.bdcdyfwlx}}">
+            <i class="fa fa-caret-right"></i>
+            <img src="../../static/image/file.png" alt="图标" class="docu-icon">
+            {{# if(item.qszt == "1"){ }}
+            <span style="color: #32b032">{{defaultValue(item.mlxx)}}</span>
+            {{# } else if(item.qszt == "2") { }}
+            <span style="color: #999">{{defaultValue(item.mlxx)}}</span>
+            {{# } else { }}
+            {{defaultValue(item.mlxx)}}
+            {{#  } }}
+        </a>
+        <ul class="submenu">
+        </ul>
+    </li>
+    {{#  }); }}
+</script>
+
+<script type="text/html" id="asideSecondTpl">
+    {{#  layui.each(d, function(index, item){ }}
+    {{#  if(item.child.length != 0){ }}
+    <li class="bdc-inner-li bdc-invented-li" data-src="" title="{{defaultValue(item.name)}}">
+        <a href="javascript:;" class="link">
+            <i class="fa fa-caret-right"></i>
+            <img src="../../static/image/file.png" alt="图标" class="docu-icon">{{item.name}}
+        </a>
+        <ul class="submenu bdc-submenu-child">
+            {{#  layui.each(item.child, function(i, v){ }}
+            <li class="bdc-inner-li bdc-invented-li  xx-li" title="{{defaultValue(v.mlxx)}}" data-src=""
+                style="padding-left: 18px;">
+                <a class="bdc-last-child" data-id="{{v.id}}" data-qllx="{{v.qllx}}" data-bdcdyfwlx="{{v.bdcdyfwlx}}">
+                    {{# if(v.qszt == "1" || v.sdzt =="1"){ }}
+                    <img src="../../static/image/log.png" alt="图标" class="docu-icon"><span style="color: #32b032">{{defaultValue(v.mlxx)}}</span>
+                    {{# } else if(v.qszt == "2" || v.sdzt =="0") { }}
+                    <img src="../../static/image/grey-log.png" alt="图标" class="docu-icon"><span style="color: #999">{{defaultValue(v.mlxx)}}</span>
+                    {{# } else { }}
+                    <img src="../../static/image/grey-log.png" alt="图标" class="docu-icon">{{defaultValue(v.mlxx)}}
+                    {{#  } }}
+                </a>
+            </li>
+            {{#  }); }}
+        </ul>
+    </li>
+    {{# } else{ }}
+    <li class="bdc-inner-li bdc-invented-li" data-src="">
+        <a href="javascript:;" class="bdc-last-child">
+            <img src="../../static/image/log.png" alt="图标" class="docu-icon">{{item.name}}
+        </a>
+    </li>
+    {{#  } }}
+    {{#  }); }}
+</script>
+<!--查询 目录树 模板-->
+<script type="text/html" id="searchMenuTpl">
+    {{#  layui.each(d, function(index, item){ }}
+    {{#  if(item.childList.length != 0){ }}
+    <li class="bdc-outer-li bdc-invented-li" data-num="230103001006GB00004">
+        <a class="link">
+            <i class="fa fa-caret-right"></i>
+            <img src="../../static/image/file.png" alt="图标" class="docu-icon">
+            {{# if(item.lsgxModelDTO.qszt == "1"){ }}
+            <span style="color: #32b032">{{item.lsgxModelDTO.mlxx}}</span>
+            {{# } else if(item.lsgxModelDTO.qszt == "2") { }}
+            <span style="color: #999">{{item.lsgxModelDTO.mlxx}}</span>
+            {{# } else { }}
+            {{item.lsgxModelDTO.mlxx}}
+            {{#  } }}
+        </a>
+        <ul class="submenu">
+            {{# layui.each(item.childList, function(ind, value){ }}
+            <li class="bdc-inner-li bdc-invented-li" data-src="../../bdcui/view/certificate.html">
+                <a data-id="{{item.id}}" data-qllx="{{item.qllx}}" class="link">
+                    <i class="fa fa-caret-right"></i>
+                    <img src="../../static/image/file.png" alt="图标" class="docu-icon">{{value.name}}
+                </a>
+                <ul class="submenu bdc-submenu-child">
+                    {{# layui.each(value.childTree, function(i, v){ }}
+                    <li class="bdc-inner-li bdc-invented-li" data-src="../../bdcui/view/certificate.html">
+                        <a data-id="{{item.id}}" data-qllx="{{item.qllx}}" class="bdc-last-child">
+                            <img src="../../static/image/log.png" alt="图标" class="docu-icon">
+                            {{# if(v.qszt == "1" || v.sdzt =="1"){ }}
+                            <span style="color: #32b032">{{v.mlxx}}</span>
+                            {{# } else if(v.qszt == "2" || v.sdzt =="0") { }}
+                            <span style="color: #999">{{v.mlxx}}</span>
+                            {{# } else { }}
+                            {{v.mlxx}}
+                            {{#  } }}
+                        </a>
+                    </li>
+                    {{# }); }}
+                </ul>
+            </li>
+            {{# }); }}
+        </ul>
+    </li>
+    {{# } else{ }}
+    <li class="bdc-outer-li bdc-invented-li" data-num="230103001006GB00004">
+        <a class="link">
+            <img src="../../static/image/file.png" alt="图标" class="docu-icon">
+            {{# if(item.lsgxModelDTO.qszt == "1"){ }}
+            <span style="color: #32b032">{{item.lsgxModelDTO.mlxx}}</span>
+            {{# } else if(item.lsgxModelDTO.qszt == "2") { }}
+            <span style="color: #999">{{item.lsgxModelDTO.mlxx}}</span>
+            {{# } else { }}
+            {{item.lsgxModelDTO.mlxx}}
+            {{#  } }}
+        </a>
+    </li>
+    {{#  } }}
+    {{#  }); }}
+</script>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/jquery-mousewheel/jquery.mousewheel.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/flow/js/vis.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/lsgx/hsbg.js"></script>
+<script src="../../static/js/lsgx/cqbgls.js"></script>
+<script src="../../static/js/lsgx/tree.js"></script>
+<script src="../../static/js/lsgx/lsgx.js"></script>
+</html>

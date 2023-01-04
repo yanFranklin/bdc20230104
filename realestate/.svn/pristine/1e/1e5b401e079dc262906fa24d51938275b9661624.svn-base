@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!-- 1 工程建设项目平台信息查询 -->
+    <ex:bean id="ggpt_gcjsxmcx">
+        <ex:service-info request-type="httpPostWithUrlParam">
+            <ex:property name="logEventName" value="工程建设项目平台信息查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GGPT"/>
+            <ex:property name="dsfFlag" value="GGPT"/>
+            <ex:property name="url" value="${ggpt.gcjsxmcx.url}"/>
+            <ex:property name="contentType" value="application/x-www-form-urlencoded"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/xuancheng/ggpt/param.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!-- 2 工程建设项目平台附件信息查询 -->
+    <ex:bean id="ggpt_gcjsfjcx">
+        <ex:service-info request-type="httpPostWithUrlParam">
+            <ex:property name="logEventName" value="工程建设项目平台附件信息查询"/>
+            <ex:property name="beanName" value="BdcGgptxxServiceImpl"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GGPT"/>
+            <ex:property name="dsfFlag" value="GGPT"/>
+            <ex:property name="url" value="${ggpt.gcjsfjcx.url}"/>
+            <ex:property name="contentType" value="application/x-www-form-urlencoded"/>
+        </ex:service-info>
+    </ex:bean>
+
+
+
+</beans>

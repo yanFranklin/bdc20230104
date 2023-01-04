@@ -1,0 +1,58 @@
+package cn.gtmap.realestate.exchange.core.support.spring;
+
+import cn.gtmap.realestate.exchange.core.annotations.LayuiPageable;
+import org.springframework.core.MethodParameter;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.web.bind.support.WebDataBinderFactory;
+import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.method.support.ModelAndViewContainer;
+
+
+/**
+ * @author <a href="mailto:liyinqiao@gtmap.cn">liyinqiao</a>
+ * @version 1.0  2018-12-16
+ * @description layui 组件 页码转换器
+ */
+public class LayuiPageableArgumentResolver extends PageableHandlerMethodArgumentResolver {
+
+    /**
+     * Whether the given {@linkplain MethodParameter method parameter} is
+     * supported by this resolver.
+     *
+     * @param parameter the method parameter to check
+     * @return {@code true} if this resolver supports the supplied parameter;
+     * {@code false} otherwise
+     */
+    @Override
+    public boolean supportsParameter(MethodParameter parameter) {
+        return parameter.hasParameterAnnotation(LayuiPageable.class);
+    }
+
+    /**
+     * Resolves a method parameter into an argument value from a given request.
+     * A {@link ModelAndViewContainer} provides access to the model for the
+     * request. A {@link WebDataBinderFactory} provides a way to create
+     * a instance when needed for data binding and
+     * type conversion purposes.
+     *
+     * @param parameter     the method parameter to resolve. This parameter must
+     *                      have previously been passed to {@link #supportsParameter} which must
+     *                      have returned {@code true}.
+     * @param mavContainer  the ModelAndViewContainer for the current request
+     * @param webRequest    the current request
+     * @param binderFactory a factory for creating instances
+     * @return the resolved argument value, or {@code null}
+     * @throws Exception in case of errors with the preparation of argument values
+     */
+    @Override
+    public Pageable resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory){
+        Pageable pageable = super.resolveArgument(parameter, mavContainer, webRequest, binderFactory);
+        if (pageable != null && pageable.getPageNumber() > 0) {
+            return new PageRequest(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
+        } else {
+            return pageable;
+        }
+    }
+}

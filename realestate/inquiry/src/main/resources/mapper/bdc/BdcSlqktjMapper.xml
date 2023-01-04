@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcSlqktjMapper">
+    <select id="listBdcSlqktj" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.SlqktjQO"
+            resultType="java.util.HashMap">
+          SELECT
+              <if test="slqklx == 'djxl'">
+                DJXL,
+              </if>
+              <if test="slqklx == 'djyy'">
+                DJYY,
+              </if>
+          sum (CASE WHEN x.bdclx=1 THEN zdzhmj ELSE dzwmj END )mj,
+          COUNT(*) REALCOUNT
+          FROM bdc_xm X where DJJG IS NOT NULL
+        AND GZLDYMC IS NOT NULL
+        AND SLR IS NOT NULL
+        AND DJXL IS NOT NULL
+        AND DJYY IS NOT NULL
+        <if test="djjglist != null and djjglist.size() > 0">
+            AND x.DJJG in
+            <foreach collection="djjglist" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="processnamelist != null and processnamelist.size() > 0">
+            AND x.gzldymc in
+            <foreach collection="processnamelist" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="slrmclist != null and slrmclist.size() > 0">
+            AND x.slr in
+            <foreach collection="slrmclist" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="djlxlist != null and djlxlist.size() > 0">
+            AND x.djlx in
+            <foreach collection="djlxlist" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="djxllist != null and djxllist.size() > 0">
+            AND x.djxl in
+            <foreach collection="djxllist" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="djyylist != null and djyylist.size() > 0">
+            AND x.djyy in
+            <foreach collection="djyylist" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="kssj != null and kssj != ''">
+            AND to_char(x.slsj,'yyyy-MM-dd hh24:mi:ss') >= #{kssj}
+        </if>
+        <if test="jzsj != null and jzsj != ''">
+            AND to_char(x.slsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{jzsj}
+        </if>
+
+         GROUP BY
+            <if test="slqklx == 'djxl'">
+                x.DJXL
+            </if>
+            <if test="slqklx == 'djyy'">
+                x.DJYY
+            </if>
+         ORDER BY REALCOUNT DESC
+
+    </select>
+
+
+    <select id="listBdcSlqktjmxByPage" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.SlqktjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcSlqkDTO">
+        select x.xmid,gzldymc,
+        CASE WHEN x.qllx=95 or x.qllx =37 THEN zd.mc ELSE x.djyy END as ywxl,
+        x.qlr,
+        x.bdcdyh,
+        x.zl,
+        x.slr as cjr,
+        to_char(x.slsj,'yyyy-MM-dd hh24:mi:ss')slsj,
+        x.ajzt
+
+        FROM  bdc_xm x
+        left join bdc_dyaq dy
+        inner join bdc_zd_dyfs zd
+        on dy.dyfs = zd.dm
+        on x.xmid = dy.xmid
+        where x.DJJG IS NOT NULL
+        AND x.GZLDYMC IS NOT NULL
+        AND x.SLR IS NOT NULL
+        AND x.DJXL IS NOT NULL
+        AND x.DJYY IS NOT NULL
+        <if test="djjglist != null and djjglist.size() > 0">
+            AND x.DJJG in
+            <foreach collection="djjglist" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="processnamelist != null and processnamelist.size() > 0">
+            AND x.gzldymc in
+            <foreach collection="processnamelist" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="slrmclist != null and slrmclist.size() > 0">
+            AND x.slr in
+            <foreach collection="slrmclist" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="djlxlist != null and djlxlist.size() > 0">
+            AND x.djlx in
+            <foreach collection="djlxlist" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="djxllist != null and djxllist.size() > 0">
+            AND x.djxl in
+            <foreach collection="djxllist" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="djyylist != null and djyylist.size() > 0">
+            AND x.djyy in
+            <foreach collection="djyylist" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="kssj != null and kssj != ''">
+            AND to_char(x.slsj,'yyyy-MM-dd hh24:mi:ss') >= #{kssj}
+        </if>
+        <if test="jzsj != null and jzsj != ''">
+            AND to_char(x.slsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{jzsj}
+        </if>
+
+
+
+    </select>
+
+    <select id="listDjyyByDjxl" parameterType="Map"
+            resultType="java.util.Map">
+        SELECT A.* FROM BDC_DJXL_DJYY_GX A WHERE 1=1
+        <if test="djxl != null and djxl.size() > 0">
+            AND A.DJXL in
+            <foreach collection="djxl" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        ORDER BY A.DJYY
+    </select>
+
+
+
+</mapper>

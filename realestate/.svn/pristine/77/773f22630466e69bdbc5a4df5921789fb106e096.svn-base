@@ -1,0 +1,41 @@
+---主表
+select t.slbh,t.qlr,#{ewm} ewm  from bdc_xm t where t.xmid = #{xmid}
+---子表
+SELECT rownum AS xh, t3.bdcdyh, t3.qlr AS qlrmc, t3.zl, t3.bdcdywybh
+	, t3.zh, t3.szc, t3.dzwmj AS jzmj
+	, t3.jgsj,t3.zcs
+	, t4.mc AS ghyt
+FROM (
+	SELECT t.bdcdyh, t.gzlslid, t.xmid, t.qlr, t.zl
+		, t2.zh, t.zdzhmj, t.bdcdywybh, t1.szc
+		, CASE
+            WHEN t2.fzid IS NULL THEN t1.zh
+            ELSE t2.zh
+        END AS zh
+		, CASE
+			WHEN t2.fzid IS NULL THEN t.dzwyt
+			ELSE t2.ghyt
+		END AS dzwyt
+		, CASE
+			WHEN t2.fzid IS NULL THEN t1.jgsj
+			ELSE t2.jgsj
+		END AS jgsj
+		, CASE
+			WHEN t2.fzid IS NULL THEN t1.zcs
+			ELSE t2.zcs
+		END AS zcs
+	FROM (
+		SELECT DISTINCT xm2.*
+		FROM (
+			SELECT ROW_NUMBER() OVER (PARTITION BY xm.bdcdyh ORDER BY xm.xmid ASC) AS rn, xm.bdcdyh, xm.gzlslid, xm.xmid, xm.qlr
+				, xm.zl, xm.dzwyt, xm.dzwmj, xm.zdzhmj, xm.bdcdywybh
+			FROM bdc_xm xm
+			WHERE xm.gzlslid = #{gzlslid}
+		) xm2
+		WHERE rn = 1
+	) t
+	LEFT JOIN bdc_fdcq t1 ON t.xmid = t1.xmid
+		LEFT JOIN bdc_fdcq_fdcqxm t2 ON t1.qlid = t2.qlid
+	ORDER BY t.bdcdyh ASC, zh ASC
+) t3
+	LEFT JOIN bdc_zd_fwyt t4 ON t3.dzwyt = t4.dm

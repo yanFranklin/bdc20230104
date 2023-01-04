@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>机构配置</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/common.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+
+    <script src="../../static/lib/layui/layui.js"></script>
+    <script src="../../static/lib/jquery/jquery.min.js"></script>
+    <!--添加水印-->
+    <script src="../../static/lib/bdcui/js/common.js"></script>
+    <script src="../../static/js/common.js"></script>
+    <script src="../../static/js/table.js"></script>
+    <script src='../../static/js/formCenter.js'></script>
+    <script src="../../static/js/jgpz/jgpzEdit.js"></script>
+    <style>
+        .bdc-qlr-btns {
+            width: 100%;
+            height: 38px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            padding-bottom: 10px;
+            background-color: #eee;
+        }
+        .pannel-form-btns {
+            padding-top: 10px;
+            text-align: center;
+        }
+        .layui-form-danger + .layui-form-select, .layui-form-danger.layui-input, .layui-form-danger:focus {
+            border-color: #f54743 !important;
+        }
+    </style>
+
+</head>
+
+<body>
+<div>
+    <div id="bdc-popup-large">
+        <form class="layui-form bdc-not-full-bg" action="" lay-filter="searchform" id="jgpzform">
+            <div class="layui-form-item pf-form-item">
+                <div class="layui-inline bdc-not-null" id="jglbDiv">
+                    <label class="layui-form-label">机构类别</label>
+                    <div class="layui-input-inline">
+                        <select lay-filter="jglb" id="jglb" name="jglb" lay-verify="required" lay-search="" class="search">
+                            <option value="">请选择</option>
+                        </select>
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+                <div class="layui-inline bdc-two-line bdc-not-null" id="jgmcDiv">
+                    <label class="layui-form-label">机构名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="jgmc" name="jgmc" lay-verify="required" autocomplete="off" placeholder="请输入"
+                               class="layui-input search">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+                <div class="layui-inline bdc-not-null" id="jgzjzlDiv">
+                    <label class="layui-form-label bdc-label-newline">机构<br>证件种类</label>
+                    <div class="layui-input-inline">
+                        <select lay-filter="jgzjzl" id="jgzjzl" name="jgzjzl" lay-verify="required" lay-search="" class="search">
+                            <option value="">请选择</option>
+                        </select>
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+                <div class="layui-inline bdc-not-null" id="jgzjbhDiv">
+                    <label class="layui-form-label bdc-label-newline">机构<br>证件编号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="jgzjbh" name="jgzjbh" lay-verify="required" autocomplete="off" placeholder="请输入"
+                               class="layui-input search">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline bdc-filter" id="frmcDiv">
+                    <label class="layui-form-label">法人代表名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="frmc" name="frmc" autocomplete="off" placeholder="请输入"
+                               class="layui-input search">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+                <div class="layui-inline" id="frzjzlDiv">
+                    <label class="layui-form-label bdc-label-newline">法人代表<br>证件种类</label>
+                    <div class="layui-input-inline">
+                        <select lay-filter="frzjzl" id="frzjzl" name="frzjzl" lay-search="" class="search">
+                            <option value="">请选择</option>
+                        </select>
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+                <div class="layui-inline" id="frzjhDiv">
+                    <label class="layui-form-label bdc-label-newline">法人代表<br>证件号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="frzjh" name="frzjh" autocomplete="off" placeholder="请输入" class="layui-input search">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+                <div class="layui-inline" id="frdhDiv">
+                    <label class="layui-form-label">法人代表电话</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="frdh" name="frdh" autocomplete="off" placeholder="请输入" class="layui-input search">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline bdc-filter" id="dlrmcDiv">
+                    <label class="layui-form-label">代理人名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="dlrmc" name="dlrmc" autocomplete="off" placeholder="请输入"
+                               class="layui-input search">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+                <div class="layui-inline" id="dlrzjzlDiv">
+                    <label class="layui-form-label bdc-label-newline">代理人<br>证件种类</label>
+                    <div class="layui-input-inline">
+                        <select lay-filter="dlrzjzl" id="dlrzjzl" name="dlrzjzl" lay-search="" class="search">
+                            <option value="">请选择</option>
+                        </select>
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+                <div class="layui-inline" id="dlrzjhDiv">
+                    <label class="layui-form-label">代理人证件号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="dlrzjh" name="dlrzjh" autocomplete="off" placeholder="请输入" class="layui-input search">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+                <div class="layui-inline" id="dlrdhDiv">
+                    <label class="layui-form-label">代理人电话</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="dlrdh" name="dlrdh" autocomplete="off" placeholder="请输入" class="layui-input search">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline" id="sfayjsDiv">
+                    <label class="layui-form-label bdc-two-lines">是否<br/>按月结算</label>
+                    <div class="layui-input-inline">
+                        <select lay-filter="sfayjs" id="sfayjs" name="sfayjs" lay-verify="" lay-search=""
+                                class="search">
+                            <option value="">请选择</option>
+                            <option value="0">否</option>
+                            <option value="1">是</option>
+                        </select>
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+
+                <div class="layui-inline" id="sfjrhlwDiv">
+                    <label class="layui-form-label bdc-two-lines">是否接入<br/>互联网 +</label>
+                    <div class="layui-input-inline">
+                        <select class="search" id="sfjrhlw" lay-filter="sfjrhlw" lay-search="" lay-verify=""
+                                name="sfjrhlw">
+                            <option value="0">否</option>
+                            <option value="1">是</option>
+                        </select>
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+
+                <div class="layui-inline" id="sfxyjgDiv">
+                    <label class="layui-form-label bdc-two-lines">是否<br/>协议机构</label>
+                    <div class="layui-input-inline">
+                        <select lay-filter="sfxyjg" id="sfxyjg" name="sfxyjg" lay-verify="" lay-search=""
+                                class="search">
+                            <option value="">请选择</option>
+                            <option value="0">否</option>
+                            <option value="1">是</option>
+                        </select>
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline" id="sfbajgDiv">
+                    <label class="layui-form-label bdc-two-lines">是否<br/>备案机构</label>
+                    <div class="layui-input-inline">
+                        <select lay-filter="sfbajg" id="sfbajg" name="sfbajg" lay-verify="" lay-search=""
+                                class="search">
+                            <option value="">请选择</option>
+                            <option value="0">否</option>
+                            <option value="1">是</option>
+                        </select>
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+
+                <div class="layui-inline" id="nfDiv">
+                    <label class="layui-form-label">备案年份</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="nf" name="nf" autocomplete="off" placeholder="请输入" class="layui-input search">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+
+                <div class="layui-inline" id="sfdzDiv">
+                    <label class="layui-form-label">是否打证</label>
+                    <div class="layui-input-inline">
+                        <select lay-filter="sfdz" id="sfdz" name="sfdz" lay-verify="" lay-search=""
+                                class="search">
+                            <option value="">请选择</option>
+                            <option value="0">否</option>
+                            <option value="1">是</option>
+                        </select>
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+
+                <div class="layui-inline" id="qlrlbDiv">
+                    <label class="layui-form-label">权利人类型</label>
+                    <div class="layui-input-inline">
+                        <select lay-filter="qlrlx" id="qlrlx" name="qlrlx" lay-verify="" lay-search=""
+                                class="search">
+                            <option value="">请选择</option>
+                        </select>
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+
+                <div class="layui-inline bdc-complete-line bdc-filter" id="bzDiv">
+                    <label class="layui-form-label">备注</label>
+                    <div class="layui-input-inline bdc-end-time-box">
+                        <textarea class="layui-textarea change-textarea-width search" placeholder="请输入" id="bz" name="bz"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pannel-form-btns bdc-qlr-btns">
+                <button class="layui-btn bdc-major-btn" lay-submit="" id="saveJgpz" lay-filter="saveJgpz">保存</button>
+                <button class="layui-btn bdc-secondary-btn" id="cancelEdit" onclick="cancel()">取消</button>
+                <a class="layui-btn bdc-secondary-btn" id="clsc" lay-filter="clsc" onclick="clsc();">材料上传</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>

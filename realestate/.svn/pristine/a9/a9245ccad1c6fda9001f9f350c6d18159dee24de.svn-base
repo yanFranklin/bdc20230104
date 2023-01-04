@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title class="bdc_subsystem">不动产电子证照日志信息</title>
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <link rel="stylesheet" href="../../static/thirdControl/layui/css/layui.css" media="all">
+    <script src="../../static/thirdControl/layui/layui.js"></script>
+    <script src="../../static/thirdControl/jquery/jquery.min.js"></script>
+    <script src="../../static/js/common.js?v=1.1"></script>
+    <link rel="stylesheet" href="../../static/thirdControl/bdcui/css/table.css">
+    <link rel="stylesheet" href="../../static/thirdControl/bdcui/css/search.css">
+    <link href="../../static/lib/registerui/css/percentage-layout.css" rel="stylesheet">
+</head>
+<body>
+<div class="bdc-percentage-container">
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <!--表单模块-->
+            <form class="layui-form">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">应用名称</label>
+                        <div class="layui-input-inline">
+                            <select name="username" id="username">
+                                <option value="">请选择</option>
+                                <!--<#list listToken as token>
+                                    <option value="${token.yymc!''}">${token.yymc!''}</option>
+                                </#list>-->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">接口名称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="controller" class="layui-input" placeholder="请输入接口名称">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">不动产权证号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="bdcqzh" class="layui-input" placeholder="请输入不动产权证号">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">证照标识</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="zzbs" class="layui-input" placeholder="请输入证照标识">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">状态</label>
+                        <div class="layui-input-inline">
+                            <select name="status">
+                                <option value="">请选择</option>
+                                <option value="0">成功</option>
+                                <option value="1">失败</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">单位代码</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="dwdm" class="layui-input" placeholder="请输入单位代码">
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <button class="layui-btn layui-btn-normal bdc-major-btn" lay-submit="" id="query" lay-filter="query"
+                                type="button">
+                            查询
+                        </button>
+                        <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="bdc-table-box">
+        <table id="dzzzZzxxList" lay-filter="dataTable"></table>
+    </div>
+    <script type="text/html" id="zzxxListToolBarTmpl">
+        <div class="layui-btn-container">
+            <span class="layui-btn layui-btn-xs bdc-major-btn" lay-event="detail">详情</span>
+        </div>
+    </script>
+</div>
+
+<script src="../../static/thirdControl/bdcui/js/table.js"></script>
+
+<script>
+    layui.use(['jquery', 'layer', 'element', 'form', 'table', 'util'], function () {
+        var $ = layui.jquery;
+        var element = layui.element;
+        var form = layui.form;
+        var table = layui.table;
+        var util = layui.util;
+        //提交表单
+        form.on("submit(query)", function (data) {
+            tableReload('dzzzZzxxList', data.field);
+            return false;
+        });
+
+        var tableConfig = {
+            elem: '#dzzzZzxxList'
+            , method: "POST"
+            , url: '/realestate-e-certificate/log/listZzxxLogByPageJson'
+            , cols: [[ //表头
+                {field: 'userName', title: '应用名称', width: '10%'}
+                , {field: 'czrq', title: '操作日期', width: '15%'}
+                , {field: 'controller', title: '接口名称', width: '20%'}
+                , {field: 'status', title: '状态', width: '7%', templet: function (d) {
+                    return logDict(d.status);
+                }}
+                , {field: 'bdcqzh', title: '不动产权证号', width: '25%'}
+                , {field: 'zzbs', title: '证照标识', width: '20%'}
+                /*, {field: 'message', title: '响应结果', width: '8%'}*/
+                , {field: 'dwdm', title: '单位代码', width: '8%'}
+                , {title: '操作', align: 'center', fixed: 'right', width:100, toolbar: '#zzxxListToolBarTmpl'}
+            ]]
+            , done: function() {
+                setHeight();
+            }
+        };
+        //加载表格
+        loadDataTablbeByUrl("#dzzzZzxxList", tableConfig);
+
+        table.on('tool(dataTable)', function (obj) {
+            var data = obj.data;
+            if (data && data.logId) {
+                if (obj.event === "detail") {
+                    detail(data.logId);
+                    return false;
+                }
+            } else {
+                layer.alert("当前数据主键缺失，请检查数据");
+                return false
+            }
+        });
+
+        //获取部门字典项 循环list
+        var yymcData = ajaxQuery("/realestate-e-certificate/getBdcTokenDict", null, "GET", false, 'application/x-www-form-urlencoded');
+        if (notNull(yymcData)) {
+            $.each(yymcData, function (index, item) {
+                $('#username').append(new Option(item.yymc, item.yymc));
+            });
+            form.render("select");
+        }
+
+    });
+
+    function detail(logId){
+        if (notNull(logId)) {
+            var view = layer.open({
+                type: 2,
+                title: "日志查看",
+                maxmin: true,
+                area: ['70%', '100%'],
+                fixed: false, //不固定
+                content: '/realestate-e-certificate/view/log/bdcDzzzZzxxLogDetail.html?logId=' + logId
+                , end: function (index, layero) {
+                    return false;
+                }
+            });
+        } else {
+            layer.msg("未找到该日志ES详细信息！");
+        }
+
+    }
+
+    function logDict(status) {
+        if ("0" == status) {
+            return "成功";
+        } else if ("1" == status) {
+            return "失败";
+        } else {
+            return "其它";
+        }
+    }
+</script>
+</body>
+</html>
+
+

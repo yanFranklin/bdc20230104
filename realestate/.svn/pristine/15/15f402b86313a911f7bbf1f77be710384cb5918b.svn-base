@@ -1,0 +1,894 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcdyXxMapper">
+    <select id="listBdcDyaByPageOrder" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcDyaQo"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcDyaDTO">
+        select x.xmid, x.bdcqzh, x.ycqzh, x.zl, x.qlr, x.qlrzjh, x.qszt ,x.bdcdyh, x.ywr, x.ywrzjh,
+            x.djyy, x.djjg, x.djsj, x.dbr, x.qllx, dya.dyfs, dya.bdbzzqse,
+            to_char(dya.zwlxqssj , 'yyyy-MM-dd') zwlxqssj,
+            to_char(dya.zwlxjssj, 'yyyy-MM-dd') zwlxjssj
+        from bdc_xm x join bdc_dyaq dya ON x.xmid = dya.xmid
+        where (x.qllx = 95 or x.qllx =37)
+
+        <if test="bdcqzh != null and bdcqzh != ''">
+            AND
+            <if test="bdcqzhmhlx == null || bdcqzhmhlx == 0">
+                x.bdcqzh = #{bdcqzh,jdbcType=VARCHAR}
+            </if>
+            <if test="bdcqzhmhlx == 1">
+                x.bdcqzh like #{bdcqzh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="bdcqzhmhlx == 2">
+                x.bdcqzh like '%' || #{bdcqzh,jdbcType=VARCHAR}
+            </if>
+            <if test="bdcqzhmhlx == 3">
+                x.bdcqzh like '%' || #{bdcqzh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="ycqzh != null and ycqzh != ''">
+            AND
+            <if test="ycqzhmhlx == null ||ycqzhmhlx == 0">
+                x.bdcdyh in (
+                    select xm.bdcdyh from bdc_xm xm where xm.xmid in (
+                        select gx.xmid from bdc_xm_zs_gx gx where gx.zsid in ( select zsid from bdc_zs z where z.bdcqzh = #{ycqzh,jdbcType=VARCHAR} )
+                    )
+                )
+            </if>
+            <if test="ycqzhmhlx == 1">
+                x.bdcdyh in (
+                    select xm.bdcdyh from bdc_xm xm where xm.xmid in (
+                        select gx.xmid from bdc_xm_zs_gx gx where gx.zsid in ( select zsid from bdc_zs z where z.bdcqzh like #{ycqzh,jdbcType=VARCHAR} || '%' )
+                    )
+                )
+            </if>
+            <if test="ycqzhmhlx == 2">
+                x.bdcdyh in (
+                    select xm.bdcdyh from bdc_xm xm where xm.xmid in (
+                        select gx.xmid from bdc_xm_zs_gx gx where gx.zsid in ( select zsid from bdc_zs z where z.bdcqzh like '%' || #{ycqzh,jdbcType=VARCHAR} )
+                    )
+                )
+            </if>
+            <if test="ycqzhmhlx == 3">
+                x.bdcdyh in ( select xm.bdcdyh from  bdc_xm  xm where xm.bdcqzh like '%' || #{ycqzh,jdbcType=VARCHAR} || '%')
+            </if>
+        </if>
+
+        <if test="ywr != null and ywr != ''">
+            AND
+            <if test="ywrmhlx == null || ywrmhlx == 0">
+                x.xmid in ( select xmid from bdc_qlr qlr where qlr.qlrlb = 2 and qlr.qlrmc = #{ywr,jdbcType=VARCHAR})
+            </if>
+            <if test="ywrmhlx == 1">
+                x.ywr like #{ywr,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="ywrmhlx == 2">
+                x.ywr like '%' || #{ywr,jdbcType=VARCHAR}
+            </if>
+            <if test="ywrmhlx == 3">
+                x.ywr like '%' || #{ywr,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="ywrzjh != null and ywrzjh != ''">
+            AND
+            <if test="ywrzjhmhlx == null || ywrzjhmhlx == 0">
+                x.xmid in ( select xmid from bdc_qlr qlr where qlr.qlrlb = 2 and qlr.zjh = #{ywrzjh,jdbcType=VARCHAR})
+            </if>
+            <if test="ywrzjhmhlx == 1">
+                x.ywrzjh like #{ywrzjh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="ywrzjhmhlx == 2">
+                x.ywrzjh like '%' || #{ywrzjh,jdbcType=VARCHAR}
+            </if>
+            <if test="ywrzjhmhlx == 3">
+                x.ywrzjh like '%' || #{ywrzjh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="qlrmc != null and qlrmc != ''">
+            AND
+            <if test="qlrmcmhlx == null || qlrmcmhlx == 0">
+                x.xmid in ( select xmid from bdc_qlr qlr where qlr.qlrlb = 1 and qlr.qlrmc = #{qlrmc,jdbcType=VARCHAR})
+            </if>
+            <if test="qlrmcmhlx == 1">
+                x.qlr like #{qlrmc,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="qlrmcmhlx == 2">
+                x.qlr like '%' || #{qlrmc,jdbcType=VARCHAR}
+            </if>
+            <if test="qlrmcmhlx == 3">
+                x.qlr like '%' || #{qlrmc,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="qlrzjh != null and qlrzjh != ''">
+            AND
+            <if test="qlrzjhmhlx == null || qlrzjhmhlx == 0">
+                x.xmid in ( select xmid from bdc_qlr qlr where qlr.qlrlb = 1 and qlr.zjh = #{qlrzjh,jdbcType=VARCHAR})
+            </if>
+            <if test="qlrzjhmhlx == 1">
+                x.qlrzjh like #{qlrzjh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="qlrzjhmhlx == 2">
+                x.qlrzjh like '%' || #{qlrzjh,jdbcType=VARCHAR}
+            </if>
+            <if test="qlrzjhmhlx == 3">
+                x.qlrzjh like '%' || #{qlrzjh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="qszt == 0 || qszt != null and qszt != ''">
+            AND x.qszt = #{qszt,jdbcType=INTEGER}
+        </if>
+        <if test="qxdmList != null and qxdmList.size() == 1 ">
+            AND x.qxdm=#{qxdmList[0]}
+        </if>
+        <if test="qxdmList != null and qxdmList.size() > 1 ">
+            AND x.qxdm IN
+            <foreach collection="qxdmList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="zl != null and zl != ''">
+            AND
+            <if test="zlmhlx == null || zlmhlx == 0">
+                x.zl = #{zl,jdbcType=VARCHAR}
+            </if>
+            <if test="zlmhlx == 1">
+                x.zl like #{zl,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="zlmhlx == 2">
+                x.zl like '%' || #{zl,jdbcType=VARCHAR}
+            </if>
+            <if test="zlmhlx == 3">
+                x.zl like '%' || #{zl,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="bdcdyh != null and bdcdyh != ''">
+            AND
+            <if test="bdcdyhmhlx == null || bdcdyhmhlx == 0">
+                x.bdcdyh = #{bdcdyh,jdbcType=VARCHAR}
+            </if>
+            <if test="bdcdyhmhlx == 1">
+                x.bdcdyh like #{bdcdyh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="bdcdyhmhlx == 2">
+                x.bdcdyh like '%' || #{bdcdyh,jdbcType=VARCHAR}
+            </if>
+            <if test="bdcdyhmhlx == 3">
+                x.bdcdyh like '%' || #{bdcdyh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+        order by x.djsj,x.xmid desc
+    </select>
+
+    <select id="listBdcYgDyaByPageOrder" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcDyaQo"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcDyaDTO">
+        select x.xmid, x.bdcqzh, x.ycqzh, x.zl, x.qlr, x.qlrzjh, x.qszt ,x.bdcdyh, x.ywr, x.ywrzjh,
+                x.djyy, x.djjg, x.djsj, x.dbr, x.qllx, yg.dyfs, yg.qdjg as bdbzzqse,
+                to_char(yg.zwlxqssj , 'yyyy-MM-dd') zwlxqssj,
+                to_char(yg.zwlxjssj, 'yyyy-MM-dd') zwlxjssj
+        from bdc_xm x join bdc_yg yg ON x.xmid = yg.xmid
+        where x.qllx = 96 and yg.ygdjzl in(3,4)
+        <if test="ygzmh != null and ygzmh != ''">
+            AND
+            <if test="ygzmhmhlx == null || ygzmhmhlx == 0">
+                x.bdcqzh = #{ygzmh,jdbcType=VARCHAR}
+            </if>
+            <if test="ygzmhmhlx == 1">
+                x.bdcqzh like #{ygzmh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="ygzmhmhlx == 2">
+                x.bdcqzh like '%' || #{ygzmh,jdbcType=VARCHAR}
+            </if>
+            <if test="ygzmhmhlx == 3">
+                x.bdcqzh like '%' || #{ygzmh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="ycqzh != null and ycqzh != ''">
+            AND
+            <if test="ycqzhmhlx == null ||ycqzhmhlx == 0">
+                x.bdcdyh in (
+                    select xm.bdcdyh from bdc_xm xm where xm.xmid in (
+                        select gx.xmid from bdc_xm_zs_gx gx where gx.zsid in ( select zsid from bdc_zs z where z.bdcqzh = #{ycqzh,jdbcType=VARCHAR} )
+                    )
+                )
+            </if>
+            <if test="ycqzhmhlx == 1">
+                x.bdcdyh in (
+                    select xm.bdcdyh from bdc_xm xm where xm.xmid in (
+                        select gx.xmid from bdc_xm_zs_gx gx where gx.zsid in ( select zsid from bdc_zs z where z.bdcqzh like #{ycqzh,jdbcType=VARCHAR} || '%' )
+                    )
+                )
+            </if>
+            <if test="ycqzhmhlx == 2">
+                x.bdcdyh in (
+                    select xm.bdcdyh from bdc_xm xm where xm.xmid in (
+                        select gx.xmid from bdc_xm_zs_gx gx where gx.zsid in ( select zsid from bdc_zs z where z.bdcqzh like '%' || #{ycqzh,jdbcType=VARCHAR} )
+                    )
+                )
+            </if>
+            <if test="ycqzhmhlx == 3">
+                x.bdcdyh in ( select xm.bdcdyh from  bdc_xm  xm where xm.bdcqzh like '%' || #{ycqzh,jdbcType=VARCHAR} || '%')
+            </if>
+        </if>
+
+        <if test="ywr != null and ywr != ''">
+            AND
+            <if test="ywrmhlx == null || ywrmhlx == 0">
+                x.xmid in ( select xmid from bdc_qlr qlr where qlr.qlrlb = 2 and qlr.qlrmc = #{ywr,jdbcType=VARCHAR})
+            </if>
+            <if test="ywrmhlx == 1">
+                x.ywr like #{ywr,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="ywrmhlx == 2">
+                x.ywr like '%' || #{ywr,jdbcType=VARCHAR}
+            </if>
+            <if test="ywrmhlx == 3">
+                x.ywr like '%' || #{ywr,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="ywrzjh != null and ywrzjh != ''">
+            AND
+            <if test="ywrzjhmhlx == null || ywrzjhmhlx == 0">
+                x.xmid in ( select xmid from bdc_qlr qlr where qlr.qlrlb = 2 and qlr.zjh = #{ywrzjh,jdbcType=VARCHAR})
+            </if>
+            <if test="ywrzjhmhlx == 1">
+                x.ywrzjh like #{ywrzjh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="ywrzjhmhlx == 2">
+                x.ywrzjh like '%' || #{ywrzjh,jdbcType=VARCHAR}
+            </if>
+            <if test="ywrzjhmhlx == 3">
+                x.ywrzjh like '%' || #{ywrzjh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="qlrmc != null and qlrmc != ''">
+            AND
+            <if test="qlrmcmhlx == null || qlrmcmhlx == 0">
+                x.xmid in ( select xmid from bdc_qlr qlr where qlr.qlrlb = 1 and qlr.qlrmc = #{qlrmc,jdbcType=VARCHAR})
+            </if>
+            <if test="qlrmcmhlx == 1">
+                x.qlr like #{qlrmc,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="qlrmcmhlx == 2">
+                x.qlr like '%' || #{qlrmc,jdbcType=VARCHAR}
+            </if>
+            <if test="qlrmcmhlx == 3">
+                x.qlr like '%' || #{qlrmc,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="qlrzjh != null and qlrzjh != ''">
+            AND
+            <if test="qlrzjhmhlx == null || qlrzjhmhlx == 0">
+                x.xmid in ( select xmid from bdc_qlr qlr where qlr.qlrlb = 1 and qlr.zjh = #{qlrzjh,jdbcType=VARCHAR})
+            </if>
+            <if test="qlrzjhmhlx == 1">
+                x.qlrzjh like #{qlrzjh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="qlrzjhmhlx == 2">
+                x.qlrzjh like '%' || #{qlrzjh,jdbcType=VARCHAR}
+            </if>
+            <if test="qlrzjhmhlx == 3">
+                x.qlrzjh like '%' || #{qlrzjh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="qszt == 0 || qszt != null and qszt != ''">
+            AND x.qszt = #{qszt,jdbcType=INTEGER}
+        </if>
+        <if test="qxdmList != null and qxdmList.size() == 1 ">
+            AND x.qxdm=#{qxdmList[0]}
+        </if>
+        <if test="qxdmList != null and qxdmList.size() > 1 ">
+            AND x.qxdm IN
+            <foreach collection="qxdmList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="zl != null and zl != ''">
+            AND
+            <if test="zlmhlx == null || zlmhlx == 0">
+                x.zl = #{zl,jdbcType=VARCHAR}
+            </if>
+            <if test="zlmhlx == 1">
+                x.zl like #{zl,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="zlmhlx == 2">
+                x.zl like '%' || #{zl,jdbcType=VARCHAR}
+            </if>
+            <if test="zlmhlx == 3">
+                x.zl like '%' || #{zl,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="bdcdyh != null and bdcdyh != ''">
+            AND
+            <if test="bdcdyhmhlx == null || bdcdyhmhlx == 0">
+                x.bdcdyh = #{bdcdyh,jdbcType=VARCHAR}
+            </if>
+            <if test="bdcdyhmhlx == 1">
+                x.bdcdyh like #{bdcdyh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="bdcdyhmhlx == 2">
+                x.bdcdyh like '%' || #{bdcdyh,jdbcType=VARCHAR}
+            </if>
+            <if test="bdcdyhmhlx == 3">
+                x.bdcdyh like '%' || #{bdcdyh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+        order by x.djsj,x.xmid desc
+    </select>
+
+    <select id="listBdcDyaCzByPageOrder" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcDyaQo"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcDyaDTO">
+        SELECT
+            x.xmid, x.bdcqzh, x.zl, x.qlr, x.qlrzjh, x.qszt, x.bdcdyh, x.ywr, x.ywrzjh, x.djyy,
+            x.djjg,x.djsj,x.dbr,z.bdcqzhjc
+        FROM BDC_XM x
+        <!--动态关联房地产权表查询-->
+        <if test="( zh != null and zh != '' ) or ( fjh != null and fjh != '' )">
+        JOIN BDC_DYAQ dya ON x.xmid = dya.xmid
+        </if>
+        LEFT JOIN BDC_XM_ZS_GX g ON x.xmid = g.xmid
+        LEFT JOIN BDC_ZS z ON  g.zsid = z.zsid
+        LEFT JOIN BDC_XM_LSGX l ON x.xmid = l.xmid
+        WHERE
+        ( x.qllx = 95 OR x.qllx =37 )
+
+        <!--根据房地产权幢号查询-->
+        <if test="zh != null and zh != ''">
+            AND
+            <if test="zhmhlx == null || zhmhlx == 0">
+                dya.zh = #{zh,jdbcType=VARCHAR}
+            </if>
+            <if test="zhmhlx == 1">
+                dya.zh like #{zh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="zhmhlx == 2">
+                dya.zh like '%' || #{zh,jdbcType=VARCHAR}
+            </if>
+            <if test="zhmhlx == 3">
+                dya.zh like '%' || #{zh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+        <if test="fjh != null and fjh != ''">
+            AND
+            <if test="fjhmhlx == null || fjhmhlx == 0">
+                dya.fjh = #{fjh,jdbcType=VARCHAR}
+            </if>
+            <if test="fjhmhlx == 1">
+                dya.fjh like #{fjh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="fjhmhlx == 2">
+                dya.fjh like '%' || #{fjh,jdbcType=VARCHAR}
+            </if>
+            <if test="fjhmhlx == 3">
+                dya.fjh like '%' || #{fjh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="qszt == 0 || qszt != null and qszt != ''">
+            AND x.qszt = #{qszt,jdbcType=INTEGER}
+        </if>
+
+        <if test="qsztList != null and qsztList.size() > 0">
+            AND x.qszt in
+            <foreach collection="qsztList" item="item" index="index" open="(" separator="," close=")">
+                #{item,jdbcType=INTEGER}
+            </foreach>
+        </if>
+
+        <if test="qxdmList != null and qxdmList.size() == 1 ">
+            AND x.qxdm=#{qxdmList[0]}
+        </if>
+        <if test="qxdmList != null and qxdmList.size() > 1 ">
+            AND x.qxdm IN
+            <foreach collection="qxdmList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="qlrmc != null and qlrmc != ''">
+            AND
+            <if test="qlrmcmhlx == null || qlrmcmhlx == 0">
+                x.qlr = #{qlrmc,jdbcType=VARCHAR}
+            </if>
+            <if test="qlrmcmhlx == 1">
+                x.qlr like #{qlrmc,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="qlrmcmhlx == 2">
+                x.qlr like '%' || #{qlrmc,jdbcType=VARCHAR}
+            </if>
+            <if test="qlrmcmhlx == 3">
+                x.qlr like '%' || #{qlrmc,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="qlrzjh != null and qlrzjh != ''">
+            AND
+            <if test="qlrzjhmhlx == null || qlrzjhmhlx == 0">
+                x.qlrzjh = #{qlrzjh,jdbcType=VARCHAR}
+            </if>
+            <if test="qlrzjhmhlx == 1">
+                x.qlrzjh like #{qlrzjh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="qlrzjhmhlx == 2">
+                x.qlrzjh like '%' || #{qlrzjh,jdbcType=VARCHAR}
+            </if>
+            <if test="qlrzjhmhlx == 3">
+                x.qlrzjh like '%' || #{qlrzjh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="zl != null and zl != ''">
+            AND
+            <if test="zlmhlx == null || zlmhlx == 0">
+                x.zl = #{zl,jdbcType=VARCHAR}
+            </if>
+            <if test="zlmhlx == 1">
+                x.zl like #{zl,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="zlmhlx == 2">
+                x.zl like '%' || #{zl,jdbcType=VARCHAR}
+            </if>
+            <if test="zlmhlx == 3">
+                x.zl like '%' || #{zl,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="bdcqzh != null and bdcqzh != ''">
+            AND
+            <if test="bdcqzhmhlx == null || bdcqzhmhlx == 0">
+                x.bdcqzh = #{bdcqzh,jdbcType=VARCHAR}
+            </if>
+            <if test="bdcqzhmhlx == 1">
+                x.bdcqzh like #{bdcqzh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="bdcqzhmhlx == 2">
+                x.bdcqzh like '%' || #{bdcqzh,jdbcType=VARCHAR}
+            </if>
+            <if test="bdcqzhmhlx == 3">
+                x.bdcqzh like '%' || #{bdcqzh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="ywr != null and ywr != ''">
+            AND
+            <if test="ywrmhlx == null || ywrmhlx == 0">
+                x.ywr = #{ywr,jdbcType=VARCHAR}
+            </if>
+            <if test="ywrmhlx == 1">
+                x.ywr like #{ywr,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="ywrmhlx == 2">
+                x.ywr like '%' || #{ywr,jdbcType=VARCHAR}
+            </if>
+            <if test="ywrmhlx == 3">
+                x.ywr like '%' || #{ywr,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="ywrzjh != null and ywrzjh != ''">
+            AND
+            <if test="ywrzjhmhlx == null || ywrzjhmhlx == 0">
+                x.ywrzjh = #{ywrzjh,jdbcType=VARCHAR}
+            </if>
+            <if test="ywrzjhmhlx == 1">
+                x.ywrzjh like #{ywrzjh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="ywrzjhmhlx == 2">
+                x.ywrzjh like '%' || #{ywrzjh,jdbcType=VARCHAR}
+            </if>
+            <if test="ywrzjhmhlx == 3">
+                x.ywrzjh like '%' || #{ywrzjh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="bdcdyh != null and bdcdyh != ''">
+            AND
+            <if test="bdcdyhmhlx == null || bdcdyhmhlx == 0">
+                x.bdcdyh = #{bdcdyh,jdbcType=VARCHAR}
+            </if>
+            <if test="bdcdyhmhlx == 1">
+                x.bdcdyh like #{bdcdyh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="bdcdyhmhlx == 2">
+                x.bdcdyh like '%' || #{bdcdyh,jdbcType=VARCHAR}
+            </if>
+            <if test="bdcdyhmhlx == 3">
+                x.bdcdyh like '%' || #{bdcdyh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="slbh != null and slbh != ''">
+            AND
+            <if test="slbhmhlx == null || slbhmhlx == 0">
+                x.slbh = #{slbh,jdbcType=VARCHAR}
+            </if>
+            <if test="slbhmhlx == 1">
+                x.slbh like #{slbh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="slbhmhlx == 2">
+                x.slbh like '%' || #{slbh,jdbcType=VARCHAR}
+            </if>
+            <if test="slbhmhlx == 3">
+                x.slbh like '%' || #{slbh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="fwbh != null and fwbh != ''">
+            AND
+            <if test="fwbhmhlx == null || fwbhmhlx == 0">
+                x.bdcdywybh = #{fwbh,jdbcType=VARCHAR}
+            </if>
+            <if test="fwbhmhlx == 1">
+                x.bdcdywybh like #{fwbh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="fwbhmhlx == 2">
+                x.bdcdywybh like '%' || #{fwbh,jdbcType=VARCHAR}
+            </if>
+            <if test="fwbhmhlx == 3">
+                x.bdcdywybh like '%' || #{fwbh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="ycqzh != null and ycqzh != ''">
+            AND
+            <if test="ycqzhmhlx == null || ycqzhmhlx == 0">
+                x.ycqzh = #{ycqzh,jdbcType=VARCHAR}
+            </if>
+            <if test="ycqzhmhlx == 1">
+                x.ycqzh like #{ycqzh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="ycqzhmhlx == 2">
+                x.ycqzh like '%' || #{ycqzh,jdbcType=VARCHAR}
+            </if>
+            <if test="ycqzhmhlx == 3">
+                x.ycqzh like '%' || #{ycqzh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="zslx != null and zslx != ''">
+            AND z.zslx = #{zslx,jdbcType=INTEGER}
+        </if>
+
+        <if test="zmjc != null and zmjc != ''">
+            AND
+            <if test="zmjcmhlx == null || zmjcmhlx == 0">
+                z.bdcqzhjc = #{zmjc,jdbcType=VARCHAR}
+            </if>
+            <if test="zmjcmhlx == 1">
+                z.bdcqzhjc like #{zmjc,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="zmjcmhlx == 2">
+                z.bdcqzhjc like '%' || #{zmjc,jdbcType=VARCHAR}
+            </if>
+            <if test="zmjcmhlx == 3">
+                z.bdcqzhjc like '%' || #{zmjc,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="zsyzh != null and zsyzh != ''">
+            AND
+            <if test="zsyzhmhlx == null || zsyzhmhlx == 0">
+                z.qzysxlh = #{zsyzh,jdbcType=VARCHAR}
+            </if>
+            <if test="zsyzhmhlx == 1">
+                z.qzysxlh like #{zsyzh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="zsyzhmhlx == 2">
+                z.qzysxlh like '%' || #{zsyzh,jdbcType=VARCHAR}
+            </if>
+            <if test="zsyzhmhlx == 3">
+                z.qzysxlh like '%' || #{zsyzh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="zhlsh != null and zhlsh != ''">
+            AND
+            <if test="zhlshmhlx == null || zhlshmhlx == 0">
+                z.zhlsh = #{zhlsh,jdbcType=VARCHAR}
+            </if>
+            <if test="zhlshmhlx == 1">
+                z.zhlsh like #{zhlsh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="zhlshmhlx == 2">
+                z.zhlsh like '%' || #{zhlsh,jdbcType=VARCHAR}
+            </if>
+            <if test="zhlshmhlx == 3">
+                z.zhlsh like '%' || #{zhlsh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="cqzhjc != null and cqzhjc != ''">
+            AND l.yxmid in (
+                SELECT gx.xmid  FROM  BDC_XM_ZS_GX gx LEFT JOIN BDC_ZS zs ON  gx.zsid = zs.zsid
+                WHERE 1 = 1
+                <if test="cqzhjc != null and cqzhjc != ''">
+                    AND
+                    <if test="cqzhjcmhlx == null || cqzhjcmhlx == 0">
+                        zs.bdcqzhjc = #{cqzhjc,jdbcType=VARCHAR}
+                    </if>
+                    <if test="cqzhjcmhlx == 1">
+                        zs.bdcqzhjc like #{cqzhjc,jdbcType=VARCHAR} || '%'
+                    </if>
+                    <if test="cqzhjcmhlx == 2">
+                        zs.bdcqzhjc like '%' || #{cqzhjc,jdbcType=VARCHAR}
+                    </if>
+                    <if test="cqzhjcmhlx == 3">
+                        zs.bdcqzhjc like '%' || #{cqzhjc,jdbcType=VARCHAR} || '%'
+                    </if>
+                </if>
+            )
+        </if>
+        <if test="kssj != null and kssj != ''">
+            AND to_char(x.slsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{kssj}
+        </if>
+        <if test="jssj != null and jssj != ''">
+            AND to_char(x.slsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{jssj}
+        </if>
+        ORDER BY x.djsj DESC
+    </select>
+
+    <select id="listBdcdys" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcDyaQo"
+            resultType="java.lang.String">
+        select distinct(x.bdcdyh)
+        from bdc_xm x where (x.qllx = 95 or x.qllx =37) and x.qszt != 2
+        <if test="qlrmc != null and qlrmc != ''">
+            AND x.qlr = #{qlrmc,jdbcType=VARCHAR}
+        </if>
+        <if test="bdcqzh != null and bdcqzh != ''">
+            AND x.bdcqzh = #{bdcqzh,jdbcType=VARCHAR}
+        </if>
+        <if test="zl != null and zl != ''">
+            AND x.zl = #{zl}
+        </if>
+        <if test="yxtcqzh != null and yxtcqzh != ''">
+            AND x.yxtcqzh = #{yxtcqzh}
+        </if>
+        <if test="ywr != null and ywr != ''">
+            AND x.ywr = #{ywr}
+        </if>
+        <if test="ywrzjh != null and ywrzjh != ''">
+            AND x.ywrzjh = #{ywrzjh}
+        </if>
+        <if test="slbh != null and slbh != ''">
+            AND x.slbh = #{slbh}
+        </if>
+        <if test="bdcdyh != null and bdcdyh != ''">
+            AND x.bdcdyh = #{bdcdyh}
+        </if>
+        <if test="ycqzh != null and ycqzh != ''">
+            AND x.ycqzh = #{ycqzh}
+        </if>
+    </select>
+
+    <select id="listBdcDyaByXmidOrder" parameterType="Map"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcDyaDTO">
+        select x.bdcqzh,x.zl,x.qlr,x.qlrzjh,x.qszt,x.bdcdyh,x.yxtcqzh,x.ywr,x.ywrzjh
+        from bdc_xm x where 1=1
+        <if test="xmids != null and xmids.size() > 0">
+            and x.xmid in
+            <foreach collection="xmids" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="xmids != null and xmids.size() == 0">
+            and 1=2
+        </if>
+        order by X.djsj desc
+    </select>
+
+
+    <select id="listBdcDyaBengbuByPageOrder" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcDyaQo"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcDyaDTO">
+
+        select x.xmid,x.bdcqzh,x.ycqzh,x.zl,x.qlr,x.qlrzjh,x.qszt,x.bdcdyh,x.ywr,x.ywrzjh,
+        x.djyy,x.DJJG,x.DJSJ,x.DBR,dy.bdbzzqse,
+        to_char(dy.zwlxqssj , 'yyyy-MM-dd hh24:mi:ss') zwlxqssj,
+        to_char(dy.zwlxjssj, 'yyyy-MM-dd hh24:mi:ss') zwlxjssj
+
+        from bdc_xm x inner join bdc_dyaq dy on x.xmid = dy.xmid where (x.qllx = 95 or x.qllx=37)
+
+        <if test="qlrmc != null and qlrmc != ''">
+            AND
+            <if test="qlrmcmhlx == null || qlrmcmhlx == 0">
+                x.qlr = #{qlrmc,jdbcType=VARCHAR}
+            </if>
+            <if test="qlrmcmhlx == 1">
+                x.qlr like #{qlrmc,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="qlrmcmhlx == 2">
+                x.qlr like '%' || #{qlrmc,jdbcType=VARCHAR}
+            </if>
+            <if test="qlrmcmhlx == 3">
+                x.qlr like '%' || #{qlrmc,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+        <if test="qlrzjh != null and qlrzjh != ''">
+            AND
+            <if test="qlrzjhmhlx == null || qlrzjhmhlx == 0">
+                x.qlrzjh = #{qlrzjh,jdbcType=VARCHAR}
+            </if>
+            <if test="qlrzjhmhlx == 1">
+                x.qlrzjh like #{qlrzjh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="qlrzjhmhlx == 2">
+                x.qlrzjh like '%' || #{qlrzjh,jdbcType=VARCHAR}
+            </if>
+            <if test="qlrzjhmhlx == 3">
+                x.qlrzjh like '%' || #{qlrzjh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+        <if test="bdcqzh != null and bdcqzh != ''">
+            AND
+            <if test="bdcqzhmhlx == null || bdcqzhmhlx == 0">
+                x.bdcqzh = #{bdcqzh,jdbcType=VARCHAR}
+            </if>
+            <if test="bdcqzhmhlx == 1">
+                x.bdcqzh like #{bdcqzh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="bdcqzhmhlx == 2">
+                x.bdcqzh like '%' || #{bdcqzh,jdbcType=VARCHAR}
+            </if>
+            <if test="bdcqzhmhlx == 3">
+                x.bdcqzh like '%' || #{bdcqzh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+        <if test="zl != null and zl != ''">
+            AND
+            <if test="zlmhlx == null || zlmhlx == 0">
+                x.zl = #{zl,jdbcType=VARCHAR}
+            </if>
+            <if test="zlmhlx == 1">
+                x.zl like #{zl,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="zlmhlx == 2">
+                x.zl like '%' || #{zl,jdbcType=VARCHAR}
+            </if>
+            <if test="zlmhlx == 3">
+                x.zl like '%' || #{zl,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+        <if test="ywr != null and ywr != ''">
+            AND
+            <if test="ywrmhlx == null || ywrmhlx == 0">
+                x.ywr = #{ywr,jdbcType=VARCHAR}
+            </if>
+            <if test="ywrmhlx == 1">
+                x.ywr like #{ywr,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="ywrmhlx == 2">
+                x.ywr like '%' || #{ywr,jdbcType=VARCHAR}
+            </if>
+            <if test="ywrmhlx == 3">
+                x.ywr like '%' || #{ywr,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+        <if test="ywrzjh != null and ywrzjh != ''">
+            AND
+            <if test="ywrzjhmhlx == null || ywrzjhmhlx == 0">
+                x.ywrzjh = #{ywrzjh,jdbcType=VARCHAR}
+            </if>
+            <if test="ywrzjhmhlx == 1">
+                x.ywrzjh like #{ywrzjh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="ywrzjhmhlx == 2">
+                x.ywrzjh like '%' || #{ywrzjh,jdbcType=VARCHAR}
+            </if>
+            <if test="ywrzjhmhlx == 3">
+                x.ywrzjh like '%' || #{ywrzjh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+        <if test="bdcdyh != null and bdcdyh != ''">
+            AND
+            <if test="bdcdyhmhlx == null || bdcdyhmhlx == 0">
+                x.bdcdyh = #{bdcdyh,jdbcType=VARCHAR}
+            </if>
+            <if test="bdcdyhmhlx == 1">
+                x.bdcdyh like #{bdcdyh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="bdcdyhmhlx == 2">
+                x.bdcdyh like '%' || #{bdcdyh,jdbcType=VARCHAR}
+            </if>
+            <if test="bdcdyhmhlx == 3">
+                x.bdcdyh like '%' || #{bdcdyh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+        <if test="slbh != null and slbh != ''">
+            AND
+            <if test="slbhmhlx == null || slbhmhlx == 0">
+                x.slbh = #{slbh,jdbcType=VARCHAR}
+            </if>
+            <if test="slbhmhlx == 1">
+                x.slbh like #{slbh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="slbhmhlx == 2">
+                x.slbh like '%' || #{slbh,jdbcType=VARCHAR}
+            </if>
+            <if test="slbhmhlx == 3">
+                x.slbh like '%' || #{slbh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+        <if test="qszt == 0 || qszt != null and qszt != ''">
+            AND x.qszt = #{qszt}
+        </if>
+        <if test="qxdmList != null and qxdmList.size() == 1 ">
+            AND x.qxdm=#{qxdmList[0]}
+        </if>
+        <if test="qxdmList != null and qxdmList.size() > 1 ">
+            AND x.qxdm IN
+            <foreach collection="qxdmList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        order by X.djsj desc
+
+    </select>
+
+    <select id="listBdcDyaBengbu" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcDyaQo"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcDyaDTO">
+
+        select x.xmid,x.bdcqzh,x.zl,x.qlr,x.qlrzjh,x.qszt,x.bdcdyh,x.ywr,x.ywrzjh,
+        x.djyy,x.DJJG,x.DJSJ,x.DBR
+        from bdc_xm x inner join bdc_dyaq dy on x.xmid = dy.xmid where
+        (x.qllx = 95 or x.qllx=37) and x.qszt != 2
+
+        <if test="qlrmc != null and qlrmc != ''">
+            AND x.qlr like '%' || #{qlrmc,jdbcType=VARCHAR} || '%'
+        </if>
+        <if test="qlrzjh != null and qlrzjh != ''">
+            AND x.qlrzjh like '%' || #{qlrzjh,jdbcType=VARCHAR} || '%'
+        </if>
+        <if test="bdcqzh != null and bdcqzh != ''">
+            AND x.bdcqzh like '%' || #{bdcqzh,jdbcType=VARCHAR} || '%'
+        </if>
+        <if test="zl != null and zl != ''">
+            AND x.zl like '%' || #{zl} || '%'
+        </if>
+        <if test="ywr != null and ywr != ''">
+            AND x.ywr like '%' || #{ywr} || '%'
+        </if>
+        <if test="ywrzjh != null and ywrzjh != ''">
+            AND x.ywrzjh like '%' || #{ywrzjh} || '%'
+        </if>
+        <if test="bdcdyh != null and bdcdyh != ''">
+            AND x.bdcdyh like '%' || #{bdcdyh} || '%'
+        </if>
+        <if test="slbh != null and slbh != ''">
+            AND x.slbh like '%' || #{slbh} || '%'
+        </if>
+
+        order by X.djsj desc
+
+    </select>
+
+
+    <select id="getCqBdcqzhByXmxx" parameterType="cn.gtmap.realestate.common.core.dto.inquiry.BdcDyaDTO" resultType="java.lang.String">
+        <choose>
+            <when test="qllx == 96">
+                SELECT x.bdcqzh FROM bdc_xm x LEFT JOIN bdc_xm_lsgx gx ON x.xmid = gx.yxmid
+                WHERE gx.xmid= #{xmid}
+            </when>
+            <otherwise>
+                SELECT bdcqzh FROM (
+                SELECT bdcqzh
+                FROM bdc_xm xm
+                WHERE qllx in (4,6,8) AND xm.bdcdyh = #{bdcdyh} and xm.bdcqzh is not null
+                ORDER BY xm.slsj desc nulls last
+                ) where rownum = 1
+            </otherwise>
+        </choose>
+    </select>
+
+</mapper>

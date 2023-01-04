@@ -1,0 +1,1862 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.init.core.mapper.BdcXmMapper">
+
+    <sql id="listBdcQl">
+        SELECT t.gzlslid,t.bdcdyh,t.zl,t.xmid,t.qllx,t.djxl,t.bdcqzh,
+        <choose>
+            <when test="sfahdj != '' and sfahdj !=null and sfahdj == 1">
+                (CASE WHEN fb.SFAHDJ = 1 THEN t.QLR || '（户）' ELSE t.qlr END)
+                AS qlrmc,
+            </when>
+            <otherwise>
+                t.qlr qlrmc,
+            </otherwise>
+        </choose>
+        t.qszt,t.dzwmj,t.dzwyt,
+        t.dzwyt2,t.dzwyt3,t.zdzhmj,t.bdcdyfwlx,t.ycqzh,t.ybdcdyh,t.slbh,t.yfczh,t.ytdzh,t.djsj,t.slsj,t.jssj,
+        t.gzldymc,t.bdcdywybh,t.qlrzjh,t.xmly,t.bdclx,t.ysfwbm,t.yxtcqzh,fb.qjgldm,t.ssxz,t.qxdm
+
+        <if test="(gllq != null and gllq == true)">
+        , lq.xb AS xb
+        </if>
+        <!--动态关联房地产权表查询-->
+        <if test="(zh != null and zh !='')  or  (fjh != null and fjh !='') or( glfdcq != null and glfdcq == true)">
+            , F.ZH AS ZH
+            , F.FJH AS FJH
+        </if>
+        <if test="sfcjzy != '' and sfcjzy !='' and sfcjzy == 1">
+            , s.sdsqwh as sdsqwh
+        </if>
+        <if test="cxzs != '' and cxzs !='' and cxzs == 1">
+            ,CASE WHEN d.qzysxlh IS NULL THEN 'dzzz' ELSE 'zzzm' END ZSZMLX
+
+        </if>
+        FROM BDC_XM t
+        LEFT JOIN BDC_XMFB fb ON fb.xmid =t.xmid
+        <if test="( gllq != null and gllq == true)" >
+            LEFT JOIN BDC_LQ lq ON lq.xmid = t.xmid
+        </if>
+        <!--动态关联房地产权表查询-->
+        <if test="(zh != null and zh !='')  or  (fjh != null and fjh !='') or( glfdcq != null and glfdcq == true)">
+            LEFT JOIN BDC_FDCQ F ON t.XMID = F.XMID
+        </if>
+        <if test="(cfwh != null and cfwh !='')">
+            LEFT JOIN BDC_CF CF ON t.XMID = CF.XMID
+        </if>
+        <if test="(qlrmc != null and qlrmc !='') or (qlrzjh != null and qlrzjh != '') or (zjhjc != null and zjhjc != '')  or  (qlrzjhList != null and qlrzjhList.size() > 0)">
+            INNER JOIN (SELECT DISTINCT xmid FROM bdc_qlr b WHERE 1=1
+            <if test="qlrmc != null and qlrmc != ''">
+                <if test='qlrmcmh == "1"'>
+                    AND b.qlrmc = #{qlrmc}
+                </if>
+                <if test='qlrmcmh == "2"'>
+                    AND b.qlrmc LIKE '%'|| #{qlrmc}
+                </if>
+                <if test='qlrmcmh == "3"'>
+                    AND b.qlrmc LIKE #{qlrmc} || '%'
+                </if>
+                <if test='qlrmcmh == "4"'>
+                    AND instr(b.qlrmc, #{qlrmc}) > 0
+                </if>
+            </if>
+            <if test="qlrzjh != null and qlrzjh != ''">
+                <if test='qlrzjhmh == "1"'>
+                    AND b.zjh = #{qlrzjh}
+                </if>
+                <if test='qlrzjhmh == "2"'>
+                    AND b.zjh LIKE '%'|| #{qlrzjh}
+                </if>
+                <if test='qlrzjhmh == "3"'>
+                    AND b.zjh LIKE #{qlrzjh} || '%'
+                </if>
+                <if test='qlrzjhmh == "4"'>
+                    AND instr(b.zjh, #{qlrzjh}) > 0
+                </if>
+            </if>
+            <if test="zjhjc != null and zjhjc != ''">
+                    AND  (substr(b.zjh,7,6) = #{zjhjc} or substr(b.zjh,9,6) = #{zjhjc})
+            </if>
+            <if test="qlrzjhList != null and qlrzjhList.size() > 0 != ''">
+                AND b.zjh IN
+                <foreach collection="qlrzjhList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            AND b.qlrlb = 1 ) q ON
+            q.xmid=t.xmid
+        </if>
+        <if test="(jtcymc != null and jtcymc !='')">
+            INNER JOIN (SELECT DISTINCT q.xmid FROM BDC_JTCY j
+            LEFT JOIN BDC_QLR_HKB_GX gx ON gx.HKBBM = j.HKBBM AND gx.HKBBBH =j.HKBBBH
+            LEFT JOIN BDC_QLR q ON q.QLRID = gx.QLRID WHERE q.qlrlb = 1
+            <if test='jtcymcmh == "1"'>
+                AND j.jtcymc = #{jtcymc}
+            </if>
+            <if test='jtcymcmh == "2"'>
+                AND j.jtcymc LIKE '%'|| #{jtcymc}
+            </if>
+            <if test='jtcymcmh == "3"'>
+                AND j.jtcymc LIKE #{jtcymc} || '%'
+            </if>
+            <if test='jtcymcmh == "4"'>
+                AND instr(j.jtcymc,#{jtcymc}) > 0
+            </if>
+            )j ON
+            j.xmid=t.xmid
+        </if>
+        <if test="(ywrmc != null and ywrmc !='')">
+            INNER JOIN (SELECT DISTINCT xmid FROM bdc_qlr b WHERE 1=1
+            <if test='ywrmcmh == "1"'>
+                AND b.qlrmc = #{ywrmc}
+            </if>
+            <if test='ywrmcmh == "2"'>
+                AND b.qlrmc LIKE '%'|| #{ywrmc}
+            </if>
+            <if test='ywrmcmh == "3"'>
+                AND b.qlrmc LIKE #{ywrmc} || '%'
+            </if>
+            <if test='ywrmcmh == "4"'>
+                AND instr(b.qlrmc,#{ywrmc}) > 0
+            </if>
+            AND b.qlrlb = 2 ) y ON
+            y.xmid=t.xmid
+        </if>
+        <if test="((bdcqzhjc != null and bdcqzhjc !='')  or  (zhlsh != null and zhlsh !='')  or  (zslx != null and zslx !='')  or (nf != null and nf !='')  or  ((bdcqzh != null and bdcqzh !='') and (bdcqzhmh == 1 or bdcqzhmh == 2 or bdcqzhmh == 3))) or (cxzs != '' and cxzs !='' and cxzs == 1)">
+            INNER JOIN (SELECT xmid,MIN(c.qzysxlh) AS qzysxlh FROM bdc_zs c
+            left join BDC_XM_ZS_GX m on m.zsid=c.zsid
+            <where>
+                <if test="bdcqzhjc != null and bdcqzhjc !=''">
+                    <if test='bdcqzhjcmh == "1"'>
+                        AND  c.bdcqzhjc = #{bdcqzhjc}
+                    </if>
+                    <if test='bdcqzhjcmh == "2"'>
+                        AND c.bdcqzhjc LIKE '%'|| #{bdcqzhjc}
+                    </if>
+                    <if test='bdcqzhjcmh == "3"'>
+                        AND c.bdcqzhjc LIKE #{bdcqzhjc} || '%'
+                    </if>
+                    <if test='bdcqzhjcmh == "4"'>
+                        AND instr(c.bdcqzhjc,#{bdcqzhjc}) > 0
+                    </if>
+                </if>
+                <if test="zhlsh != null and zhlsh !=''">
+                    <if test='zhlshmh == "1"'>
+                        AND c.zhlsh = #{zhlsh}
+                    </if>
+                    <if test='zhlshmh == "2"'>
+                        AND c.zhlsh LIKE '%'|| #{zhlsh}
+                    </if>
+                    <if test='zhlshmh == "3"'>
+                        AND c.zhlsh LIKE #{zhlsh} || '%'
+                    </if>
+                    <if test='zhlshmh == "4"'>
+                        AND instr(c.zhlsh, #{zhlsh}) > 0
+                    </if>
+                </if>
+                <if test="nf != null and nf !=''">
+                    AND c.nf = #{nf}
+                </if>
+                <if test="zslx != null and zslx !=''">
+                    AND c.zslx = #{zslx}
+                </if>
+                <if test='bdcqzhmh == "1"'>
+                    <if test="bdcqzh != null and bdcqzh !=''">
+                        AND c.bdcqzh = #{bdcqzh}
+                    </if>
+                </if>
+                <if test='bdcqzhmh == "2"'>
+                    <if test="bdcqzh != null and bdcqzh !=''">
+                        AND c.bdcqzh LIKE '%'|| #{bdcqzh}
+                    </if>
+                </if>
+                <if test='bdcqzhmh == "3"'>
+                    <if test="bdcqzh != null and bdcqzh !=''">
+                        AND c.bdcqzh LIKE #{bdcqzh} || '%'
+                    </if>
+                </if>
+            </where>
+            GROUP BY m.XMID) d ON d.xmid=t.xmid
+        </if>
+        <if test="(qllx != null and qllx.size() == 1 and qllx[0] == 96 )  and  (ygdjzlList != null and ygdjzlList.size() > 0)">
+            INNER JOIN (SELECT DISTINCT xmid FROM bdc_yg y
+            <where>
+                <if test="ygdjzlList != null and ygdjzlList.size() > 0">
+                    AND y.ygdjzl IN
+                    <foreach collection="ygdjzlList" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+            ) e ON e.xmid=t.xmid
+        </if>
+        <if test="sfcjzy != '' and sfcjzy !='' and sfcjzy == 1">
+            left join bdc_dysd s
+            on s.cqxmid = t.xmid
+            and s.sdlx=9
+        </if>
+        <where>
+            <if test="bdcqzh != null and bdcqzh !=''">
+                <if test='bdcqzhmh == "4"'>
+                    AND t.bdcqzh LIKE '%' || #{bdcqzh} || '%'
+                </if>
+            </if>
+
+            <if test="zl != null and zl !=''">
+                <if test='zlmh == "1"'>
+                    AND t.zl = #{zl}
+                </if>
+                <if test='zlmh == "2"'>
+                    AND t.zl LIKE '%'|| #{zl}
+                </if>
+                <if test='zlmh == "3"'>
+                    AND t.zl LIKE #{zl} || '%'
+                </if>
+                <if test='zlmh == "4"'>
+                    AND instr(t.zl,#{zl}) > 0
+                </if>
+            </if>
+            <if test="ycqzh != null and ycqzh !=''">
+                <if test='ycqzhmh == "1"'>
+                    AND t.ycqzh = #{ycqzh}
+                </if>
+                <if test='ycqzhmh == "2"'>
+                    AND t.ycqzh LIKE '%'|| #{ycqzh}
+                </if>
+                <if test='ycqzhmh == "3"'>
+                    AND t.ycqzh LIKE #{ycqzh} || '%'
+                </if>
+                <if test='ycqzhmh == "4"'>
+                    AND instr(t.ycqzh,#{ycqzh}) > 0
+                </if>
+            </if>
+            <if test="qszt != null and qszt !=''  or qszt ==0">
+                AND t.qszt=#{qszt}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                <if test='bdcdyhmh == "1"'>
+                    AND t.bdcdyh = #{bdcdyh}
+                </if>
+                <if test='bdcdyhmh == "2"'>
+                    AND t.bdcdyh LIKE '%'|| #{bdcdyh}
+                </if>
+                <if test='bdcdyhmh == "3"'>
+                    AND t.bdcdyh LIKE #{bdcdyh} || '%'
+                </if>
+                <if test='bdcdyhmh == "4"'>
+                    AND instr(t.bdcdyh, #{bdcdyh}) > 0
+                </if>
+            </if>
+            <if test="xndyh == true">
+                AND length(t.bdcdyh)=28 and substr(t.bdcdyh,7,6)='000000' and substr(t.bdcdyh,14,1) not in ('G','H')
+            </if>
+            <if test="bdcdyhList != null and bdcdyhList.size() == 1 ">
+                AND t.bdcdyh=#{bdcdyhList[0]}
+            </if>
+            <if test="bdcdyhList != null and bdcdyhList.size() > 1 ">
+                AND t.bdcdyh IN
+                <foreach collection="bdcdyhList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="bdcqzhList != null and bdcqzhList.size() > 1 ">
+                AND t.bdcqzh IN
+                <foreach collection="bdcqzhList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="bdcdyhlike != null and bdcdyhlike !=''">
+                AND instr(t.bdcdyh, #{bdcdyhlike}) > 0
+            </if>
+            <if test="gzlslid != null and gzlslid !=''">
+                AND t.gzlslid=#{gzlslid}
+            </if>
+            <if test="qllx != null and qllx.size() == 1 ">
+                AND t.qllx=#{qllx[0]}
+            </if>
+            <if test="qllx != null and qllx.size() > 1 ">
+                AND t.qllx IN
+                <foreach collection="qllx" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="xmid != null and xmid.size() == 1">
+                AND t.xmid=#{xmid[0]}
+            </if>
+            <if test="xmid != null and xmid.size() > 1 ">
+                AND t.xmid IN
+                <foreach collection="xmid" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="xmly != null and xmly.size() == 1">
+                AND t.xmly=#{xmly[0]}
+            </if>
+            <if test="xmly != null and xmly.size() > 1 ">
+                AND t.xmly IN
+                <foreach collection="xmly" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="bdclx != null and bdclx.size() == 1 ">
+                AND t.bdclx=#{bdclx[0]}
+            </if>
+            <if test="bdclx != null and bdclx.size() > 1 ">
+                AND t.bdclx IN
+                <foreach collection="bdclx" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="dzwtzm != null and dzwtzm.size() == 1 ">
+                AND SUBSTR(t.bdcdyh, 20, 1)=#{dzwtzm[0]}
+            </if>
+            <if test="dzwtzm != null and dzwtzm.size() > 1 ">
+                AND SUBSTR(t.bdcdyh, 20, 1) IN
+                <foreach collection="dzwtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="zdtzm != null and zdtzm.size() == 1 ">
+                AND SUBSTR(t.bdcdyh, 13, 2)=#{zdtzm[0]}
+            </if>
+            <if test="zdtzm != null and zdtzm.size() > 1 ">
+                AND SUBSTR(t.bdcdyh, 13, 2) IN
+                <foreach collection="zdtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="slbh != null and slbh != '' ">
+                <if test='slbhmh == "1"'>
+                    AND t.slbh = #{slbh}
+                </if>
+                <if test='slbhmh == "2"'>
+                    AND t.slbh LIKE '%'|| #{slbh}
+                </if>
+                <if test='slbhmh == "3"'>
+                    AND t.slbh LIKE #{slbh} || '%'
+                </if>
+                <if test='slbhmh == "4"'>
+                    AND instr(t.slbh, #{slbh}) > 0
+                </if>
+            </if>
+            <if test="yxtcqzh != null and yxtcqzh !=''">
+                <if test='yxtcqzhmh == "1"'>
+                    AND t.yxtcqzh = #{yxtcqzh}
+                </if>
+                <if test='yxtcqzhmh == "2"'>
+                    AND t.yxtcqzh like '%' ||#{yxtcqzh}
+                </if>
+                <if test='yxtcqzhmh == "3"'>
+                    AND t.yxtcqzh like #{yxtcqzh}|| '%'
+                </if>
+                <if test='yxtcqzhmh == "4"'>
+                    AND instr(t.yxtcqzh, #{yxtcqzh}) > 0
+                </if>
+            </if>
+            <if test="clgdsj == true">
+                AND NVL(t.bdcqzh,'-1') NOT LIKE '%不动产%'
+            </if>
+            <if test="xjxzqh != null and xjxzqh != ''">
+                AND (substr(t.bdcdyh,1,9) = #{xjxzqh} or (substr(t.bdcdyh,7,6)='000000' and substr(t.bdcdyh,14,1) not in
+                ('G','H'))) order by substr(t.bdcdyh,7,6) desc
+            </if>
+            <if test="qjxzqh != null and qjxzqh != ''">
+                AND (substr(t.bdcdyh,1,6) = #{qjxzqh}) order by substr(t.bdcdyh,7,6) desc
+            </if>
+            <if test="qxdmList != null and qxdmList.size() == 1 ">
+                AND t.qxdm=#{qxdmList[0]}
+            </if>
+            <if test="qxdmList != null and qxdmList.size() > 1 ">
+                AND t.qxdm IN
+                <foreach collection="qxdmList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="sfzjjg != null">
+                AND NVL(fb.sfzjjg, 0) = #{sfzjjg}
+            </if>
+
+            <if test="zh != null and zh !=''">
+                <if test='zhmh == "1"'>
+                    AND F.zh = #{zh}
+                </if>
+                <if test='zhmh == "2"'>
+                    AND F.zh like '%' ||#{zh}
+                </if>
+                <if test='zhmh == "3"'>
+                    AND F.zh like #{zh}|| '%'
+                </if>
+                <if test='zhmh == "4"'>
+                    AND instr(F.zh, #{zh}) > 0
+                </if>
+            </if>
+
+            <if test="fjh != null and fjh !=''">
+                <if test='fjhmh == "1"'>
+                    AND F.fjh = #{fjh}
+                </if>
+                <if test='fjhmh == "2"'>
+                    AND F.fjh like '%' ||#{fjh}
+                </if>
+                <if test='fjhmh == "3"'>
+                    AND F.fjh like #{fjh}|| '%'
+                </if>
+                <if test='fjhmh == "4"'>
+                    AND instr(F.fjh, #{fjh}) > 0
+                </if>
+            </if>
+            <if test="dzwytList != null and dzwytList.size()>0">
+                AND t.dzwyt IN
+                <foreach collection="dzwytList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="cfwh != null and cfwh !=''">
+                <if test='cfwhmh == "1"'>
+                    AND CF.cfwh = #{cfwh}
+                </if>
+                <if test='cfwhmh == "2"'>
+                    AND CF.cfwh like '%' ||#{cfwh}
+                </if>
+                <if test='cfwhmh == "3"'>
+                    AND CF.cfwh like #{cfwh}|| '%'
+                </if>
+                <if test='cfwhmh == "4"'>
+                    AND instr(CF.cfwh, #{cfwh}) > 0
+                </if>
+            </if>
+            <if test="bdcdywybh != null and bdcdywybh !=''">
+                <if test='bdcdywybhmh == "1"'>
+                    AND t.bdcdywybh = #{bdcdywybh}
+                </if>
+                <if test='bdcdywybhmh == "2"'>
+                    AND t.bdcdywybh like '%' ||#{bdcdywybh}
+                </if>
+                <if test='bdcdywybhmh == "3"'>
+                    AND t.bdcdywybh like #{bdcdywybh}|| '%'
+                </if>
+                <if test='bdcdywybhmh == "4"'>
+                    AND instr(t.bdcdywybh, #{bdcdywybh}) > 0
+                </if>
+            </if>
+
+        </where>
+        order by t.xmid
+    </sql>
+
+    <select id="listBdcQlByPageOrder" resultType="cn.gtmap.realestate.common.core.dto.init.BdcQlPageResponseDTO"
+            parameterType="cn.gtmap.realestate.common.core.qo.init.BdcQlQO">
+        <include refid="listBdcQl"/>
+    </select>
+
+    <select id="listBdcQlHbcxjgByPageOrder" resultType="cn.gtmap.realestate.common.core.dto.init.BdcQlPageResponseDTO"
+            parameterType="cn.gtmap.realestate.common.core.qo.init.BdcQlQO">
+        select
+        listagg(s.bdcqzh, '/') within group(order by s.xmid) bdcqzh,
+        listagg(s.qlrmc, '/') within group(order by s.xmid) qlrmc,
+        listagg(s.qlrzjh, '/') within group(order by s.xmid) qlrzjh,
+        s.bdcdyh,
+        s.qjgldm,
+        s.zl,
+        s.qllx,
+        max(s.xmid) xmid,
+        max(s.slbh) slbh,
+        max(s.bdcdywybh) bdcdywybh,
+        s.bdclx,
+        s.dzwyt
+        from (<include refid="listBdcQl"/>) s
+        group by s.bdcdyh, s.qjgldm, s.zl, s.qllx, s.bdclx, s.dzwyt
+    </select>
+
+    <select id="listBdcQlCount" resultType="java.lang.Integer"
+            parameterType="cn.gtmap.realestate.common.core.qo.init.BdcQlQO">
+        SELECT count(xmid)
+        FROM (<include refid="listBdcQl"/>)
+    </select>
+
+    <select id="listBdcQlFbczDtByPage" resultType="cn.gtmap.realestate.common.core.dto.init.BdcQlPageResponseDTO"
+            parameterType="cn.gtmap.realestate.common.core.qo.init.BdcQlQO">
+        SELECT t.gzlslid,t.bdcdyh,t.zl,t.xmid,t.qllx,t.djxl,z.bdcqzh,q.qlrmc,t.qszt,t.dzwmj,t.dzwyt,
+        t.dzwyt2,t.dzwyt3,t.zdzhmj,t.bdcdyfwlx,t.ycqzh,t.ybdcdyh,t.slbh,t.yfczh,t.ytdzh,t.djsj,t.slsj,t.jssj,
+        t.gzldymc,t.bdcdywybh,t.qlrzjh,t.xmly,t.bdclx,t.ysfwbm,t.yxtcqzh FROM (<include refid="listBdcQl"/>) t
+        LEFT JOIN bdc_qlr q ON t.xmid=q.xmid
+        LEFT JOIN bdc_zs z ON q.zsid=z.zsid
+    </select>
+
+    <sql id="listBdcCfxx">
+        SELECT t.bdcdyh,t.zl,c.xmid,t.qllx,t.djxl,t.ywr ywrmc,t.qlr
+        qlrmc,c.cfjg,c.cflx,c.cfwh,c.cfwj,c.qlid,c.cfqssj,c.cfjssj,t.ycqzh
+        bdcqzh,fb.qjgldm,c.cfbh,t.xmly,t.gzlslid,t.dzwyt,t.qxdm,t.bdclx
+        FROM BDC_CF c
+        LEFT JOIN bdc_xm t ON t.xmid=c.xmid
+        LEFT JOIN BDC_XMFB fb ON fb.xmid =t.xmid
+        <if test="qlrmc != null and qlrmc !=''">
+            INNER JOIN (SELECT DISTINCT xmid FROM bdc_qlr b WHERE b.qlrmc LIKE #{qlrmc} || '%' AND b.qlrlb = 1 ) q ON
+            q.xmid=c.xmid
+        </if>
+        <if test="ywrmc != null and ywrmc !=''">
+            <if test='ywrmcmh == "1"'>
+                INNER JOIN (SELECT DISTINCT xmid FROM bdc_qlr b WHERE b.qlrmc = #{ywrmc} AND b.qlrlb = 2 ) q ON
+                q.xmid=c.xmid
+            </if>
+            <if test='ywrmcmh == "2"'>
+                INNER JOIN (SELECT DISTINCT xmid FROM bdc_qlr b WHERE b.qlrmc LIKE '%'|| #{ywrmc} AND b.qlrlb = 2 ) q ON
+                q.xmid=c.xmid
+            </if>
+            <if test='ywrmcmh == "3"'>
+                INNER JOIN (SELECT DISTINCT xmid FROM bdc_qlr b WHERE b.qlrmc LIKE #{ywrmc} || '%' AND b.qlrlb = 2 ) q
+                ON
+                q.xmid=c.xmid
+            </if>
+            <if test='ywrmcmh == "4"'>
+                INNER JOIN (SELECT DISTINCT xmid FROM bdc_qlr b WHERE b.qlrmc LIKE '%' || #{ywrmc} || '%' AND b.qlrlb =
+                2 ) q ON
+                q.xmid=c.xmid
+            </if>
+        </if>
+        <if test="bdcqzhjc != null and bdcqzhjc != ''">
+            <if test='bdcqzhjcmh != null and bdcqzhjcmh == "1" '>
+                inner join (SELECT DISTINCT bdcqzh FROM bdc_zs c
+                where c.bdcqzhjc =#{bdcqzhjc}
+                ) z on z.bdcqzh=t.ycqzh
+            </if>
+            <if test='bdcqzhjcmh != null and bdcqzhjcmh == "4" '>
+                inner join (SELECT DISTINCT bdcqzh FROM bdc_zs c
+                where c.bdcqzhjc LIKE '%' || #{bdcqzhjc} || '%'
+                ) z on t.ycqzh LIKE '%' || z.bdcqzh || '%'
+            </if>
+        </if>
+        WHERE c.qszt=1
+        <if test="cfwh != null and cfwh !=''">
+            <if test='cfwhmh == "1"'>
+                AND c.cfwh = #{cfwh}
+            </if>
+            <if test='cfwhmh == "2"'>
+                AND c.cfwh LIKE '%'|| #{cfwh}
+            </if>
+            <if test='cfwhmh == "3"'>
+                AND c.cfwh LIKE #{cfwh} || '%'
+            </if>
+            <if test='cfwhmh == "4"'>
+                AND c.cfwh LIKE '%' || #{cfwh} || '%'
+            </if>
+        </if>
+        <if test="zl != null and zl !=''">
+            <if test='zlmh == "1"'>
+                AND t.zl = #{zl}
+            </if>
+            <if test='zlmh == "2"'>
+                AND t.zl LIKE '%'|| #{zl}
+            </if>
+            <if test='zlmh == "3"'>
+                AND t.zl LIKE #{zl} || '%'
+            </if>
+            <if test='zlmh == "4"'>
+                AND t.zl LIKE '%' || #{zl} || '%'
+            </if>
+        </if>
+        <if test="cfjg != null and cfjg !=''">
+            <if test='cfjgmh == "1"'>
+                AND c.cfjg = #{cfjg}
+            </if>
+            <if test='cfjgmh == "2"'>
+                AND c.cfjg LIKE '%'|| #{cfjg}
+            </if>
+            <if test='cfjgmh == "3"'>
+                AND c.cfjg LIKE #{cfjg} || '%'
+            </if>
+            <if test='cfjgmh == "4"'>
+                AND c.cfjg LIKE '%' || #{cfjg} || '%'
+            </if>
+        </if>
+        <if test="ycqzh != null and ycqzh !=''">
+            <if test='ycqzhmh == "1"'>
+                AND t.ycqzh = #{ycqzh}
+            </if>
+            <if test='ycqzhmh == "2"'>
+                AND t.ycqzh LIKE '%'|| #{ycqzh}
+            </if>
+            <if test='ycqzhmh == "3"'>
+                AND t.ycqzh LIKE #{ycqzh} || '%'
+            </if>
+            <if test='ycqzhmh == "4"'>
+                AND t.ycqzh LIKE '%' || #{ycqzh} || '%'
+            </if>
+        </if>
+        <if test="bdcdyh != null and bdcdyh.size() == 1">
+            <if test='bdcdyhmh == null or bdcdyhmh ==""'>
+                AND t.bdcdyh=#{bdcdyh[0]}
+            </if>
+            <if test='bdcdyhmh == "1"'>
+                AND t.bdcdyh=#{bdcdyh[0]}
+            </if>
+            <if test='bdcdyhmh == "2"'>
+                AND t.bdcdyh LIKE '%'|| #{bdcdyh[0]}
+            </if>
+            <if test='bdcdyhmh == "3"'>
+                AND t.bdcdyh LIKE #{bdcdyh[0]} || '%'
+            </if>
+            <if test='bdcdyhmh == "4"'>
+                AND t.bdcdyh LIKE '%' || #{bdcdyh[0]} || '%'
+            </if>
+        </if>
+        <if test="bdcdyh != null and bdcdyh.size() > 1 ">
+            AND t.bdcdyh IN
+            <foreach collection="bdcdyh" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="slbh != null and slbh !=''">
+            <if test='slbhmh == "1"'>
+                AND t.slbh = #{slbh}
+            </if>
+            <if test='slbhmh == "2"'>
+                AND t.slbh LIKE '%'|| #{slbh}
+            </if>
+            <if test='slbhmh == "3"'>
+                AND t.slbh LIKE #{slbh} || '%'
+            </if>
+            <if test='slbhmh == "4"'>
+                AND t.slbh LIKE '%' || #{slbh} || '%'
+            </if>
+        </if>
+        <if test="xmid != null and xmid.size() == 1">
+            AND t.xmid=#{xmid[0]}
+        </if>
+        <if test="xmid != null and xmid.size() > 1 ">
+            AND t.xmid IN
+            <foreach collection="xmid" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="cfbh != null and cfbh !=''">
+            <if test='cfbhmh == "1"'>
+                AND c.cfbh = #{cfbh}
+            </if>
+            <if test='cfbhmh == "2"'>
+                AND c.cfbh LIKE '%'|| #{cfbh}
+            </if>
+            <if test='cfbhmh == "3"'>
+                AND c.cfbh LIKE #{cfbh} || '%'
+            </if>
+            <if test='cfbhmh == "4"'>
+                AND c.cfbh LIKE '%' || #{cfbh} || '%'
+            </if>
+        </if>
+        <if test="qxdmList != null and qxdmList.size() == 1 ">
+            AND t.qxdm=#{qxdmList[0]}
+        </if>
+        <if test="qxdmList != null and qxdmList.size() > 1 ">
+            AND t.qxdm IN
+            <foreach collection="qxdmList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="cflxList != null and cflxList.size() > 0 ">
+            AND c.cflx IN
+            <foreach collection="cflxList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="dzwytList != null and dzwytList.size() > 0 ">
+            AND t.dzwyt IN
+            <foreach collection="dzwytList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </sql>
+
+    <select id="listBdcCfxxByPage" resultType="cn.gtmap.realestate.common.core.dto.init.BdcCfxxPageResponseDTO"
+            parameterType="cn.gtmap.realestate.common.core.qo.init.BdcCfQO">
+        <include refid="listBdcCfxx"/>
+        order by t.ycqzh , c.cfsx, c.cfbh,t.bdcdyh
+    </select>
+
+    <select id="listBdcCfXfxxByPage" resultType="cn.gtmap.realestate.common.core.dto.init.BdcCfxxPageResponseDTO"
+            parameterType="cn.gtmap.realestate.common.core.qo.init.BdcCfQO">
+        <include refid="listBdcCfxx"/>
+        union all
+        SELECT t.bdcdyh,t.zl,c.xmid,t.qllx,t.djxl,t.ywr ywrmc,t.qlr
+        qlrmc,c.cfjg,c.cflx,c.cfwh,c.cfwj,c.qlid,c.cfqssj,c.cfjssj,t.ycqzh bdcqzh,fb.qjgldm,c.cfbh,t.xmly,t.gzlslid,t.dzwyt,t.qxdm
+        FROM BDC_CF c
+        LEFT JOIN bdc_xm t ON t.xmid=c.xmid
+        LEFT JOIN BDC_XMFB fb ON fb.xmid =t.xmid
+        LEFT JOIN bdc_xm_lsgx l on l.xmid=c.xmid
+        inner join bdc_cf s on s.xmid=l.yxmid
+        <if test="qlrmc != null and qlrmc !=''">
+            INNER JOIN (SELECT DISTINCT xmid FROM bdc_qlr b WHERE b.qlrmc LIKE #{qlrmc} || '%' AND b.qlrlb = 1 ) q ON
+            q.xmid=c.xmid
+        </if>
+        <if test="ywrmc != null and ywrmc !=''">
+            <if test='ywrmcmh == "1"'>
+                INNER JOIN (SELECT DISTINCT xmid FROM bdc_qlr b WHERE b.qlrmc = #{ywrmc} AND b.qlrlb = 2 ) q ON
+                q.xmid=c.xmid
+            </if>
+            <if test='ywrmcmh == "2"'>
+                INNER JOIN (SELECT DISTINCT xmid FROM bdc_qlr b WHERE b.qlrmc LIKE '%'|| #{ywrmc} AND b.qlrlb = 2 ) q ON
+                q.xmid=c.xmid
+            </if>
+            <if test='ywrmcmh == "3"'>
+                INNER JOIN (SELECT DISTINCT xmid FROM bdc_qlr b WHERE b.qlrmc LIKE #{ywrmc} || '%' AND b.qlrlb = 2 ) q
+                ON
+                q.xmid=c.xmid
+            </if>
+            <if test='ywrmcmh == "4"'>
+                INNER JOIN (SELECT DISTINCT xmid FROM bdc_qlr b WHERE b.qlrmc LIKE '%' || #{ywrmc} || '%' AND b.qlrlb =
+                2 ) q ON
+                q.xmid=c.xmid
+            </if>
+        </if>
+        WHERE c.qszt=1 and c.cflx = 5 and s.cflx=1
+        <if test="cfwh != null and cfwh !=''">
+            <if test='cfwhmh == "1"'>
+                AND c.cfwh = #{cfwh}
+            </if>
+            <if test='cfwhmh == "2"'>
+                AND c.cfwh LIKE '%'|| #{cfwh}
+            </if>
+            <if test='cfwhmh == "3"'>
+                AND c.cfwh LIKE #{cfwh} || '%'
+            </if>
+            <if test='cfwhmh == "4"'>
+                AND c.cfwh LIKE '%' || #{cfwh} || '%'
+            </if>
+        </if>
+        <if test="zl != null and zl !=''">
+            <if test='zlmh == "1"'>
+                AND t.zl = #{zl}
+            </if>
+            <if test='zlmh == "2"'>
+                AND t.zl LIKE '%'|| #{zl}
+            </if>
+            <if test='zlmh == "3"'>
+                AND t.zl LIKE #{zl} || '%'
+            </if>
+            <if test='zlmh == "4"'>
+                AND t.zl LIKE '%' || #{zl} || '%'
+            </if>
+        </if>
+        <if test="cfjg != null and cfjg !=''">
+            <if test='cfjgmh == "1"'>
+                AND c.cfjg = #{cfjg}
+            </if>
+            <if test='cfjgmh == "2"'>
+                AND c.cfjg LIKE '%'|| #{cfjg}
+            </if>
+            <if test='cfjgmh == "3"'>
+                AND c.cfjg LIKE #{cfjg} || '%'
+            </if>
+            <if test='cfjgmh == "4"'>
+                AND c.cfjg LIKE '%' || #{cfjg} || '%'
+            </if>
+        </if>
+        <if test="ycqzh != null and ycqzh !=''">
+            <if test='ycqzhmh == "1"'>
+                AND t.ycqzh = #{ycqzh}
+            </if>
+            <if test='ycqzhmh == "2"'>
+                AND t.ycqzh LIKE '%'|| #{ycqzh}
+            </if>
+            <if test='ycqzhmh == "3"'>
+                AND t.ycqzh LIKE #{ycqzh} || '%'
+            </if>
+            <if test='ycqzhmh == "4"'>
+                AND t.ycqzh LIKE '%' || #{ycqzh} || '%'
+            </if>
+        </if>
+        <if test="bdcdyh != null and bdcdyh.size() == 1">
+            AND t.bdcdyh=#{bdcdyh[0]}
+        </if>
+        <if test="bdcdyh != null and bdcdyh.size() > 1 ">
+            AND t.bdcdyh IN
+            <foreach collection="bdcdyh" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="slbh != null and slbh !=''">
+            <if test='slbhmh == "1"'>
+                AND t.slbh = #{slbh}
+            </if>
+            <if test='slbhmh == "2"'>
+                AND t.slbh LIKE '%'|| #{slbh}
+            </if>
+            <if test='slbhmh == "3"'>
+                AND t.slbh LIKE #{slbh} || '%'
+            </if>
+            <if test='slbhmh == "4"'>
+                AND t.slbh LIKE '%' || #{slbh} || '%'
+            </if>
+        </if>
+        <if test="xmid != null and xmid.size() == 1">
+            AND t.xmid=#{xmid[0]}
+        </if>
+        <if test="xmid != null and xmid.size() > 1 ">
+            AND t.xmid IN
+            <foreach collection="xmid" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="cfbh != null and cfbh !=''">
+            <if test='cfbhmh == "1"'>
+                AND c.cfbh = #{cfbh}
+            </if>
+            <if test='cfbhmh == "2"'>
+                AND c.cfbh LIKE '%'|| #{cfbh}
+            </if>
+            <if test='cfbhmh == "3"'>
+                AND c.cfbh LIKE #{cfbh} || '%'
+            </if>
+            <if test='cfbhmh == "4"'>
+                AND c.cfbh LIKE '%' || #{cfbh} || '%'
+            </if>
+        </if>
+        <if test="qxdmList != null and qxdmList.size() == 1 ">
+            AND t.qxdm=#{qxdmList[0]}
+        </if>
+        <if test="qxdmList != null and qxdmList.size() > 1 ">
+            AND t.qxdm IN
+            <foreach collection="qxdmList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="listBdcCfxxCount" resultType="java.lang.Integer"
+            parameterType="cn.gtmap.realestate.common.core.qo.init.BdcCfQO">
+        SELECT count(xmid) FROM (
+        <include refid="listBdcCfxx"/>
+        )
+    </select>
+
+    <select id="listBdcBjjd" parameterType="map" resultType="map">
+        SELECT t.slbh,t.c.mc AS djlx,t.zl,t.slsj,t.ajzt,
+        CASE WHEN b.qlrlb=1 THEN t.qlr ELSE t.ywr END qlr,
+        CASE WHEN b.qlrlb=1 THEN t.qlrzjh ELSE t.ywrzjh END qlrzjh
+        FROM BDC_XM t
+        INNER JOIN bdc_qlr b ON b.xmid=t.xmid
+        LEFT JOIN bdc_zd_djlx c ON c.dm=t.djlx
+        <where>
+            <if test="slbh != null and slbh !=''">
+                AND t.slbh=#{slbh}
+            </if>
+            <if test="zjh != null and zjh !=''">
+                AND b.zjh=#{zjh}
+            </if>
+        </where>
+    </select>
+
+    <select id="listBdcxmByCqzh" parameterType="map" resultType="map">
+        SELECT t.bdcdyh,t.zl,t.xmid,t.qllx,t.djxl,t.bdcqzh,t.qlr qlrmc,t.qszt,t.dzwmj,t.dzwyt,
+        t.dzwyt2,t.dzwyt3,t.zdzhmj,t.bdcdyfwlx,t.ycqzh,t.yfczh,t.ytdzh,t.djsj
+        FROM BDC_XM t
+        <where>
+            <if test="bdcqzh != null and bdcqzh !=''">
+                AND t.bdcqzh = #{bdcqzh}
+            </if>
+            <if test="qszt != null and qszt !=''">
+                AND t.qszt=#{qszt}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND t.bdcdyh=#{bdcdyh}
+            </if>
+        </where>
+    </select>
+
+    <!-- 删除流程初始化实例表 -->
+    <delete id="deleteCshFwkgSl">
+        DELETE FROM BDC_CSH_FWKG_SL a WHERE a.id IN
+        (
+        SELECT b.xmid FROM bdc_xm b
+        WHERE b.gzlslid = #{gzlslid}
+        )
+    </delete>
+
+
+    <select id="listXmBfxx" resultType="cn.gtmap.realestate.common.core.dto.init.BdcXmDTO">
+        SELECT t.xmid,t.bdcdyh,t.gzlslid,t.slbh,t.qllx,t.djxl,t.gzldyid,fb.qjgldm,t.qxdm FROM BDC_XM t
+        LEFT JOIN bdc_xmfb fb on fb.xmid =t.xmid
+        <where>
+            <if test="gzlslid != null and gzlslid !=''">
+                AND t.gzlslid=#{gzlslid}
+            </if>
+            <if test="slbh != null and slbh !=''">
+                AND t.slbh=#{slbh}
+            </if>
+            <if test="onlyOne == true">
+                AND rownum=1
+            </if>
+        </where>
+        order by t.xmid
+    </select>
+
+    <select id="listBdcdyhByBjrq" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO" parameterType="map">
+        <![CDATA[
+
+
+
+        SELECT A.BDCDYH FROM BDC_XM A WHERE
+          A.jssj >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+          AND A.jssj <= to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+
+
+
+        ]]>
+    </select>
+
+    <select id="listBdcXm" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            parameterType="cn.gtmap.realestate.common.core.qo.init.BdcXmQO">
+        SELECT * FROM BDC_XM A
+        <where>
+            <if test="xmid != null and xmid !=''">
+                AND A.xmid=#{xmid}
+            </if>
+            <if test="slbh != null and slbh !=''">
+                AND A.slbh=#{slbh}
+            </if>
+            <if test="gzlslid != null and gzlslid !=''">
+                AND A.gzlslid=#{gzlslid}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND A.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="bjrq != null and bjrq !=''">
+                AND A.jssj = #{bjrq}
+            </if>
+            <if test="jyhth != null and jyhth !=''">
+                AND A.jyhth = #{jyhth}
+            </if>
+            <if test="spxtywh != null and spxtywh !=''">
+                AND A.spxtywh = #{spxtywh}
+            </if>
+            <if test="djxl != null and djxl !=''">
+                AND A.djxl = #{djxl}
+            </if>
+            <if test="ajzt != null and ajzt !=''">
+                AND A.ajzt = #{ajzt}
+            </if>
+            <if test="qlr != null and qlr !=''">
+                AND A.qlr = #{qlr}
+            </if>
+            <if test="bdcqzh != null and bdcqzh !=''">
+                AND A.bdcqzh = #{bdcqzh}
+            </if>
+            <if test="ycqzh != null and ycqzh !=''">
+                AND A.ycqzh = #{ycqzh}
+            </if>
+            <if test="qszt != null and qszt !=''">
+                AND A.qszt = #{qszt}
+            </if>
+            <if test="qllxs != null and qllxs.size() > 0">
+                AND A.qllx IN
+                <foreach collection="qllxs" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="bdcdyhList != null and bdcdyhList.size() > 0">
+                AND A.bdcdyh IN
+                <foreach collection="bdcdyhList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="xmidList != null and xmidList.size() > 0">
+                AND A.xmid IN
+                <foreach collection="xmidList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <!--审批来源传0的时候，查0和null的-->
+            <if test="sply != null">
+                <if test="sply == 0">
+                    AND (A.sply = 0 or A.sply is null)
+                </if>
+                <if test="sply != 0">
+                    AND A.sply = #{sply,jdbcType=INTEGER}
+                </if>
+            </if>
+            <if test="bdclx != null and bdclx !=''">
+                AND A.bdclx = #{bdclx}
+            </if>
+            <if test="bdcdywybh != null and bdcdywybh !=''">
+                AND A.bdcdywybh = #{bdcdywybh}
+            </if>
+            <if test="zl != null and zl !=''">
+                AND instr(A.zl,#{zl})>0
+            </if>
+            <if test="zljq != null and zljq !=''">
+                AND A.ZL = #{zljq}
+            </if>
+            <if test="gzldymc != null and gzldymc !=''">
+                AND A.gzldymc = #{gzldymc}
+            </if>
+            <if test="qxdm != null and qxdm !=''">
+                AND A.qxdm = #{qxdm}
+            </if>
+            <if test="qszts != null and qszts.size() > 0">
+                AND A.qszt IN
+                <foreach collection="qszts" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="gzldyids != null and gzldyids !=''">
+                AND A.gzldyid IN
+                <foreach collection="gzldyids.split(',')" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="splys != null and splys.size() > 0">
+                AND A.sply IN
+                <foreach collection="splys" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="slbhList != null and slbhList.size() > 0">
+                AND A.slbh IN
+                <foreach collection="slbhList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="currentDate != null">
+                AND trunc(A.DJSJ) = trunc(#{currentDate})
+            </if>
+            <if test="zfxzspbh != null and zfxzspbh !=''">
+                AND A.zfxzspbh = #{zfxzspbh}
+            </if>
+        </where>
+        ORDER BY A.XMID ASC
+    </select>
+
+    <select id="listBdCshSl" resultType="cn.gtmap.realestate.common.core.domain.BdcCshFwkgSlDO">
+        SELECT a.*  FROM  BDC_CSH_FWKG_SL a
+        left join bdc_xm b on b.xmid=a.id
+        WHERE  b.gzlslid=#{gzlslid}
+    </select>
+
+    <select id="queryDjyy" resultType="java.lang.String">
+        SELECT a.djyy FROM BDC_XM a
+        <where>
+            rownum=1
+            <if test="gzlslid != null and gzlslid !=''">
+                AND a.gzlslid=#{gzlslid}
+            </if>
+            <if test="qllx != null and qllx !=''">
+                AND a.qllx=#{qllx}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryZxYgYdyDjyy" resultType="java.lang.String">
+        SELECT a.djyy FROM BDC_XM a
+        LEFT JOIN BDC_XM_LSGX l ON l.xmid =a.xmid AND l.zxyql =1
+        LEFT JOIN BDC_YG y ON y.xmid =l.yxmid
+        <where>
+            rownum=1
+            <if test="gzlslid != null and gzlslid !=''">
+                AND a.gzlslid=#{gzlslid}
+            </if>
+            <if test="ygdjzl != null and ygdjzl.size() > 0">
+                AND nvl(y.ygdjzl,1) IN
+                <foreach collection="ygdjzl" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!-- 批量更新不动产项目 -->
+    <update id="updateBatchBdcXm" parameterType="map">
+        <if test="statement != null and ((gzlslid != null and gzlslid !='') or (xmids != null and xmids.size() > 0 ) or (gzlslids != null and gzlslids.size() > 0 ))">
+            ${statement}
+            <where>
+                <if test="gzlslid != null and gzlslid !=''">
+                    AND gzlslid=#{gzlslid}
+                </if>
+                <if test="xmids != null and xmids.size() > 0">
+                    AND xmid IN
+                    <foreach collection="xmids" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="gzlslids != null and gzlslids.size() > 0">
+                    AND gzlslid IN
+                    <foreach collection="gzlslids" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="djxl != null and djxl !=''">
+                    AND djxl = #{djxl}
+                </if>
+
+            </where>
+        </if>
+    </update>
+
+    <!-- 分页查询原权利信息 -->
+    <select id="listBdcYqlByPage" resultType="cn.gtmap.realestate.common.core.dto.init.BdcQlPageResponseDTO"
+            parameterType="cn.gtmap.realestate.common.core.qo.init.BdcQlQO">
+        SELECT x.DJXL,
+        x.BDCDYH,
+        x.QLR qlrmc,
+        x.ZL,
+        x.XMID,
+        x.BDCDYFWLX,
+        x.QLLX,
+        x.DJLX,
+        x.GZLSLID,
+        x.SLBH,
+        s.qllx yqllx
+        from BDC_XM x
+        inner join (select l.YXMID AS XMID, t.qllx
+        from bdc_xm t
+        LEFT JOIN BDC_XM_LSGX l
+        on l.XMID = t.XMID
+        <where>
+            <if test="gzlslid != null and gzlslid !=''">
+                AND t.GZLSLID = #{gzlslid}
+            </if>
+        </where>
+        ) s
+        on x.xmid = s.xmid
+        ORDER BY X.BDCDYH ASC,x.DJSJ ASC NULLS LAST
+    </select>
+
+    <!-- 批量项目表备注-->
+    <update id="updateBatchXmBz" parameterType="map">
+        <if test="gzlslid != null and gzlslid !='' or xmid != null and xmid !=''">
+            UPDATE BDC_XM t SET t.bz=nvl2(t.bz,t.bz||chr(13)||#{bz},#{bz})
+            <where>
+                <if test="gzlslid != null and gzlslid !=''">
+                    AND t.gzlslid=#{gzlslid}
+                </if>
+                <if test="xmid != null and xmid !=''">
+                    AND t.xmid=#{xmid}
+                </if>
+                <if test="djxl != null and djxl !=''">
+                    AND t.djxl=#{djxl}
+                </if>
+            </where>
+        </if>
+    </update>
+
+    <!-- 查询房屋状况信息 -->
+    <select id="listFwzkbByPage" resultType="cn.gtmap.realestate.common.core.vo.accept.ui.BdcXmFwzkfbVO"
+            parameterType="map">
+        SELECT
+        c.zh AS zh,
+        c.FJH AS fjh,
+        c.FWJG AS fwjg,
+        c.JGSJ AS jgsj,
+        c.SZMYC AS myc,
+        c.SZC AS wlc,
+        c.GHYT AS ghyt,
+        c.JZMJ AS jzmj,
+        c.ZYJZMJ AS tnjzmj
+        FROM
+        BDC_XM a
+        <if test="qllx == 95 or qllx == 37">
+            LEFT JOIN BDC_FDCQ c ON a.BDCDYH = c.BDCDYH
+        </if>
+        <if test="qllx == 4 or qllx == 6 or qllx == 8">
+            LEFT JOIN BDC_FDCQ c ON a.xmid = c.xmid
+        </if>
+        WHERE
+        a.GZLSLID = #{gzlslid}
+        <if test="qllx == 95 or qllx == 37">
+            AND c.QSZT = '1'
+        </if>
+        ORDER BY zh,myc ASC
+    </select>
+
+    <!-- 查询原房屋状况信息 -->
+    <select id="listYxmFwzkbByPage" resultType="cn.gtmap.realestate.common.core.vo.accept.ui.BdcXmFwzkfbVO"
+            parameterType="map">
+        SELECT
+        c.zh AS zh,
+        c.FJH AS fjh,
+        c.FWJG AS fwjg,
+        c.JGSJ AS jgsj,
+        c.SZMYC AS myc,
+        c.SZC AS wlc,
+        c.GHYT AS ghyt,
+        c.JZMJ AS jzmj,
+        c.ZYJZMJ AS tnjzmj
+        FROM
+        BDC_XM a
+        <if test="qllx == 95 or qllx == 37">
+            LEFT JOIN BDC_FDCQ c ON a.BDCDYH = c.BDCDYH
+        </if>
+        <if test="qllx == 4 or qllx == 6 or qllx == 8">
+            LEFT JOIN BDC_XM_LSGX b ON a.XMID = b.XMID
+            LEFT JOIN BDC_FDCQ c ON b.YXMID = c.XMID
+        </if>
+        WHERE
+        a.GZLSLID = #{gzlslid}
+        <if test="qllx == 95 or qllx == 37">
+            AND c.QSZT = '1'
+        </if>
+        ORDER BY zh,myc ASC
+    </select>
+
+
+    <!-- 查询原房屋状况信息 -->
+    <select id="getZfYtList" resultType="String" parameterType="map">
+        select dm from bdc_zd_fwyt
+        <where>
+            <if test="zfpz != null and zfpz != ''">
+                <foreach collection="zfpz.split(',')" item="item" open="(" close=")" separator="or">
+                    mc like '%' || #{item,jdbcType=VARCHAR} || '%'
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询流程中房屋用途字典项 -->
+    <select id="queryZdFwytByGzlslid" resultType="cn.gtmap.realestate.common.core.domain.BdcZdFwytDO"
+            parameterType="String">
+        SELECT DISTINCT (z.dm),z.mc FROM bdc_xm x
+        LEFT JOIN bdc_Zd_fwyt z ON x.dzwyt =z.dm
+        WHERE x.dzwyt IS NOT NULL AND gzlslid =#{gzlslid}
+    </select>
+
+    <!-- 根据当前工作流实例ID查询原项目-->
+    <select id="listYxmByGzlslid" parameterType="map" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT distinct t.* FROM BDC_XM t
+        LEFT JOIN BDC_XM_LSGX r ON r.yxmid =t.xmid
+        LEFT JOIN BDC_XM x ON x.xmid =r.xmid
+        WHERE x.gzlslid =#{gzlslid}
+        <if test="djxl != null and djxl !=''">
+            AND x.djxl=#{djxl}
+        </if>
+        <if test="wlxm != null">
+            AND nvl(r.wlxm,0)=#{wlxm}
+        </if>
+        <if test="zxyql != null">
+            AND nvl(r.zxyql,0)=#{zxyql}
+        </if>
+
+
+    </select>
+
+    <!-- 根据当前工作流实例ID查询原项目-->
+    <select id="listYxmByYxmQO" parameterType="cn.gtmap.realestate.common.core.qo.init.BdcYxmQO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        <if test="((gzlslid != null and gzlslid !='') or (xmidList != null and xmidList.size() > 0 ))">
+            SELECT t.* FROM BDC_XM t
+            LEFT JOIN BDC_XM_LSGX r ON r.yxmid =t.xmid
+            LEFT JOIN BDC_XM x ON x.xmid =r.xmid
+            WHERE 1=1
+            <if test="gzlslid != null and gzlslid !=''">
+                AND x.gzlslid=#{gzlslid}
+            </if>
+            <if test="djxl != null and djxl !=''">
+                AND x.djxl=#{djxl}
+            </if>
+            <if test="wlxm != null">
+                AND nvl(r.wlxm,0)=#{wlxm}
+            </if>
+            <if test="zxyql != null">
+                AND nvl(r.zxyql,0)=#{zxyql}
+            </if>
+            <if test="xmidList != null and xmidList.size>0">
+                AND x.xmid IN
+                <foreach collection="xmidList" item="xmid" open="(" close=")" separator=",">
+                    #{xmid}
+                </foreach>
+            </if>
+        </if>
+
+
+    </select>
+
+    <sql id="listBdcZssd">
+        SELECT
+            z.ZSSDID,z.CQZH,z.SDZT,z.SDYY,z.SDR,z.SDSJ,z.JSR,z.JSSJ,z.JSYY,z.BZ,z.SDLX,z.XMID,
+            xm.bdcdyh,xm.zl,xm.qllx,xm.djxl,xm.ywr as ywrmc,xm.qlr as qlrmc
+        FROM
+            BDC_ZSSD z
+        LEFT JOIN
+            bdc_xm_zs_gx g  ON g.zsid = z.zsid
+        LEFT JOIN
+            bdc_xm       xm ON g.xmid = xm.xmid
+        WHERE
+            z.sdzt = 1 AND xm.xmid is not null
+        <if test="cqzh != null and cqzh !=''">
+            <if test='cqzhmh == "1"'>
+                AND z.cqzh = #{cqzh}
+            </if>
+            <if test='cqzhmh == "2"'>
+                AND z.cqzh LIKE '%'|| #{cqzh}
+            </if>
+            <if test='cqzhmh == "3"'>
+                AND z.cqzh LIKE #{cqzh} || '%'
+            </if>
+            <if test='cqzhmh == "4"'>
+                AND z.cqzh LIKE '%' || #{cqzh} || '%'
+            </if>
+        </if>
+        <if test="zl != null and zl !=''">
+            <if test='zlmh == "1"'>
+                AND xm.zl = #{zl}
+            </if>
+            <if test='zlmh == "2"'>
+                AND xm.zl LIKE '%'|| #{zl}
+            </if>
+            <if test='zlmh == "3"'>
+                AND xm.zl LIKE #{zl} || '%'
+            </if>
+            <if test='zlmh == "4"'>
+                AND xm.zl LIKE '%' || #{zl} || '%'
+            </if>
+        </if>
+        <if test="(qlr != null and qlr !='') or (qlrzjh != null and qlrzjh !='')">
+            AND z.zsid in
+            (
+                 SELECT zsid FROM bdc_qlr q WHERE QLRLB = 1
+                 <if test="qlr != null and qlr !=''">
+                     <if test='qlrmh == "1"'>
+                         AND q.qlrmc = #{qlr}
+                     </if>
+                     <if test='qlrmh == "2"'>
+                         AND q.qlrmc LIKE '%'|| #{qlr}
+                     </if>
+                     <if test='qlrmh == "3"'>
+                         AND q.qlrmc LIKE #{qlr} || '%'
+                     </if>
+                     <if test='qlrmh == "4"'>
+                         AND q.qlrmc LIKE '%' || #{qlr} || '%'
+                     </if>
+                 </if>
+                 <if test="qlrzjh != null and qlrzjh !=''">
+                     <if test='qlrzjhmh == "1"'>
+                         AND q.zjh = #{qlrzjh}
+                     </if>
+                     <if test='qlrzjhmh == "2"'>
+                         AND q.zjh LIKE '%'|| #{qlrzjh}
+                     </if>
+                     <if test='qlrzjhmh == "3"'>
+                         AND q.zjh LIKE #{qlrzjh} || '%'
+                     </if>
+                     <if test='qlrzjhmh == "4"'>
+                         AND q.zjh LIKE '%' || #{qlrzjh} || '%'
+                     </if>
+                 </if>
+            )
+        </if>
+        <if test="zhlsh != null and zhlsh !=''">
+            AND z.zsid in
+            (
+                SELECT zsid FROM bdc_zs zs WHERE
+                <if test='zhlshmh == "1"'>
+                     zs.zhlsh = #{zhlsh}
+                </if>
+                <if test='zhlshmh == "2"'>
+                     zs.zhlsh LIKE '%'|| #{zhlsh}
+                </if>
+                <if test='zhlshmh == "3"'>
+                     zs.zhlsh LIKE #{zhlsh} || '%'
+                </if>
+                <if test='zhlshmh == "4"'>
+                     zs.zhlsh LIKE '%' || #{zhlsh} || '%'
+                </if>
+            )
+        </if>
+        <if test="qxdmList != null and qxdmList.size() == 1 ">
+            AND xm.qxdm=#{qxdmList[0]}
+        </if>
+        <if test="qxdmList != null and qxdmList.size() > 1 ">
+            AND xm.qxdm IN
+            <foreach collection="qxdmList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </sql>
+
+    <select id="listBdcZssdCount" resultType="java.lang.Integer"
+            parameterType="cn.gtmap.realestate.common.core.qo.init.BdcZssdQO">
+        SELECT count(xmid) FROM (
+            <include refid="listBdcZssd"/>
+        )
+    </select>
+
+    <select id="listBdcDysdCount" resultType="java.lang.Integer"
+            parameterType="cn.gtmap.realestate.common.core.qo.init.BdcDysdQO">
+        SELECT count(xmid) FROM (
+            <include refid="listBdcDysd"/>
+        )
+    </select>
+
+    <select id="listBdcZssdByPage" resultType="cn.gtmap.realestate.common.core.dto.init.BdcZssdPageResponseDTO"
+            parameterType="cn.gtmap.realestate.common.core.qo.init.BdcZssdQO">
+        <include refid="listBdcZssd"/>
+    </select>
+
+    <sql id="listBdcDysd">
+        SELECT
+        d.DYSDID,d.SDZT,d.SDYY,d.SDR,d.SDSJ,d.JSR,d.JSSJ,d.JSYY,d.BZ,d.BDCDYWYBH,d.SDLX,
+        xm.bdcdyh,xm.zl,xm.xmid,xm.qllx,xm.djxl,xm.ywr as ywrmc,xm.qlr as qlrmc
+        FROM
+        BDC_DYSD d
+        LEFT JOIN
+        bdc_xm xm ON d.xmid = xm.xmid
+        WHERE
+        d.sdzt = 1 AND xm.xmid is not null
+        <if test="bdcdyh != null and bdcdyh !=''">
+            <if test='bdcdyhmh == "1"'>
+                AND d.bdcdyh = #{bdcdyh}
+            </if>
+            <if test='bdcdyhmh == "2"'>
+                AND d.bdcdyh LIKE '%'|| #{bdcdyh}
+            </if>
+            <if test='bdcdyhmh == "3"'>
+                AND d.bdcdyh LIKE #{bdcdyh} || '%'
+            </if>
+            <if test='bdcdyhmh == "4"'>
+                AND d.bdcdyh LIKE '%' || #{bdcdyh} || '%'
+            </if>
+        </if>
+        <if test="zl != null and zl !=''">
+            <if test='zlmh == "1"'>
+                AND xm.zl = #{zl}
+            </if>
+            <if test='zlmh == "2"'>
+                AND xm.zl LIKE '%'|| #{zl}
+            </if>
+            <if test='zlmh == "3"'>
+                AND xm.zl LIKE #{zl} || '%'
+            </if>
+            <if test='zlmh == "4"'>
+                AND xm.zl LIKE '%' || #{zl} || '%'
+            </if>
+        </if>
+        <if test="(qlr != null and qlr !='') or (qlrzjh != null and qlrzjh !='')">
+            AND d.xmid in
+            (
+            SELECT xmid FROM bdc_qlr q WHERE QLRLB = 1
+            <if test="qlr != null and qlr !=''">
+                <if test='qlrmh == "1"'>
+                    AND q.qlrmc = #{qlr}
+                </if>
+                <if test='qlrmh == "2"'>
+                    AND q.qlrmc LIKE '%'|| #{qlr}
+                </if>
+                <if test='qlrmh == "3"'>
+                    AND q.qlrmc LIKE #{qlr} || '%'
+                </if>
+                <if test='qlrmh == "4"'>
+                    AND q.qlrmc LIKE '%' || #{qlr} || '%'
+                </if>
+            </if>
+            <if test="qlrzjh != null and qlrzjh !=''">
+                <if test='qlrzjhmh == "1"'>
+                    AND q.zjh = #{qlrzjh}
+                </if>
+                <if test='qlrzjhmh == "2"'>
+                    AND q.zjh LIKE '%'|| #{qlrzjh}
+                </if>
+                <if test='qlrzjhmh == "3"'>
+                    AND q.zjh LIKE #{qlrzjh} || '%'
+                </if>
+                <if test='qlrzjhmh == "4"'>
+                    AND q.zjh LIKE '%' || #{qlrzjh} || '%'
+                </if>
+            </if>
+            )
+        </if>
+        <if test="qxdmList != null and qxdmList.size() == 1 ">
+            AND xm.qxdm=#{qxdmList[0]}
+        </if>
+        <if test="qxdmList != null and qxdmList.size() > 1 ">
+            AND xm.qxdm IN
+            <foreach collection="qxdmList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="sdlx != null">
+            AND d.sdlx = #{sdlx}
+        </if>
+    </sql>
+
+    <select id="listBdcDysdByPage" resultType="cn.gtmap.realestate.common.core.dto.init.BdcDysdPageResponseDTO"
+            parameterType="cn.gtmap.realestate.common.core.qo.init.BdcDysdQO">
+        <include refid="listBdcDysd"/>
+    </select>
+
+    <!-- 根据当前工作流实例ID查询原项目-->
+    <select id="listXmAndFb" parameterType="cn.gtmap.realestate.common.core.qo.init.BdcXmQO"
+            resultType="cn.gtmap.realestate.common.core.dto.init.BdcXmAndFbDTO">
+        select t.xmid,t.bdcdyh,t.gzlslid,t.slbh,t.qllx,t.djxl,t.gzldyid,f.sfyt,f.ddjb,t.dzwyt,t.zdzhmj,f.tdsyqfe,t.qxdm,f.qjgldm,t.zl,t.qlr,t.bdcqzh,t.ywr,t.ycqzh  from
+        bdc_xm t left join bdc_xmfb f on f.xmid = t.xmid
+        <where>
+            <if test="gzlslid != null and gzlslid !=''">
+                AND t.gzlslid=#{gzlslid}
+            </if>
+            <if test="slbh != null and slbh !=''">
+                AND t.slbh=#{slbh}
+            </if>
+            <if test="xmid != null and xmid !=''">
+                AND t.xmid=#{xmid}
+            </if>
+            <if test="djxl != null and djxl !=''">
+                AND t.djxl=#{djxl}
+            </if>
+            <if test="bdcqzh != null and bdcqzh !=''">
+                AND t.bdcqzh=#{bdcqzh}
+            </if>
+            <if test="qlr != null and qlr !=''">
+                AND t.qlr=#{qlr}
+            </if>
+        </where>
+    </select>
+
+    <select id="listXscq" resultType="cn.gtmap.realestate.common.core.dto.etl.XscqDTO">
+        select
+        t1.xmid as xmid,
+        t1.slbh as cqdjbh,
+        t1.bdcdyh as fwbm,
+        t1.bdcdyh as bdcdyh,
+        t3.bdcqzh AS cqzh,
+        t3.qlrmc as xm,
+        t3.zjh as zjhm,
+        t1.zl as fwzl,
+        t2.myzcs as zcs,
+        t2.szmyc as szcs,
+        t2.fwjg as jg,
+        t1.dzwyt as yt,
+        t2.fwxz as fwxz,
+        t3.gyfs as gyfs,
+        t3.qlbl as gyfe,
+        t2.jzmj as jm,
+        t2.jyjg as sbgz,
+        to_char(t2.djsj,'yy-mm-dd hh24:mi:ss') as fwcqrq,
+        t2.zh as zh,
+        t2.fjh as fh,
+        t2.fwlx as yt2,
+        t1.qxdm as szqx,
+        t1.qlxz as tdxz,
+        t1.qlxz as tdjyfs,
+        '' as jznd,
+        '' as jzqh
+        from bdc_xm t1
+        join bdc_fdcq t2
+        on t2.xmid = t1.xmid
+        join bdc_xm_zs_gx t4
+        on t4.xmid = t1.xmid
+        join bdc_zs t5
+        on t5.zsid = t4.zsid
+        JOIN bdc_qlr t3
+        on t3.zsid = t5.zsid
+        WHERE 1 = 1
+        AND t1.gzlslid in
+        (select x.gzlslid
+        FROM bdc_qlr q
+        LEFT JOIN bdc_xm x
+        ON x.xmid = q.xmid
+        LEFT JOIN bdc_zs z
+        ON z.zsid = q.zsid
+        WHERE 1 = 1
+        <if test="xm != null and xm != ''">
+            and q.qlrmc = #{xm,jdbcType=VARCHAR}
+        </if>
+        <if test="zjhm != null and zjhm != ''">
+            and q.zjh = #{zjhm,jdbcType=VARCHAR}
+        </if>
+        <if test="cqzh != null and cqzh != ''">
+            and z.bdcqzh = #{cqzh,jdbcType=VARCHAR}
+        </if>
+
+        )
+        <if test="cqzh != null and cqzh != ''">
+            AND t5.bdcqzh = #{cqzh,jdbcType=VARCHAR}
+        </if>
+        and t3.qlrlb = 1
+    </select>
+
+    <select id="listBzjd" resultType="cn.gtmap.realestate.common.core.dto.etl.BzjdDTO">
+        select
+        t1.xmid as xmid,
+        t1.slbh as cqdjbh,
+        t1.bdcdyh as fwbm,
+        t3.bdcqzh as cqzh,
+        t3.qlrmc as xm,
+        t3.zjh as zjhm,
+        t1.zl as fwzl,
+        t2.myzcs as zcs,
+        t2.szmyc as szcs,
+        t2.fwjg as jg,
+        t1.dzwyt as yt,
+        t2.fwxz as fwxz,
+        t3.gyfs as gyfs,
+        case t3.gyfs
+        when 0 then ''
+        when 1 then ''
+        when 2 then t3.qlbl
+        when 3 then t3.qlbl
+        else '' end as gyfe,
+        t2.jzmj as jm,
+        t2.jyjg as sbgz,
+        to_char(t2.djsj,'yy-mm-dd hh24:mi:ss') as fwcqrq,
+        t3.qlrlb as qlrxz,
+        t1.qszt as cqbj,
+        a.mc as jd ,
+        t1.qxdm as xzqy
+        from
+        bdc_xm t1 join bdc_fdcq t2 on t2.xmid = t1.xmid
+        join bdc_qlr t3 on t3.xmid = t1.xmid
+        left join bdc_zd_ajzt a on a.dm = t1.ajzt
+        where 1 = 1
+        <if test="htbh != null and htbh != ''">
+            and t1.jyhth = #{htbh,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="listCbjyqXm" parameterType="cn.gtmap.realestate.common.core.qo.init.BdcQlrQO"
+            resultType="cn.gtmap.realestate.common.core.dto.init.BdcXmDTO">
+        SELECT t.xmid,t.bdcdyh,t.gzlslid,t.slbh,t.qllx,t.djxl,t.gzldyid FROM BDC_XM t where t.xmid in
+        (select xmid from bdc_qlr q
+        <where>
+            <if test="qlrmc != null and qlrmc !=''">
+                AND q.qlrmc=#{qlrmc}
+            </if>
+            <if test="zjh != null and zjh !=''">
+                AND q.zjh=#{zjh}
+            </if>
+            <if test="qlrlb != null and qlrlb !=''">
+                AND q.qlrlb=#{qlrlb}
+            </if>
+        </where>
+        ) and t.qllx=9 and t.qszt=1
+        order by t.xmid
+    </select>
+
+    <select id="listBdcXmByXmids" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT * FROM BDC_XM A
+        where 1=1
+        <if test="xmids != null and xmids.size() > 0">
+            and A.xmid in
+            <foreach collection="xmids" item="item" open="(" close=")" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        order by A.xmid asc
+    </select>
+
+    <select id="listBdCshSlSfzf" resultType="cn.gtmap.realestate.common.core.domain.BdcCshFwkgSlDO">
+        SELECT a.*  FROM  BDC_CSH_FWKG_SL a
+        left join bdc_xm b on b.xmid=a.id
+        WHERE  b.gzlslid=#{gzlslid}
+        <if test="sfzf != null and sfzf != ''">
+            and a.sfzf = #{sfzf}
+        </if>
+        order by a.id
+    </select>
+
+    <update id="updateZfxzspbh">
+        update bdc_xm
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="zfxzspbh=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.zfxzspbh != null and item.zfxzspbh != ''">
+                        when xmid =#{item.xmid,jdbcType=VARCHAR} then #{item.zfxzspbh,jdbcType=VARCHAR}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" separator="or" item="item" index="index">
+            xmid = #{item.xmid,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+
+    <select id="listPageBjbhByPage" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.dto.init.BdcBjbhDTO">
+        select
+        t1.xmid as xmid,
+        t1.slbh as slbh,
+        t1.qlr as qlrmc,
+        t1.qlrzjh as qlrzjh,
+        t1.zfxzspbh as zfxzspbh,
+        t1.gzldymc as lcmc,
+        t1.gzldyid as gzldyid,
+        t1.gzlslid as gzlslid,
+        t2.unid as unid
+        from bdc_xm t1 left join bdc_xmfb t2 on t1.xmid = t2.xmid
+        where 1 = 1 and t1.ajzt = 2
+        <if test="slbh != null and slbh != ''">
+            and slbh = #{slbh,jdbcType=VARCHAR}
+        </if>
+        <if test="lcmc != null and lcmc != ''">
+            and gzldymc = #{lcmc,jdbcType=VARCHAR}
+        </if>
+        <if test="djkssj != null and djkssj != ''">
+            and djsj &gt;= to_date(#{djkssj},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="djjssj != null and djjssj != ''">
+            and djsj &lt;= to_date(#{djjssj},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <choose>
+            <when test="sortParameter != null and sortParameter != ''">
+                order by ${sortParameter}
+            </when>
+            <otherwise>
+                order by djsj desc NULLS last
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="listCourtXscq" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            parameterType="cn.gtmap.realestate.common.core.dto.exchange.yancheng.court.ywxxcx.CourtYwxxcxRequestDTO">
+        select * from bdc_qlr t1 join bdc_xm t2 on t1.xmid = t2.xmid
+        <if test="zjzl != null and zjzl != ''">
+            <where>
+            t1.zjzl = #{zjzl,jdbcType=INTEGER} and t1.qlrlb = '1'
+                <choose>
+                    <when test=" zjzl == '6'.toString() ">
+
+                            and (
+                            <if test="qlrmc != null  and qlrmc != ''">
+                                t1.qlrmc = #{qlrmc,jdbcType=VARCHAR}
+                            </if>
+                            <if test="qlrmc != null  and qlrmc != '' and zjh != null  and zjh != '' ">
+                                or
+                            </if>
+                            <if test="zjh != null  and zjh != ''">
+                                t1.zjh = #{zjh,jdbcType=VARCHAR}
+                            </if>
+                            )
+                            <if test="qszt != null">
+                                and t2.qszt = #{qszt,jdbcType=INTEGER}
+                            </if>
+                    </when>
+                    <otherwise>
+                            <if test="qlrmc != null  and qlrmc != ''">
+                                and t1.qlrmc = #{qlrmc,jdbcType=VARCHAR}
+                            </if>
+                            <if test="zjh != null  and zjh != '' and fifteenNumZjh != null">
+                                and (t1.zjh = #{zjh,jdbcType=VARCHAR} or t1.zjh = #{fifteenNumZjh,jdbcType=VARCHAR})
+                            </if>
+                            <if test="zjh != null  and zjh != '' and fifteenNumZjh == null">
+                                and t1.zjh = #{zjh,jdbcType=VARCHAR}
+                            </if>
+                            <if test="qszt != null">
+                                and t2.qszt = #{qszt,jdbcType=INTEGER}
+                            </if>
+                    </otherwise>
+                </choose>
+            </where>
+        </if>
+    </select>
+
+    <select id="listXscqXm" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        <if test="bdcdyhList != null and bdcdyhList.size() > 0 ">
+          SELECT t.* FROM BDC_XM t
+          WHERE t.qszt =1 AND t.qllx NOT IN (95, 96, 97, 98, 19, 92,37)
+          AND t.bdcdyh IN
+            <foreach collection="bdcdyhList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            <if test="bdclx != null and bdclx !=''">
+                AND t.bdclx = #{bdclx}
+            </if>
+        </if>
+    </select>
+
+    <select id="listQjgldm" resultType="String">
+        SELECT DISTINCT qjgldm
+        FROM bdc_xmfb
+        WHERE qjgldm IS NOT NULL
+    </select>
+
+    <select id="listBdCshSlById" resultType="cn.gtmap.realestate.common.core.domain.BdcCshFwkgSlDO">
+        SELECT a.* FROM BDC_CSH_FWKG_SL a
+        left join bdc_xm b on b.xmid=a.id
+        WHERE b.gzlslid=#{gzlslid}
+        <if test="xmid != null  and xmid != ''">
+            and b.xmid = #{xmid}
+        </if>
+    </select>
+
+    <select id="queryXmByZsBdcqzh" parameterType="java.lang.String" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT
+        x.*
+        FROM
+        BDC_XM X
+        JOIN
+        BDC_XM_ZS_GX G ON X.XMID = G.XMID
+        JOIN
+        BDC_ZS Z ON G.ZSID = Z.ZSID
+        <where>
+            <if test="bdcqzh != null and bdcqzh != '' ">
+                AND z.BDCQZH = #{bdcqzh}
+            </if>
+        </where>
+    </select>
+
+    <select id="listOtherXmWithSameSpxtywh" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT a.* FROM BDC_XM a
+        left join bdc_xm b on b.spxtywh=a.spxtywh
+        WHERE b.gzlslid=#{gzlslid} AND a.gzlslid !=#{gzlslid}
+    </select>
+
+    <select id="queryDaywh" resultType="java.lang.String">
+        SELECT t.daywh FROM BDC_XM t
+        <where>
+        t.daywh is not null
+            <if test="xmid != null and xmid !=''">
+                AND t.xmid=#{xmid}
+            </if>
+        </where>
+    </select>
+
+    <select id="listBdcXmSlbhs" parameterType="cn.gtmap.realestate.common.core.qo.init.BdcXmQO" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT * FROM
+        (
+            SELECT
+                t.bdcdyh,
+                t.zl,
+                t.slbh
+            FROM
+                bdc_xm t
+            WHERE
+                <if test="bdcdyh != null and bdcdyh != ''">
+                    instr(t.bdcdyh, #{bdcdyh}) > 0
+                </if>
+                <if test="zl != null and zl != ''">
+                    instr(t.zl, #{zl}) > 0
+                </if>
+                <if test="ajzt != null and ajzt != ''">
+                    t.ajzt = #{ajzt}
+                </if>
+            ORDER BY
+                slsj DESC nulls LAST
+        )
+        WHERE
+            rownum &lt;= #{count}
+    </select>
+
+    <select id="countBdcByGzlslidGroupBdcdyh" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(*)
+        from (select bdcdyh
+              from bdc_xm
+              where gzlslid = #{gzlslid}
+              group by bdcdyh)
+    </select>
+
+    <select id="queryOneBdcXmDOBySlbh" parameterType="java.lang.String" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        select qlr, zl, bdcdyh
+        from BDC_XM
+        where slbh = #{slbh} and rownum=1
+    </select>
+
+</mapper>

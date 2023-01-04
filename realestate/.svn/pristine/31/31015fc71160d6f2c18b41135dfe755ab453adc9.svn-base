@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>居住权登记信息</title>
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table-vertical.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+
+    <script src="../../static/lib/jquery/jquery.min.js"></script>
+    <!--添加水印-->
+    <script src="../../static/lib/bdcui/js/common.js"></script>
+    <script src="../../static/js/common.js"></script>
+    <script src="../../static/lib/layui/layui.js"></script>
+</head>
+<style>
+    .layui-table td, .layui-table th {
+        position: relative;
+        padding: 9px 15px;
+        min-height: 19.2px;
+        line-height: 19.2px;
+        font-size: 14px;
+    }
+</style>
+<body>
+<div class="bdc-table">
+    <p class="bsc-table-tips">第<span id="bs"></span>本 &nbsp;&nbsp; 第<span id="jzqys"></span>页</p>
+    <div class="bdc-table-box clearBoth">
+        <div class="bdc-register-catalog bdc-td-20">
+            <div class="bdc-tr-box">
+                <div class="bdc-catalog-title">居住权登记信息</div>
+            </div>
+            <div class="bdc-tr-box bdc-syq-msg clearBoth">
+                <span id="bdcdyh"></span>
+                <span id="zl"></span>
+            </div>
+
+            <div class="bdc-change-tr-contain clearBoth">
+                <div class="bdc-change-tr bdc-change-tr-title">
+                    <div class="bdc-table-line bdc-tr-box">
+                        <i class="bdc-outer"></i>
+                        <span class="bdc-table-bottom">内容</span>
+                        <span class="bdc-table-top">业务号</span>
+                    </div>
+                    <div class="bdc-tr-box">居住权人</div>
+                    <div class="bdc-tr-box">证件种类</div>
+                    <div class="bdc-tr-box">证件号码</div>
+                    <div class="bdc-tr-box">义务人</div>
+                    <div class="bdc-tr-box">登记类型</div>
+                    <div class="bdc-tr-box">登记原因</div>
+                    <div class="bdc-tr-box">居住条件和要求</div>
+                    <div class="bdc-tr-box">居住权期限</div>
+                    <div class="bdc-tr-box">不动产登记证明号</div>
+                    <div class="bdc-tr-box">登记时间</div>
+                    <div class="bdc-tr-box">登簿人</div>
+                    <div class="bdc-tr-box bdc-fj">附记</div>
+                </div>
+
+                <div id="tableInfoDiv">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="tablePage"></div>
+</div>
+
+<!--插入权利模块-->
+<script type="text/html" id="qlTpl">
+    {{# for(var i = 0, len = d.list.length; i < len; i++){ }}
+    <div class="bdc-change-tr bdc-tr-width">
+        <div class="bdc-tr-box" data-title="{{d.list[i].slbh || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].slbh || ''}}</div>
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].jzqr || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].jzqr || ''}}</div>
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].jzqrzjzl || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].jzqrzjzl || ''}}</div>
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].jzqrzjh || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].jzqrzjh || ''}}</div>
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].ywr || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].ywr || ''}}</div>
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].djlxmc || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].djlxmc || ''}}</div>
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].djyy || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].djyy || ''}}</div>
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].jztjhyq || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].jztjhyq || ''}}</div>
+        </div>
+
+        {{# if(d.list[i].zsjz ==1){ }}
+        <div class="bdc-tr-box">
+            {{# if(d.list[i].jzqksrq){ }}
+            <div class="bdc-tr-box-content">{{d.list[i].jzqksrq}}至长期</div>
+            {{# }else{ }}
+            <div class="bdc-tr-box-content">终生</div>
+            {{# }}}
+        </div>
+        {{# }else{}}
+        <div class="bdc-year bdc-tr-box">
+            {{# if(d.list[i].jzqksrq){ }}
+            <p>{{d.list[i].jzqksrq}}&nbsp;&nbsp;&nbsp;&nbsp;起</p>
+            {{# }else{}}
+
+            {{# }}}
+            {{# if(d.list[i].jzqjsrq){ }}
+            <p>{{d.list[i].jzqjsrq}}&nbsp;&nbsp;&nbsp;&nbsp;止</p>
+            {{# }else{}}
+
+            {{# }}}
+        </div>
+        {{# }}}
+
+        <div class="bdc-tr-box" data-title="{{d.list[i].bdcqzmh || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].bdcqzmh || ''}}</div>
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].djrq || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].djrq || ''}}</div>
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].dbr || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].dbr || ''}}</div>
+        </div>
+        <div class="bdc-tr-box bdc-fj" data-title="{{d.list[i].fj || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].fj || ''}}</div>
+        </div>
+    </div>
+    {{# } }}
+
+    <!--如果数据不足4条，那么补充显示空内容，避免页面样式问题-->
+    {{# for(var i = 0, len = 4 - d.list.length; i < len; i++){ }}
+    <div class="bdc-change-tr bdc-tr-width">
+        {{# for(var j = 0; j < 12; j++){ }}
+        <div class="bdc-tr-box">
+            <div class="bdc-tr-box-content"></div>
+        </div>
+        {{# } }}
+        <div class="bdc-tr-box bdc-fj">
+            <div class="bdc-tr-box-content"></div>
+        </div>
+    </div>
+    {{# } }}
+</script>
+</body>
+
+<script src="../../static/js/djbxx/bdcDjbJzq.js"></script>
+<script src="../../static/js/djbxx/djbCss.js"></script>
+<script src="../../static/js/djbxx/bdcDjbYm.js"></script>
+</html>

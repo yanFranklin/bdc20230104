@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>警示记录</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/common.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+
+    <script src="../../static/lib/layui/layui.js"></script>
+    <script src="../../static/lib/jquery/jquery.min.js"></script>
+    <!--添加水印-->
+    <script src="../../static/lib/bdcui/js/common.js"></script>
+    <script src="../../static/js/common.js"></script>
+    <script src="../../static/js/table.js"></script>
+    <script src='../../static/js/formCenter.js'></script>
+    <script src='../../static/lib/bdcui/js/readIdCard.js'></script>
+    <script src="../../static/js/changzhou/sd/bljlEdit.js"></script>
+    <style>
+        .bdc-qlr-btns {
+            width: 100%;
+            height: 38px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            padding-bottom: 10px;
+            background-color: #eee;
+        }
+        .pannel-form-btns {
+            padding-top: 10px;
+            text-align: center;
+        }
+        .layui-form-danger + .layui-form-select, .layui-form-danger.layui-input, .layui-form-danger:focus {
+            border-color: #f54743 !important;
+        }
+    </style>
+</head>
+
+<body>
+<div>
+    <div id="bdc-popup-large">
+        <form class="layui-form bdc-not-full-bg" action="" lay-filter="searchform" id="bljlform">
+            <div class="layui-form-item pf-form-item">
+                <input type="hidden" id="hmdid" name="hmdid" class="layui-input search">
+                <input type="hidden" id="hmdztlb" name="hmdztlb" class="layui-input search">
+                <input type="hidden" id="bdcdyh" name="bdcdyh" class="layui-input search">
+                <div class="layui-inline bdc-two-line">
+                    <label class="layui-form-label">产权证号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="bdcqzh" name="bdcqzh" lay-verify="required" disabled="off" autocomplete="off" class="layui-input search">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">流程名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="gzldymc" name="gzldymc" class="layui-input search">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">锁定类型</label>
+                    <div class="layui-input-inline">
+                        <select lay-search="" lay-filter="sdlx" id="sdlx" name="sdlx" class="search">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">记录员</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="cjr" name="cjr" lay-verify="required" disabled="off" autocomplete="off"
+                               class="layui-input search">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">记录时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="cjsj" name="cjsj" disabled="off" autocomplete="off" class="layui-input test-item">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">记录内容</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="bz" name="bz" lay-verify="required" class="layui-input search">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">涉及人员<br>姓名</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="ztmc" name="ztmc" class="layui-input search" ondblclick="onReadIdCard(1)">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">涉及人员<br>证件号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="ztzjh" name="ztzjh" class="layui-input search">
+                    </div>
+                </div>
+                <div class="layui-inline bdc-complete-line bdc-filter">
+                    <label class="layui-form-label">事由</label>
+                    <div class="layui-input-inline bdc-end-time-box">
+                        <textarea class="layui-textarea change-textarea-width search" placeholder="请输入" id="cjyy"
+                                  name="cjyy"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pannel-form-btns bdc-qlr-btns">
+                <button class="layui-btn bdc-major-btn" lay-submit="" id="saveBljl" lay-filter="saveBljl">保存</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>

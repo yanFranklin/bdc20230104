@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <title>信息补录-审核台账</title>
+    <meta content="webkit" name="renderer">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0"
+          name="viewport">
+    <link href="../../static/lib/layui/css/layui.css" media="all" rel="stylesheet">
+    <link href="../../static/lib/bdcui/css/search.css" rel="stylesheet"/>
+    <link href="../../static/lib/bdcui/css/table.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/bdcdyzt.css"/>
+    <link href="../../static/lib/bdcui/css/mask.css" rel="stylesheet">
+    <link href="../../static/lib/bdcui/css/popup.css" rel="stylesheet">
+    <link href="../../static/lib/registerui/css/percentage-layout.css" rel="stylesheet">
+</head>
+<body>
+<div class="bdc-percentage-container" style="padding: 61px 10px 10px">
+
+    <!-- 查询条件 3个 -->
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <form action="" class="layui-form">
+
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">不动产单元号</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input search" id="bdcdyh" name="bdcdyh" placeholder="请输入" type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">不动产权证号</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input search" name="bdcqzh" placeholder="请输入" type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">权利人</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input search" name="qlr" placeholder="请输入" type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline bdc-button-box">
+                        <a class="layui-btn layui-btn-normal bdc-major-btn" href="javascript:" id="search">查询</a>
+                        <button class="layui-btn layui-btn-normal bdc-secondary-btn" type="reset">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+    <!--表格-->
+    <div class="bdc-table-box">
+        <table id="blTable" lay-filter="blTable"></table>
+    </div>
+</div>
+
+<!--验证异常提示信息-->
+<div class="layui-hide">
+    <div lay-filter="tsxx" id="tsxx">
+        <a class="layui-btn layui-btn-sm bdc-ignore-btn" id="ignoreAll" onclick="removeAllDb(this)">忽略全部</a>
+        <div class="bdc-right-tips-box" id="bottomTips">
+            <!--<h3>提示信息<i class="layui-icon layui-icon-close"></i></h3>-->
+            <div class="tsxx" id="alertInfo"></div>
+            <div class="tsxx" id="confirmInfo"></div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+<!--提示模板-->
+<script type="text/html" id="tsxxTpl">
+    <a class="layui-btn layui-btn-sm bdc-ignore-btn" id="ignoreAll" onclick="removeAllDb(this)">忽略全部</a>
+    <div class="bdc-right-tips-box" id="bottomTips">
+        <!--<h3>提示信息<i class="layui-icon layui-icon-close"></i></h3>-->
+        <div class="tsxx" id="alertInfo"></div>
+        <div class="tsxx" id="confirmInfo"></div>
+    </div>
+</script>
+
+<!-- 工具栏 -->
+<script id="toolbar" type="text/html">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="forward">转发</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="back">退回</button>
+    </div>
+</script>
+
+<!-- 不动产单元号模板 -->
+<script id="bdcdyhTpl" type="text/html">
+    {{#  if(d.bdcdyh != undefined){ }}
+    {{formatBdcdyh(d.bdcdyh)}}
+    {{# } else {  }}
+    <span></span>
+    {{#  } }}
+</script>
+<!--格式化权属状态-->
+<script id="qsztTemplate" type="text/html">
+    {{ formatQszt(d.qszt) }}
+</script>
+<!--格式化限制权利状态-->
+<script id="xzqlZtTemplate" type="text/html">
+    {{ getBdcdyZt(d.bdcdyh,d.qjgldm) }}
+</script>
+<!--补录状态模板-->
+<script id="blztTemplate" type="text/html">
+    {{#  if(d.blzt == 3){ }}
+    <p>未转发</p>
+    {{#  } else if(d.blzt == 1) { }}
+    <p>审核结束</p>
+    {{#  } else if(d.blzt == 2) { }}
+    <p>退回</p>
+    {{#  } else { }}
+    <p>审核中</p>
+    {{# } }}
+</script>
+<!--补录状态模板-->
+<script id="blshlxTemplate" type="text/html">
+    {{#  if(d.blshlx == 1){ }}
+    <p>市级</p>
+    {{#  } else { }}
+    <p>县级</p>
+    {{# } }}
+</script>
+<!--补录状态模板-->
+<script id="bllxTemplate" type="text/html">
+    {{#  if(d.bllx == 0){ }}
+    <p>新增</p>
+    {{#  } else { }}
+    <p>修改</p>
+    {{# } }}
+</script>
+
+<script id="bdcqzhTpl" type="text/html">
+    {{#  if(d.bdcqzh != undefined){ }}
+    <span style="color:#1d87d1;cursor:pointer">
+        {{d.bdcqzh}}
+    </span>
+    {{#  } else { }}
+    <span></span>
+    {{#  } }}
+</script>
+
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/xxbl/xxblCommon.js"></script>
+<script src="../../static/js/xxbl/xxbl_sh.js"></script>
+</html>

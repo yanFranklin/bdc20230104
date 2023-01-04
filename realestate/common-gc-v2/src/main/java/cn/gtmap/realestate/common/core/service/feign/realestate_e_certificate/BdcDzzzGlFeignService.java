@@ -1,0 +1,13 @@
+package cn.gtmap.realestate.common.core.service.feign.realestate_e_certificate;
+
+import cn.gtmap.realestate.common.core.service.rest.realestate_e_certificate.BdcDzzzGlRestService;
+import org.springframework.cloud.openfeign.FeignClient;
+
+/**
+ * @author <a href="mailto:chenyongqiang@gtmap.cn">chenyongqiang</a>
+ * @version 1.0, 2020/02/17 8:50
+ * @description 电子证照管理接口
+ */
+@FeignClient("e-certificate-app")
+public interface BdcDzzzGlFeignService extends BdcDzzzGlRestService {
+}

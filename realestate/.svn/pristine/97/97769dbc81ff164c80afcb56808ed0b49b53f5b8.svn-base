@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcZzdzMapper">
+
+    <select id="getZszmBybdcZzdzRequestDTO"
+            parameterType="cn.gtmap.realestate.common.core.dto.inquiry.BdcZzdzRequestDTO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcZzdzResponseDTO">
+        select distinct z.zsid, z.bdcdyh, z.bdcqzh, z.zhlsh, z.nf
+        , z.qzysxlh, z.qlqtzk, z.qxdm, z.szsxqc, z.fzr
+        , z.fzsj, z.lzr, z.lzsj, z.lzrzjh,z.lzrdh,z.lzrzjzl, z.szr
+        , z.szsj, z.zslx, z.fj, z.zl, z.qlr as qlrmc
+        , z.ywr ywrmc, z.gyfs, z.qllx, z.yt, z.mj
+        , z.qlxz, z.syqx,z.zmqlsx,z.ewmnr,z.zhxlh,z.sqsjc
+        , xm.xmid, xm.qszt, xm.gzlslid, xm.ytdzh, xm.ycqzh
+        , qlr.zjh as qlrzjh, xm.slbh, xm.djjg, cq.gyqk
+        , xm.bdclx,xm.djsj,xm.djyy,cq.ghyt,xm.ywrzjh,z.gyfs,z.yt as ghytmc
+        from bdc_zs z
+        inner join bdc_xm_zs_gx gx
+        on z.zsid = gx.zsid
+        inner join bdc_xm xm
+        on xm.xmid = gx.xmid
+        inner join bdc_qlr qlr
+        on xm.xmid = qlr.xmid
+        left join bdc_fdcq cq
+        on cq.xmid = xm.xmid
+        where qlr.qlrlb = 1
+        and z.zslx =#{zslx}
+        and (qlr.zjh = #{qlrzjh} or dlrzjh=#{qlrzjh})
+        --and xm.slsj > to_date('2019-10-18','yyyy-mm-dd')
+        <if test="excludeDjxl != null and excludeDjxl.size>0 ">
+            AND XM.djxl not in
+            <foreach collection="excludeDjxl" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        and z.qzysxlh is null
+        and xm.qszt = 1
+    </select>
+
+    <select id="getZszmBybdcZzdzRequestScDTO"
+            parameterType="cn.gtmap.realestate.common.core.dto.inquiry.shucheng.BdcZzdzRequestScDTO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcZzdzResponseDTO">
+        select distinct z.zsid, z.bdcdyh, z.bdcqzh, z.zhlsh, z.nf
+        , z.qzysxlh, z.qlqtzk, z.qxdm, z.szsxqc, z.fzr
+        , z.fzsj, z.lzr, z.lzsj, z.lzrzjh,z.lzrdh,z.lzrzjzl, z.szr
+        , z.szsj, z.zslx, z.fj, z.zl, z.qlr as qlrmc
+        , z.ywr ywrmc, z.gyfs, z.qllx, z.yt, z.mj
+        , z.qlxz, z.syqx,z.zmqlsx,z.ewmnr,z.zhxlh,z.sqsjc
+        , xm.xmid, xm.qszt, xm.gzlslid, xm.ytdzh, xm.ycqzh
+        , qlr.zjh as qlrzjh, xm.slbh, xm.djjg, cq.gyqk
+        , xm.bdclx,xm.djsj,xm.djyy,cq.ghyt,xm.ywrzjh,z.gyfs,z.yt as ghytmc
+        from bdc_zs z
+        inner join bdc_xm_zs_gx gx
+        on z.zsid = gx.zsid
+        inner join bdc_xm xm
+        on xm.xmid = gx.xmid
+        inner join bdc_qlr qlr
+        on xm.xmid = qlr.xmid
+        left join bdc_fdcq cq
+        on cq.xmid = xm.xmid
+        where qlr.qlrlb = 1
+        <if test="xm != null and xm != ''">
+            and qlr.dlrmc =#{xm}
+        </if>
+        <if test="sfzh != null and sfzh != ''">
+            and qlr.dlrzjh=#{sfzh}
+        </if>
+        <if test="lqrxm != null and lqrxm != ''">
+            and qlr.qlrmc =#{lqrxm}
+        </if>
+        <if test="lqrzjh != null and lqrzjh != ''">
+            and qlr.zjh=#{lqrzjh}
+        </if>
+
+        <if test="excludeDjxl != null and excludeDjxl.size>0 ">
+            AND XM.djxl not in
+            <foreach collection="excludeDjxl" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="gzldyid != null and gzldyid.size>0 ">
+            AND XM.gzldyid not in
+            <foreach collection="gzldyid" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="ywbh != null and ywbh != ''">
+            and xm.slbh = #{ywbh}
+        </if>
+        and z.qzysxlh is null
+        and xm.qszt = 1
+    </select>
+
+    <select id="getCountByQzysxlh" parameterType="java.util.Map" resultType="java.lang.Integer">
+      select count(*) as count from bdc_yzh where qzysxlh =#{yzh} and syqk != 6
+         and zslx = (select zslx from bdc_zs where zsid = #{zsid})
+
+    </select>
+
+    <select id="queryYzhByLqfs" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(*) as count from bdc_yzh where qzysxlh =#{yzh}
+        <if test="lqfs == 1">
+            and lqrid = #{fzrid}
+        </if>
+        <if test="lqfs == 0">
+            and lqbmid = #{bmid}
+        </if>
+    </select>
+
+    <update id="updateYzh" parameterType="java.util.Map">
+        UPDATE bdc_yzh t
+        set
+        t.syqk=3
+        <if test="zsid != null and zsid !=''">
+            , t.zsid = #{zsid}
+        </if>
+        <if test="zzdzjip != null and zzdzjip !=''">
+            , t.bz = #{zzdzjip}
+        </if>
+        <if test="fzrq != null and fzrq !=''">
+            , t.sysj = to_date(#{fzrq},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <!--<if test="slbh != null and slbh !=''">
+            , t.slbh = #{slbh}
+        </if>-->
+        <!--<if test="fzr != null and zsid !=''">
+            , t.syr = #{fzr}
+        </if>-->
+        <!--<if test="sybmmc != null and sybmmc !=''">
+            , t.sybmmc = #{sybmmc}
+        </if>-->
+        where
+        t.qzysxlh = #{yzh}
+    </update>
+
+    <update id="reWriteYzhToBdcZs" parameterType="java.util.Map">
+        UPDATE bdc_zs zs
+        set
+        zs.qzysxlh=#{yzh}
+        <if test="fzr != null and zsid !=''">
+            , zs.fzr = #{fzr}
+            , zs.szr = #{fzr}
+        </if>
+        <if test="fzrid != null and fzrid !=''">
+            , zs.fzrid = #{fzrid}
+            , zs.szrid = #{fzrid}
+        </if>
+        <if test="fzrq != null and fzrq !=''">
+            , zs.fzsj = to_date(#{fzrq},'yyyy-mm-dd hh24:mi:ss')
+            , zs.szsj = to_date(#{fzrq},'yyyy-mm-dd hh24:mi:ss')
+            , zs.lzsj = to_date(#{fzrq},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="lzr != null and lzr !=''">
+            , zs.lzr = #{lzr}
+        </if>
+
+        <if test="lzrzjh != null and lzrzjh !=''">
+            , zs.lzrzjh = #{lzrzjh}
+        </if>
+        <if test="lzrzjzl != null and lzrzjzl !=''">
+            , zs.lzrzjzl = #{lzrzjzl}
+        </if>
+        <if test="dyzt != null and dyzt !=''">
+            , zs.dyzt = #{dyzt}
+        </if>
+        where
+        zs.zsid = #{zsid}
+    </update>
+
+    <select id="getZszmBybdcZzdzNtRequestDTO"
+            parameterType="cn.gtmap.realestate.common.core.dto.inquiry.BdcZzdzNtRequestDTO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcZzdzNtResultDTO">
+        SELECT DISTINCT Z.ZSID, Z.BDCDYH, Z.BDCQZH, Z.ZHLSH, Z.NF
+        , Z.QZYSXLH AS ZSBH, Z.QLQTZK, Z.QXDM, Z.SZSXQC, Z.FZR, Z.FZSJ AS FZRQ
+        , Z.LZR, Z.LZSJ, LZR.LZRDH,LZR.LZRZJZL,z.LZRZJH, Z.SZR, Z.SZSJ, Z.ZSLX
+        , Z.FJ, Z.ZL,z.qlr AS QLR, Z.YWR, Z.GYFS, Z.QLLX, Z.YT, Z.MJ, Z.QLXZ
+        , Z.SYQX,Z.ZMQLSX AS ZMQL,Z.EWMNR,Z.ZHXLH,Z.SQSJC, XM.XMID AS PROID, XM.QSZT
+        , XM.YTDZH, XM.YCQZH, qlr.zjh AS QLRZJH,XM.DJLX
+        , XM.SLBH, XM.DJJG, XM.GZLSLID AS WIID,
+        ZD.MC AS GYQK,
+        SYSDATE AS CREATETIME
+        , XM.DJXL,XM.DJSJ,''AS SFZT,''AS DYZT,''AS QT,'不动产权'AS ZSMC,''AS HST,''AS ZDT, FB.QJGLDM
+        FROM BDC_ZS Z
+        INNER JOIN BDC_XM_ZS_GX GX
+        ON Z.ZSID = GX.ZSID
+        INNER JOIN BDC_XM XM
+        ON XM.XMID = GX.XMID
+        INNER JOIN BDC_XMFB FB
+        ON FB.XMID = XM.XMID
+        INNER JOIN( SELECT x.xmid,TO_CHAR( REPLACE ( WMSYS.WM_CONCAT ( q.QLRMC ), ',', '、' ) ) AS qlrmc,TO_CHAR( REPLACE
+        ( WMSYS.WM_CONCAT ( q.zjh ), ',', '、' ) ) AS zjh FROM BDC_QLR q
+        LEFT JOIN BDC_XM x ON x.XMID = q.xmid
+        WHERE
+        q.QLRLB = 1
+        <if test="transtionId != null and transtionId != ''">
+            AND x.SLBH = #{transtionId}
+        </if>
+        GROUP BY
+        x.XMID
+        ) qlr ON xm.XMID = qlr.XMID
+        LEFT JOIN (SELECT x.xmid,TO_CHAR( WMSYS.WM_CONCAT ( l.LZRDH ) ) AS LZRDH,TO_CHAR( WMSYS.WM_CONCAT ( l.LZRZJZL )
+        ) AS LZRZJZL,TO_CHAR( WMSYS.WM_CONCAT ( l.LZRZJH ) ) AS LZRZJH FROM BDC_lzr l LEFT JOIN BDC_XM x ON x.XMID =
+        l.xmid WHERE
+        <if test="transtionId != null and transtionId != ''">
+            x.SLBH = #{transtionId}
+        </if>
+        GROUP BY x.XMID) LZR ON LZR.xmid = xm.xmid
+        INNER JOIN BDC_ZD_GYFS ZD
+        ON Z.GYFS = ZD.DM
+        WHERE 1=1
+        <if test="transtionId != null and transtionId != ''">
+            AND XM.SLBH = #{transtionId}
+        </if>
+        <if test="qlr != null and qlr != ''">
+            AND qlr.qlrmc like '%'|| #{qlr} || '%'
+        </if>
+        <if test="bdcdyh != null and bdcdyh != ''">
+            AND xm.bdcdyh = #{bdcdyh}
+        </if>
+        <if test="lzfs != null and lzfs != ''">
+            AND FB.lzfs like '%'|| #{lzfs} || '%'
+        </if>
+        <if test="zl != null and zl != ''">
+            AND z.zl = #{zl}
+        </if>
+        <if test="zstype == '不动产证书' ">
+            AND Z.ZSLX =1
+        </if>
+        <if test="zstype == '不动产证明' ">
+            AND Z.ZSLX =2
+        </if>
+
+        <if test="sqlx != null and sqlx != ''">
+            AND XM.DJXL = #{sqlx}
+        </if>
+        <if test="excludeWdidList != null and excludeWdidList.length>0 ">
+            AND XM.GZLSLID not in
+            <foreach collection="excludeWdidList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        AND Z.QZYSXLH IS NULL
+    </select>
+
+    <select id="getAllzs" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(*) as count from bdc_zs where 1 = 1
+        <if test="zslx != null and zslx.size>0">
+            and zslx in
+            <foreach collection="zslx" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="zsids != null and zsids.size>0">
+            and zsid in
+            <foreach collection="zsids" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        and qzysxlh is null
+    </select>
+</mapper>

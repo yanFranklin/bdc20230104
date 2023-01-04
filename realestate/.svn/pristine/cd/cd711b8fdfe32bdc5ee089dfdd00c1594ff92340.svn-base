@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!-- 南通 招商银行回写 抵押信息-->
+    <ex:bean id="nt_zsyhdyxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="回写招商银行抵押信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZSYH"/>
+            <ex:property name="dsfFlag" value="ZSYH"/>
+            <ex:property name="url" value="${nt.zsyhdyxx.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerRelXml="param.xml"/>
+        </ex:request>
+    </ex:bean>
+    <!-- 南通 招商银行回写 删除抵押信息-->
+    <ex:bean id="nt_zsyhdyxx_sc">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="回写招商银行抵押删除信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZSYH"/>
+            <ex:property name="dsfFlag" value="ZSYH"/>
+            <ex:property name="url" value="${nt.zsyhdyxx.url}"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 根据工作流实例id推送招商银行删除信息  -->
+    <ex:bean id="zsyhxx_delete">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="ntZsyhService"/>
+            <ex:property name="methodName" value="tsxxByGzlslidAndValid"/>
+            <ex:property name="params" value="processInsId,msg"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!--南通  招商银行回写  抵押注销信息 -->
+    <ex:bean id="nt_zsyhdyzxxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="回写招商银行抵押注销信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZSYH"/>
+            <ex:property name="dsfFlag" value="ZSYH"/>
+            <ex:property name="url" value="${nt.zsyhdyzxxx.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerRelXml="param.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!--南通  招商银行回写  抵押删除注销信息 -->
+    <ex:bean id="nt_zsyhdyzxxx_sc">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="回写招商银行抵押注销删除信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZSYH"/>
+            <ex:property name="dsfFlag" value="ZSYH"/>
+            <ex:property name="url" value="${nt.zsyhdyzxxx.url}"/>
+        </ex:service-info>
+    </ex:bean>
+</beans>

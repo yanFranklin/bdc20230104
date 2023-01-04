@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <ex:bean id="czFcjySpfBaxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${fcjy.spf.url}"/>
+            <ex:property name="logEventName" value="查询商品房交易基本信息接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/changzhou/fcjy/czFcjySpfBaxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/changzhou/fcjy/czFcjySpfBaxx/response/data.xml"/>
+        </ex:response>
+    </ex:bean>
+    <ex:bean id="fcjySpfBaxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${fcjy.spf2.url}"/>
+            <ex:property name="logEventName" value="根据合同号读取商品房备案信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/changzhou/fcjy/fcjySpfBaxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/changzhou/fcjy/fcjySpfBaxx/response/data.xml"/>
+        </ex:response>
+    </ex:bean>
+    <ex:bean id="czFcjyClfHtxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${fcjy.clf.url}"/>
+            <ex:property name="logEventName" value="查询存量房交易基本信息接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/changzhou/fcjy/czFcjyClfHtxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/changzhou/fcjy/czFcjyClfHtxx/response/data.xml"/>
+        </ex:response>
+    </ex:bean>
+    <ex:bean id="fcjyClfHtxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${fcjy.clf2.url}"/>
+            <ex:property name="logEventName" value="读取房产交易存量房合同信息接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/changzhou/fcjy/fcjyClfHtxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/changzhou/fcjy/fcjyClfHtxx/response/data.xml"/>
+        </ex:response>
+    </ex:bean>
+    <ex:bean id="queryBdcXmByGzlslid">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="commonServiceImpl"/>
+            <ex:property name="methodName" value="listBdcXmByGzlslid"/>
+            <ex:property name="params" value="processInsId"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/changzhou/fcjy/queryBdcXmByGzlslid/response/data.xml" listToObject="true"/>
+        </ex:response>
+    </ex:bean>
+    <ex:bean id="zdthbyslbh">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="dyServiceImpl"/>
+            <ex:property name="methodName" value="zdthBySlbh"/>
+            <ex:property name="params" value="bdcslbh"/>
+        </ex:service-info>
+        <ex:log dsfFlag="CZFCJY" logEventName="常州原登记系统自动退回" requester="CZFCJY" responser="BDC"/>
+    </ex:bean>
+    <ex:bean id="noticeydjxt">
+        <ex:service-info request-type="httpGet">
+            <ex:property name="url" value="${ydjxt.djzt.url}"/>
+            <ex:property name="logEventName" value="通知原登记系统登簿办结"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="YDJXT"/>
+            <ex:property name="dsfFlag" value="YDJXT"/>
+        </ex:service-info>
+        <ex:request replaceRequestBody="true">
+            <ex:element sourceService="queryBdcXmByGzlslid"/>
+        </ex:request>
+        <ex:response excludeKey="updatezt" extendRequestBody="true">
+            <ex:element dozerXml="conf/dozer/changzhou/fcjy/noticeydjxt/response/data.xml"/>
+            <ex:element name="updatezt" sourceService="updateCzOuterInner"/>
+        </ex:response>
+    </ex:bean>
+    <ex:bean id="updateCzOuterInner">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="cn.gtmap.realestate.common.core.service.feign.accept.BdcDsfdjJhxxFeignService"/>
+            <ex:property name="methodName" value="updateDsfdjJhxxByBdcslbh"/>
+            <ex:property name="params" value="jsonObject,bdcslbh"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/changzhou/fcjy/updateCzOuterInner/request/bdcslbh.xml"/>
+            <ex:element dozerXml="conf/dozer/changzhou/fcjy/updateCzOuterInner/request/param.xml" name="jsonObject"/>
+        </ex:request>
+        <ex:log dsfFlag="CZFCJY" logEventName="常州调用更新第三方日志信息" requester="CZFCJY" responser="BDC"/>
+    </ex:bean>
+    <ex:bean id="getRoomidXzxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="qzViewDataServiceImpl"/>
+            <ex:property name="methodName" value="dvHlwListByParamMap"/>
+            <ex:property name="params" value="param"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/changzhou/fcjy/getRoomidXzxx/request/param.xml" name="param"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/changzhou/fcjy/getRoomidXzxx/response/data.xml" listToObject="true"/>
+        </ex:response>
+    </ex:bean>
+
+    <ex:bean id="hffcjyycfbyfwbm">
+        <ex:service-info request-type="httpGet">
+            <ex:property name="url" value="${fcjy.ycfbyfwbm.url}"/>
+            <ex:property name="appKey" sourceArgs="${fcjy.appCode}" sourceClass="cn.gtmap.realestate.exchange.util.rsa.RsaUtil" sourceMethod="enCode"/>
+            <ex:property name="logEventName" value="根据FWBM查询预查封接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <!--使用 强转方式 如果字段值为空 也拼在URL 后面 -->
+            <ex:property name="paramClass" value="cn.gtmap.realestate.exchange.core.dto.hefei.fcjyYcfByFwbm.request.FcjyYcfByFwbmRequestDTO"/>
+        </ex:service-info>
+    </ex:bean>
+    <ex:bean id="spfBaxxHttp">
+        <ex:service-info request-type="httpGet">
+            <ex:property name="url" value="${spf.baxx.url}"/>
+            <ex:property name="logEventName" value="商品房读取备案信息接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="appKey" sourceArgs="${spf.appCode}" sourceClass="cn.gtmap.realestate.exchange.util.rsa.RsaUtil" sourceMethod="enCode"/>
+            <!--使用 强转方式 如果字段值为空 也拼在URL 后面 -->
+            <ex:property name="paramClass" value="cn.gtmap.realestate.exchange.core.dto.hefei.spfbaxxhttp.request.SpfBaxxRequestDTO"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/hefei/fcjy/spfbaxxhttp/request/httpParam.xml"/>
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="fcjybaxxbycqzhandzjh">
+        <ex:service-info request-type="httpGet">
+            <ex:property name="url" value="${fcjy.baxx.url}"/>
+            <ex:property name="logEventName" value="根据产权证号和权利人证件号查询交易备案信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="appKey" sourceArgs="${fcjy.appCode}" sourceClass="cn.gtmap.realestate.exchange.util.rsa.RsaUtil" sourceMethod="enCode"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/hefei/fcjy/bycqzhzjh/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/hefei/fcjy/bycqzhzjh/response/clfhtxx_jyxx.xml" name="bdcSlJyxx"/>
+            <ex:element dozerXml="conf/dozer/hefei/fcjy/bycqzhzjh/response/clfhtxx_fwxx.xml" name="bdcSlFwxx"/>
+            <ex:element dozerXml="conf/dozer/hefei/fcjy/byhth/fcjyclfhtxx_qlr.xml" name="bdcQlr"/>
+            <ex:element dozerXml="conf/dozer/hefei/fcjy/byhth/fcjyclfhtxx_sqr.xml" name="bdcSlSqr"/>
+            <ex:element dozerXml="conf/dozer/hefei/fcjy/bycqzhzjh/response/clfhtxx_response.xml"/>
+        </ex:response>
+    </ex:bean>
+    <ex:bean id="acceptHbHyxx">
+        <ex:request excludeKey="bjjkResponse,filterResponse,jhsjcxResponse,lhsjcxResponse">
+            <ex:element name="bjjkResponse" sourceService="bjjk_hydjxx_request"/>
+            <ex:element name="filterResponse" sourceService="bjjk_filter"/>
+            <ex:element name="jhsjcxResponse" sourceService="hf_jhsjcx"/>
+            <ex:element name="lhsjcxResponse" sourceService="hf_lhsjcx"/>
+            <ex:element sourceService="hysj_filter"/>
+        </ex:request>
+        <ex:log dsfFlag="BJJK" logEventName="业务系统查询婚姻信息接口" requester="BDC" responser="BJJK"/>
+    </ex:bean>
+    <ex:bean id="hfwxzjyz">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${wxzj.yz.url}"/>
+            <ex:property name="appKey" sourceArgs="${fcjy.appCode}" sourceClass="cn.gtmap.realestate.exchange.util.rsa.RsaUtil" sourceMethod="enCode"/>
+            <ex:property name="logEventName" value="维修资金验证接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+        </ex:service-info>
+    </ex:bean>
+    <ex:bean id="hfFcjyClfHtxx">
+        <ex:service-info request-type="httpGet">
+            <ex:property name="url" value="${fcjy.htxx.url}"/>
+            <ex:property name="logEventName" value="读取房产交易存量房合同信息接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="appKey" sourceArgs="${fcjy.appCode}" sourceClass="cn.gtmap.realestate.exchange.util.rsa.RsaUtil" sourceMethod="enCode"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/hefei/fcjy/byhth/fcjyclfhtxx_response.xml"/>
+            <ex:element dozerXml="conf/dozer/hefei/fcjy/byhth/fcjyclfhtxx_jyxx.xml" name="bdcSlJyxx"/>
+            <ex:element dozerXml="conf/dozer/hefei/fcjy/byhth/fcjyclfhtxx_fwxx.xml" name="bdcSlFwxx"/>
+            <ex:element dozerXml="conf/dozer/hefei/fcjy/byhth/fcjyclfhtxx_qlr.xml" name="bdcQlr"/>
+            <ex:element dozerXml="conf/dozer/hefei/fcjy/byhth/fcjyclfhtxx_sqr.xml" name="bdcSlSqr"/>
+        </ex:response>
+    </ex:bean>
+    <ex:bean id="hfFcjySpfBaxx">
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/hefei/fcjy/spfbaxxhttp/request/byContractNoHttpParam.xml" name="httpParam"/>
+            <ex:element sourceService="spfBaxxHttp"/>
+        </ex:request>
+        <ex:response extendRequestBody="true">
+            <ex:element dozerXml="conf/dozer/hefei/fcjy/spfbaxxhttp/response/merge.xml"/>
+        </ex:response>
+    </ex:bean>
+    <!--根据房屋编码读取商品房备案信息 与hfFcjySpfBaxxByBdcdyhOrYxmid接口联动 -->
+    <ex:bean id="hfFcjySpfBaxxByFwbm">
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/hefei/fcjy/spfbaxxhttp/request/byFwbmHttpParam.xml" name="httpParam"/>
+            <ex:element sourceService="spfBaxxHttp"/>
+        </ex:request>
+        <ex:response extendRequestBody="true">
+            <ex:element dozerXml="conf/dozer/hefei/fcjy/spfbaxxhttp/response/merge.xml"/>
+        </ex:response>
+        <ex:log dsfFlag="FCJY" logEventName="根据房屋编码读取商品房备案信息" requester="BDC" responser="FCJY"/>
+    </ex:bean>
+    <!--根据不动产单元号或者原项目ID获取房屋编码读取商品房备案信息 与hfFcjySpfBaxxByFwbm接口联动 -->
+    <ex:bean id="hfFcjySpfBaxxByBdcdyhOrYxmid">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="fcjyServiceImpl"/>
+            <ex:property name="methodName" value="getSpfBaxxByBdcdyhOrYxmid"/>
+        </ex:service-info>
+        <ex:log dsfFlag="FCJY" logEventName="根据不动产单元号或者原项目ID获取房屋编码读取商品房备案信息" requester="BDC" responser="FCJY"/>
+    </ex:bean>
+    <ex:bean id="fcjybaxxbyxmid">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="fcjyServiceImpl"/>
+            <ex:property name="methodName" value="getBaxxByXmid"/>
+        </ex:service-info>
+        <ex:log dsfFlag="FCJY" logEventName="根据XMID查询交易备案信息" requester="BDC" responser="FCJY"/>
+    </ex:bean>
+    <ex:bean id="hysj_filter">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="hysjServiceImpl"/>
+            <ex:property name="methodName" value="hysjFilter"/>
+            <ex:property name="params" value="filterResponse,jhsjcxResponse,lhsjcxResponse"/>
+        </ex:service-info>
+    </ex:bean>
+
+
+    <!--1.1.	共享业务系统查询接口-用于舒城 -->
+    <ex:bean id="queryGxyw">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${gxywxt.queryYwxx.url}"/>
+            <ex:property name="logEventName" value="共享业务系统查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GXYWXT"/>
+            <ex:property name="dsfFlag" value="GXYWXT"/>
+            <ex:property name="contentType" value="application/json"/>
+        </ex:service-info>
+
+    </ex:bean>
+
+    <!--1.2.	共享业务系统获取附件接口 -->
+    <ex:bean id="downGxxtFjxx">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${gxywxt.downGxxtFjxx.url}"/>
+            <ex:property name="logEventName" value="共享业务系统获取附件接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GXYWXT"/>
+            <ex:property name="dsfFlag" value="GXYWXT"/>
+            <ex:property name="contentType" value="application/json"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!--1.3.	推送共享业务系统数据接口 -->
+    <ex:bean id="tsGxxt">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${gxywxt.tsGxxt.url}"/>
+            <ex:property name="logEventName" value="推送共享业务系统数据接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GXYWXT"/>
+            <ex:property name="dsfFlag" value="GXYWXT"/>
+            <ex:property name="contentType" value="application/json"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 4.20.	验证房源是否人才锁定 -->
+    <ex:bean id="rcsdFyxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="fcjyServiceImpl"/>
+            <ex:property name="methodName" value="getRcsdFyxx"/>
+        </ex:service-info>
+        <ex:log dsfFlag="FCJY" logEventName="验证房源是否人才锁定" requester="BDC" responser="FCJY"/>
+    </ex:bean>
+
+    <!-- 4.21.	验证房源是否存在查封、抵押、异议 -->
+    <ex:bean id="rcsdFyxxzt">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="fcjyServiceImpl"/>
+            <ex:property name="methodName" value="getRcsdFyxxZt"/>
+        </ex:service-info>
+        <ex:log dsfFlag="FCJY" logEventName="验证房源是否存在查封、抵押、异议" requester="BDC" responser="FCJY"/>
+    </ex:bean>
+
+    <!-- 推送监管——登簿信息  -->
+    <ex:bean id="zjjg_tsdbxx">
+        <ex:service-info request-type="httpPostForShij">
+            <ex:property name="url" value="${zjjg.tsdbxx.url}"/>
+            <ex:property name="beanId" value="zjjg_tsdbxx"/>
+            <ex:property name="logEventName" value="推送登簿信息给资金监管接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZWGX"/>
+            <ex:property name="dsfFlag" value="ZWGX"/>
+            <ex:property name="rzlx" value="DSFSHIJIGXJK"/>
+            <ex:property name="contentType" value="application/json"/>
+        </ex:service-info>
+
+    </ex:bean>
+
+    <!-- 2.2.	增量房合同提取—证件号 -->
+    <ex:bean id="getIncrementContactinfoID">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="zsFwhttqServiceImpl"/>
+            <ex:property name="methodName" value="getIncrementContactinfoID"/>
+        </ex:service-info>
+        <ex:log dsfFlag="FCJY" logEventName="增量房合同提取—证件号" requester="BDC" responser="FCJY"/>
+    </ex:bean>
+
+    <!-- 2.4.	存量房合同提取—证件号 -->
+    <ex:bean id="getStockContactinfoID">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="zsFwhttqServiceImpl"/>
+            <ex:property name="methodName" value="getStockContactinfoID"/>
+        </ex:service-info>
+        <ex:log dsfFlag="FCJY" logEventName="存量房合同提取—证件号" requester="BDC" responser="FCJY"/>
+    </ex:bean>
+</beans>

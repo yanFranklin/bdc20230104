@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcDpCxMapper">
+
+    <select id="listJrdjlx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.BdcDpTjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcDpCxTjDTO">
+        SELECT
+        count(*) as sl,
+        x.djlx as djlx,
+        z.mc as djlxmc
+        FROM bdc_xm x
+        LEFT JOIN bdc_zd_djlx z
+        ON x.djlx = z.dm
+        where x.djlx is not null
+        <if test="kssj !=null and kssj != ''">
+            AND to_char(x.slsj,'yyyy-MM-dd') <![CDATA[>=]]> #{kssj}
+        </if>
+        <if test="jssj != null and jssj != ''">
+            AND to_char(x.slsj,'yyyy-MM-dd') <![CDATA[<=]]> #{jssj}
+        </if>
+        <if test="qxdm != null and qxdm != ''">
+            AND x.qxdm = #{qxdm}
+        </if>
+        group by
+        x.djlx,z.mc
+    </select>
+
+    <select id="listDjxl" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.BdcDpMxtjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcDpDjlxtjMxDTO">
+        SELECT
+            sl,
+            mc AS lxmc
+        FROM
+        (
+            SELECT
+                COUNT(*) AS sl,
+                djxl
+            FROM
+                bdc_xm x
+            WHERE
+                gzldymc IS NOT NULL
+            AND djxl IS NOT NULL
+            <if test="kssj !=null and kssj != ''">
+                AND to_char(x.slsj,'yyyy-MM-dd') <![CDATA[>=]]> #{kssj}
+            </if>
+            <if test="jssj != null and jssj != ''">
+                AND to_char(x.slsj,'yyyy-MM-dd') <![CDATA[<=]]> #{jssj}
+            </if>
+            <if test="djlx !=null and djlx != ''">
+                AND x.djlx = #{djlx}
+            </if>
+            <if test="djxl !=null and djxl != ''">
+                AND x.djxl = #{djxl}
+            </if>
+            <if test="qxdm != null and qxdm != ''">
+                AND x.qxdm = #{qxdm}
+            </if>
+            <if test="processDefKeyList != null and processDefKeyList.size()>0 ">
+                AND x.gzldyid  IN
+                <foreach collection="processDefKeyList" item="gzldyid" index="index" open="(" close=")" separator=",">
+                    #{gzldyid}
+                </foreach>
+            </if>
+            GROUP BY
+            djxl
+            ) a
+            LEFT JOIN bdc_zd_djxl z ON a.djxl = z.dm
+    </select>
+
+
+    <select id="listDjlx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.BdcDpTjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcDpDjlxtjMxDTO">
+        SELECT
+        count(*) as sl,
+        x.djlx as djlx,
+        z.mc as lxmc
+        FROM bdc_xm x
+        LEFT JOIN bdc_zd_djlx z
+        ON x.djlx = z.dm
+        where x.djlx is not null
+        <if test="kssj !=null and kssj != ''">
+            AND to_char(x.slsj,'yyyy-MM-dd') <![CDATA[>=]]> #{kssj}
+        </if>
+        <if test="jssj != null and jssj != ''">
+            AND to_char(x.slsj,'yyyy-MM-dd') <![CDATA[<=]]> #{jssj}
+        </if>
+        <if test="qxdm != null and qxdm != ''">
+            AND x.qxdm = #{qxdm}
+        </if>
+        <if test="djlx !=null and djlx != ''">
+            AND x.djlx = #{djlx}
+        </if>
+        <if test="djxl !=null and djxl != ''">
+            AND x.djxl = #{djxl}
+        </if>
+        <if test="processDefKeyList != null and processDefKeyList.size()>0 ">
+            AND x.gzldyid  IN
+            <foreach collection="processDefKeyList" item="gzldyid" index="index" open="(" close=")" separator=",">
+                #{gzldyid}
+            </foreach>
+        </if>
+        group by
+        x.djlx,z.mc
+    </select>
+
+
+    <select id="listDjxlXmly" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.BdcDpTjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcDpDjlxtjMxDTO">
+        SELECT
+        count(*) as sl,
+        x.xmly as djlx,
+        z.mc as lxmc
+        FROM bdc_xm x
+        LEFT JOIN bdc_zd_xmly z
+        ON x.xmly = z.dm
+        where x.djlx is not null
+        <if test="kssj !=null and kssj != ''">
+            AND to_char(x.slsj,'yyyy-MM-dd') <![CDATA[>=]]> #{kssj}
+        </if>
+        <if test="jssj != null and jssj != ''">
+            AND to_char(x.slsj,'yyyy-MM-dd') <![CDATA[<=]]> #{jssj}
+        </if>
+        <if test="qxdm != null and qxdm != ''">
+            AND x.qxdm = #{qxdm}
+        </if>
+        <if test="djlx !=null and djlx != ''">
+            AND x.djlx = #{djlx}
+        </if>
+        <if test="djxl !=null and djxl != ''">
+            AND x.djxl = #{djxl}
+        </if>
+        <if test="processDefKeyList != null and processDefKeyList.size()>0 ">
+            AND x.gzldyid  IN
+            <foreach collection="processDefKeyList" item="gzldyid" index="index" open="(" close=")" separator=",">
+                #{gzldyid}
+            </foreach>
+        </if>
+        group by
+        x.xmly,z.mc
+    </select>
+
+
+    <select id="getLctjByDjlx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.BdcDpTjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcDpCxTjDTO">
+    SELECT
+        sl,
+        gzldymc|| '/'|| mc AS djlxmc
+    FROM
+     (
+            SELECT
+                COUNT(*) AS sl,
+                djxl,
+                gzldymc
+            FROM
+               bdc_xm x
+            LEFT JOIN  bdc_zd_djlx z ON x.djlx = z.dm
+           WHERE
+                gzldymc IS NOT NULL
+                AND djxl IS NOT NULL
+            <if test="kssj !=null and kssj != ''">
+                AND to_char(x.slsj,'yyyy-MM-dd') <![CDATA[>=]]> #{kssj}
+            </if>
+            <if test="jssj != null and jssj != ''">
+                AND to_char(x.slsj,'yyyy-MM-dd') <![CDATA[<=]]> #{jssj}
+            </if>
+            <if test="djlx !=null and djlx != ''">
+                AND z.mc = #{djlx}
+            </if>
+            <if test="qxdm !=null and qxdm != ''">
+                AND x.qxdm = #{qxdm}
+            </if>
+            GROUP BY
+                djxl,
+                gzldymc
+        ) a
+        LEFT JOIN bdc_zd_djxl z ON a.djxl = z.dm
+    </select>
+
+    <select id="listFzslTj" resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcDpCxTjDTO"
+            parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.BdcDpTjQO">
+        SELECT count(*) as sl,qxdm,zslx
+        FROM bdc_zs
+        WHERE
+        qxdm is not null
+        AND zslx is not null
+        <if test="kssj !=null and kssj != ''">
+            AND to_char(fzsj,'yyyy-MM-dd') <![CDATA[>=]]> #{kssj}
+        </if>
+        <if test="jssj != null and jssj != ''">
+            AND to_char(fzsj,'yyyy-MM-dd') <![CDATA[<=]]> #{jssj}
+        </if>
+        <if test="qxdm !=null and qxdm != ''">
+            AND qxdm = #{qxdm}
+        </if>
+        group by qxdm,zslx
+    </select>
+
+    <select id="listDyzje" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.BdcDpTjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcDpCxTjDTO">
+        SELECT nvl(round(sum(case
+        when jedw='1' then bdbzzqse
+        when jedw='2' then bdbzzqse*10000
+        else bdbzzqse end)/100000000,2),0) as je,dybdclx
+        FROM bdc_dyaq d
+        <if test=" (qxdmList != null and qxdmList.size()>0) or (processDefKeyList != null and processDefKeyList.size()>0 )">
+            LEFT JOIN bdc_xm x on d.xmid = x.xmid
+        </if>
+        WHERE d.dybdclx is not null
+        AND d.djsj is not null
+        <if test="qszt !=null and qszt != ''">
+            AND d.qszt = #{qszt}
+        </if>
+        <if test="qxdmList != null and qxdmList.size()>0 ">
+            AND x.qxdm  IN
+            <foreach collection="qxdmList" item="qxdm" index="index" open="(" close=")" separator=",">
+                #{qxdm}
+            </foreach>
+        </if>
+        <if test="nf !=null and nf != ''">
+            AND to_char(d.djsj,'yyyy') = #{nf}
+        </if>
+        <if test="kssj !=null and kssj != ''">
+            AND to_char(d.djsj,'yyyy-MM-dd') <![CDATA[>=]]> #{kssj}
+        </if>
+        <if test="jssj != null and jssj != ''">
+            AND to_char(d.djsj,'yyyy-MM-dd') <![CDATA[<=]]> #{jssj}
+        </if>
+        <if test="dybdclxList != null and dybdclxList.size()>0 ">
+            AND d.dybdclx IN
+            <foreach collection="dybdclxList" item="dybdclx" index="index" open="(" close=")" separator=",">
+                #{dybdclx}
+            </foreach>
+        </if>
+        <if test="processDefKeyList != null and processDefKeyList.size()>0 ">
+            AND x.gzldyid  IN
+            <foreach collection="processDefKeyList" item="gzldyid" index="index" open="(" close=")" separator=",">
+                #{gzldyid}
+            </foreach>
+        </if>
+        group by dybdclx
+    </select>
+
+    <select id="listDyjeByMonth" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.BdcDpTjQO"
+            resultType="java.util.HashMap">
+        SELECT a.rn||'月' as yf,nvl(b.dyje,0) as dyje,nvl(b.dyts,0) as dyts from
+        ( SELECT ROWNUM AS RN FROM DUAL CONNECT BY ROWNUM <![CDATA[ <= ]]>'12' ) a left join
+
+        ( SELECT round(sum(case
+        when jedw='1' then bdbzzqse
+        when jedw='2' then bdbzzqse*10000
+        else bdbzzqse end)/100000000,2) as dyje,
+        count(*) as dyts,
+        to_char(d.djsj,'fmmm') as yf
+        FROM bdc_dyaq d
+        <if test="(processDefKeyList != null and processDefKeyList.size()>0) or (qxdmList != null and qxdmList.size()>0)">
+            left join bdc_xm x on x.xmid = d.xmid
+        </if>
+        WHERE d.djsj is not null
+        <if test="qszt !=null and qszt != ''">
+            and d.qszt = #{qszt}
+        </if>
+        <if test="qxdmList != null and qxdmList.size()>0 ">
+            AND x.qxdm  IN
+            <foreach collection="qxdmList" item="qxdm" index="index" open="(" close=")" separator=",">
+                #{qxdm}
+            </foreach>
+        </if>
+        <if test="nf !=null and nf != ''">
+            AND to_char(d.djsj,'yyyy') = #{nf}
+        </if>
+        <if test="dybdclx !=null and dybdclx != ''">
+            and d.dybdclx = #{dybdclx}
+        </if>
+        <if test="kssj != null and kssj !=''">
+            AND to_char(d.djsj,'YYYY-MM-DD') <![CDATA[ >= ]]> #{kssj}
+        </if>
+        <if test="jssj != null and jssj !=''">
+            AND to_char(d.djsj,'YYYY-MM-DD')  <![CDATA[ <= ]]> #{jssj}
+        </if>
+        <if test="processDefKeyList != null and processDefKeyList.size()>0 ">
+            AND x.gzldyid  IN
+            <foreach collection="processDefKeyList" item="gzldyid" index="index" open="(" close=")" separator=",">
+                #{gzldyid}
+            </foreach>
+        </if>
+        group by to_char(d.djsj,'fmmm')) b
+        on a.rn= b.yf
+        order by a.rn
+    </select>
+
+    <select id="listZzTj" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.BdcDpTjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcDpCxTjDTO">
+        SELECT count(f.xmid) as ts,
+        sum(f.JZMJ) as mj,
+        x.qxdm as qxdm
+        FROM BDC_FDCQ f
+        LEFT JOIN bdc_xm x
+        ON f.xmid = x.xmid
+        where f.ghyt in
+        ('10','299','707','376','386','407','512','529','256','592','676','683','307','146','300','169','234','252','261','271','330','399','522','530','533','535','598','602','611','622','655','676','712')
+        <if test="qszt !=null and qszt != ''">
+            and x.qszt = #{qszt}
+        </if>
+        <if test="kssj != null and kssj !=''">
+            <![CDATA[ and to_char(f.djsj,'YYYY-MM-DD') >= #{kssj} ]]>
+        </if>
+        <if test="jssj != null and jssj !=''">
+            <![CDATA[ and to_char(f.djsj,'YYYY-MM-DD')  <= #{jssj} ]]>
+        </if>
+        <if test="qxdm != null and qxdm !=''">
+            and x.qxdm = #{qxdm}
+        </if>
+        <if test="qxdmList != null and qxdmList.size()>0 ">
+            AND x.qxdm  IN
+            <foreach collection="qxdmList" item="qxdm" index="index" open="(" close=")" separator=",">
+                #{qxdm}
+            </foreach>
+        </if>
+        <if test="processDefKeyList != null and processDefKeyList.size()>0 ">
+            AND x.gzldyid  IN
+            <foreach collection="processDefKeyList" item="gzldyid" index="index" open="(" close=")" separator=",">
+                #{gzldyid}
+            </foreach>
+        </if>
+        group by x.qxdm
+
+    </select>
+
+    <select id="countBdcDsfLogByGxbmbz" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.BdcDpTjQO"
+            resultType="map">
+        SELECT t.gxbmbz,COUNT(*) AS zs
+        FROM BDC_DSF_RZ t
+        LEFT JOIN (SELECT DISTINCT t.slbh,t.djbmdm,t.gzldymc FROM BDC_XM t) x ON t.slbh = x.slbh
+        <where>
+            <if test="kssj != null and kssj !=''">
+                <![CDATA[  AND t.qqsj >= to_date(#{kssj},'yyyy-mm-dd hh24:mi:ss')]]>
+            </if>
+            <if test="jssj != null and jssj !=''">
+                <![CDATA[  AND to_date(#{jssj},'yyyy-mm-dd hh24:mi:ss') >= t.qqsj]]>
+            </if>
+        </where>
+        GROUP BY t.gxbmbz
+
+    </select>
+
+    <select id="getJrsbjl" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.BdcDpTjQO" resultType="map">
+        select nvl(count(*),0) as sl from BDC_JR_SJJL x
+        <where>
+            <if test="kssj != null and kssj !=''">
+                <![CDATA[AND to_char(x.jrrq,'YYYY-MM-DD') >= #{kssj} ]]>
+            </if>
+            <if test="jssj != null and jssj !=''">
+                <![CDATA[AND to_char(x.jrrq,'YYYY-MM-DD')  <= #{jssj} ]]>
+            </if>
+            <if test="cgbs != null and cgbs != '' ">
+                and x.cgbs = #{cgbs}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="getZmgzjcsl" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.BdcDpTjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcDpCxTjDTO">
+        select count(*) as sl from CHECK_GZJC_LOG x
+        LEFT JOIN CHECK_GZXX G ON G.GZID=X.GZID
+        <where>
+            <if test="kssj != null and kssj !=''">
+                <![CDATA[   AND to_char(x.fxsj,'YYYY-MM-DD') >= #{kssj} ]]>
+            </if>
+            <if test="jssj != null and jssj !=''">
+                <![CDATA[   AND to_char(x.fxsj,'YYYY-MM-DD')  <= #{jssj} ]]>
+            </if>
+            <if test="jcdj != null and jcdj !=''">
+                and x.jcdj = #{jcdj}
+            </if>
+        </where>
+    </select>
+
+    <select id="getJcxmsl" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.BdcDpTjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcDpCxTjDTO">
+        select nvl(sum(jcxmsl),0) as sl FROM CHECK_LOG t
+        <where>
+            <if test="kssj != null and kssj !=''">
+                <![CDATA[   AND to_char(t.qssj,'YYYY-MM-DD') >= #{kssj} ]]>
+            </if>
+            <if test="jssj != null and jssj != ''">
+                <![CDATA[   AND to_char(t.jssj,'YYYY-MM-DD')  <= #{jssj} ]]>
+            </if>
+        </where>
+    </select>
+
+
+    <select id="getDjlxtjMxByPage" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcDpDjlxtjMxDTO">
+            SELECT slbh,qlr,ywr,zl,gzldymc as lcmc,bdcdyh,xmid FROM bdc_xm x
+            <where>
+                <if test="kssj !=null and kssj != ''">
+                    AND to_char(x.slsj,'yyyy-MM-dd') <![CDATA[>=]]> #{kssj}
+                </if>
+                <if test="jssj != null and jssj != ''">
+                    AND to_char(x.slsj,'yyyy-MM-dd') <![CDATA[<=]]> #{jssj}
+                </if>
+                <if test="qxdm != null and qxdm != ''">
+                    AND x.qxdm = #{jssj}
+                </if>
+                <if test="djlx != null and djlx != ''">
+                    AND x.djlx = #{djlx}
+                </if>
+                <if test="djxl != null and djxl != ''">
+                    AND x.djxl = #{djxl}
+                </if>
+            </where>
+
+    </select>
+
+    <select id="getFzltjTb" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.BdcDpMxtjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcDpFzltjMxDTO">
+        SELECT
+            zslx,
+            COUNT(*) AS sl,
+            d.mc
+        FROM
+            bdc_zs z
+            LEFT JOIN bdc_zd_zslx   d ON z.zslx = d.dm
+        <if test="(processDefKeyList != null and processDefKeyList.size()>0 ) or (qxdm !=null and qxdm != '')">
+            LEFT JOIN bdc_xm_zs_gx g ON g.zsid = z.zsid
+            LEFT JOIN bdc_xm x ON x.xmid = g.xmid
+        </if>
+        WHERE
+            zslx IS NOT NULL
+        <if test="kssj !=null and kssj != ''">
+            AND to_char(z.fzsj,'yyyy-MM-dd') <![CDATA[>=]]> #{kssj}
+        </if>
+        <if test="jssj != null and jssj != ''">
+            AND to_char(z.fzsj,'yyyy-MM-dd') <![CDATA[<=]]> #{jssj}
+        </if>
+        <if test="zslx != null and zslx != ''">
+            AND z.zslx = #{zslx}
+        </if>
+        <if test="qxdm != null and qxdm != ''">
+            AND x.qxdm = #{qxdm}
+        </if>
+        <if test="processDefKeyList != null and processDefKeyList.size()>0 ">
+            AND x.gzldyid  IN
+            <foreach collection="processDefKeyList" item="processDefKey" index="index" open="(" close=")" separator=",">
+                #{processDefKeyList}
+            </foreach>
+        </if>
+        GROUP BY
+            zslx,
+            d.mc
+    </select>
+
+    <select id="getFztjMx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.BdcDpMxtjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcDpFzltjMxDTO">
+        SELECT
+            bdcqzh,bdcqzhjc,zslx,bdcdyh,zl,qlr,ywr,lzr,lzsj
+        FROM
+            bdc_zs z
+
+            <if test="(processDefKeyList != null and processDefKeyList.size()>0 ) or (qxdm !=null and qxdm != '')">
+                LEFT JOIN bdc_xm_zs_gx g ON g.zsid = z.zsid
+                LEFT JOIN bdc_xm x ON x.xmid = g.xmid
+            </if>
+        WHERE
+            zslx IS NOT NULL
+        <if test="kssj !=null and kssj != ''">
+            AND to_char(z.fzsj,'yyyy-MM-dd') <![CDATA[>=]]> #{kssj}
+        </if>
+        <if test="jssj != null and jssj != ''">
+            AND to_char(z.fzsj,'yyyy-MM-dd') <![CDATA[<=]]> #{jssj}
+        </if>
+        <if test="zslx != null and zslx != ''">
+            AND z.zslx = #{zslx}
+        </if>
+        <if test="qxdm != null and qxdm != ''">
+            AND x.qxdm = #{qxdm}
+        </if>
+        <if test="processDefKeyList != null and processDefKeyList.size()>0 ">
+            AND x.gzldyid  IN
+            <foreach collection="processDefKeyList" item="processDefKey" index="index" open="(" close=")" separator=",">
+                #{processDefKeyList}
+            </foreach>
+        </if>
+
+    </select>
+
+    <select id="getDyjetjMxByPage" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcDpDyjeMxDTO">
+        SELECT
+            x.slbh,
+            d.bdcdyh,
+            d.zl,
+            d.bdbzzqse,
+            d.zwlxqssj,
+            d.zwlxjssj,
+            d.qszt,
+            x.qlr,
+            x.ywr,
+            d.dyfs
+        FROM
+            bdc_dyaq   d
+            LEFT JOIN bdc_xm     x ON d.xmid = x.xmid
+            WHERE d.djsj is not null
+            <if test="qszt !=null and qszt != ''">
+                and d.qszt = #{qszt}
+            </if>
+            <if test="qxdmList != null and qxdmList.size()>0 ">
+                AND x.qxdm  IN
+                <foreach collection="qxdmList" item="qxdm" index="index" open="(" close=")" separator=",">
+                    #{qxdm}
+                </foreach>
+            </if>
+            <if test="nf !=null and nf != ''">
+                AND to_char(d.djsj,'yyyy') = #{nf}
+            </if>
+            <if test="dybdclx !=null and dybdclx != ''">
+                and d.dybdclx = #{dybdclx}
+            </if>
+            <if test="kssj != null and kssj !=''">
+                AND to_char(d.djsj,'YYYY-MM-DD') <![CDATA[ >= ]]> #{kssj}
+            </if>
+            <if test="jssj != null and jssj !=''">
+                AND to_char(d.djsj,'YYYY-MM-DD')  <![CDATA[ <= ]]> #{jssj}
+            </if>
+            <if test="processDefKeyList != null and processDefKeyList.size()>0 ">
+                AND x.gzldyid  IN
+                <foreach collection="processDefKeyList" item="gzldyid" index="index" open="(" close=")" separator=",">
+                    #{gzldyid}
+                </foreach>
+            </if>
+    </select>
+</mapper>

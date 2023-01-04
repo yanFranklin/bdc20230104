@@ -1,0 +1,65 @@
+info:
+  name: ${spring.application.name}
+  component: Etl Application
+
+app:
+  center: http://192.168.2.99:8000/eureka/
+  oauth: http://192.168.2.99:8002/account
+  security:
+    moduleAuthPath: http://account/account
+    ignores: /**,/index/**,/realestate-etl/rest/v1.0/**,/image/**,/css/**,/js/**,/webjars/**
+    authorities:
+      permitAll: /**
+      hasUrlAuthority('read'): /auth/users,/auth/orgs
+      hasModuleAuthority('yhgl:add'): /auth/user/create
+      hasAnyAuthority('ROLE_USER'): /resource1/**,/catalog1/**,/index
+      hasAnyAuthority('ROLE_ADMIN_2'): /call
+      authenticated : true
+    resources:
+      hasScope('get_portal_info'): /realestate-etl/res/**
+
+spring:
+  rabbitmq:
+    host: 192.168.2.98
+    port: 5672
+    username: admin
+    password: admin
+  redis:
+    port: 6379
+    host: 192.168.0.60
+  datasource:
+    exchange:
+      url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+      username: bdcdj_hefei
+      password: gtis
+    fcjy:
+      password: gtis
+      url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+      username: bdcdj_hefei
+    hlw:
+      password: gtis
+      url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+      username: bdcdj_hefei
+    sjgl:
+      #      url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+      #      username: bdcdj_hefei
+      #      password: gtis
+      password: Njgtis
+      url: jdbc:oracle:thin:@192.168.2.111:1521/orcl
+      username: bdcsjgl
+  messages:
+    basename: conf/message/messages
+
+server:
+  port: ${port:8800}
+
+
+#证照信息开关 （默认推送，true则不推送）
+yzw.zzxx.enable: true
+
+#遗失公告登记小类
+ysgg.djxl: 9000313,9000414,9000515
+
+daxxUrl: http://127.0.0.1:8080/archive/og!list.action?ownerId=
+daxx.file.Url: http://11.48.64.40:8040/archive/og!get.action?preview=false&id=
+

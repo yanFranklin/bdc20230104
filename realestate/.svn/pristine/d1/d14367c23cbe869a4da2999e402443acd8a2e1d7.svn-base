@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <title>邮寄信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/common.css"/>
+    <link rel="stylesheet" href="../../static/css/xuancheng/yjxx.css"/>
+    <style type="text/css">
+        /*用于调整下拉列表高度*/
+        .select-height .layui-form-select dl {
+            max-height: 210px;
+        }
+    </style>
+</head>
+<body>
+
+<div lay-filter="yjxx" id="bdc-popup-large"></div>
+
+</body>
+<!--邮寄信息展示-->
+<script type="text/html" id="yjTpl">
+    <form class="layui-form bdc-not-full-bg" id="yjxxForm" lay-filter="yjxxForm">
+        <input type="hidden" name="gzlslid" value="{{d.bdcYjxxDO.gzlslid || ''}}" >
+        <input type="hidden" name="slbh" value="{{d.bdcYjxxDO.slbh || ''}}" >
+        <input type="hidden" name="yjxxid" id="yjxxid" value="{{d.bdcYjxxDO.yjxxid || ''}}" >
+        <input type="hidden" name="djxl" value="{{d.bdcYjxxDO.djxl || ''}}" >
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>收件人姓名</label>
+                <div class="layui-input-inline  select-height">
+                    <select  id="sjrmc" class="layui-input" lay-filter="loadSjr" lay-verify="required">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.bdcQlrDOList, function(key, bdcQlr){ }}
+                        <option value="{{bdcQlr.qlrmc}}" {{# if(d.bdcYjxxDO.sjrmc== bdcQlr.qlrmc ){ }} selected="selected" {{# } }} >
+                            {{bdcQlr.qlrmc}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>证件号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="sjrzjh" lay-verify="required" id ="sjrzjh" class="layui-input"  value="{{d.bdcYjxxDO.sjrzjh || ''}}">
+                </div>
+                </div>
+            <div class="layui-inline">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>联系电话</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="sjrlxdh" id="sjrlxdh" lay-verify="lxdh" class="layui-input"  value="{{d.bdcYjxxDO.sjrlxdh || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline bdc-three-combine" id="sjrszdz">
+                <label class="layui-form-label">所在地址</label>
+                <div id="sjrAddress">
+                </div>
+            </div>
+            <div class="layui-inline bdc-complete-line">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>详细地址</label>
+                <div class="layui-input-inline bdc-end-time-box">
+                    <input type="text" name="sjrxxdz" id="sjrxxdz" class="layui-input" lay-verify="required" value="{{d.bdcYjxxDO.sjrxxdz || ''}}">
+                </div>
+            </div>
+        </div>
+        <div class="pannel-form-btns bdc-save-btn">
+            <button class="layui-btn bdc-major-btn" lay-submit="" id="updateQlr" lay-filter="updateYjxx">保存</button>
+            <button class="layui-btn bdc-secondary-btn" id="cancelEdit" onclick="cancel()">取消</button>
+        </div>
+
+    </form>
+</script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<!--小数计算防精度缺失-->
+<script src="../../static/lib/mathjs/math.js"></script>
+<script src="../../static/js/common.js"></script>
+<!--为了获取参数方便，将formCenter.js放在参数之后 -->
+<script src='../../static/js/formCenter.js'></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/xuancheng/slym/yjxx.js"></script>
+<!--表单验证公共方法-->
+<script src='../../static/js/slymyz.js'></script>
+
+
+</html>

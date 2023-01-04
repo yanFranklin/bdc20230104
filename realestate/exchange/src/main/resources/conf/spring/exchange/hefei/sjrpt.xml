@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+<!--    合肥版，省金融平台不需要加密-->
+<!-- 省金融平台 驳回互联网申请-->
+    <ex:bean id="bhhlwsq">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="驳回互联网申请"/>
+            <ex:property name="requester" value="BHHLWSQ"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="SJRPT"/>
+            <ex:property name="url" value="${sjrpt.bhhlwsq.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/hefei/sjrpt/bhhlwsq/request/param.xml"/>
+        </ex:request>
+    </ex:bean>
+
+
+    <!-- 省金融平台 推送ems信息-->
+    <ex:bean id="tsemsxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="推送ems信息"/>
+            <ex:property name="requester" value="TSEMS"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="SJRPT"/>
+            <ex:property name="url" value="${sjrpt.tsems.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/hefei/sjrpt/tsems/request/param.xml"/>
+        </ex:request>
+    </ex:bean>
+
+
+</beans>

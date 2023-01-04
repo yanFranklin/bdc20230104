@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.interchange.core.mapper.gx.InfApplyMapper">
+    <resultMap type="cn.gtmap.interchange.core.domain.InfApply" id="infApply">
+        <!-- 用id属性来映射主键字段 -->
+        <result property="anticipate_day_type"  column="anticipate_day_type"/>
+        <result property="applicant_address"  column="applicant_address"/>
+        <result property="applicant_code"  column="applicant_code"/>
+        <result property="applicant_email"  column="applicant_email"/>
+        <result property="applicant_mobile"  column="applicant_mobile"/>
+        <result property="applicant_name"  column="applicant_name"/>
+        <result property="applicant_paper_code"  column="applicant_paper_code"/>
+        <result property="applicant_paper_type"  column="applicant_paper_type"/>
+        <result property="applicant_phone"  column="applicant_phone"/>
+        <result property="applicant_type"  column="applicant_type"/>
+        <result property="applicant_zipcode"  column="applicant_zipcode"/>
+        <result property="apply_date"  column="apply_date"/>
+        <result property="apply_way"  column="apply_way"/>
+        <result property="area_name"  column="area_name"/>
+        <result property="area_no"  column="area_no"/>
+        <result property="bj_statu"  column="bj_statu"/>
+        <result property="create_date"  column="create_date"/>
+        <result property="data_sources"  column="data_sources"/>
+        <result property="dept_ql_name"  column="dept_ql_name"/>
+        <result property="dept_ql_reg_no"  column="dept_ql_reg_no"/>
+        <result property="dept_yw_name"  column="dept_yw_name"/>
+        <result property="dept_yw_reg_no"  column="dept_yw_reg_no"/>
+        <result property="if_urgent"  column="if_urgent"/>
+        <result property="internal_id"  column="internal_id"/>
+        <result property="internal_no"  column="internal_no"/>
+        <result property="item_id"  column="item_id"/>
+        <result property="linkman_address"  column="linkman_address"/>
+        <result property="linkman_email"  column="linkman_email"/>
+        <result property="linkman_mobile"  column="linkman_mobile"/>
+        <result property="linkman_name"  column="linkman_name"/>
+        <result property="linkman_paper_code"  column="linkman_paper_code"/>
+        <result property="linkman_paper_type"  column="linkman_paper_type"/>
+        <result property="linkman_phone"  column="linkman_phone"/>
+        <result property="linkman_zipcode"  column="linkman_zipcode"/>
+        <result property="org_id"  column="org_id"/>
+        <result property="org_name"  column="org_name"/>
+        <result property="promise_type"  column="promise_type"/>
+        <result property="sj_file_remark"  column="sj_file_remark"/>
+        <result property="sync_date"  column="sync_date"/>
+        <result property="sync_error_desc"  column="sync_error_desc"/>
+        <result property="sync_sign"  column="sync_sign"/>
+        <result property="transact_affair_name"  column="transact_affair_name"/>
+        <result property="update_date"  column="update_date"/>
+        <result property="wapply_date"  column="wapply_date"/>
+        <result property="ye_ms"  column="ye_ms"/>
+        <result property="apply_type"  column="apply_type"/>
+        <result property="catalog_code"  column="catalog_code"/>
+        <result property="task_version"  column="task_version"/>
+        <result property="wwsq_way" column="wwsq_way"/>
+    </resultMap>
+
+    <select id="getInfApply" parameterType="map" resultMap="infApply" resultType="cn.gtmap.interchange.core.domain.InfApply">
+        select t.* from inf_apply t
+        inner join DJF_DJ_YWXX y on t.internal_no = y.yzwbh
+        where 1=1
+        <if test="proid!=null and proid!=''">
+            <choose>
+                <when test="getAll == 'true'">
+                    and y.slh in (select slh from DJF_DJ_YWXX where ywh=#{proid})
+                </when>
+                <otherwise>
+                    and y.ywh=#{proid}
+                </otherwise>
+            </choose>
+        </if>
+        <if test="internal_no!=null and internal_no!=''">
+            and t.internal_no=#{internal_no}
+        </if>
+    </select>
+
+    <select id="queryWtbInfApply" parameterType="map" resultMap="infApply" resultType="cn.gtmap.interchange.core.domain.InfApply">
+        select t.* from inf_apply t
+        inner join DJF_DJ_YWXX y on t.internal_no = y.yzwbh
+        where nvl(t.sync_sign, '0') != '1'
+        <if test="update_date!=null">
+            and trunc(t.update_date) = trunc(#{update_date})
+        </if>
+    </select>
+
+    <select id="getYzwBhSeq" resultType="java.lang.Integer">
+        select YZWBHSEQ.nextVal from dual
+    </select>
+</mapper>

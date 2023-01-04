@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <ex:bean id="clfwqxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="JY"/>
+            <ex:property name="dsfFlag" value="JY"/>
+            <ex:property name="url" value="${jy.clfwq.url}"/>
+        </ex:service-info>
+        <!-- 输入结构体 -->
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/jy/clfwx/request/param.xml"/>
+        </ex:request>
+
+    </ex:bean>
+    <ex:bean id="sw_wsxx_yc">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SW"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="url" value="${sw.wsxx.url}"/>
+        </ex:service-info>
+        <ex:log dsfFlag="SW" logEventName="查询税务房屋完税信息" requester="BDC" responser="SW"/>
+        <!-- 输入结构体 -->
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/sw/req/sw_wsxx_req.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/sw/resp/sw_wsxx_resp_yc.xml"/>
+
+        </ex:response>
+    </ex:bean>
+
+    <ex:bean id="sw_tsztWithFjxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="logEventName" value="税务推送完税状态接口"/>
+            <ex:property name="requester" value="SW"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="beanName" value="nantongSwServiceImpl"/>
+            <ex:property name="methodName" value="updateWsztAndFjxx"/>
+            <ex:property name="param" value="data"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/nantong/sw/htbhWithFjxx/param.xml"/>
+        </ex:request>
+        <ex:log dsfFlag="SW" logEventName="税务推送核税状态接口" requester="SW" responser="BDC"/>
+    </ex:bean>
+
+    <!-- 获取支付链接  德宽-->
+    <ex:bean id="sw_getZflj">
+        <ex:service-info request-type="httpGet">
+            <ex:property name="logEventName" value="获取支付连接-德宽"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SW"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="httpsRequest" value="true"/>
+            <ex:property name="xPlatToken" value="${dksw.token}"/>
+            <ex:property name="url" value="${dksw.zflj.url}"/>
+            <ex:property name="getUseNameValuePair" value="true"/>
+
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="params" dozerXml="conf/dozer/standard/sw/zflj/swzfljParam.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!-- 获取支付状态   德宽-->
+    <ex:bean id="sw_getZfzt">
+        <ex:service-info request-type="httpGet">
+            <ex:property name="logEventName" value="获取支付状态 -德宽"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SW"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="httpsRequest" value="true"/>
+            <ex:property name="xPlatToken" value="${dksw.token}"/>
+            <ex:property name="url" value="${dksw.zfzt.url}"/>
+            <ex:property name="getUseNameValuePair" value="true"/>
+
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="params" dozerXml="conf/dozer/standard/sw/zfzt/swzfztParam.xml"/>
+        </ex:request>
+    </ex:bean>
+    <!--  A01查询银行端扣款数据接口  -->
+    <ex:bean id="sw_getYhdkkxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SW"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="url" value="${sw.yhdkkxx.url}"/>
+        </ex:service-info>
+        <ex:log dsfFlag="SW" logEventName="查询银行端扣款数据接口" requester="BDC" responser="SW"/>
+        <!-- 输入结构体 -->
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/standard/sw/yydkkxx/req/sw_yhdkkxx_req.xml"/>
+        </ex:request>
+        <!--  输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/standard/sw/yydkkxx/resp/sw_yhdkkxx_resp.xml"/>
+        </ex:response>
+    </ex:bean>
+    <!--  2.6	（A02）查询房产交易完税信息接口  -->
+    <ex:bean id="sw_getZkwszm">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SW"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="url" value="${sw.zkwszm.url}"/>
+        </ex:service-info>
+        <ex:log dsfFlag="SW" logEventName="查询房产交易完税信息接口" requester="BDC" responser="SW"/>
+        <!-- 输入结构体 -->
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/standard/sw/zkwszm/req/sw_zkwszm_req.xml"/>
+        </ex:request>
+        <!--  输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/standard/sw/yydkkxx/resp/sw_wsxx_resp.xml"/>
+        </ex:response>
+    </ex:bean>
+
+</beans>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcZjMapper">
+
+    <!--查询是否有存在的质检信息-->
+    <select id="queryZjxx" resultType="Integer" parameterType="map">
+        SELECT COUNT(*) cnt
+        from bdc_zj z
+        where z.djsj >= to_date(#{kssj},'yyyy-mm-dd')
+          and z.djsj <![CDATA[ <= ]]> to_date(#{jssj},'yyyy-mm-dd')
+    </select>
+
+    <!--通过开始时间和结束时间查询可质检的工作流实例id-->
+    <select id="listZjGzlslid" parameterType="map"
+            resultType="String">
+        SELECT DISTINCT gzlslid
+        FROM bdc_xm t
+        where t.djsj >= to_date(#{kssj},'yyyy-mm-dd')
+          and t.djsj <![CDATA[ <= ]]> to_date(#{jssj},'yyyy-mm-dd')
+          and t.djsj is not null
+          and t.ajzt = 2
+        <!--排除质检表已经有的数据-->
+        and not exists(select 1 from bdc_zj z where z.gzlslid = t.gzlslid)
+    </select>
+
+    <select id="listBdcZjxxByPage" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcZjQO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT * FROM BDC_XM xm
+        WHERE
+            xm.AJZT = 2
+        <if test="slbh != null and slbh != ''">
+            AND xm.slbh = #{slbh,jdbcType=VARCHAR}
+        </if>
+        <if test="bdcdyh != null and bdcdyh != ''">
+            AND xm.bdcdyh = #{bdcdyh,jdbcType=VARCHAR}
+        </if>
+        <if test="qlr != null and qlr != ''">
+            AND xm.qlr like '%' || #{qlr,jdbcType=VARCHAR} || '%'
+        </if>
+        <if test="ywr != null and ywr != ''">
+            AND xm.ywr like '%' || #{ywr,jdbcType=VARCHAR} || '%'
+        </if>
+        <if test="zl != null and zl != ''">
+            AND xm.zl like '%' || #{zl,jdbcType=VARCHAR} || '%'
+        </if>
+        <if test="gzldyid != null and gzldyid != ''">
+            AND xm.gzldyid = #{gzldyid,jdbcType=VARCHAR}
+        </if>
+        <if test="kssj != null and kssj != ''">
+            AND to_char(xm.djsj,'yyyy-MM-dd') <![CDATA[>=]]> #{kssj}
+        </if>
+        <if test="jssj != null and jssj != ''">
+            AND to_char(xm.djsj,'yyyy-MM-dd') <![CDATA[<=]]> #{jssj}
+        </if>
+        AND xm.DJSJ is not null AND not exists(select 1 from bdc_zj z where z.gzlslid = xm.gzlslid)
+    </select>
+
+    <select id="listBdcZjXmxx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcZjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcZjXmxxDTO">
+        SELECT * FROM (
+            SELECT xm.*, zj.zjid, zj.hdr, ROW_NUMBER() OVER (PARTITION BY xm.gzlslid ORDER BY xm.xmid ASC) RN
+            FROM BDC_XM xm left join BDC_ZJ zj on xm.gzlslid = zj.gzlslid
+            WHERE xm.QSZT = 1
+            <if test="djlx != null and djlx != ''">
+                AND xm.djlx = #{djlx,jdbcType=VARCHAR}
+            </if>
+            <if test="gzldyids != null and gzldyids.size() > 0">
+                AND xm.gzldyid IN
+                <foreach collection="gzldyids" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="qxdm != null and qxdm != ''">
+                AND xm.qxdm  = #{qxdm,jdbcType=VARCHAR}
+            </if>
+            <if test="slbh != null and slbh != ''">
+                AND xm.slbh = #{slbh,jdbcType=VARCHAR}
+            </if>
+            <if test="zjkssj != null and zjkssj != ''">
+                AND to_char(zj.zjsj,'YYYY-MM-DD HH24:MI:SS') <![CDATA[>=]]> #{zjkssj}
+            </if>
+            <if test="zjjssj != null and zjjssj != ''">
+                AND to_char(zj.zjsj,'YYYY-MM-DD HH24:MI:SS') <![CDATA[<=]]> #{zjjssj}
+            </if>
+            <if test="dbkssj != null and dbkssj != ''">
+                AND to_char(xm.DJSJ,'YYYY-MM-DD HH24:MI:SS') <![CDATA[>=]]> #{dbkssj}
+            </if>
+            <if test="dbjssj != null and dbjssj != ''">
+                AND to_char(xm.DJSJ,'YYYY-MM-DD HH24:MI:SS') <![CDATA[<=]]> #{dbjssj}
+            </if>
+            <if test="zjkssj == null and zjjssj == null and dbkssj == null and dbjssj == null">
+                AND to_char(xm.DJSJ, 'yyyy-MM-dd') between  to_char(sysdate-30,'yyyy-MM-dd') AND to_char(sysdate,'yyyy-MM-dd')
+            </if>
+            <if test="hdr != null and hdr != ''">
+                AND zj.hdr = #{hdr,jdbcType=VARCHAR}
+            </if>
+        )
+        where RN=1
+    </select>
+
+    <select id="queryBdcZjjgHz" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcZjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcZjXmxxDTO">
+        SELECT * FROM (
+            SELECT zj.*, xm.gzldymc, xm.dbr, ROW_NUMBER() OVER (PARTITION BY xm.gzlslid ORDER BY xm.xmid ASC) RN
+            FROM BDC_XM xm left join BDC_ZJ zj on xm.gzlslid = zj.gzlslid
+            <where>
+                <if test="kssj != null and kssj != ''">
+                    AND to_char(zj.zjsj,'YYYY-MM-DD HH24:MI:SS') <![CDATA[>=]]> #{kssj}
+                </if>
+                <if test="jssj != null and jssj != ''">
+                    AND to_char(zj.zjsj,'YYYY-MM-DD HH24:MI:SS') <![CDATA[<=]]> #{jssj}
+                </if>
+                <if test="hdr != null and hdr != ''">
+                    AND zj.hdr = #{hdr,jdbcType=VARCHAR}
+                </if>
+                <if test="djlx != null and djlx != ''">
+                    AND zj.djlx = #{djlx,jdbcType=VARCHAR}
+                </if>
+                <if test="gzldyids != null and gzldyids.size() > 0">
+                    AND xm.gzldyid IN
+                    <foreach collection="gzldyids" item="item" open="(" close=")" separator=",">
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+                <if test="zjdid != null and zjdid != ''">
+                    AND zj.zjdid = #{zjdid,jdbcType=VARCHAR}
+                </if>
+            </where>
+            )
+        where RN=1
+    </select>
+</mapper>

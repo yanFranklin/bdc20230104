@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>弹出层图片查看</title>
+    <meta name="referrer" content="no-referrer" >
+<!--    <meta name="renderer" content="webkit">-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link href="../static/lib/layui/css/layui.css" media="all" rel="stylesheet">
+    <link rel="stylesheet" href="../static/lib/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link href="../static/lib/bdcui/css/search.css" media="all" rel="stylesheet">
+    <link rel="stylesheet" href="../static/lib/viewerjs/dist/viewer.css">
+    <link rel="stylesheet" href="../static/css/new-page.css">
+    <link rel="stylesheet" href="../static/css/picture.css">
+    <link href="../static/lib/bdcui/css/mask.css" media="all" rel="stylesheet"/>
+    <link href="../static/lib/hiprint/css/hiprint.css" rel="stylesheet" />
+    <link href="../static/lib/hiprint/css/print-lock.css" rel="stylesheet" />
+    <style type="text/css">
+        /*html, body{*/
+        /*    background-color: #fff;*/
+        /*}*/
+        .fl-list-box .layui-nav-tree .layui-this,
+        .fl-list-box .layui-nav-tree a:hover,
+        .layui-nav-tree .layui-nav-child dd.layui-this a{
+            background-color: #f3f4f6;
+        }
+        #seeImgView {
+            overflow-y: auto;
+        }
+        .viewer-button{
+            right:0px;
+            top: 0px;
+            width: 40px;
+            height: 40px;
+        }
+        .viewer-button::before {
+            bottom: 10px;
+            left: 10px;
+        }
+        .viewer-footer {
+            top: 8px;
+            right: 14px;
+            position: fixed;
+        }
+    </style>
+</head>
+
+<body>
+<!--点击显示内容-->
+<div id="fjContent" class="bdc-fj-content">
+    <!--左侧列表-->
+    <div class="seeList">
+        <!--附件清单-->
+        <div class="pf-fl-list">
+            <!--<p class="fl-list-title">-->
+            <!--<i class="layui-icon layui-icon-search"></i>-->
+            <!--<input type="text" name="title" placeholder="请搜索" autocomplete="off" class="layui-input">-->
+            <!--</p>-->
+            <div class="fl-list-box">
+                <ul class="layui-nav layui-nav-tree layui-form" id="fjLeftTree" lay-filter="fjTreeFilter">
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!--右侧图文-->
+    <div class="pf-img-details">
+        <!--上面功能按钮-->
+        <div class="pf-bottom-btn">
+            <div class="bdc-operate-btn">
+<!--                <button class="layui-btn layui-btn-sm bdc-secondary-btn bdc-back">后退</button>-->
+                <button class="layui-btn layui-btn-sm bdc-secondary-btn bdc-show-all">全部展开</button>
+                <button class="layui-btn layui-btn-sm bdc-secondary-btn bdc-hide-all">全部收起</button>
+                <button class="layui-btn layui-btn-sm bdc-secondary-btn" id="ys">压缩</button>
+                <button class="layui-btn layui-btn-sm bdc-secondary-btn yscz czan" style="display: none" id="qrys">确认压缩</button>
+                <button class="layui-btn layui-btn-sm bdc-secondary-btn yscz czan" style="display: none" id="qxys">取消压缩</button>
+                <button class="layui-btn layui-btn-sm bdc-secondary-btn" id="jys">解压</button>
+                <button class="layui-btn layui-btn-sm bdc-secondary-btn jyscz czan" style="display: none" id="qrjys">确认解压</button>
+                <button class="layui-btn layui-btn-sm bdc-secondary-btn jyscz czan" style="display: none" id="qxjys">取消解压</button>
+                <button class="layui-btn layui-btn-sm bdc-secondary-btn" id="xz">下载</button>
+                <button class="layui-btn layui-btn-sm bdc-secondary-btn xzcz czan" style="display: none" id="qrxz">确认下载</button>
+                <button class="layui-btn layui-btn-sm bdc-secondary-btn xzcz czan" style="display: none" id="qxxz">取消下载</button>
+                <button class="layui-btn layui-btn-sm bdc-secondary-btn qxwj czan" style="display: none" id="wjqx">全选</button>
+                <button class="layui-btn layui-btn-sm bdc-secondary-btn qxwj czan" style="display: none" id="wjqxqx">取消全选</button>
+                <button class="layui-btn layui-btn-sm bdc-secondary-btn" id="dy">打印</button>
+                <button class="layui-btn layui-btn-sm bdc-secondary-btn dycz czan" style="display: none" id="qrdy">确认打印</button>
+                <button class="layui-btn layui-btn-sm bdc-secondary-btn dycz czan" style="display: none" id="qxdy">取消打印</button>
+                <button class="layui-btn layui-btn-sm bdc-secondary-btn xztp czan" style="display: none" id="xztp">选中图片</button>
+                <button class="layui-btn layui-btn-sm bdc-secondary-btn xztp czan" style="display: none" id="xzqx">取消选中</button>
+            </div>
+            <div class="bdc-img-btn" style="z-index: 0">
+                <span class="seeLeftBtn"><i class="bdc-left-icon"></i></span>
+                <span class="seeRightBtn"><i class="bdc-right-icon"></i></span>
+                <span><i class="bdc-plus-icon"></i></span>
+                <span><i class="bdc-minus-icon"></i></span>
+                <span><i class="bdc-refresh-icon"></i></span>
+                <span><i class="bdc-left-rotate-icon"></i></span>
+                <span><i class="bdc-right-rotate-icon"></i></span>
+                <!--                <span style="opacity: 0;"><i class="bdc-download-icon"></i></span>-->
+            </div>
+        </div>
+        <!--下面图片-->
+        <div id="seeImgView" class="pf-details-top">
+        </div>
+    </div>
+</div>
+<!--隐藏form，为了导出文件使用-->
+<form style="display: none" action="/realestate-portal-ui/rest/v1.0/files/dxxz" method="POST" id="form">
+    <input type="hidden" id="idJsonStr" name="idJsonStr"/>
+    <input type="hidden" id="gzlslid" name="gzlslid"/>
+</form>
+
+<!--附件侧边栏-->
+<script type="text/html" id="fjAsideTpl">
+    <li class="layui-nav-item">
+        <a href="javascript:" data-src="{{d.url}}" class="bdc-fj-file fj-ml">
+            <img src="../static/image/file.png" alt=""><span>{{d.name}}</span>
+        </a>
+        {{# if(d.children && d.children.length >0){ }}
+        <dl class="layui-nav-child">
+            {{# layui.each(d.children, function(i, value){ }}
+            <dd>
+                <a href="javascript:" data-src="{{value.downUrl}}" data-type="{{value.picType}}" data-index="{{value.imgIndex}}" data-id="{{value.id}}" class="bdc-fj-file">
+                    {{# if(value.picType == 'jpg'){ }}
+                    <img src="../static/image/new-page/jpg.png" alt="">
+                    {{#} else if(value.picType == 'png'){ }}
+                    <img src="../static/image/new-page/png.png" alt="">
+                    {{#} else if(value.picType == 'pdf'){ }}
+                    <img src="../static/image/new-page/pdf.png" alt="">
+                    {{#} else if(value.picType == 'docx'||value.picType == 'doc'){ }}
+                    <img src="../static/image/new-page/word.png" alt="">
+                    {{#} else if(value.picType == 'ofd'){ }}
+                    <img src="../static/image/new-page/ofd.png" alt="">
+                    {{#} else if(value.type == '0'){ }}
+                    <img src="../static/image/file.png" alt="">
+                    {{#} else { }}
+                    <img src="../static/image/log.png" alt="">
+                    {{# } }}
+                    <span>{{value.name}}</span>
+                </a>
+                {{# if(value.children && value.children.length >0){ }}
+                <dl class="layui-nav-child">
+                    {{# layui.each(value.children, function(ind, val){ }}
+                    <dd>
+                        <a href="javascript:" data-src="{{val.downUrl}}" data-type="{{val.picType}}" data-index="{{val.imgIndex}}" data-id="{{val.id}}" class="bdc-fj-file">
+                            {{# if(val.picType == 'jpg'){ }}
+                            <img src="../static/image/new-page/jpg.png" alt="">
+                            {{#} else if(val.picType == 'png'){ }}
+                            <img src="../static/image/new-page/png.png" alt="">
+                            {{#} else if(val.picType == 'pdf'){ }}
+                            <img src="../static/image/new-page/pdf.png" alt="">
+                            {{#} else if(val.picType == 'docx'||val.picType == 'doc'){ }}
+                            <img src="../static/image/new-page/word.png" alt="">
+                            {{#} else if(val.picType == 'ofd'){ }}
+                            <img src="../static/image/new-page/ofd.png" alt="">
+                            {{#} else if(val.type == '0'){ }}
+                            <img src="../static/image/file.png" alt="">
+                            {{#} else { }}
+                            <img src="../static/image/log.png" alt="">
+                            {{# } }}
+                            <span>{{val.name}}</span>
+                        </a>
+                        {{# if(val.children && val.children.length >0){ }}
+                        <dl class="layui-nav-child">
+                            {{# layui.each(val.children, function(i, v){ }}
+                            <dd>
+                                <a href="javascript:" data-src="{{v.downUrl}}" data-type="{{v.picType}}" data-index="{{v.imgIndex}}" data-id="{{v.id}}">
+                                    {{# if(v.picType == 'jpg'){ }}
+                                    <img src="../static/image/new-page/jpg.png" alt="">
+                                    {{#} else if(v.picType == 'png'){ }}
+                                    <img src="../static/image/new-page/png.png" alt="">
+                                    {{#} else if(v.picType == 'pdf'){ }}
+                                    <img src="../static/image/new-page/pdf.png" alt="">
+                                    {{#} else if(v.picType == 'docx' ||v.picType == 'doc'){ }}
+                                    <img src="../static/image/new-page/word.png" alt="">
+                                    {{#} else if(v.picType == 'ofd'){ }}
+                                    <img src="../static/image/new-page/ofd.png" alt="">
+                                    {{#} else { }}
+                                    <img src="../static/image/log.png" alt="">
+                                    {{# } }}
+                                    <span>{{v.name}}</span>
+                                </a>
+                                </dd>
+                            {{# }); }}
+                        </dl>
+                        {{# } }}
+                    </dd>
+                    {{# }); }}
+                </dl>
+                {{# } }}
+            </dd>
+            {{#  }); }}
+        </dl>
+        {{#  } }}
+    </li>
+</script>
+
+<script type="text/html" id="filePreviewTpl">
+    {{#  layui.each(d, function(index, item){ }}
+    {{# if(item.fileUrl){ }}
+    <div class="file-slt">
+        {{# if(item.type == 'jpg' ||item.type == 'png' ||item.type == 'jpeg'){ }}
+        <img src="{{ item.fileUrl }}" href="{{ item.fileUrl }}" class="slt-img" alt="" data-src="{{ item.fileUrl }}" data-type="{{ item.type }}" data-index="{{ item.imgIndex }}" data-id="{{ item.id }}">
+        {{#} else if(item.type == 'pdf'){ }}
+        <img src="../static/image/new-page/pdf-big.png" href="{{ item.fileUrl }}" class="slt-img" alt="" data-src="{{ item.fileUrl }}" data-type="{{ item.type }}" data-index="{{ item.imgIndex }}" data-id="{{ item.id }}" style="margin-left: 20px">
+        {{#} else if(item.type == 'docx' ||item.type == 'doc'){ }}
+        <img src="../static/image/new-page/word-big.png" href="{{ item.fileUrl }}" class="slt-img" alt="" data-src="{{ item.fileUrl }}" data-type="{{ item.type }}" data-index="{{ item.imgIndex }}" data-id="{{ item.id }}" style="margin-left: 20px">
+        {{#} else if(item.type == 'lsx' || item.type == 'xls'){ }}
+        <img src="../static/image/new-page/excelslt-big.png" href="{{ item.fileUrl }}" class="slt-img" alt="" data-src="{{ item.fileUrl }}" data-type="{{ item.type }}" data-index="{{ item.imgIndex }}" data-id="{{ item.id }}" style="margin-left: 20px">
+        {{#} else if(item.type == 'ofd'){ }}
+        <img src="../static/image/new-page/ofd-png.png" href="{{ item.fileUrl }}" class="slt-img" alt="" data-src="{{ item.fileUrl }}" data-type="{{ item.type }}" data-index="{{ item.imgIndex }}" data-id="{{ item.id }}" style="margin-left: 20px">
+        {{#} else if(item.type == 'zip'){ }}
+        <img src="../static/image/new-page/zip.jpeg" href="{{ item.fileUrl }}" class="slt-img" alt="" data-src="{{ item.fileUrl }}" data-type="{{ item.type }}" data-index="{{ item.imgIndex }}" data-id="{{ item.id }}" style="margin-left: 20px">
+        {{#} else { }}
+        <img src="../static/image/new-page/folder.png" href="{{ item.fileUrl }}" class="slt-img" alt="" data-src="{{ item.fileUrl }}" data-type="{{ item.type }}" style="margin-left: 20px">
+        {{#  } }}
+        {{# if(item.type == 'jpg' ||item.type == 'png' ||item.type == 'jpeg') { }}
+        <div><input type="checkbox" lay-filter="xzCheckbox" class="xzCheckbox" name="xzCheckbox" value="{{ item.fileUrl }}"
+                  style="width: 13px;margin-right: 5px;display: none" title=""
+                  lay-skin="primary">
+            <div style="text-align: center; display:block">{{ item.fileName }}</div>
+        </div>
+        {{# } else{ }}
+        <div><input type="checkbox" lay-filter="xzCheckbox" class="xzCheckbox" name="xzCheckbox" value="{{ item.id }}"
+                  style="width: 13px;margin-right: 5px;display: none" title=""
+                  lay-skin="primary">
+            <div style="text-align: center;display:block">{{ item.fileName }}</div>
+        </div>
+        {{# } }}
+    </div>
+    {{#  } }}
+    {{#  }); }}
+    {{#  if(d.length === 0){ }}
+    无数据
+    {{#  } }}
+</script>
+<script src="../static/lib/layui/layui.js"></script>
+<script src="../static/lib/jquery/jquery.min.js"></script>
+<!--添加水印-->
+<script src="../static/lib/bdcui/js/common.js"></script>
+<script src="../static/lib/viewerjs/dist/viewer.js"></script>
+<script src="../static/lib/bdcui/js/print/print-common.js"></script>
+<script src="../static/js/common.js"></script>
+
+<script src="../static/js/popup.js"></script>
+<script src="../static/lib/hiprint/polyfill.min.js"></script>
+<script src="../static/lib/hiprint/hiprint.bundle.js"></script>
+<script src="../static/lib/hiprint/plugins/jquery.hiwprint.js"></script>
+
+<script>
+    layui.config({
+        base: '../static/' //静态资源所在路径
+    }).extend({
+        index: '/lib/index' //主入口模块
+    }).use('index').extend({
+        workflow:'js/workflow-handle'
+    }).use('workflow').extend({response:'lib/bdcui/js/response'}).use('response');
+</script>
+</body>
+</html>
+
+

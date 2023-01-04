@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>不动产异议信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+    <link rel="stylesheet" href="../../static/css/zszm/bdcZszm.css"/>
+</head>
+<body>
+<!--************ 条件搜索 ************-->
+<div class="bdc-percentage-container bdc-zhcx-container">
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <form class="layui-form"  action="" lay-filter="searchform">
+                <!--设置字段查询模糊类型-->
+                <!--值 3 默认全模糊； 值 0 默认精确；后面class中mhlx3、mhlx0对应-->
+                <input type="hidden" id="bdcdyhmhlx" name="bdcdyhmhlx" class="search mhlx"/>
+                <input type="hidden" id="bdcqzhmhlx" name="bdcqzhmhlx" class="search mhlx"/>
+                <input type="hidden" id="bdcqzhjcmhlx" name="bdcqzhjcmhlx" class="search mhlx"/>
+                <input type="hidden" id="qlrmcmhlx"  name="qlrmcmhlx"  class="search mhlx"/>
+                <input type="hidden" id="qlrzjhmhlx" name="qlrzjhmhlx" class="search mhlx"/>
+                <input type="hidden" id="ywrmhlx"    name="ywrmhlx"    class="search mhlx"/>
+                <input type="hidden" id="ywrzjhmhlx" name="ywrzjhmhlx" class="search mhlx"/>
+                <input type="hidden" id="zlmhlx"     name="zlmhlx"     class="search mhlx"/>
+                <input type="hidden" id="ycqzhmhlx"  name="ycqzhmhlx"  class="search mhlx"/>
+                <input type="hidden" id="zhmhlx"     name="zhmhlx"     class="search mhlx"/>
+                <input type="hidden" id="fjhmhlx"    name="fjhmhlx"    class="search mhlx"/>
+                <input type="hidden" id="slbhmhlx"   name="slbhmhlx"   class="search mhlx"/>
+                <input type="hidden" id="fwbhmhlx"   name="fwbhmhlx"   class="search mhlx"/>
+                <input type="hidden" id="zhlshmhlx"  name="zhlshmhlx"  class="search mhlx"/>
+                <input type="hidden" id="zsyzhmhlx"  name="zsyzhmhlx"  class="search mhlx"/>
+                <input type="hidden" id="yxtcqzhmhlx"name="yxtcqzhmhlx"class="search mhlx"/>
+                <input type="hidden" id="cqzhjcmhlx" name="cqzhjcmhlx" class="search mhlx"/>
+                <input type="hidden" id="zmjcmhlx"   name="zmjcmhlx"   class="search mhlx"/>
+                <!--隐藏高级查询时高级查询页面多出的字段值-->
+                <input type="hidden" id="zslx"       name="zslx"       class="search required"/>
+                <input type="hidden" id="ycqzh"      name="ycqzh"      class="search required"/>
+                <input type="hidden" id="zh"         name="zh"         class="search required"/>
+                <input type="hidden" id="fjh"        name="fjh"        class="search required"/>
+                <input type="hidden" id="slbh"       name="slbh"       class="search required"/>
+                <input type="hidden" id="fwbh"       name="fwbh"       class="search required"/>
+                <input type="hidden" id="zhlsh"      name="zhlsh"      class="search required"/>
+                <input type="hidden" id="zsyzh"      name="zsyzh"      class="search required"/>
+                <input type="hidden" id="ybdcdyh"    name="ybdcdyh"    class="search required"/>
+                <!--隐藏复选框查询时的字段值 -->
+                <input type="hidden" id="qszt"       name="qszt"       class="search"/>
+                <!--IP地址-->
+                <input type="hidden" id="ipaddress"  name="ipaddress"/>
+
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline bdc-gxk">
+                        <label id="cxfsLabel" class="layui-form-label">查询方式</label>
+                        <div id="cxfsDiv" class="layui-input-inline">
+                            <input type="radio" name="cxfs" value="0" lay-filter="cxfs" class="change-radio-top" title="精确" checked="checked">
+                            <input type="radio" name="cxfs" value="3" lay-filter="cxfs" class="change-radio-top" title="模糊">
+                        </div>
+
+                        <label id="qsztLabel"  class="layui-form-label">权属状态</label>
+                        <div id="qsztDiv"  class="layui-input-inline2">
+                            <input type="checkbox" name="qsztmc" title="临时" value="0" lay-filter="qszt3" lay-skin="primary"/>
+                            <input type="checkbox" name="qsztmc" title="现势" value="1" lay-filter="qszt3" lay-skin="primary" checked/>
+                            <input type="checkbox" name="qsztmc" title="历史" value="2" lay-filter="qszt3" lay-skin="primary"/>
+                            <input type="checkbox" name="qsztmc" title="终止" value="3" lay-filter="qszt3" lay-skin="primary"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label id="qlrmcLabel"  class="layui-form-label">权利人</label>
+                        <div id="qlrmcDiv"  class="layui-input-inline">
+                            <input type="text" autocomplete="off" id="qlrmc" name="qlrmc" placeholder="请输入" ondblclick="ReadIDCardNewQlrAndZjh(this)"
+                                   class="layui-input search required">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label id="qlrzjhLabel"  class="layui-form-label">权利人证件号</label>
+                        <div id="qlrzjhDiv"  class="layui-input-inline">
+                            <input type="text" autocomplete="off" id="qlrzjh" name="qlrzjh" placeholder="请输入" class="layui-input search required">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label id="bdcdyhLabel"  class="layui-form-label">不动产单元号</label>
+                        <div id="bdcdyhDiv"  class="layui-input-inline">
+                            <input type="text" autocomplete="off" id="bdcdyh" name="bdcdyh" placeholder="请输入"
+                                   class="layui-input search required">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label id="bdcqzhLabel"  class="layui-form-label">不动产权证号</label>
+                        <div id="bdcqzhDiv"  class="layui-input-inline">
+                            <input type="text" autocomplete="off" id="bdcqzh" name="bdcqzh" placeholder="请输入" class="layui-input search required">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label id="zlLabel"  class="layui-form-label">坐落</label>
+                        <div id="zlDiv"  class="layui-input-inline">
+                            <input type="text" autocomplete="off" id="zl" name="zl" placeholder="请输入" class="layui-input search required">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label id="zxyyywhLabel"  class="layui-form-label change-label-width bdc-label-newline">注销异议<br>业务号</label>
+                        <div id="zxyyywhDiv"  class="layui-input-inline">
+                            <input type="text" autocomplete="off" id="zxyyywh" name="zxyyywh" placeholder="请输入" class="layui-input search required">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                        <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-secondary-btn" id="moreSearch">高级查询</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="bdc-table-box">
+        <table id="bdcYyTable" lay-filter="bdcYyTable"></table>
+    </div>
+</div>
+
+<!--表格上面功能按钮-->
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="zx">失效</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="export">导出Excel</button>
+        <!--<button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="edit">编辑</button>-->
+    </div>
+</script>
+
+<!--权属状态模板-->
+<script type="text/html" id="qsztTpl">
+    {{#  if(d.qszt == 0){ }}
+    <span style="color:#1d87d1;">临时</span>
+    {{#  } else if(d.qszt == 1) { }}
+    <span style="color:#32b032;">现势</span>
+    {{#  } else if(d.qszt == 2) { }}
+    <span style="color:#f28943;">历史</span>
+    {{#  } else if(d.qszt == 3) { }}
+    <span style="color:#f24b43;">终止</span>
+    {{#  } else { }}
+    <span></span>
+    {{#  } }}
+</script>
+<!--到期时间模板-->
+<script type="text/html" id="qxTpl">
+    {{#  if(d.qx == 0){ }}
+    <span style="color:#1d87d1;">到期</span>
+    {{#  } else if(d.qx < 0) { }}
+    <span style="color:#f24b43;">超期</span>
+    {{#  } else { }}
+    <span>{{d.qx}}</span>
+    {{#  } }}
+</script>
+<!--表格内部操作按钮-->
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="openBdcYy">查看</a>
+</script>
+
+<!--隐藏form，为了Excel导出缓存数据使用-->
+<form style="display: none" action="/realestate-inquiry-ui/excel/export" method="POST" id="form">
+    <input type="hidden" id="fileName" name="fileName"/>
+    <input type="hidden" id="sheetName" name="sheetName"/>
+    <input type="hidden" id="cellTitle" name="cellTitle"/>
+    <input type="hidden" id="cellWidth" name="cellWidth"/>
+    <input type="hidden" id="cellKey" name="cellKey"/>
+    <input type="hidden" id="data" name="data"/>
+</form>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/lib/form-select/formSelects-v4.js"/>
+<script src="../../static/lib/bdcui/js/mask.js"></script>
+<script src="../../static/lib/bdcui/js/readIdCard.js"></script>
+<script src="../../static/js/readCard.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/commonSearch.js"></script>
+<script src="../../static/js/formCenter.js"></script>
+<script src="../../static/js/dyaCx/changzhou/cxtjcommon.js"></script>
+<script src="../../static/js/changzhou/bdcYy/bdcYyList.js"></script>
+</body>
+</html>

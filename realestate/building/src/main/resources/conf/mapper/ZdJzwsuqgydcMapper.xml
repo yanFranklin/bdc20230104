@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.building.core.mapper.ZdJzwsuqgydcMapper">
+    <!-- -->
+    <select id="listLastBgGydcByDjh" parameterType="map" resultType="map">
+        SELECT BZ,DCRXM,DCSJ,DJH,FTTDMJ,JZWDM,JZWMC,JZWMJ,JZWSL,
+        MJDW,ZD_JZWSUQGYDC_INDEX,ZDMJ,a.BGBH FROM h_zd_jzwsuqgydc a
+        inner join
+         (SELECT BGBH FROM h_zd_jzwsuqgydc
+        WHERE DJH = #{djh} AND ROWNUM = 1 order by bgbh desc ) b
+        on a.bgbh = b.bgbh
+    </select>
+
+</mapper>

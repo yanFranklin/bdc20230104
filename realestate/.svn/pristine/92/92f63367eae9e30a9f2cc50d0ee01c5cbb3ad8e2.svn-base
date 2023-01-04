@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <!--舒城一些其他单位的共享接口 -->
+
+    <!-- 获取竣工验收备案附件信息-->
+    <ex:bean id="jgysbaFjxx">
+        <ex:service-info request-type="httpGetForShuChengGx">
+            <ex:property name="url" value="${gxjk.jgysbaxx.url}"/>
+            <ex:property name="logEventName" value="获取竣工验收备案附件信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZJBM"/>
+            <ex:property name="dsfFlag" value="ZJBM"/>
+            <ex:property name="appKey" value="${gxjk.jgysbaxx.appKey}"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 获取建设工程规划许可证证照列表-->
+    <ex:bean id="ghxkzList">
+        <ex:service-info request-type="httpGetForShuChengGx">
+            <ex:property name="url" value="${gxjk.jsgcghxkzList.url}"/>
+            <ex:property name="logEventName" value="获取建设工程规划许可证证照列表"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZJBM"/>
+            <ex:property name="dsfFlag" value="ZJBM"/>
+            <ex:property name="appKey" value="${gxjk.jsgcghxkzList.appKey}"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 获取建设工程规划许可证证照单个文件-->
+    <ex:bean id="ghxkzFile">
+        <ex:service-info request-type="httpGetForShuChengGx">
+            <ex:property name="url" value="${gxjk.jsgcghxkzFile.url}"/>
+            <ex:property name="logEventName" value="获取建设工程规划许可证证照单个文件"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZJBM"/>
+            <ex:property name="dsfFlag" value="ZJBM"/>
+            <ex:property name="appKey" value="${gxjk.jsgcghxkzFile.appKey}"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 收养信息查询接口-->
+    <ex:bean id="bjjk_sycx">
+        <ex:service-info request-type="httpGetForShuChengGx">
+            <ex:property name="logEventName" value="收养信息查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="BJJK"/>
+            <ex:property name="dsfFlag" value="BJJK"/>
+            <ex:property name="url" value="${bjjk.sycx.url}" />
+            <ex:property name="appKey" value="${bjjk.sycx.appkey}"/>
+        </ex:service-info>
+        <ex:response resultKey="data">
+            <ex:element name="data" dozerXml="conf/dozer/shucheng/gxjk/sycx/response/data.xml" saveNull="java.util.ArrayList"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 死亡证明 -->
+    <ex:bean id="bjjk_swzmcx">
+        <ex:service-info request-type="httpGetForShuChengGx">
+            <ex:property name="logEventName" value="死亡证明查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="BJJK"/>
+            <ex:property name="dsfFlag" value="BJJK"/>
+            <ex:property name="url" value="${bjjk.swzm.url}" />
+            <ex:property name="appKey" value="${bjjk.swzm.appkey}"/>
+        </ex:service-info>
+        <ex:response resultKey="data">
+            <ex:element name="data" dozerXml="conf/dozer/shucheng/gxjk/swzm/response/data.xml" saveNull="java.util.ArrayList"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 部级接口 解码服务 -->
+    <ex:bean id="soapXmldecodeResponse">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="bjjkServiceImpl" />
+            <ex:property name="methodName" value="xmldecode" />
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 2.1 公证书信息 -->
+    <ex:bean id="bjjk_gzajgzjbxx">
+        <ex:service-info request-type="httpGetForShuChengGx">
+            <ex:property name="logEventName" value="公证书基本信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="BJJK"/>
+            <ex:property name="dsfFlag" value="BJJK"/>
+            <ex:property name="url" value="${bjjk.gzajgzjbxx.url}" />
+            <ex:property name="appKey" value="${bjjk.gzajgzjbxx.appkey}"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element sourceService="soapXmldecodeResponse" />
+            <ex:element dozerXml="conf/dozer/shucheng/gxjk/gzaj/response/data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 2.2 公证书其他信息-->
+    <ex:bean id="bjjk_gzajgzsxx">
+        <ex:service-info request-type="httpGetForShuChengGx">
+            <ex:property name="url" value="${bjjk.gzajgzsxx.url}"/>
+            <ex:property name="logEventName" value="公证书其他信息单个文件"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZJBM"/>
+            <ex:property name="dsfFlag" value="ZJBM"/>
+            <ex:property name="appKey" value="${bjjk.gzajgzjbxx.appkey}"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element sourceService="soapXmldecodeResponse" />
+            <ex:element dozerXml="conf/dozer/shucheng/gxjk/gzaj/response/gzsdata.xml" saveNull="java.util.ArrayList"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 2.3 公证书其他信息-->
+    <ex:bean id="bjjk_gzajqtxx">
+        <ex:service-info request-type="httpGetForShuChengGx">
+            <ex:property name="url" value="${bjjk.gzajqtxx.url}"/>
+            <ex:property name="logEventName" value="公证书其他信息单个文件"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZJBM"/>
+            <ex:property name="dsfFlag" value="ZJBM"/>
+            <ex:property name="appKey" value="${bjjk.gzajgzjbxx.appkey}"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element sourceService="soapXmldecodeResponse"/>
+            <ex:element dozerXml="conf/dozer/shucheng/gxjk/gzaj/response/qtdata.xml" saveNull="java.util.ArrayList"/>
+        </ex:response>
+    </ex:bean>
+
+
+
+</beans>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>林权统计信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css">
+
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/common.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/ztree/metroStyle.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css"/>
+
+    <style type="text/css">
+        .bdc-percentage-container {
+            width: 100%;
+            height: 100%;
+            padding: 10px 10px 10px;
+            box-sizing: border-box;
+            position: relative;
+            background-color: #eaedf1;
+        }
+
+        .bdc-table-box {
+            width: 100%;
+            height: calc(100% - 52px);
+        }
+
+        .gray-tr {
+            text-align: center;
+            background: #f3f4f6;
+        }
+        .setOverflow td, .bdc-form-table td{
+            height: 34px;
+        }
+        .export{
+            background-color: #81BC57!important;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+<!--************ 条件搜索 ************-->
+<div class="bdc-percentage-container">
+
+    <div class="bdc-search-box">
+        <form class="layui-form" action="">
+            <div class="layui-form-item pf-form-item">
+                <div class="layui-inline">
+                    <label id="kssjLabel" class="layui-form-label">开始时间</label>
+                    <div id="kssjDiv" class="layui-input-inline">
+                        <input id="startTime" class="layui-input search" type="text" name="kssj" placeholder="请选择"/>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label id="jzsjLabel" class="layui-form-label">结束时间</label>
+                    <div id="jzsjDiv" class="layui-input-inline">
+                        <input id="endTime" class="layui-input search" type="text" name="jzsj" placeholder="请选择"/>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">区县</label>
+                    <div class="layui-input-inline">
+                        <select xm-select="selectBmmc" xm-select-skin="default"
+                                xm-select-show-count="2" xm-select-height="34px" xm-select-search=""
+                                xm-select-search-type="dl"
+                                id="selectBmmc" lay-search="" lay-filter="selectBmmc"
+                                class="layui-select xxxx-tab-useful" lay-verify=""
+                                name="djxl">
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="layui-inline bdc-button-box">
+                    <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                    <a type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn">重置</a>
+                    <a class="layui-btn layui-btn-normal export" id="export">导出
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="bdc-table-box">
+        <form class="common-form layui-form bdc-form-table" name="zrfForm">
+            <div class="layui-form-item" style="overflow: auto">
+                <div colspan="25" style="height: 36px">
+                    <span style="position: absolute;right: 20px;top:20px"> 面积单位：亩&nbsp;&nbsp;金额单位：万元</span>
+                </div>
+                <div id="lqtjtpl">
+                    <table class="layui-table bdc-jt-table bdc-table-box" border="1">
+                        <thead>
+                        <tr class="gray-tr">
+                            <th rowspan="3" style="min-width: 80px;">登记类型</th>
+                            <th style="min-width: 80px" rowspan="3">集体林地数</th>
+                            <th style="min-width: 100px" rowspan="3">集体林地面积</th>
+                            <th style="min-width: 80px" rowspan="3">国有林地数</th>
+                            <th style="min-width: 100px" rowspan="3">国有林地面积</th>
+                            <th style="min-width: 150px" colspan="2" rowspan="2">合计</th>
+                            <th colspan="10">其中</th>
+                            <th style="min-width: 60px" rowspan="3">抵押金额</th>
+                            <th style="min-width: 60px" rowspan="3">办件量</th>
+                            <th style="min-width: 60px" rowspan="3">发证数</th>
+                        </tr>
+                        <tr class="gray-tr">
+                            <th style="min-width: 200px" colspan="2">林地使用权/森林、林木使用权</th>
+                            <th style="min-width: 200px" colspan="2">林地承包经营权/林木所有权</th>
+                            <th style="min-width: 200px" colspan="2">林地使用权/林木所有权</th>
+                            <th style="min-width: 100px" colspan="2">林地经营权/林木所有权</th>
+                            <th style="min-width: 100px" colspan="2">林地经营权/林木使用权</th>
+                        </tr>
+                        <tr class="gray-tr">
+                            <th style="min-width: 60px">林地数</th>
+                            <th style="min-width: 60px">林地面积</th>
+                            <th style="min-width: 60px">林地数</th>
+                            <th style="min-width: 60px">林地面积</th>
+                            <th style="min-width: 60px">林地数</th>
+                            <th style="min-width: 60px">林地面积</th>
+                            <th style="min-width: 60px">林地数</th>
+                            <th style="min-width: 60px">林地面积</th>
+                            <th style="min-width: 60px">林地数</th>
+                            <th style="min-width: 60px">林地面积</th>
+                            <th style="min-width: 60px">林地数</th>
+                            <th style="min-width: 60px">林地面积</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr style="height: 36px">
+                            <td  class="none" colspan="20" style="text-align: left">
+                                <img src="../../static/lib/bdcui/images/table-none.png" alt="">暂无数据</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+    <script src="../../static/lib/jquery/jquery.min.js"></script>
+    <script src="../../static/lib/layui/layui.js"></script>
+    <!--添加水印-->
+    <script src="../../static/lib/bdcui/js/common.js"></script>
+<!--    <script src="../../static/lib/form-select/formSelects-v4.js"/>-->
+    <script src="../../static/lib/bdcui/js/mask.js"></script>
+    <script src="../../static/js/common.js"></script>
+    <script src="../../static/js/lqtj/lqtj.js"></script>
+<script type="text/html" id="lqxxTpl">
+    {{# if(d.data!=[]){ }}
+    <table class="layui-table bdc-jt-table bdc-table-box" border="1">
+        <thead>
+        <tr class="gray-tr">
+            <th rowspan="3" style="min-width: 80px;">登记类型</th>
+            <th style="min-width: 80px" rowspan="3">集体林地数</th>
+            <th style="min-width: 100px" rowspan="3">集体林地面积</th>
+            <th style="min-width: 80px" rowspan="3">国有林地数</th>
+            <th style="min-width: 100px" rowspan="3">国有林地面积</th>
+            <th style="min-width: 150px" colspan="2" rowspan="2">合计</th>
+            <th colspan="10">其中</th>
+            <th style="min-width: 60px" rowspan="3">抵押金额</th>
+            <th style="min-width: 60px" rowspan="3">办件量</th>
+            <th style="min-width: 60px" rowspan="3">发证数</th>
+        </tr>
+        <tr class="gray-tr">
+            <th style="min-width: 200px" colspan="2">林地使用权/森林、林木使用权</th>
+            <th style="min-width: 200px" colspan="2">林地承包经营权/林木所有权</th>
+            <th style="min-width: 200px" colspan="2">林地承包经营权/林木所有权</th>
+            <th style="min-width: 100px" colspan="2">林地经营权/林木所有权</th>
+            <th style="min-width: 100px" colspan="2">林地经营权/林木使用权</th>
+        </tr>
+        <tr class="gray-tr">
+            <th style="min-width: 60px">林地数</th>
+            <th style="min-width: 60px">林地面积</th>
+            <th style="min-width: 60px">林地数</th>
+            <th style="min-width: 60px">林地面积</th>
+            <th style="min-width: 60px">林地数</th>
+            <th style="min-width: 60px">林地面积</th>
+            <th style="min-width: 60px">林地数</th>
+            <th style="min-width: 60px">林地面积</th>
+            <th style="min-width: 60px">林地数</th>
+            <th style="min-width: 60px">林地面积</th>
+            <th style="min-width: 60px">林地数</th>
+            <th style="min-width: 60px">林地面积</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.data, function(index, item){ }}
+        <tr>
+            <td> {{ item.djlxmc}}</td>
+            <td> {{ item.jtlds==null?"—":item.jtlds }}</td>
+            <td> {{ item.jtldmj==null?"—":item.jtldmj }}</td>
+            <td> {{ item.gylds==null?"—":item.gylds }}</td>
+            <td> {{ item.gyldmj==null?"—":item.gyldmj }}</td>
+            <td> {{ item.ldzs==null?"—":item.ldzs }}</td>
+            <td> {{ item.ldzmj==null?"—":item.ldzmj }}</td>
+            <td>{{ item.lds1==null?"—":item.lds1 }}</td>
+            <td>{{ item.ldmj1==null?"—":item.ldmj1 }}</td>
+            <td>{{ item.lds2==null?"—":item.lds2 }}</td>
+            <td>{{ item.ldmj2==null?"—":item.ldmj2 }}</td>
+            <td>{{ item.lds3==null?"—":item.lds3 }}</td>
+            <td>{{ item.ldmj3==null?"—":item.ldmj3 }}</td>
+            <td>{{ item.lds4==null?"—":item.lds4 }}</td>
+            <td>{{ item.ldmj4==null?"—":item.ldmj4 }}</td>
+            <td>{{ item.lds5==null?"—":item.lds5 }}</td>
+            <td>{{ item.ldmj5==null?"—":item.ldmj5 }}</td>
+            <td>{{ item.dyje==null?"—":item.dyje }}</td>
+            <td>{{ item.bjl==null?"—":item.bjl }}</td>
+            <td>{{ item.fzs==null?"—":item.fzs }}</td>
+        </tr>
+        {{# }); }}
+        </tbody>
+        {{# }}}
+    </table>
+
+</script>

@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>综合法人库-农村留守儿童信息查询</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/css/common.css"/>
+</head>
+<body>
+
+<div class="content-div gxjklc-div">
+    <!--查询条件-->
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <!--一行的-->
+            <form class="layui-form" action="">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">证件号</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input search" name="zjh" id="zjh" placeholder="请输入" type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                        <button type="reset" id="reset" class="layui-btn bdc-secondary-btn reset-btn">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="bdc-content-box">
+        <form class="layui-form setOverflow" action="">
+            <div class="bdc-content-fix">
+                <div class="content-title">
+                    <p>农村留守儿童信息查询(综合法人库)</p>
+                    <div class="title-btn-area .layui-layout-right">
+                        <button type="reset" class="layui-btn bdc-secondary-btn upload-pdf">上传PDF</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-main">
+                <div class="table-name"></div>
+
+                <div class="bdc-table-box">
+                    <table class="layui-table" border="1">
+                        <colgroup>
+                            <col width="50">
+                            <col width="100">
+                            <col width="150">
+                            <col width="100">
+                            <col width="150">
+                        </colgroup>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/html" id="cxywcsTpl">
+    {{# if(d.cxywcs){ }}
+    {{# layui.each(d.cxywcs,function(index,item){  }}
+    <tr>
+        <td class="set-back-color set-center" rowspan="1">查询条件</td>
+        <td class="set-back-color">证件号</td>
+        <td colspan="4"><input type="text" class="layui-table-edit zjh" value="{{ item.zjh || ''}}" disabled="off"></td>
+    </tr>
+    <!--查询结果-->
+    <tr>
+        <td class="set-back-color set-center" rowspan="26">查<br>询<br>结<br>果</td>
+        <td class="set-back-color">姓名</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">性别</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">民族</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">出生日期</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">公民身份号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">是否登记户口</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">户籍所在地</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">住址</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">住址区划</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">详细地址</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">身体情况</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">残疾类别</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">残疾登记</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">患病类型</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">是否学校寄宿</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">就学情况</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">父亲名称</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">父亲身份证标识</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">父亲身份证号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">父亲号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">父亲务工地点</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">父亲工作城市</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">母亲名称</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">母亲身份证标识</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">母亲身份证号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">母亲电话号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">母亲务工地点</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">母亲工作城市</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">儿童类型</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">有无委托其他监护人</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">委托监护人姓名</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">委托监护人身份证号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">委托监护人身份证标识</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">委托监护人电话号码标识</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">委托监护人电话号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">与委托人关系</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">委托监护人地址</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">委托监护人类型</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">家庭经济来源</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">健康状况</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">联系人名称</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">联系人电话号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">单位负责人名称</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">复核人</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">是否有身份证号</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">录入时间</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">户籍所在地区划</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">无监护能力</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">更新时间</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">填表人</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">区划</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color"></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td colspan="5" class="quarantine"></td>
+    </tr>
+    {{# }); }}
+    {{# }else{ }}
+    <tr>
+        <td class="set-back-color set-center" rowspan="1">查询条件</td>
+        <td class="set-back-color">证件号</td>
+        <td colspan="4"><input type="text" class="layui-table-edit zjh" value="" disabled="off"></td>
+    </tr>
+    <!--查询结果-->
+    <tr>
+        <td class="set-back-color set-center" rowspan="26">查<br>询<br>结<br>果</td>
+        <td class="set-back-color">姓名</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">性别</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">民族</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">出生日期</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">公民身份号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">是否登记户口</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">户籍所在地</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">住址</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">住址区划</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">详细地址</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">身体情况</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">残疾类别</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">残疾登记</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">患病类型</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">是否学校寄宿</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">就学情况</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">父亲名称</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">父亲身份证标识</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">父亲身份证号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">父亲号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">父亲务工地点</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">父亲工作城市</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">母亲名称</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">母亲身份证标识</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">母亲身份证号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">母亲电话号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">母亲务工地点</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">母亲工作城市</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">儿童类型</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">有无委托其他监护人</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">委托监护人姓名</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">委托监护人身份证号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">委托监护人身份证标识</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">委托监护人电话号码标识</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">委托监护人电话号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">与委托人关系</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">委托监护人地址</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">委托监护人类型</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">家庭经济来源</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">健康状况</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">联系人名称</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">联系人电话号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">单位负责人名称</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">复核人</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">是否有身份证号</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">录入时间</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">户籍所在地区划</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">无监护能力</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">更新时间</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">填表人</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">区划</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color"></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td colspan="5" class="quarantine"></td>
+    </tr>
+    {{# } }}
+</script>
+<script type="text/html" id="tableTpl">
+    {{# if(d){ }}
+    {{# layui.each(d,function(index,item){  }}
+    <tr>
+        <td class="set-back-color set-center" rowspan="1">查询条件</td>
+        <td class="set-back-color">证件号</td>
+        <td colspan="4"><input type="text" class="layui-table-edit zjh" value="{{ item.zjh || ''}}" disabled="off"></td>
+    </tr>
+    <!--查询结果-->
+    <tr>
+        <td class="set-back-color set-center" rowspan="26">查<br>询<br>结<br>果</td>
+        <td class="set-back-color">姓名</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.xm || ''}}"></td>
+        <td class="set-back-color">性别</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.xb || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">民族</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.mz || ''}}"></td>
+        <td class="set-back-color">出生日期</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.csrq || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">公民身份号码</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.gmsfhm || ''}}"></td>
+        <td class="set-back-color">是否登记户口</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.sfdjhk || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">户籍所在地</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.hjszd || ''}}"></td>
+        <td class="set-back-color">住址</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.zz || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">住址区划</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.zzqh || ''}}"></td>
+        <td class="set-back-color">详细地址</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.xxdz || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">身体情况</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.stqk || ''}}"></td>
+        <td class="set-back-color">残疾类别</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.cjlb || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">残疾登记</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.cjdj || ''}}"></td>
+        <td class="set-back-color">患病类型</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.hblx || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">是否学校寄宿</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.sfxxjs || ''}}"></td>
+        <td class="set-back-color">就学情况</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.jxqk || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">父亲名称</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.fqmc || ''}}"></td>
+        <td class="set-back-color">父亲身份证标识</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.fqsfzbs || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">父亲身份证号码</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.fqsfzhm || ''}}"></td>
+        <td class="set-back-color">父亲号码</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.fqhm || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">父亲务工地点</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.fqwgdd || ''}}"></td>
+        <td class="set-back-color">父亲工作城市</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.fqgzcs || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">母亲名称</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.mqmc || ''}}"></td>
+        <td class="set-back-color">母亲身份证标识</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.mqsfzbs || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">母亲身份证号码</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.mqsfzhm || ''}}"></td>
+        <td class="set-back-color">母亲电话号码</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.mqdhhm || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">母亲务工地点</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.mqwgdd || ''}}"></td>
+        <td class="set-back-color">母亲工作城市</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.mqgzcs || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">儿童类型</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.etlx || ''}}"></td>
+        <td class="set-back-color">有无委托其他监护人</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.ywwtqtjhr || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">委托监护人姓名</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.wtjhrxm || ''}}"></td>
+        <td class="set-back-color">委托监护人身份证号码</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.wtjhrsfzhm || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">委托监护人身份证标识</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.wtjhrsfzbs || ''}}"></td>
+        <td class="set-back-color">委托监护人电话号码标识</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.wtjhrdhhmbs || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">委托监护人电话号码</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.wtjhrdhhm || ''}}"></td>
+        <td class="set-back-color">与委托人关系</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.ywtrgx || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">委托监护人地址</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.wtjhrdz || ''}}"></td>
+        <td class="set-back-color">委托监护人类型</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.wtjhrlx || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">家庭经济来源</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.jtjjly || ''}}"></td>
+        <td class="set-back-color">健康状况</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.jkzt || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">联系人名称</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.lxrmc || ''}}"></td>
+        <td class="set-back-color">联系人电话号码</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.lxrdhhm || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">单位负责人名称</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.dwfzrmc || ''}}"></td>
+        <td class="set-back-color">复核人</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.fhr || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">是否有身份证号</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.sfysfzh || ''}}"></td>
+        <td class="set-back-color">录入时间</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.lrsj || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">户籍所在地区划</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.hjszdqh || ''}}"></td>
+        <td class="set-back-color">无监护能力</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.wjhnl || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">更新时间</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.gxsj || ''}}"></td>
+        <td class="set-back-color">填表人</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.tbr || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">区划</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.qh || ''}}"></td>
+        <td class="set-back-color"></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td colspan="5" class="quarantine"></td>
+    </tr>
+    {{# }); }}
+    {{# }else{ }}
+    <tr>
+        <td class="set-back-color set-center" rowspan="1">查询条件</td>
+        <td class="set-back-color">证件号</td>
+        <td colspan="4"><input type="text" class="layui-table-edit zjh" value="" disabled="off"></td>
+    </tr>
+    <!--查询结果-->
+    <tr>
+        <td class="set-back-color set-center" rowspan="26">查<br>询<br>结<br>果</td>
+        <td class="set-back-color">姓名</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">性别</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">民族</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">出生日期</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">公民身份号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">是否登记户口</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">户籍所在地</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">住址</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">住址区划</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">详细地址</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">身体情况</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">残疾类别</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">残疾登记</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">患病类型</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">是否学校寄宿</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">就学情况</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">父亲名称</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">父亲身份证标识</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">父亲身份证号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">父亲号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">父亲务工地点</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">父亲工作城市</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">母亲名称</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">母亲身份证标识</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">母亲身份证号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">母亲电话号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">母亲务工地点</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">母亲工作城市</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">儿童类型</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">有无委托其他监护人</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">委托监护人姓名</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">委托监护人身份证号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">委托监护人身份证标识</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">委托监护人电话号码标识</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">委托监护人电话号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">与委托人关系</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">委托监护人地址</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">委托监护人类型</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">家庭经济来源</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">健康状况</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">联系人名称</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">联系人电话号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">单位负责人名称</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">复核人</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">是否有身份证号</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">录入时间</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">户籍所在地区划</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">无监护能力</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">更新时间</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">填表人</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">区划</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color"></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td colspan="5" class="quarantine"></td>
+    </tr>
+    {{# } }}
+</script>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/bdcui/js/mask.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/gxjklc/gxjkCommon.js"></script>
+<script src="../../static/js/yancheng/sjgx/lcshijNclsrtxx.js"></script>
+</body>
+</html>

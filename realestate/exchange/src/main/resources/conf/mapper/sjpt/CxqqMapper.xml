@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.sjpt.CxqqMapper">
+    <select id="listCxqqByPage" parameterType="java.util.Map" resultType="cn.gtmap.realestate.exchange.core.domain.sjpt.GxPeCxqq">
+        select t.cxsqdh,t.cxjgbs,t.cxywlb,t.cjsj,t.gxsj,t.zt,t.cxfw,t.sbsj  from GX_PE_CXQQ t
+        <where>
+            <if test="cxsqdh!=null and cxsqdh!=''">
+                and t.cxsqdh like '%' || #{cxsqdh} || '%'
+            </if>
+            <if test="cxjgbs!=null and cxjgbs!=''">
+                and t.cxjgbs =#{cxjgbs}
+            </if>
+            <if test="cxywlb!=null and cxywlb!=''">
+                and t.cxywlb = #{cxywlb}
+            </if>
+            <if test="zt!=null and zt!=''">
+                and t.zt = #{zt}
+            </if>
+
+            <if test="kssj!=null and kssj!=''">
+                <![CDATA[
+                and t.cjsj >= to_date(#{kssj},'yyyy-mm-dd')
+            ]]>
+
+            </if>
+            <if test="jssj!=null and jssj!=''">
+                <![CDATA[
+                and t.cjsj < to_date(#{jssj},'yyyy-mm-dd') + 1
+            ]]>
+            </if>
+        </where>
+        order by t.cxsqdh desc
+    </select>
+
+
+    <select id="querySjsjlcxCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(*)  from gx_pe_cxqq t
+        <where>
+            <if test="zt!=null and zt!=''">
+                and t.zt = #{zt}
+            </if>
+            <if test="kssj!=null and kssj!=''">
+                <![CDATA[
+                and t.cjsj >= to_date(#{kssj},'yyyy-mm-dd hh24:mi:ss')
+            ]]>
+            </if>
+            <if test="jssj!=null and jssj!=''">
+                <![CDATA[
+                and t.cjsj < to_date(#{jssj},'yyyy-mm-dd hh24:mi:ss') + 1
+            ]]>
+            </if>
+        </where>
+    </select>
+
+    <select id="listCxrByPage" parameterType="java.util.Map" resultType="cn.gtmap.realestate.exchange.core.domain.sjpt.GxPeCxqqXm">
+        select t.xmid,t.qlrmc,t.qlrzjh,t.qlrzjlx,t.wsbh,t.cxsqdh,t.cxzt,t.cxqy,t.cxfw from GX_PE_CXQQ_XM t
+        where 1=1
+        <if test="cxsqdh!=null and cxsqdh!=''">
+            and t.cxsqdh like '%' || #{cxsqdh} || '%'
+        </if>
+        <if test="wsbh!=null and wsbh!=''">
+            and t.wsbh like '%' || #{wsbh} || '%'
+        </if>
+    </select>
+
+    <select id="getRzByPage" parameterType="map" resultType="cn.gtmap.realestate.exchange.core.domain.sjpt.GxPeRz">
+        select t.rzid,t.cxsqdh,t.wsbh,t.qlrmc,t.jlsj,z.mc czlx,t.xzqdm,t.cxjgbs,t.yhm,t.mm,t.qlrzjh,t.zt,t.error_msg, t.hqqqs,t.czr,t.success_msg
+        fROM GX_PE_RZ t left join gx_pe_zd_rzczlx z on t.czlx = z.dm
+        where 1=1
+        <if test="czr!=null and czr!=''">
+            and t.czr like '%' || #{czr} || '%'
+        </if>
+        <if test="czlx!=null and czlx!=''">
+            and t.czlx=#{czlx}
+        </if>
+        <if test="rzid!=null and rzid!=''">
+            and t.rzid=#{rzid}
+        </if>
+        <if test="kssj!=null and kssj!=''">
+            <![CDATA[
+                and to_date(to_char(t.jlsj,'yyyy-mm-dd'),'yyyy-mm-dd') >= to_date(#{kssj},'yyyy-mm-dd')
+            ]]>
+
+        </if>
+        <if test="jssj!=null and jssj!=''">
+            <![CDATA[
+                and to_date(to_char(t.jlsj,'yyyy-mm-dd'),'yyyy-mm-dd') <= to_date(#{jssj},'yyyy-mm-dd')
+            ]]>
+        </if>
+        order by t.jlsj desc
+    </select>
+
+    <select id="getQlxxByPage" parameterType="map" resultType="map">
+        select * from ${table} t
+        where 1=1
+        <if test="cxsqdh!=null and cxsqdh!=''">
+            and t.cxsqdh = #{cxsqdh}
+        </if>
+        <if test="wsbh!=null and wsbh!=''">
+            and t.wsbh = #{wsbh}
+        </if>
+    </select>
+
+    <update id="updateCxqqXmZt" parameterType="map">
+        UPDATE GX_PE_CXQQ_XM t
+        SET t.CXZT = #{cxzt}
+        WHERE 1=1
+        <if test="cxsqdh!=null and cxsqdh!=''">
+            and t.cxsqdh=#{cxsqdh}
+        </if>
+        <if test="xmid!=null and xmid!=''">
+            and t.xmid=#{xmid}
+        </if>
+    </update>
+
+
+    <select id="listShareDataByPage" parameterType="map" resultType="map">
+        select * from T_BM_CASEBASEINFO t
+        where 1=1 and datasource = 1
+        <if test="ywbh!=null and ywbh!=''">
+            and t.caseno = #{ywbh}
+        </if>
+        <if test="sqrmc!=null and sqrmc!=''">
+            and t.caseapplicant = #{sqrmc}
+        </if>
+        <if test="sqrzjh!=null and sqrzjh!=''">
+            and t.caseapplicantpapercode = #{sqrzjh}
+        </if>
+    </select>
+</mapper>

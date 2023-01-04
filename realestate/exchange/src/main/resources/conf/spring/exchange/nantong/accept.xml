@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!-- 南通 为业务系统提供查询省级平台的婚姻信息接口-->
+    <ex:bean id="acceptHyxx">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${xgbmcx.hyxx.url}"/>
+            <ex:property name="logEventName" value="业务系统查询省级平台婚姻信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SJPT"/>
+            <ex:property name="dsfFlag" value="SJPT"/>
+            <ex:property name="contentType" value="application/x-www-form-urlencoded"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/nantong/accept/acceptHyxx/request/param.xml"/>
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+            <ex:element sourceService="acceptHyxx_fiter"/>
+        </ex:response>
+    </ex:bean>
+    <!-- 过滤省级平台的婚姻信息 -->
+    <ex:bean id="acceptHyxx_fiter">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="nantongAcceptService"/>
+            <ex:property name="methodName" value="filterHyxx"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 业务系统请求 家庭成员申请 -->
+    <ex:bean id="acceptJtcyCxsq">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="业务系统申请查询家庭成员信息接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SJPT"/>
+            <ex:property name="dsfFlag" value="SJPT"/>
+            <ex:property name="url" value="${xgbmcx.hjxxcxsq.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/nantong/accept/acceptJtcy/cxsq/request/param.xml"/>
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+            <ex:element dozerXml="conf/dozer/nantong/accept/acceptJtcy/cxsq/response/data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 业务系统请求 家庭成员申请反馈 -->
+    <ex:bean id="acceptJtcyCxfk">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="业务系统申请查询家庭成员信息反馈接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SJPT"/>
+            <ex:property name="dsfFlag" value="SJPT"/>
+            <ex:property name="url" value="${xgbmcx.hjxxcxfk.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/nantong/accept/acceptJtcy/cxfk/request/param.xml"/>
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+            <ex:element dozerXml="conf/dozer/nantong/accept/acceptJtcy/cxfk/response/data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 验证执照出示信息接口-->
+    <ex:bean id="yzyyzz">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="营业执照验证出示接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GS"/>
+            <ex:property name="dsfFlag" value="SJPT"/>
+            <ex:property name="url" value="${gs.yzyyzz.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/nantong/accept/yayYyzz/param.xml"/>
+        </ex:request>
+    </ex:bean>
+</beans>

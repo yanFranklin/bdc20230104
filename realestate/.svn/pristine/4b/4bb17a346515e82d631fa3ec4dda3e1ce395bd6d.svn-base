@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.DjfDjSqrMapper">
+
+    <select id="queryDjfDjSqrList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.DjfDjSqrDO">
+        SELECT
+        c.xmid ywh,
+        nvl(t.qlrmc, '/') qlrmc,
+        t.zjzl qlrzjzl, t.zjh qlrzjh,
+        t.txdz qlrtxdz, t.yb qlryb,
+        t.frmc qlrfrmc, t.frdh qlrfrdh,
+        t.dlrmc qlrdlrmc, t.dlrdh qlrdlrdh,
+        t.dljg qlrdljg, t1.qlrmc ywrmc,
+        t1.zjzl ywrzjzl,
+        substr(t1.zjh,0,50) ywrzjh,
+        t1.txdz ywrtxdz, t1.yb ywryb,
+        t1.frmc ywrfrmc, t1.frdh ywrfrdh,
+        t1.dlrmc ywrdlrmc, t1.dlrdh ywrdlrdh,
+        t1.dljg ywrdljg, c.bz, substr(c.bdcdyh,0,6) qxdm
+        FROM bdc_xm c
+        LEFT JOIN bdc_qlr t ON (c.xmid = t.xmid AND t.qlrlb = '1')
+        LEFT JOIN bdc_qlr t1 ON (t1.xmid = t.xmid AND t1.qlrlb = '2')
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND c.xmid = #{ywh}
+            </if>
+        </where>
+    </select>
+    <select id="queryDjfDjSqrListOld" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.yancheng.yth.old.DjfDjSqrOldDO">
+        SELECT
+        c.xmid ywh,
+        nvl(t.qlrmc, '/') qlrmc,
+        t.zjzl qlrzjzl, t.zjh qlrzjh,
+        t.txdz qlrtxdz, t.yb qlryb,
+        t.frmc qlrfrmc, t.frdh qlrfrdh,
+        t.dlrmc qlrdlrmc, t.dlrdh qlrdlrdh,
+        t.dljg qlrdljg, t1.qlrmc ywrmc,
+        t1.zjzl ywrzjzl,
+        substr(t1.zjh,0,50) ywrzjh,
+        t1.txdz ywrtxdz, t1.yb ywryb,
+        t1.frmc ywrfrmc, t1.frdh ywrfrdh,
+        t1.dlrmc ywrdlrmc, t1.dlrdh ywrdlrdh,
+        t1.dljg ywrdljg, c.bz, substr(c.bdcdyh,0,6) qxdm
+        FROM bdc_xm c
+        LEFT JOIN bdc_qlr t ON (c.xmid = t.xmid AND t.qlrlb = '1')
+        LEFT JOIN bdc_qlr t1 ON (t1.xmid = t.xmid AND t1.qlrlb = '2')
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND c.xmid = #{ywh}
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

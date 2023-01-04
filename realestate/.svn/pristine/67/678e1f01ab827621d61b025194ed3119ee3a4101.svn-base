@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.init.core.mapper.BdcQlMapper">
+    <!-- 删除流程权利 -->
+    <delete id="deleteQl">
+        DELETE FROM ${tableName} a WHERE a.xmid IN
+        (SELECT b.xmid FROM bdc_xm b
+            WHERE b.gzlslid = #{gzlslid})
+    </delete>
+
+    <!-- 批量更新不动产权利 -->
+    <update id="updateBatchBdcQl" parameterType="map">
+        <if test="statement != null and ((gzlslid != null and gzlslid !='') or (xmids != null and xmids.size() > 0 ))">
+            ${statement}
+            <where>
+                <if test="gzlslid != null and gzlslid !=''">
+                    <choose>
+                    <when test="sfyql == true">
+                        AND xmid IN (
+                        SELECT r.yxmid
+                        FROM bdc_xm x
+                        INNER JOIN bdc_xm_lsgx r ON x.xmid = r.xmid
+                        WHERE  x.gzlslid = #{gzlslid}
+                        <if test="djxl != null and djxl !=''">
+                            AND x.djxl = #{djxl}
+                        </if>
+                        )
+                        <if test="bdcdywybh != null and bdcdywybh !='' ">
+                            AND bdcdywybh = #{bdcdywybh}
+                        </if>
+                    </when>
+                    <otherwise>
+                        AND xmid IN (
+                        SELECT x.xmid
+                        FROM bdc_xm x
+                        WHERE x.gzlslid = #{gzlslid}
+                        <if test="djxl != null and djxl !=''">
+                            AND x.djxl = #{djxl}
+                        </if>
+                        )
+                        <if test="bdcdywybh != null and bdcdywybh !='' ">
+                            AND bdcdywybh = #{bdcdywybh}
+                        </if>
+                    </otherwise>
+                    </choose>
+                </if>
+                <if test="xmids != null and xmids.size() > 0">
+                    <choose>
+                        <when test="sfyql == true">
+                            AND xmid IN
+                            (
+                            SELECT r.yxmid
+                            FROM bdc_xm x
+                            INNER JOIN bdc_xm_lsgx r ON x.xmid = r.xmid
+                            WHERE  x.xmid IN
+                            <foreach collection="xmids" item="item" open="(" separator="," close=")">
+                               #{item}
+                            </foreach>
+                            )
+                            <if test="bdcdywybh != null and bdcdywybh !='' ">
+                                AND bdcdywybh = #{bdcdywybh}
+                            </if>
+                        </when>
+                        <otherwise>
+                            AND xmid IN
+                            <foreach collection="xmids" item="item" open="(" separator="," close=")">
+                                #{item}
+                            </foreach>
+                            <if test="bdcdywybh != null and bdcdywybh !='' ">
+                                AND bdcdywybh = #{bdcdywybh}
+                            </if>
+                        </otherwise>
+                    </choose>
+
+                </if>
+            </where>
+        </if>
+    </update>
+    
+    <update id="updateCfbhPl">
+        <if test="gzlslid != null and gzlslid != ''">
+            UPDATE bdc_cf t
+            <set>
+                t.cfbh = #{cfbh,jdbcType=VARCHAR}
+            </set>
+            WHERE EXISTS (
+            SELECT x.xmid
+            FROM bdc_xm x
+            WHERE (t.xmid = x.xmid
+            AND x.gzlslid = #{gzlslid}
+            )
+            )
+        </if>
+
+    </update>
+
+    <select id="queryFdcqByZl" parameterType="Map" resultType="Map">
+        SELECT
+        f.zl,
+        f.djsj,
+        f.jzmj,
+        fb.cqly,
+        x.xmid
+        FROM
+        bdc_fdcq   f
+        LEFT JOIN bdc_xm     x ON f.xmid = x.xmid
+        AND f.bdcdyh = x.bdcdyh
+        LEFT JOIN bdc_xmfb   fb ON x.xmid = fb.xmid
+        <where>
+            <if test="zl != null and zl !=''">
+                and f.zl = #{zl}
+            </if>
+        </where>
+
+    </select>
+
+    <select id="listBdcXmxxByQlr" parameterType="cn.gtmap.realestate.common.core.dto.inquiry.BdcQlxxRequestDTO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        select
+            xm.qllx,
+            xm.xmid
+        from bdc_xm xm
+        inner join bdc_qlr qlr
+        on xm.xmid = qlr.xmid
+        where
+            xm.djlx != 400
+        <if test="qszts != null and qszts.length>0 ">
+            and xm.qszt in
+            <foreach collection="qszts" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qlrmc != null and qlrmc != ''">
+            and qlr.qlrmc in (to_multi_byte(#{qlrmc,jdbcType=VARCHAR}),to_single_byte(#{qlrmc,jdbcType=VARCHAR}))
+        </if>
+        <if test="qlrzjh != null and qlrzjh != ''">
+            and UPPER(qlr.zjh) IN
+            <foreach item="item" index="index" collection="qlrzjh.split(',')" open="(" separator="," close=")">
+                UPPER(#{item})
+            </foreach>
+        </if>
+        <if test="qlrlb != null and qlrlb != ''">
+            and qlr.qlrlb=#{qlrlb,jdbcType=VARCHAR}
+        </if>
+        <if test="qllxs != null and qllxs.length>0 ">
+            and xm.qllx in
+            <foreach collection="qllxs" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="bdcdyh != null and bdcdyh != ''">
+            and xm.bdcdyh=#{bdcdyh,jdbcType=VARCHAR}
+        </if>
+        <if test="bdcqzh != null and bdcqzh != ''">
+            and qlr.bdcqzh=#{bdcqzh,jdbcType=VARCHAR}
+        </if>
+    </select>
+</mapper>

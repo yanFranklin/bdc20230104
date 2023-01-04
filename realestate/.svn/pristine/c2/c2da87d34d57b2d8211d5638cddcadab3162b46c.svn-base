@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcPlcxMapper">
+
+    <select id="listBdcPlcxByPageOrder" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcPlcxQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcPlcxDTO">
+
+        select * from (
+        select cq.xmid,qlr.qlrmc qlr,qlr.zjh,cq.zl,cq.qszt,x.bdcqzh,x.bdcdyh,fb.qjgldm,
+
+        cq.fj as bz,
+        <if test="bdclx == 'fw'">
+            cq.jzmj,
+            cq.jyjg*10000 || '' as jyjg,
+            cq.ghyt || '' as ghyt,
+        </if>
+        <if test="bdclx == 'td'">
+            cq.syqmj jzmj,
+            cq.qdjg*10000  || '' as jyjg,
+            x.zdzhyt ghyt,
+        </if>
+        to_char(cq.djsj,'yyyy-MM-dd') djsj,
+        cq.gyqk,x.qlr as cqqlr,0 as sfhtba
+        <if test="bdclx == 'fw'">
+            from bdc_fdcq cq
+        </if>
+        <if test="bdclx == 'td'">
+            from bdc_jsydsyq cq
+        </if>
+
+        left join bdc_xm x on x.xmid = cq.xmid
+        left join bdc_xmfb fb on fb.xmid = cq.xmid
+        left join bdc_qlr qlr on qlr.xmid = cq.xmid
+        where qlr.qlrlb = 1
+        <if test="qszt != null and qszt != ''">
+            and cq.qszt = #{qszt}
+        </if>
+        <if test="singleZjh != null and singleZjh != ''">
+            and (qlr.zjh like  '%' || #{singleZjh,jdbcType=VARCHAR} || '%'
+            or qlr.zjh like  '%' || #{singleZjh15,jdbcType=VARCHAR} || '%')
+        </if>
+        <if test="singleQlr != null and singleQlr != ''">
+            and qlr.qlrmc like '%' || #{singleQlr,jdbcType=VARCHAR} || '%'
+        </if>
+
+        <if test="zjh != null and zjh.size() > 0">
+            and (qlr.zjh in
+            <foreach collection="zjh" item="item" index="i" open="(" separator=" , " close=")">
+                <if test="(i%999)==998">
+                    null ) or qlr.zjh in (
+                </if>
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            or qlr.zjh in
+            <foreach collection="zjh15" item="item" index="i" open="(" separator=" , " close=")">
+                <if test="(i%999)==998">
+                    null ) or qlr.zjh in (
+                </if>
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            )
+        </if>
+
+        <if test="qlr != null and qlr.size() > 0">
+            and qlr.qlrmc in
+            <foreach collection="qlr" item="item" index="i" open="(" separator=" , " close=")">
+                <if test="(i%999)==998">
+                    null ) or qlr.zjh in (
+                </if>
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+
+        <!--根据权籍管理代码查询 -->
+        <if test="qjgldm != null and qjgldm != ''">
+            and fb.qjgldm in
+            <foreach item="item" index="index" collection="qjgldm.split(',')" open="(" separator="," close=")">
+                <if test="(index%999)==998">
+                    null ) or fb.qjgldm in (
+                </if>
+                #{item, jdbcType=VARCHAR}
+            </foreach>
+        </if>
+
+        <!--区县代码 -->
+        <if test="qxdmList != null and qxdmList.size() == 1 ">
+            AND x.qxdm=#{qxdmList[0]}
+        </if>
+        <if test="qxdmList != null and qxdmList.size() > 1 ">
+            AND x.qxdm IN
+            <foreach collection="qxdmList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <!--是否过滤农房 0:否  1：是 -->
+        <if test="sfglnf != null and sfglnf != '' and sfglnf == '1'.toString()">
+            AND SUBSTR(x.BDCDYH, 13, 2) != 'JC'
+        </if>
+
+        <include refid="getYg"/>
+        <include refid="getHtba"/>
+
+        ) a
+        <if test="qlr != null and qlr.size() > 0">
+            ORDER BY DECODE(qlr,
+            <foreach collection="qlr" item="item" index="idx" open="" separator=" , " close=")">
+                #{item,jdbcType=VARCHAR} ,#{idx}
+            </foreach>
+        </if>
+    </select>
+
+
+    <sql id="getHtba">
+        <if test="(cxht != null and cxht)">
+            union all
+            SELECT
+            cq.baid as xmid,
+            qlr.qlrmc qlr,
+            qlr.zjh,
+            cq.zl,
+            cq.bazt as qszt,
+            cq.htbh as bdcqzh,
+            cq.fwbm as bdcdyh,
+            cq.qxdm as qjgldm,
+            '商品房网签备案合同' as bz,
+            cq.jzmj,
+            cq.htzjk as jyjg,
+            cq.yt || '' as ghyt,
+            to_char(cq.basj,'yyyy-MM-dd') djsj,
+            '' as gyqk,
+            (select wm_concat(to_char(q.qlrmc)) from htba_qlr q where q.baid = cq.baid) as cqqlr,1 as sfhtba
+            FROM  HTBA_SPF cq
+            LEFT JOIN HTBA_QLR qlr ON cq.BAID = qlr.BAID
+            WHERE nvl(cq.bazt, 1) = 1
+            <if test="singleZjh != null and singleZjh != ''">
+                and (qlr.zjh like  '%' || #{singleZjh,jdbcType=VARCHAR} || '%'
+                or qlr.zjh like  '%' || #{singleZjh15,jdbcType=VARCHAR} || '%')
+            </if>
+            <if test="singleQlr != null and singleQlr != ''">
+                and qlr.qlrmc like '%' || #{singleQlr,jdbcType=VARCHAR} || '%'
+            </if>
+
+            <if test="zjh != null and zjh.size() > 0">
+                and (qlr.zjh in
+                <foreach collection="zjh" item="item" index="i" open="(" separator=" , " close=")">
+                    <if test="(i%999)==998">
+                        null ) or qlr.zjh in (
+                    </if>
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+                or qlr.zjh in
+                <foreach collection="zjh15" item="item" index="i" open="(" separator=" , " close=")">
+                    <if test="(i%999)==998">
+                        null ) or qlr.zjh in (
+                    </if>
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+                )
+            </if>
+
+            <if test="qlr != null and qlr.size() > 0">
+                and qlr.qlrmc in
+                <foreach collection="qlr" item="item" index="i" open="(" separator=" , " close=")">
+                    <if test="(i%999)==998">
+                        null ) or qlr.zjh in (
+                    </if>
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+
+            <!--区县代码 -->
+            <if test="qxdmList != null and qxdmList.size() == 1 ">
+                AND cq.qxdm=#{qxdmList[0]}
+            </if>
+            <if test="qxdmList != null and qxdmList.size() > 1 ">
+                AND cq.qxdm IN
+                <foreach collection="qxdmList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </if>
+    </sql>
+
+    <sql id="getYg">
+        <if test="(cxyg != null and cxyg)">
+            union all
+
+            select cq.xmid,
+                   qlr.qlrmc qlr,
+                   qlr.zjh,
+                   cq.zl,
+                   cq.qszt,
+                   x.bdcqzh,
+                   x.bdcdyh,
+                   fb.qjgldm,
+                   cq.fj as bz,
+                   cq.jzmj,
+                   cq.qdjg*10000 || '' as jyjg,
+                   cq.ghyt || '' as ghyt,
+                   to_char(cq.djsj,'yyyy-MM-dd') djsj,
+                   cq.gyqk,x.qlr as cqqlr,0 as sfhtba
+            from bdc_yg cq
+            left join bdc_xm x on x.xmid = cq.xmid
+            left join bdc_xmfb fb on fb.xmid = cq.xmid
+            left join bdc_qlr qlr on qlr.xmid = cq.xmid
+            where qlr.qlrlb = 1
+            <if test="qszt != null and qszt != ''">
+                and cq.qszt = #{qszt}
+            </if>
+            <if test="singleZjh != null and singleZjh != ''">
+                and (qlr.zjh like  '%' || #{singleZjh,jdbcType=VARCHAR} || '%'
+                or qlr.zjh like  '%' || #{singleZjh15,jdbcType=VARCHAR} || '%')
+            </if>
+            <if test="singleQlr != null and singleQlr != ''">
+                and qlr.qlrmc like '%' || #{singleQlr,jdbcType=VARCHAR} || '%'
+            </if>
+
+            <if test="zjh != null and zjh.size() > 0">
+                and (qlr.zjh in
+                <foreach collection="zjh" item="item" index="i" open="(" separator=" , " close=")">
+                    <if test="(i%999)==998">
+                        null ) or qlr.zjh in (
+                    </if>
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+                or qlr.zjh in
+                <foreach collection="zjh15" item="item" index="i" open="(" separator=" , " close=")">
+                    <if test="(i%999)==998">
+                        null ) or qlr.zjh in (
+                    </if>
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+                )
+            </if>
+
+            <if test="qlr != null and qlr.size() > 0">
+                and qlr.qlrmc in
+                <foreach collection="qlr" item="item" index="i" open="(" separator=" , " close=")">
+                    <if test="(i%999)==998">
+                        null ) or qlr.zjh in (
+                    </if>
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+
+            <!--根据权籍管理代码查询 -->
+            <if test="qjgldm != null and qjgldm != ''">
+                and fb.qjgldm in
+                <foreach item="item" index="index" collection="qjgldm.split(',')" open="(" separator="," close=")">
+                    <if test="(index%999)==998">
+                        null ) or fb.qjgldm in (
+                    </if>
+                    #{item, jdbcType=VARCHAR}
+                </foreach>
+            </if>
+
+            <!--区县代码 -->
+            <if test="qxdmList != null and qxdmList.size() == 1 ">
+                AND x.qxdm=#{qxdmList[0]}
+            </if>
+            <if test="qxdmList != null and qxdmList.size() > 1 ">
+                AND x.qxdm IN
+                <foreach collection="qxdmList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <!--是否过滤农房 0:否  1：是 -->
+            <if test="sfglnf != null and sfglnf != '' and sfglnf == '1'.toString()">
+                AND SUBSTR(x.BDCDYH, 13, 2) != 'JC'
+            </if>
+        </if>
+    </sql>
+
+    <select id="listBdcYcPlcx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcPlcxQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.yancheng.BdcYcPlcxDTO">
+        select cq.xmid,x.qlr qlr,x.qlrzjh zjh,cq.zl,cq.qszt,z.bdcqzh,ly.mc as bz,
+        <if test="bdclx == 'fw'">
+            cq.jzmj,
+            cq.ghyt,
+        </if>
+        <if test="bdclx == 'td'">
+            cq.syqmj jzmj,
+            x.zdzhyt ghyt,
+        </if>
+        to_char(cq.djsj,'yyyy-MM-dd') djsj,
+        to_char(cq.zxdjsj,'yyyy-MM-dd') zxdjsj
+
+        <if test="bdclx == 'fw'">
+            from bdc_fdcq cq
+        </if>
+        <if test="bdclx == 'td'">
+            from bdc_jsydsyq cq
+        </if>
+        join bdc_xm  x   on x.xmid = cq.XMID
+        join bdc_qlr qlr on qlr.xmid = cq.xmid
+        join bdc_zs  z   on qlr.zsid = z.zsid
+        left join bdc_zd_xmly ly on x.xmly = ly.dm
+        where qlr.qlrlb = 1 and cq.qszt in (1,2)
+        <if test="qszt != null and qszt != ''">
+            and cq.qszt = #{qszt}
+        </if>
+        <if test="singleZjh != null and singleZjh != ''">
+            and (qlr.zjh like  '%' || #{singleZjh,jdbcType=VARCHAR} || '%'
+            or qlr.zjh like  '%' || #{singleZjh15,jdbcType=VARCHAR} || '%')
+        </if>
+        <if test="singleQlr != null and singleQlr != ''">
+            and qlr.qlrmc like '%' || #{singleQlr,jdbcType=VARCHAR} || '%'
+        </if>
+
+        <if test="zjh != null and zjh.size() > 0">
+            and (qlr.zjh in
+            <foreach collection="zjh" item="item" index="i" open="(" separator=" , " close=")">
+                <if test="(i%999)==998">
+                    NULL ) OR qlr.zjh IN (
+                </if>
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            or qlr.zjh in
+            <foreach collection="zjh15" item="item" index="i" open="(" separator=" , " close=")">
+                <if test="(i%999)==998">
+                    NULL ) OR qlr.zjh IN (
+                </if>
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            )
+        </if>
+
+        <if test="qlr != null and qlr.size() > 0">
+            and qlr.qlrmc in
+            <foreach collection="qlr" item="item"  index="i" open="(" separator=" , " close=")">
+                <if test="(i%999)==998">
+                    NULL ) OR qlr.qlrmc IN (
+                </if>
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="qlr != null and qlr.size() > 0">
+            ORDER BY DECODE(qlr.qlrmc,
+            <foreach collection="qlr" item="item" index="idx" open="" separator=" , " close=")">
+                #{item,jdbcType=VARCHAR} ,#{idx}
+            </foreach>
+        </if>
+
+    </select>
+
+    <select id="listBdcYcPlcxAll" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcPlcxQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.yancheng.BdcYcPlcxDTO">
+        with s1 as (
+        select
+            cq.xmid,x.qlr qlr,x.qlrzjh zjh,cq.zl,cq.qszt,z.bdcqzh,ly.mc as bz,cq.jzmj,yt.mc as ghyt,to_char(cq.djsj,'yyyy-MM-dd') djsj,
+            to_char(cq.zxdjsj,'yyyy-MM-dd') zxdjsj
+        from bdc_fdcq cq
+        join bdc_xm   x    on x.xmid = cq.XMID
+        join bdc_qlr  qlr  on qlr.xmid = cq.xmid
+        join bdc_zs   z    on qlr.zsid = z.zsid
+        left join bdc_zd_xmly ly on x.xmly = ly.dm
+        left join bdc_zd_fwyt yt on cq.ghyt = yt.dm
+        where qlr.qlrlb = 1 and cq.qszt in (1,2)
+        <if test="qszt != null and qszt != ''">
+            and cq.qszt = #{qszt}
+        </if>
+        <if test="singleZjh != null and singleZjh != ''">
+            and (qlr.zjh like  '%' || #{singleZjh,jdbcType=VARCHAR} || '%'
+            or qlr.zjh like  '%' || #{singleZjh15,jdbcType=VARCHAR} || '%')
+        </if>
+        <if test="singleQlr != null and singleQlr != ''">
+            and qlr.qlrmc like '%' || #{singleQlr,jdbcType=VARCHAR} || '%'
+        </if>
+
+        <if test="zjh != null and zjh.size() > 0">
+            and (qlr.zjh in
+            <foreach collection="zjh" item="item" index="i" open="(" separator=" , " close=")">
+                 <if test="(i%999)==998">
+                    NULL ) OR qlr.zjh IN (
+                 </if>
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            or qlr.zjh in
+            <foreach collection="zjh15" item="item" index="i" open="(" separator=" , " close=")">
+                <if test="(i%999)==998">
+                    NULL ) OR qlr.zjh IN (
+                </if>
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            )
+        </if>
+
+        <if test="qlr != null and qlr.size() > 0">
+            and qlr.qlrmc in
+            <foreach collection="qlr" item="item"  index="i" open="(" separator=" , " close=")">
+                <if test="(i%999)==998">
+                    NULL ) OR qlr.qlrmc IN (
+                </if>
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="qlr != null and qlr.size() > 0">
+            ORDER BY DECODE(qlr.qlrmc,
+            <foreach collection="qlr" item="item" index="idx" open="" separator=" , " close=")">
+                #{item,jdbcType=VARCHAR} ,#{idx}
+            </foreach>
+        </if>
+        ),
+        s2 as (
+        select
+            cq.xmid,x.qlr qlr,x.qlrzjh zjh,cq.zl,cq.qszt,z.bdcqzh,ly.mc as bz,cq.syqmj jzmj,yt.mc as ghyt,to_char(cq.djsj,'yyyy-MM-dd') djsj,
+            to_char(cq.zxdjsj,'yyyy-MM-dd') zxdjsj
+        from bdc_jsydsyq cq
+        join bdc_xm  x   on x.xmid = cq.XMID
+        join bdc_qlr qlr on qlr.xmid = cq.xmid
+        join bdc_zs  z   on qlr.zsid = z.zsid
+        left join bdc_zd_xmly ly on x.xmly = ly.dm
+        left join bdc_zd_fwyt yt on x.zdzhyt = yt.dm
+        where qlr.qlrlb = 1 and cq.qszt in (1,2)
+        <if test="qszt != null and qszt != ''">
+            and cq.qszt = #{qszt}
+        </if>
+        <if test="singleZjh != null and singleZjh != ''">
+            and (qlr.zjh like  '%' || #{singleZjh,jdbcType=VARCHAR} || '%'
+            or qlr.zjh like  '%' || #{singleZjh15,jdbcType=VARCHAR} || '%')
+        </if>
+        <if test="singleQlr != null and singleQlr != ''">
+            and qlr.qlrmc like '%' || #{singleQlr,jdbcType=VARCHAR} || '%'
+        </if>
+
+        <if test="zjh != null and zjh.size() > 0">
+            and (qlr.zjh in
+            <foreach collection="zjh" item="item" index="i" open="(" separator=" , " close=")">
+                <if test="(i%999)==998">
+                    NULL ) OR qlr.zjh IN (
+                </if>
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            or qlr.zjh in
+            <foreach collection="zjh15" item="item" index="i" open="(" separator=" , " close=")">
+                <if test="(i%999)==998">
+                    NULL ) OR qlr.zjh IN (
+                </if>
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            )
+        </if>
+
+        <if test="qlr != null and qlr.size() > 0">
+            and qlr.qlrmc in
+            <foreach collection="qlr" item="item"  index="i" open="(" separator=" , " close=")">
+                <if test="(i%999)==998">
+                    NULL ) OR qlr.qlrmc IN (
+                </if>
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="qlr != null and qlr.size() > 0">
+            ORDER BY DECODE(qlr.qlrmc,
+            <foreach collection="qlr" item="item" index="idx" open="" separator=" , " close=")">
+                #{item,jdbcType=VARCHAR} ,#{idx}
+            </foreach>
+        </if>
+        )
+        select  *  from s1 union all select * from s2
+
+    </select>
+
+
+    <select id="listBdcBaxxPlcxByPageOrder" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcBaxxCxQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcBaxxPlcxDTO">
+        <include refid="listBdcBaxx"/>
+    </select>
+
+
+    <select id="listBdcBaxxPlcx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcBaxxCxQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcBaxxPlcxDTO">
+        <include refid="listBdcBaxx"/>
+    </select>
+
+    <sql id="listBdcBaxx">
+        <if test="qlr == null or qlr.size() == 0">
+            select
+            row_number() over(order by msr) as zdyxh,
+            t.msr,
+            t.gmrzjhm,
+            t.jzmj,
+            t2.xmldfh,
+            t.fwyt,
+            to_char(t.basj,'yyyy/MM/dd') basj,
+            t.bdcdyh
+            from fg_htfy t
+            left join fg_fyxx t2
+            on t.bdcdyh = t2.bdcdyh
+            where t.htbazt = '已备案'
+
+            <if test="singleMsr != null and singleMsr != ''">
+                and t.msr like '%' || #{singleMsr,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="singleGmrzjhm != null and singleGmrzjhm != ''">
+                and t.gmrzjhm like '%' || #{singleGmrzjhm,jdbcType=VARCHAR} || '%'
+            </if>
+            order by zdyxh asc
+        </if>
+
+        <if test="qlr != null and qlr.size() > 0">
+            select * from (
+            <foreach collection="qlr" item="item" index="idx" separator="union all" open="(" close=")">
+                select #{idx}+1 as zdyxh,
+                t.msr,
+                t.gmrzjhm,
+                t.jzmj,
+                t2.xmldfh,
+                t.fwyt,
+                to_char(t.basj, 'yyyy/MM/dd') basj,
+                t.bdcdyh
+                from fg_htfy t
+                left join fg_fyxx t2
+                on t.bdcdyh = t2.bdcdyh
+                where t.htbazt = '已备案'
+                and
+                INSTR(t.gmrzjhm, #{zjh[${idx}]}  ) > 0
+                and INSTR(t.msr, #{item}) > 0
+            </foreach>
+            ) order by zdyxh asc
+
+        </if>
+
+    </sql>
+
+    <select id="listXysxmByBdcqzh" parameterType="java.util.Set" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT
+            z.bdcqzh, x.djsj, x.qllx
+        FROM
+            bdc_zs z
+        JOIN
+            bdc_xm_zs_gx zg ON z.zsid = zg.zsid
+        JOIN
+            bdc_xm_lsgx  lg ON zg.xmid = lg.yxmid
+        JOIN
+            bdc_xm       x  ON lg.xmid = x.xmid
+        WHERE
+            <choose>
+                <when test="set !=null and set.size() > 0">
+                    z.bdcqzh in
+                    <foreach item="bdcqzh" index="index" collection="set" open="(" separator="," close=")">
+                        #{bdcqzh, jdbcType=VARCHAR}
+                    </foreach>
+                    and x.qllx NOT IN (99, 98, 97, 96, 95,37)
+                    ORDER BY x.djsj ASC
+                </when>
+                <otherwise>
+                    0 = 1
+                </otherwise>
+            </choose>
+    </select>
+
+
+</mapper>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.accept.core.mapper.BdcSlSqrMapper">
+
+    <!--删除不动产受理申请人-->
+    <delete id="deleteBdcSlSqr" parameterType="map">
+        DELETE FROM bdc_sl_sqr a WHERE a.xmid IN
+        (
+        SELECT b.xmid FROM bdc_sl_xm b
+        WHERE b.jbxxid = #{jbxxid}
+        <if test="dyhList != null and dyhList.size() > 0">
+            and b.bdcdyh IN
+            <foreach collection="dyhList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        )
+    </delete>
+
+    <!--批量删除不动产受理申请人-->
+    <delete id="delBatchSqrxx">
+        <if test="((xmids != null and xmids.size() > 0)) or ((jbxxid != null and jbxxid !=''))">
+            DELETE FROM bdc_sl_sqr a
+            <where>
+              <if test="jbxxid != null and jbxxid !=''">
+                AND a.xmid IN
+                (SELECT b.xmid FROM bdc_sl_xm b
+                WHERE b.jbxxid = #{jbxxid}
+                )
+            </if>
+              <if test="xmids != null and xmids.size() > 0">
+                and a.xmid IN
+                <foreach collection="xmids" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+              <if test="sqrlb != null and sqrlb !=''">
+                AND a.sqrlb=#{sqrlb}
+            </if>
+                <if test="sqrmc != null and sqrmc !=''">
+                    AND a.sqrmc=#{sqrmc}
+                </if>
+                <if test="zjh != null and zjh !=''">
+                    AND a.zjh=#{zjh}
+                </if>
+
+            </where>
+        </if>
+    </delete>
+
+    <!--删除不动产受理申请人-->
+    <delete id="batchDeleteBdcSlSqr" parameterType="cn.gtmap.realestate.common.core.dto.accept.BdcSlDeleteCsDTO">
+        <if test="xmidList != null and xmidList.size>0">
+            DELETE FROM bdc_sl_sqr a
+            <where>
+                <if test="xmidList != null">
+                    AND a.xmid IN
+                    <foreach collection="xmidList" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+        </if>
+
+    </delete>
+
+    <!-- 批量更新不动产权利人 -->
+    <update id="batchUpdateSlSqr" parameterType="map">
+        <if test="statement != null and ((gzlslid != null and gzlslid !=''))">
+            ${statement}
+            <where>
+                <if test="gzlslid != null and gzlslid !=''">
+                    AND xmid IN (
+                        SELECT b.xmid
+                        FROM BDC_SL_JBXX a left join BDC_SL_XM b on a.JBXXID = b.JBXXID
+                        WHERE a.gzlslid = #{gzlslid}
+                            <if test="xmid != null">
+                                AND b.xmid =#{xmid}
+                            </if>
+                    )
+                </if>
+                <if test="sqrmc != null and sqrmc !=''">
+                    AND sqrmc = #{sqrmc}
+                </if>
+                <if test="zjh != null and zjh !=''">
+                    AND zjh = #{zjh}
+                </if>
+                <if test="sqrlb != null and sqrlb !=''">
+                    AND sqrlb = #{sqrlb}
+                </if>
+            </where>
+        </if>
+    </update>
+
+</mapper>

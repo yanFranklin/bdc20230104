@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--界址线信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.ZdkSqlMapper">
+
+    <select id="queryZdKList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.ZdKDO">
+        select c.bdcdyh, nvl(a.tzjb,0)+1 zdx,nvl(a.xh,rownum) as xh,nvl(a.xzbz,'1') xzb,nvl(a.yzbz,'1')
+        yzb,to_char(a.djh) djh ,'' zzb,'/' kjlx from
+        djsj_zd_jzbsb a
+        LEFT JOIN bdc_bdcdjb_zdjbxx C ON a.djh = c.zddm
+        inner join bdc_xm d on a.djh = substr(d.bdcdyh, 0, 19)
+        <where>
+            <if test="ywh != null and ywh !=''">
+                and d.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                and d.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+        union all
+        select d.bdcdyh,-1 zdx,-1 xh,-1 xzb,-1 yzb,substr(d.bdcdyh, 0, 19) djh,'' zzb,'/' kjlx from bdc_xm d
+        <where>
+            <if test="ywh != null and ywh !=''">
+                and d.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                and d.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryGzwZhList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.ZdKDO">
+        select h.bdcdyh,nvl(a.tzjb,0)+1 zdx,nvl(a.xh,rownum) as xh,nvl(a.xzbz,'1') xzb,nvl(a.yzbz,'1') yzb from djsj_zh_jzbsb
+        a
+        left join bdc_bdcdjb b on a.zhdm=b.zdzhh
+        left join bdc_bdcdy c on b.djbid=c.djbid
+        left join bdc_xm d on d.bdcdyid=c.bdcdyid
+        left join bdc_hy h on h.zdzhh=a.zhdm
+        <where>
+            <if test="ywh != null and ywh !=''">
+                and d.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                and c.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+    <select id="queryZdKListOld" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.yancheng.yth.old.ZdKOldDO">
+        select c.bdcdyh, nvl(a.tzjb,0)+1 zdx,nvl(a.xh,rownum) as xh,nvl(a.xzbz,'1') xzb,nvl(a.yzbz,'1') yzb,a.djh from
+        djsj_zd_jzbsb a
+        LEFT JOIN bdc_bdcdjb_zdjbxx C ON a.djh = c.zddm
+        inner join bdc_xm d on a.djh = substr(d.bdcdyh, 0, 19)
+        <where>
+            <if test="ywh != null and ywh !=''">
+                and d.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                and d.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+</mapper>

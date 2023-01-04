@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.init.core.mapper.BdcZsMapper">
+    <!-- 删除证书 -->
+    <delete id="deleteZs">
+        DELETE  FROM bdc_zs a WHERE a.zsid IN
+			(
+				SELECT b.zsid
+				FROM bdc_xm_zs_gx b
+				LEFT JOIN bdc_xm c ON c.xmid=b.xmid
+				WHERE c.gzlslid = #{gzlslid}
+			)
+    </delete>
+
+    <!-- 删除证书项目关系 -->
+    <delete id="deleteZsXmGx">
+        DELETE  FROM bdc_xm_zs_gx a WHERE a.xmid IN
+			(
+				SELECT b.xmid FROM bdc_xm b
+                WHERE b.gzlslid = #{gzlslid}
+			)
+    </delete>
+
+	<delete id="deleteZsByXmid">
+		DELETE  FROM bdc_zs a WHERE a.zsid IN
+			(
+			SELECT b.zsid
+			FROM bdc_xm_zs_gx b
+			LEFT JOIN bdc_xm c ON c.xmid=b.xmid
+			WHERE c.xmid = #{xmid}
+			)
+	</delete>
+
+	<!-- 删除证书项目关系 -->
+	<delete id="deleteXmZsgx">
+		DELETE  FROM bdc_xm_zs_gx a WHERE a.xmid IN
+		(
+		SELECT b.xmid FROM bdc_xm b
+		WHERE b.xmid = #{xmid}
+		)
+	</delete>
+</mapper>

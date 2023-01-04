@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--不动产业务信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.BdcXtJrMapper">
+    <select id="listBdcXtJrPz" resultType="cn.gtmap.realestate.common.core.domain.exchange.BdcXtJrDO"
+            parameterType="cn.gtmap.realestate.common.core.qo.exchange.openapi.BdcXtJrQO">
+        SELECT id, bdcqllxdm, bdcqllxmc, bdcdjlxdm, bdcdjlxmc, bdclx, ywdm, ywfwdm, sfdz
+        FROM bdc_xt_jr
+        <where>
+            <if test="djxl != '' and djxl != null">
+                AND bdcdjlxdm = #{djxl}
+            </if>
+            <if test="qllx != '' and qllx != null">
+                AND bdcqllxdm = #{qllx}
+            </if>
+            <if test="bdclx != '' and bdclx != null">
+                AND BDCLX = #{bdclx}
+            </if>
+            <if test="bdcdyfwlxList != null and bdcdyfwlxList.size()>0 ">
+                AND sfdz in
+                <foreach collection="bdcdyfwlxList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+</mapper>

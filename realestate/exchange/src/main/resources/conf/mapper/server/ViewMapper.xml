@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.ViewMapper">
+    <select id="getViewJyQlrByCqzh" parameterType="java.util.Map" resultType="cn.gtmap.realestate.exchange.core.domain.ViewJyQlrDO">
+        SELECT *
+        FROM VIEW_JY_QLR a
+        <where>
+            <if test="cqzhRightLike != null and cqzhRightLike != '' ">
+                AND a.cqzh LIKE #{cqzhRightLike} || '%'
+            </if>
+        </where>
+    </select>
+    <select id="getViewJyQlrByZl" parameterType="java.util.Map" resultType="cn.gtmap.realestate.exchange.core.domain.ViewJyQlrDO">
+        SELECT a.cqrXm,a.cqrZjhm,a.cqzh,a.fwzl,a.ghyt,a.scjzmj
+        FROM VIEW_JY_QLR a
+        <where>
+            <if test="fwzl != null and fwzl != '' ">
+                AND a.fwzl = #{fwzl}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryViewDvYgDO" parameterType="cn.gtmap.realestate.exchange.core.dto.wwsq.ycfw.YcfwCxRequestDTO"
+            resultType="cn.gtmap.realestate.exchange.core.dto.wwsq.ychsbyysfwbm.response.YchsByYsfwbmResponseDTO">
+        select
+        bdcdyh,
+        OHOUSENUM as ZH,
+        BSIT as ZL,
+        TTLFLRS as ZCS,
+        CURFLR as SZC,
+        ROOMLABEL as FJH,
+        TO_CHAR(BAREA) as YCJZMJ,
+        roomid
+        from DV_YG Y
+        <where>
+            <if test="zl != null and zl != '' ">
+                AND Y.BSIT = #{zl}
+            </if>
+            <if test="roomid != null and roomid != '' ">
+                AND Y.ROOMID = #{roomid}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <title>不动产信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/slymForm.css"/>
+    <style type="text/css">
+        .layui-table .set-right {
+            padding-right: 10px;
+            text-align: right;
+        }
+
+        .layui-table .bdc-td-box .change-input-width {
+            display: inline-block;
+            width: 25%;
+            float: left;
+        }
+
+        .not-null-color td {
+            background-color: #fef6e1;
+        }
+    </style>
+</head>
+<body>
+<div class="bdc-form-div bdc-form-not-full bdc-not-full-bg">
+    <form class="layui-form setOverflow" action="">
+        <div class="bdc-content-fix">
+            <div class="content-title">
+                <p>不动产信息</p>
+                <div id="buttonArea">
+                    <div class="title-btn-area">
+                        <button type="button" class="layui-btn bdc-major-btn bdc-sjsh-save" id="saveBtn" lay-submit="" lay-filter="saveBtn">
+                            保存
+                        </button>
+                        <button type="button" class="layui-btn layui-btn-normal bdc-secondary-btn" onclick="showYlcxx()" id="saveData">原流程信息
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-margin-area">
+            <div class="basic-info bdc-jbxx"></div>
+            <div class="basic-info" id="bdcdyxx"></div>
+        </div>
+    </form>
+</div>
+</body>
+
+<!--基本信息模板-->
+<script type="text/html" id="jbxxTpl">
+    <div class="basic-info">
+        <div class="title-sign bdc-title-sign-btn">
+            <p>基本信息</p>
+        </div>
+        <div class="layui-form-item">
+            <input type="hidden" class="bdc-smxx" id="jbxxid" name="jbxxid" value="{{d.jbxx.jbxxid || ''}}">
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">受理编号</label>
+                <div class="layui-input-inline bdc-one-icon">
+                    <input type="text" name="slbh" autocomplete="off" id="slbh" class="layui-input"
+                           value="{{d.jbxx.slbh || ''}}"
+                           disabled="off">
+                    <img src="../../static/lib/bdcui/images/lock.png" alt="">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width ">承诺期限(天)</label>
+                <div class="layui-input-inline bdc-one-icon">
+                    <input type="text" name="cnqx" autocomplete="off" id="cnqx" class="layui-input"
+                           value="{{d.jbxx.cnqx|| ''}}"
+                           disabled="off">
+                    <img src="../../static/lib/bdcui/images/lock.png" alt="">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">收件人</label>
+                <div class="layui-input-inline bdc-one-icon">
+                    <input type="text" name="slr" autocomplete="off" class="layui-input" value="{{d.jbxx.slr|| ''}}"
+                           id="slr"
+                           disabled="off">
+                    <img src="../../static/lib/bdcui/images/lock.png" alt="">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">受理时间</label>
+                <div class="layui-input-inline bdc-one-icon">
+                    <input type="text" name="slsj" autocomplete="off" class="layui-input" value="{{d.jbxx.slsj || ''}}"
+                           id="slsj"
+                           disabled="off">
+                    <img src="../../static/lib/bdcui/images/lock.png" alt="">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">业务类型</label>
+                <div class="layui-input-inline bdc-one-icon">
+                    <input type="text" name="lcmc" autocomplete="off" class="layui-input" id="ywlx"
+                           value="{{d.jbxx.lcmc || ''}}"
+                           disabled="off">
+                    <img src="../../static/lib/bdcui/images/lock.png" alt="">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item change-textarea-margin">
+            <label class="layui-form-label change-label-width">备注</label>
+            <div class="layui-input-inline bdc-one-icon">
+                    <textarea class="layui-textarea change-textarea-width bdcxm" name="bz"
+                              id="bz">{{d.jbxx.bz || ''}}</textarea>
+            </div>
+        </div>
+        </div>
+    </div>
+
+</script>
+
+<!--权利tab页不动产单元信息展示-->
+<script type="text/html" id="bdcdyxxTpl">
+    <div class="basic-info" id="bdcdyxxForm{{d.index || ''}}">
+        <div class="title-sign bdc-title-sign-btn">
+            <p>不动产单元信息</p>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">原产权证号</label>
+                <div class="layui-input-inline">
+                    <input type="text" disabled="off" autocomplete="off" class="layui-input xmxx" id="ybdcqz"
+                           name="ybdcqz"
+                           value="{{d.bdcSlXm.ybdcqz || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline xzq-sele">
+                <label class="layui-form-label change-label-width">{{#if(d.bdcSlXm.qllx == 15 ||d.bdcSlXm.qllx == 17){}}
+                    宗地/宗海<br>用途
+                    {{# }else{ }}
+                    宗地用途
+                    {{# } }}</label>
+                <div class="layui-input-inline select-height bdc-search-by-dm">
+                    <select lay-search="" name="zdzhyt" id="zdzhyt" class="bdc-zdzhyt xmxx">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.tdyt, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(d.bdcSlXm.zdzhyt==item.DM ){ }} selected="selected"
+                                {{# } }} title="{{item.MC || ''}}">{{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+            <div class="layui-inline xzq-sele">
+                <label class="layui-form-label change-label-width">{{#if(d.bdcSlXm.qllx == 15 ||d.bdcSlXm.qllx == 17){}}
+                    宗地/宗海<br>用途2
+                    {{# }else{ }}
+                    宗地用途2
+                    {{# } }}</label>
+                <div class="layui-input-inline select-height bdc-search-by-dm">
+                    <select lay-search="" name="zdzhyt2" id="zdzhyt2" class="bdc-zdzhyt xmxx">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.tdyt, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(d.bdcSlXm.zdzhyt2==item.DM ){ }} selected="selected"
+                                {{# } }} title="{{item.MC || ''}}">{{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+            <div class="layui-inline xzq-sele">
+                <label class="layui-form-label change-label-width">{{#if(d.bdcSlXm.qllx == 15 ||d.bdcSlXm.qllx == 17){}}
+                    宗地/宗海<br>用途3
+                    {{# }else{ }}
+                    宗地用途3
+                    {{# } }}</label>
+                <div class="layui-input-inline select-height bdc-search-by-dm">
+                    <select lay-search="" name="zdzhyt3" id="zdzhyt3" class="bdc-zdzhyt xmxx">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.tdyt, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(d.bdcSlXm.zdzhyt3==item.DM ){ }} selected="selected"
+                                {{# } }} title="{{item.MC || ''}}">{{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">
+                    {{#if(d.bdcSlXm.qllx == 15 ||d.bdcSlXm.qllx == 17 ||d.bdcSlXm.qllx == 16 ||d.bdcSlXm.qllx == 18 ||d.bdcSlXm.qllx == 28){}}
+                    宗地/宗海面积
+                    {{# }else{ }}
+                    宗地面积
+                    {{# } }}</label>
+                <div class="layui-input-inline">
+                    <input type="number" autocomplete="off" class="layui-input xmxx" name="zdzhmj" id="zdzhmj"
+                           value="{{d.bdcSlXm.zdzhmj}}">
+                </div>
+            </div>
+            <div class="layui-inline xzq-sele">
+                <label class="layui-form-label change-label-width">权利性质</label>
+                <div class="layui-input-inline">
+                    <select name="qlxz" lay-search="" id="qlxz" lay-filter="qlxz" class="bdc-qlxz xmxx">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.qlxz, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(d.bdcSlXm.qlxz==item.DM ){ }} selected="selected"
+                                {{# } }} title="{{item.MC || ''}}">{{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">定着物面积</label>
+                <div class="layui-input-inline">
+                    <input type="number" autocomplete="off" class="layui-input xmxx" id="dzwmj" name="dzwmj"
+                           value="{{d.bdcSlXm.dzwmj}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">定着物用途</label>
+                <div class="layui-input-inline">
+                    <select lay-search="" name="dzwyt" class="xmxx" id="dzwyt">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.fwyt, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(d.bdcSlXm.yt==item.DM ){ }} selected="selected"
+                                {{# } }} title="{{item.MC || ''}}">{{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">不动产类型</label>
+                <div class="layui-input-inline">
+                    <select lay-search="" name="bdclx" id="bdclx" class="xmxx">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.bdclx, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(d.bdcSlXm.bdclx==item.DM ){ }} selected="selected"
+                                {{# } }} title="{{item.MC || ''}}">{{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">构筑物类型</label>
+                <div class="layui-input-inline">
+                    <select name="gzwlx" lay-search="" lay-filter="gzwlx" id="gzwlx" class="xmxx">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.gjzwlx, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(d.bdcSlXm.gzwlx==item.DM ){ }} selected="selected"
+                                {{# } }} title="{{item.MC || ''}}">{{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">用海类型</label>
+                <div class="layui-input-inline">
+                    <select name="yhlxa" lay-search="" id="yhlx" lay-filter="yhlxa" class="xmxx">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.hysylxa, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(d.bdcSlXm.yhlxa==item.DM ){ }} selected="selected"
+                                {{# } }} title="{{item.MC || ''}}">{{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">用海类型B</label>
+                <div class="layui-input-inline">
+                    <select name="yhlxb" lay-search="" id="yhlxb" lay-filter="yhlxb" class="xmxx">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.hysylxb, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(d.bdcSlXm.yhlxb==item.DM ){ }} selected="selected"
+                                {{# } }} title="{{item.MC || ''}}">{{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">林种</label>
+                <div class="layui-input-inline">
+                    <select name="lz" lay-search="" id="lz" lay-filter="lz" class="xmxx">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.lz, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(d.bdcSlXm.lz==item.DM ){ }} selected="selected" {{#
+                                } }} title="{{item.MC || ''}}">{{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline bdc-two-column">
+                <label class="layui-form-label change-label-width">不动产单元号</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input no-modify" disabled="off" name="bdcdyh" id="bdcdyh"
+                           autocomplete="off"
+                           value="{{d.bdcSlXm.bdcdyh || ''}}" title="{{d.bdcSlXm.bdcdyh || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline bdc-two-column">
+                <label class="layui-form-label change-label-width">坐落</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="zl" id="zl" class="layui-input xmxx"
+                           autocomplete="off"
+                           value="{{d.bdcSlXm.zl || ''}}" title="{{d.bdcSlXm.zl || ''}}">
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</script>
+
+
+
+
+
+
+
+
+
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/formCenter.js"></script>
+
+<script src="../../static/js/slym/bdcslxx.js"></script>
+<script src="../../static/js/common.js"></script>
+</html>

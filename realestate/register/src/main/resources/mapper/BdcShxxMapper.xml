@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.register.core.mapper.BdcShxxMapper">
+    <!--分页查询审核信息 -->
+    <select id="listBdcShxxByPage" parameterType="map" resultType="cn.gtmap.realestate.common.core.domain.BdcShxxDO">
+        SELECT t.shxxid,t.jdmc,t.sxh,t.shryxm,t.shryid,t.shkssj,t.shjssj,t.shyj,t.qmsj,t.czjg,t.bz,t.gzlslid,t.xmid
+        FROM bdc_shxx t
+        <where>
+            <if test="shxxid != null and shxxid != ''">
+                AND t.shxxid LIKE #{shxxid} || '%'
+            </if>
+            <if test="xmid != null and xmid != ''">
+                AND t.xmid LIKE #{xmid} || '%'
+            </if>
+            <if test="shyj != null and shyj != ''">
+                AND t.shyj LIKE '%' || #{shyj} || '%'
+            </if>
+            <if test="jdmc != null and jdmc != ''">
+                AND t.jdmc LIKE '%' || #{jdmc} || '%'
+            </if>
+        </where>
+        <choose>
+            <when test="sortParameter != null and sortParameter != ''">
+                order by ${sortParameter}
+            </when>
+            <otherwise>
+                order by xmid desc
+            </otherwise>
+        </choose>
+    </select>
+
+    <update id="batchDeleteShxxSign" parameterType="java.util.List">
+        UPDATE bdc_shxx t
+        <set>
+            t.qmid = '',
+            t.shyj = '',
+            t.qmsj = null
+        </set>
+        <where>
+            AND t.shxxid IN
+            <foreach collection="list" item="shxxid" open="(" close=")" separator=",">
+                #{shxxid}
+            </foreach>
+        </where>
+    </update>
+
+
+    <select id="queryCsShr" parameterType="map" resultType="cn.gtmap.realestate.common.core.domain.BdcShxxDO">
+       SELECT MAX(SXH)SXH,SHRYXM,SHRYID,GZLSLID
+          FROM BDC_SHXX
+       WHERE  GZLSLID IN
+        <foreach collection="gzlslids" item="gzlslid" open="(" close=")" separator=",">
+            #{gzlslid}
+        </foreach>
+        AND JDMC = '初审'
+        GROUP BY SHRYXM,SHRYID,GZLSLID ORDER BY SXH DESC
+    </select>
+</mapper>

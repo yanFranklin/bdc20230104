@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.register.core.mapper.BdcFgfMapper">
+    <select id="listBdcFgf" parameterType="cn.gtmap.realestate.common.core.qo.init.BdcXmQO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcFgfDO">
+        SELECT t.id, t.slbh, t.xmid, t.blzt
+        FROM bdc_fgf t
+        LEFT JOIN bdc_xm t1 ON t.xmid = t1.xmid
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                and t1.gzlslid = #{gzlslid}
+            </if>
+            <if test="xmid != null and xmid !=''">
+                AND t1.xmid=#{xmid}
+            </if>
+            <if test="slbh != null and slbh !=''">
+                AND t1.slbh=#{slbh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND t1.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="bjrq != null and bjrq !=''">
+                AND t1.jssj = #{bjrq}
+            </if>
+            <if test="jyhth != null and jyhth !=''">
+                AND t1.jyhth = #{jyhth}
+            </if>
+            <if test="spxtywh != null and spxtywh !=''">
+                AND t1.spxtywh = #{spxtywh}
+            </if>
+            <if test="djxl != null and djxl !=''">
+                AND t1.djxl = #{djxl}
+            </if>
+            <if test="ajzt != null and ajzt !=''">
+                AND t1.ajzt = #{ajzt}
+            </if>
+            <if test="qlr != null and qlr !=''">
+                AND t1.qlr = #{qlr}
+            </if>
+            <if test="qllxs != null and qllxs.size() > 0">
+                AND t1.qllx IN
+                <foreach collection="qllxs" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+</mapper>

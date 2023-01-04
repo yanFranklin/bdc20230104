@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcGxbmcxMapper">
+    <select id="listBdcGxbmcxByPage" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcGxbmcxQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGxbmcxDTO">
+        SELECT X.BDCDYH,
+        X.ZL,
+        qs.mc as QSZT,
+        aj.mc as AJZT,
+        X.DJYY,
+        X.BDCQZH AS CQZH,
+        to_char(X.DJSJ, 'yyyy-mm-dd hh24:mi:ss') djsj,
+        X.QLR AS QLRMC,
+        X.YWR AS YWRMC,
+        Y.ZJH AS QLRZJH,
+        X.YWRZJH AS YWRZJH,
+        lx.mc as BDCLX,
+        X.SLBH AS SLBH,
+        X.BDCDYWYBH AS FWBH,
+        X.YCQZH,
+        yt.mc AS GHYT,
+        X.YTDZH
+        FROM BDC_XM X
+        JOIN BDC_QLR Y
+        ON X.XMID = Y.XMID
+        inner join bdc_zd_bdclx lx
+        on lx.dm = x.bdclx
+        inner join bdc_zd_fwyt yt
+        on yt.dm = x.DZWYT
+        inner join bdc_zd_qszt qs
+        on qs.dm = x.qszt
+        inner join bdc_zd_ajzt aj
+        on aj.dm = x.ajzt
+        WHERE 1 = 1
+        and X.AJZT != 6
+        AND Y.QLRLB = 1
+        <if test = "zjh != null and zjh != ''">
+            <if test = "zjhmh == '1' || zjhmh == 1">
+                and y.zjh = #{zjh}
+            </if>
+            <if test = "zjhmh == '2' || zjhmh == 2">
+                and y.zjh like '%' || #{zjh} || '%'
+            </if>
+        </if>
+
+        <if test = "cqzh != null and cqzh != ''">
+            <if test = "cqzhmh == '1' || cqzhmh == 1 ">
+                AND X.XMID IN
+                (
+                SELECT XMID
+                FROM BDC_XM_ZS_GX
+                WHERE ZSID IN
+                (
+                SELECT ZSID
+                FROM BDC_ZS Z
+                WHERE 1 = 1
+                and z.bdcqzh = #{cqzh}
+                )
+                )
+            </if>
+            <if test = "cqzhmh == '2' || cqzhmh == 2">
+                AND X.XMID IN
+                (
+                SELECT XMID
+                FROM BDC_XM_ZS_GX
+                WHERE ZSID IN
+                (
+                SELECT ZSID
+                FROM BDC_ZS Z
+                WHERE 1 = 1
+                and z.bdcqzh  like '%' || #{cqzh} || '%'
+                )
+                )
+            </if>
+
+
+        </if>
+
+    </select>
+</mapper>

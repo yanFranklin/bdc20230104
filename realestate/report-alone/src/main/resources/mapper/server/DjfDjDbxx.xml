@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--登簿信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.DjfDjDbxxMapper">
+
+    <select id="queryDjfDbxxList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.domain.exchange.DjfDjDb">
+        select * from (SELECT DISTINCT '6004040000' ysdm,
+        c.xmid as ywh,
+        c.dbr as dbryxm,
+        t.shyj as dbyj,
+        c.djsj as dbsj,
+        t.czjg,
+        c.qxdm,
+        row_number () over ( partition BY t.gzlslid ORDER BY t.sxh DESC ) rn
+        FROM
+        bdc_shxx t
+        LEFT JOIN bdc_xm c
+        ON t.gzlslid = c.gzlslid
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND c.xmid = #{ywh}
+            </if>
+        </where>
+        ) r where r.rn = 1
+    </select>
+
+</mapper>

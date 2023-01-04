@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!--宣城 市级查询接口 户籍人口信息查询 -->
+    <ex:bean id="hjrkxxcx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="户籍人口信息查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SJCX"/>
+            <ex:property name="dsfFlag" value="SJCX"/>
+            <ex:property name="url" value="${sjcx.hjrkxxcx.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/xuancheng/hjrkcx/request/request.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!--宣城 市级查询接口 企业信息查询 -->
+    <ex:bean id="qyxxcx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="企业信息查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SJCX"/>
+            <ex:property name="dsfFlag" value="SJCX"/>
+            <ex:property name="url" value="${sjcx.qyxxcx.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/xuancheng/qyxxcx/request/request.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!--宣城 市级查询接口 出生证明查询 -->
+    <ex:bean id="cszmcx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="出生证明查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SJCX"/>
+            <ex:property name="dsfFlag" value="SJCX"/>
+            <ex:property name="url" value="${sjcx.cszmcx.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/xuancheng/cszmcx/request/request.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!--宣城 市级查询接口 单位法人查询 -->
+    <ex:bean id="dwfrcx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="单位法人查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SJCX"/>
+            <ex:property name="dsfFlag" value="SJCX"/>
+            <ex:property name="url" value="${sjcx.dwfrcx.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/xuancheng/dwfrcx/request/request.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!--宣城 市级查询接口 婚姻登记查询 -->
+    <ex:bean id="hydjcx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="婚姻登记查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SJCX"/>
+            <ex:property name="dsfFlag" value="SJCX"/>
+            <ex:property name="url" value="${sjcx.hydjcx.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/xuancheng/hydjcx/request/request.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!--宣城 市级查询接口 死亡证明查询 -->
+    <ex:bean id="swzmcx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="死亡证明查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SJCX"/>
+            <ex:property name="dsfFlag" value="SJCX"/>
+            <ex:property name="url" value="${sjcx.swzmcx.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/xuancheng/swzmcx/request/request.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!--宣城 市级查询接口 家庭成员查询 -->
+    <ex:bean id="jtcycx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="家庭成员查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SJCX"/>
+            <ex:property name="dsfFlag" value="SJCX"/>
+            <ex:property name="url" value="${sjcx.jtcycx.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/xuancheng/jtcycx/request/request.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!--为受理提供 婚姻登记查询,过滤信息-->
+    <ex:bean id="acceptHyxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="sjjkServiceImpl" />
+            <ex:property name="methodName" value="hyxxFilter" />
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 为受理提供 家庭成员查询，过滤未成年子女-->
+    <ex:bean id="acceptJtcyxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="sjjkServiceImpl" />
+            <ex:property name="methodName" value="jtcyFilter" />
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 宣城全市法院—律师调查令信息 -->
+    <ex:bean id="xclsdcl">
+        <ex:service-info request-type="httpPostWithUrlParam">
+            <ex:property name="url" value="${sjcx.lsdcl.url}"/>
+            <ex:property name="logEventName" value="宣城全市法院—律师调查令信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FY"/>
+            <ex:property name="dsfFlag" value="FY"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/xuancheng/lsdcl/request/request.xml"/>
+        </ex:request>
+        <ex:log dsfFlag="FY" logEventName="宣城全市法院—律师调查令信息" requester="BDC" responser="FY"/>
+    </ex:bean>
+
+    <!-- 宣城全市法院—立案文书查询-->
+    <ex:bean id="laws">
+        <ex:service-info request-type="httpPostWithUrlParam">
+            <ex:property name="url" value="${sjcx.laws.url}"/>
+            <ex:property name="logEventName" value="宣城全市法院—立案文书查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FY"/>
+            <ex:property name="dsfFlag" value="FY"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/xuancheng/laws/request/request.xml"/>
+        </ex:request>
+        <ex:log dsfFlag="FY" logEventName="宣城全市法院—立案文书查询" requester="BDC" responser="FY"/>
+    </ex:bean>
+    <!--宣城 市级查询接口 竣工验收备案信息查询 -->
+    <ex:bean id="jgysbacx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="竣工验收备案信息查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SJCX"/>
+            <ex:property name="dsfFlag" value="SJCX"/>
+            <ex:property name="url" value="${sjcx.jgysbacx.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/xuancheng/jgysbacx/request/request.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!--宣城 市级查询接口 竣工验收备案详情信息查询 -->
+    <ex:bean id="jgysbaxqcx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="竣工验收备案详情信息查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SJCX"/>
+            <ex:property name="dsfFlag" value="SJCX"/>
+            <ex:property name="url" value="${sjcx.jgysbaxqcx.url}"/>
+        </ex:service-info>
+    </ex:bean>
+
+</beans>

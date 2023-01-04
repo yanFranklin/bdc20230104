@@ -1,0 +1,502 @@
+package cn.gtmap.realestate.engine.ruleexpression
+import cn.gtmap.realestate.engine.core.bo.BdcGzBdsYsBO
+
+/**
+ * @author <a href="mailto:zhuyong@gtmap.cn">zhuyong</a>
+ * @version 1.0, 2019/3/8
+ * @description 处理规则表达式生成对应的Drools语法语句
+ *   1、示例说明
+ *   1.1、表达式  ：(( list2 不为空 ) 并且 name 包含 "asd" ) 或 isboy == true 并且 ( list1 为空 ) 或 age >= 0
+ *   1.2、解析内容：将其中以 "包含"、"不包含"、"开始于"、"结束于"、"为空"、"不为空" ">"、">="、"<"、"<="、"=="、"!=" 形成的元素簇拆分出来
+ *   1.3、解析结果:
+ *        List<BdcGzBdsYsBO>
+ *            2    2   null!= list2 && list2.size() > 0
+ *            6    2   name contains "asd"
+ *            11   3   isboy == true
+ *            16   2   null == list1 || 0 == list1.size()
+ *            20   3   age >= 0
+
+ *   1.4、同时为了后续引擎判断操作方便，采用Map集合传值，即需要将变量封装成Map取值方式
+ */
+
+// 获取上一个元素即目标操作对象数据类型
+rule "Get Previous Element Java Type"
+    when
+        $element: BdcGzBdsYsBO(null != preElementObj)
+    then
+        $element.setPreElementJavaType($element.getPreElementObj().getClass().getName());
+        update($element)
+end
+
+rule "Get Previous Element Java Type When Null"
+    when
+        $element: BdcGzBdsYsBO(null == preElementObj)
+    then
+        $element.setPreElementJavaType("NULL");
+        update($element)
+end
+
+// ************************************************************************************************************************************
+// xmList[0].SLBH  >  >=  <  <=  ==  !=
+// CollectionUtils.isNotEmpty(this["xmList"]) && null != this["xmList"].get(0) && this["xmList"].get(0).get("SLBH")  >   ****
+rule "List<Map> Item More Or Lower Or Equals Than"
+    when
+        $element: BdcGzBdsYsBO("1" == preElementType && (curOperator == ">" || curOperator == ">=" || curOperator == "<" || curOperator == "<=" || curOperator == "==" || curOperator == "!="))
+    then
+        $element.setLength(3);
+        $element.setExpression("( CollectionUtils.isNotEmpty(this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"])" +
+             "&& null != this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ")" +
+             "&& this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ").get(\"" + $element.getBdcGzBdsYszcBO().getSubItemName() + "\")" +
+             $element.getCurOperator() +
+             $element.getNextElement() +
+              ")");
+
+        update($element)
+end
+
+// xmList[0].SLBH  开始于  ***
+// CollectionUtils.isNotEmpty(this["xmList"]) && null != this["xmList"].get(0) && this["xmList"].get(0).get("SLBH").startsWith(***)
+rule "List<Map> Item Starts With Someone"
+    when
+        $element: BdcGzBdsYsBO("1" == preElementType && curOperator == "开始于")
+    then
+        $element.setLength(3);
+        $element.setExpression("( CollectionUtils.isNotEmpty(this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"])" +
+             "&& null != this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ")" +
+             "&& this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ").get(\"" + $element.getBdcGzBdsYszcBO().getSubItemName() + "\")" +
+             ".startsWith(" + $element.getNextElement() + ")" +
+              ")");
+
+        update($element)
+end
+
+// xmList[0].SLBH  结束于  ***
+// CollectionUtils.isNotEmpty(this["xmList"]) && null != this["xmList"].get(0) && this["xmList"].get(0).get("SLBH").endWith(***)
+rule "List<Map> Item End With Someone"
+    when
+        $element: BdcGzBdsYsBO("1" == preElementType && curOperator == "结束于")
+    then
+        $element.setLength(3);
+        $element.setExpression("( CollectionUtils.isNotEmpty(this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"])" +
+             "&& null != this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ")" +
+             "&& this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ").get(\"" + $element.getBdcGzBdsYszcBO().getSubItemName() + "\")" +
+             ".endsWith(" + $element.getNextElement() + ")" +
+              ")");
+
+        update($element)
+end
+
+// xmList[0].SLBH  包含  ***
+// CollectionUtils.isNotEmpty(this["xmList"]) && null != this["xmList"].get(0) && this["xmList"].get(0).get("SLBH") contains ***
+rule "List<Map> Item Contains Someone"
+    when
+        $element: BdcGzBdsYsBO("1" == preElementType && curOperator == "包含")
+    then
+        $element.setLength(3);
+        $element.setExpression("( CollectionUtils.isNotEmpty(this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"])" +
+             "&& null != this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ")" +
+             "&& this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ").get(\"" + $element.getBdcGzBdsYszcBO().getSubItemName() + "\")" +
+             " contains " + $element.getNextElement() +
+              ")");
+
+        update($element)
+end
+
+// xmList[0].SLBH  不包含  ***
+// CollectionUtils.isEmpty(this["xmList"]) || null == this["xmList"].get(0) || this["xmList"].get(0).get("SLBH") not contains ***
+rule "List<Map> Item Not Contains Someone"
+    when
+        $element: BdcGzBdsYsBO("1" == preElementType && curOperator == "不包含")
+    then
+        $element.setLength(3);
+        $element.setExpression("( CollectionUtils.isEmpty(this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"])" +
+             "|| null == this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ")" +
+             "|| this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ").get(\"" + $element.getBdcGzBdsYszcBO().getSubItemName() + "\")" +
+             " not contains " + $element.getNextElement() +
+              ")");
+
+        update($element)
+end
+
+// xmList[0].SLBH 为空
+// CollectionUtils.isEmpty(this["xmList"]) || null == this["xmList"].get(0) || null == this["xmList"].get(0).get("SLBH")
+rule "List<Map> Item Is Empty"
+    when
+        $element: BdcGzBdsYsBO("1" == preElementType && curOperator == "为空")
+    then
+        $element.setLength(2);
+        $element.setExpression("( CollectionUtils.isEmpty(this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"])" +
+             "|| null == this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ")" +
+             "|| null == this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ").get(\"" + $element.getBdcGzBdsYszcBO().getSubItemName() + "\")" +
+             ")");
+
+        update($element)
+end
+
+// xmList[0].SLBH 不为空
+// CollectionUtils.isNotEmpty(this["xmList"]) && null != this["xmList"].get(0) && null != this["xmList"].get(0).get("SLBH")
+rule "List<Map> Item Is Not Empty"
+    when
+        $element: BdcGzBdsYsBO("1" == preElementType && curOperator == "不为空")
+    then
+        $element.setLength(2);
+        $element.setExpression("( CollectionUtils.isNotEmpty(this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"])" +
+             "&& null != this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ")" +
+             "&& null != this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ").get(\"" + $element.getBdcGzBdsYszcBO().getSubItemName() + "\")" +
+             ")");
+
+        update($element)
+end
+
+// ************************************************************************************************************************************
+
+// xmList[0]  >  >=  <  <=  ==  !=  ***
+// CollectionUtils.isNotEmpty(this["xmList"]) && null != this["xmList"].get(0) && this["xmList"].get(0) >  ****
+rule "List<Object> Item More Or Lower Or Equals Than"
+    when
+        $element: BdcGzBdsYsBO("2" == preElementType && (curOperator == ">" || curOperator == ">=" || curOperator == "<" || curOperator == "<=" || curOperator == "==" || curOperator == "!="))
+    then
+        $element.setLength(3);
+        $element.setExpression("( CollectionUtils.isNotEmpty(this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"])" +
+             "&& null != this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ")" +
+             "&& this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ")" +
+             $element.getCurOperator() +
+             $element.getNextElement() +
+             ")");
+
+        update($element)
+end
+
+// xmList[0]  开始于  ***
+// CollectionUtils.isNotEmpty(this["xmList"]) && null != this["xmList"].get(0) && this["xmList"].get(0).startsWith(***)
+rule "List<Object> Item Starts With Someone"
+    when
+        $element: BdcGzBdsYsBO("2" == preElementType && curOperator == "开始于")
+    then
+        $element.setLength(3);
+        $element.setExpression("( CollectionUtils.isNotEmpty(this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"])" +
+             "&& null != this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ")" +
+             "&& this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ")" +
+             ".startsWith(" + $element.getNextElement() + ")" +
+              ")");
+
+        update($element)
+end
+
+// xmList[0]  结束于  ***
+// CollectionUtils.isNotEmpty(this["xmList"]) && null != this["xmList"].get(0) && this["xmList"].get(0).endWith(***)
+rule "List<Object> Item End With Someone"
+    when
+        $element: BdcGzBdsYsBO("2" == preElementType && curOperator == "结束于")
+    then
+        $element.setLength(3);
+        $element.setExpression("( CollectionUtils.isNotEmpty(this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"])" +
+             "&& null != this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ")" +
+             "&& this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ")" +
+             ".endsWith(" + $element.getNextElement() + ")" +
+              ")");
+
+        update($element)
+end
+
+// xmList[0]  包含  ***
+// CollectionUtils.isNotEmpty(this["xmList"]) && null != this["xmList"].get(0) && this["xmList"].get(0) contains ***
+rule "List<Object> Item Contains Someone"
+    when
+        $element: BdcGzBdsYsBO("2" == preElementType && curOperator == "包含")
+    then
+        $element.setLength(3);
+        $element.setExpression("( CollectionUtils.isNotEmpty(this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"])" +
+             "&& null != this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ")" +
+             "&& this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ")" +
+             " contains " + $element.getNextElement() +
+              ")");
+
+        update($element)
+end
+
+// xmList[0]  不包含  ***
+// CollectionUtils.isNotEmpty(this["xmList"]) && null != this["xmList"].get(0) && this["xmList"].get(0) not contains ***
+rule "List<Object> Item Not Contains Someone"
+    when
+        $element: BdcGzBdsYsBO("2" == preElementType && curOperator == "不包含")
+    then
+        $element.setLength(3);
+        $element.setExpression("( CollectionUtils.isEmpty(this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"])" +
+             "|| null == this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ")" +
+             "|| this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ")" +
+             " not contains " + $element.getNextElement() +
+              ")");
+
+        update($element)
+end
+
+// xmList[0] 为空
+// CollectionUtils.isEmpty(this["xmList"]) || null == this["xmList"].get(0)
+rule "List<Object> Item Is Empty"
+    when
+        $element: BdcGzBdsYsBO("2" == preElementType && curOperator == "为空")
+    then
+        $element.setLength(2);
+        $element.setExpression("( CollectionUtils.isEmpty(this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"])" +
+             "|| null == this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ")" +
+             ")");
+
+        update($element)
+end
+
+// xmList[0] 不为空
+// CollectionUtils.isNotEmpty(this["xmList"]) && null != this["xmList"].get(0)
+rule "List<Object> Item Is Not Empty"
+    when
+        $element: BdcGzBdsYsBO("2" == preElementType && curOperator == "不为空")
+    then
+        $element.setLength(2);
+        $element.setExpression("( CollectionUtils.isNotEmpty(this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"])" +
+             "&& null != this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get("  + $element.getBdcGzBdsYszcBO().getIndex() + ")" +
+             ")");
+
+        update($element)
+end
+
+// ************************************************************************************************************************************
+
+// xmMap.slbh  >  >=  <  <=  ==  !=  ***
+// MapUtils.isNotEmpty(this["xmMap"]) && null != this["xmMap"].get("slbh") && this["xmMap"].get("slbh") >  ****
+rule "Map Item More Or Lower Or Equals Than"
+    when
+        $element: BdcGzBdsYsBO("3" == preElementType && (curOperator == ">" || curOperator == ">=" || curOperator == "<" || curOperator == "<=" || curOperator == "==" || curOperator == "!="))
+    then
+        $element.setLength(3);
+        $element.setExpression("( MapUtils.isNotEmpty(this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"])" +
+             "&& null != this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get(\""  + $element.getBdcGzBdsYszcBO().getSubItemName() + "\")" +
+             "&& this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get(\""  + $element.getBdcGzBdsYszcBO().getSubItemName() + "\")" +
+             $element.getCurOperator() +
+             $element.getNextElement() +
+             ")");
+
+        update($element)
+end
+
+// xmMap.slbh  开始于  ***
+// MapUtils.isNotEmpty(this["xmMap"]) && null != this["xmMap"].get("slbh") && this["xmMap"].get("slbh").startsWith(***)
+rule "Map Item Starts With Someone"
+    when
+        $element: BdcGzBdsYsBO("3" == preElementType && curOperator == "开始于")
+    then
+        $element.setLength(3);
+        $element.setExpression("( MapUtils.isNotEmpty(this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"])" +
+             "&& null != this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get(\""  + $element.getBdcGzBdsYszcBO().getSubItemName() + "\")" +
+             "&& this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get(\""  + $element.getBdcGzBdsYszcBO().getSubItemName() + "\")" +
+             ".startsWith(" + $element.getNextElement() + ")" +
+              ")");
+
+        update($element)
+end
+
+// xmMap.slbh  结束于  ***
+// MapUtils.isNotEmpty(this["xmMap"]) && null != this["xmMap"].get("slbh") && this["xmMap"].get("slbh").endsWith(***)
+rule "Map Item Ends With Someone"
+    when
+        $element: BdcGzBdsYsBO("3" == preElementType && curOperator == "结束于")
+    then
+        $element.setLength(3);
+        $element.setExpression("( MapUtils.isNotEmpty(this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"])" +
+             "&& null != this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get(\""  + $element.getBdcGzBdsYszcBO().getSubItemName() + "\")" +
+             "&& this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get(\""  + $element.getBdcGzBdsYszcBO().getSubItemName() + "\")" +
+             ".endsWith(" + $element.getNextElement() + ")" +
+              ")");
+
+        update($element)
+end
+
+// xmMap.slbh  包含  ***
+// MapUtils.isNotEmpty(this["xmMap"]) && null != this["xmMap"].get("slbh") && this["xmMap"].get("slbh")  contains ***
+rule "Map Item Contains With Someone"
+    when
+        $element: BdcGzBdsYsBO("3" == preElementType && curOperator == "包含")
+    then
+        $element.setLength(3);
+        $element.setExpression("( MapUtils.isNotEmpty(this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"])" +
+             "&& null != this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get(\""  + $element.getBdcGzBdsYszcBO().getSubItemName() + "\")" +
+             "&& this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get(\""  + $element.getBdcGzBdsYszcBO().getSubItemName() + "\")" +
+             " contains " + $element.getNextElement() +
+              ")");
+
+        update($element)
+end
+
+// xmMap.slbh  不包含  ***
+// MapUtils.isNotEmpty(this["xmMap"]) && null != this["xmMap"].get("slbh") && this["xmMap"].get("slbh")  not contains ***
+rule "Map Item Not Contains With Someone"
+    when
+        $element: BdcGzBdsYsBO("3" == preElementType && curOperator == "不包含")
+    then
+        $element.setLength(3);
+        $element.setExpression("( MapUtils.isEmpty(this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"])" +
+             "|| null == this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get(\""  + $element.getBdcGzBdsYszcBO().getSubItemName() + "\")" +
+             "|| this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get(\""  + $element.getBdcGzBdsYszcBO().getSubItemName() + "\")" +
+             " not  contains " + $element.getNextElement() +
+              ")");
+
+        update($element)
+end
+
+// xmMap.slbh  为空
+// MapUtils.isEmpty(this["xmMap"]) || null == this["xmMap"].get("slbh")
+rule "Map Item Is Empty"
+    when
+        $element: BdcGzBdsYsBO("3" == preElementType && curOperator == "为空")
+    then
+        $element.setLength(2);
+        $element.setExpression("( MapUtils.isEmpty(this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"])" +
+             "|| null == this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get(\""  + $element.getBdcGzBdsYszcBO().getSubItemName() + "\")" +
+              ")");
+
+        update($element)
+end
+
+// xmMap.slbh  不为空
+// MapUtils.isNotEmpty(this["xmMap"]) && null != this["xmMap"].get("slbh")
+rule "Map Item Starts Is Not Empty"
+    when
+        $element: BdcGzBdsYsBO("3" == preElementType && curOperator == "不为空")
+    then
+        $element.setLength(2);
+        $element.setExpression("( MapUtils.isNotEmpty(this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"])" +
+             "&& null != this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].get(\""  + $element.getBdcGzBdsYszcBO().getSubItemName() + "\")" +
+              ")");
+
+        update($element)
+end
+
+// ************************************************************************************************************************************
+
+// obj  >  >=  <  <=  ==  !=  ***
+// this["obj"]  >  >=  <  <=  ==  !=  ***
+rule "Obj More Or Lower Or Equals Than"
+    when
+        $element: BdcGzBdsYsBO("4" == preElementType && (curOperator == ">" || curOperator == ">=" || curOperator == "<" || curOperator == "<=" || curOperator == "==" || curOperator == "!="))
+    then
+        $element.setLength(3);
+        $element.setExpression(" this[\"" + $element.getPreElement() + "\"]" + $element.getCurOperator() + $element.getNextElement());
+        update($element)
+end
+
+// obj 开始于  ***
+// null != this["obj"] && this["obj"].startsWith(***)
+rule "Obj Starts With Someone"
+    when
+        $element: BdcGzBdsYsBO("4" == preElementType && curOperator == "开始于")
+    then
+        $element.setLength(3);
+        $element.setExpression("( null != this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"]"+
+             " && this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].startsWith(" + $element.getNextElement() + ")" + ")");
+
+        update($element)
+end
+
+// obj 结束于  ***
+// null != this["obj"] && this["obj"].endsWith(***)
+rule "Obj Ends With Someone"
+    when
+        $element: BdcGzBdsYsBO("4" == preElementType && curOperator == "结束于")
+    then
+        $element.setLength(3);
+        $element.setExpression("( null != this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"]"+
+             " && this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"].endsWith(" + $element.getNextElement() + ")" + ")");
+
+        update($element)
+end
+
+// obj 包含  ***
+// null != this["obj"] && this["obj"] contains ***
+rule "Obj Contains Someone"
+    when
+        $element: BdcGzBdsYsBO("4" == preElementType && curOperator == "包含")
+    then
+        $element.setLength(3);
+        $element.setExpression("( null != this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"]"+
+             "&& this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"]  contains " + $element.getNextElement() + ")");
+
+        update($element)
+end
+
+// obj 不包含  ***
+// null == this["obj"] || this["obj"] not contains ***
+rule "Obj Not Contains  Someone"
+    when
+        $element: BdcGzBdsYsBO("4" == preElementType && curOperator == "不包含")
+    then
+        $element.setLength(3);
+        $element.setExpression("( null == this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"]"+
+             "|| this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() +  "\"]  not  contains " + $element.getNextElement() + ")");
+
+        update($element)
+end
+
+// obj 为空
+// CollectionUtils.isEmpty(this["obj"])
+rule "Is Empty And Type Is List"
+    when
+        $element: BdcGzBdsYsBO("4" == preElementType && curOperator == "为空" && preElementJavaType contains "List")
+    then
+        $element.setLength(2);
+        $element.setExpression(" CollectionUtils.isEmpty(this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"]) ");
+        update($element)
+end
+
+// obj 为空
+// MapUtils.isEmpty(this["obj"])
+rule "Is Empty And Type Is Map"
+    when
+        $element: BdcGzBdsYsBO("4" == preElementType && curOperator == "为空" && preElementJavaType contains "Map")
+    then
+        $element.setLength(2);
+        $element.setExpression(" MapUtils.isEmpty(this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"]) ");
+        update($element)
+end
+
+// obj 为空
+// null == this["obj"]
+rule "Is Null And Type Is Not List And Map"
+    when
+        $element: BdcGzBdsYsBO("4" == preElementType && curOperator == "为空" && !(preElementJavaType contains "List" || preElementJavaType contains "Map"))
+    then
+        $element.setLength(2);
+        $element.setExpression(" null == this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"] ");
+        update($element)
+end
+
+// obj 不为空
+// CollectionUtils.isNotEmpty(this["obj"])
+rule "Is Not Empty And Type Is List"
+    when
+        $element: BdcGzBdsYsBO("4" == preElementType && curOperator == "不为空" && preElementJavaType contains "List")
+    then
+        $element.setLength(2);
+        $element.setExpression(" CollectionUtils.isNotEmpty(this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"]) ");
+        update($element)
+end
+
+// obj 不为空
+// MapUtils.isNotEmpty(this["obj"])
+rule "Is Not Empty And Type Is Map"
+    when
+        $element: BdcGzBdsYsBO("4" == preElementType && curOperator == "不为空" && preElementJavaType contains "Map")
+    then
+        $element.setLength(2);
+        $element.setExpression(" MapUtils.isNotEmpty(this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"]) ");
+        update($element)
+end
+
+// obj 不为空
+// null != this["obj"]
+rule "Is Not Empty And Type Is Not List And Map"
+    when
+        $element: BdcGzBdsYsBO("4" == preElementType && curOperator == "不为空" && !(preElementJavaType contains "List" || preElementJavaType contains "Map"))
+    then
+        $element.setLength(2);
+        $element.setExpression(" null != this[\"" + $element.getBdcGzBdsYszcBO().getParentItemName() + "\"] ");
+        update($element)
+end

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>社会组织信息查询</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+    <link rel="stylesheet" href="../../static/css/common.css"/>
+    <link rel="stylesheet" href="../../static/css/bjjk/bjjk.css"/>
+</head>
+<body>
+<div class="bdc-percentage-container">
+    <!--查询条件-->
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <!--默认两行的-->
+            <form class="layui-form" action="" lay-filter="searchform">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">受理编号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" autocomplete="off" placeholder="请输入" class="layui-input" name="slbh" id="slbh">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">权利人名称</label>
+                        <div class="layui-input-inline">
+                            <select name="qlrmc" id="qlrmc" lay-filter="qlrmc" class="search" lay-filter="qlrmc">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">证件号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" autocomplete="off" placeholder="请输入" class="layui-input" name="zjh" id="zjh">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">查询类型</label>
+                        <div class="layui-input-inline">
+                            <select id="type" name="type" lay-filter="type" lay-search="">
+                                <option value="10" selected="selected">社会组织信息查询</option>
+                                <option value="20">社会团体法人登记证书信息查询</option>
+                                <option value="30">民办非企业单位法人登记证书信息查询</option>
+                                <option value="40">基金会法人登记证书信息查询</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box-four">
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-secondary-btn" id="qtqlr">其他权利人</a>
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                        <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!--表格-->
+    <div class="bdc-table-box">
+        <table id="pageTable" lay-filter="pageTable"></table>
+    </div>
+
+    <!--社会组织详细，弹框表单-->
+    <div id="bdc-popup-small" class="bdc-hide">
+        <form class="layui-form" action="" id="shzzdjxxForm" lay-filter="shzzdjxxForm">
+            <div class="layui-form-item pf-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">社会组织名称</label>
+                    <div class="layui-input-inline">
+                        <input id="org_name" name="org_name" type="text" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">统一社会信用代码</label>
+                    <div class="layui-input-inline">
+                        <input id="usc_code" name="usc_code" type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">业务范围</label>
+                    <div class="layui-input-inline">
+                        <input id="business_scope" name="business_scope" type="text" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">法定代表人</label>
+                    <div class="layui-input-inline">
+                        <input name="legal_name" type="text" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">注册资金</label>
+                    <div class="layui-input-inline">
+                        <input name="registered_capital" type="text" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">住所_具体地址</label>
+                    <div class="layui-input-inline">
+                        <input name="domicile_addres" type="text" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">证书有效期起</label>
+                    <div class="layui-input-inline">
+                        <input name="valid_from" type="text" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">证书有效期止</label>
+                    <div class="layui-input-inline">
+                        <input name="valid_to" type="text" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">发证机关</label>
+                    <div class="layui-input-inline">
+                        <input name="issue_certificate_dept" type="text" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">发证日期</label>
+                    <div class="layui-input-inline">
+                        <input name="registration_date" type="text" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">主管单位</label>
+                    <div class="layui-input-inline">
+                        <input name="manager_dept" type="text" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">是否慈善组织</label>
+                    <div class="layui-input-inline">
+                        <input name="ifcharity" type="text" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!--表格上面功能按钮-->
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm bdc-table-second-btn upload-pdf" lay-event="upload-pdf">上传PDF</button>
+
+        </div>
+    </script>
+
+    <!--表格内部操作按钮-->
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="info">详细</a>
+    </script>
+
+    <script src="../../static/lib/jquery/jquery.min.js"></script>
+    <script src="../../static/lib/layui/layui.js"></script>
+    <script src="../../static/js/common.js"></script>
+    <script src="../../static/js/commonSearch.js"></script>
+    <script src="../../static/js/gxjklc/gxjkCommon.js"></script>
+    <script src="../../static/js/bjjk/shzzxx.js"></script>
+    <script src="../../static/lib/bdcui/js/common.js"></script>
+</div>
+</body>
+</html>

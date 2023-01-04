@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>合同备案商品房</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/tab-iframe.css">
+    <link rel="stylesheet" href="../../static/css/tab-content.css">
+</head>
+
+<!--备案信息台账部分-->
+<body>
+    <div class="bdc-container-tab">
+        <div class="bdc-container">
+            <div class="layui-tab layui-tab-brief" lay-filter="tabFilter">
+                <ul class="layui-tab-title bdc-tab-title">
+                    <li class="layui-this" id="htba">合同备案</li>
+                    <li class="bdc-hide xzlpb" id="xzlpb">选择楼盘表</li>
+                </ul>
+                <div class="layui-tab-content bdc-tab-content" id="contentTable">
+                    <div class="layui-tab-item layui-show">
+                        <div class="bdc-percentage-container">
+                            <!--查询条件-->
+                            <div class="bdc-search-content">
+                                <div class="bdc-search-box">
+                                    <!--默认两行的-->
+                                    <form class="layui-form" action="" lay-filter="searchform">
+                                        <div class="layui-form-item pf-form-item">
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">受理编号</label>
+                                                <div class="layui-input-inline">
+                                                    <input name="slbh" type="text" autocomplete="off" placeholder="受理编号"
+                                                           class="layui-input search required">
+                                                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                                                </div>
+                                            </div>
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">合同编号</label>
+                                                <div class="layui-input-inline">
+                                                    <input name="htbh" type="text" autocomplete="off" placeholder="合同编号"
+                                                           class="layui-input search required">
+                                                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                                                </div>
+                                            </div>
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">房屋坐落</label>
+                                                <div class="layui-input-inline">
+                                                    <input name="zl" type="text" autocomplete="off" placeholder="房屋坐落"
+                                                           class="layui-input search required">
+                                                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                                                </div>
+                                            </div>
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">买受人</label>
+                                                <div class="layui-input-inline">
+                                                    <input name="qlrmc" type="text" autocomplete="off" placeholder="买受人"
+                                                           class="layui-input search required">
+                                                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                                                </div>
+                                            </div>
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">买受人证件号</label>
+                                                <div class="layui-input-inline">
+                                                    <input name="zjh" type="text" autocomplete="off" placeholder="买受人证件号"
+                                                           class="layui-input search required">
+                                                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                                                </div>
+                                            </div>
+                                            <!--查询按钮-->
+                                            <div class="layui-inline">
+                                                <button class="layui-btn layui-btn-normal bdc-major-btn" type="button" lay-submit=""
+                                                        id="queryBaxx"
+                                                        lay-filter="queryBaxx">查询
+                                                </button>
+                                                <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn">重置
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="bdc-table-box">
+                                <table id="baxxTable" lay-data="{id: 'baxxTable'}" lay-filter="baxxTable"></table>
+                            </div>
+                            <!--表格上面功能按钮-->
+                            <script type="text/html" id="toolbarDemo">
+                                <div class="layui-btn-container">
+                                    <button class="layui-btn layui-btn-sm layui-btn-danger layui-btn-danger delete" lay-event="delete" id="delete">删除</button>
+                                    <!--<button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="selectlpb" id="selectlpb">选择楼盘表</button>-->
+                                </div>
+                            </script>
+
+                            <script type="text/html" id="htbaczTpl">
+                                <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="edit"  {{#  if(d.edit=="delete"){ }}style="display: none" {{# } }}>编辑</a>
+                                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" {{#  if(d.del=="delete"){ }}style="display: none" {{# } }}>删除</a>
+                                <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="view">查看</a>
+                            </script>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item bdc-hide">
+                        <iframe id="childFrame1" src="../lpb/selectLpb.html"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<!--引入js部分一般放在最下面-->
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<!--小数计算防精度缺失-->
+<script src="../../static/lib/mathjs/math.js"></script>
+<script src="../../static/lib/registerui/js/tab-iframe.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/table.js"></script>
+<script src="../../static/js/htbaspf/htbaspf.js"></script>
+</html>

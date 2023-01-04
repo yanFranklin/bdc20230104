@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+    <!-- 事务管理器 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource">
+			<ref bean="DataSource" />
+		</property>
+		<qualifier value="exchange" />
+	</bean>
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+
+	<!-- 事务管理器 -->
+	<bean id="yzwTransactionManager"
+		  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource">
+			<ref bean="yzwDataSource" />
+		</property>
+		<qualifier value="yzw" />
+	</bean>
+	<tx:annotation-driven transaction-manager="yzwTransactionManager" proxy-target-class="true"/>
+
+	<!-- 事务管理器 -->
+	<bean id="ydjzhTransactionManager"
+		  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource">
+			<ref bean="ydjzhDataSource" />
+		</property>
+		<qualifier value="ydjzh" />
+	</bean>
+	<tx:annotation-driven transaction-manager="ydjzhTransactionManager" proxy-target-class="true"/>
+
+	<!-- 事务管理器 -->
+	<bean id="ydjbfTransactionManager"
+		  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource">
+			<ref bean="ydjbfDataSource" />
+		</property>
+		<qualifier value="ydjbf" />
+	</bean>
+	<tx:annotation-driven transaction-manager="ydjbfTransactionManager" proxy-target-class="true"/>
+
+	<!-- 事务管理器 -->
+	<bean id="hlwTransactionManager"
+		  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource">
+			<ref bean="hlwDataSource" />
+		</property>
+		<qualifier value="hlw" />
+	</bean>
+	<tx:annotation-driven transaction-manager="hlwTransactionManager" proxy-target-class="true"/>
+</beans>

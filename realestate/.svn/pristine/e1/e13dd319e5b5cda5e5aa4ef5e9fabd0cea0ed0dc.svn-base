@@ -1,0 +1,273 @@
+<!--
+    海门发证记录
+-->
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>不动产发证记录</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../static/css/fzjl/fzjl.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+</head>
+<body>
+<!--<div class="main-container">-->
+<div class="content-div">
+    <div class="bdc-content-box">
+        <form class="layui-form setOverflow" action="" lay-filter="form">
+            <div class="bdc-content-fix">
+                <div class="content-title">
+                    <p>发证记录</p>
+                    <div class="title-btn-area .layui-layout-right">
+                        <button type="submit" id="sf" class="layui-btn bdc-secondary-btn" lay-submit="" lay-filter="sf" style="display:none;">
+                            完成收费
+                        </button>
+                        <button type="submit" id="submitBtn" class="layui-btn bdc-major-btn" lay-submit="" lay-filter="submitBtn">
+                            保存
+                        </button>
+                        <button type="button" id="plxg" class="layui-btn bdc-secondary-btn" lay-submit="" lay-filter="plxgBtn">
+                            批量修改
+                        </button>
+                        <button type="button" id="printBtn" name="printBtn" class="layui-btn bdc-secondary-btn" lay-submit="" lay-filter="printBtn">
+                            打印
+                        </button>
+                        <button type="button" id="lzrqz" name="printBtn" class="layui-btn bdc-secondary-btn" lay-submit="" lay-filter="lzrqz">
+                            领证人签字
+                        </button>
+                        <button type="button" id="endBtn" class="layui-btn bdc-secondary-btn" lay-submit="" lay-filter="endProcess" style="display: none">
+                            办结
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!--主体开始部分-->
+            <div class="content-main">
+                <div class="table-name" id="11">发证记录</div>
+                <!--模板主键-->
+                <div id="templateFatherDiv"></div>
+                <P style="float: right">收费状态：<span id="sfzt"></span></P>
+                <table class="layui-table" border="1" style="max-width: 935px">
+                    <colgroup>
+                        <col width="100">
+                        <col width="120">
+                        <col width="264">
+                        <col width="187">
+                        <col width="264">
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <td class="set-back-color" colspan="2"><span class="required-span"></span>受理编号</td>
+                        <td colspan="1">
+                            <input type="text" lay-verify="" class="layui-table-edit" name="slbh" readonly="true">
+                        </td>
+                        <td class="set-back-color" colspan="1"><span class="required-span"></span>日期</td>
+                        <td colspan="1">
+                            <input type="text" lay-verify="" class="layui-table-edit" name="fzrq" id="fzrq" readonly="true">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color" colspan="2"><span class="required-span"></span>申请(抵押权)人</td>
+
+                        <td colspan="3">
+                            <input type="text" lay-verify="" class="layui-table-edit" name="sqr" readonly="true"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color" colspan="2"><span class="required-span"></span> 坐落</td>
+
+                        <td colspan="3"><input type="text" class="layui-table-edit" name="zl" readonly="true"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color" colspan="2">缮证人</td>
+                        <td colspan="1"><input type="text" class="layui-table-edit" name="szr" readonly="true"></td>
+
+                        <td class="set-back-color" colspan="1">发证人</td>
+                        <td colspan="1">
+                            <input type="text" class="layui-table-edit" name="fzr" id="fzr" readonly="true"></td>
+                    </tr>
+                    </tbody>
+                    <!--备注栏-->
+                    <tbody id="bzbody">
+                    <tr style="height: 80px;">
+                        <td class="set-back-color" colspan="2">备注</td>
+                        <td colspan="3"><textarea class="layui-table-edit" name="bz" id="bz"></textarea></td>
+                    </tr>
+                    </tbody>
+
+                </table>
+            </div>
+        </form>
+    </div>
+</div>
+<!--弹框表单-->
+<div id="bdc-popup-small" class="bdc-hide">
+    <form class="layui-form" action="" id="lzrForm">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label bdc-label-newline"><span class="required-span"><sub>*</sub></span>领证人</label>
+                <div class="layui-input-inline">
+                    <input id="plxg_lzr" name="plxg_lzr" type="text" autocomplete="off" lay-verify="required" placeholder="请输入" class="layui-input" ondblclick="plxgLzrReadIdCard(this)">
+                </div>
+            </div>
+            <div class="layui-inline xzq-sele">
+                <label class="layui-form-label bdc-label-newline"><span class="required-span"><sub>*</sub></span>证件种类</label>
+                <div class="layui-input-inline bdc-radio">
+                    <select id="plxg_lzrzjzl" name="plxg_lzrzjzl" xm-select="select01" xm-select-radio xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label bdc-label-newline"><span class="required-span"><sub>*</sub></span>证件号码</label>
+                <div class="layui-input-inline">
+                    <input id="plxg_lzrzjh" name="plxg_lzrzjh" type="text" lay-verify="" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!--插入领证人信息-->
+<script type="text/html" id="lzrTpl">
+    <tbody id="lzrbody">
+    {{# if(d && d.length > 0){ }}
+    {{# for(var i = 0, len = d.length; i < len; i++){ }}
+    <tr>
+        <td class="set-back-color text-center" colspan="1" rowspan="5">领证情况</td>
+        {{# if(d[i].zsidList && d[i].zsidList.length == 1){ }}
+        <td class="set-back-color" colspan="1">
+            <input type="text" class="layui-table-edit" name="zsid" value="{{d[i].zsidList[0] || ''}}" readonly="true" style="width: 0px;height: 0px">权证号
+        </td>
+        {{# } else { }}
+        <td class="set-back-color" colspan="1">
+            <input type="text" class="layui-table-edit" name="zsid" value="{{d[i].zsidList || ''}}" readonly="true" style="width: 0px;height: 0px">权证号
+        </td>
+        {{# } }}
+        <td colspan="3">
+            <input type="text" class="layui-table-edit" name="qzh" value="{{d[i].bdcqzh || ''}}" readonly="true">
+        </td>
+    </tr>
+    <tr>
+        <td class="set-back-color" colspan="1">权证印刷序列号</td>
+        <td colspan="1">
+            <input type="text" class="layui-table-edit" name="qzysxlh" value="{{d[i].qzysxlh || ''}}" readonly="true">
+        </td>
+
+        <td class="set-back-color" colspan="1">权证所有人</td>
+        <td colspan="1">
+            <input type="text" class="layui-table-edit" name="czr" value="{{d[i].qlr|| ''}}" readonly="true">
+        </td>
+    </tr>
+    <tr>
+        <td class="set-back-color" colspan="1">领证人</td>
+        <td colspan="1">
+            <input type="text" class="layui-table-edit" name="lzr" id="lzr_{{d[i].zsidList[0]}}" value="{{d[i].lzr|| ''}}" ondblclick="lzrReadIdCard(this)">
+        </td>
+
+        <td class="set-back-color" colspan="1" rowspan="3">
+            <a onclick="lzrqz2({{i}})">领证人签字<i class="layui-icon layui-icon-edit"></i></a>
+        </td>
+        <td colspan="1" rowspan="3" style="text-align: center">
+            <img src="#" class="lzrqz lzrqz{{i}}" style="width: 150px;height: 100px;">
+        </td>
+    </tr>
+    <tr>
+        <td class="set-back-color" colspan="1">领证人证件种类</td>
+        <td colspan="1">
+            <select id="lzrzjzl_{{d[i].zsidList[0]}}" name="lzrzjzl" lay-filter="lzrzjzl" lay-search="">
+                <option value=""></option>
+                {{# layui.each(d[i].zjzl, function(index, item){ }}
+                <option value="{{item.DM || '0'}}" {{# if(d[i].lzrzjzl==item.DM ){ }} selected="selected" {{# }
+                        }}>{{item.MC || ''}}
+                </option>
+                {{# }); }}
+            </select>
+            <!--<input type="text" class="layui-table-edit" name="lzrzjzl" id="lzrzjzl_{{d[i].zsidList[0]}}" value="{{d[i].lzrzjzl|| ''}}">-->
+        </td>
+    </tr>
+    <tr>
+        <td class="set-back-color" colspan="1">领证人证件号</td>
+        <td colspan="1">
+            <input type="text" class="layui-table-edit" name="lzrzjh" id="lzrzjh_{{d[i].zsidList[0]}}" value="{{d[i].lzrzjh|| ''}}">
+        </td>
+    </tr>
+    <!--<tr>-->
+    <!--<td class="set-back-color" colspan="1">领证人电话</td>-->
+    <!--<td colspan="1">-->
+    <!--<input type="text" class="layui-table-edit" name="lzrdh" id="lzrdh_{{d[i].zsidList[0]}}" value="{{d[i].lzrdh|| ''}}">-->
+    <!--</td>-->
+    <!--</tr>-->
+    {{# } }}
+    {{# } else { }}
+    <tr>
+        <td class="set-back-color text-center" colspan="1" rowspan="6">领证情况</td>
+        <td class="set-back-color" colspan="1">
+            <input type="text" class="layui-table-edit" name="zsid" value="" readonly="true" style="width: 0px;height: 0px">权证号
+        </td>
+        <td colspan="3">
+            <input type="text" class="layui-table-edit" name="qzh" value="" readonly="true">
+        </td>
+    </tr>
+    <tr>
+        <td class="set-back-color" colspan="1">权证印刷序列号</td>
+        <td colspan="1">
+            <input type="text" class="layui-table-edit" name="qzysxlh" value="" readonly="true">
+        </td>
+
+        <td class="set-back-color" colspan="1">权证所有人</td>
+        <td colspan="1">
+            <input type="text" class="layui-table-edit" name="czr" value="" readonly="true">
+        </td>
+    </tr>
+    <tr>
+        <td class="set-back-color" colspan="1">领证人</td>
+        <td colspan="1">
+            <input type="text" class="layui-table-edit" name="lzr" value="">
+        </td>
+
+        <td class="set-back-color" colspan="1" rowspan="4">领证人签字</td>
+        <td colspan="1" rowspan="4">
+            <img src="#" class="lzrqz" style="width: 150px;height: 100px;">
+        </td>
+    </tr>
+    <tr>
+        <td class="set-back-color" colspan="1">领证人证件种类</td>
+        <td colspan="1">
+            <input type="text" class="layui-table-edit" name="lzrzjzl" lay-verify="identitynew" value="">
+        </td>
+    </tr>
+    <tr>
+        <td class="set-back-color" colspan="1">领证人证件号</td>
+        <td colspan="1">
+            <input type="text" class="layui-table-edit" name="lzrzjh" value="">
+        </td>
+    </tr>
+    <tr>
+        <td class="set-back-color" colspan="1">领证人电话</td>
+        <td colspan="1">
+            <input type="text" class="layui-table-edit" name="lzrdh" value="">
+        </td>
+    </tr>
+    {{# } }}
+    </tbody>
+</script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.all.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/lib/bdcui/js/application.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/lib/bdcui/js/print/print-common.js"></script>
+<script src="../../static/js/formCenter.js"></script>
+<script src='../../static/lib/bdcui/js/readIdCard.js'></script>
+
+<script src="../../static/js/nantong/fzjl/fzjlCommon.js"></script>
+<script src="../../static/js/haimen/fzjl/fzjl.js"></script>
+
+</body>
+
+</html>

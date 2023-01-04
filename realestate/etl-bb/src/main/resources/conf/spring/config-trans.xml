@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+    <!-- 事务管理器 -->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource">
+            <ref bean="DataSource"/>
+        </property>
+        <qualifier value="exchange"/>
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+
+    <!-- 事务管理器 -->
+    <bean id="fcjyTransactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource">
+            <ref bean="fcjyDataSource"/>
+        </property>
+        <qualifier value="fcjy"/>
+    </bean>
+    <tx:annotation-driven transaction-manager="fcjyTransactionManager" proxy-target-class="true"/>
+
+    <bean id="sjglTransactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource">
+            <ref bean="sjglDataSource"/>
+        </property>
+        <qualifier value="sjgl"/>
+    </bean>
+    <tx:annotation-driven transaction-manager="sjglTransactionManager" proxy-target-class="true"/>
+</beans>

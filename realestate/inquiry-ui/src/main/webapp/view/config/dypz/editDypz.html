@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>打印配置</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../../static/css/config/dypz/smartMenu.css">
+    <link rel="stylesheet" href="../../../static/lib/font-awesome-4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="../../../static/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../../static/css/config/dypz/dypz.css"/>
+</head>
+<body>
+<div class="bdc-form-div">
+    <!--全局 标题和操作按钮 开始-->
+    <div class="bdc-content-fix">
+        <div class="content-title layui-clear">
+            <p>打印配置</p>
+            <div class="title-btn-area">
+                <button class="layui-btn bdc-major-btn" lay-submit="" id="submit-btn">保存</button>
+            </div>
+        </div>
+    </div>
+    <!--全局 标题和操作按钮 结束-->
+    <div class="layui-tab" lay-filter="tabFilter">
+        <ul class="layui-tab-title">
+            <li class="layui-this">基本信息</li>
+            <li>主表配置</li>
+            <li>子表配置</li>
+            <li>配置校验</li>
+        </ul>
+        <div class="layui-tab-content">
+            <!--基本信息-->
+            <div class="layui-tab-item bdc-basic layui-show">
+                <form id='jbxxFrom' lay-filter="jbxxFrom" class="layui-form setOverflow" action="">
+                    <!--数据库中主表的主键-->
+                    <input type="hidden" id="id" name="id" class="search"/>
+
+                    <div class="form-margin-area">
+                        <div class="basic-info">
+                            <div class="layui-form-item change-textarea-margin">
+                                <label class="layui-form-label change-label-width">用途说明/名称</label>
+                                <div class="layui-input-inline">
+                                    <textarea id="ytmc" class="layui-textarea bdc-pr70 bdc-copy-textarea" name="ytmc"></textarea>
+                                    <!--
+                                    <p class="bdc-textarea-btn">
+                                        <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn bdc-copy-btn">复制</a>
+                                    </p>
+                                    -->
+                                </div>
+                            </div>
+                            <div id="jbxx" class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>打印类型</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" lay-verify="required" autocomplete="off" class="layui-input"
+                                               id="dylx" name="dylx" placeholder="请输入">
+                                    </div>
+                                </div>
+                                <div class="layui-inline bdc-complete-line">
+                                    <label class="layui-form-label change-label-width">fr3模板</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" class="layui-input" id="fr3path" name="fr3path" placeholder="模板获取的绝对路径">
+                                        <p class="info"><span class="required-span"><sub>*</sub></span>使用本地fr3模板需输入路径</p>
+                                    </div>
+
+                                    <a type="button" class="layui-btn layui-btn-sm bdc-secondary-btn upload-btn" id="fr3Upload">上传fr3模板</a>
+<!--                                    <a href="javascript:" class="layui-btn-sm-file" id="fr3Form"><i class="layui-icon layui-icon-template-1"></i> 选择本地fr3模板</a>-->
+                                </div>
+                                <div class="layui-inline bdc-complete-line">
+                                    <label class="layui-form-label change-label-width">pdf模板</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" autocomplete="off" class="layui-input" id="pdfpath" name="pdfpath" placeholder="模板获取的绝对路径">
+                                    </div>
+                                    <a type="button" class="layui-btn layui-btn-sm bdc-secondary-btn upload-btn" id="pdfUpload">上传pdf模板</a>
+                                </div>
+                            </div>
+                            <div class="layui-form-item change-textarea-margin">
+                                <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>打印字段</label>
+                                <div class="layui-input-inline">
+                                    <div class="bdc-sl-box">
+                                        <textarea id="dyzd" class="layui-textarea bdc-large-textarea bdc-pr148 bdc-copy-textarea" name="dyzd" style="min-height: 300px;"></textarea>
+                                        <p class="bdc-textarea-btn">
+                                            <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn bdc-copy-btn">复制</a>
+                                            <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn dyzd-sl-btn">获取示例</a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!--主表配置-->
+            <div class="layui-tab-item bdc-basic">
+                <form id='zbpzFrom' lay-filter="zbpzForm" class="layui-form setOverflow"></form>
+            </div>
+            <!--子表配置-->
+            <div class="layui-tab-item bdc-sjl">
+                <div class="bdc-container">
+                    <!--收缩左侧列表-->
+                    <div class="bdc-aside-zoom">
+                        <a class="bdc-aside-close" href="javascript:;"><i class="fa fa-chevron-left"
+                                                                          aria-hidden="true"></i></a>
+                        <a class="bdc-aside-open bdc-hide" href="javascript:;"><i class="fa fa-chevron-right"
+                                                                                  aria-hidden="true"></i></a>
+                    </div>
+
+                    <!--左侧菜单栏开始-->
+                    <div class="bdc-menu-aside" id="asideBox">
+                        <div class="aside" id="asideCon">
+                            <h4>子表配置信息</h4>
+                            <div id="aside">
+                                <ul id="accordion" class="accordion">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="asideLine"></div>
+                    <!--左侧菜单栏结束-->
+
+                    <!--右侧主内容开始-->
+                    <div class="bdc-right-content">
+                        <!--内容存放开始-->
+                        <div class="content-div" id="contentView">
+                            <!--<iframe id="childFrame"></iframe>-->
+                        </div>
+                        <!--内容存放结束-->
+                    </div>
+                    <!--右侧主内容结束-->
+                </div>
+            </div>
+            <!--校验信息-->
+            <div class="layui-tab-item bdc-jgjy">
+                <div class="bdc-tab-btn">
+                    <a href="javascript:;" class="bdc-third-btn sjjy-btn">校验</a>
+                    <a href="javascript:;" class="bdc-third-btn bdc-dyyl">打印预览
+                        <i class="layui-icon layui-icon-down"></i></a>
+                    <div class="bdc-table-btn-more bdc-dyyl-second">
+                        <a class="pdf-btn">pdf预览</a>
+                        <a class="fr3-btn">fr3预览</a>
+                    </div>
+                </div>
+                <div class="bdc-left-content">
+                    <div class="basic-info">
+                        <div class="title-sign">
+                            <div class="layui-col-xs6">
+                                <p><a href="javascript:;">校验参数</a></p>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <textarea placeholder='测试参数【JSON格式】:' class="layui-textarea" style="min-height: 360px;" name="jsonCs" id="jsonCs"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bdc-right-content">
+                    <div class="basic-info">
+                        <div class="title-sign">
+                            <div class="layui-row">
+                                <div class="layui-col-xs6">
+                                    <p><a href="javascript:;">校验结果</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <textarea id="jyjg" name="jyjg" placeholder="" class="layui-textarea bdc-large-textarea bdc-pr70" style="min-height: 360px;"></textarea>
+                                <p class="bdc-textarea-btn">
+                                    <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn bdc-copy-btn">复制</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!--主表模板-->
+<script type="text/html" id="zubTpl">
+    <div class="form-margin-area">
+        <div class="basic-info">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>数据来源</label>
+                    <div class="layui-input-inline">
+                        <input type="radio" name="sjly" class="bdc-sql-js" lay-filter="sjlyFilter" value="1" title="sql" {{# if(d.sjly== 1||d.sjly==null){ }} checked{{# } }} data-sjk="{{d.dbsource}}">
+                        <input type="radio" name="sjly" class="bdc-sjly-js" lay-filter="sjlyFilter" value="2" title="服务" {{#  if(d.sjly == 2){ }} checked{{#  } }} data-fwfs="{{d.fwfs}}" data-qqyy="{{d.qqyy}}">
+                    </div>
+                </div>
+                {{# if(d.sjly == 1|| d.sjly == null){ }}
+                <div class="bdc-sql-content">
+                    <div class="layui-inline">
+                        <label class="layui-form-label change-label-width">数据库</label>
+                        <div class="layui-input-inline">
+                            {{# if(d.dbsource == 'bdcdj'||d.dbsource == null){ }}
+                            <input type="radio" class="bdc-sjk" name="dbsource" value="bdcdj" title="登记库" checked>
+                            <input type="radio" class="bdc-sjk" name="dbsource" value="bdcsl" title="受理库">
+                            <input type="radio" class="bdc-sjk" name="dbsource" value="bdcqj" title="权籍库">
+                            {{# } else if(d.dbsource == 'bdcsl'){ }}
+                            <input type="radio" class="bdc-sjk" name="dbsource" value="bdcdj" title="登记库">
+                            <input type="radio" class="bdc-sjk" name="dbsource" value="bdcsl" title="受理库" checked>
+                            <input type="radio" class="bdc-sjk" name="dbsource" value="bdcqj" title="权籍库">
+                            {{# } else if(d.dbsource == 'bdcqj'){ }}
+                            <input type="radio" class="bdc-sjk" name="dbsource" value="bdcdj" title="登记库">
+                            <input type="radio" class="bdc-sjk" name="dbsource" value="bdcsl" title="受理库">
+                            <input type="radio" class="bdc-sjk" name="dbsource" value="bdcqj" title="权籍库" checked>
+                            {{#  } }}
+                        </div>
+                    </div>
+                </div>
+                {{# } else if(d.sjly == 2){ }}
+                <div class="bdc-fw-content">
+                    <div class="layui-inline">
+                        <label class="layui-form-label change-label-width">服务方式</label>
+                        <div class="layui-input-inline">
+                            <select name="fwfs" lay-verify="" class="bdc-ffws">
+                                <option value="1" {{# if(d.fwfs== 1 || d.fwfs==null){ }} selected{{# } }}>GET</option>
+                                <option value="2" {{# if(d.fwfs== 2){ }} selected{{# } }}>POST</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label change-label-width">请求应用</label>
+                        <div class="layui-input-inline">
+                            <input type="text" autocomplete="off" class="layui-input bdc-qqyy" name="qqyy" placeholder="IP：端口/应用实例名称" value="{{d.qqyy||''}}">
+                        </div>
+                    </div>
+                </div>
+                {{#  } }}
+            </div>
+            <div class="layui-form-item change-textarea-margin">
+                <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>参数</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" value="{{d.cs||''}}" class="layui-input" name="cs" placeholder="多个参数以英文逗号分隔，如：xmid,gzlslid...">
+                </div>
+            </div>
+            <div class="layui-form-item change-textarea-margin">
+                <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>加密参数</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" value="{{d.jmcs||''}}" class="layui-input" name="jmcs" placeholder="多个加密参数以英文逗号分隔，如：xmid,gzlslid...">
+                </div>
+            </div>
+            <div class="layui-form-item change-textarea-margin">
+                <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>解密结果</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" value="{{d.jmjg||''}}" class="layui-input" name="jmjg" placeholder="多个解密参数以英文逗号分隔，如：xmid,gzlslid...">
+                </div>
+            </div>
+            <div class="layui-form-item change-textarea-margin">
+                <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>数据源配置</label>
+                <div class="layui-input-inline">
+                    <textarea id="sjypz" class="layui-textarea bdc-large-textarea" name="dysjy" style="min-height: 300px;" placeholder="示例：&#13;&#10;&#13;&#10;1.数据源为sql：多条sql以英文分号分隔，如 select * from dual; select * from dual&#13;&#10;&#13;&#10;2.数据来源为服务：配置示例如， /realestate-inquiry-ui/rest/v1.0/print/zfxx3/#{bdcdyh}/#{gzlslid}/xml?bdcdyh=#{bdcdyh}">
+                        {{d.dysjy||''}}
+                    </textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<!--子表配置左侧列表模板-->
+<script type="text/html" id="leftTpl">
+    {{#  layui.each(d.bdcDysjZbPzDOList, function(index, item){ }}
+    <li class="bdc-outer-li bdc-invented-li {{#  if(index == 0){ }}bdc-this-li{{#  } }}" data-num="230103001006GB00004">
+        <a class="link">
+            <img src="../../../static/image/log.png" alt="图标" class="docu-icon">
+            <span>{{item.ytmc||'用途说明/名称'}}</span>
+        </a>
+    </li>
+    {{#  }); }}
+</script>
+<!--子表配置右侧内容区模板-->
+<script type="text/html" id="rightTpl">
+    {{#  layui.each(d.bdcDysjZbPzDOList, function(index, item){ }}
+    <form lay-filter="" class="layui-form setOverflow bdc-zb-form{{#  if(index > 0){ }} bdc-hide{{#  } }}">
+        <div class="form-margin-area bdc-li-content">
+            <input type="hidden" name="id" value="{{item.id||''}}">
+            <input type="hidden" name="ytmc" value="{{item.ytmc||''}}">
+            <div class="basic-info">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>打印数据来源</label>
+                        <div class="layui-input-inline">
+                            <input type="radio" class="bdc-sql-js" name="sjly" lay-filter="sjlyFilter" value="1" title="sql" {{# if(item.sjly== 1||item.sjl==null){ }} checked{{# } }} data-sjk="{{d.dbsource}}">
+                            <input type="radio" class="bdc-sjly-js" name="sjly" lay-filter="sjlyFilter" value="2" title="服务" {{# if(item.sjly== 2){ }} checked{{# } }} data-fwfs="{{item.fwfs}}" data-qqyy="{{item.qqyy||''}}">
+                        </div>
+                    </div>
+                    {{# if(item.sjly == 1|| item.sjly == null){ }}
+                    <div class="bdc-sql-content">
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">数据库</label>
+                            <div class="layui-input-inline">
+                                {{# if(item.dbsource == 'bdcdj'||item.dbsource == null){ }}
+                                <input type="radio" class="bdc-sjk" name="dbsource" value="bdcdj" title="登记库" checked>
+                                <input type="radio" class="bdc-sjk" name="dbsource" value="bdcsl" title="受理库">
+                                <input type="radio" class="bdc-sjk" name="dbsource" value="bdcqj" title="权籍库">
+                                {{# } else if(item.dbsource == 'bdcsl'){ }}
+                                <input type="radio" class="bdc-sjk" name="dbsource" value="bdcdj" title="登记库">
+                                <input type="radio" class="bdc-sjk" name="dbsource" value="bdcsl" title="受理库" checked>
+                                <input type="radio" class="bdc-sjk" name="dbsource" value="bdcqj" title="权籍库">
+                                {{# } else if(d.dbsource == 'bdcqj'){ }}
+                                <input type="radio" class="bdc-sjk" name="dbsource" value="bdcdj" title="登记库">
+                                <input type="radio" class="bdc-sjk" name="dbsource" value="bdcsl" title="受理库">
+                                <input type="radio" class="bdc-sjk" name="dbsource" value="bdcqj" title="权籍库" checked>
+                                {{#  } }}
+                            </div>
+                        </div>
+                    </div>
+                    {{# }else if(item.sjly == 2){ }}
+                    <div class="bdc-fw-content">
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">服务方式</label>
+                            <div class="layui-input-inline">
+                                <select name="fwfs" lay-verify="" class="bdc-ffws">
+                                    <option value="1" {{# if(item.fwfs== 1||item.fwfs==null){ }} selected{{# } }}>GET
+                                    </option>
+                                    <option value="2" {{# if(item.fwfs== 2){ }} selected{{# } }}>POST</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">请求应用</label>
+                            <div class="layui-input-inline">
+                                <input type="text" autocomplete="off" class="layui-input bdc-qqyy" name="qqyy" placeholder="IP：端口/应用实例名称" value="{{item.qqyy||''}}">
+                            </div>
+                        </div>
+                    </div>
+                    {{#  } }}
+                </div>
+                <div class="layui-form-item change-textarea-margin">
+                    <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>打印子表ID</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" class="layui-input" name="dyzbid" id="dyzbid" placeholder="对应打印字段配置中detail的ID值，区分子表。如示例中<detail  ID='zbid'>，则此处的值写 zbid " value="{{item.dyzbid||''}}">
+                    </div>
+                </div>
+
+                <div class="layui-form-item bdc-complete-line">
+                    <label class="layui-form-label change-label-width"><span class="required-span"></span>表格属性</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" class="layui-input" name="dyzbsx" id="dyzbsx" placeholder="" value="{{item.dyzbsx||''}}">
+                    </div>
+                    <a type="button" class="layui-btn layui-btn-sm bdc-secondary-btn upload-btn" id="generateDetailId" onclick="generateDetailId();" >生成打印子表DetailId</a>
+                </div>
+
+                <div class="layui-form-item change-textarea-margin">
+                    <label class="layui-form-label change-label-width"><span class="required-span"></span>子表DetailID</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" class="layui-input" name="dyzbdtid"  id="dyzbdtid" placeholder="" value="">
+                    </div>
+                </div>
+
+                <div class="layui-form-item change-textarea-margin">
+                    <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>参数</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" class="layui-input" name="cs" placeholder="多个参数以英文逗号分隔，如：xmid,gzlslid..." value="{{item.cs||''}}">
+                    </div>
+                </div>
+                <div class="layui-form-item change-textarea-margin">
+                    <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>数据源</label>
+                    <div class="layui-input-inline">
+                        <textarea class="layui-textarea bdc-large-textarea" name="dyzbsjy" style="min-height: 300px;" placeholder="示例：&#13;&#10;&#13;&#10;1.数据源为sql：多条sql以英文分号分隔，如 select * from dual; select * from dual&#13;&#10;&#13;&#10;2.数据来源为服务：配置示例如， /realestate-inquiry-ui/rest/v1.0/print/zfxx3/#{bdcdyh}/#{gzlslid}/xml?bdcdyh=#{bdcdyh}">{{item.dyzbsjy||''}}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    {{#  }); }}
+</script>
+<!--新增子表模板-->
+<script type="text/html" id="addZbTpl">
+    <form lay-filter="" class="layui-form setOverflow bdc-zb-form">
+        <div class="form-margin-area bdc-li-content">
+            <input type="hidden" name="ytmc" value="{{d.ytmc}}">
+            <div class="basic-info">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>打印数据来源</label>
+                        <div class="layui-input-inline">
+                            <input type="radio" class="bdc-sql-js" name="sjly" lay-filter="sjlyFilter" value="1" title="sql" checked data-sjk="{{d.dbsource}}">
+                            <input type="radio" class="bdc-sjly-js" name="sjly" lay-filter="sjlyFilter" value="2" title="服务" data-fwfs="undefined" data-qqyy="undefined">
+                        </div>
+                    </div>
+                    <div class="bdc-sql-content">
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">数据库</label>
+                            <div class="layui-input-inline">
+                                <input type="radio" class="bdc-sjk" name="dbsource" value="bdcdj" title="登记库" checked>
+                                <input type="radio" class="bdc-sjk" name="dbsource" value="bdcsl" title="受理库">
+                                <input type="radio" class="bdc-sjk" name="dbsource" value="bdcqj" title="权籍库">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item change-textarea-margin">
+                    <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>打印子表ID</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" class="layui-input" name="dyzbid" placeholder="对应打印字段配置中detail的ID值，区分子表。如示例中<detail  ID='zbid'>，则此处的值写 zbid ">
+                    </div>
+                </div>
+                <div class="layui-form-item change-textarea-margin">
+                    <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>参数</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" class="layui-input" name="cs" placeholder="多个参数以英文逗号分隔，如：xmid,gzlslid..." value="">
+                    </div>
+                </div>
+                <div class="layui-form-item change-textarea-margin">
+                    <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>数据源</label>
+                    <div class="layui-input-inline">
+                        <textarea class="layui-textarea bdc-large-textarea" name="dyzbsjy" style="min-height: 300px;" placeholder="示例：&#13;&#10;&#13;&#10;1.数据源为sql：多条sql以英文分号分隔，如 select * from dual; select * from dual&#13;&#10;&#13;&#10;2.数据来源为服务：配置示例如， /realestate-inquiry-ui/rest/v1.0/print/zfxx3/#{bdcdyh}/#{gzlslid}/xml?bdcdyh=#{bdcdyh}"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</script>
+
+<!--数据来源 是 服务的，动态显示模板-->
+<script type="text/html" id="fwTpl">
+    <div class="bdc-fw-content">
+        <div class="layui-inline">
+            <label class="layui-form-label change-label-width">HTTP方式</label>
+            <div class="layui-input-inline">
+                <select name="ffws" lay-verify="" class="bdc-ffws">
+                    <option value="">请选择</option>
+                    <option value="1" {{# if(d.fwfs== 1){ }} selected{{# } }}>GET</option>
+                    <option value="2" {{# if(d.fwfs== 2){ }} selected{{# } }}>POST</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label change-label-width">请求应用</label>
+            <div class="layui-input-inline">
+                <input type="text" autocomplete="off" class="layui-input bdc-qqyy" name="qqyy" placeholder="IP：端口/应用实例名称" value="{{d.qqyy||''}}">
+            </div>
+        </div>
+    </div>
+</script>
+<!--数据来源 是 sql的，动态显示模板-->
+<script type="text/html" id="sqlTpl">
+    <div class="bdc-sql-content">
+        <div class="layui-inline">
+            <label class="layui-form-label change-label-width">数据库</label>
+            <div class="layui-input-inline">
+                {{# if(d.dbsource == 'bdcdj'||d.dbsource == null){ }}
+                <input type="radio" class="bdc-sjk" name="dbsource" value="bdcdj" title="登记库" checked>
+                <input type="radio" class="bdc-sjk" name="dbsource" value="bdcsl" title="受理库">
+                <input type="radio" class="bdc-sjk" name="dbsource" value="bdcqj" title="权籍库">
+                {{# } else if(d.dbsource == 'bdcsl'){ }}
+                <input type="radio" class="bdc-sjk" name="dbsource" value="bdcdj" title="登记库">
+                <input type="radio" class="bdc-sjk" name="dbsource" value="bdcsl" title="受理库" checked>
+                <input type="radio" class="bdc-sjk" name="dbsource" value="bdcqj" title="权籍库">
+                {{# } else if(d.dbsource == 'bdcqj'){ }}
+                <input type="radio" class="bdc-sjk" name="dbsource" value="bdcdj" title="登记库">
+                <input type="radio" class="bdc-sjk" name="dbsource" value="bdcsl" title="受理库">
+                <input type="radio" class="bdc-sjk" name="dbsource" value="bdcqj" title="权籍库" checked>
+                {{#  } }}
+            </div>
+        </div>
+    </div>
+</script>
+
+<script src="../../../static/lib/layui/layui.js"></script>
+<script src="../../../static/lib/jquery/jquery.min.js"></script>
+<!--base64加密-->
+<script src="../../../static/js/bjjk/base64.js"></script>
+<!--添加水印-->
+<script src="../../../static/lib/bdcui/js/common.js"></script>
+<script src="../../../static/js/config/dypz/jquery-smartMenu.js"></script>
+<script src="../../../static/js/config/common.js"></script>
+<script src="../../../static/js/commonSearch.js"></script>
+<script src="../../../static/js/config/dypz/gsh.js"></script>
+<script src="../../../static/js/config/dypz/dypzCommon.js"></script>
+<script src="../../../static/js/config/dypz/editDypz.js"></script>
+<script src="../../../static/js/config/dypz/tree.js"></script>
+</html>

@@ -1,0 +1,118 @@
+<!--
+ * @author "<a href="mailto:zhuyong@gtmap.cn>zhuyong</a>"
+ * @version 1.0, 2018/12/28
+ * @description 登记簿：建设用地使用权、宅基地使用权登记信息
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>建设用地使用权、宅基地使用权登记信息</title>
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table-vertical.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+</head>
+<body>
+    <div class="bdc-table">
+        <p class="bsc-table-tips">第<span id="bs"></span>本 &nbsp;&nbsp; 第<span id="ys"></span>页</p>
+        <div class="bdc-table-box clearBoth">
+            <div class="bdc-register-catalog bdc-td-20">
+                <div class="bdc-tr-box">
+                    <div class="bdc-catalog-title">建设用地使用权、宅基地使用权登记信息</div>
+                </div>
+                <div class="bdc-tr-box bdc-syq-msg clearBoth">
+                    <span id="bdcdyh"></span>
+                </div>
+
+                <div class="bdc-change-tr-contain clearBoth">
+                    <div class="bdc-change-tr bdc-change-tr-title">
+                        <div class="bdc-table-line bdc-tr-box">
+                            <i class="bdc-outer"></i>
+                            <span class="bdc-table-bottom">内容</span>
+                            <span class="bdc-table-top">业务号</span>
+                        </div>
+                        <div class="bdc-tr-box">权利人</div>
+                        <div class="bdc-tr-box">证件种类</div>
+                        <div class="bdc-tr-box">证件号</div>
+                        <div class="bdc-tr-box">共有情况</div>
+                        <div class="bdc-tr-box">权利人类型</div>
+                        <div class="bdc-tr-box">登记类型</div>
+                        <div class="bdc-tr-box">登记原因</div>
+                        <div class="bdc-tr-box">使用权面积（m²）</div>
+                        <div class="bdc-tr-box">使用期限</div>
+                        <div class="bdc-tr-box">取得价格<span class="jedw"></span></div>
+                        <div class="bdc-tr-box">不动产权证书号</div>
+                        <div class="bdc-tr-box">登记时间</div>
+                        <div class="bdc-tr-box">登簿人</div>
+                        <div class="bdc-tr-box bdc-fj">附记</div>
+                    </div>
+
+                    <form  id="form" class="layui-form">
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="tablePage"></div>
+    </div>
+
+    <!--插入权利模块-->
+    <script type="text/html" id="qlTpl">
+        {{# for(var i = 0, len = d.list.length; i < len; i++){ }}
+            <div class="bdc-change-tr bdc-tr-width">
+                <div class="bdc-tr-box" data-title="{{d.list[i].slbh || ''}}"><div class="bdc-tr-box-content">{{d.list[i].slbh || ''}}</div></div>
+                <div class="bdc-tr-box" data-title="{{d.list[i].qlr || ''}}"><div class="bdc-tr-box-content">{{d.list[i].qlr || ''}}</div></div>
+                <div class="bdc-tr-box" data-title="{{d.list[i].qlrzjzl || ''}}"><div class="bdc-tr-box-content">{{d.list[i].qlrzjzl || ''}}</div></div>
+                <div class="bdc-tr-box" data-title="{{d.list[i].qlrzjh || ''}}"><div class="bdc-tr-box-content">{{d.list[i].qlrzjh || ''}}</div></div>
+                <div class="bdc-tr-box" data-title="{{d.list[i].gyqk || ''}}"><div class="bdc-tr-box-content">{{d.list[i].gyqk || ''}}</div></div>
+                <div class="bdc-tr-box" data-title="{{d.list[i].qlrlx || ''}}"><div class="bdc-tr-box-content">{{d.list[i].qlrlx || ''}}</div></div>
+                <div class="bdc-tr-box" data-title="{{d.list[i].djlxmc || ''}}"><div class="bdc-tr-box-content">{{d.list[i].djlxmc || ''}}</div></div>
+                <div class="bdc-tr-box" data-title="{{d.list[i].djyy || ''}}"><div class="bdc-tr-box-content">{{d.list[i].djyy || ''}}</div></div>
+                <div class="bdc-tr-box" data-title="{{d.list[i].syqmj || ''}}"><div class="bdc-tr-box-content">{{d.list[i].syqmj || ''}}</div></div>
+                <div  class="bdc-year bdc-tr-box">
+                    {{# if(d.list[i].syqqssj){ }}
+                    <p>{{d.list[i].syqqssj}}&nbsp;&nbsp;&nbsp;&nbsp;起</p>
+                    {{# }else{}}
+
+                    {{# }}}
+
+                    {{# if(d.list[i].syqjssj){ }}
+                    <p>{{d.list[i].syqjssj}}&nbsp;&nbsp;&nbsp;&nbsp;止</p>
+                    {{# }else{}}
+
+                    {{# }}}
+                </div>
+                <div class="bdc-tr-box" data-title="{{d.list[i].qdjg || ''}}"><div class="bdc-tr-box-content">{{d.list[i].qdjg || ''}}</div></div>
+                <div class="bdc-tr-box" data-title="{{d.list[i].bdcqzh || ''}}"><div class="bdc-tr-box-content">{{d.list[i].bdcqzh || ''}}</div></div>
+                <div class="bdc-tr-box" data-title="{{d.list[i].djsj || ''}}"><div class="bdc-tr-box-content">{{d.list[i].djsj || ''}}</div></div>
+                <div class="bdc-tr-box" data-title="{{d.list[i].dbr || ''}}"><div class="bdc-tr-box-content">{{d.list[i].dbr || ''}}</div></div>
+                <div class="bdc-tr-box bdc-fj" data-title="{{d.list[i].fj || ''}}"><div class="bdc-tr-box-content">{{d.list[i].fj || ''}}</div></div>
+            </div>
+        {{# } }}
+
+        <!--如果数据不足4条，那么补充显示空内容，避免页面样式问题-->
+        {{# for(var i = 0, len = 4 - d.list.length; i < len; i++){ }}
+            <div class="bdc-change-tr bdc-tr-width">
+                {{# for(var j = 0; j < 9; j++){ }}
+                    <div class="bdc-tr-box"><div class="bdc-tr-box-content"></div></div>
+                {{# } }}
+                <div  class="bdc-year bdc-tr-box">
+                    <p></p>
+                    <p></p>
+                </div>
+                {{# for(var j = 0; j < 4; j++){ }}
+                    <div class="bdc-tr-box"><div class="bdc-tr-box-content"></div></div>
+                {{# } }}
+                <div class="bdc-tr-box bdc-fj"><div class="bdc-tr-box-content"></div></div>
+            </div>
+        {{# } }}
+    </script>
+</body>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/js/djbxx/bdcDjbJsydsyqZjdsyq.js"></script>
+<script src="../../static/js/djbxx/bdcDjbYm.js"></script>
+<script src="../../static/js/djbxx/djbCss.js"></script>
+</html>

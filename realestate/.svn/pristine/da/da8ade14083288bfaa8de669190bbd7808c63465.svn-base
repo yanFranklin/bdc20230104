@@ -1,0 +1,40 @@
+-----主表sql 打印类型  cfjds
+select t.cfjg,to_char(t.cfjssj,'yyyy-mm-dd'),t.cfwh,t.fysdr,t.fysdrlxfs,to_char(x.slsj,'yyyy"年"mm"月"dd"日" hh24:mi') slsj,to_char(x.slsj,'yyyy-mm-dd') blsj  from bdc_cf t left join bdc_xm x on t.xmid=x.xmid where x.xmid=#{xmid};
+-----参数   xmid
+
+
+select a.xmid ,a.ywr ,a.ycqzh,xm.qlr dyaqr,'' cfqk,''yyqk,''qtqk,a.bdcdyh,a.zl,a.xh,a.zllx from
+(select row_number() over(ORDER BY x.xmid) xh, x.xmid,x.ywr,x.ycqzh,x.bdcdyh,x.zl,(case substr(x.bdcdyh,19,20) when 'F' then '房屋坐落' when 'W' then '土地坐落' else '房屋坐落' end) zllx from bdc_xm x where x.gzlslid=(select gzlslid from bdc_xm where xmid=#{xmid})
+)a left join bdc_dyaq d on d.bdcdyh=a.bdcdyh
+left join bdc_xm xm on xm.xmid=d.xmid;
+
+
+xml配置
+
+<?xml version="1.0" encoding="utf-8"?>
+<fetchdatas>
+<page>
+        <datas>
+            <data name="cfjg" type="String">$CFJG</data>
+            <data name="cfjssj" type="String">$CFJSSJ</data>
+            <data name="slsj" type="String">$SLSJ</data>
+            <data name="blsj" type="String">$BLSJ</data>
+            <data name="cfwh" type="String">$CFWH</data>
+            <data name="fysdr" type="String">$FYSDR</data>
+            <data name="fysdrlxfs" type="String">$FYSDRLXFS</data>
+        </datas>
+        <detail ID="cfxx">
+            <row ID="${XMID}">
+            <data name="xh" type="String">$XH</data>
+            <data name="zllx" type="String">$ZLLX</data>
+            <data name="zl" type="String">$ZL</data>
+                <data name="ywr" type="String">$YWR</data>
+                <data name="ycqzh" type="String">$YCQZH</data>
+                <data name="dyaqr" type="String">$DYAQR</data>
+                <data name="cfqk" type="String">$CFQK</data>
+                 <data name="yyqk" type="String">$YYQK</data>
+                  <data name="qtqk" type="String">$QTQK</data>
+            </row>
+        </detail>
+</page>
+</fetchdatas>

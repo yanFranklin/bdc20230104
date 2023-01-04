@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.building.core.mapper.FwJsydzrzxxMapper">
+
+    <select id="listFwJsydzrzxx" parameterType="cn.gtmap.realestate.common.core.qo.building.FwJsydzrzxxQO" resultType="cn.gtmap.realestate.common.core.domain.building.FwJsydzrzxxDO">
+        SELECT * FROM FW_JSYDZRZXX t
+        where 1=1
+        <if test="fwJsydzrzxxIndexList != null and fwJsydzrzxxIndexList.size() > 0">
+            AND t.FW_JSYDZRZXX_INDEX IN
+            <foreach collection="fwJsydzrzxxIndexList" item="item" open="(" close=")" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="notInfwJsydzrzxxIndexList != null and notInfwJsydzrzxxIndexList.size() > 0">
+            AND t.FW_JSYDZRZXX_INDEX NOT IN
+            <foreach collection="notInfwJsydzrzxxIndexList" item="item" open="(" close=")" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="lszd != null and lszd !=''">
+            AND t.lszd= #{lszd}
+        </if>
+        <if test="lhdycs != null">
+            AND nvl(t.lhdycs, 0) = #{lhdycs}
+        </if>
+        <if test="lhcfcs != null">
+            AND nvl(t.lhcfcs, 0) = #{lhcfcs}
+        </if>
+        <if test="lhsdqlzt != null">
+            AND nvl(t.lhsdqlzt, 0) = #{lhsdqlzt}
+        </if>
+        ORDER BY to_number(nvl(REGEXP_SUBSTR(t.dh, '[0-9]+'), 999)) ASC, t.gcjd DESC
+    </select>
+
+    <select id="listFwJsydzrzxxByPage" parameterType="cn.gtmap.realestate.common.core.qo.building.FwJsydzrzxxQO" resultType="cn.gtmap.realestate.common.core.dto.building.FwJsydzrzxxDTO">
+        SELECT t.*, nvl2(a.count,1,0) as sfyg FROM FW_JSYDZRZXX t
+         LEFT JOIN (
+            SELECT count(1) as count, ychs.fw_dcb_index
+            FROM  FW_LJZ ljz
+            LEFT JOIN FW_YCHS ychs ON ljz.fw_dcb_index = ychs.fw_dcb_index
+            LEFT JOIN S_SJ_BDCDYHXSZT dyhxszt ON ychs.bdcdyh = dyhxszt.bdcdyh
+            WHERE dyhxszt.XSYGCS is not null and dyhxszt.XSYGCS !=0
+            GROUP BY ychs.fw_dcb_index
+        )  a on a.fw_dcb_index = t.fw_dcb_index
+        <where>
+            <if test="lszd != null and lszd !=''">
+                AND t.lszd= #{lszd}
+            </if>
+            <if test="lhdycs != null and lhdycs == 0 ">
+                AND nvl(t.lhdycs, 0) = #{lhdycs}
+            </if>
+            <if test="lhdycs != null and lhdycs == 1">
+                AND nvl(t.lhdycs, 0) >= #{lhdycs}
+            </if>
+            <if test="lhcfcs != null and lhcfcs == 0 ">
+                AND nvl(t.lhcfcs, 0) = #{lhcfcs}
+            </if>
+            <if test="lhcfcs != null and lhcfcs == 1">
+                AND nvl(t.lhcfcs, 0) >= #{lhcfcs}
+            </if>
+            <if test="lhsdqlzt != null">
+                AND nvl(t.lhsdqlzt, 0) = #{lhsdqlzt}
+            </if>
+            <if test="fwJsydzrzxxIndexList != null and fwJsydzrzxxIndexList.size() > 0">
+                AND t.FW_JSYDZRZXX_INDEX IN
+                <foreach collection="fwJsydzrzxxIndexList" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="notInfwJsydzrzxxIndexList != null and notInfwJsydzrzxxIndexList.size() > 0">
+                AND t.FW_JSYDZRZXX_INDEX NOT IN
+                <foreach collection="notInfwJsydzrzxxIndexList" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY to_number(nvl(REGEXP_SUBSTR(t.dh, '[0-9]+'), 999)) ASC, t.gcjd DESC
+    </select>
+
+    <update id="updateFwJsydzrzxxZtPl" parameterType="cn.gtmap.realestate.common.core.qo.building.FwJsydzrzxxQO">
+        UPDATE FW_JSYDZRZXX t
+        <set>
+            <if test="lhdycs != null">
+                t.lhdycs = #{lhdycs},
+            </if>
+            <if test="lhcfcs != null">
+                t.lhcfcs = #{lhcfcs},
+            </if>
+            <if test="lhsdqlzt != null">
+                t.lhsdqlzt = #{lhsdqlzt},
+            </if>
+        </set>
+        <where>
+            <if test="lszd != null and lszd !=''">
+                AND t.LSZD = #{lszd,jdbcType=VARCHAR}
+            </if>
+            <if test="fwJsydzrzxxIndexList != null and fwJsydzrzxxIndexList.size() > 0">
+                AND t.FW_JSYDZRZXX_INDEX IN
+                <foreach collection="fwJsydzrzxxIndexList" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </update>
+</mapper>

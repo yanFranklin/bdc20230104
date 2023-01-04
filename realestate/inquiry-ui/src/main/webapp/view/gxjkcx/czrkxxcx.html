@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>常住人口信息查询台账</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+    <style type="text/css">
+        .search { /*用于查询标识*/
+        }
+        .bdc-percentage-container {
+            width: 100%;
+            height: 100%;
+            padding: 10px 10px 10px;
+            box-sizing: border-box;
+            position: relative;
+            background-color: #eaedf1;
+        }
+        .bdc-table-box {
+            width: 100%;
+            height: 90%;
+        }
+    </style>
+</head>
+<body>
+<!--************ 条件搜索 ************-->
+<div class="bdc-percentage-container">
+
+    <div class="bdc-search-box">
+        <form class="layui-form" action="">
+            <div class="layui-form-item pf-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" id="xm" name="xm" placeholder="请输入" class="layui-input search">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">公民身份证号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" id="gmsfhm" name="gmsfhm" placeholder="请输入" class="layui-input search">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+
+                <div class="layui-inline bdc-button-box">
+                    <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                    <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="bdc-table-box">
+        <table id="czrkxxcxTable" lay-filter="czrkxxcxTable"></table>
+    </div>
+
+    <!--台湾居民申请详细，弹框表单-->
+    <div id="popupTwoRows" class="bdc-hide">
+        <form class="layui-form" action="" id="czrkxxForm" lay-filter="czrkxxForm">
+            <div class="layui-form-item pf-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-inline">
+                        <input name="xm" type="text" disabled="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">曾用名</label>
+                    <div class="layui-input-inline">
+                        <input name="zym" type="text" disabled="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">公民身份号码</label>
+                    <div class="layui-input-inline">
+                        <input name="gmsfhm" type="text" disabled="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">性别</label>
+                    <div class="layui-input-inline">
+                        <input name="xb" type="text" disabled="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">婚姻状况</label>
+                    <div class="layui-input-inline">
+                        <input name="hyzk" type="text" disabled="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">与户主关系</label>
+                    <div class="layui-input-inline">
+                        <input name="yhzgx" type="text" disabled="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">签发机关</label>
+                    <div class="layui-input-inline">
+                        <input name="qfjg" type="text" disabled="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">户类型</label>
+                    <div class="layui-input-inline">
+                        <input name="hlx" type="text" disabled="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">文化程度</label>
+                    <div class="layui-input-inline">
+                        <input name="whcd" type="text" disabled="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">户号</label>
+                    <div class="layui-input-inline">
+                        <input name="hh" type="text" disabled="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">兵役状况</label>
+                    <div class="layui-input-inline">
+                        <input name="byzk" type="text" disabled="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">出生日期</label>
+                    <div class="layui-input-inline">
+                        <input name="csrq" type="text" disabled="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">籍贯省市县（区）</label>
+                    <div class="layui-input-inline">
+                        <input name="jgssxq" type="text" disabled="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">出生地省市县（区）</label>
+                    <div class="layui-input-inline">
+                        <input name="csdssxq" type="text" disabled="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">职业</label>
+                    <div class="layui-input-inline">
+                        <input name="zy" type="text" disabled="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">民族</label>
+                    <div class="layui-input-inline">
+                        <input name="mz" type="text" disabled="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">何祥址来本址</label>
+                    <div class="layui-input-inline">
+                        <input name="hxzlbz" type="text" disabled="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">何时来本址</label>
+                    <div class="layui-input-inline">
+                        <input name="hslbz" type="text" disabled="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">有效期限起始日期</label>
+                    <div class="layui-input-inline">
+                        <input name="yxqxqsrq" type="text" disabled="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">有效期限截止日期</label>
+                    <div class="layui-input-inline">
+                        <input name="yxqxjzrq" type="text" disabled="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">更新时间</label>
+                    <div class="layui-input-inline">
+                        <input name="gxsj" type="text" disabled="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">起用时间</label>
+                    <div class="layui-input-inline">
+                        <input name="qysj" type="text" disabled="off" class="layui-input">
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+</div>
+<!--表格内部操作按钮-->
+<script type="text/html" id="czTpl">
+    <a href="javascript:;" class="layui-btn layui-btn-xs bdc-major-btn" lay-event="detail">详细</a>
+</script>
+
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/bdcui/js/mask.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/commonSearch.js"></script>
+<script src="../../static/js/gxjkcx/czrkxxcx.js"></script>
+</body>
+</html>

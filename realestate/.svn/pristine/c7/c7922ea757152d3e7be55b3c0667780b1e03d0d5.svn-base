@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>契税联系单</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/hefei/swxx.css">
+</head>
+<body>
+<div class="bdc-form-div bdc-not-full-bg">
+    <!--全局 标题和操作按钮 开始-->
+    <form class="layui-form sl-from bdc-form-table">
+        <div class="bdc-content-fix">
+            <div class="content-title layui-clear">
+                <p>税务信息</p>
+                <div id="buttonArea"></div>
+            </div>
+        </div>
+        <!--全局 标题和操作按钮 结束-->
+        <div class="form-margin-area">
+            <div class="basic-info" id="sfhy">
+
+                <div class="title-sign bdc-title-sign-btn" style="height: 40px">
+                    <p>税费核验</p>
+                </div>
+                <div class="bdc-sw-table">
+                    <table class="layui-table" border="1" name="swxxTable">
+                        <!--设立列宽度-->
+                        <colgroup>
+                            <col width="100">
+                            <col width="100">
+                            <col width="50">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+
+                        </colgroup>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--合同号查询弹窗-->
+<div id="bdc-popup-small" class="bdc-hide layui-layer-wrap" style="display: none;">
+    <form class="layui-form" action="">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">合同编号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="htbh" autocomplete="off" placeholder="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">纳税人识别号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="nsrsbh" autocomplete="off" placeholder="" class="layui-input">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--税款信息表格弹窗-->
+<div id="bdc-popup-large" class="bdc-hide bdc-big-layer-css">
+    <div class="bdc-table-box">
+        <table id="skdrxxTable" lay-filter="skdrxxTable"></table>
+    </div>
+</div>
+
+</body>
+
+<!--按钮显示-->
+<script type="text/html" id="buttonAreaTpl">
+    <div class="title-btn-area">
+        <button class="layui-btn bdc-secondary-btn" type="button" id="cxswxx">获取完税信息</button>
+    </div>
+</script>
+
+<!--税费核验-->
+<script type="text/html" id="sfhyTpl">
+    {{# var bdcSlHsxxDO = d.bdcSlHsxxDO}}
+    <tr>
+        <td colspan="2" class="set-back-color">收件编号</td>
+        <td colspan="3">
+            <div class="bdc-td-box">
+                <input type="text" disabled="off" id="sphm" class="layui-input"
+                       value="{{bdcSlHsxxDO.sjbh || ''}}" title="{{bdcSlHsxxDO.sjbh || ''}}">
+            </div>
+        </td>
+        <td colspan="2" class="set-back-color">合同编号</td>
+        <td colspan="3">
+            <div class="bdc-td-box">
+                <input type="text" disabled="off" id="nsrmc" class="layui-input"
+                       value="{{bdcSlHsxxDO.htbh || ''}}" title="{{bdcSlHsxxDO.htbh || ''}}">
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="10" class="set-back-color">附件类型</td>
+    </tr>
+    {{# layui.each(d.bdcSlHsxxMxDOList, function(i, bdcSlHsxxMx){ }}
+    <tr>
+        <td colspan="10">
+            {{# if(bdcSlHsxxMx.fjlx ==="1001"){ }}
+            契税完税证
+            {{# }else if(bdcSlHsxxMx.fjlx ==="1002"){ }}
+            契税不征免征文件
+            {{# }else if(bdcSlHsxxMx.fjlx ==="1003"){ }}
+            发票文件
+            {{# }}}
+        </td>
+    </tr>
+    {{# }); }}
+
+</script>
+<!--无数据展示-->
+<script type="text/html" id="noneTpl">
+    <tr>
+        <td colspan="2" class="set-back-color">收件编号</td>
+        <td colspan="3"></td>
+        <td colspan="2" class="set-back-color">合同编号</td>
+        <td colspan="3"></td>
+    </tr>
+
+    <tr>
+        <td  colspan="10" class="set-back-color">附件类型</td>
+    </tr>
+
+    <tr class="bdc-table-none">
+        <td colspan="10">
+            <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据</div>
+        </td>
+    </tr>
+
+</script>
+
+<!--税款信息表格内部操作按钮-->
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="import">导入</a>
+</script>
+
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src='../../static/js/yancheng/ycsl/swxx_qslxd.js'></script>
+<script src='../../static/js/formCenter.js'></script>
+</html>

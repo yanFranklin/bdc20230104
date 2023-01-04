@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.accept.core.mapper.BdcSlSfxmPzMapper">
+    <select id="listBdcSlSfxmPzByPage" parameterType="cn.gtmap.realestate.common.core.domain.accept.BdcSlSfxmPzDO" resultType="cn.gtmap.realestate.common.core.domain.accept.BdcSlSfxmPzDO">
+        SELECT
+        t.SFXMPZID,t.DJXL,t.JEDW,t.QLRLB,t.SFXMBZ,t.SFXMDM,t.SFXMMC,t.SL,t.XH,t.YSJE,t.JSFF,t.DJYY,t.ddjb,t.sfxmdj FROM
+        BDC_SL_SFXM_PZ t
+        <where>
+            <if test="djxl != null and djxl != ''">
+                AND T.djxl = #{djxl}
+            </if>
+            <if test="sfxmmc != null and sfxmmc != ''">
+                AND T.sfxmmc = #{sfxmmc}
+            </if>
+            <if test="sfxmdm != null">
+                AND T.sfxmdm = #{sfxmdm}
+            </if>
+            <if test="sfxmbz != null and sfxmbz != ''">
+                AND T.sfxmbz = #{sfxmbz}
+            </if>
+        </where>
+    </select>
+
+    <select id="querySfxmPzMaxSxh" parameterType="cn.gtmap.realestate.common.core.domain.accept.BdcSlSfxmPzDO"
+            resultType="Integer">
+        SELECT NVL(MAX(xh),0) AS xh FROM BDC_SL_SFXM_PZ t
+        <where>
+            <if test="djxl != null and djxl != ''">
+                AND t.djxl = #{djxl}
+            </if>
+        </where>
+    </select>
+
+    <select id="querySfxmmc"
+            resultType="String">
+        SELECT distinct sfxmmc FROM BDC_SL_SFXM_PZ t
+    </select>
+
+</mapper>

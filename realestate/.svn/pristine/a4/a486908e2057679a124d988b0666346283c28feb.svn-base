@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.certificate.core.mapper.BdcDzzzJzjxxMapper">
+
+    <select id="queryJzjxxByZzid" parameterType="string"
+            resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzJzjxxDO">
+        SELECT jzjid, zzid, jzjzzsj, jzjzzz, jzjzzsy, jzjyxqjzsj, zzwjlj
+        FROM bdc_dzzz_jzjxx WHERE zzid=#{zzid}
+    </select>
+
+    <select id="queryJzjxxByJzjId" parameterType="string"
+            resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzJzjxxDO">
+        SELECT jzjid, zzid, jzjzzsj, jzjzzz, jzjzzsy, jzjyxqjzsj, zzwjlj
+        FROM bdc_dzzz_jzjxx WHERE jzjid=#{jzjid}
+    </select>
+
+    <insert id="insertBdcDzzzJzjxx" parameterType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzJzjxxDO">
+        INSERT INTO bdc_dzzz_jzjxx t (t.jzjid, t.zzid, t.jzjzzsj, t.jzjzzz, t.jzjzzsy, t.jzjyxqjzsj, t.zzwjlj,t.cjsj,t.szzs)
+        VALUES (#{jzjid,jdbcType=VARCHAR},#{zzid,jdbcType=VARCHAR},#{jzjzzsj,jdbcType=TIMESTAMP},#{jzjzzz,jdbcType=VARCHAR}
+        ,#{jzjzzsy,jdbcType=VARCHAR},#{jzjyxqjzsj,jdbcType=TIMESTAMP},#{zzwjlj,jdbcType=VARCHAR}
+        ,#{cjsj,jdbcType=TIMESTAMP},#{szzs,jdbcType=VARCHAR})
+    </insert>
+
+    <delete id="deleteBdcDzzzJzjxxByZzid" parameterType="String">
+        DELETE BDC_DZZZ_JZJXX WHERE zzid = #{zzid}
+    </delete>
+
+</mapper>

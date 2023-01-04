@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>收费信息页面</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+    <link rel="stylesheet" href="../../static/css/slymForm.css"/>
+</head>
+<body>
+<div class="bdc-form-div bdc-not-full-bg">
+    <!--全局 标题和操作按钮 开始-->
+    <form class="layui-form sl-from" id="all">
+        <div class="bdc-content-fix">
+            <div class="content-title layui-clear">
+                <p>不动产登记收费信息</p>
+                <div class="title-btn-area">
+                    <button class="layui-btn bdc-major-btn" lay-submit="" lay-filter="saveData" type="button"
+                            id="saveSfxx">保存
+                    </button>
+                    <button class="layui-btn bdc-secondary-btn print-btn" type="button" id="printButton" onclick="printSfd('hmsflxd','1')">打印
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!--表单信息-->
+        <div class="form-margin-area">
+            <!--基本收费信息-->
+            <div class="basic-info" id="jbSfxx">
+                <div class="title-sign bdc-title-sign-btn">
+                    <p>基本信息</p>
+                </div>
+                <div class="layui-form setOverflow bdc-jbxx-view"></div>
+            </div>
+
+            <!--权利人收费项目-->
+            <div class="basic-info bdcsfxxForm" id="qlrSfxm">
+                <form class="common-form sl-from layui-form">
+                    <div class="title-sign bdc-title-sign-btn">
+                        <p>权利人收费信息</p>
+                        <div class="bdc-title-sign-btn-box">
+                            <span class="bdc-sfxx-span bdc-jfxzt"></span>
+                            <span class="bdc-sfxx-span bdc-jfxmc"></span>
+                            <a href="javascript:;"
+                               class="layui-btn layui-btn-sm bdc-secondary-btn bdc-add-sfxx qlrgjsfxx"
+                               onclick="gjSfxx('1')" id="qlr-sfxxgj">挂接</a>
+                            <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn bdc-add-sfxx qlrtssfxx" onclick="tssfxx('1')" id="qlr-tssfxx">推送</a>
+                            <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn bdc-add-sfxx" onclick="addSfxm(this,'1')" id="qlr-addSfxm">新增</a>
+                            <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn bdc-zf-sfxx" onclick="zfsfxx('1')" id="qlr-zfsfxx">作废</a>
+                            <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn bdc-ch-sfxx" onclick="chsfxx('1')" id="qlr-chsfxx">冲红</a>
+                            <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn bdc-tssf-sfxx" onclick="tssf('1')" id="qlr-tssfxx">推送税费</a>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width bdc-label-newline">税费二维码</label>
+                            <img class="bdc-inline-code qlrewm" src="" alt="未生成二维码">
+                        </div>
+                        <div id="outerdiv"
+                             style="position:fixed;top:0;left:0;background:rgba(0,0,0,0.7);z-index:999;width:100%;height:100%;display:none;">
+                            <div id="innerdiv" style="position:absolute;">
+                                <img id="bigimg" style="border:5px solid #fff;" src=""/>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="layui-table bdc-table-box" border="1"></table>
+                </form>
+            </div>
+            <!--权利人税务项目-->
+            <div class="basic-info bdcsfxxForm" id="csfskxx" >
+            </div>
+            <!--义务人收费项目-->
+            <div class="basic-info bdcsfxxForm" id="ywrSfxm">
+                <form class="common-form sl-from layui-form">
+                    <div class="title-sign bdc-title-sign-btn">
+                        <p>义务人收费信息</p>
+                        <div class="bdc-title-sign-btn-box">
+                            <span class="bdc-sfxx-span bdc-jfxzt"></span>
+                            <span class="bdc-sfxx-span bdc-jfxmc"></span>
+                            <a href="javascript:;"
+                               class="layui-btn layui-btn-sm bdc-secondary-btn bdc-add-sfxx ywrgjsfxx"
+                               onclick="gjSfxx('2')" id="ywr-gjsfxx">推送</a>
+                            <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn bdc-add-sfxx ywrtssfxx" onclick="tssfxx('2')" id="ywr-tssfxx">推送</a>
+                            <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn bdc-add-sfxx" onclick="addSfxm(this,'2')" id="ywr-addSfxm">新增</a>
+                            <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn bdc-zf-sfxx" onclick="zfsfxx('2')" id="ywr-zfsfxx">作废</a>
+                            <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn bdc-ch-sfxx" onclick="chsfxx('2')" id="ywr-chsfxx">冲红</a>
+                            <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn bdc-tssf-sfxx" onclick="tssf('2')" id="ywr-tssfxx">推送税费</a>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width bdc-label-newline">税费二维码</label>
+                            <img class="bdc-inline-code ywrewm" src="" alt="未生成二维码">
+                        </div>
+                        <div id="outerdiv"
+                             style="position:fixed;top:0;left:0;background:rgba(0,0,0,0.7);z-index:999;width:100%;height:100%;display:none;">
+                            <div id="innerdiv" style="position:absolute;">
+                                <img id="bigimg" style="border:5px solid #fff;" src=""/>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="layui-table bdc-table-box" border="1"></table>
+                </form>
+            </div>
+            <!--义务人税务项目-->
+            <div class="basic-info bdcsfxxForm" id="msfskxx">
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--退付原因弹出框-->
+<div id="tfyy-div" class="bdc-layer-textarea bdc-hide">
+    <form class="layui-form" action="">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>退付原因</label>
+                <div class="layui-input-inline bdc-end-time-box">
+                    <textarea name="desc" id="tfyy" placeholder="请输入内容" class="layui-textarea"></textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--挂接收费信息-->
+<div id="gjsfxx" class="bdc-layer-textarea bdc-hide">
+    <form class="layui-form" action="">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>受理编号</label>
+                <div class="layui-input-inline bdc-end-time-box">
+                    <input type="text" name="gjslbh" id="gjslbh" placeholder="请输入内容" class="layui-input" value="">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+<!--基本信息动态渲染-->
+<script type="text/html" id="qlrxxTpl">
+    <div class="layui-form-item">
+        <input type="hidden" class="sfxx bdc-sfxxid" name="sfxxid" value="{{d.renderList.sfxxid || ''}}" id="sfxxid">
+        <input type="hidden" class="sfxx" name="qlrlb" value="{{d.renderList.qlrlb || ''}}" id="qlrlb">
+        <div class="layui-inline">
+            <label class="layui-form-label change-label-width">执收单位代码</label>
+            <div class="layui-input-inline bdc-one-icon">
+                <input type="text" name="sfdwdm" id="sfdwdm" value="{{d.renderList.sfdwdm ? d.renderList.sfdwdm:d.sfxxpz.sfdwdm}}" autocomplete="off" class="layui-input sfxx">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label change-label-width">收款人全称</label>
+            <div class="layui-input-inline bdc-one-icon">
+                <input type="text" name="sfrxm" id="sfrxm" value="{{d.renderList.sfrxm ? d.renderList.sfrxm:d.sfxxpz.sfrxm}}" autocomplete="off" class="layui-input sfxx">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label change-label-width">执收单位名称</label>
+            <div class="layui-input-inline bdc-one-icon">
+                <input type="text" name="sfdwmc" id="sfdwmc" value="{{d.renderList.sfdwmc?d.renderList.sfdwmc:d.sfxxpz.sfdwmc}}" autocomplete="off" class="layui-input sfxx">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label change-label-width">收款人账号</label>
+            <div class="layui-input-inline bdc-one-icon">
+                <input type="text" name="sfrzh" id="sfrzh" value="{{d.renderList.sfrzh?d.renderList.sfrzh:d.sfxxpz.sfrzh}}" autocomplete="off" class="layui-input sfxx">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label change-label-width bdc-label-newline">代理银行网点代码</label>
+            <div class="layui-input-inline bdc-one-icon">
+                <input type="text" name="sfrkhyhwddm" id="sfrkhyhwddm" value="{{d.renderList.sfrkhyhwddm?d.renderList.sfrkhyhwddm:d.sfxxpz.sfrkhyhwddm}}" autocomplete="off" class="layui-input sfxx">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label change-label-width bdc-label-newline">收款人<br>开户银行</label>
+            <div class="layui-input-inline bdc-one-icon">
+                <input type="text" name="sfrkhyh" id="sfrkhyh" value="{{d.renderList.sfrkhyh?d.renderList.sfrkhyh:d.sfxxpz.sfrkhyh}}" autocomplete="off" class="layui-input sfxx">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label change-label-width">开票方式</label>
+            <div class="layui-input-inline bdc-one-icon">
+                <select id="kpfs" name="kpfs" lay-filter="kpfs" lay-search="" class="sfxx">
+                    {{# layui.each(d.zd.kpfs, function(index, item){ }}
+                    <option value="{{item.MC || ''}}" {{# if(d.renderList.kpfs==item.MC ){ }} selected="selected" {{#
+                            }
+                            }}>
+                        {{item.MC || ''}}
+                    </option>
+                    {{# }); }}
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label change-label-width">缴款方式</label>
+            <div class="layui-input-inline bdc-one-icon">
+                <select id="jkfs" name="jkfs" lay-filter="jkfs" lay-search="" class="sfxx">
+                    {{# layui.each(d.zd.jkfs, function(index, item){ }}
+                    <option value="{{item.MC || ''}}" {{# if(d.renderList.jkfs==item.MC ){ }} selected="selected" {{#
+                            }
+                            }}>
+                        {{item.MC || ''}}
+                    </option>
+                    {{# }); }}
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label change-label-width">土地面积</label>
+            <div class="layui-input-inline bdc-one-icon">
+                <input type="number" name="tdsyqmj" id="tdsyqmj" value="{{d.tdsyqmj}}" autocomplete="off" class="layui-input sfxx" disabled="off">
+                <img src="../../static/lib/bdcui/images/lock.png" alt="">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label change-label-width bdc-label-newline">建筑面积<br>（m²）</label>
+            <div class="layui-input-inline bdc-one-icon">
+                <input type="number" name="dzwmj"  id="dzwmj" value="{{d.dzwmj}}" autocomplete="off" class="layui-input sfxx" disabled="off">
+                <img src="../../static/lib/bdcui/images/lock.png" alt="">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label change-label-width">登记类型</label>
+            <div class="layui-input-inline bdc-one-icon">
+                <input type="text" name="djlx" id="djlx" value="{{d.djlx ? d.djlx :''}}" autocomplete="off" class="layui-input" disabled="off">
+                <img src="../../static/lib/bdcui/images/lock.png" alt="">
+            </div>
+        </div>
+
+
+        <div class="layui-inline">
+            <label class="layui-form-label change-label-width">收费日期</label>
+            <div class="layui-input-inline">
+                <input type="text" name="sfsj" class="layui-input test-item sfxx" id="jbxxSfrq">
+            </div>
+        </div>
+        <div class="layui-inline bdc-two-column">
+            <label class="layui-form-label change-label-width">坐落</label>
+            <div class="layui-input-inline bdc-one-icon">
+                <input type="text" name="zl" id="zl" value="{{d.zl}}" autocomplete="off" class="layui-input sfxx" disabled="off">
+                <img src="../../static/lib/bdcui/images/lock.png" alt="">
+            </div>
+        </div>
+        <div class="layui-inline bdc-two-column">
+            <label class="layui-form-label change-label-width">不动产单元号</label>
+            <div class="layui-input-inline bdc-one-icon">
+                <input type="text" name="bdcdyh" id="bdcdyh" value="{{d.bdcdyh}}" autocomplete="off" class="layui-input sfxx" disabled="off">
+                <img src="../../static/lib/bdcui/images/lock.png" alt="">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label change-label-width">发票号</label>
+            <div class="layui-input-inline">
+                <input type="text" autocomplete="off" value="{{d.renderList.fph?d.renderList.fph:''}}" class="layui-input sfxx" name="fph" id="fph">
+            </div>
+        </div>
+        <div class="layui-inline bdc-two-column">
+            <label class="layui-form-label change-label-width">单位</label>
+            <div class="layui-input-inline">
+                <input type="checkbox" name="" title="元" lay-skin="primary" checked disabled>
+                <input type="checkbox" name="" title="次" lay-skin="primary" checked disabled>
+                <input type="checkbox" name="" title="平方" lay-skin="primary" checked disabled>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item change-textarea-margin">
+        <label class="layui-form-label change-label-width">备注</label>
+        <div class="layui-input-inline">
+            <textarea class="layui-textarea change-textarea-width sfxx" name="bz" id="bz">{{d.renderList.bz?d.renderList.bz:''}}</textarea>
+        </div>
+    </div>
+</script>
+<!--收费项目模板-->
+<script type="text/html" id="sfxmTpl">
+    <thead>
+    <tr class="gray-tr">
+        <td>收费项目</td>
+        <td>标准</td>
+        <td>单位</td>
+        <td>数量</td>
+        <td>应收金额</td>
+        <td>减免金额</td>
+        <td>实收金额</td>
+        <td width="150px">操作</td>
+    </tr>
+    </thead>
+    <tbody>
+    {{#  if(d.length > 0){ }}
+    {{#  layui.each(d, function(index, item){ }}
+    <tr id="sfxmTrTpl">
+        <input type="hidden" name="sfxxid" value="{{item.sfxxid || ''}}" class="sfxm">
+        <input type="hidden" name="sfxmid" value="{{item.sfxmid || ''}}" class="sfxm">
+        <input type="hidden" name="sfxmmc" value="{{item.sfxmmc || ''}}" class="bdc-sfxmmc sfxm">
+        <input type="hidden" name="sfxmbz" value="{{item.sfxmbz || ''}}" class="bdc-sfxmbz sfxm">
+        <input type="hidden" name="ssje" value="{{item.ssje || ''}}" class="bdc-ssje-input sfxm">
+        <input type="hidden" name="ysje" value="{{item.ysje || ''}}" class="bdc-ysje-input sfxm">
+        <input type="hidden" name="qlrlb" value="{{item.qlrlb || ''}}" class="sfxm">
+        <input type="hidden" name="xh" value="{{item.xh || ''}}" class="sfxm">
+        <input type="hidden" name="cz" value="update" class="sfxm">
+        <td>
+            <div class="bdc-td-box">
+                <select name="sfxmdm" lay-filter="sfxmFilter" class="bdc-sfxm sfxm">
+                    {{#  layui.each(item.sfxmList, function(i, value){ }}
+                        {{# if(value.sfxmdm == item.sfxmdm){ }}
+                        <option value="{{value.sfxmdm}}" selected>{{value.sfxmmc}}</option>
+                        {{# }else{ }}
+                        <option value="{{value.sfxmdm}}">{{value.sfxmmc}}</option>
+                        {{# } }}
+                    {{#  }); }}
+                </select>
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <select name="sfxmdj" lay-search="" lay-filter="sfdjFilter" class="bdc-sfdj sfxm">
+                    {{#  layui.each(item.sfxmList, function(i, value){ }}
+                    {{# if(value.sfxmdm == item.sfxmdm){ }}
+                        {{#  layui.each(value.bdcSlSfxmSfbzList, function(ind, v){ }}
+                            {{# if(v.sfxmbz == item.sfxmbz){ }}
+                            <option value="{{v.sfxmbz}}" data-dj="{{v.sfxmdj}}" selected>{{v.sfxmbz}}</option>
+                            {{# }else{ }}
+                            <option value="{{v.sfxmbz}}" data-dj="{{v.sfxmdj}}">{{v.sfxmbz}}</option>
+                            {{# } }}
+                        {{#  }); }}
+                    {{# } }}
+                    {{#  }); }}
+                </select>
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box bdc-one-icon">
+                <input type="text" value="元" autocomplete="off" class="layui-input" disabled="off">
+                <img src="../../static/lib/bdcui/images/lock.png" alt="">
+            </div>
+        </td>
+
+        <td>
+            <div class="bdc-td-box">
+
+                <input type="text" lay-verify="" name="sl" value="{{item.sl?item.sl:0}}" onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')" oninput="changeSl(this)" class="layui-input bdc-sfsl sfxm">
+
+            </div>
+        </td><td>
+        <div class="bdc-td-box bdc-one-icon">
+
+            <input type="text" value="{{item.ysje?item.ysje:0}}" autocomplete="off" class="layui-input bdc-ysje" disabled="off">
+            <img src="../../static/lib/bdcui/images/lock.png" alt="">
+
+        </div>
+    </td>
+
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" lay-verify="" name="jmje" value="{{item.jmje?item.jmje:0}}" onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')" oninput="changeJmje(this)" class="layui-input bdc-jmje sfxm">
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box bdc-one-icon">
+                <input type="text" name="" value="{{item.ssje?item.ssje:0}}" autocomplete="off" class="layui-input bdc-ssje sfxm" disabled="off">
+                <img src="../../static/lib/bdcui/images/lock.png" alt="">
+            </div>
+        </td>
+        <td align="center">
+            <a href="javascript:;" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn" onclick="deleteSfxmTr(this,'{{item.sfxmid}}','{{item.qlrlb}}')" id="deleteSfxmTr">删除</a>
+        </td>
+    </tr>
+    {{#  }); }}
+    <tr class="bdc-count">
+        <td>合计</td>
+        <td colspan="7">
+            <div class="sfxxtext">
+                <div class="layui-input-inline bdc-one-icon">
+                    <input type="text" class="layui-input bdc-hj" lay-verify="" name="hj" disabled="off"
+                           style="text-align:left;padding-left: 6px" value="">
+                    <img src="../../static/lib/bdcui/images/lock.png" alt="">
+                </div>
+            </div>
+        </td>
+    </tr>
+    {{#  } }}
+
+    {{#  if(d.length === 0){ }}
+    <tr class="bdc-table-none">
+        <td colspan="8">
+            <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无相关收费信息
+            </div>
+        </td>
+    </tr>
+    {{#  } }}
+    </tbody>
+</script>
+
+<!--新增收费项目模板-->
+<script type="text/html" id="addSfxmTpl">
+    <tr>
+        <input type="hidden" name="sfxxid" value="{{d.sfxxid || ''}}" class="sfxm">
+        <input type="hidden" name="sfxmid" value="{{d.sfxmid || ''}}" class="sfxm">
+        <input type="hidden" name="sfxmmc" value="{{d.sfxmList[0]['sfxmmc'] || ''}}" class="bdc-sfxmmc sfxm">
+        <input type="hidden" name="sfxmbz" value="{{d.sfxmList[0].bdcSlSfxmSfbzList[0].sfxmbz || ''}}" class="bdc-sfxmbz sfxm">
+        <input type="hidden" name="ssje" value="" class="bdc-ssje-input sfxm">
+        <input type="hidden" name="ysje" value="" class="bdc-ysje-input sfxm">
+        <input type="hidden" name="qlrlb" value="{{d.qlrlb || ''}}" class="sfxm">
+        <input type="hidden" name="xh" value="{{d.xh || ''}}" class="sfxm">
+        <input type="hidden" name="cz" value="insert" class="sfxm">
+        <td>
+            <div class="bdc-td-box">
+                <select name="sfxmdm" lay-filter="sfxmFilter" class="bdc-sfxm sfxm">
+                    {{#  layui.each(d.sfxmList, function(i, value){ }}
+                    <option value="{{value.sfxmdm}}">{{value.sfxmmc}}</option>
+                    {{#  }); }}
+                </select>
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <select name="sfxmdj" lay-search="" lay-filter="sfdjFilter" class="bdc-sfdj sfxm">
+                    {{#  layui.each(d.sfxmList, function(i, value){ }}
+                    {{# if(i == 0){ }}
+                    {{#  layui.each(value.bdcSlSfxmSfbzList, function(ind, v){ }}
+                    <option value="{{v.sfxmbz}}" data-dj="{{v.sfxmdj}}">{{v.sfxmbz}}</option>
+                    {{#  }); }}
+                    {{# } }}
+                    {{#  }); }}
+                </select>
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box bdc-one-icon">
+                <input type="text" value="元" autocomplete="off" class="layui-input" disabled="off">
+                <img src="../../static/lib/bdcui/images/lock.png" alt="">
+            </div>
+        </td>
+
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" lay-verify="" name="sl" value="0" onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')" oninput="changeSl(this)" class="layui-input bdc-sfsl sfxm">
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box bdc-one-icon">
+                <input type="text" value="0" autocomplete="off" class="layui-input bdc-ysje" disabled="off">
+                <img src="../../static/lib/bdcui/images/lock.png" alt="">
+            </div>
+        </td>
+
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" name="jmje" lay-verify="" name="jmje" value="0" onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')" oninput="changeJmje(this)" class="layui-input bdc-jmje sfxm">
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box bdc-one-icon">
+                <input type="text" value="0" autocomplete="off" class="layui-input bdc-ssje" disabled="off">
+                <img src="../../static/lib/bdcui/images/lock.png" alt="">
+            </div>
+        </td>
+        <td align="center">
+            <a href="javascript:;" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn" onclick="deleteSfxmTr(this,'{{d.sfxmid}}','{{d.qlrlb}}')">删除</a>
+        </td>
+    </tr>
+</script>
+
+<script type="text/html" id="hjTpl">
+    <tr class="bdc-count">
+        <td>合计</td>
+        <td colspan="8">
+            <div class="sfxxtext">
+                <div class="layui-input-inline bdc-one-icon">
+                    <input type="text" class="layui-input bdc-hj sfxx" lay-verify="" name="hj" disabled="off"
+                           style="text-align:left;padding-left: 6px" value="">
+                    <img src="../../static/lib/bdcui/images/lock.png" alt="">
+                </div>
+            </div>
+        </td>
+    </tr>
+</script>
+
+<!--税务项目模板-->
+<script type="text/html" id="csfskxxTpl">
+    <form class="common-form layui-form bdc-form-table" name="zrfForm">
+        <div class="layui-form-item form-add-padding">
+            <div class="zrfForm" id="zrfskForm">
+                <table class="layui-table" border="1" id="addzrfskTable">
+                    <colgroup>
+                        <col width="100">
+                        <col width="80">
+                        <col width="160">
+                        <col width="80">
+                        <col width="160">
+                    </colgroup>
+                    <thead>
+                    <tr class="gray-tr">
+                        <td>纳税人名称</td>
+                        <td>纳税人识别号</td>
+                        <td>合同编号</td>
+                        <td>应补退税额</td>
+                        <td>电子税票号码</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{# if(!d.swxxList) { }}
+                    <tr class="bdc-table-none">
+                        <td colspan="10">
+                            <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据
+                            </div>
+                        </td>
+                    </tr>
+                    {{# } else { }}
+                    {{# layui.each(d.swxxList, function(i,swmx){ }}
+                    <tr>
+                        <td>
+                            <div class="bdc-td-box">
+                                <input type="text" lay-verify="" class="layui-input" value="{{swmx.nsrmc  || ''}}"
+                                       disabled="off">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <input type="text" lay-verify="" class="layui-input" value="{{swmx.nsrsbh  || ''}}"
+                                       disabled="off">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <input type="text" lay-verify="" class="layui-input" value="{{swmx.htbh  || ''}}"
+                                       disabled="off">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <input type="text" lay-verify="" class="layui-input" value="{{swmx.ynsehj  || ''}}"
+                                       disabled="off">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <input type="text" lay-verify="" class="layui-input" value="{{swmx.sphm  || ''}}"
+                                       disabled="off">
+                            </div>
+                        </td>
+                    </tr>
+                    {{# }); }}
+                    <tr class="bdc-count">
+                        <td class="set-back-color">金额小计</td>
+                        <td colspan="4">
+                            <div class="bdc-td-box">
+                                <input type="text" lay-verify="" class="layui-input" value="{{d.jexj.ynsexj || '0'}}"
+                                       disabled="off" style="text-align:left;padding-left: 6px">
+                            </div>
+                        </td>
+                    </tr>
+                    {{# } }}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+</script>
+
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<!--小数计算防精度缺失-->
+<script src="../../static/lib/mathjs/math.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/lib/bdcui/js/print/print-common.js"></script>
+<script src="../../static/js/jquery.validate.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src='../../static/js/form-not-full.js'></script>
+<script src='../../static/js/qidong/sfxx/sfxx.js'></script>
+<script src='../../static/js/formCenter.js'></script>
+<script src="../../static/js/nantong/slym/print.js"></script>
+
+</html>

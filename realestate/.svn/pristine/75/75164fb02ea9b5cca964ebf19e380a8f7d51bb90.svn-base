@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <ex:bean id="dian_fjsc">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="电附件删除接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="DIAN"/>
+            <ex:property name="dsfFlag" value="DIAN"/>
+            <ex:property name="url" value="${dian.fjsc.url}"/>
+        </ex:service-info>
+        <ex:request excludeKey="slbh,xmid">
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="shui_fjts">
+        <ex:service-info request-type="httpPostFile">
+            <ex:property name="logEventName" value="水推送附件接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SHUI"/>
+            <ex:property name="dsfFlag" value="SHUI"/>
+            <ex:property name="url" value="${shui.fjts.url}"/>
+        </ex:service-info>
+        <ex:request excludeKey="slbh,xmid">
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="dian_fjts">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="电附件推送接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="DIAN"/>
+            <ex:property name="dsfFlag" value="DIAN"/>
+            <ex:property name="url" value="${dian.fjts.url}"/>
+        </ex:service-info>
+        <ex:request excludeKey="slbh,xmid">
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="new_shui_sqgh">
+        <ex:service-info request-type="httpTokenPost">
+            <ex:property name="logEventName" value="水申请过户接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SHUI"/>
+            <ex:property name="dsfFlag" value="SHUI"/>
+            <ex:property name="url" value="${shui.sqgh.url}"/>
+            <ex:property name="tokenInterface" value="shuiToken"/>
+        </ex:service-info>
+        <ex:request dozerXml="conf/dozer/hefei/sdq/new_shui_sqgh/request/param.xml" excludeKey="slbh">
+            <ex:element dozerXml="conf/dozer/hefei/sdq/new_shui_sqgh/request/data.xml" name="requestData"/>
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="ranqi_ghcx">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="燃气过户查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="RANQI"/>
+            <ex:property name="dsfFlag" value="RANQI"/>
+            <ex:property name="url" value="${ranqi.ghcx.url}"/>
+        </ex:service-info>
+        <ex:request excludeKey="slbh,xmid">
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="dian_ghqkcx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${dian.ghqkcx.url}"/>
+            <ex:property name="logEventName" value="电过户情况查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="DIAN"/>
+            <ex:property name="dsfFlag" value="DIAN"/>
+        </ex:service-info>
+        <ex:request excludeKey="slbh,xmid">
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="shui_sqgh">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="水申请过户接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SHUI"/>
+            <ex:property name="dsfFlag" value="SHUI"/>
+            <ex:property name="url" value="${shui.sqgh.url}"/>
+        </ex:service-info>
+        <ex:request excludeKey="slbh,xmid">
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="dian_gxzt">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="logEventName" value="电更新过户状态"/>
+            <ex:property name="requester" value="DIAN"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="DIAN"/>
+            <ex:property name="beanName" value="cn.gtmap.realestate.common.core.service.feign.inquiry.BdcSdqghFeignService"/>
+            <ex:property name="methodName" value="updateSdqBlzt"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/hefei/sdq/gxzt/request/dian.xml"/>
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="shui_gxzt">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="logEventName" value="水更新过户状态"/>
+            <ex:property name="requester" value="SHUI"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="SHUI"/>
+            <ex:property name="beanName" value="cn.gtmap.realestate.common.core.service.feign.inquiry.BdcSdqghFeignService"/>
+            <ex:property name="methodName" value="updateSdqBlzt"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/hefei/sdq/gxzt/request/shui.xml"/>
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="dian_sqgh">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${dian.sqgh.url}"/>
+            <ex:property name="logEventName" value="电申请过户接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="DIAN"/>
+            <ex:property name="dsfFlag" value="DIAN"/>
+            <ex:property name="encryptMethod" value="cn.gtmap.realestate.exchange.util.AESUtil.hefeiDianEncrypt"/>
+        </ex:service-info>
+        <ex:request excludeKey="slbh,xmid">
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="ranqi_sqgh">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="燃气申请过户接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="RANQI"/>
+            <ex:property name="dsfFlag" value="RANQI"/>
+            <ex:property name="url" value="${ranqi.sqgh.url}"/>
+        </ex:service-info>
+        <ex:request excludeKey="slbh,xmid">
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="ranqi_gxzt">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="logEventName" value="燃气更新过户状态"/>
+            <ex:property name="requester" value="RANQI"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="RANQI"/>
+            <ex:property name="beanName" value="cn.gtmap.realestate.common.core.service.feign.inquiry.BdcSdqghFeignService"/>
+            <ex:property name="methodName" value="updateSdqBlzt"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/hefei/sdq/gxzt/request/qi.xml"/>
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="dian_ghcx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${dian.ghcx.url}"/>
+            <ex:property name="logEventName" value="电过户查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="DIAN"/>
+            <ex:property name="dsfFlag" value="DIAN"/>
+            <ex:property name="encryptMethod" value="cn.gtmap.realestate.exchange.util.AESUtil.hefeiDianEncrypt"/>
+            <ex:property name="decryptMethod" value="cn.gtmap.realestate.exchange.util.AESUtil.hefeiDianDecrypt"/>
+        </ex:service-info>
+        <ex:request excludeKey="slbh,xmid">
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="new_shui_fjts">
+        <ex:service-info request-type="httpTokenPostFile">
+            <ex:property name="logEventName" value="水推送附件接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SHUI"/>
+            <ex:property name="dsfFlag" value="SHUI"/>
+            <ex:property name="url" value="${shui.fjts.url}"/>
+            <ex:property name="tokenInterface" value="shuiToken"/>
+        </ex:service-info>
+        <ex:request excludeKey="slbh,xmid">
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="shui_token">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="水获取token接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SHUI"/>
+            <ex:property name="dsfFlag" value="SHUI"/>
+            <ex:property name="url" value="${shui.token.url}"/>
+        </ex:service-info>
+        <ex:response resultKey="token">
+            <ex:element dozerXml="conf/dozer/hefei/sdq/shui_token/response/data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!--昆仑燃气 过户申请接口  目前舒城使用-->
+    <ex:bean id="ranqi_kl_sqgh">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="昆仑燃气申请过户接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="KUNLUNRANQI"/>
+            <ex:property name="dsfFlag" value="KUNLUNRANQI"/>
+            <ex:property name="contentType" value="application/json"/>
+            <ex:property name="url" value="${ranqi.klsqgh.url}"/>
+        </ex:service-info>
+
+    </ex:bean>
+</beans>

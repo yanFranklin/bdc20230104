@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+
+    <!-- 外网推送附件材料 -->
+    <ex:bean id="tsWwsqFjxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="logEventName" value="外网推送附件材料接口"/>
+            <ex:property name="request" value="WWSQ"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="WWSQ"/>
+            <ex:property name="beanName"
+                         value="gxWwSqxxServiceImpl"/>
+            <ex:property name="methodName" value="tsfjcl"/>
+
+        </ex:service-info>
+    </ex:bean>
+
+
+    <!-- 外网申请 更新受理状态 -->
+    <ex:bean id="wwsqupdateslzt">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="slztServiceImpl"/>
+            <ex:property name="methodName" value="updateSlzt"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 调用一卡清 查询缴费状态的接口 -->
+    <ex:bean id="wwsq_ykqjfztcx">
+        <ex:service-info request-type="httpTokenPostJson">
+            <ex:property name="logEventName" value="调用互联网+查询缴费状态的接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="WWSQ"/>
+            <ex:property name="dsfFlag" value="WWSQ"/>
+            <ex:property name="url" value="${wwsq.ykqjfztcx.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerRelXml="param.xml"/>
+        </ex:request>
+        <ex:response resultKey="data">
+            <ex:element dozerRelXml="data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 外网一卡清 退款操作 -->
+    <ex:bean id="wwsq_ykqtkcz">
+        <ex:service-info request-type="httpTokenPostJson">
+            <ex:property name="logEventName" value="外网一卡清退款操作"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="WWSQ"/>
+            <ex:property name="dsfFlag" value="WWSQ"/>
+            <ex:property name="url" value="${wwsq.ykqtkcz.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerRelXml="param.xml"/>
+        </ex:request>
+        <ex:response resultKey="data">
+            <ex:element dozerRelXml="data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 外网一卡清 退款状态查询接口 -->
+    <ex:bean id="wwsq_ykqtkztcx">
+        <ex:service-info request-type="httpTokenPostJson">
+            <ex:property name="logEventName" value="外网一卡清退款状态查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="WWSQ"/>
+            <ex:property name="dsfFlag" value="WWSQ"/>
+            <ex:property name="url" value="${wwsq.ykqtkztcx.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerRelXml="param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerRelXml="data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 外网一卡清 向外网推送三要素并缴库 -->
+    <ex:bean id="wwsq_tsswsys">
+        <ex:service-info request-type="httpTokenPostJson">
+            <ex:property name="logEventName" value="调用互联网+推送税务三要素接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="WWSQ"/>
+            <ex:property name="dsfFlag" value="WWSQ"/>
+            <ex:property name="url" value="${wwsq.tsswsys.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerRelXml="param.xml"/>
+        </ex:request>
+        <ex:response extendRequestBodyWithKey="request" excludeKey="kkk">
+            <ex:element dozerRelXml="data.xml"/>
+            <ex:element name="kkk" sourceService="saveTsjkrk"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 请求后直接保存缴款状态 -->
+    <ex:bean id="saveTsjkrk">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.accept.BdcSlSfxxFeignService"/>
+            <ex:property name="methodName" value="updateSlSfSsxxYhJkrkzt"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerRelXml="param.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!-- 调用一卡清 生成订单的接口 -->
+    <ex:bean id="wwsqScddh">
+        <ex:service-info request-type="httpTokenPostJson">
+            <ex:property name="logEventName" value="调用互联网+生成订单号的接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="WWSQ"/>
+            <ex:property name="dsfFlag" value="WWSQ"/>
+            <ex:property name="url" value="${wwsq.scddh.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerRelXml="param.xml"/>
+        </ex:request>
+        <ex:response resultKey="data">
+            <ex:element dozerRelXml="data.xml"/>
+        </ex:response>
+        <!--<ex:log dsfFlag="WWSQ" logEventName="调用互联网+生成订单号的接口" requester="BDC" responser="WWSQ" />-->
+    </ex:bean>
+
+    <!-- 调用一卡清 pos更新订单接口 -->
+    <ex:bean id="wwsq_pos_gxdd">
+        <ex:service-info request-type="httpTokenPostJson">
+            <ex:property name="logEventName" value="调用互联网+更新订单状态的接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="WWSQ"/>
+            <ex:property name="dsfFlag" value="WWSQ"/>
+            <ex:property name="url" value="${wwsq.posgxdd.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerRelXml="param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerRelXml="data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 调用一卡清 获取token接口 -->
+    <ex:bean id="ykq_gettoken">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="调用一卡清获取token的接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="YKQ"/>
+            <ex:property name="dsfFlag" value="YKQ"/>
+            <ex:property name="url" value="${ykq.token.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerRelXml="param.xml"/>
+        </ex:request>
+        <ex:response resultKey="token">
+            <ex:element dozerRelXml="data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 一卡清调用-更新订单编号  -->
+    <ex:bean id="ykq_ddxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="logEventName" value="一卡清更新订单编号"/>
+            <ex:property name="requester" value="WWSQ"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="WWSQ"/>
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.accept.BdcSlSfssDdxxFeignService"/>
+            <ex:property name="methodName" value="saveDsfDdxx"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerRelXml="param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element saveNull="cn.gtmap.realestate.exchange.core.dto.wwsq.ykq_ddxx.YkqResponseDTO"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 一卡清调用-更新订单编号  -->
+    <ex:bean id="ykq_token">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="logEventName" value="获取一卡清token"/>
+            <ex:property name="requester" value="WWSQ"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="WWSQ"/>
+            <ex:property name="noArgs" value="true"/>
+            <ex:property name="beanName"
+                         value="ykqTokenServiceImpl"/>
+            <ex:property name="methodName" value="getYkqTokenJson"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 内部使用 -->
+    <ex:bean id="getWwsqCqzxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="standardGrdacx"/>
+            <ex:property name="methodName" value="grdacx"/>
+            <ex:property name="params" value="param"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="param" dozerXml="conf/dozer/wwsq/getWwsqCqzxx/request/param.xml" notEmpty="true"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/wwsq/getWwsqCqzxx/response/data.xml"
+                        saveNull="cn.gtmap.realestate.exchange.core.dto.wwsq.getWwsqCqzxx.response.GetWwsqCqzxxResponseDTO"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 4.4.3 获取流程办件状态 -->
+    <ex:bean id="getWwsqzt">
+        <!--        <ex:request>-->
+        <!--            <ex:element sourceService="getWwsqzt_dealparam"/>-->
+        <!--        </ex:request>-->
+        <!--        <ex:response dozerXml="conf/dozer/wwsq/bjzt/response/data.xml" extendRequestBody="true">-->
+        <!--            <ex:element dozerXml="conf/dozer/wwsq/bjzt/response/bdcXm.xml"/>-->
+        <!--            <ex:element name="jdmc" sourceService="queryJdmcByBdcXm"/>-->
+        <!--        </ex:response>-->
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="commonServiceImpl"/>
+            <ex:property name="methodName" value="queryProcessStatusInfo"/>
+        </ex:service-info>
+        <ex:log dsfFlag="WWSQ" logEventName="根据审批系统业务号获取流程办件状态" requester="WWSQ" responser="BDC"/>
+    </ex:bean>
+
+    <!-- 4.4.3 获取流程办件状态,省金融平台使用，根据spxtywh查询 -->
+    <ex:bean id="getWwsqztBySlbh">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="commonServiceImpl"/>
+            <ex:property name="methodName" value="getWwsqztBySlbh"/>
+        </ex:service-info>
+        <ex:log dsfFlag="WWSQ" logEventName="根据受理编号获取流程办件状态" requester="WWSQ" responser="BDC"/>
+    </ex:bean>
+
+
+    <ex:bean id="getWwsqzt_dealparam">
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/wwsq/bjzt/request/param.xml"/>
+        </ex:request>
+        <ex:response extendRequestBody="true">
+            <ex:element sourceService="listBdcXmBySpxtywh" listToObject="true"/>
+        </ex:response>
+    </ex:bean>
+    <!--不动产获取-->
+    <ex:bean id="zdxxbybdcdyh">
+        <ex:request>
+            <ex:element sourceService="bdcdyxxByBdcdyh"/>
+        </ex:request>
+        <ex:log dsfFlag="WWSQ" logEventName="根据BDCDYH、行政区划查询土地信息" requester="WWSQ" responser="BDC"/>
+    </ex:bean>
+    <ex:bean id="bdcdyxxByBdcdyh">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="cn.gtmap.realestate.common.core.service.feign.building.DjxxFeignService"/>
+            <ex:property name="methodName" value="getDjdcbAndQlrByBdcdyh"/>
+            <ex:property name="params" value="bdcdyh,qjgldm"/>
+            <ex:property name="responseJson" value="true"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/wwsq/zdxxbybdcdyh/request/paramxx.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/wwsq/zdxxbybdcdyh/response/bdcdyxx.xml"/>
+        </ex:response>
+        <ex:log dsfFlag="WWSQ" logEventName="根据BDCDYH、行政区划查询土地信息" requester="WWSQ" responser="BDC"/>
+    </ex:bean>
+
+    <!-- 4.4.3 获取流程办件状态 -->
+    <ex:bean id="getWwsqztByYwSlbh">
+        <ex:request>
+            <ex:element sourceService="getWwsqztByYwSlbh_dealparam"/>
+        </ex:request>
+        <ex:response dozerXml="conf/dozer/wwsq/bjzt/response/data.xml" extendRequestBody="true">
+            <ex:element dozerXml="conf/dozer/wwsq/bjzt/response/bdcXm.xml"/>
+            <ex:element name="jdmc" sourceService="queryJdmcByBdcXm"/>
+        </ex:response>
+        <ex:log dsfFlag="WWSQ" logEventName="根据受理编号获取流程办件状态" requester="WWSQ" responser="BDC"/>
+    </ex:bean>
+    <ex:bean id="getWwsqztByYwSlbh_dealparam">
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/wwsq/bjzt/request/param.xml"/>
+        </ex:request>
+        <ex:response extendRequestBody="true">
+            <ex:element sourceService="listBdcXmBySlbh" listToObject="true"/>
+        </ex:response>
+    </ex:bean>
+    <!-- 4.4.2 合肥验证及初始化接口（合肥已使用） -->
+    <ex:bean id="initWwsqxx">
+        <ex:request>
+            <ex:element name="acceptCjParam" noSetRequestBody="true" sourceService="initWwsqxx_acceptCjParam"/>
+            <ex:element name="fjclList" dozerXml="conf/dozer/wwsq/init/zy/request/fjcl.xml"/>
+            <ex:element dozerXml="conf/dozer/wwsq/init/zy/request/spxtywh.xml" listToObject="true"/>
+            <!-- 是否自动转发 -->
+            <ex:element dozerXml="conf/dozer/wwsq/init/zy/request/autoturn.xml" listToObject="true"/>
+        </ex:request>
+        <ex:response resultKey="result" extendRequestBody="true">
+            <ex:element name="cjResponse" sourceService="acceptCjService"/>
+            <ex:element name="result" sourceService="acceptCjService_response" appendRequestBody="true"/>
+        </ex:response>
+        <ex:log dsfFlag="WWSQ" logEventName="合肥验证及初始化接口" requester="WWSQ" responser="BDC"/>
+    </ex:bean>
+    <ex:bean id="initWwsqxx_acceptCjParam">
+        <ex:request dozerXml="conf/dozer/wwsq/init/zy/request/bdcSlxxDTO.xml">
+            <ex:element name="bdcSlJbxx" noSetRequestBody="true"
+                        dozerXml="conf/dozer/wwsq/init/zy/request/bdcSlJbxx.xml"
+                        listToObject="true"/>
+            <ex:element name="bdcSlXmList" noSetRequestBody="true"
+                        dozerXml="conf/dozer/wwsq/init/zy/request/bdcSlXm.xml"/>
+            <!--过户信息 -->
+            <ex:element name="ghxx" noSetRequestBody="true" dozerXml="conf/dozer/wwsq/init/zy/request/bdcGhxx.xml"/>
+            <!--sfxx信息 -->
+            <ex:element dozerXml="conf/dozer/wwsq/init/zy/request/bdcSfxx.xml" name="sf" noSetRequestBody="true"/>
+            <!-- 判断是否需要规则验证  gzyz  sfss -->
+            <ex:element dozerXml="conf/dozer/wwsq/init/zy/request/cjyz.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!-- 一卡清调用-生成订单  -->
+    <ex:bean id="ykq_create_order">
+        <ex:service-info request-type="httpTokenPostJson">
+            <ex:property name="logEventName" value="一卡清生成订单"/>
+            <ex:property name="requester" value="WWSQ"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="WWSQ"/>
+            <ex:property name="url" value="${ykq.create.order.url}"/>
+            <ex:property name="appKey" sourceClass="cn.gtmap.realestate.exchange.util.rsa.RsaUtil"
+                         sourceMethod="enCode" sourceArgs="${fcjy.appCode}"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 一卡清调用-支付结果通知  -->
+    <ex:bean id="ykq_payment_complete">
+        <ex:service-info request-type="httpTokenPostJson">
+            <ex:property name="logEventName" value="一卡清支付完成通知"/>
+            <ex:property name="requester" value="WWSQ"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="WWSQ"/>
+            <ex:property name="url" value="${ykq.payment.complete.url}"/>
+            <ex:property name="appKey" sourceClass="cn.gtmap.realestate.exchange.util.rsa.RsaUtil"
+                         sourceMethod="enCode" sourceArgs="${fcjy.appCode}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/hefei/wwsq/ykq_payment_complete/request/param.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!-- 互联网调用-查询月结缴费信息  -->
+    <ex:bean id="yjjfcx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="logEventName" value="查询月结缴费信息"/>
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.accept.BdcYjdhSfxxGxFeignService"/>
+            <ex:property name="methodName" value="listYhyjSfxxForHlw"/>
+            <ex:property name="params" value="bdcYjSfxxQO,pageSize,pageNumber"/>
+            <ex:property name="requester" value="WWSQ"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="WWSQ"/>
+        </ex:service-info>
+        <ex:request>
+            <!--分页参数 -->
+            <!--<ex:element dozerXml="conf/dozer/wwsq/yjxx/yjjfxx/request/pageinfo.xml" name="pageDTO"/>
+            <ex:element name="pageable" sourceService="getPageable"/>-->
+            <ex:element dozerXml="conf/dozer/wwsq/yjxx/yjjfxx/request/param.xml" name="bdcYjSfxxQO"/>
+            <ex:element dozerXml="conf/dozer/wwsq/yjxx/yjjfxx/request/page.xml"/>
+
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/wwsq/yjxx/yjjfxx/response/data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 互联网调用-更新月结缴费状态  -->
+    <ex:bean id="gxyjjfzt">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="logEventName" value="更新月结缴费状态"/>
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.accept.BdcSlSfssDdxxFeignService"/>
+            <ex:property name="methodName" value="udpateYjDdxxSfztForHlw"/>
+            <ex:property name="params" value="data"/>
+            <ex:property name="requester" value="WWSQ"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="WWSQ"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/wwsq/yjxx/gxjfzt/request/param.xml" name="data"/>
+        </ex:request>
+    </ex:bean>
+    <!-- 互联网调用-生成月结单号  -->
+    <ex:bean id="scyjdh">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="logEventName" value="生成月结单号"/>
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.accept.BdcYjdhSfxxGxFeignService"/>
+            <ex:property name="methodName" value="queryYjdh"/>
+            <ex:property name="params" value="data"/>
+            <ex:property name="requester" value="WWSQ"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="WWSQ"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/wwsq/yjxx/scyjdh/request/param.xml" name="data"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/wwsq/yjxx/scyjdh/response/data.xml" name="data"/>
+        </ex:response>
+    </ex:bean>
+
+
+    <!-- 一卡清文档 4.2.3.2.	推送缴库-->
+    <ex:bean id="ykq_tsjk">
+        <ex:service-info request-type="httpTokenPostJson">
+            <ex:property name="logEventName" value="一卡清推送缴库"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="YKQ"/>
+            <ex:property name="dsfFlag" value="YKQ"/>
+            <ex:property name="url" value="${ykq.tsjk.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/hefei/wwsq/ykq_tsjk/request/param.xml"/>
+        </ex:request>
+    </ex:bean>
+
+
+    <!--  一卡清文档 4.2.3.3.	账户结清-->
+    <ex:bean id="ykq_zhjq">
+        <ex:service-info request-type="httpTokenPostJson">
+            <ex:property name="logEventName" value="一卡清账户结清"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="YKQ"/>
+            <ex:property name="dsfFlag" value="YKQ"/>
+            <ex:property name="url" value="${ykq.zhjq.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/hefei/wwsq/ykq_zhjq/request/param.xml"/>
+        </ex:request>
+    </ex:bean>
+</beans>

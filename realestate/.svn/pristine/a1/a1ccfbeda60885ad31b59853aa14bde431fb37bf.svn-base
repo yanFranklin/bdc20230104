@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title class="bdc_subsystem"></title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../static/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../static/css/admin.css" media="all">
+    <link rel="stylesheet" href="../static/lib/bdcui/css/popup.css" media="all">
+    <link href="../static/lib/bdcui/css/mask.css" media="all" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/home-page-yc.css" media="all" />
+</head>
+<body class="layui-layout-body">
+<div id="LAY_app">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <!-- 头部区域 -->
+            <div class="bdc-logo">
+                <img alt="" class="bdc-logo-img" src="../static/image/logo.png">
+                <span class="bdc_subsystem">不动产登记业务管理系统</span>
+            </div>
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item layadmin-flexible" lay-unselect="">
+                    <a href="javascript:" layadmin-event="flexible" title="侧边伸缩" id="flexible">
+                        <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
+                    </a>
+                </li>
+            </ul>
+            <ul class="layui-nav layui-layout-right ul-margin-right">
+                <li class="layui-nav-item bdc-person-nav">
+                    <a href="javascript:">
+                        <cite>
+                            <i class="layui-icon layui-icon-username"></i>
+                            <span class="bdc-user-name">    </span></cite>
+                    </a>
+                    <dl class="layui-nav-child bdc-person-child">
+                        <dd>
+                            <a href="javascript:" class="bdc-message">基本资料</a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:" class="bdc-update">修改密码</a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:" class="bdc-logout">退出</a>
+                        </dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 侧边菜单 -->
+        <div class="layui-side layui-side-menu">
+            <div class="layui-side-scroll">
+                <div class="layui-logo">
+                    <img alt="" class="bdc-logo-img" src="../static/image/yc-home/yc-logo.png"/>
+                </div>
+
+                <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
+                </ul>
+            </div>
+        </div>
+
+        <!-- 页面标签 -->
+        <div class="layadmin-pagetabs" id="LAY_app_tabs">
+            <!--<div class="layui-icon layadmin-tabs-control layui-icon-prev" layadmin-event="leftPage"></div>-->
+            <!--<div class="layui-icon layadmin-tabs-control layui-icon-next" layadmin-event="rightPage"></div>-->
+            <div class="layui-icon layadmin-tabs-control layui-icon-set-sm">
+                <img alt="" src="../static/image/tab/gj.png"/>
+                <ul class="layui-nav layadmin-tabs-select" lay-filter="layadmin-pagetabs-nav">
+                    <li class="layui-nav-item" lay-unselect="">
+                        <a href="javascript:"></a>
+                        <dl class="layui-nav-child layui-anim-fadein">
+                            <dd layadmin-event="closeThisTabs"><a href="javascript:">关闭当前标签页</a></dd>
+                            <dd layadmin-event="closeOtherTabs"><a href="javascript:">关闭其它标签页</a></dd>
+                            <dd layadmin-event="closeAllTabs"><a href="javascript:">关闭全部标签页</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+            <div class="layui-icon layadmin-tabs-control bdc-refresh-frame">
+                <img alt="" src="../static/image/tab/sx.png"/>
+            </div>
+            <div class="layui-tab bdc-outer-tab" lay-allowClose="true" lay-filter="layadmin-layout-tabs" lay-unauto="">
+                <ul class="layui-tab-title" id="LAY_app_tabsheader">
+                    <li><i class="layui-icon layui-icon-home"></i></li>
+                    <li id="LAY_app_tabsheader_home" lay-id="console.html"><i class="layui-icon layui-icon-home"></i></li>
+                    <li class="layui-this" lay-id="" lay-attr="">
+                        <span></span>
+                        <i class="layui-icon layui-unselect layui-tab-close bdc-tab-close">ဆ</i>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 主体内容 -->
+        <div class="layui-body" id="LAY_app_body">
+            <div class="layadmin-tabsbody-item"></div>
+            <div class="layadmin-tabsbody-item "></div>
+            <div class="layadmin-tabsbody-item layui-show">
+                <iframe src="" frameborder="0" class="layadmin-iframe"></iframe>
+            </div>
+        </div>
+
+        <!-- 辅助元素，一般用于移动设备下遮罩 -->
+        <div class="layadmin-body-shade" layadmin-event="shade"></div>
+    </div>
+</div>
+
+<!--侧边栏动态加载-->
+<script type="text/html" id="asideTpl">
+    {{#  layui.each(d, function(index, item){ }}
+    <li data-name="{{item.mark}}" class="layui-nav-item">
+        {{# if(item.childTree.length > 0){ }}
+        <a lay-tips="{{item.name}}" lay-direction="2">
+            <i class="layui-icon bdc-icon{{index+1}}"></i>
+            <cite>{{item.name}}</cite>
+        </a>
+        <dl class="layui-nav-child">
+            {{# layui.each(item.childTree, function(secondI, secondV){ }}
+            <dd data-name="{{secondV.mark}}">
+                {{# if(secondV.childTree.length > 0){ }}
+                <a>{{secondV.name}}</a>
+                <dl class="layui-nav-child">
+                    {{# layui.each(secondV.childTree, function(thirdI, thirdV){ }}
+            <dd data-name="{{thirdV.mark}}">
+                {{# if(thirdV.childTree.length > 0){ }}
+                <a>{{thirdV.name}}</a>
+                <div class="bdc-four-list">
+                    {{# layui.each(thirdV.childTree, function(fourthI, fourthV){ }}
+                    <p lay-href="{{fourthV.url}}" class="bdc-show-msg">{{fourthV.name}}</p>
+                    {{# }); }}
+                </div>
+                {{# }else if(thirdV.description == "blank") { }}
+                <a href="{{thirdV.url}}" target="_blank">{{thirdV.name}}</a>
+                {{# }else{ }}
+                <a lay-href="{{thirdV.url}}" class="bdc-show-msg">{{thirdV.name}}</a>
+                {{# } }}
+            </dd>
+            {{# }); }}
+        </dl>
+        {{# }else if(secondV.description == "blank") { }}
+        <a href="{{secondV.url}}" target="_blank">{{secondV.name}}</a>
+        {{# }else{ }}
+        <a lay-href="{{secondV.url}}" class="bdc-show-msg">{{secondV.name}}</a>
+        {{# } }}
+        </dd>
+        {{# }); }}
+        </dl>
+        {{# }else if(item.description == "blank"){ }}
+        <a href="{{item.url}}" target="_blank" lay-tips="{{item.name}}" lay-direction="2">
+            <i class="layui-icon bdc-icon{{index+1}}"></i>
+            <cite>{{item.name}}</cite>
+        </a>
+        {{# }else { }}
+        <a lay-href="{{item.url}}" lay-tips="{{item.name}}" class="bdc-show-msg" lay-direction="2">
+            <i class="layui-icon bdc-icon{{index+1}}"></i>
+            <cite>{{item.name}}</cite>
+        </a>
+        {{# } }}
+    </li>
+    {{#  }); }}
+</script>
+
+<script src="../static/lib/jquery/jquery.min.js"></script>
+<script src="../static/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../static/lib/bdcui/js/common.js"></script>
+<script src="../static/js/common.js"></script>
+<script src="../static/js/home-page-yc.js"></script>
+
+<script>
+    layui.config({
+        base: '../static/' //静态资源所在路径
+    }).extend({
+        index: '/lib/index', //主入口模块
+    }).use('index').extend({
+        moduleAuthority: '../static/js/moduleAuthority'
+    }).use('moduleAuthority').extend({response: 'lib/bdcui/js/response'}).use('response');
+</script>
+</body>
+</html>
+
+

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--层信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.exchange.ShareDataMapper">
+
+    <select id="queryKttFwCList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.KttFwCDO">
+        SELECT t.ch,
+        t.zrzh,
+        t.ysdm,
+        t.sjc,
+        t.myc,
+        t.cjzmj,
+        t.ctnjzmj,
+        t.cytmj,
+        t.cgyjzmj,
+        t.cftjzmj,
+        t.cbqmj,
+        t.cg,
+        t.sptymj,
+        t.qxdm
+        FROM ktt_fw_c t
+        <where>
+            <if test="YWH != null and YWH !=''">
+                AND t.ywh = #{YWH}
+            </if>
+            <if test="BDCDYH != null and BDCDYH !=''">
+                AND t.bdcdyh = #{BDCDYH}
+            </if>
+        </where>
+    </select>
+</mapper>

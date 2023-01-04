@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>登记页面</title>
+    <link rel="stylesheet" href="../../../static/lib/layui/css/layui.css">
+    <!--formSelects-v4.css 和 search.css 顺序不能错-->
+    <link rel="stylesheet" href="../../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../../static/lib/registerui/css/process.css">
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/mask.css"/>
+    <style type="text/css">
+        .bdc-not-null .layui-form-label.bdc-two-lines{
+            line-height: 14px;
+        }
+    </style>
+</head>
+<body>
+<div class="bdc-container-box bdc-not-full-bg">
+    <div class="bdc-container">
+        <div class="bdc-header clear">
+            <p class="bdc-header-this">业务受理配置<img src="../../../static/lib/registerui/image/arrow.png" alt=""></p>
+            <p class="bdc-header-this">业务逻辑配置<img src="../../../static/lib/registerui/image/arrow.png" alt="">
+                <span class="bottom-sj bottom-sj-1"></span>
+                <span class="bottom-sj bottom-sj-2"></span></p>
+            <p>其他相关配置</p>
+        </div>
+        <p class="bdc-title">6/13：配置登记小类、登记类型关系表以及初始化服务开关</p>
+        <!--内容区-->
+        <div class="bdc-inner-content">
+            <form class="layui-form" action="lypzStep3Form">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline bdc-not-null">
+                        <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>登记小类</label>
+                        <div class="layui-input-inline bdc-radio">
+                            <select xm-select="selectDjxl" lay-verify="required" name="djxl" id="djxl" xm-select-radio
+                                    xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-not-null">
+                        <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>权利类型</label>
+                        <div class="layui-input-inline bdc-radio">
+                            <select xm-select="selectQllx" lay-verify="required" name="qllx" id="qllx" xm-select-radio
+                                    xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-not-null">
+                        <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>登记类型</label>
+                        <div class="layui-input-inline bdc-radio">
+                            <select xm-select="selectDjlx" lay-verify="required" name="djlx" id="djlx"
+                                    xm-select-radio xm-select-search="" xm-select-height="34px"
+                                    xm-select-search-type="dl">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-not-null">
+                        <label class="layui-form-label bdc-two-lines"><span class="required-span"><sub>*</sub></span>权利数据<br>来源</label>
+                        <div class="layui-input-inline">
+                            <select xm-select="selectQlsjly" lay-verify="required" name="qlsjly" id="qlsjly" xm-select-skin="default" xm-select-show-count="2"
+                                    xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label bdc-two-lines">权利人数据<br>来源</label>
+                        <div class="layui-input-inline bdc-radio">
+                            <select xm-select="selectQlrsjly"  name="qlrsjly" id="qlrsjly"
+                                    xm-select-radio xm-select-search="" xm-select-height="34px"
+                                    xm-select-search-type="dl">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label bdc-two-lines">义务人数据<br>来源</label>
+                        <div class="layui-input-inline bdc-radio">
+                            <select xm-select="selectYwrsjly"  name="ywrsjly" id="ywrsjly"
+                                    xm-select-radio xm-select-search="" xm-select-height="34px"
+                                    xm-select-search-type="dl">
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">证书种类</label>
+                        <div class="layui-input-inline bdc-radio">
+                            <select xm-select="selectZszl" name="zszl" id="zszl"
+                                    xm-select-radio xm-select-search="" xm-select-height="34px"
+                                    xm-select-search-type="dl">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline bdc-not-null">
+                        <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>是否生成证书</label>
+                        <div class="layui-input-inline bdc-radio">
+                            <select xm-select="selectSfsczs" lay-verify="required" name="sfsczs" id="sfsczs"
+                                    xm-select-radio xm-select-search="" xm-select-height="34px"
+                                    xm-select-search-type="dl">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline bdc-not-null">
+                        <label class="layui-form-label bdc-two-lines"><span class="required-span"><sub>*</sub></span>是否注销<br>原权利</label>
+                        <div class="layui-input-inline bdc-radio">
+                            <select xm-select="selectSfzxyql" lay-verify="required" name="sfzxyql" id="sfzxyql"
+                                    xm-select-radio xm-select-search="" xm-select-height="34px"
+                                    xm-select-search-type="dl">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline bdc-not-null">
+                        <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>是否生成权利</label>
+                        <div class="layui-input-inline bdc-radio">
+                            <select xm-select="selectSfscql" lay-verify="required" name="sfscql" id="sfscql"
+                                    xm-select-radio xm-select-search="" xm-select-height="34px"
+                                    xm-select-search-type="dl">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label bdc-two-lines">是否生成家庭成员</label>
+                        <div class="layui-input-inline bdc-radio">
+                            <select xm-select="selectSfscjtcy"  name="sfscjtcy" id="sfscjtcy"
+                                    xm-select-radio xm-select-search="" xm-select-height="34px"
+                                    xm-select-search-type="dl">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label bdc-two-lines">是否生成量化关系</label>
+                        <div class="layui-input-inline bdc-radio">
+                            <select xm-select="selectSfsclhgx"  name="sfsclhgx" id="sfsclhgx"
+                                    xm-select-radio xm-select-search="" xm-select-height="34px"
+                                    xm-select-search-type="dl">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">是否更正登记</label>
+                        <div class="layui-input-inline bdc-radio">
+                            <select xm-select="selectSfgzdj"  name="sfgzdj" id="sfgzdj"
+                                    xm-select-radio xm-select-search="" xm-select-height="34px"
+                                    xm-select-search-type="dl">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">是否换证</label>
+                        <div class="layui-input-inline bdc-radio">
+                            <select xm-select="selectSfhz"  name="sfhz" id="sfhz"
+                                    xm-select-radio xm-select-search="" xm-select-height="34px"
+                                    xm-select-search-type="dl">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+
+<!--                    <div class="layui-inline">-->
+<!--                        <label class="layui-form-label">是否登簿</label>-->
+<!--                        <div class="layui-input-inline bdc-radio">-->
+<!--                            <select xm-select="selectSfdb"  name="sfdb" id="sfdb"-->
+<!--                                    xm-select-radio xm-select-search="" xm-select-height="34px"-->
+<!--                                    xm-select-search-type="dl">-->
+<!--                                <option value="">请选择</option>-->
+<!--                            </select>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                </div>
+                <div>
+                    <input type="hidden" name="gzldyid" id="gzldyid"/>
+                    <input type="hidden" name="djxlQllxId" id="djxlQllxId"/>
+                    <input type="hidden" name="djxlDjyyId" id="djxlDjyyId"/>
+                    <input type="hidden" name="djlxDjxlId" id="djlxDjxlId"/>
+                    <input type="hidden" name="cshfwkgId" id="cshfwkgId"/>
+                </div>
+                <div class="bdc-btn-box">
+                    <a href="javascript:;" class="layui-btn bdc-secondary-btn beforestep">上一步</a>
+                    <a href="javascript:;" class="layui-btn bdc-secondary-btn" lay-submit="" lay-filter="submitBtn" title="提交已填步骤">保存</a>
+                    <a href="javascript:;" class="layui-btn bdc-major-btn nextstep layui-btn-disabled" disabled="disabled">下一步</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+<script src="../../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../../static/lib/bdcui/js/common.js"></script>
+<script src="../../../static/js/config/common.js"></script>
+<script src="../../../static/js/config/lcpz/lcpzStep6.js"></script>
+</html>

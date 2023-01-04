@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+    <bean id="quartzServiceImpl" class="cn.gtmap.realestate.exchange.quartz.AccessLogQuartzService"/>
+
+    <!-- 日志接入 定时任务 -->
+    <bean id="impNationalAccessLogQuartz"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="quartzServiceImpl"/>
+        </property>
+        <property name="targetMethod">
+            <value>accessLogs</value>
+        </property>
+    </bean>
+
+    <bean id="impNationalAccessLogTrigger"
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="impNationalAccessLogQuartz"/>
+        </property>
+        <property name="cronExpression">
+            <value>0 40 23 * * ? *</value>
+            <!--            <value>0 */1 * * * ?</value>-->
+        </property>
+    </bean>
+
+    <bean id="SpringJobSchedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="impNationalAccessLogTrigger"/>
+                <ref bean="impNationalAccessResponseTrigger"/>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 接入 定时获取响应报文 -->
+    <bean id="impNationalAccessResponseQuartz"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="quartzServiceImpl"/>
+        </property>
+        <property name="targetMethod">
+            <value>quartzGetAccessResponse</value>
+        </property>
+    </bean>
+    <bean id="impNationalAccessResponseTrigger"
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="impNationalAccessResponseQuartz"/>
+        </property>
+        <property name="cronExpression">
+            <value>${access.response.quartztime: 0 0 20 * * ? *}</value>
+        </property>
+    </bean>
+</beans>

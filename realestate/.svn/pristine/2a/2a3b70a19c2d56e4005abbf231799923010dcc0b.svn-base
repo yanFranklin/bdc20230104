@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!-- 读取档案基本信息  参数docId：受理编号；zqzh：权证号-->
+    <ex:bean id="hfDaJbxx">
+        <ex:service-info request-type="axisWebService">
+            <ex:property name="url" value="${daxx.url}" />
+            <ex:property name="uri" value="${daxx.uri}" />
+            <ex:property name="logEventName" value="档案基本信息接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="DA"/>
+            <ex:property name="dsfFlag" value="DA"/>
+            <ex:property name="methodName" value="${daxx.jbxx.method}"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element sourceService="hfDealDaJbxx"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 读取档案目录信息  参数archid:档案id-->
+    <ex:bean id="hfDaMlxx">
+        <ex:service-info request-type="axisWebService">
+            <ex:property name="url" value="${daxx.url}" />
+            <ex:property name="uri" value="${daxx.uri}" />
+            <ex:property name="logEventName" value="档案目录信息接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="DA"/>
+            <ex:property name="dsfFlag" value="DA"/>
+            <ex:property name="methodName" value="${daxx.mlxx.method}"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element sourceService="hfDealDaMlxx"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 读取档案的附件-->
+    <ex:bean id="hfDaFjxx">
+        <ex:service-info request-type="httpGet">
+            <ex:property name="url" value="${daxx.fjxx.url}" />
+            <ex:property name="logEventName" value="读取档案的附件接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="DA"/>
+            <ex:property name="dsfFlag" value="DA"/>
+            <ex:property name="contentType" value="${http.content.type.xml}"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element sourceService="hfDealDaFjxx"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 只获取分户图目录接口  参数archid:档案id-->
+    <ex:bean id="hfFcfhtMlxx">
+        <ex:service-info request-type="axisWebService">
+            <ex:property name="url" value="${daxx.url}"/>
+            <ex:property name="uri" value="${daxx.uri}"/>
+            <ex:property name="logEventName" value="分户图目录接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="DA"/>
+            <ex:property name="dsfFlag" value="DA"/>
+            <ex:property name="methodName" value="${daxx.fcfhtmlxx.method}"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element sourceService="getFcfhtMl"/>
+        </ex:response>
+    </ex:bean>
+
+    <!--返回包一层data 只获取分户图目录接口  参数archid:档案id-->
+    <ex:bean id="hfFcfhtMlxxForJkgl">
+        <ex:service-info request-type="axisWebService">
+            <ex:property name="url" value="${daxx.url}"/>
+            <ex:property name="uri" value="${daxx.uri}"/>
+            <ex:property name="logEventName" value="分户图目录接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="DA"/>
+            <ex:property name="dsfFlag" value="DA"/>
+            <ex:property name="methodName" value="${daxx.fcfhtmlxx.method}"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element sourceService="getFcfhtMlForJkgl"/>
+        </ex:response>
+    </ex:bean>
+
+
+    <!-- 处理档案基本信息-->
+    <ex:bean id="hfDealDaJbxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="daxxDealServiceImpl"/>
+            <ex:property name="methodName" value="getArchid"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 处理档案目录信息-->
+    <ex:bean id="hfDealDaMlxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="daxxDealServiceImpl" />
+            <ex:property name="methodName" value="getMlxx" />
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 处理档案附件信息-->
+    <ex:bean id="hfDealDaFjxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="daxxDealServiceImpl"/>
+            <ex:property name="methodName" value="getFjxx"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 处理分层分户图目录信息-->
+    <ex:bean id="getFcfhtMl">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="daxxDealServiceImpl"/>
+            <ex:property name="methodName" value="getFcfhtMl"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 处理分层分户图目录信息-->
+    <ex:bean id="getFcfhtMlForJkgl">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="daxxDealServiceImpl"/>
+            <ex:property name="methodName" value="getFcfhtMlForJkgl"/>
+        </ex:service-info>
+    </ex:bean>
+</beans>

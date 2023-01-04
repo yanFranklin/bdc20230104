@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <!-- 蚌埠大数据局接口 -->
+
+    <!-- 查询身份证信息 {"zjh":"",slbh:"",xmid:""}-->
+    <ex:bean id="bb_cxsfzxx">
+        <ex:service-info request-type="bbGspApi">
+            <ex:property name="logEventName" value="查询大数据局身份证信息接口" />
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GSPAPI"/>
+            <ex:property name="dsfFlag" value="GSPAPI"/>
+            <ex:property name="url" value="${gspapi.url}" />
+            <ex:property name="yybm" value="${gspapi.yybm}" />
+            <ex:property name="sqm" value="${gspapi.sqm}" />
+            <ex:property name="username" value="${gspapi.username}" />
+            <ex:property name="password" value="${gspapi.password}" />
+            <ex:property name="clientInfo" value="${gspapi.clientInfo}" />
+            <ex:property name="jkbm" value="${gspapi.sfzxx.jkbm}" />
+            <ex:property name="serviceCode" value="${gspapi.sfzxx.serviceCode}" />
+        </ex:service-info>
+        <!-- GSPAPI接口 固定两个参数：param(业务入参)、 items(固定返回值结构) -->
+        <ex:request>
+            <ex:element name="param" dozerRelXml="param.xml" />
+            <ex:element name="item" dozerRelXml="item.xml" />
+            <ex:element name="log" dozerRelXml="log.xml"/>
+        </ex:request>
+        <ex:response resultKey="result">
+            <ex:element dozerRelXml="data.xml" />
+        </ex:response>
+    </ex:bean>
+
+    <!-- 查询营业执照信息 {"zjh":"",slbh:"",xmid:""}-->
+    <ex:bean id="bb_cxyyzzxx">
+        <ex:service-info request-type="bbGspApi">
+            <ex:property name="logEventName" value="查询大数据局营业执照信息接口" />
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GSPAPI"/>
+            <ex:property name="dsfFlag" value="GSPAPI"/>
+            <ex:property name="url" value="${gspapi.url}" />
+            <ex:property name="yybm" value="${gspapi.yybm}" />
+            <ex:property name="sqm" value="${gspapi.sqm}" />
+            <ex:property name="username" value="${gspapi.username}" />
+            <ex:property name="password" value="${gspapi.password}" />
+            <ex:property name="clientInfo" value="${gspapi.clientInfo}" />
+            <ex:property name="jkbm" value="${gspapi.yyzzxx.jkbm}" />
+            <ex:property name="serviceCode" value="${gspapi.yyzzxx.serviceCode}" />
+        </ex:service-info>
+        <!-- GSPAPI接口 固定两个参数：param(业务入参)、 items(固定返回值结构) -->
+        <ex:request>
+            <ex:element name="param" dozerRelXml="param.xml" />
+            <ex:element name="item" dozerRelXml="item.xml" />
+            <ex:element name="log" dozerRelXml="log.xml"/>
+        </ex:request>
+        <ex:response resultKey="result">
+            <ex:element dozerRelXml="data.xml" />
+        </ex:response>
+    </ex:bean>
+
+    <!-- 查询婚姻状况 {"zjh":"",slbh:"",xmid:""}-->
+    <ex:bean id="acceptHyxx">
+        <ex:service-info request-type="bbGspApi">
+            <ex:property name="logEventName" value="查询大数据局婚姻信息接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GSPAPI"/>
+            <ex:property name="dsfFlag" value="GSPAPI"/>
+            <ex:property name="url" value="${gspapi.url}"/>
+            <ex:property name="yybm" value="${gspapi.yybm}"/>
+            <ex:property name="sqm" value="${gspapi.sqm}"/>
+            <ex:property name="username" value="${gspapi.username}"/>
+            <ex:property name="password" value="${gspapi.password}"/>
+            <ex:property name="clientInfo" value="${gspapi.clientInfo}"/>
+            <ex:property name="jkbm" value="${gspapi.hyzkxx.jkbm}"/>
+            <ex:property name="serviceCode" value="${gspapi.hyzkxx.serviceCode}"/>
+        </ex:service-info>
+        <!-- GSPAPI接口 固定两个参数：param(业务入参)、 items(固定返回值结构) -->
+        <ex:request>
+            <ex:element name="param" dozerRelXml="param.xml"/>
+            <ex:element name="item" dozerRelXml="item.xml"/>
+        </ex:request>
+        <ex:response resultKey="result">
+            <ex:element dozerRelXml="data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 查询婚姻状况(返回多条) {"zjh":"",slbh:"",xmid:""}-->
+    <ex:bean id="acceptHyxx_zh">
+        <ex:service-info request-type="bbGspApi">
+            <ex:property name="logEventName" value="查询大数据局婚姻信息接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GSPAPI"/>
+            <ex:property name="dsfFlag" value="GSPAPI"/>
+            <ex:property name="url" value="${gspapi.url}"/>
+            <ex:property name="yybm" value="${gspapi.yybm}"/>
+            <ex:property name="sqm" value="${gspapi.sqm}"/>
+            <ex:property name="username" value="${gspapi.username}"/>
+            <ex:property name="password" value="${gspapi.password}"/>
+            <ex:property name="clientInfo" value="${gspapi.clientInfo}"/>
+            <ex:property name="jkbm" value="${gspapi.hyzkxx.jkbm}"/>
+            <ex:property name="serviceCode" value="${gspapi.hyzkxx.serviceCode}"/>
+        </ex:service-info>
+        <!-- GSPAPI接口 固定两个参数：param(业务入参)、 items(固定返回值结构) -->
+        <ex:request>
+            <ex:element name="param" dozerRelXml="param.xml"/>
+            <ex:element name="item" dozerRelXml="item.xml"/>
+        </ex:request>
+        <ex:response resultKey="result">
+            <ex:element sourceService="handleAcceptHyxxJtcyxxResult"/>
+            <ex:element dozerRelXml="data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 查询户籍状况 {"zjh":"",slbh:"",xmid:""}-->
+    <ex:bean id="acceptJtcyxx">
+        <ex:service-info request-type="bbGspApi">
+            <ex:property name="logEventName" value="查询大数据局户籍信息接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GSPAPI"/>
+            <ex:property name="dsfFlag" value="GSPAPI"/>
+            <ex:property name="url" value="${gspapi.url}"/>
+            <ex:property name="yybm" value="${gspapi.yybm}"/>
+            <ex:property name="sqm" value="${gspapi.sqm}"/>
+            <ex:property name="username" value="${gspapi.username}"/>
+            <ex:property name="password" value="${gspapi.password}"/>
+            <ex:property name="clientInfo" value="${gspapi.clientInfo}"/>
+            <ex:property name="jkbm" value="${gspapi.hjxx.jkbm}"/>
+            <ex:property name="serviceCode" value="${gspapi.hjxx.serviceCode}"/>
+        </ex:service-info>
+        <!-- GSPAPI接口 固定两个参数：param(业务入参)、 items(固定返回值结构) -->
+        <ex:request>
+            <ex:element name="param" dozerRelXml="param.xml"/>
+            <ex:element name="item" dozerRelXml="item.xml"/>
+        </ex:request>
+        <ex:response resultKey="result">
+            <ex:element sourceService="handleAcceptHyxxJtcyxxResult"/>
+            <ex:element dozerRelXml="data.xml"/>
+        </ex:response>
+    </ex:bean>
+    <ex:bean id="handleAcceptHyxxJtcyxxResult">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="bbHyhjxxServiceImpl"/>
+            <ex:property name="methodName" value="handleAcceptHyxxJtcyxxResult"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 查询出生状况 {"cszmh":"",mqmc:"",fqmc:""}-->
+    <ex:bean id="bengbu_cszm">
+        <ex:service-info request-type="bbGspApi">
+            <ex:property name="logEventName" value="查询大数据局出生信息接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GSPAPI"/>
+            <ex:property name="dsfFlag" value="GSPAPI"/>
+            <ex:property name="url" value="${gspapi.url}"/>
+            <ex:property name="yybm" value="${gspapi.yybm}"/>
+            <ex:property name="sqm" value="${gspapi.sqm}"/>
+            <ex:property name="username" value="${gspapi.username}"/>
+            <ex:property name="password" value="${gspapi.password}"/>
+            <ex:property name="clientInfo" value="${gspapi.clientInfo}"/>
+            <ex:property name="jkbm" value="${gspapi.csxx.jkbm}"/>
+            <ex:property name="serviceCode" value="${gspapi.csxx.serviceCode}"/>
+        </ex:service-info>
+        <!-- GSPAPI接口 固定两个参数：param(业务入参)、 items(固定返回值结构) -->
+        <ex:request>
+            <ex:element name="param" dozerRelXml="param.xml"/>
+            <ex:element name="item" dozerRelXml="item.xml"/>
+        </ex:request>
+        <ex:response resultKey="result">
+            <ex:element dozerRelXml="data.xml"/>
+        </ex:response>
+    </ex:bean>
+    <!-- 查询死亡 {"CXRZJHM":"",XM:""}-->
+    <ex:bean id="bengbu_swxx">
+        <ex:service-info request-type="bbGspApi">
+            <ex:property name="logEventName" value="查询大数据局死亡信息接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GSPAPI"/>
+            <ex:property name="dsfFlag" value="GSPAPI"/>
+            <ex:property name="url" value="${gspapi.url}"/>
+            <ex:property name="yybm" value="${gspapi.yybm}"/>
+            <ex:property name="sqm" value="${gspapi.sqm}"/>
+            <ex:property name="username" value="${gspapi.username}"/>
+            <ex:property name="password" value="${gspapi.password}"/>
+            <ex:property name="clientInfo" value="${gspapi.clientInfo}"/>
+            <ex:property name="jkbm" value="${gspapi.swxx.jkbm}"/>
+            <ex:property name="serviceCode" value="${gspapi.swxx.serviceCode}"/>
+        </ex:service-info>
+        <!-- GSPAPI接口 固定两个参数：param(业务入参)、 items(固定返回值结构) -->
+        <ex:request>
+            <ex:element name="param" dozerRelXml="param.xml"/>
+            <ex:element name="item" dozerRelXml="item.xml"/>
+        </ex:request>
+        <ex:response resultKey="result">
+            <ex:element dozerRelXml="data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 土地资产划拨 {"wjh":""}-->
+    <ex:bean id="bengbu_tdzchb">
+        <ex:service-info request-type="bbGspApi">
+            <ex:property name="logEventName" value="查询大数据局土地资产划拨信息接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GSPAPI"/>
+            <ex:property name="dsfFlag" value="GSPAPI"/>
+            <ex:property name="url" value="${gspapi.url}"/>
+            <ex:property name="yybm" value="${gspapi.yybm}"/>
+            <ex:property name="sqm" value="${gspapi.sqm}"/>
+            <ex:property name="username" value="${gspapi.username}"/>
+            <ex:property name="password" value="${gspapi.password}"/>
+            <ex:property name="clientInfo" value="${gspapi.clientInfo}"/>
+            <ex:property name="jkbm" value="${gspapi.tdzchb.jkbm}"/>
+            <ex:property name="serviceCode" value="${gspapi.tdzchb.serviceCode}"/>
+        </ex:service-info>
+        <!-- GSPAPI接口 固定两个参数：param(业务入参)、 items(固定返回值结构) -->
+        <ex:request>
+            <ex:element name="param" dozerRelXml="param.xml"/>
+            <ex:element name="item" dozerRelXml="item.xml"/>
+        </ex:request>
+        <ex:response resultKey="result">
+            <ex:element dozerRelXml="data.xml"/>
+        </ex:response>
+    </ex:bean>
+</beans>

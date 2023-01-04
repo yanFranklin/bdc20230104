@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.etl.core.mapper.QlfQlDyaqMapper">
+    <select id="selectDataModelByMap" parameterType="map" resultType="map">
+        SELECT t.bdcdyh,
+        t.scywh,
+        t.dyjelx,
+        t.ywh,
+        t.dybdclx,
+        t.dyr,
+        t.dyfs,
+        t.djlx,
+        t.djyy,
+        t.zjjzwzl,
+        t.zjjzwdyfw,
+        t.bdbzzqse,
+        t.zwlxqssj,
+        t.zwlxjssj,
+        t.zgzqqdss,
+        CASE WHEN t.dyfs = 2 THEN nvl(t.zgzqse,t.bdbzzqse) ELSE t.zgzqse END zgzqse,
+        t.zxdyywh,
+        t.zxdyyy,
+        t.zxsj,
+        t.bdcdjzmh,
+        t.qxdm,
+        t.djjg,
+        t.dbr,
+        t.djsj,
+        t.fj,
+        t.qszt
+        FROM qlf_ql_dyaq t
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND ywh=#{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND bdcdyh=#{bdcdyh}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.accept.core.mapper.BdcSlSjclPzMapper">
+    <select id="listBdcSlSjclPzByPage" parameterType="cn.gtmap.realestate.common.core.domain.accept.BdcSlSjclPzDO" resultType="cn.gtmap.realestate.common.core.domain.accept.BdcSlSjclPzDO">
+        SELECT t.PZID,t.CLMC,t.DJXL,t.SJLX,t.MRFS,T.xh,t.sqbm, t.sfbc FROM BDC_SL_SJCL_PZ t
+        <where>
+            <if test="djxl != null and djxl != ''">
+                AND T.djxl = #{djxl}
+            </if>
+            <if test="clmc != null and clmc != ''">
+                AND instr(t.clmc,#{clmc})>0
+            </if>
+            <if test="sjlx != null and sjlx != ''">
+                AND T.sjlx = #{sjlx}
+            </if>
+        </where>
+        order by t.xh
+    </select>
+
+    <select id="querySjclPzMaxSxh" parameterType="cn.gtmap.realestate.common.core.domain.accept.BdcSlSjclPzDO"
+            resultType="Integer">
+        SELECT NVL(MAX(xh),0) AS xh FROM BDC_SL_SJCL_PZ t
+        <where>
+            <if test="djxl != null and djxl != ''">
+                AND t.djxl = #{djxl}
+            </if>
+        </where>
+    </select>
+</mapper>

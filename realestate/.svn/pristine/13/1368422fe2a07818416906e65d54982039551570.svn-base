@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>质检情况</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css">
+
+    <!--下拉框需要-->
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css">
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css" />
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+
+    <style>
+        .content-title p {
+            line-height: 38px;
+        }
+        .content-title {
+            line-height: 38px;
+        }
+        .content-div{ padding: 0px;}
+        .pannel-form-btns{
+            padding-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="content-div">
+    <div class="bdc-content-box">
+        <div class="content-main">
+            <div class="table-name">质检情况录入</div>
+            <form class="layui-form setOverflow" id="zjqkForm">
+                <div id="zjqkView"></div>
+            </form>
+        </div>
+
+
+    </div>
+
+</div>
+</body>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--需要复选框时引用-->
+<script src="../../static/lib/easyui/jquery.min.js"></script>
+<script src="../../static/lib/easyui/jquery.easyui.min.js"></script>
+<!--新增质检情况模板-->
+<script type="text/html" id="zjqkTpl">
+    <div class="bdc-table-box">
+        <table class="layui-table" border="1">
+            <colgroup>
+                <col width="100">
+                <col width="250">
+            </colgroup>
+
+            <tbody>
+                <tr>
+                    <input type="hidden" id="gzlslid" value="{{d.gzlslid || ''}}">
+                    <input type="hidden" id="slbh" value="{{d.slbh || ''}}">
+                    <td class="set-back-color set-center">登记类型</td>
+                    <td colspan="3">
+                        <div class="bdc-td-box">
+                            <input type="text" class="layui-input" disabled="off" name="djlx" value="{{ getZdMc('djlx', d.djlx) }}">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="set-back-color set-center">受理编号</td>
+                    <td colspan="3">
+                        <div class="bdc-td-box">
+                            <input type="text" class="layui-input" disabled="off" name="slbh" value="{{d.slbh || ''}}">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="set-back-color set-center">不动产坐落</td>
+                    <td colspan="3">
+                        <div class="bdc-td-box">
+                            <input type="text" class="layui-input zjxx" disabled="off" id="zl" name="zl" value="{{d.zl || ''}}">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="set-back-color set-center">质量检查时间</td>
+                    <td colspan="3">
+                        <div class="bdc-td-box">
+                            <input type="text" class="layui-input zjxx" disabled="off" id="zjsj" name="zjsj" value="{{d.zjsj || ''}}">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="set-back-color set-center">质量检查人员</td>
+                    <td>
+                        <div class="bdc-td-box">
+                            <input type="text" class="layui-input" disabled="off" name="hdr" value="{{d.hdr || '' }}">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                <tr>
+                    <td class="set-back-color set-center">质检结果</td>
+                    <td class="">
+                        <select class="zjxx" lay-filter="zjzt" name="zjzt" xm-select="zjzt" lay-verify="required" xm-select-skin="default" xm-select-search="" xm-select-height="38px" xm-select-search-type="dl">
+                            <option value="-1" {{# if(d.zjzt =='-1'){ }} selected="selected" {{# } }}>&nbsp;</option>
+                            <option value="1" {{# if(d.zjzt =='1'){ }} selected="selected" {{# } }} >未发现问题</option>
+                        </select>
+                    </td>
+                </tr>
+                </tr>
+                <tr>
+                    <td class="set-back-color set-center">存在问题</td>
+                    <td class=""><textarea class="layui-textarea change-textarea-width zjxx" id="spyj" name="spyj" rows="" cols="">{{d.spyj || ''}}</textarea></td>
+                </tr>
+                <tr>
+                    <td class="set-back-color set-center">备注</td>
+                    <td class=""><textarea class="layui-textarea change-textarea-width zjxx" id="bz" name="bz" rows="" cols="">{{d.bz || ''}}</textarea></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pannel-form-btns">
+        <button class="layui-btn bdc-major-btn" lay-submit="" lay-filter="saveData">保存</button>
+        <button class="layui-btn bdc-secondary-btn" onclick="cancel();">关闭</button>
+    </div>
+</script>
+
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/changzhou/zj/zjqk.js"></script>
+</html>

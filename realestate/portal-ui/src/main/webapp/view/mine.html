@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>不动产登记业务管理系统</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all">
+    <link href="../static/lib/bdcui/css/search.css" media="all" rel="stylesheet">
+    <link href="../static/lib/bdcui/css/table.css" media="all" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/admin.css" media="all">
+    <link rel="stylesheet" href="../static/css/home-page1.css" media="all">
+</head>
+<body>
+<!-- 主体内容 -->
+<div class="bdc-container">
+    <div class="bdc-content-box">
+        <!--任务栏tab切开始-->
+        <div class="layui-tab layui-tab-brief bdc-container-tab bdc-task-tab" lay-filter="taskFilter">
+            <ul class="layui-tab-title">
+                <li>常用收藏</li>
+                <li class="layui-this">新建任务</li>
+            </ul>
+            <div class="bdc-task-tools clear">
+                <div class="layui-form bdc-task-search-box">
+                    <i class="layui-icon layui-icon-search"></i>
+                    <input type="text" name="title" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+                <div class="bdc-operate-show">
+                    <i class="layui-icon layui-icon-up"></i>
+                    <i class="layui-icon layui-icon-down bdc-hide"></i>
+                </div>
+            </div>
+            <div class="layui-tab-content bdc-task-content">
+                <!--常用收藏-->
+                <div class="layui-tab-item bdc-collection-tab">
+                    <!--收藏内容-->
+                    <p class="bdc-collection-content clear">
+                        <a href="javascript:">宅基地使用权首次登记<i class="layui-icon layui-icon-rate-solid"></i></a>
+                        <a href="javascript:">国有建设用地使用权转移登记<i class="layui-icon layui-icon-rate-solid"></i></a>
+                        <a href="javascript:">商品房买卖转移登记<i class="layui-icon layui-icon-rate-solid"></i></a>
+                        <a href="javascript:">国有建设用地使用权及房屋所有权首次登记<i class="layui-icon layui-icon-rate-solid"></i></a>
+                        <a href="javascript:">国有建设用地使用权转移登记<i class="layui-icon layui-icon-rate-solid"></i></a>
+                        <a href="javascript:">国有建设用地使用权转移登记<i class="layui-icon layui-icon-rate-solid"></i></a>
+                        <a href="javascript:">国有建设用地使用权转移登记<i class="layui-icon layui-icon-rate-solid"></i></a>
+                        <a href="javascript:">国有建设用地使用权转移登记<i class="layui-icon layui-icon-rate-solid"></i></a>
+                    </p>
+
+                    <!--暂无收藏-->
+                    <!--<p class="bdc-collection-content bdc-no-collection clear">-->
+                    <!--<img src="../image/no-collection.png" alt="">-->
+                    <!--<span>暂无任何收藏内容</span>-->
+                    <!--</p>-->
+                </div>
+
+                <!--新建任务-->
+                <div class="layui-tab-item bdc-build-task layui-show">
+                    <div class="layui-carousel" id="buildTask">
+                        <div id="carouselView" carousel-item>
+
+                        </div>
+                    </div>
+                    <i class="layui-icon layui-icon-triangle-r bdc-carousel-left"></i>
+                    <i class="layui-icon layui-icon-triangle-r bdc-carousel-right"></i>
+                </div>
+            </div>
+        </div>
+        <!--任务栏tab切结束-->
+
+        <!--任务列表开始-->
+        <div class="layui-tab layui-tab-brief bdc-container-tab bdc-list-tab" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title">
+                <li class="layui-this">待办任务<span class="bdc-list-num-tips">15</span></li>
+                <li>已办任务</li>
+                <li>项目列表</li>
+            </ul>
+            <div class="layui-tab-content">
+                <!--待办任务-->
+                <div class="layui-tab-item layui-show">
+                    <!--查询条件-->
+                    <!--<div class="bdc-tab-search">-->
+                    <!--<div class="layui-inline">-->
+                    <!--<div class="layui-input-inline">-->
+                    <!--<input type="text" id="pfCqpch" autocomplete="off" placeholder="请输入抽取批次号" class="layui-input">-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--<a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>-->
+                    <!--<button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>-->
+                    <!--<a href="javascript:;" class="layui-btn layui-btn-normal bdc-secondary-btn" id="seniorSearch">高级查询</a>-->
+                    <!--</div>-->
+                    <div class="bdc-search-box">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item pf-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">受理编号</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" autocomplete="off" placeholder="请输入" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">项目名称</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" autocomplete="off" placeholder="请输入" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">登记类型</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" autocomplete="off" placeholder="请输入" class="layui-input">
+                                    </div>
+                                </div>
+
+                                <div class="pf-senior-show bdc-hide">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">登记类型</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" autocomplete="off" placeholder="请输入" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-inline bdc-button-box">
+                                    <a class="layui-btn layui-btn-normal bdc-major-btn" href="javascript:" id="search">查询</a>
+                                    <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+                                    <a class="layui-btn layui-btn-normal bdc-secondary-btn" href="javascript:" id="seniorSearch">高级查询</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--表格-->
+                    <div class="bdc-table-box">
+                        <table id="pageTable" lay-filter="test"></table>
+                    </div>
+                </div>
+
+                <div class="layui-tab-item">2</div>
+                <div class="layui-tab-item">3</div>
+            </div>
+        </div>
+        <!--任务列表结束-->
+    </div>
+</div>
+<!--轮播图动态渲染模板-->
+<script type="text/html" id="carouselTpl">
+    {{#  layui.each(d.data, function(index, item){ }}
+    <div class="bdc-carousel-father">
+        {{#  layui.each(item, function(ind, value){ }}
+        <div class="bdc-carousel-son">
+            <span class="bdc-carousel-title">{{value.name}}</span>
+            <img class="bdc-carousel-img" src="../static/image/default-carosel.png" alt="">
+            <img class="bdc-carousel-img bdc-hide" src="../static/image/select--carousel.png" alt="">
+            <div class="bdc-carousel-details bdc-hide">
+                <!--删除按钮-->
+                <i class="layui-icon layui-icon-close bdc-carousel-close"></i>
+                <div class="bdc-details-type">
+                    <p class="bdc-details-type-content clear">
+                        {{#  layui.each(value.details, function(i, v){ }}
+                        {{#  if(v.isCollection){ }}
+                        <a href="javascript:">{{v.detailsName}}<i class="layui-icon layui-icon-rate-solid"></i></a>
+                        {{# }else{ }}
+                        <a href="javascript:">{{v.detailsName}}<i class="layui-icon bdc-visible layui-icon-rate"></i></a>
+                        {{#  } }}
+                        {{#  }); }}
+                    </p>
+                    <a href="javascript:" class="bdc-details-type-tool"><span class="bdc-retract">收起-</span><span class="bdc-open bdc-hide">展开+</span></a>
+                </div>
+            </div>
+        </div>
+        {{#  }); }}
+    </div>
+    {{#  }); }}
+</script>
+
+<!--表格相关模板-->
+<!--任务名称模板-->
+<script type="text/html" id="rwNameTpl">
+    {{#  if(d.isUrgent){ }}
+    <p class="bdc-table-name"><span>【紧急】</span>{{d.name}}</p>
+    {{#  } else { }}
+    <p class="bdc-table-name-pd">{{d.name}}</p>
+    {{#  } }}
+</script>
+<!--流程模板-->
+<script type="text/html" id="lcTpl">
+    <p class="bdc-table-lc"><img src="../static/image/lc.png" alt="">{{d.lc}}</p>
+</script>
+<!--状态模板-->
+<script type="text/html" id="stateTpl">
+    {{#  if(d.state == 0){ }}
+    <p class="bdc-table-state-blz">办理中</p>
+    {{#  } else if(d.state == 1) { }}
+    <p class="bdc-table-state-th">退回</p>
+    {{#  } else if(d.state == 2) { }}
+    <p class="bdc-table-state-zt">暂停</p>
+    {{#  } }}
+</script>
+
+<!--表格上面功能按钮-->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn">新增</button>
+        <button class="layui-btn layui-btn-sm bdc-delete-btn">删除</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn">转发</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn">退回</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn">暂停</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn">取消暂停</button>
+    </div>
+</script>
+
+<script src="../static/lib/layui/layui.js"></script>
+<script src="../static/lib/jquery/jquery.min.js"></script>
+<!--添加水印-->
+<script src="../static/lib/bdcui/js/common.js"></script>
+<script src="../static/js/home-page.js"></script>
+<script>
+    layui.config({
+        base: '../' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use('index').extend({
+        workflow:'static/js/workflow-handle'
+    }).use('workflow').extend({response:'static/lib/bdcui/js/response'}).use('response').extend({
+        moduleAuthority: 'static/js/moduleAuthority'
+    }).use('moduleAuthority');
+</script>
+</body>
+</html>
+
+

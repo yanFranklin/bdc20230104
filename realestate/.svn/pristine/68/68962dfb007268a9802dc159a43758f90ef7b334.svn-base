@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.BdcDwJkXffdzgxMapper">
+
+    <select id="listPageContrastRelationByPage" resultType="cn.gtmap.realestate.common.core.domain.exchange.BdcDwJkXffdzgxDO"
+            parameterType="map">
+        select * from BDC_DW_JK_XFFDZGX where
+        1=1
+        <if test="consumerList != null and consumerList.size() > 0">
+            and xff in
+            <foreach collection="consumerList" item="item" open="(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="principal != null and principal != ''">
+            and qxbs like concat（concat('%',#{principal,jdbcType=VARCHAR}),'%')
+        </if>
+        <choose>
+            <when test="sortParameter != null and sortParameter != ''">
+                order by ${sortParameter}
+            </when>
+        </choose>
+    </select>
+
+    <select id="searchDzGxByQxbs" resultType="cn.gtmap.realestate.common.core.domain.exchange.BdcDwJkXffdzgxDO">
+        select * from BDC_DW_JK_XFFDZGX where QXBS = #{qxbs,jdbcType=VARCHAR}
+    </select>
+
+    <select id="listBdcDwJkXffdzgxDO" resultType="cn.gtmap.realestate.common.core.domain.exchange.BdcDwJkXffdzgxDO">
+        select * from BDC_DW_JK_XFFDZGX where QXBS = #{qxbs,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insertDzGx" parameterType="cn.gtmap.realestate.common.core.domain.exchange.BdcDwJkXffdzgxDO">
+        insert into BDC_DW_JK_XFFDZGX(id,xff,qxbs) values (#{id,jdbcType=VARCHAR}, #{xff,jdbcType=VARCHAR}, #{qxbs,jdbcType=VARCHAR})
+    </insert>
+
+    <delete id="deleteDzGx" parameterType="cn.gtmap.realestate.common.core.domain.exchange.BdcDwJkXffdzgxDO">
+        delete from BDC_DW_JK_XFFDZGX  where 1=1
+        <if test='list != null and list.size() > 0'>
+            and id in
+            <foreach collection="list" item="item" open="(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </delete>
+
+    <update id="updateDzGx" parameterType="cn.gtmap.realestate.common.core.domain.exchange.BdcDwJkXffdzgxDO">
+        update BDC_DW_JK_XFFDZGX set xff = #{xff,jdbcType=VARCHAR}, qxbs = #{qxbs,jdbcType=VARCHAR} where id = #{id,jdbcType=VARCHAR}
+    </update>
+</mapper>

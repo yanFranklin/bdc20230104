@@ -1,0 +1,1176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcZfxxMapper">
+    <!--
+        住房信息查询
+        1、该查询为合肥住房查询公共逻辑，内外系统都涉及调用，勿随意改动
+        2、特殊的业务需求可以逻辑层处理
+    -->
+    <select id="listBdcZfxxDTO" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcZfxxQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcZfxxDTO">
+        SELECT
+            Q.BDCQZH    AS  BDCQZH,
+            Q.QLRMC     AS  QLRMC,
+            Q.ZJH       AS  QLRZJH,
+            X.BDCDYH    AS  BDCDYH,
+            X.SLR       AS  SLR,
+            X.SLBH      AS  SLBH,
+            X.ZL        AS  ZL,
+            X.DJYY      AS  DJYY,
+            X.DJSJ      AS  DJSJ,
+            X.XMID      AS  XMID,
+            X.XMLY      AS  XMLY,
+            X.QLLX      AS  QLLX,
+            X.QLXZ      AS  QLXZ,
+            X.QSZT      AS  QSZT,
+            X.JYHTH     AS  JYHTH,
+            X.ZDZHMJ    AS  ZDMJ,
+            X.BDCDYWYBH AS  BDCDYWYBH,
+            X.BDCLX     AS  BDCLX,
+            F.JZMJ      AS  JZMJ,
+            F.GYQK      AS  GYQK,
+            F.QLID      AS  QLID,
+            F.TDSYQSSJ  AS  TDSYQSSJ,
+            F.TDSYJSSJ  AS  TDSYJSSJ,
+            F.FJ        AS  FJ,
+            F.SZC       AS  SZC,
+            F.ZCS       AS  ZCS,
+            F.SZMYC     AS  SZMYC,
+            T.MC        AS  GHYT,
+            F.GHYT      AS  GHYTDM,
+            D.MC        AS  DJLX,
+            Z.YXTCQZH   AS  YXTCQZH,
+            F.FWXZ      AS  FWXZ,
+            W.MC        AS  FWXZMC,
+            L.MC        AS  QLXZMC,
+            X.QLR       AS  QLR
+        FROM
+            BDC_FDCQ  F
+        JOIN
+            BDC_XM    X
+        ON
+            F.XMID = X.XMID
+            AND
+            X.QSZT = 1
+        JOIN
+            BDC_QLR   Q
+        ON
+            F.XMID = Q.XMID
+            AND
+            Q.QLRLB = '1'
+        LEFT JOIN
+            BDC_ZD_FWYT T
+        ON
+            F.GHYT = T.DM
+        LEFT JOIN
+            BDC_ZD_DJLX D
+        ON
+            X.DJLX = D.DM
+        LEFT JOIN
+            BDC_ZS Z
+        ON
+            Z.ZSID = Q.ZSID
+        LEFT JOIN
+            BDC_XMFB FB
+        ON
+            FB.XMID =X.XMID
+        LEFT JOIN
+            BDC_ZD_FWXZ W
+        ON
+            W.DM =F.FWXZ
+        LEFT JOIN
+            BDC_ZD_QLXZ L
+        ON
+            L.DM =X.QLXZ
+        <where>
+            <!--根据权利人信息筛选-->
+
+            <if test="qlrxx != null and qlrxx.size > 0 ">
+                (
+                <foreach collection="qlrxx" item="item" index="index" separator=" or ">
+                    (
+                      <if test="item.qlrmc != null and item.qlrmc != '' ">
+                           Q.QLRMC = #{item.qlrmc,jdbcType=VARCHAR} AND
+                      </if>
+
+                      <if test="item.zjh != null and item.zjh != '' ">
+                           Q.ZJH IN
+                          <foreach item="zjxx" index="index" collection="item.zjh.split(',')" open="(" separator="," close=")">
+                              #{zjxx, jdbcType=VARCHAR}
+                          </foreach>
+                      </if>
+                    )
+                </foreach>
+                )
+            </if>
+
+            <!--根据不动产单元号筛选-->
+            <if test="bdcdyh!=null and bdcdyh !='' and bdcdyh!='null'">
+                AND F.BDCDYH IN
+                <foreach item="item" index="index" collection="bdcdyh.split(',')"  open="(" separator="," close=")">
+                    #{item, jdbcType=VARCHAR}
+                </foreach>
+            </if>
+
+            <!--根据权籍管理代码筛选-->
+            <if test="qjgldm!=null and qjgldm !='' and qjgldm!='null'">
+                AND FB.QJGLDM IN
+                <foreach item="item" index="index" collection="qjgldm.split(',')"  open="(" separator="," close=")">
+                    #{item, jdbcType=VARCHAR}
+                </foreach>
+            </if>
+
+            <!--过滤房屋类型-->
+            <if test="cxly == '1'.toString() || cxly == '5'.toString() ">
+                AND
+                (
+                F.GHYT IS NULL OR F.GHYT IN
+                <foreach item="item" index="index" collection="ghyt.split(',')" open="(" separator="," close=")">
+                    #{item, jdbcType=VARCHAR}
+                </foreach>
+                )
+            </if>
+            <if test="cxly == '2'.toString() ">
+                <if test="ghyt != null and ghyt !=''">
+                    AND  F.GHYT  IN
+                    <foreach item="item" index="index" collection="ghyt.split(',')" open="(" separator="," close=")">
+                        #{item, jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+            </if>
+            <if test="pcqllx != null and pcqllx != '' ">
+                 AND X.QLLX NOT IN
+                <foreach item="item" index="index" collection="pcqllx.split(',')" open="(" separator="," close=")">
+                    #{item, jdbcType=VARCHAR}
+                </foreach>
+            </if>
+
+            <!--默认按照登记时间（登簿时间）倒叙排序-->
+            ORDER BY DJSJ DESC NULLS LAST
+        </where>
+    </select>
+
+    <!--
+        标准版、南通、盐城 住房信息查询
+        1、该查询为住房查询公共逻辑，内外系统都涉及调用，勿随意改动
+        2、特殊的业务需求可以逻辑层处理
+    -->
+    <select id="listBdcNtZfxxDTO" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcZfxxQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcZfxxDTO">
+        SELECT
+            <choose>
+                <when test="hbcq != null and hbcq !='' and 'Y'.toString() == hbcq">
+                    DISTINCT
+                    X.BDCQZH    AS BDCQZH,
+                    X.QLR       AS QLRMC,
+                    X.QLRZJH    AS QLRZJH,
+                </when>
+
+                <otherwise>
+                    Q.BDCQZH    AS  BDCQZH,
+                    Q.QLRMC     AS  QLRMC,
+                    Q.ZJH       AS  QLRZJH,
+                </otherwise>
+            </choose>
+
+            X.BDCDYH    AS  BDCDYH,
+            X.SLR       AS  SLR,
+            X.SLBH      AS  SLBH,
+            X.ZL        AS  ZL,
+            X.DJYY      AS  DJYY,
+            X.DJSJ      AS  DJSJ,
+            X.XMID      AS  XMID,
+            X.XMLY      AS  XMLY,
+            X.QLLX      AS  QLLX,
+            X.QLXZ      AS  QLXZ,
+            X.QSZT      AS  QSZT,
+            X.JYHTH     AS  JYHTH,
+            X.ZDZHMJ    AS  ZDMJ,
+            X.BDCDYWYBH AS  BDCDYWYBH,
+            X.BDCLX     AS  BDCLX,
+            X.DJXL      AS  DJXL,
+            X.QXDM      AS  QXDM,
+            F.JZMJ      AS  JZMJ,
+            F.GYQK      AS  GYQK,
+        F.QLID AS QLID,
+        F.TDSYQSSJ AS TDSYQSSJ,
+        F.TDSYJSSJ AS TDSYJSSJ,
+        F.FJ AS FJ,
+        F.SZC AS SZC,
+        F.ZCS AS ZCS,
+        F.SZMYC AS SZMYC,
+        D.MC AS DJLX,
+        Z.YXTCQZH AS YXTCQZH,
+        F.FWXZ AS FWXZ,
+        nvl(x.dzwyt,F.GHYT) AS GHYTDM,
+        F.JYJG AS JYJG,
+        NVL(T1.MC, t.mc) AS GHYT,
+        F.TDSYQMJ AS TDSYQMJ,
+        F.FTTDMJ AS FTTDMJ,
+        F.DYTDMJ AS DYTDMJ,
+        Z.ZSLX AS ZSLX
+        FROM
+        BDC_FDCQ F
+        JOIN
+        BDC_XM X
+        ON
+        F.XMID = X.XMID
+        AND
+        X.QSZT = 1
+        JOIN
+        BDC_QLR Q
+        ON
+        F.XMID = Q.XMID
+        AND
+        Q.QLRLB = '1'
+        LEFT JOIN
+        BDC_ZD_FWYT T
+        ON
+        F.GHYT = T.DM
+        LEFT JOIN
+        BDC_ZD_FWYT T1
+        ON
+        X.dzwyt = T1.DM
+        LEFT JOIN
+        BDC_ZD_DJLX D
+        ON
+        X.DJLX = D.DM
+        LEFT JOIN
+        BDC_ZS Z
+        ON
+        Z.ZSID = Q.ZSID
+        <where>
+            <!--根据权利人信息筛选-->
+            <if test="qlrxx != null and qlrxx.size > 0 ">
+                (
+                <foreach collection="qlrxx" item="item" index="index" separator=" or ">
+                    (
+                        <if test="item.qlrmc != null and item.qlrmc != '' ">
+                            Q.QLRMC = #{item.qlrmc,jdbcType=VARCHAR}
+                        </if>
+
+                        <!--权利人证件号集合 和单个证件号 有且只有一个有值-->
+                        <if test="item.qlrmc != null and item.qlrmc != '' and
+                        (
+                            (item.zjhList != null and item.zjhList.size > 0)
+                        or
+                            (item.zjh != null and item.zjh != '')
+                        ) ">
+                            AND
+                        </if>
+
+                        <!--权利人证件号集合 和单个证件号 有且只有一个有值-->
+                        <if test="item.zjhList != null and item.zjhList.size > 0 ">
+                            <foreach collection="item.zjhList" item="zjhItem" index="index" separator=" or ">
+                                (
+                                   instr(','||Q.ZJH||',' , ','||#{zjhItem, jdbcType=VARCHAR}||',') > 0
+                                )
+                            </foreach>
+                        </if>
+
+                        <!--权利人证件号集合 和单个证件号 有且只有一个有值-->
+                        <if test="item.zjh != null and item.zjh != '' ">
+                            Q.ZJH IN
+                            <foreach item="zjxx" index="index" collection="item.zjh.split(',')" open="(" separator="," close=")">
+                                #{zjxx, jdbcType=VARCHAR}
+                            </foreach>
+                        </if>
+                    )
+                </foreach>
+                )
+            </if>
+
+            <!--根据不动产单元号筛选-->
+            <if test="bdcdyh!=null and bdcdyh !='' and bdcdyh!='null'">
+                AND F.BDCDYH IN
+                <foreach item="item" index="index" collection="bdcdyh.split(',')"  open="(" separator="," close=")">
+                    #{item, jdbcType=VARCHAR}
+                </foreach>
+            </if>
+
+            <!--过滤房屋类型-->
+            <if test="cxly == '1'.toString()  || cxly == '4'.toString()">
+                AND
+                <choose>
+                    <!--不展示指定规划用途-->
+                    <when test="pcghyt != null and pcghyt !='' and 'Y'.toString() == pcghyt">
+                        F.GHYT NOT IN
+                        <foreach item="item" index="index" collection="ghyt.split(',')" open="(" separator="," close=")">
+                            #{item, jdbcType=VARCHAR}
+                        </foreach>
+                    </when>
+
+                    <!--展示指定规划用途或空-->
+                    <otherwise>
+                        (
+                            F.GHYT  IS  NULL  OR  F.GHYT IN
+                            <foreach item="item" index="index" collection="ghyt.split(',')" open="(" separator="," close=")">
+                                #{item, jdbcType=VARCHAR}
+                            </foreach>
+                        )
+                    </otherwise>
+                </choose>
+            </if>
+
+            <if test="cxly == '2'.toString() ">
+                <if test="ghyt != null and ghyt !=''">
+                    AND
+                    <choose>
+                        <!--不展示指定规划用途-->
+                        <when test="pcghyt != null and pcghyt !='' and 'Y'.toString() == pcghyt">
+                            F.GHYT NOT IN
+                            <foreach item="item" index="index" collection="ghyt.split(',')" open="(" separator="," close=")">
+                                #{item, jdbcType=VARCHAR}
+                            </foreach>
+                        </when>
+
+                        <!--展示指定规划用途-->
+                        <otherwise>
+                            F.GHYT  IN
+                            <foreach item="item" index="index" collection="ghyt.split(',')" open="(" separator="," close=")">
+                                #{item, jdbcType=VARCHAR}
+                            </foreach>
+                        </otherwise>
+                    </choose>
+                </if>
+            </if>
+
+            <if test="qllx != null and qllx != '' ">
+                AND X.QLLX IN
+                <foreach item="item" index="index" collection="qllx.split(',')" open="(" separator="," close=")">
+                    #{item, jdbcType=VARCHAR}
+                </foreach>
+            </if>
+
+            <if test="zslx != null and zslx != '' ">
+                AND Z.ZSLX =#{zslx}
+            </if>
+
+            <if test="qxdm != null and qxdm != '' ">
+                AND X.QXDM = #{qxdm}
+            </if>
+
+            <if test="qxdmList != null and qxdmList.size() > 0 ">
+                AND X.QXDM IN
+                <foreach item="item" index="index" collection="qxdmList" open="(" separator="," close=")">
+                    #{item, jdbcType=VARCHAR}
+                </foreach>
+            </if>
+
+            <!--默认按照登记时间（登簿时间）倒叙排序-->
+            ORDER BY DJSJ DESC NULLS LAST
+        </where>
+    </select>
+
+    <!-- 查询合同备案信息 -->
+    <select id="lisSpfhtbhxx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcZfxxQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcZfxxDTO">
+        SELECT
+            S.HTBH    AS BDCQZH,
+            Q.QLRMC   AS QLRMC,
+            Q.ZJH     AS QLRZJH,
+            S.FWBM    AS  BDCDYH,
+            S.ZL      AS  ZL,
+            S.BASJ    AS  DJSJ,
+            S.BAID    AS  XMID,
+            S.QXDM    AS  QXDM,
+            S.JZMJ    AS  JZMJ,
+            S.YT      AS GHYT,
+            4         AS ZSLX,
+            1 as      sfhtba
+        FROM
+            HTBA_SPF S
+        LEFT JOIN
+            HTBA_QLR Q ON S.BAID = Q.BAID
+        where
+            nvl(S.bazt, 1) = 1
+            <!--根据权利人信息筛选-->
+            <if test="qlrxx != null and qlrxx.size > 0 ">
+                 AND (
+                <foreach collection="qlrxx" item="item" index="index" separator=" or ">
+                    (
+                        <!-- qlrmc可能没有  -->
+                    <if test="item.qlrmc != null and item.qlrmc != '' ">
+                        Q.QLRMC = #{item.qlrmc,jdbcType=VARCHAR}
+                    </if>
+
+                    <if test="item.qlrmc != null and item.qlrmc != ''and item.zjh != null and item.zjh != ''">
+                        AND
+                    </if>
+
+                    <if test="item.zjh != null and item.zjh != '' ">
+                      Q.ZJH IN
+                        <foreach item="zjxx" index="index" collection="item.zjh.split(',')" open="(" separator="," close=")">
+                            #{zjxx, jdbcType=VARCHAR}
+                        </foreach>
+                    </if>
+                    )
+                </foreach>
+                )
+            </if>
+
+            <if test="qxdm != null and qxdm != '' ">
+                AND S.QXDM = #{qxdm}
+            </if>
+
+            <if test="qxdmList != null and qxdmList.size() > 0 ">
+                AND S.QXDM IN
+                <foreach item="item" index="index" collection="qxdmList" open="(" separator="," close=")">
+                    #{item, jdbcType=VARCHAR}
+                </foreach>
+            </if>
+
+            ORDER BY S.BASJ DESC NULLS LAST
+    </select>
+
+    <!--根据不动产单元号获取对应的房产信息-->
+    <select id="listBdcFdcqDTO" parameterType="String" resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcFdcqDTO">
+        SELECT
+            DISTINCT
+            F.BDCDYH,
+            F.ZL,
+            F.ZCS,
+            F.SZC,
+            F.SZMYC,
+            F.GHYT,
+            F.FWXZ,
+            F.JZMJ,
+            F.ZYJZMJ,
+            F.FTJZMJ,
+            F.JGSJ,
+            F.TDSYQMJ,
+            F.TDSYQSSJ,
+            F.TDSYJSSJ,
+            F.ZH,
+            F.FJH,
+            X.ZDZHMJ,
+            X.ZDZHYT,
+            F.QLLX,
+            X.QLXZ
+        FROM
+            BDC_FDCQ  F
+        JOIN
+            BDC_XM    X
+        ON
+            F.XMID = X.XMID
+            AND
+            X.QSZT = 1
+        JOIN
+            BDC_XMFB FB
+        ON
+            FB.XMID =X.XMID
+        <where>
+            <if test="bdcdyh != null and bdcdyh != '' ">
+                AND
+                F.BDCDYH = #{bdcdyh, jdbcType=VARCHAR}
+            </if>
+            <!--根据权籍管理代码查询 -->
+            <if test="qjgldm != null and qjgldm != ''">
+                AND FB.QJGLDM in
+                <foreach item="item" index="index" collection="qjgldm.split(',')" open="(" separator="," close=")">
+                    #{item, jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!--根据不动产单元号获取对应的抵押信息-->
+    <select id="listBdcFcdaDyaqDTO" parameterType="String" resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcFcdaDyaqDTO">
+        SELECT
+            DISTINCT
+            X.BDCQZH,
+            X.QLR,
+            F.FWDYMJ,
+            F.DYFS,
+            F.BDBZZQSE,
+            F.ZGZQE,
+            F.ZWLXQSSJ,
+            F.ZWLXJSSJ,
+            F.DJSJ,
+            F.FJ,
+            F.JZZR
+        FROM
+            BDC_XM    X
+        JOIN
+            BDC_XMFB FB
+        ON
+            FB.XMID =X.XMID
+        JOIN
+            BDC_DYAQ  F
+        ON
+            X.XMID = F.XMID
+        JOIN
+            BDC_FDCQ  Q
+        ON
+            F.BDCDYH = Q.BDCDYH
+        <where>
+            <if test="bdcdyh != null and bdcdyh != '' ">
+                F.BDCDYH = #{bdcdyh,jdbcType=VARCHAR}
+                AND
+                F.QSZT = 1
+            </if>
+            <if test="qjgldm != null and qjgldm != ''">
+                AND FB.QJGLDM in
+                <foreach item="item" index="index" collection="qjgldm.split(',')" open="(" separator="," close=")">
+                    #{item, jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!--根据不动产单元号获取对应的查封信息-->
+    <select id="listBdcFcdaCfxx" parameterType="String" resultType="cn.gtmap.realestate.common.core.domain.BdcCfDO">
+        SELECT
+            DISTINCT
+            F.QLID,
+            F.CFJG,
+            F.CFLX,
+            F.CFWH,
+            F.CFQSSJ,
+            F.CFJSSJ,
+            F.FJ
+        FROM
+            BDC_CF F
+        JOIN
+            BDC_FDCQ Q
+        ON
+            F.BDCDYH = Q.BDCDYH
+        JOIN
+            BDC_XM    X
+            ON
+                F.XMID = X.XMID
+        JOIN
+            BDC_XMFB FB
+            ON
+                FB.XMID =X.XMID
+        <where>
+            <if test="bdcdyh != null and bdcdyh != '' ">
+                F.QSZT = '1'
+		        AND
+		        F.BDCDYH = #{bdcdyh,jdbcType=VARCHAR}
+            </if>
+            <if test="qjgldm != null and qjgldm != ''">
+                AND FB.QJGLDM in
+                <foreach item="item" index="index" collection="qjgldm.split(',')" open="(" separator="," close=")">
+                    #{item, jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!--根据不动产单元号获取对应的异议信息-->
+    <select id="listBdcFcdaYyxx" parameterType="String" resultType="cn.gtmap.realestate.common.core.domain.BdcYyDO">
+        SELECT
+            DISTINCT
+            Y.QLID,
+		    Y.YYSX,
+		    Y.FJ
+        FROM
+            BDC_YY Y
+        JOIN
+            BDC_FDCQ Q
+	    ON
+	        Y.BDCDYH = Q.BDCDYH
+        JOIN
+            BDC_XM    X
+        ON
+            Y.XMID = X.XMID
+        JOIN
+            BDC_XMFB FB
+        ON
+            FB.XMID =X.XMID
+        <where>
+            <if test="bdcdyh != null and bdcdyh != '' ">
+                Y.QSZT = '1'
+		        AND
+		        Y.BDCDYH = #{bdcdyh,jdbcType=VARCHAR}
+            </if>
+            <if test="qjgldm != null and qjgldm != ''">
+                AND FB.QJGLDM in
+                <foreach item="item" index="index" collection="qjgldm.split(',')" open="(" separator="," close=")">
+                    #{item, jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询机 查询房屋权利-->
+    <select id="listBdcFwqlDTO" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcFwqlQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcFwqlDTO">
+        select * from (
+        SELECT
+        X.BDCDYH AS BDCDYH,
+        X.ZL AS ZL,
+        X.DJSJ AS DJSJ,
+        X.XMID AS XMID,
+        X.QLLX AS QLLX,
+        X.QLXZ AS QLXZ,
+        X.QSZT AS QSZT,
+        X.JYHTH AS JYHTH,
+        X.ZDZHMJ AS ZDMJ,
+        X.ZDZHYT AS ZDZHYT,
+        X.BDCLX AS BDCLX,
+        F.JZMJ AS JZMJ,
+        F.GYQK AS GYQK,
+        F.QLID AS QLID,
+        F.TDSYQSSJ AS TDSYQSSJ,
+        F.TDSYJSSJ AS TDSYJSSJ,
+        F.FJ AS FJ,
+        F.SZMYC AS SZC,
+        F.ZCS AS ZCS,
+        F.FWXZ AS FWXZ,
+        F.Ghyt || '' AS GHYT,
+        F.FJH AS FJH,
+        F.FTTDMJ AS FTTDMJ,
+        F.DYTDMJ AS DYTDMJ,
+        F.FWJG || '' AS FWJG,
+        F.zyjzmj AS TNJZMJ,
+        F.FTJZMJ AS FTJZMJ,
+        F.FWLX AS FWLX,
+        F.BZ AS BZ,
+        F.JGSJ AS JGSJ,
+        F.JYJG AS JYJG,
+        0 as sfhtba
+        FROM BDC_FDCQ F
+        JOIN BDC_XM X ON F.XMID = X.XMID AND X.QSZT = 1
+        JOIN BDC_QLR Q ON F.XMID = Q.XMID AND Q.QLRLB='1'
+        <where>
+            <!--根据权利人信息筛选-->
+            <if test="qlrxx != null and qlrxx.size > 0 ">
+                (
+                <foreach collection="qlrxx" item="item" index="index" separator=" or ">
+                    (
+                    <if test="item.qlrmc != null and item.qlrmc != '' ">
+                        Q.QLRMC = #{item.qlrmc,jdbcType=VARCHAR}
+                    </if>
+
+                    <if test="item.qlrmc != null and item.qlrmc != '' and item.zjh != null and item.zjh != '' ">
+                        AND
+                    </if>
+
+                    <if test="item.zjh != null and item.zjh != '' ">
+                        Q.ZJH IN
+                        <foreach item="zjxx" index="index" collection="item.zjh.split(',')" open="(" separator=","
+                                 close=")">
+                            #{zjxx, jdbcType=VARCHAR}
+                        </foreach>
+                    </if>
+                    <if test="item.bdcdyh != null and item.bdcdyh != '' ">
+                        AND F.BDCDYH = #{item.bdcdyh, jdbcType=VARCHAR}
+                    </if>
+                    <if test="item.zl != null and item.zl != '' ">
+                        AND X.ZL = #{item.zl, jdbcType=VARCHAR}
+                    </if>
+                    <if test="item.bdcqzh != null and item.bdcqzh != '' ">
+                        AND X.BDCQZH = #{item.bdcqzh, jdbcType=VARCHAR}
+                    </if>
+                    )
+                </foreach>
+                )
+            </if>
+
+            <if test="qxdm != null and qxdm != '' "> AND X.QXDM = #{qxdm}</if>
+        </where>
+
+
+        <include refid="getYg"/>
+        <include refid="getHtba"/>
+        ) a
+    </select>
+
+
+    <sql id="getHtba">
+        <if test="(cxht != null and cxht)">
+            union all
+            SELECT F.htbh   AS BDCDYH,
+            F.ZL       AS ZL,
+            F.basj     AS DJSJ,
+            F.baid     AS XMID,
+            null    AS QLLX,
+            null     AS QLXZ,
+            1     AS QSZT,
+            null    AS JYHTH,
+            null   AS ZDMJ,
+            tdyt  AS ZDZHYT,
+            null    AS BDCLX,
+            F.JZMJ     AS JZMJ,
+            null     AS GYQK,
+            null     AS QLID,
+            null AS TDSYQSSJ,
+            null as TDSYJSSJ,
+            '商品房网签备案合同'  AS FJ,
+            null    AS SZC,
+            null      AS ZCS,
+            null     AS FWXZ,
+            F.yt     AS GHYT,
+            fjh      AS FJH,
+            null  AS FTTDMJ,
+            null   AS DYTDMJ,
+            F.FWJG     AS FWJG,
+            null  AS TNJZMJ,
+            null   AS FTJZMJ,
+            null    AS FWLX,
+            F.BZ       AS BZ,
+            null     AS JGSJ,
+            null     AS JYJG,
+            1 as sfhtba
+            FROM HTBA_SPF F
+            LEFT JOIN HTBA_QLR qlr ON F.BAID = qlr.BAID
+            WHERE nvl(F.bazt, 1) = 1
+            <!--根据权利人信息筛选-->
+            <if test="qlrxx != null and qlrxx.size > 0 ">
+               and (
+                <foreach collection="qlrxx" item="item" index="index" separator=" or ">
+                    (
+                    <if test="item.qlrmc != null and item.qlrmc != '' ">
+                        qlr.QLRMC = #{item.qlrmc,jdbcType=VARCHAR}
+                    </if>
+
+                    <if test="item.qlrmc != null and item.qlrmc != '' and item.zjh != null and item.zjh != '' ">
+                        AND
+                    </if>
+
+                    <if test="item.zjh != null and item.zjh != '' ">
+                        qlr.ZJH IN
+                        <foreach item="zjxx" index="index" collection="item.zjh.split(',')" open="(" separator=","
+                                 close=")">
+                            #{zjxx, jdbcType=VARCHAR}
+                        </foreach>
+                    </if>
+                    <if test="item.bdcdyh != null and item.bdcdyh != '' ">
+                        AND F.htbh = #{item.bdcdyh, jdbcType=VARCHAR}
+                    </if>
+                    <if test="item.zl != null and item.zl != '' ">
+                        AND F.ZL = #{item.zl, jdbcType=VARCHAR}
+                    </if>
+                    )
+                </foreach>
+                )
+            </if>
+
+            <if test="qxdm != null and qxdm != '' ">
+                AND F.QXDM = #{qxdm}
+            </if>
+
+        </if>
+    </sql>
+
+    <sql id="getYg">
+        <if test="(cxyg != null and cxyg)">
+            union all
+
+        SELECT
+        X.BDCDYH   AS BDCDYH,
+        X.ZL       AS ZL,
+        X.DJSJ     AS DJSJ,
+        X.XMID     AS XMID,
+        X.QLLX     AS QLLX,
+        X.QLXZ     AS QLXZ,
+        X.QSZT     AS QSZT,
+        X.JYHTH    AS JYHTH,
+        X.ZDZHMJ   AS ZDMJ,
+        X.ZDZHYT   AS ZDZHYT,
+        X.BDCLX    AS BDCLX,
+        F.JZMJ     AS JZMJ,
+        F.GYQK     AS GYQK,
+        F.QLID     AS QLID,
+        F.TDSYQSSJ AS TDSYQSSJ,
+        F.TDSYJSSJ AS TDSYJSSJ,
+        F.FJ       AS FJ,
+        F.SZMYC    AS SZC,
+        F.ZCS      AS ZCS,
+        F.FWXZ     AS FWXZ,
+        F.Ghyt || ''  AS GHYT,
+        F.FJH      AS FJH,
+        F.FTTDMJ   AS FTTDMJ,
+        null   AS DYTDMJ,
+        null     AS FWJG,
+        null   AS TNJZMJ,
+        null   AS FTJZMJ,
+        null     AS FWLX,
+        F.BZ       AS BZ,
+        null     AS JGSJ,
+        null     AS JYJG,
+        0 as sfhtba
+        FROM BDC_YG F
+        JOIN BDC_XM X ON F.XMID = X.XMID AND X.QSZT = 1
+        JOIN BDC_QLR Q ON F.XMID = Q.XMID AND Q.QLRLB = '1'
+        <where>
+            <!--根据权利人信息筛选-->
+            <if test="qlrxx != null and qlrxx.size > 0 ">
+                (
+                <foreach collection="qlrxx" item="item" index="index" separator=" or ">
+                    (
+                    <if test="item.qlrmc != null and item.qlrmc != '' ">
+                        Q.QLRMC = #{item.qlrmc,jdbcType=VARCHAR}
+                    </if>
+
+                    <if test="item.qlrmc != null and item.qlrmc != '' and item.zjh != null and item.zjh != '' ">
+                        AND
+                    </if>
+
+                    <if test="item.zjh != null and item.zjh != '' ">
+                        Q.ZJH IN
+                        <foreach item="zjxx" index="index" collection="item.zjh.split(',')" open="(" separator=","
+                                 close=")">
+                            #{zjxx, jdbcType=VARCHAR}
+                        </foreach>
+                    </if>
+                    <if test="item.bdcdyh != null and item.bdcdyh != '' ">
+                        AND F.BDCDYH = #{item.bdcdyh, jdbcType=VARCHAR}
+                    </if>
+                    <if test="item.zl != null and item.zl != '' ">
+                        AND X.ZL = #{item.zl, jdbcType=VARCHAR}
+                    </if>
+                    <if test="item.bdcqzh != null and item.bdcqzh != '' ">
+                        AND X.BDCQZH = #{item.bdcqzh, jdbcType=VARCHAR}
+                    </if>
+                    )
+                </foreach>
+                )
+            </if>
+
+            <if test="qxdm != null and qxdm != '' ">AND X.QXDM = #{qxdm}</if>
+        </where>
+        </if>
+    </sql>
+
+
+    <!-- 查询机 查询房屋权利-->
+    <select id="listBdcFwQsxxDTO" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.yancheng.BdcFwQsxxQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.yancheng.BdcFwJbxxDTO">
+        SELECT
+            DISTINCT
+            X.XMID   AS  XMID,
+            X.XMLY   AS XMLY,
+            X.BDCDYH AS  BDCDYH,
+            X.ZL     AS  FWZL,
+            X.JYHTH  AS  HTH,
+            X.DJSJ   AS  DJSJ,
+            X.ZDZHMJ AS  ZDZHMJ,
+            F.QLID   AS  QLID,
+            F.FTTDMJ AS  FTTDMJ,
+            F.DYTDMJ AS  DYTDMJ,
+            F.JYJG   AS  JYJG,
+            F.JGSJ   AS  JGSJ,
+            F.SZMYC  AS  SZC,
+            F.ZCS    AS  ZCS,
+            F.JZMJ   AS  JZMJ,
+            F.FJ     AS  FJ,
+            F.BZ     AS  BZ,
+            Y.MC     AS  FWYT,
+            J.MC     AS  FWJG,
+            L.MC     AS  QLLX,
+            Z.MC     AS  QLXZ,
+            B.MC     AS  BDCLX,
+            T.MC     AS  QSZT,
+            ZS.FZSJ  AS  FZRQ,
+            NVL(to_char(F.TDSYQSSJ,'yyyy-MM-dd'), '') || '起' || NVL(to_char(F.TDSYJSSJ,'yyyy-MM-dd'), '') || '止' AS TDSYQX,
+            NVL(F.ZCS, '')      || '/'  || NVL(F.SZMYC, '')  AS CS,
+            '共有宗地面积' || NVL(X.ZDZHMJ, '')   || '㎡/房屋建筑面积'  || NVL(F.JZMJ, '')  || '㎡' AS MJ
+        FROM
+            BDC_FDCQ F
+        JOIN
+            BDC_XM   X     ON F.XMID = X.XMID AND X.QSZT = 1
+        JOIN
+            BDC_QLR  Q     ON F.XMID = Q.XMID AND Q.QLRLB ='1'
+        LEFT JOIN
+            BDC_ZS   ZS    ON Q.ZSID = ZS.ZSID
+        LEFT JOIN
+            BDC_ZD_FWYT Y  ON F.GHYT = Y.DM
+        LEFT JOIN
+            BDC_ZD_FWJG J  ON F.FWJG = J.DM
+        LEFT JOIN
+            BDC_ZD_QLLX L  ON X.QLLX = L.DM
+        LEFT JOIN
+            BDC_ZD_QLXZ Z  ON X.QLXZ = Z.DM
+        LEFT JOIN
+            BDC_ZD_BDCLX B ON X.BDCLX = B.DM
+        LEFT JOIN
+            BDC_ZD_QSZT T ON X.QSZT = T.DM
+        <where>
+            <!--根据权利人信息筛选-->
+            <if test="qlrxx != null and qlrxx.size > 0 ">
+                (
+                    <foreach collection="qlrxx" item="item" index="index" separator=" or ">
+                        (
+                            <if test="item.qlr != null and item.qlr != '' ">
+                                Q.QLRMC = #{item.qlr,jdbcType=VARCHAR}
+                            </if>
+
+                            <if test="item.qlr != null and item.qlr != '' and item.sfzh != null and item.sfzh != '' ">
+                                AND
+                            </if>
+
+                            <if test="item.sfzh != null and item.sfzh != '' ">
+                                Q.ZJH IN
+                                <foreach item="zjxx" index="index" collection="item.sfzh.split(',')" open="(" separator="," close=")">
+                                    #{zjxx, jdbcType=VARCHAR}
+                                </foreach>
+                            </if>
+                        )
+                    </foreach>
+                )
+            </if>
+
+            <if test="bdcdyh != null and bdcdyh != '' ">
+                AND F.BDCDYH = #{bdcdyh, jdbcType=VARCHAR}
+            </if>
+            <if test="fwzl != null and fwzl != '' ">
+                AND X.ZL = #{fwzl, jdbcType=VARCHAR}
+            </if>
+
+            <if test="cxly == '2'.toString() ">
+                AND
+                <choose>
+                    <!--不展示指定规划用途-->
+                    <when test="pcghyt != null and pcghyt !='' and 'Y'.toString() == pcghyt">
+                        F.GHYT NOT IN
+                        <foreach item="item" index="index" collection="ghyt.split(',')" open="(" separator="," close=")">
+                            #{item, jdbcType=VARCHAR}
+                        </foreach>
+                    </when>
+
+                    <!--展示指定规划用途或空-->
+                    <otherwise>
+                        (
+                            <if test="ghyt != null and ghyt !=''">
+                                  F.GHYT  IN
+                                <foreach item="item" index="index" collection="ghyt.split(',')" open="(" separator="," close=")">
+                                    #{item, jdbcType=VARCHAR}
+                                </foreach>
+                            </if>
+                        )
+                    </otherwise>
+                </choose>
+            </if>
+
+            <!--默认按照登记时间（登簿时间）倒叙排序-->
+            ORDER BY X.DJSJ DESC NULLS LAST
+        </where>
+    </select>
+
+    <!--
+        （盐城）根据权利人名称、证件号查询历史房产信息
+    -->
+    <select id="listBdcLsZfxxDTO" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcZfxxQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcZfxxDTO">
+        SELECT
+            DISTINCT
+            X.QLR       AS  YQLRMC,
+            X.QLRZJH    AS  YQLRZJH,
+            X.SLR       AS  SLR,
+            X.SLBH      AS  SLBH,
+            X.ZL        AS  ZL,
+            X.BDCQZH    AS  BDCQZH,
+            F.BDCDYH    AS  BDCDYH,
+            F.JZMJ      AS  JZMJ,
+            F.GHYT      AS  GHYTDM,
+            XYSXM.DJSJ  AS  ZXDJSJ,
+            T.MC        AS  GHYT
+        FROM
+            BDC_FDCQ    F
+        JOIN
+            BDC_XM      X  ON F.XMID  = X.XMID AND X.QSZT = 2
+        JOIN
+            BDC_QLR     Q  ON F.XMID  = Q.XMID AND Q.QLRLB = '1'
+        JOIN
+            BDC_XM_LSGX L  ON L.YXMID = X.XMID
+        JOIN
+            BDC_XM   XYSXM ON L.XMID  = XYSXM.XMID
+        LEFT JOIN
+            BDC_ZD_FWYT T  ON F.GHYT  = T.DM
+        LEFT JOIN
+            BDC_ZD_DJLX D  ON X.DJLX  = D.DM
+        LEFT JOIN
+            BDC_ZS      Z  ON Z.ZSID  = Q.ZSID
+        <where>
+            F.QSZT = 2
+
+            <if test="zxcqcxnx != null and zxcqcxnx != '' ">
+                AND
+                XYSXM.DJSJ >= to_date(#{zxcqcxnx, jdbcType=VARCHAR}, 'yyyyMMdd')
+            </if>
+            <if test="zxcqxyslc != null and zxcqxyslc != '' ">
+                AND XYSXM.GZLDYID IN
+                <foreach item="item" index="index" collection="zxcqxyslc.split(',')"  open="(" separator="," close=")">
+                    #{item, jdbcType=VARCHAR}
+                </foreach>
+            </if>
+
+            <!--根据权利人信息筛选-->
+            <if test="qlrxx != null and qlrxx.size > 0 ">
+                AND
+                (
+                <foreach collection="qlrxx" item="item" index="index" separator=" or ">
+                    (
+                        <if test="item.qlrmc != null and item.qlrmc != '' ">
+                            Q.QLRMC = #{item.qlrmc,jdbcType=VARCHAR}
+                        </if>
+
+                        <if test="(item.qlrmc != null and item.qlrmc != '' ) and ( item.zjh != null and item.zjh != '')">
+                            AND
+                        </if>
+
+                        <!--权利人证件号集合 和单个证件号 有且只有一个有值-->
+                        <if test="item.zjh != null and item.zjh != '' ">
+                            Q.ZJH IN
+                            <foreach item="zjxx" index="index" collection="item.zjh.split(',')" open="(" separator="," close=")">
+                                #{zjxx, jdbcType=VARCHAR}
+                            </foreach>
+                        </if>
+                    )
+                </foreach>
+                )
+            </if>
+
+            <!--根据不动产单元号筛选-->
+            <if test="bdcdyh!=null and bdcdyh !='' and bdcdyh!='null'">
+                AND F.BDCDYH IN
+                <foreach item="item" index="index" collection="bdcdyh.split(',')"  open="(" separator="," close=")">
+                    #{item, jdbcType=VARCHAR}
+                </foreach>
+            </if>
+
+            <!--过滤房屋类型-->
+            <if test="cxly == '1'.toString()">
+                AND
+                <choose>
+                    <!--不展示指定规划用途-->
+                    <when test="pcghyt != null and pcghyt !='' and 'Y'.toString() == pcghyt">
+                        F.GHYT NOT IN
+                        <foreach item="item" index="index" collection="ghyt.split(',')" open="(" separator="," close=")">
+                            #{item, jdbcType=VARCHAR}
+                        </foreach>
+                    </when>
+
+                    <!--展示指定规划用途或空-->
+                    <otherwise>
+                        (
+                            F.GHYT  IS  NULL  OR  F.GHYT IN
+                            <foreach item="item" index="index" collection="ghyt.split(',')" open="(" separator="," close=")">
+                                #{item, jdbcType=VARCHAR}
+                            </foreach>
+                        )
+                    </otherwise>
+                </choose>
+            </if>
+            <!--默认按照登记时间（登簿时间）倒叙排序-->
+            ORDER BY
+                F.BDCDYH ASC, XYSXM.DJSJ DESC NULLS LAST
+        </where>
+    </select>
+
+
+    <select id="listJsydsyqDOByXmid" parameterType="java.lang.String" resultType="cn.gtmap.realestate.common.core.domain.BdcJsydsyqDO">
+        SELECT *
+        FROM
+        bdc_jsydsyq j
+        left join BDC_FCTD_PPGX gx
+        on j.xmid=gx.TDCQXMID
+        left join bdc_fdcq f on gx.FWCQXMID=f.xmid
+        <where>
+            f.xmid  = #{xmid} and j.qszt = 1
+            ORDER BY j.djsj ASC,j.slbh ASC
+        </where>
+    </select>
+
+
+    <!--根据不动产单元号获取对应的查封信息-->
+    <select id="listBdcJzqxx" parameterType="String" resultType="cn.gtmap.realestate.common.core.domain.BdcJzqDO">
+        SELECT
+        J.*
+        FROM
+        BDC_JZQ J
+        JOIN
+        BDC_XM    X
+        ON
+        J.XMID = X.XMID
+        JOIN
+        BDC_XMFB FB
+        ON
+        FB.XMID =X.XMID
+        <where>
+            <if test="bdcdyh != null and bdcdyh != '' ">
+                J.QSZT = '1'
+                AND
+                J.BDCDYH = #{bdcdyh,jdbcType=VARCHAR}
+            </if>
+            <if test="qjgldm != null and qjgldm != ''">
+                AND FB.QJGLDM in
+                <foreach item="item" index="index" collection="qjgldm.split(',')" open="(" separator="," close=")">
+                    #{item, jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+
+    <select id="listBdcHtZfxxDTO" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcZfxxQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcZfxxDTO">
+        SELECT
+        distinct
+        spf.baid AS XMID,
+        spf.SLBH AS SLBH,
+        spf.ZL AS ZL,
+        spf.basj AS DJSJ,
+        spf.bazt AS QSZT,
+        spf.tnmj AS ZDMJ,
+        spf.fwbm AS BDCDYWYBH,
+        2 AS BDCLX,
+        spf.jzmj AS JZMJ,
+        spf.bz AS FJ,
+        spf.jzmj AS TDSYQMJ,
+        spf.jzmj AS FTTDMJ,
+        spf.jzmj AS DYTDMJ,
+        spf.htbh AS jyhth
+        FROM HTBA_SPF spf
+        INNER JOIN HTBA_QLR qlr ON qlr.baid = spf.baid
+        <where>
+            spf.bazt = 1
+            <!--根据权利人信息筛选-->
+            <if test="qlrxx != null and qlrxx.size > 0 ">
+                AND (
+                <foreach collection="qlrxx" item="item" index="index" separator=" or ">
+                    (
+                    <if test="item.qlrmc != null and item.qlrmc != '' ">
+                        qlr.QLRMC = #{item.qlrmc,jdbcType=VARCHAR}
+                    </if>
+
+                    <!--权利人证件号集合 和单个证件号 有且只有一个有值-->
+                    <if test="item.qlrmc != null and item.qlrmc != '' and
+                        (
+                            (item.zjhList != null and item.zjhList.size > 0)
+                        or
+                            (item.zjh != null and item.zjh != '')
+                        ) ">
+                        AND
+                    </if>
+
+                    <!--权利人证件号集合 和单个证件号 有且只有一个有值-->
+                    <if test="item.zjhList != null and item.zjhList.size > 0 ">
+                        <foreach collection="item.zjhList" item="zjhItem" index="index" separator=" or ">
+                            (
+                            instr(','||qlr.ZJH||',' , ','||#{zjhItem, jdbcType=VARCHAR}||',') > 0
+                            )
+                        </foreach>
+                    </if>
+
+                    <!--权利人证件号集合 和单个证件号 有且只有一个有值-->
+                    <if test="item.zjh != null and item.zjh != '' ">
+                        qlr.ZJH IN
+                        <foreach item="zjxx" index="index" collection="item.zjh.split(',')" open="(" separator=","
+                                 close=")">
+                            #{zjxx, jdbcType=VARCHAR}
+                        </foreach>
+                    </if>
+                    )
+                </foreach>
+                )
+            </if>
+
+            <!--默认按照登记时间（登簿时间）倒叙排序-->
+            ORDER BY basj DESC NULLS LAST
+        </where>
+    </select>
+</mapper>

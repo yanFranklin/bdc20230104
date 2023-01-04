@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://dozer.sourceforge.net"
+          xsi:schemaLocation="http://dozer.sourceforge.net
+          http://dozer.sourceforge.net/schema/beanmapping.xsd">
+    <mapping map-null="false" map-empty-string="false" type="one-way" wildcard="false">
+        <!-- 向BDC_QLR转换 -->
+        <class-a>com.alibaba.fastjson.JSONObject</class-a>
+        <class-b>cn.gtmap.realestate.common.core.dto.accept.FcjyClfHtxxDTO</class-b>
+        <field map-id="slxm">
+            <a>BODY</a>
+            <b>bdcSlXmDO</b>
+        </field>
+        <field map-id="jyxx">
+            <a>BODY</a>
+            <b>bdcSlJyxx</b>
+        </field>
+        <field custom-converter="cn.gtmap.realestate.exchange.core.dozer.converters.ExecuteStaticMethodObjCustomConvert"
+               custom-converter-param="cn.gtmap.realestate.exchange.service.impl.inf.changzhou.FcjyQlrDealServiceImpl.splitQlrsByDh">
+            <a>BODY</a>
+            <b>bdcQlr</b>
+        </field>
+        <field custom-converter="cn.gtmap.realestate.exchange.core.dozer.converters.ExecuteStaticMethodObjCustomConvert"
+               custom-converter-param="cn.gtmap.realestate.exchange.service.impl.inf.changzhou.FcjyQlrDealServiceImpl.splitSqrsByDh">
+            <a>BODY</a>
+            <b>bdcSlSqr</b>
+        </field>
+        <field>
+            <a>HEADER.RET_CODE</a>
+            <b>code</b>
+        </field>
+        <field>
+            <a>HEADER.RET_MSG</a>
+            <b>msg</b>
+        </field>
+        <field map-id="qtAttrMap">
+            <a>BODY</a>
+            <b>qtAttrMap</b>
+        </field>
+        <field>
+            <a>BODY.DZHT</a>
+            <b>dzht</b>
+        </field>
+    </mapping>
+
+    <mapping map-id="qtAttrMap" map-null="false" map-empty-string="false" type="one-way" wildcard="false">
+        <class-a>com.alibaba.fastjson.JSONObject</class-a>
+        <class-b>java.util.Map</class-b>
+        <field>
+            <a>FWBHLX</a>
+            <b key="fwbhlx">this</b>
+        </field>
+    </mapping>
+
+    <mapping map-id="slxm" map-null="false" map-empty-string="false" type="one-way" wildcard="false">
+        <class-a>com.alibaba.fastjson.JSONObject</class-a>
+        <class-b>cn.gtmap.realestate.common.core.domain.accept.BdcSlXmDO</class-b>
+        <field>
+            <a>ZL</a>
+            <b>zl</b>
+        </field>
+    </mapping>
+
+    <mapping map-id="jyxx" map-null="false" map-empty-string="false" type="one-way" wildcard="false">
+        <!-- 向BDC_JYXX转换 -->
+        <class-a>com.alibaba.fastjson.JSONObject</class-a>
+        <class-b>cn.gtmap.realestate.common.core.domain.accept.BdcSlJyxxDO</class-b>
+        <field>
+            <a>HTBH</a>
+            <b>htbh</b>
+        </field>
+        <field custom-converter="cn.gtmap.realestate.common.core.dozer.converters.gtmap.StringToDateCustomConverter"
+               custom-converter-param="yyyy-MM-dd">
+            <a>BASJ</a>
+            <b>htbasj</b>
+        </field>
+        <field custom-converter="cn.gtmap.realestate.common.core.dozer.converters.gtmap.DivisionCustomConvert"
+               custom-converter-param="10000">
+            <a>ZJK</a>
+            <b>jyje</b>
+        </field>
+        <field>
+            <a>JZMJ</a>
+            <b>htmj</b>
+        </field>
+        <field>
+            <a>ZL</a>
+            <b>zl</b>
+        </field>
+    </mapping>
+</mappings>

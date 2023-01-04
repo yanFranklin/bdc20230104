@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>查档页面</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/slymForm.css"/>
+    <link rel="stylesheet" href="../../static/css/cdym.css"/>
+</head>
+<body>
+<div class="bdc-form-div bdc-not-full-bg">
+    <!--全局 标题和操作按钮 开始-->
+    <form class="layui-form sl-from bdc-form-table">
+        <div class="bdc-content-fix">
+            <div class="content-title layui-clear">
+                <p>查档</p>
+                <div id="buttonArea"></div>
+            </div>
+        </div>
+        <!--全局 标题和操作按钮 结束-->
+        <div class="form-margin-area">
+            <div class="form-margin-area">
+                <div id="cdxx" class="basic-info"></div>
+                <div id="bcxr" class="basic-info"></div>
+                <div id="cxContent"></div>
+                <div id="sjcl" class="basic-info"></div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+
+<script type="text/html" id="buttonAreaTpl">
+    <div class="title-btn-area">
+        <button class="layui-btn bdc-major-btn" lay-submit="" lay-filter="saveData" type="button"
+                id="saveData">保存
+        </button>
+        <button  class="layui-btn bdc-secondary-btn" type="button" id="showRzdb">人证对比</button>
+        <button  class="layui-btn bdc-secondary-btn" lay-submit="" lay-filter="hqdbjg" type="button"
+                id="hqdbjg">获取对比结果
+        </button>
+        <button onclick="jumpQuery('qlrcdjg')" class="layui-btn bdc-secondary-btn" lay-submit="" lay-filter="qlrcx" type="button"
+                id="qlrcx">权利人查询
+        </button>
+        <button onclick="jumpQuery('lhgxcdjg')" class="layui-btn bdc-secondary-btn" lay-submit="" lay-filter="gxrcx" type="button"
+                id="gxrcx">关系人查询
+        </button>
+        <button onclick="jumpQuery('zlhgxcdjg')" class="layui-btn bdc-secondary-btn" lay-submit="" lay-filter="zgxrcx" type="button"
+                id="zgxrcx">准关系人查询
+        </button>
+        <button class="layui-btn bdc-secondary-btn print-btn" type="button" id="printButtonQlr" onclick="printData('qlrsqrd')">打印</button>
+        <button class="layui-btn bdc-secondary-btn print-btn" type="button" id="printButtonGxr" onclick="printData('lhgxsqd')">关系人打印</button>
+        <button class="layui-btn bdc-secondary-btn print-btn" type="button" id="printButtonZGxr" onclick="printData('zlhgxsqd')">准利害关系人打印</button>
+
+    </div>
+</script>
+<!--申请信息展示-->
+<script type="text/html" id="cdxxTpl">
+    {{# if(d.cdxx){ }}
+    {{# var bdcCdxxDO = d.cdxx.bdcCdxxDO}}
+    {{# var bdcFdcqDO = d.cdxx.bdcFdcqDO}}
+    {{# var bdcXmDO = d.cdxx.bdcXmDO}}
+    {{# var bdcSlJbxx = d.cdxx.bdcSlJbxxDO }}
+    <form class="layui-form setOverflow" id="cdxxForm">
+        <div class="title-sign">
+            <p>申请信息</p>
+        </div>
+        <div class="layui-form-item">
+            <input type="hidden" id="xmid" name="xmid" class="layui-input cdxx"
+                   value="{{bdcCdxxDO.xmid || ''}}">
+            <input type="hidden" id="cdxxid" name="cdxxid" class="layui-input cdxx"
+                   value="{{bdcCdxxDO.cdxxid || ''}}">
+            <input type="hidden" id="jbxxid" name="jbxxid" class="layui-input"
+                   value="{{bdcSlJbxx.jbxxid || ''}}">
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">受理编号</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="slbh" class="layui-input"
+                           value="{{bdcSlJbxx.slbh || ''}}" disabled="off">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label">受理时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="slsj" name="slsj" class="layui-input"
+                           value="{{bdcSlJbxx.slsj || ''}}" disabled="off">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">受理人</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="slr" name="slr" class="layui-input"
+                           value="{{bdcSlJbxx.slr || ''}}" disabled="off">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">申请人</label>
+                <div class="layui-input-inline">
+                    <input type="text" lay-verify="required" id="cdr" name="cdr" class="layui-input cdxx"
+                           value="{{bdcCdxxDO.cdr || ''}}" ondblclick="cdrReadIdCard(this)">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">申请人<br>证件类型</label>
+                <div class="layui-input-inline">
+                    <select name="cdrzjzl" lay-verify="required" lay-search="" lay-filter="cdrzjzl" id="cdrzjzl" class="cdxx">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                        <option value="{{item.DM || ''}}" {{# if(bdcCdxxDO.cdrzjzl==item.DM ){ }} selected="selected" {{# }
+                                }}>
+                            {{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">申请人证件号</label>
+                <div class="layui-input-inline">
+                    {{# if(bdcCdxxDO.cdrzjzl == '1' ){ }}
+                    <input lay-verify="identitynew required" type="text"  id="cdrzjh" name="cdrzjh" class="layui-input cdxx"
+                           value="{{bdcCdxxDO.cdrzjh || ''}}" >
+                    {{# }else{ }}
+                    <input lay-verify="required" type="text"  id="cdrzjh" name="cdrzjh" class="layui-input cdxx"
+                           value="{{bdcCdxxDO.cdrzjh || ''}}" >
+                    {{# } }}
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">申请人电话</label>
+                <div class="layui-input-inline">
+                    <input type="text" lay-verify="required" id="cdrdh" name="cdrdh" class="layui-input cdxx"
+                           value="{{bdcCdxxDO.cdrdh || ''}}">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">代理人</label>
+                <div class="layui-input-inline">
+                    <input type="text" lay-verify="" id="dlr" name="dlr" class="layui-input cdxx"
+                           value="{{bdcCdxxDO.dlr || ''}}" ondblclick="dlrReadIdCard(this)">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">代理人<br>证件类型</label>
+                <div class="layui-input-inline">
+                    <select name="dlrzjzl" lay-verify="" lay-search="" lay-filter="dlrzjzl" id="dlrzjzl" class="cdxx">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                        <option value="{{item.DM || ''}}" {{# if(bdcCdxxDO.dlrzjzl==item.DM ){ }} selected="selected" {{# }
+                                }}>
+                            {{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">代理人证件号</label>
+                <div class="layui-input-inline">
+                    {{# if(bdcCdxxDO.dlrzjzl== '1' ){ }}
+                    <input  lay-verify="identitynew" type="text"  id="dlrzjh" name="dlrzjh" class="layui-input cdxx"
+                           value="{{bdcCdxxDO.dlrzjh || ''}}" >
+                    {{# }else{ }}
+                    <input lay-verify="" type="text"  id="cdlrzjh" name="dlrzjh" class="layui-input cdxx"
+                           value="{{bdcCdxxDO.dlrzjh || ''}}" >
+                    {{# } }}
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">代理人电话</label>
+                <div class="layui-input-inline">
+                    <input type="text" lay-verify="" id="dlrdh" name="dlrdh" class="layui-input cdxx"
+                           value="{{bdcCdxxDO.dlrdh || ''}}">
+                </div>
+            </div>
+        </div>
+    </form>
+    {{# }}}
+</script>
+
+<!--被查询人信息展示-->
+<script type="text/html" id="bcxrTpl">
+    <div class="title-sign bdc-title-sign-btn">
+        <p>被查询人</p>
+        <div class="bdc-tab-a">
+            <button type="button" class="layui-btn layui-btn-sm bdc-secondary-btn" onclick="addBcxrEle()"
+                    id="addbcxr">新增
+            </button>
+        </div>
+    </div>
+    <form class="common-form sl-from layui-form bdc-form-table" name="bcxrForm">
+        <div class="layui-form-item">
+            <div class="bcxrForm" id="bcxrForm">
+                <table class="slym layui-table bdc-jt-table" border="1" name="addBcxr" id="addBcxrTable">
+                    <thead>
+                    <tr class="gray-tr">
+                        <th>序号</th>
+                        <th>关系</th>
+                        <th>名称</th>
+                        <th>证件种类</th>
+                        <th>身份证证件号</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    {{# if(d.bdcBcxrDOList.length==0) { }}
+                    <tr class="bdc-table-none">
+                        <td colspan="3">
+                            <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据</div>
+                        </td>
+                    </tr>
+                    {{# } else { }}
+                    {{# layui.each(d.bdcBcxrDOList, function(i, bdcBcxr){ }}
+                    <tr>
+                        <input type="hidden" name="jtcyid" value="{{bdcBcxr.jtcyid || ''}}" class="bcxr">
+
+                        <td>{{i+1}}</td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <select name="ysqrgx" lay-search="" lay-filter="ysqrgx" class="bcxr" id="ysqrgx"
+                                        {{# if(i==0 ){ }}
+
+                                        {{# } }}>
+                                    <option value="">请选择</option>
+                                    <option value="本人" {{# if(bdcBcxr.ysqrgx=='本人' ){ }}
+                                            selected="selected"
+                                            {{# } }}>本人</option>
+                                    <option value="配偶" {{# if(bdcBcxr.ysqrgx=='配偶' ){ }}
+                                            selected="selected"
+                                            {{# } }}>配偶</option>
+                                    <option value="子女" {{# if(bdcBcxr.ysqrgx=='子女' ){ }}
+                                            selected="selected"
+                                            {{#
+                                            } }}>子女</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <input type="text" lay-verify="" id="jtcymc" name="jtcymc" value="{{bdcBcxr.jtcymc || ''}}"
+                                       class="layui-input bcxr" {{# if(i==0 ){ }}
+                                       {{#
+                                       } }} ondblclick="zjhReadIdCard(this)">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <select name="bcxrzjzl" lay-verify="" lay-search="" class="bcxr" lay-filter="zjzl" id="bcxrzjzl">
+                                    <option value="">请选择</option>
+                                    {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                                    <option value="{{item.DM || ''}}" {{# if(bdcBcxr.zjzl==item.DM ){ }} selected="selected" {{# }
+                                            }}>
+                                        {{item.MC || ''}}
+                                    </option>
+                                    {{# }); }}
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <input type="text" lay-verify="identitynew" id="zjh" name="zjh" value="{{bdcBcxr.zjh || ''}}"
+                                       class="layui-input bcxr" {{# if(i==0 ){ }}
+                                       {{#
+                                       } }} >
+                            </div>
+                        </td>
+                        <td align="center">
+                            {{# if(bdcBcxr.ysqrgx !='本人' ){ }}
+                                <span class="layui-btn layui-btn-xs layui-btn-danger bdc-delete-btn" onclick="deleteBcxr('',this)">删除</span>
+                            {{#
+                            } }}
+
+                        </td>
+
+                    </tr>
+                    {{# }); }}
+                    {{# } }}
+                </table>
+            </div>
+        </div>
+    </form>
+</script>
+
+<!--查询信息展示-->
+<script type="text/html" id="cxxxTpl">
+    {{# if(d.cdxx){ }}
+    {{# var bdcCdxxDO = d.cdxx.bdcCdxxDO}}
+    {{# var bdcFdcqDO = d.cdxx.bdcFdcqDO}}
+    {{# var bdcXmDO = d.cdxx.bdcXmDO}}
+    {{# var bdcSlJbxx = d.cdxx.bdcSlJbxxDO}}
+    <div id="cxxx" class="basic-info">
+        <form class="layui-form setOverflow" id="cxxxForm">
+            <div class="title-sign">
+                <p>查询信息</p>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline bdc-two-column">
+                    <label class="layui-form-label change-label-width">查询证号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" lay-verify="" id="cqzh" name="cqzh" class="layui-input cdxx"
+                               value="{{bdcCdxxDO.cqzh || ''}}">
+                    </div>
+                </div>
+                <div class="layui-inline bdc-two-column">
+                    <label class="layui-form-label change-label-width">查询坐落</label>
+                    <div class="layui-input-inline">
+                        <input type="text" lay-verify="" id="zl" name="zl" class="layui-input cdxx"
+                               value="{{bdcCdxxDO.zl || ''}}">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="cxmd" class="basic-info">
+        <form class="layui-form setOverflow" id="cxmdForm">
+            <div class="title-sign">
+                <p>查询目的</p>
+            </div>
+
+            <div class="layui-form-item">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width bdc-label-newline">查询目的<br>或用途</label>
+                    <div class="layui-input-inline">
+                        <select xm-select="cxmdhyt" lay-verify="" name="cxmdhyt" id="cxmdhyt" class="cdxx"
+                                xm-select-skin="default" xm-select-show-count="2" xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline bdc-two-column" style="display: none">
+                    <div class="layui-input-inline">
+                        <input type="text" lay-verify="" id="cxmdhytqt" name="cxmdhytqt" class="layui-input cdxx"
+                               value="{{bdcCdxxDO.cxmdhytqt || ''}}">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline xzq-sele">
+                    <label class="layui-form-label change-label-width bdc-label-newline">登记簿<br>记载信息</label>
+                    <div class="layui-input-inline">
+                        <select xm-select="djbjzxx" lay-verify="" name="djbjzxx" id="djbjzxx" class="cdxx"
+                                xm-select-skin="default" xm-select-show-count="2" xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline xzq-sele">
+                    <label class="layui-form-label">登记原始凭证</label>
+                    <div class="layui-input-inline">
+                        <select xm-select="djyspz" lay-verify="" name="djyspz" id="djyspz" class="cdxx"
+                                xm-select-skin="default" xm-select-show-count="2" xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline xzq-sele">
+                    <label class="layui-form-label">查询结果要求</label>
+                    <div class="layui-input-inline">
+                        <select xm-select="cxjgyq" lay-verify="" name="cxjgyq" id="cxjgyq" class="cdxx"
+                                xm-select-skin="default" xm-select-show-count="2" xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+
+            <div class="layui-form-item change-textarea-margin">
+                <label class="layui-form-label change-label-width">备注</label>
+                <div class="layui-input-inline">
+                    <textarea class="layui-textarea change-textarea-width" name="bz"
+                              id="bz">{{bdcSlJbxx.bz || ''}}</textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+              <div class="layui-inline bdc-two-column two-column-textarea">
+                  <label class="layui-form-label change-label-width">承诺书</label>
+                  <div class="layui-input-inline">
+                     <textarea class="layui-textarea" readonly>申请人承诺：本次查询申请填写内容及提交材料真实、合法、有效，并严格按照有关要求查阅、利用不动产登记材料，
+            严格按照产查目的使用查询结果。如有虚假或违反，由本人（单位）承担相关法律责任。</textarea>
+                  </div>
+              </div>
+                <div class="layui-inline bdc-two-column sign-inline">
+                    <div class="layui-input-inline">
+                        <img id="photo" src=" " alt="" height="100px"/>
+                        <div class="sign-btn-box">
+                            <a href="javascript:;" onclick="sign()" id="sqrSign" class="layui-btn layui-btn-sm bdc-secondary-btn" lay-filter="saveQlrSign">
+                                <i class="layui-icon layui-icon-edit"></i><br>申<br>请<br>人<br>签<br>名
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--        <div class="layui-form-item">-->
+            <!--            <div class="layui-inline bdc-two-column">-->
+            <!--                <label class="layui-form-label">下载地址</label>-->
+            <!--                <div class="layui-input-inline">-->
+            <!--                    <input type="text" autocomplete="off"  class="layui-input"-->
+            <!--                           value="www.baidu.com" disabled="off">-->
+            <!--                </div>-->
+            <!--            </div>-->
+
+            <!--            <div class="layui-inline  bdc-two-column">-->
+            <!--                <label class="layui-form-label">咨询电话</label>-->
+            <!--                <div class="layui-input-inline">-->
+            <!--                    <input type="text" autocomplete="off" class="layui-input"-->
+            <!--                           value="110" disabled="off">-->
+            <!--                </div>-->
+            <!--            </div>-->
+            <!--        </div>-->
+        </form>
+    </div>
+    {{# }}}
+</script>
+
+<!--收件信息信息展示-->
+<script type="text/html" id="sjclTpl">
+    <div class="title-sign bdc-title-sign-btn">
+        <p>收件材料</p>
+        <div class="bdc-tab-a">
+            <button type="button" class="layui-btn layui-btn-sm bdc-secondary-btn" onclick="addSjcl()"
+                    id="addsjcl">新增
+            </button>
+            <button type="button" class="layui-btn layui-btn-sm sjclscbtn bdc-secondary-btn"
+                    onclick="uploadSjcl('')"
+                    id="clsc">材料上传
+            </button>
+            <button type="button" class="layui-btn layui-btn-sm sjclscbtn bdc-secondary-btn"
+                    onclick="checksjcl()"
+                    id="clck">材料查看
+            </button>
+            <button type="button" class="layui-btn layui-btn-sm bdc-secondary-btn" onclick="deleteSjclPl()"
+                    id="plsc">批量删除
+            </button>
+        </div>
+    </div>
+    <input type="hidden" name="xmid" value="{{d.xmid || ''}}">
+    <form class="common-form sl-from layui-form bdc-form-table" name="sjclForm">
+        <div class="layui-form-item">
+            <div class="sjclForm" id="sjclForm">
+                <table class="slym layui-table bdc-jt-table" border="1" name="addsjcl" id="addSjclTable">
+                    <thead>
+                    <tr class="gray-tr">
+                        <td width="30px">
+                            <input type="checkbox" lay-filter="qxCheckbox" name="qxTable" style="width: 50px;" title=""
+                                   lay-skin="primary">
+                        </td>
+                        <th width="50px">序号</th>
+                        <th style="min-width: 200px">材料名称</th>
+                        <th>份数</th>
+                        <th>页数</th>
+                        <th>类型</th>
+                        <th width="200px">操作</th>
+                    </tr>
+                    </thead>
+                    {{# if(d.bdcSlSjclDOList.length==0) { }}
+                    <tr class="bdc-table-none">
+                        <td colspan="7">
+                            <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据</div>
+                        </td>
+                    </tr>
+                    {{# } else { }}
+                    {{# layui.each(d.bdcSlSjclDOList, function(i, bdcSlSjcl){ }}
+                    <tr>
+                        <input type="hidden" name="xmid" value="{{bdcSlSjcl.xmid || ''}}" class="sjcl">
+                        <input type="hidden" name="gzlslid" value="{{bdcSlSjcl.gzlslid || ''}}"
+                               class="sjcl{{d.index || ''}}">
+                        <input type="hidden" name="sjclid" value="{{bdcSlSjcl.sjclid || ''}}" class="sjcl">
+                        <input type="hidden" name="wjzxid" value="{{bdcSlSjcl.wjzxid || ''}}" class="sjcl">
+                        <input type="hidden" name="xh" value="{{bdcSlSjcl.xh || ''}}" class="sjcl">
+                        <td>
+                            <input type="checkbox" lay-filter="yxCheckbox" class="yx" name="yxTable"
+                                   value="{{bdcSlSjcl.sjclid || ''}}" title="" lay-skin="primary">
+                        </td>
+                        <td>{{i+1}}</td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <input type="text" lay-verify="" id="clmc" name="clmc" value="{{bdcSlSjcl.clmc || ''}}"
+                                       class="layui-input sjcl{{d.index || ''}}" title="{{bdcSlSjcl.clmc || ''}}">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <input type="text" lay-verify="" id="fs" name="fs" value="{{bdcSlSjcl.fs || ''}}"
+                                       class="layui-input sjcl">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <input type="text" lay-verify="" id="ys" name="ys" value="{{bdcSlSjcl.ys || ''}}"
+                                       class="layui-input sjcl">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <select name="sjlx" lay-search="" lay-filter="sjlx" class="sjcl" id="sjlx">
+                                    <option value="">请选择</option>
+                                    {{# layui.each(d.zd.sjlx, function(index, item){ }}
+                                    <option value="{{item.DM || '0'}}" {{# if(bdcSlSjcl.sjlx==item.DM ){ }}
+                                            selected="selected"
+                                            {{#
+                                            } }}>{{item.MC || ''}}
+                                    </option>
+                                    {{# }); }}
+                                </select>
+                            </div>
+                        </td>
+                        <td align="center">
+                            <button type="button" class="layui-btn layui-btn-xs bdc-major-btn" onclick="scfj(this)"
+                                    id="sjclsc" name="sjclsc">上传
+                            </button>
+                            <button type="button" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn"
+                                    onclick="deleteSjcl('{{bdcSlSjcl.sjclid || \'\'}}',this)" id="sjcldelete"
+                                    name="sjcldelete">
+                                删除
+                            </button>
+                            <button type="button" class="layui-btn layui-btn-xs layui-btn-primary"
+                                    onclick="changeSjclSxh('{{bdcSlSjcl.sjclid || \'\'}}', 'up')" id="sjclup" name="sjclup">
+                                ↑
+                            </button>
+                            <button type="button" class="layui-btn layui-btn-xs layui-btn-primary"
+                                    onclick="changeSjclSxh('{{bdcSlSjcl.sjclid || \'\'}}', 'down')" id="sjcldown"
+                                    name="sjcldown">↓
+                            </button>
+                        </td>
+                    </tr>
+                    {{# }); }}
+                    {{# } }}
+                </table>
+            </div>
+        </div>
+    </form>
+</script>
+
+
+<!--新增被查询人模板-->
+<script type="text/html" id="addBcxrTpl">
+    <tr>
+        <input type="hidden" name="jtcyid" value="" class="bcxr">
+
+        <td>
+            {{d.bcxrNumber || ''}}
+        </td>
+        <td>
+            <select name="ysqrgx" lay-search="" lay-filter="ysqrgx" class="bcxr">
+                <option value="">请选择</option>
+                <option value="配偶">配偶</option>
+                <option value="子女">子女</option>
+            </select>
+        <td>
+            <input type="text" name="jtcymc" lay-verify="" class="bcxr">
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <select name="bcxrzjzl" lay-verify="" lay-search="" lay-filter="zjzl" id="bcxrzjzl" disabled="off">
+                    <option value="">请选择</option>
+                    {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                    <option value="{{item.DM || ''}}" {{# if(item.DM =='1' ){ }} selected="selected" {{# }
+                            }}>
+                        {{item.MC || ''}}
+                    </option>
+                    {{# }); }}
+                </select>
+            </div>
+        </td>
+        <td>
+            <input type="text" name="zjh" lay-verify="" class="bcxr" ondblclick="zjhReadIdCard(this)">
+        </td>
+
+        <td align="center">
+            <span class="layui-btn layui-btn-xs layui-btn-danger bdc-delete-btn" onclick="deleteBcxr('',this)">删除</span>
+
+        </td>
+    </tr>
+</script>
+
+<!--新增收件材料模板-->
+<script type="text/html" id="addSjclTpl">
+    <tr>
+        <input type="hidden" name="xmid" value="" class="sjcl">
+        <input type="hidden" name="gzlslid" value="{{d.gzlslid || ''}}" class="sjcl">
+        <input type="hidden" name="sjclid" value="" class="sjcl">
+        <input type="hidden" name="wjzxid" value="" class="sjcl">
+        <input type="hidden" name="xh" value="{{d.sjclNumber || ''}}" class="sjcl">
+        <td>
+            <input type="checkbox"  name="checkbox{{d.sjclNumber || ''}}"  class='sjcl' lay-skin="primary">
+        </td>
+        <td>
+            {{d.sjclNumber || ''}}
+        </td>
+        <td>
+            <input type="text" name="clmc" lay-verify="" class="sjcl">
+        <td>
+            <input type="text" name="fs" lay-verify="" class="sjcl">
+        </td>
+        <td>
+            <input type="text" name="ys" lay-verify="" class="sjcl">
+        </td>
+        <td>
+            <select  name="sjlx" class="sjcl">
+                <option value="">请选择</option>
+                {{# layui.each(d.zd.sjlx, function(index, item){ }}
+                <option value="{{item.DM || '0'}}" selected="selected">{{item.MC || ''}}
+                </option>
+                {{# }); }}
+            </select>
+        </td>
+        <td align="center">
+            <span class="layui-btn layui-btn-xs bdc-major-btn" onclick="scfj(this)">上传</span>
+            <span class="layui-btn layui-btn-xs layui-btn-danger bdc-delete-btn" onclick="deleteSjcl('',this)">删除</span>
+            <span class="layui-btn layui-btn-xs layui-btn-primary" onclick="changeSjclSxh('', 'up')">↑</span>
+            <span class="layui-btn layui-btn-xs layui-btn-primary" onclick="changeSjclSxh('', 'down')">↓</span>
+        </td>
+    </tr>
+</script>
+
+<!--读卡器-->
+<object id="CertCtl" TYPE="application/cert-reader" width=0 height=0"></object>
+
+
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<!--小数计算防精度缺失-->
+<script src="../../static/lib/mathjs/math.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/lib/bdcui/js/print/print-common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/slymCommon.js"></script>
+<script src="../../static/js/yancheng/cdym/cdym.js"></script>
+<!--表单验证公共方法-->
+<script src='../../static/js/slymyz.js'></script>
+<!--收件材料公共方法-->
+<script src='../../static/js/slym/sjclCommon.js'></script>
+<!--打印方法-->
+<script src='../../static/js/slym/print.js'></script>
+<script src='../../static/js/yancheng/cdym/readCard.js'></script>
+<!--为了获取参数方便，将formCenter.js放在参数之后 -->
+<script src='../../static/js/formCenter.js'></script>
+
+</html>

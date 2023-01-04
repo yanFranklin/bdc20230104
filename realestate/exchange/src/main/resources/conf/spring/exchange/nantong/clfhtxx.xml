@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!-- 南通 存量房合同信息查询 参数为 {"htbh":"","msrzjh":""}-->
+    <ex:bean id="nt_clfhtxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="存量房合同信息查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="url" value="${nt.clfhtxx.url}" />
+        </ex:service-info>
+    </ex:bean>
+    <!-- 南通 通知交易系统合同受理编号，案件状态，权属状态-->
+    <ex:bean id="ts_tofcjy_djzt">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="向资金监管推送登记状态"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="url" value="${nt.tsdjzt.url}"/>
+        </ex:service-info>
+        <ex:request replaceRequestBody="true">
+            <ex:element sourceService="listBdcXmByGzlslid_djzt"/>
+        </ex:request>
+    </ex:bean>
+
+    <!-- 根据工作流实例id查询项目  -->
+    <ex:bean id="listBdcXmByGzlslid_djzt">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="commonServiceImpl"/>
+            <ex:property name="methodName" value="listBdcXmByGzlslidForNtTofcjy"/>
+            <ex:property name="params" value="gzlslid"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/nantong/clfhtxx/ts_tofcjy_djzt/request/param.xml" notEmpty="true"/>
+        </ex:request>
+        <ex:response dozerXml="conf/dozer/nantong/clfhtxx/ts_tofcjy_djzt/response/merge.xml">
+            <ex:element dozerXml="conf/dozer/nantong/clfhtxx/ts_tofcjy_djzt/response/data.xml" listToObject="true"/>
+            <ex:element name="qlxx" dozerXml="conf/dozer/nantong/clfhtxx/ts_tofcjy_djzt/response/qlxx.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <ex:bean id="queryZslx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="commonServiceImpl"/>
+            <ex:property name="methodName" value="queryZslxByxmid"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <ex:bean id="queryZsfj">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="commonServiceImpl"/>
+            <ex:property name="methodName" value="queryZsfjByxmid"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 南通 接收合同备案状态-->
+    <ex:bean id="htbazt">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.accept.BdcSlJyxxFeignService"/>
+            <ex:property name="methodName" value="updateJyxxByHtbh"/>
+            <ex:property name="params" value="jsonObject,htbh"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="jsonObject" dozerRelXml="json.xml"/>
+            <ex:element dozerRelXml="param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element saveNull="cn.gtmap.realestate.exchange.core.dto.wwsq.yhxt.YhxtResponseDTO"/>
+        </ex:response>
+        <ex:log dsfFlag="FCJY" logEventName="房产交易更新合同备案状态" requester="FCJY" responser="BDC"/>
+    </ex:bean>
+
+    <!-- 南通 一体化存量房网签 参数为 {"htbh":"","msrzjh":""}-->
+    <ex:bean id="ntyth_clfwqxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="存量房网签信息查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="url" value="${nt.clfwqxx.url}"/>
+        </ex:service-info>
+    </ex:bean>
+    <!-- 南通 一体化存量房网签 数据格式转换后 参数为 {"htbh":"","msrzjh":""}-->
+    <ex:bean id="ntyth_clfwqxx_zh">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="存量房网签信息查询_转换"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="url" value="${nt.clfwqxx.url}"/>
+        </ex:service-info>
+        <ex:response resultKey="htxx">
+            <ex:element dozerXml="conf/dozer/nantong/clfhtxx/ntyth_clfwqxx/response/data.xml"/>
+        </ex:response>
+    </ex:bean>
+    <!-- 南通 一体化 推送审查信息给 存量房网签 -->
+    <ex:bean id="ntyth_clfwqsc">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="存量房网签信息审查推送"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="url" value="${nt.clfwqsc.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerRelXml="param.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!--如东  获取存量房交易信息分页 -->
+    <ex:bean id="rd_clfhtxx_page">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.etl.RudongFcjyDataFeignService"/>
+            <ex:property name="methodName" value="bdcClfHtxxByPageJson"/>
+            <ex:property name="params" value="pageable,bdcHtxxQoStr"/>
+        </ex:service-info>
+
+        <ex:request>
+            <ex:element name="pageable" sourceService="getPageable"/>
+            <ex:element name="bdcHtxxQoStr" dozerXml="conf/dozer/nantong/clfhtxx/rd_clfhtxx_page/request/param.xml" objectToJsonString="true"/>
+        </ex:request>
+    </ex:bean>
+
+    <!-- 如东 获取商品房交易信息分页 -->
+    <ex:bean id="rd_spfhtxx_page">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.etl.RudongFcjyDataFeignService"/>
+            <ex:property name="methodName" value="bdcSpfHtxxByPageJson"/>
+            <ex:property name="params" value="pageable,bdcHtxxQoStr"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="pageable" sourceService="getPageable"/>
+            <ex:element name="bdcHtxxQoStr" dozerXml="conf/dozer/nantong/clfhtxx/rd_spfhtxx_page/request/param.xml" objectToJsonString="true"/>
+        </ex:request>
+    </ex:bean>
+
+    <!--如东  获取存量房交易信息 -->
+    <ex:bean id="rd_clfhtxx">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="存量房合同信息查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="url" value="${rd.clfhtxx.url}" />
+        </ex:service-info>
+        <ex:request replaceRequestBody="true">
+            <ex:element sourceService="rd_clfhtxxcx_request"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/nantong/clfhtxx/rd_clfhtxx/response/data.xml" sourceFirst="true" sourceService="rdhtxx_dealresult"/>
+        </ex:response>
+    </ex:bean>
+
+    <!--如东  获取商品房交易信息 -->
+    <ex:bean id="rd_spfhtxx">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="商品房合同信息查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="url" value="${rd.spfhtxx.url}" />
+        </ex:service-info>
+        <ex:request replaceRequestBody="true">
+            <ex:element sourceService="rd_spfhtxxcx_request" />
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/nantong/clfhtxx/rd_spfhtxx/response/data.xml" sourceFirst="true" sourceService="rdhtxx_dealresult"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 处理交易结果信息 -->
+    <ex:bean id="rdhtxx_dealresult">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="nantongFcjyServiceImpl"/>
+            <ex:property name="methodName" value="dealResult"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 构造交易查询信息的 请求参数 -->
+    <ex:bean id="rd_clfhtxxcx_request">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="nantongFcjyServiceImpl"/>
+            <ex:property name="methodName" value="getClfHtxxParam"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <ex:bean id="rd_spfhtxxcx_request">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="nantongFcjyServiceImpl"/>
+            <ex:property name="methodName" value="getSpfHtxxParam"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!--南通获取住建交易信息接口 -->
+    <ex:bean id="nt_clfzjjyxx_zh">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="存量房住建交易信息查询_转换"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZJBM"/>
+            <ex:property name="dsfFlag" value="ZJBM"/>
+            <ex:property name="url" value="${nt.clfzjjyxx.url}"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element sourceService="zjxxZh"/>
+            <!--            <ex:element dozerXml="conf/dozer/nantong/clfhtxx/zjjyxx/response/data.xml"/>-->
+        </ex:response>
+    </ex:bean>
+    <!-- 根据受理的历史关系 查询上一手产权 -->
+    <ex:bean id="zjxxZh">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="nantongFcjyServiceImpl"/>
+            <ex:property name="methodName" value="zjxxZh"/>
+        </ex:service-info>
+    </ex:bean>
+
+</beans>

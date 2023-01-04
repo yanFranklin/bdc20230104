@@ -1,0 +1,82 @@
+<!--/**-->
+<!--* author: 前端组-->
+<!--* date: 2019-01-28-->
+<!--* version 3.0.0-->
+<!--* describe: 筛选弹窗的常用尺寸有宽度440px和宽度900px。
+                宽度440px用于单行文本框，适用于查询条件不多的情况；
+                宽度900px用于有筛选项和文本框较多，一行两个或者三个，input较长时独占一行-->
+<!--*/-->
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>新增或者编辑系统公告配置</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/popup.css" />
+</head>
+<body>
+<div id="bdc-popup-large">
+    <form class="layui-form bdc-not-full-bg" action="" lay-filter="xtggForm">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline xzq-sele bdc-not-null">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>工作流名称</label>
+                <div class="layui-input-inline bdc-radio">
+                    <select lay-filter="gzldyid" lay-verify="required" class="search" id="gzldyid" name="gzldyid" xm-select="selectGzldyid"  xm-select-radio xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                        <option value="">请选择或输入</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline bdc-not-null">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>公告类型</label>
+                <div class="layui-input-inline bdc-radio">
+                    <select lay-filter="gglx" id="gglx" name="gglx" lay-verify="required" lay-search="" class="search" xm-select="selectGglx"  xm-select-radio xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline bdc-not-null">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>审批来源</label>
+                <div class="layui-input-inline bdc-radio">
+                    <select lay-filter="sply" id="sply" name="sply" lay-verify="required" lay-search="" class="search" xm-select="selectSply"  xm-select-radio xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-inline bdc-complete-line bdc-not-null">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>公告标题</label>
+                <div class="layui-input-inline bdc-end-time-box">
+                    <textarea placeholder="请输入公告标题(例如：select '不动产权属证书作废公告(' || t.zl ||')' as ggbt from bdc_xm t where t.xmid =#{xmid} )" name="ggbtpz" lay-verify="required" style="background-color:#fef6e1"
+                              class="layui-textarea change-textarea-width"></textarea>
+                </div>
+            </div>
+            <div class="layui-inline bdc-complete-line bdc-not-null">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>公告内容</label>
+                <div class="layui-input-inline bdc-end-time-box">
+                    <textarea placeholder="请输入公告内容(例如：select '现公告产权证号(' || t.bdcqzh ||')作废' as ggnr from bdc_xm t where t.xmid =#{xmid} )" name="ggnrpz" lay-verify="required" style="background-color:#fef6e1"
+                              class="layui-textarea change-textarea-width"></textarea>
+                </div>
+            </div>
+            <div class="layui-inline bdc-frame-button-box">
+                <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" lay-submit="" lay-filter="submitBtn">保存</a>
+                <a href="javascript:;" class="layui-btn layui-btn-normal bdc-secondary-btn bdc-frame-close" lay-filter="closeBtn" onclick="closeWin();">取消</a>
+            </div>
+        </div>
+
+        <div>
+            <input type="hidden" name="xtggid" id="xtggid"/>
+        </div>
+    </form>
+</div>
+</body>
+
+<script src="../../../static/lib/layui/layui.js"></script>
+<script src="../../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../../static/lib/layui/layui.all.js"></script>
+<!--添加水印-->
+<script src="../../../static/lib/bdcui/js/common.js"></script>
+<script src="../../../static/js/config/common.js"></script>
+<script src="../../../static/js/config/xtgg/addOrEditBdcXtGg.js"></script>
+
+</html>

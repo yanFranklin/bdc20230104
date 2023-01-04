@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>共享接口流程目录</title>
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/index.css">
+    <link rel="stylesheet" href="../../static/css/gxjklc/lcmenu.css"/>
+    <style>
+        .submenu a {
+            padding-left: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="bdc-container-box">
+    <div class="bdc-container">
+        <!--收缩左侧列表-->
+        <div class="bdc-aside-zoom">
+            <a class="bdc-aside-close" href="javascript:;"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
+            <a class="bdc-aside-open bdc-hide" href="javascript:;"><i class="fa fa-chevron-right" aria-hidden="true"></i></a>
+        </div>
+
+        <!--左侧菜单栏开始-->
+        <div class="bdc-menu-aside" id="asideBox">
+            <div class="aside" id="asideCon" style="padding-top: 50px;">
+                <h4>目录</h4>
+                <div id="aside">
+<!--                    <div class="menu-title-hj">-->
+<!--                        <p class="wcx">未查询: <span id="wcxNum">0</span></p>-->
+<!--                        <p class="success">查询成功: <span id="successNum">0</span></p>-->
+<!--                        <p class="fail">查询失败: <span id="failNum">0</span></p>-->
+<!--                    </div>-->
+
+                    <ul id="accordion" class="accordion">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="asideLine"></div>
+        <!--左侧菜单栏结束-->
+
+        <!--右侧主内容开始-->
+        <div class="bdc-right-content">
+            <!--内容存放开始-->
+            <div class="content-div" id="contentView">
+                <!--                <iframe id="childFrame" src="">-->
+                <!--                </iframe>-->
+            </div>
+            <!--内容存放结束-->
+        </div>
+        <!--右侧主内容结束-->
+    </div>
+</div>
+</body>
+<!--侧边树模板-->
+<script type="text/html" id="menuTpl">
+    {{# layui.each(d, function(index, item){ }}
+    <li class="bdc-outer-li bdc-invented-li">
+        <a class="link" data-src="">
+            <i class="fa fa-caret-right"></i>
+            <img src="../../static/lib/registerui/image/file.png" alt="图标" class="docu-icon">
+            {{item.mc}}
+        </a>
+        <ul class="submenu">
+            {{# if(item.children!=[]){ }}
+            {{# layui.each(item.children, function(i, v){ }}
+            <li class="bdc-inner-li bdc-invented-li">
+                <a href="javascript:;" data-url="{{v.url}}" data-id="{{v.class}}" class="bdc-last-child" >
+                    <img src="../../static/image/sj.png" height="20" alt="图标" class="cxzt wcx" style="margin-left:0px">
+                    <p style="margin-left:21px" title="{{ v.mc }}">{{ v.mc }}</p>
+                </a>
+            </li>
+            {{# }); }}
+            {{# } }}
+        </ul>
+    </li>
+    {{# }); }}
+</script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/jquery-mousewheel/jquery.mousewheel.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/hefei/sjgx/lcmenu.js"></script>
+</html>

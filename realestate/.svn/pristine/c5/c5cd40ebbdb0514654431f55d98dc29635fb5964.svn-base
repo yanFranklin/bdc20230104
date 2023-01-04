@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.accept.core.mapper.BdcSlJyxxMapper">
+
+    <!-- 批量更新受理交易信息 -->
+    <update id="batchUpdateBdcSlJyxx" parameterType="map">
+        <if test="statement != null and xmids != null and xmids.size() > 0">
+            ${statement}
+            <where>
+              <if test="xmids != null and xmids.size() > 0">
+                and xmid IN
+                <foreach collection="xmids" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            </where>
+        </if>
+    </update>
+
+    <!-- 项目更新受理交易信息 -->
+    <update id="updateXmBdcSlJyxx" parameterType="map">
+        <if test="statement != null">
+            ${statement}  WHERE xmid =#{xmid}
+        </if>
+    </update>
+
+    <!--删除不动产受理交易信息-->
+    <delete id="deleteBdcSlJyxx" parameterType="cn.gtmap.realestate.common.core.dto.accept.BdcSlDeleteCsDTO">
+        <if test="xmidList != null and xmidList.size>0">
+            DELETE FROM bdc_sl_jyxx a
+            <where>
+                <if test="xmidList != null">
+                    AND a.xmid IN
+                    <foreach collection="xmidList" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+        </if>
+
+    </delete>
+    
+    <select id="listBdcSlJxxByXmids" resultType="cn.gtmap.realestate.common.core.domain.accept.BdcSlJyxxDO">
+        select *
+        from bdc_sl_jyxx t 
+        where 1 = 1
+        <if test="xmids != null and xmids.size() > 0">
+            and t.xmid in
+            <foreach collection="xmids" item="item" open="(" close=")" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="listBdcSlJyxx" resultType="cn.gtmap.realestate.common.core.domain.accept.BdcSlJyxxDO"
+            parameterType="cn.gtmap.realestate.common.core.qo.accept.BdcSlJyxxQO">
+        select * from BDC_SL_JYXX t
+        where 1=1
+        <if test="xmid != null and xmid !=''">
+            AND t.xmid=#{xmid}
+        </if>
+        <if test="htbh != null and htbh !=''">
+            AND t.htbh=#{htbh}
+        </if>
+        <if test="gzlslid != null and gzlslid !=''">
+            AND t.xmid in (
+                SELECT xmid from BDC_SL_XM where jbxxid in (
+                    SELECT jbxxid from BDC_SL_JBXX where gzlslid= #{gzlslid}
+                )
+            )
+        </if>
+    </select>
+</mapper>

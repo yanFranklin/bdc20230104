@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>历史关系</title>
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/flow/css/vis.css">
+    <link rel="stylesheet" href="../../static/lib/registerui/css/topIndex.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form.css"/>
+    <style type="text/css">
+        .layui-form{
+            height: 100%;
+        }
+        .bdc-inner-li{
+            position: relative;
+        }
+        .layui-form-radio{
+            line-height: 0;
+            height: 0px;
+            display: list-item;
+        }
+        .bdc-inner-li .layui-form-radio i{
+            top: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="bdc-outer-box">
+    <!--    <form class="layui-form">-->
+    <div class="bdc-container-box">
+        <div class="bdc-lc-container">
+            <div class="bdc-lc-title">
+                <p>户室变更图</p>
+                <div class="bdc-operate-show">
+                    <i class="layui-icon layui-icon-up"></i>
+                    <i class="layui-icon layui-icon-down bdc-hide"></i>
+                </div>
+            </div>
+            <div id="relationMap" style="height: 260px;"></div>
+        </div>
+
+        <div class="bdc-container-box">
+            <div class="bdc-container">
+                <!--收缩左侧列表-->
+                <div class="bdc-aside-zoom">
+                    <a class="bdc-aside-close" href="javascript:;"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
+                    <a class="bdc-aside-open bdc-hide" href="javascript:;"><i class="fa fa-chevron-right" aria-hidden="true"></i></a>
+                </div>
+
+                <div class="bdc-menu-aside" id="asideBox">
+                    <div class="aside" id="asideCon">
+                        <h4>目录</h4>
+                        <div id="aside">
+                            <div class="bdc-search-box">
+                                <input type="text" id="qllxSearch" name="title" placeholder="请输入" autocomplete="off"
+                                       class="layui-input bdc-search">
+                                <i class="layui-icon layui-icon-search"></i>
+                                <i class="layui-icon layui-icon-close"></i>
+                            </div>
+                            <div class="layui-tab layui-tab-brief bdc-menu-tab" lay-filter="menuChangeFilter">
+                                <ul class="layui-tab-title">
+                                    <li class="layui-this">
+                                        权利历史
+                                        <div class="border-up-empty">
+                                            <span></span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        登记历史
+                                        <div class="border-up-empty bdc-hide">
+                                            <span></span>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <div class="layui-tab-content">
+                                    <div class="layui-tab-item layui-show">
+                                        <ul id="accordion" class="accordion">
+
+                                        </ul>
+                                        <ul id="searchMenu" class="accordion bdc-hide">
+
+                                        </ul>
+                                    </div>
+                                    <div class="layui-tab-item">
+                                        <!--<a href="#" onclick="lsgx()">登记历史</a>-->
+                                        <ul class="accordion">
+                                            <li class="bdc-outer-li bdc-invented-li" data-num="230103001006GB00004">
+                                                <a class="link bdc-history">
+                                                    <img src="../../static/lib/registerui/image/log.png" alt="图标"
+                                                         class="docu-icon">
+                                                    登记历史
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="asideLine"></div>
+                <!--左侧菜单栏结束-->
+
+                <!--右侧主内容开始-->
+                <div class="bdc-right-content">
+                    <!--内容存放开始-->
+                    <div id="qlls" class="layui-tab layui-tab-brief" lay-filter="tabContentFilter">
+                        <ul class="layui-tab-title bdc-tab-title">
+                            <li class="layui-this" lay-id="qlxxTab">权利信息</li>
+                        </ul>
+                        <div class="layui-tab-content">
+                            <div class="layui-tab-item layui-show">
+                                <iframe id="qlxxIframe" style="width: 100%; min-height: 100%; border: none;"></iframe>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="lsgx" class="bdc-hide" style="width: 100%;height: 100%;">
+                        <iframe id="lsgxIframe" style="width: 100%; min-height: 100%; border: none;"></iframe>
+                    </div>
+                </div>
+                <!--右侧主内容结束-->
+            </div>
+        </div>
+    </div>
+    <!--    </form>-->
+</div>
+</body>
+
+<script type="text/html" id="asideTpl">
+    <!-- 一级目录 -->
+    {{#  layui.each(d, function(index, item){ }}
+    {{# if(item.name =='产权历史及现状数据'){ }}
+    <li class="bdc-outer-li bdc-invented-li">
+        {{# }else{ }}
+    <li class="bdc-outer-li bdc-invented-li qllx-outer-li">
+        {{# } }}
+
+        <a href="javascript:;" class="link">
+            <i class="fa fa-caret-right"></i>
+            <img src="../../static/image/file.png" alt="图标" class="docu-icon">
+            {{item.name}}
+        </a>
+        {{# if(item.lsgxModel.length != 0){ }}
+        <form class="layui-form">
+        <ul class="submenu">
+            <!--二级目录-->
+            {{#  layui.each(item.lsgxModel, function(i,v){ }}
+            <li class="bdc-inner-li bdc-invented-li"  data-cqid="{{v.cqid}}" title="{{defaultValue(v.xsxx)}}">
+
+                {{# if(item.name =='产权历史及现状数据'){ }}
+
+                    <input type="radio" name="screenCq" id="screenCq" class="change-radio-top" data-qllx="{{v.qllx}}" value="{{v.cqid}}" data-bdcdyfwlx="{{v.bdcdyfwlx}}" lay-filter="screenCq" >
+                {{# } }}
+
+                <a href="javascript:;" class="bdc-last-child" data-id="{{v.id}}" data-qllx="{{v.qllx}}" data-bdcdyfwlx="{{v.bdcdyfwlx}}">
+                    {{# if(v.qszt == "1"){ }}
+                    <img src="../../static/image/log.png" alt="图标" class="docu-icon"><span style="color: #32b032">{{v.xsxx || ''}}</span>
+                    {{# } else if(v.qszt == "2") { }}
+                    <img src="../../static/image/grey-log.png" alt="图标" class="docu-icon"><span style="color: #999">{{v.xsxx || ''}}</span>
+                    {{# } else { }}
+                    <img src="../../static/image/grey-log.png" alt="图标" class="docu-icon">{{v.xsxx|| ''}}
+                    {{#  } }}
+                </a>
+            </li>
+            {{# }); }}
+        </ul>
+        </form>
+        {{# } }}
+    </li>
+    {{# }); }}
+</script>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/jquery-mousewheel/jquery.mousewheel.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/flow/js/vis.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/lsgx/hsbg.js"></script>
+<!--<script src="../../static/js/lsgx/tree.js"></script>-->
+<script src="../../static/js/yancheng/lsgx/lsgx.js"></script>
+</html>

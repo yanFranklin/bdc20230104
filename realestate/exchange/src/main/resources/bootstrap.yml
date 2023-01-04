@@ -1,0 +1,138 @@
+spring:
+  mvc:
+    static-path-pattern: /realestate-exchange/**
+  profiles:
+    active: v1
+  application:
+    # 云应用名称，用于标识该应用，服务发现、动态负载也根据此名称
+    name: exchange-app
+    admin:
+      enabled: true
+  cloud:
+    config:
+      name: exchange-app
+      enabled: false
+      failFast: false
+      discovery:
+        # 开启配置服务发现
+        enabled: false
+        # 配置服务实例名称
+        service-id: config-app
+  sleuth:
+    sampler:
+      percentage: 1
+  http:
+    encoding:
+      charset: UTF-8
+      force: true
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+  thymeleaf:
+    prefix: classpath:/META-INF/resources/view/
+    suffix: .html
+    cache: false
+  freemarker:
+    cache: false
+    charset: UTF-8
+    check-template-location: true
+    content-type: text/html
+    expose-request-attributes: true
+    expose-session-attributes: true
+    request-context-attribute: request
+    suffix: .ftl
+
+eureka:
+  instance:
+    hostname: ${spring.application.name}
+    preferIpAddress: true
+  client:
+    serviceUrl:
+      defaultZone: ${app.center}
+    healthcheck:
+      enabled: true
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 10000
+        loggerLevel: basic
+  httpclient:
+    enabled:  false
+  hystrix:
+    enabled: false
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          #          strategy: THREAD
+          strategy: SEMAPHORE
+          semaphore:
+            maxConcurrentRequests: 1000
+          thread:
+            timeoutInMilliseconds: 10000
+
+ribbon:
+  okhttp:
+    enabled: true
+  eureka:
+    enabled: true
+  ConnectTimeout: 30000
+  ReadTimeout: 30000
+
+security:
+  oauth2:
+    sso:
+      login-path: /realestate-exchange/login
+    client:
+      access-token-uri: ${app.oauth}/oauth/token
+      user-authorization-uri: ${app.oauth}/oauth/authorize
+      client-id: exchangeClient
+      client-secret: exchangeSecret
+    resource:
+      prefer-token-info: true
+      user-info-uri: ${app.oauth}/user
+      token-info-uri: ${app.oauth}/oauth/check_token
+      loadBalanced: true
+
+
+logging:
+  security:
+    collection:
+      authorizationSuccess: false
+      authenticationSuccess: false
+
+httpClient:
+  # 连接池最大总数 默认值：100
+  maxTotalConnections: 100
+  # 每个路由保持链接最大数 默认值：20
+  maxConnectionsPerRoute: 50
+  # 请求连接超时时间 单位：ms 默认值：30000
+  connectionTimeout: 20000
+  # 接收数据超时时间 单位：ms 默认值：30000
+  soTimeout: 30000
+  # 保持活性的时限 -1是一直保持 单位：ms 默认值：30000
+  timeToLive: -1
+
+
+# 日志系统配置
+log:
+  #log日志开关
+  logback-switch: false
+  #数据库操作开关
+  mybatis-switch: false
+  appender:
+    # 是否开启记录日志至es中，开启日志功能时，该配置必须配置为 true
+    enabled: false
+    ignores: Apollo
+    level: error
+    appname: exchange
+    redis-host: ${spring.redis.host}
+    redis-port: ${spring.redis.port}
+

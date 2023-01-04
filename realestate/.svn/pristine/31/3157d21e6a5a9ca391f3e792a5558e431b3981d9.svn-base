@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <ex:bean id="hlwcjService">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="cn.gtmap.realestate.common.core.service.feign.accept.BdcSlFeignService"/>
+            <ex:property name="methodName" value="wwsqCjBdcXm"/>
+            <ex:property name="params" value="cjparam"/>
+        </ex:service-info>
+    </ex:bean>
+    <ex:bean id="cjResponseBySlbh">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="commonServiceImpl"/>
+            <ex:property name="methodName" value="listBdcXmBySlbh"/>
+            <ex:property name="params" value="slbh"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/nantong/hlw/cjResponseBySlbh/response/data.xml" listToObject="true"/>
+        </ex:response>
+    </ex:bean>
+    <ex:bean id="hlwjbxx_param">
+        <ex:request dozerXml="conf/dozer/nantong/nthlwcj/request/bdcSlxxDTO.xml">
+            <!-- 判断是否需要规则验证  gzyz -->
+            <ex:element dozerXml="conf/dozer/nantong/nthlwcj/request/cjyz.xml" listToObject="true"/>
+            <ex:element dozerXml="conf/dozer/nantong/nthlwcj/request/bdcSlJbxx.xml" listToObject="true" name="bdcSlJbxx"/>
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="hlwcjService_response">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="gxWwSqxxServiceImpl"/>
+            <ex:property name="methodName" value="revertNtCjResponseAsync"/>
+            <ex:property name="params" value="cjResponse,fjclList,zdzf"/>
+        </ex:service-info>
+    </ex:bean>
+    <ex:bean id="hlwcjService_dealxmxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="ntLccjService"/>
+            <ex:property name="methodName" value="dealXmxx"/>
+            <ex:property name="params" value="sqxx,cjparam,sply"/>
+        </ex:service-info>
+        <ex:request dozerXml="conf/dozer/nantong/nthlwcj/request/dealXmxx.xml">
+            <ex:element dozerXml="conf/dozer/nantong/nthlwcj/request/hlwsply.xml" name="sply"/>
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="nt_hlwcj">
+        <ex:request>
+            <ex:element name="cjparam" sourceService="hlwjbxx_param"/>
+            <ex:element dozerXml="conf/dozer/nantong/nthlwcj/request/fjcl.xml" name="fjclList"/>
+            <ex:element name="cjparam" sourceService="hlwcjService_dealxmxx"/>
+        </ex:request>
+        <ex:response extendRequestBody="true" resultKey="result">
+            <ex:element name="cjResponse" sourceService="hlwcjService"/>
+            <ex:element name="result" sourceService="hlwcjService_response"/>
+        </ex:response>
+        <ex:log dsfFlag="HLWCJ" logEventName="南通互联网创建接口" requester="HLWLCCJ" responser="BDC"/>
+    </ex:bean>
+    <ex:bean id="zsyzhyz">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="cn.gtmap.realestate.common.core.service.feign.certificate.BdcYzhFeignService"/>
+            <ex:property name="methodName" value="checkYzhStatus"/>
+            <ex:property name="params" value="qzysxlh,userName"/>
+        </ex:service-info>
+        <ex:log dsfFlag="WWSQ" logEventName="印制号验证" requester="WWSQ" responser="BDC"/>
+    </ex:bean>
+    <ex:bean id="zdbjbyslbh">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="gxWwSqxxServiceImpl"/>
+            <ex:property name="methodName" value="zdbjAndUpdateZsyzh"/>
+            <ex:property name="params" value="cjResponse,slr,zslist"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/nantong/hlw/zdbjbyslbh/request/param.xml"/>
+            <ex:element name="cjResponse" sourceService="cjResponseBySlbh"/>
+        </ex:request>
+        <ex:response>
+            <ex:element saveNull="cn.gtmap.realestate.exchange.core.dto.wwsq.yhxt.YhxtResponseDTO"/>
+        </ex:response>
+        <ex:log dsfFlag="WWSQ" logEventName="根据受理编号自动办结" requester="WWSQ" responser="BDC"/>
+    </ex:bean>
+</beans>

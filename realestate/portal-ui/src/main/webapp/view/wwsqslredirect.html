@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title class="bdc_subsystem"></title>
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <script src="../static/lib/jquery/jquery.min.js"></script>
+    <script src="../static/lib/layui/layui.js"></script>
+    <!--添加水印-->
+    <script src="../static/lib/bdcui/js/common.js"></script>
+    <script src="../static/js/common.js"></script>
+    <script>
+        $(function () {
+            layui.use(['workflow'], function () {
+                var workflow = layui.workflow;
+
+                $.getUrlParam = function (name) {
+                    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                    var r = window.location.search.substr(1).match(reg);
+                    if (null != r) return unescape(r[2]);
+                    return null;
+                }
+
+                var taskId = $.getUrlParam("taskId");
+                $.ajax({
+                    url: getContextPath() + "/rest/v1.0/task/info/" + taskId,
+                    type:"get",
+                    async: false,
+                    success:function(data) {
+                        if (data) {
+                            var lcArray = {
+                                taskId: data.taskId,
+                                formKey: data.formKey,
+                                processInstanceId: data.processInstanceId,
+                                processDefName: data.processDefName,
+                                claimStatus: data.claimStatus,
+                                claimStatusName: data.claimStatusName,
+                                taskName: data.taskName,
+                                processInstanceType: 'todo'
+                            };
+                            sessionStorage.setItem('lcArray' + data.taskId, JSON.stringify(lcArray));
+                            //锁定任务
+                            workflow.lockProcess(data);
+                            window.location.href = "./new-page.html?name=" + taskId;
+                        }
+                    }
+                });
+            })
+        })
+    </script>
+</head>
+<body>
+</body>
+<script>
+    layui.config({
+        base: '../static/' //静态资源所在路径
+    }).extend({
+        index: '/lib/index' //主入口模块
+    }).use('index').extend({
+        workflow:'js/workflow-handle'
+    }).use('workflow').extend({response:'lib/bdcui/js/response'}).use('response').extend({
+        moduleAuthority: 'js/moduleAuthority'
+    }).use('moduleAuthority');
+</script>
+</html>
+
+

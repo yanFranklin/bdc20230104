@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+
+
+    <ex:bean id="xcFcjySpfQlr">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${xcfcjy.spf1.url}"/>
+            <ex:property name="logEventName" value="宣城读取商品房备案信息权利人"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+        </ex:service-info>
+    </ex:bean>
+
+
+    <ex:bean id="xcFcjySpfBaxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${xcfcjy.spf2.url}"/>
+            <ex:property name="logEventName" value="根据合同号读取商品房备案信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/xuancheng/spfbaxx/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/xuancheng/spfbaxx/data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!--宣城多测合一-分层分户图接口-->
+    <ex:bean id="xcDchyFcfht">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${dchy.fcfht.url:}"/>
+            <ex:property name="logEventName" value="宣城多测合一分层分户图接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="DCHY"/>
+            <ex:property name="dsfFlag" value="DCHY"/>
+            <ex:property name="getUrlEncode" value="true"/>
+            <ex:property name="contentType" value="multipart/form-data"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!--宣城多测合一-宗地调查表接口-->
+    <ex:bean id="xcDchyZddcb">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${dchy.zddcb.url:}"/>
+            <ex:property name="logEventName" value="宣城多测合一宗地调查表接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="DCHY"/>
+            <ex:property name="dsfFlag" value="DCHY"/>
+            <ex:property name="getUrlEncode" value="true"/>
+            <ex:property name="contentType" value="multipart/form-data"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!--宣城多测合一-测绘报告接口-->
+    <ex:bean id="xcDchyChbg">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${dchy.chbg.url:}"/>
+            <ex:property name="logEventName" value="宣城多测合一测绘报告接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="DCHY"/>
+            <ex:property name="dsfFlag" value="DCHY"/>
+            <ex:property name="getUrlEncode" value="true"/>
+            <ex:property name="contentType" value="multipart/form-data"/>
+        </ex:service-info>
+    </ex:bean>
+
+
+</beans>

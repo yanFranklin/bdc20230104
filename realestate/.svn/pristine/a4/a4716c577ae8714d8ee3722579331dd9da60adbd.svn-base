@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.accept.core.mapper.BdcYztMapper">
+
+    <!--查询供地审批信息-->
+    <select id="listGdspxxByPage" parameterType="cn.gtmap.realestate.common.core.qo.accept.BdcGdspxxQO"
+            resultType="cn.gtmap.realestate.common.core.domain.accept.BdcVYztGyGdxmDkDO">
+
+        SELECT PROID,SQYDDW,TDZL,YD_AREA as mj,GHYT FROM V_YZT_GY_GDXM_DK
+        WHERE 1=1
+        <if test="tdzl !=null and tdzl !=''">
+            AND TDZL LIKE '%'|| #{tdzl} || '%'
+        </if>
+        <if test="sqyddw !=null and sqyddw !=''">
+            AND SQYDDW LIKE '%'|| #{sqyddw} || '%'
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>家庭成员信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+
+</head>
+<body style="background-color: #fff">
+<div id="bdc-popup-large">
+    <form class="layui-form bdc-form-table" style="padding:15px 25px;" action="" lay-filter="form">
+        <div class="layui-form-item pf-form-item">
+            <table class="slym layui-table bdc-jt-table" border="1">
+                <colgroup>
+                    <col width="150">
+                    <col width="150">
+                    <col width="100">
+                </colgroup>
+                <thead>
+                <tr class="gray-tr">
+                    <td>姓名</td>
+                    <td>证件号</td>
+                    <td>与权利人关系</td>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+<!--            <div class="layui-inline bdc-frame-button-box">-->
+<!--                <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" lay-submit=""-->
+<!--                   lay-filter="saveJtcyData">保存</a>-->
+<!--            </div>-->
+        </div>
+    </form>
+</div>
+</body>
+<script type="text/html" id="jtcyTpl">
+    {{# if(d.jtcyList && d.jtcyList.length >0){ }}
+    {{# layui.each(d.jtcyList, function(i, jtcy){ }}
+    <tr>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-input" name="jtcymc" id="jtcymc" disabled="off"
+                       value="{{jtcy.jtcymc || ''}}" >
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-input" name="jtcy_zjh" id="jtcy_zjh" disabled="off"
+                       value="{{jtcy.zjh || ''}}">
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-input" name="ysqrgx" id="ysqrgx" disabled="off"
+                       value="{{jtcy.ysqrgx || ''}}">
+            </div>
+        </td>
+    </tr>
+    {{# }); }}
+    {{# }else{ }}
+    <tr class="bdc-table-none">
+        <td colspan="3">
+            <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据</div>
+        </td>
+    </tr>
+    {{# } }}
+</script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.all.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src='../../static/js/bengbu/ycsl/jtcy.js'></script>
+</html>

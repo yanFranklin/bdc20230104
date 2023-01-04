@@ -1,0 +1,102 @@
+info:
+  name: ${spring.application.name}
+  component: accept-ui application
+
+app:
+  center: http://192.168.2.99:8000/eureka/
+  oauth: http://192.168.2.99:8030/account
+  security:
+    moduleAuthPath: http://account/account
+    ignores: /image/**,/css/**,/js/**,/webjars/**,/static/**,/rest/v1.0/nslxd/**
+    authorities:
+      permitAll: /index2
+      hasUrlAuthority('read'): /auth/users,/auth/orgs
+      hasModuleAuthority('yhgl:add'): /auth/user/create
+      hasAnyAuthority('ROLE_USER'): /resource1/**,/catalog1/**,/index
+      authenticated : true
+    resources:
+      authenticated: /resource/**
+  services:
+    accept-app: accept-app3
+#    init-app: init-app
+#    register-app: register-app
+#    exchange-app: exchange-app
+#    inquiry-app: inquiry-app
+#    realestate-config: realestate-config
+
+spring:
+  rabbitmq:
+    host: 192.168.0.60
+    port: 5672
+    username: guest
+    password: guest
+  redis:
+    port: 6379
+    host: 192.168.0.60
+  messages:
+    basename: message/messages, message/errors
+  profiles:
+    include: config  #引入配置文件 application-config.yml
+  mvc:
+    static-path-pattern: /**
+  #--------- 大云版本V2.X新增或变动配置 ---------------#
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 1000MB
+  zipkin:
+    #    base-url: http://localhost:8003
+    sender:
+      type: rabbit
+    service:
+      name: ${spring.application.name}
+  main:
+    allow-bean-definition-overriding: true
+
+server:
+  port: ${port:8687}
+  #--------- 大云版本V2.X context-path路径需要修改 ---------------#
+  servlet:
+    context-path: /realestate-accept-ui
+  # 解除POST提交请求数据量限制，避免Excel导出数据量过大导出不了
+  tomcat:
+    max-http-post-size: -1
+    max-threads: 10
+    min-spare-threads: 2
+
+logging:
+  security:
+    collection:
+      authorizationSuccess: false
+      authenticationSuccess: false
+#--------- 大云版本V2.X新增或变动配置 ---------------#
+management:
+  endpoint:
+    health:
+      show-details: always
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+
+#   打印模板外置配置
+print:
+  path: /usr/local/bdc3/print/
+
+#页面版本
+html:
+  version: hefei
+
+url:
+  #  buildingUiUrl: http://192.168.2.87:8030/building-ui
+  #  storageUrl: http://192.168.2.70:8030/storage
+  buildingUiUrl: http://10.1.1.249:8999/building-ui
+  storageUrl: http://192.168.2.99:8030/storage
+  ###档案附件地址
+  archiveFjUrl: http://192.168.50.181:8064/archive/gateway!originalInfoBySlbh.action?slbh=

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+    <bean id="acceptBeanFactory"
+          class="cn.gtmap.realestate.accept.config.AcceptBeanFactory">
+        <!--购物车删除受理信息-->
+        <property name="bdcGwcSlDeleteServiceSet">
+            <set>
+                <!--受理项目历史关系-->
+                <ref bean="bdcSlXmLsgxServiceImpl"/>
+                <!--受理交易信息-->
+                <ref bean="bdcSlJyxxServiceImpl"/>
+                <!--受理房屋信息-->
+                <ref bean="bdcSlFwxxServiceImpl"/>
+                <!--受理申请人-->
+                <ref bean="bdcSlSqrServiceImpl" />
+                <!--受理项目-->
+                <ref bean="bdcSlXmServiceImpl"/>
+
+            </set>
+        </property>
+        <!--删除全部受理信息-->
+        <property name="bdcSlDeleteServiceSet">
+            <set>
+                <!--受理项目历史关系-->
+                <ref bean="bdcSlXmLsgxServiceImpl"/>
+                <!--受理交易信息-->
+                <ref bean="bdcSlJyxxServiceImpl"/>
+                <!--受理房屋信息-->
+                <ref bean="bdcSlFwxxServiceImpl"/>
+                <!--受理家庭成员信息-->
+                <ref bean="bdcSlJtcyServiceImpl" />
+                <!--受理申请人-->
+                <ref bean="bdcSlSqrServiceImpl" />
+                <!--受理项目-->
+                <ref bean="bdcSlXmServiceImpl"/>
+
+            </set>
+        </property>
+    </bean>
+
+
+</beans>

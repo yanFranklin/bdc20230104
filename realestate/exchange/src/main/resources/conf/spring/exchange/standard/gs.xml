@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <ex:bean id="gs_qyxydmcx">
+        <ex:service-info request-type="openApiClient">
+            <ex:property name="url" value="${gs.qyxydmcx.url}"/>
+            <ex:property name="appKey" value="${gs.openapi.appkey}"/>
+            <ex:property name="userName" value="${gs.openapi.username}"/>
+            <ex:property name="messageId" sourceClass="cn.gtmap.realestate.exchange.util.CommonUtil" sourceMethod="openApiUUID"/>
+            <ex:property name="status" value="1"/>
+            <ex:property name="contentType" value="application/json"/>
+            <ex:property name="requestType" value="GET"/>
+            <ex:property name="skprivateKeyPath" value="${gs.openapi.skprivateKeyFile.path}"/>
+            <ex:property name="logEventName" value="企业注册号与统一社会信用代码对照查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="OPENAPI"/>
+            <ex:property name="dsfFlag" value="OPENAPI"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/hefei/gs/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/hefei/gs/response/model.xml"/>
+            <ex:element dozerXml="conf/dozer/hefei/gs/response/data.xml" name="qyxx"/>
+        </ex:response>
+    </ex:bean>
+</beans>

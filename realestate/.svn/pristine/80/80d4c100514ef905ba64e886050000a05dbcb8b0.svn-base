@@ -1,0 +1,284 @@
+<!--/**-->
+<!--* author: 前端组-->
+<!--* date: 2018-12-14-->
+<!--* version 3.0.0-->
+<!--* describe: form表单填写--带tab切换功能，点击任一tab栏，切换不能页面，需要注意：本页面与其他表单页面不太一样，引用的是form-tab.css-->
+<!--*/-->
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>汇总统计</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css" />
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form.css" />
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+<!--    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>-->
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css">
+    <link rel="stylesheet" href="../../static/css/common.css"/>
+    <style>
+        .bdc-percentage-container{
+            padding-top: 63px;
+        }
+        .content-div{
+            padding: 0px;
+        }
+        .content-main{
+            padding-top: 10px;
+        }
+        .bdc-form-div {
+             padding: 0px 0px 0px 0px!important;
+        }
+    </style>
+</head>
+<body>
+<div class="bdc-percentage-container">
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <form class="layui-form" action="">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">开始时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" autocomplete="off" id="startTime" name="startTime" placeholder="请输入"
+                                   class="layui-input search">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">结束时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" autocomplete="off" id="endTime" name="endTime" placeholder="请输入"
+                                   class="layui-input search">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <a href="javascript:;" id="search" lay-submit="" lay-filter="search"
+                           class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                        <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--表格-->
+    <div class="content-div">
+        <div class="bdc-content-box">
+            <form class="layui-form setOverflow">
+                <div class="bdc-table-box content-main">
+                    <table class="layui-table" border="1">
+                        <colgroup>
+                            <col width="80">
+                            <col width="160">
+                            <col width="150">
+                            <col width="150">
+                            <col width="150">
+                        </colgroup>
+
+                        <tbody>
+                        <tr>
+                            <td rowspan="3" class="set-back-color set-center">土<br>地</td>
+                            <td class="set-back-color" disabled="off">在押宗数</td>
+                            <td><input type="text" class="layui-table-edit"></td>
+                            <td class="set-back-color">抵押宗数</td>
+                            <td><input type="text" class="layui-table-edit" disabled="off"></td>
+                        </tr>
+                        <tr>
+                            <td class="set-back-color">土地面积(平方米)</td>
+                            <td><input type="text" class="layui-table-edit" disabled="off"></td>
+                            <td class="set-back-color ">土地抵押金额(万元)</td>
+                            <td><input type="text" class="layui-table-edit" disabled="off"></td>
+                        </tr>
+                        <tr>
+                            <td class="set-back-color ">单位面积抵押金额(万元/平方米)</td>
+                            <td colspan="3"><input type="text" class="layui-table-edit" disabled="off"></td>
+                        </tr>
+
+                        <tr>
+                            <td rowspan="3"  class="set-back-color set-center">土<br>地<br>房<br>屋</td>
+                            <td class="set-back-color ">在押件数</td>
+                            <td><input type="text" class="layui-table-edit" disabled="off"></td>
+                            <td class="set-back-color ">抵押件数</td>
+                            <td><input type="text" class="layui-table-edit" disabled="off"></td>
+                        </tr>
+                        <tr>
+                            <td class="set-back-color ">总面积(平方米)</td>
+                            <td><input type="text" class="layui-table-edit" disabled="off"></td>
+                            <td class="set-back-color ">抵押金额(万元)</td>
+                            <td><input type="text" class="layui-table-edit" disabled="off"></td>
+                        </tr>
+                        <tr>
+                            <td class="set-back-color ">单位面积抵押金额(万元/平方米)</td>
+                            <td colspan="3"><input type="text" class="layui-table-edit" disabled="off"></td>
+                        </tr>
+
+                        <tr>
+                            <td rowspan="3"  class="set-back-color set-center">林<br>权</td>
+                            <td class="set-back-color ">在押件数</td>
+                            <td><input type="text" class="layui-table-edit" disabled="off"></td>
+                            <td class="set-back-color ">抵押件数</td>
+                            <td><input type="text" class="layui-table-edit" disabled="off"></td>
+                        </tr>
+                        <tr>
+                            <td class="set-back-color ">总面积(平方米)</td>
+                            <td><input type="text" class="layui-table-edit" disabled="off"></td>
+                            <td class="set-back-color ">抵押金额(万元)</td>
+                            <td><input type="text" class="layui-table-edit" disabled="off"></td>
+                        </tr>
+                        <tr>
+                            <td class="set-back-color ">单位面积抵押金额(万元/平方米)</td>
+                            <td colspan="3"><input type="text" class="layui-table-edit" disabled="off"></td>
+                        </tr>
+
+                        <tr>
+                            <td rowspan="3"  class="set-back-color set-center">在<br>建<br>工<br>程</td>
+                            <td class="set-back-color ">在押件数</td>
+                            <td><input type="text" class="layui-table-edit" disabled="off"></td>
+                            <td class="set-back-color ">抵押件数</td>
+                            <td><input type="text" class="layui-table-edit" disabled="off"></td>
+                        </tr>
+                        <tr>
+                            <td class="set-back-color ">总面积(平方米)</td>
+                            <td><input type="text" class="layui-table-edit" disabled="off"></td>
+                            <td class="set-back-color ">抵押金额(万元)</td>
+                            <td><input type="text" class="layui-table-edit" disabled="off"></td>
+                        </tr>
+                        <tr>
+                            <td class="set-back-color ">单位面积抵押金额(万元/平方米)</td>
+                            <td colspan="3"><input type="text" class="layui-table-edit "></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+
+<!--<div class="layui-form bdc-form-div bdc-not-full-bg">
+    <div class="layui-tab" lay-filter="tabFilter">
+        <ul class="layui-tab-title">
+            <li class="layui-this">不动产抵押登记数据汇总季度报表</li>
+            <li>不动产抵押登记数据汇总专项表</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                &lt;!&ndash;表格开始&ndash;&gt;
+                <div class="bdc-table-box">
+                    <table id="zbTable" lay-filter="zbTable"></table>
+                </div>
+                &lt;!&ndash;表格结束&ndash;&gt;
+            </div>
+            <div class="layui-tab-item">
+                &lt;!&ndash;表格开始&ndash;&gt;
+                <div class="bdc-table-box">
+                    <table id="zxbTable" lay-filter="zxbTable"></table>
+                </div>
+                &lt;!&ndash;表格结束&ndash;&gt;
+            </div>
+        </div>
+    </div>
+</div>-->
+<div class="layui-input-inline">
+    <input type="hidden" id='version' name="version" value="bengbu">
+</div>
+</body>
+
+<!--汇总统计表格模版-->
+<script type="text/html" id="hztjTpl">
+{{# layui.each(d, function(index, item){ }}
+    {{# if(item.DYBDCLX ==1){ }}
+    <tr>
+        <td rowspan="3" class="set-back-color set-center">土<br>地</td>
+        <td class="set-back-color">在押宗数</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.COUNT_DY || '0'}}" disabled="off"></td>
+        <td class="set-back-color">抵押宗数</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.COUNT || '0'}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">土地面积(平方米)</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.MJ || '0'}}" disabled="off"></td>
+        <td class="set-back-color ">土地抵押金额(万元)</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.DYJE || '0'}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color ">单位面积抵押金额(万元/平方米)</td>
+        <td colspan="3"><input type="text" class="layui-table-edit" value="{{item.AVGJEMJ || '0'}}" disabled="off"></td>
+    </tr>
+    {{# }else if(item.DYBDCLX ==2){ }}
+    <tr>
+        <td rowspan="3"  class="set-back-color set-center">土<br>地<br>房<br>屋</td>
+        <td class="set-back-color ">在押件数</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.COUNT_DY ||  '0'}}" disabled="off"></td>
+        <td class="set-back-color ">抵押件数</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.COUNT ||  '0'}}" disabled="off"></td>
+    </tr>
+
+    <tr>
+        <td class="set-back-color ">总面积(平方米)</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.MJ || '0'}}" disabled="off"></td>
+        <td class="set-back-color ">抵押金额(万元)</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.DYJE || '0'}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color ">单位面积抵押金额(万元/平方米)</td>
+        <td colspan="3"><input type="text" class="layui-table-edit" value="{{item.AVGJEMJ || '0'}}" disabled="off"></td>
+    </tr>
+    {{# }else if(item.DYBDCLX ==3){ }}
+<tr>
+    <td rowspan="3"  class="set-back-color set-center">林<br>权</td>
+    <td class="set-back-color ">在押件数</td>
+    <td><input type="text" class="layui-table-edit" value="{{item.COUNT_DY || '0'}}" disabled="off"></td>
+    <td class="set-back-color ">抵押件数</td>
+    <td><input type="text" class="layui-table-edit" value="{{item.COUNT || '0'}}" disabled="off"></td>
+</tr>
+<tr>
+    <td class="set-back-color ">总面积(平方米)</td>
+    <td><input type="text" class="layui-table-edit" value="{{item.MJ || '0'}}" disabled="off"></td>
+    <td class="set-back-color ">抵押金额(万元)</td>
+    <td><input type="text" class="layui-table-edit" value="{{item.DYJE || '0'}}" disabled="off"></td>
+</tr>
+<tr>
+    <td class="set-back-color ">单位面积抵押金额(万元/平方米)</td>
+    <td colspan="3"><input type="text" class="layui-table-edit" value="{{item.AVGJEMJ || '0'}}" disabled="off"></td>
+</tr>
+    {{# }else if(item.DYBDCLX ==4){ }}
+<tr>
+    <td rowspan="3"  class="set-back-color set-center">在<br>建<br>工<br>程</td>
+    <td class="set-back-color ">在押件数</td>
+    <td><input type="text" class="layui-table-edit" value="{{item.COUNT_DY || '0'}}" disabled="off"></td>
+    <td class="set-back-color ">抵押件数</td>
+    <td><input type="text" class="layui-table-edit" value="{{item.COUNT || '0'}}" disabled="off"></td>
+</tr>
+<tr>
+    <td class="set-back-color ">总面积(平方米)</td>
+    <td><input type="text" class="layui-table-edit" value="{{item.MJ || '0'}}" disabled="off"></td>
+    <td class="set-back-color ">抵押金额(万元)</td>
+    <td><input type="text" class="layui-table-edit" value="{{item.DYJE || '0'}}" disabled="off"></td>
+</tr>
+<tr>
+    <td class="set-back-color ">单位面积抵押金额(万元/平方米)</td>
+    <td colspan="3"><input type="text" class="layui-table-edit" value="{{item.AVGJEMJ || '0'}}" disabled="off"></td>
+</tr>
+    {{# } }}
+{{# }); }}
+</script>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/lib/form-select/formSelects-v4.js"/>
+<script src="../../static/lib/bdcui/js/mask.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/commonSearch.js"></script>
+<script src="../../static/js/bengbu/hzdytj/dydjtj.js"></script>
+</html>

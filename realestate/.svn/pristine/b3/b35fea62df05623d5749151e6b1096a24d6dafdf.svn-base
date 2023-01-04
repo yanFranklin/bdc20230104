@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>自定义统计配置</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css"/>
+</head>
+
+<body>
+<div class="bdc-percentage-container" style="padding-top: 61px">
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <form class="layui-form" action="" id="searchform">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">查询名称</label>
+                        <div class="layui-input-inline">
+                            <input id="cxmc" class="layui-input cxtj" type="text" name="cxmc" placeholder="请输入"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">查询代号</label>
+                        <div class="layui-input-inline">
+                            <input id="cxdh" class="layui-input cxtj" type="text" name="cxdh" placeholder="请输入"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+<!--                    <div class="layui-inline">-->
+<!--                        <label class="layui-form-label">创建人</label>-->
+<!--                        <div class="layui-input-inline">-->
+<!--                            <input id="cjr" class="layui-input cxtj" type="text" name="cjr" placeholder="请输入"/>-->
+<!--                            <i class="layui-icon layui-icon-close bdc-hide"></i>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="layui-inline">-->
+<!--                        <label class="layui-form-label">变更人</label>-->
+<!--                        <div class="layui-input-inline">-->
+<!--                            <input id="bgr" class="layui-input cxtj" type="text" name="bgr" placeholder="请输入"/>-->
+<!--                            <i class="layui-icon layui-icon-close bdc-hide"></i>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="layui-inline">-->
+<!--                        <label class="layui-form-label">创建日期(起)</label>-->
+<!--                        <div class="layui-input-inline">-->
+<!--                            <input id="cjqssj" class="layui-input cxtj " type="text" name="cjqssj" placeholder="请选择"/>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="layui-inline">-->
+<!--                        <label class="layui-form-label">创建日期(止)</label>-->
+<!--                        <div class="layui-input-inline">-->
+<!--                            <input id="cjjssj" class="layui-input cxtj " type="text" name="cjjssj" placeholder="请选择"/>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                    <div class="layui-inline bdc-button-box">
+                        <button id="search" class="layui-btn bdc-major-btn" lay-submit="" lay-filter="search">查询
+                        </button>
+                        <button type="reset" class="layui-btn bdc-secondary-btn reset-btn">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="bdc-table-box">
+        <form enctype="multipart/form-data" id="uploadFile" method="post" action="">
+        <input type="file" id="importExcelFile" name="importExcelFile" accept="application/vnd.ms-excel"
+               style="position:absolute;top:0px;right:0px;cursor:pointer; opacity:0;filter:alpha(opacity:0);z-index:999;"
+               onchange="importFile(this)">
+        </form>
+        <table id="pageTable" lay-data="{id: 'pageTable'}" lay-filter="dataTable"></table>
+        <div id="laypage"></div>
+    </div>
+
+</div>
+
+
+</body>
+<!--表格上面按钮组-->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        {{# layui.each(globalToolbarList, function(index, item){ }}
+        <button class="layui-btn layui-btn-sm {{item.class }}" lay-event="{{item.layEvent }}">{{item.text
+            }}
+        </button>
+        {{# }) }}
+    </div>
+</script>
+
+<!--行按钮组-->
+<script type="text/html" id="rowTools">
+    {{# layui.each(globalTooList, function(index, item){ }}
+    <button class="layui-btn layui-btn-xs {{item.class}} inline-btns" lay-event="{{item.layEvent }}">{{item.text }}
+    </button>
+    {{# }) }}
+</script>
+
+<!--行按钮组-->
+<script type="text/html" id="ztTemplet">
+    {{ cxtzTemplet(d.dqzt,d)}}
+</script>
+
+<!--table 序列号 -->
+<script type="text/html" id="xuhao">
+    {{d.LAY_TABLE_INDEX+1}}
+</script>
+
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layuigxh.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/commonSearch.js"></script>
+<script src="../../static/js/dtcx/jquery-form.js"></script>
+<script src="../../static/js/gxhpz.js"></script>
+<script src="../../static/js/table.js"></script>
+<script src="../../static/js/zdytj/configTjList.js"></script>
+</html>

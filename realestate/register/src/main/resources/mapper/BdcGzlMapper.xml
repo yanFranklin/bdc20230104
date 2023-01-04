@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.register.core.mapper.BdcGzlMapper">
+    <!--分页查询工作流事件接口-->
+    <select id="listBdcGzlsjByPage" resultType="cn.gtmap.realestate.common.core.domain.register.BdcGzlSjDO"
+            parameterType="cn.gtmap.realestate.common.core.qo.register.BdcGzlQO">
+        select t.sjid,t.SJMC,t.SJBS,t.JDMC,t.CJR,t.CJSJ from BDC_GZLSJ t
+        <where>
+            <if test="sjmc != null and sjmc != ''">
+                and t.sjmc LIKE '%' || #{sjmc} || '%'
+            </if>
+            <if test="sjbs != null and sjbs != ''">
+                and t.sjbs LIKE '%' || #{sjbs} || '%'
+            </if>
+            <if test="jdmc != null and jdmc != ''">
+                and t.jdmc = #{jdmc}
+            </if>
+        </where>
+        order by t.sjbs
+    </select>
+
+
+    <select id="listBdcGzljkByPage" resultType="cn.gtmap.realestate.common.core.domain.register.BdcGzlJkDO"
+            parameterType="cn.gtmap.realestate.common.core.qo.register.BdcGzlQO">
+        select t.JKID, t.JKMC, t.JKSM, t.JKLX, t.CJSJ, t.CJR, t.YYMC, t.QQFS, t.SFTB, t.SFHLYC from BDC_GZLJK t
+        <if test="gljk != null and gljk != '' and gljk == '1'.toString() and sjid != null and sjid != ''">
+            left join bdc_gzlsj_gx g on g.jkid=t.jkid
+        </if>
+        <where>
+            <if test="jkmc != null and jkmc != ''">
+                and t.jkmc LIKE '%' || #{jkmc} || '%'
+            </if>
+            <if test="jklx != null and jklx != ''">
+                and t.jklx = #{jklx}
+            </if>
+            <if test="yymc != null and yymc != ''">
+                and t.yymc = #{yymc}
+            </if>
+            <if test="jkidList != null and jkidList.size() > 0">
+                and t.jkid in
+                <foreach collection="jkidList" item="item" separator="," open="(" close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="gljk != null and gljk != '' and gljk == '1'.toString() and sjid != null and sjid != ''">
+                AND g.sjid=#{sjid}
+            </if>
+        </where>
+        <if test="gljk != null and gljk != '' and gljk == '1'.toString() and sjid != null and sjid != ''">
+            order by g.sxh nulls last
+        </if>
+    </select>
+
+    <select id="listGzlSjJk" resultType="cn.gtmap.realestate.common.core.dto.register.BdcGzlSjJkDTO"
+            parameterType="cn.gtmap.realestate.common.core.qo.register.BdcGzlQO">
+        select t.JKID, t.JKMC, t.JKSM, t.JKLX, t.CJSJ, t.CJR, t.YYMC, t.QQFS, t.SFTB, t.SFHLYC,g.SXH,g.SJID from
+        BDC_GZLJK t
+        left join BDC_GZLSJ_GX g on g.JKID=t.JKID
+        where g.sjid in (
+        select s.sjid from bdc_gzlsj s
+        <where>
+            and rownum=1
+            <if test="sjid != null and sjid != ''">
+                and s.sjid= #{sjid}
+            </if>
+            <if test="sjbs != null and sjbs != ''">
+                and s.sjbs= #{sjbs}
+            </if>
+            <if test="jdmc != null and jdmc != ''">
+                and s.jdmc= #{jdmc}
+            </if>
+        </where>
+        )
+        order by g.sxh nulls last
+    </select>
+
+    <select id="queryMaxSxh" resultType="int" parameterType="string">
+        select nvl(max(t.sxh), 0)
+        from bdc_gzlsj_gx t
+        where t.sjid = #{sjid}
+    </select>
+</mapper>

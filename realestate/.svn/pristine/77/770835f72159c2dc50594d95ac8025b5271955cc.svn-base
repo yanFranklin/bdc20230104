@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://dozer.sourceforge.net"
+          xsi:schemaLocation="http://dozer.sourceforge.net
+          http://dozer.sourceforge.net/schema/beanmapping.xsd">
+    <mapping type="one-way" wildcard="false">
+        <class-a>com.alibaba.fastjson.JSONObject</class-a>
+        <class-b>cn.gtmap.realestate.exchange.core.dto.hefei.wjwcszm.request.WjwCszmRequestDTO</class-b>
+        <field map-id="requestInfo">
+            <a>this</a>
+            <b>WjwCszmRequestInfo[0]</b>
+            <b-hint>cn.gtmap.realestate.exchange.core.dto.hefei.wjwcszm.request.WjwCszmRequestInfo</b-hint>
+        </field>
+        <field map-id="body">
+            <a>this</a>
+            <b>WjwCszmRequestBody[0]</b>
+            <b-hint>cn.gtmap.realestate.exchange.core.dto.hefei.wjwcszm.request.WjwCszmRequestBody</b-hint>
+        </field>
+    </mapping>
+
+    <mapping map-id="requestInfo" >
+        <class-a>com.alibaba.fastjson.JSONObject</class-a>
+        <class-b>cn.gtmap.realestate.exchange.core.dto.hefei.wjwcszm.request.WjwCszmRequestInfo</class-b>
+        <field custom-converter="cn.gtmap.realestate.common.core.dozer.converters.gtmap.NewDateCustomConverter"
+               custom-converter-param="yyyy-MM-dd hh:mm:ss">
+            <a>this</a>
+            <b>requestDate</b>
+        </field>
+        <field custom-converter="cn.gtmap.realestate.common.core.dozer.converters.gtmap.ApplicationConfigCustomConvert"
+               custom-converter-param="wjw.orgcode">
+            <a>this</a>
+            <b>requestOrgCode</b>
+        </field>
+        <field custom-converter="cn.gtmap.realestate.common.core.dozer.converters.gtmap.ApplicationConfigCustomConvert"
+               custom-converter-param="wjw.orgname">
+            <a>this</a>
+            <b>requestOrgName</b>
+        </field>
+    </mapping>
+
+    <mapping map-id="body">
+        <class-a>com.alibaba.fastjson.JSONObject</class-a>
+        <class-b>cn.gtmap.realestate.exchange.core.dto.hefei.wjwcszm.request.WjwCszmRequestBody</class-b>
+        <field>
+            <a key="data">this</a>
+            <b>data[0]</b>
+            <b-hint>cn.gtmap.realestate.exchange.core.dto.hefei.wjwcszm.request.WjwCszmRequestData</b-hint>
+        </field>
+    </mapping>
+
+    <mapping map-id="data">
+        <class-a>com.alibaba.fastjson.JSONObject</class-a>
+        <class-b>cn.gtmap.realestate.exchange.core.dto.hefei.wjwcszm.request.WjwCszmRequestData</class-b>
+        <field>
+            <a key="mqmc">this</a>
+            <b>MomName</b>
+        </field>
+        <field>
+            <a key="mqzjh">this</a>
+            <b>MomIdCode</b>
+        </field>
+        <field>
+            <a key="cszmh">this</a>
+            <b>BirthCode</b>
+        </field>
+    </mapping>
+</mappings>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.init.core.mapper.BdcXmFbMapper">
+    <!-- 批量更新不动产项目附表 -->
+    <update id="updateBatchBdcXmFb" parameterType="map">
+        <if test="statement != null and ((gzlslid != null and gzlslid !='') or (xmids != null and xmids.size() > 0 ) or (gzlslids != null and gzlslids.size() > 0 ))">
+            ${statement}
+            <where>
+                <if test="gzlslid != null and gzlslid !=''">
+                    AND gzlslid=#{gzlslid}
+                </if>
+                <if test="xmids != null and xmids.size() > 0">
+                    AND xmid IN
+                    <foreach collection="xmids" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="gzlslids != null and gzlslids.size() > 0">
+                    AND gzlslid IN
+                    <foreach collection="gzlslids" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+        </if>
+    </update>
+    <select id="listBdcXmFb" resultType="cn.gtmap.realestate.common.core.domain.BdcXmFbDO"
+            parameterType="cn.gtmap.realestate.common.core.qo.init.BdcXmFbQO">
+        SELECT * FROM BDC_XMFB A
+            <where>
+                <if test="xmid != null and xmid !=''">
+                    AND A.xmid=#{xmid}
+                </if>
+                <if test="xmids != null and xmids.size() > 0">
+                    AND A.xmid IN
+                    <foreach collection="xmids" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="gzlslid != null and gzlslid !=''">
+                    AND A.gzlslid=#{gzlslid}
+                </if>
+            </where>
+    </select>
+
+    <select id="listBdcFgfXmByBdcdyh" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            parameterType="map">
+        SELECT A.*
+          FROM BDC_XM A
+         INNER JOIN BDC_XMFB B
+            ON A.XMID = B.XMID
+         WHERE A.QSZT = 1
+           AND A.QLLX NOT IN (95, 96, 97, 98, 19, 92,37)
+           AND B.SFSZFGF = 1
+           AND A.BDCDYH =#{bdcdyh}
+
+    </select>
+
+    <select id="batchInsertMerge">
+        MERGE INTO bdc_xmfb t
+        USING (
+        <foreach collection="list" item="item" index="index" separator="union">
+            SELECT
+            #{item.xmid,jdbcType=VARCHAR} as xmid,
+            #{item.gzlslid,jdbcType=VARCHAR} as gzlslid,
+            #{item.unid,jdbcType=VARCHAR} as unid
+            FROM DUAL
+        </foreach>) t1
+        ON (t.xmid = t1.xmid)
+        WHEN MATCHED THEN
+        UPDATE SET
+        unid = t1.unid
+        WHEN NOT MATCHED THEN
+        INSERT(
+        <trim suffixOverrides=",">
+            <if test="item.xmid != null and item.xmid != ''">
+                xmid,
+            </if>
+            <if test="item.gzlslid != null and item.gzlslid != ''">
+                gzlslid,
+            </if>
+            <if test="item.unid != null and item.unid != ''">
+                unid,
+            </if>
+        </trim>
+        )
+        VALUES (
+        <trim suffixOverrides=",">
+            <if test="item.xmid != null and item.xmid != ''">
+                t1.xmid,
+            </if>
+            <if test="item.gzlslid != null and item.gzlslid != ''">
+                t1.gzlslid,
+            </if>
+            <if test="item.unid != null and item.unid != ''">
+                t1.unid,
+            </if>
+        </trim>
+        )
+
+    </select>
+
+    <select id="queryQjgldm" parameterType="cn.gtmap.realestate.common.core.qo.init.BdcQjgldmQO" resultType="String">
+        SELECT
+            max(f.qjgldm)
+        FROM
+            bdc_xmfb     f
+        JOIN
+            bdc_xm       x  ON f.xmid = x.xmid
+        LEFT JOIN
+            bdc_xm_zs_gx g  ON x.xmid = g.xmid
+        LEFT JOIN
+            bdc_zs       z  ON g.zsid = z.zsid
+        <where>
+            f.qjgldm IS NOT NULL
+
+            <if test="xmid != null and xmid !=''">
+                AND x.xmid = #{xmid}
+            </if>
+            <if test="slbh != null and slbh !=''">
+                AND x.slbh = #{slbh}
+            </if>
+            <if test="gzlslid != null and gzlslid !=''">
+                AND x.gzlslid = #{gzlslid}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND x.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="bdcdywybh != null and bdcdywybh !=''">
+                AND x.bdcdywybh = #{bdcdywybh}
+            </if>
+            <if test="zl != null and zl !=''">
+                AND x.zl = #{zl}
+            </if>
+            <if test="qxdm != null and qxdm !=''">
+                AND x.qxdm = #{qxdm}
+            </if>
+            <if test="djbmdm != null and djbmdm !=''">
+                AND x.djbmdm = #{djbmdm}
+            </if>
+            <if test="bdcqzh != null and bdcqzh !=''">
+                AND z.bdcqzh = #{bdcqzh}
+            </if>
+        </where>
+    </select>
+</mapper>

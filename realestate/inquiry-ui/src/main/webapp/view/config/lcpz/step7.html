@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>登记页面</title>
+    <link rel="stylesheet" href="../../../static/lib/registerui/css/process.css">
+    <link rel="stylesheet" href="../../../static/lib/layui/css/layui.css">
+    <!--formSelects-v4.css 和 search.css 顺序不能错-->
+    <link rel="stylesheet" href="../../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/popup.css"/>
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/table.css"/>
+    <style type="text/css">
+        .bdc-not-null textarea{
+            background-color: #fef6e1;
+        }
+    </style>
+</head>
+<body>
+<div class="bdc-container-box bdc-not-full-bg">
+    <div class="bdc-container">
+        <div class="bdc-header clear">
+            <p class="bdc-header-this">业务受理配置<img src="../../../static/lib/registerui/image/arrow.png" alt=""></p>
+            <p class="bdc-header-this">业务逻辑配置<img src="../../../static/lib/registerui/image/arrow.png" alt="">
+                <span class="bottom-sj bottom-sj-1"></span>
+                <span class="bottom-sj bottom-sj-2"></span></p>
+            <p>其他相关配置</p>
+        </div>
+        <p class="bdc-title">7/13：登记原因配置</p>
+
+        <div class="bdc-percentage-container">
+
+            <div class="bdc-table-box">
+                <table id="djyyTable" lay-filter="djyyTable"></table>
+            </div>
+            <div class="bdc-btn-box">
+                <a href="javascript:;" class="layui-btn bdc-secondary-btn beforestep">上一步</a>
+                <a href="javascript:;" class="layui-btn bdc-major-btn nextstep">下一步</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="bdc-popup-small" class="bdc-hide">
+    <form class="layui-form" action="">
+        <div class="layui-form-item pf-form-item">
+
+            <div class="layui-inline">
+                <label class="layui-form-label">是否默认</label>
+                <div class="layui-input-inline">
+                    <input type="radio" name="sfmr" value="1" title="是">
+                    <input type="radio" name="sfmr" value="0" title="否" checked>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">是否关联流程</label>
+                <div class="layui-input-inline">
+                    <input type="radio" name="sfgllc" value="1" title="是">
+                    <input type="radio" name="sfgllc" value="0" title="否" checked>
+                </div>
+            </div>
+            <div class="layui-inline bdc-not-null">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>登记原因</label>
+                <div class="layui-input-inline bdc-end-time-box">
+                    <textarea name="djyy" id="djyy" placeholder="请输入内容" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">顺序号</label>
+                <div class="layui-input-inline bdc-end-time-box">
+                    <input type="number" id="sxh" name="sxh" class="layui-input" />
+                </div>
+            </div>
+            <div class="bdc-hide">
+                <input id="gxid" name="id"/>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+<!--表格上面功能按钮-->
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn"  lay-event="add">新增</button>
+        <button class="layui-btn layui-btn-sm bdc-delete-btn" lay-event="delete">删除</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="edit">编辑</button>
+    </div>
+</script>
+<script type="text/html" id="sfTpl">
+
+    {{#  if(d.sfmr == 0){ }}
+    <span >否</span>
+    {{#  } else if(d.sfmr == 1) { }}
+    <span >是</span>
+    {{#  } else { }}
+    <span></span>
+    {{#  } }}
+</script>
+<script type="text/html" id="barAction">
+    <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="up">↑</a>
+    <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="down">↓</a>
+</script>
+
+<script src="../../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../../static/lib/bdcui/js/common.js"></script>
+<script src="../../../static/lib/form-select/formSelects-v4.js" />
+<script src="../../../static/lib/bdcui/js/mask.js"></script>
+<script src="../../../static/js/config/common.js"></script>
+<script src="../../../static/js/config/lcpz/lcpzStep7.js"></script>
+</html>

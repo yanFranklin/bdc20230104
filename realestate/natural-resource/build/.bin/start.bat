@@ -1,0 +1,3 @@
+@echo off
+TITLE {project.name}
+java -Xms512m -Xmx512m -Xmn144m -XX:MetaspaceSize=20M -XX:MaxMetaspaceSize=512m -Xss512K -XX:SurvivorRatio=2 -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=70 -XX:+UseParNewGC -XX:CMSFullGCsBeforeCompaction=0 -XX:+UseCMSCompactAtFullCollection -jar app/{project.name}-{project.version}.jar --spring.config.location=cfg/ --logging.path=logs/ --server.tomcat.basedir=tmp/

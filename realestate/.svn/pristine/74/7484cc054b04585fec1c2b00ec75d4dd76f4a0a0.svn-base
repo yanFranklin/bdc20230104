@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!-- 7.1 婚姻信息 -->
+    <ex:bean id="xgbmcx_hyxx">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${xgbmcx.hyxx.url}"/>
+            <ex:property name="logEventName" value="查询省级平台婚姻信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="MinZheng"/>
+            <ex:property name="dsfFlag" value="MinZheng"/>
+            <ex:property name="contentType" value="application/x-www-form-urlencoded"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/xgbmcx/hyxx/request/data.xml" />
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+            <!-- TODO 婚姻信息 处理-->
+        </ex:response>
+    </ex:bean>
+
+    <!--7.2 社会组织信息-->
+    <ex:bean id="xgbmcx_shgx">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${xgbmcx.shgx.url}"/>
+            <ex:property name="logEventName" value="查询省级平台社会组织信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="MinZheng"/>
+            <ex:property name="dsfFlag" value="MinZheng"/>
+            <ex:property name="contentType" value="application/x-www-form-urlencoded"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/xgbmcx/shgx/request/data.xml" />
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+    </ex:bean>
+
+    <!-- 3.12 人口基准信息-->
+    <ex:bean id="xgbmcx_rkkjzxxcx">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${xgbmcx.rkkjzxxcx.url}"/>
+            <ex:property name="logEventName" value="国家公安部—人口库基准信息查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GongAn"/>
+            <ex:property name="dsfFlag" value="GongAn"/>
+            <ex:property name="contentType" value="application/x-www-form-urlencoded"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/xgbmcx/rkkjzxxcx/request/data.xml" />
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+        <!--        <ex:log dsfFlag="ZWGX" logEventName="国家公安部—人口库基准信息查询接口" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!-- 3.13 国家公安部—人口库身份核查接口-->
+    <ex:bean id="xgbmcx_rkksfhc">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${xgbmcx.rkksfhc.url}"/>
+            <ex:property name="logEventName" value="国家公安部—人口库身份核查"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GongAn"/>
+            <ex:property name="dsfFlag" value="GongAn"/>
+            <ex:property name="contentType" value="application/json"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/xgbmcx/rkksfhc/request/data.xml" />
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+        <!--        <ex:log dsfFlag="ZWGX" logEventName="国家公安部—人口库身份核查接口" requester="BDC" responser="ZWGX"/>-->
+    </ex:bean>
+
+    <!--7.4 居民身份信息-->
+    <ex:bean id="xgbmcx_jmsf">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${xgbmcx.jmsf.url}"/>
+            <ex:property name="logEventName" value="查询省级平台居民身份信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GongAn"/>
+            <ex:property name="dsfFlag" value="GongAn"/>
+            <ex:property name="contentType" value="application/x-www-form-urlencoded"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/xgbmcx/jmsf/request/data.xml" />
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+    </ex:bean>
+
+    <!-- 7.5 居民身份信息查询申请反馈 -->
+    <ex:bean id="xgbmcx_jmsfsqfk">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${xgbmcx.jmsfsqfk.url}" />
+            <ex:property name="logEventName" value="查询省级平台居民身份信息反馈"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SJPT"/>
+            <ex:property name="dsfFlag" value="SJPT"/>
+            <ex:property name="contentType" value="application/x-www-form-urlencoded" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/xgbmcx/jmsfsqfk/request/data.xml" />
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+    </ex:bean>
+
+    <!-- 7.6 企业基本信息-->
+    <ex:bean id="xgbmcx_qyxx">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="查询省级平台企业基本信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SCJGZJ"/>
+            <ex:property name="dsfFlag" value="SCJGZJ"/>
+            <ex:property name="url" value="${xgbmcx.qyxx.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element  name="gxData" dozerXml="conf/dozer/sjpt/xgbmcx/qyxx/request/data.xml" />
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+    </ex:bean>
+
+    <!-- 居民户籍信息查询申请 接口说明 -->
+    <ex:bean id="xgbmcx_hjxxcxsq">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${xgbmcx.hjxxcxsq.url}"/>
+            <ex:property name="logEventName" value="查询省级平台居民户籍信息查询申请"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GongAn"/>
+            <ex:property name="dsfFlag" value="GongAn"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/xgbmcx/hjxx/cxsq/request/param.xml" />
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+    </ex:bean>
+
+    <!-- 居民户籍信息查询反馈 接口说明 -->
+    <ex:bean id="xgbmcx_hjxxcxfk" >
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="查询省级平台居民户籍信息查询申请反馈"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GongAn"/>
+            <ex:property name="dsfFlag" value="GongAn"/>
+            <ex:property name="url" value="${xgbmcx.hjxxcxfk.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/xgbmcx/hjxx/cxfk/request/param.xml"/>
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+    </ex:bean>
+
+    <!-- 江苏省级平台接口 2.1 公安部-身份核查服务接口说明-->
+    <ex:bean id="xgbmcx_gasfhc">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${sjpt.gxjk.url}"/>
+            <ex:property name="logEventName" value="查询公安部身份核查服务"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GongAn"/>
+            <ex:property name="dsfFlag" value="GongAn"/>
+        </ex:service-info>
+        <ex:request name="gxData">
+            <ex:element name="head"  dozerXml="conf/dozer/sjpt/head.xml" listToObject="true"/>
+            <ex:element name="data"  sourceService="sfhc_requestParam" dozerXml="conf/dozer/sjpt/xgbmcx/gasfhc/request/param.xml"/>
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+            <ex:element dozerXml="conf/dozer/sjpt/xgbmcx/gasfhc/response/data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 江苏省级平台接口 2.2 民政部-地名信息查询接口说明-->
+    <ex:bean id="xgbmcx_dmxxcx">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${jiangsu.mzb.dmxxcx.url}"/>
+            <ex:property name="logEventName" value="查询民政部的地名信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="MinZheng"/>
+            <ex:property name="dsfFlag" value="MinZheng"/>
+        </ex:service-info>
+        <ex:request name="gxData">
+            <ex:element name="head"  dozerXml="conf/dozer/sjpt/head.xml" listToObject="true"/>
+            <ex:element name="data"  dozerXml="conf/dozer/sjpt/xgbmcx/dmxxcx/request/param.xml"/>
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+    </ex:bean>
+
+    <!-- 江苏省级平台接口 2.4 2.4 民政部-社会组织统一社会信用代码信息查询服务接口-->
+    <ex:bean id="xgbmcx_shzztyxxcx">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${jiangsu.mzb.shzztyxydm.url}"/>
+            <ex:property name="logEventName" value="社会组织统一社会信用代码信息查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="MinZheng"/>
+            <ex:property name="dsfFlag" value="MinZheng"/>
+        </ex:service-info>
+        <ex:request name="gxData">
+            <ex:element name="head"  dozerXml="conf/dozer/sjpt/head.xml" listToObject="true"/>
+            <ex:element name="data"  dozerXml="conf/dozer/sjpt/xgbmcx/shzztyxydm/request/param.xml"/>
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+    </ex:bean>
+
+    <!--3.1 卫健委-出生医学证明查询接口 -->
+    <ex:bean id="xgbmcx_csyxzm">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${jiangsu.mzb.jrxkz.url}"/>
+            <ex:property name="logEventName" value="出生医学证明查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="WJW"/>
+            <ex:property name="dsfFlag" value="WJW"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/xgbmcx/csyxzm/request/param.xml"/>
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+
+    </ex:bean>
+
+    <!--3.2 卫健委-死亡医学证明查询接口 -->
+    <ex:bean id="xgbmcx_swyxzm">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${jiangsu.mzb.swyxzm.url}"/>
+            <ex:property name="logEventName" value="死亡医学证明查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="WJW"/>
+            <ex:property name="dsfFlag" value="WJW"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/xgbmcx/swyxzm/request/param.xml"/>
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+    </ex:bean>
+
+    <!--3.3 民政部-基金会法人登记证书查询接口 -->
+    <ex:bean id="xgbmcx_jjhfrdjzs">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${jiangsu.mzb.jjhfrdjzs.url}"/>
+            <ex:property name="logEventName" value="基金会法人登记证书查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="MinZheng"/>
+            <ex:property name="dsfFlag" value="MinZheng"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/xgbmcx/jjhfr/request/param.xml"/>
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+    </ex:bean>
+
+    <!--3.4 民政部-民办非企业单位登记证书查询接口 -->
+    <ex:bean id="xgbmcx_mbfqydjzs">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${jiangsu.mzb.mbfqydjzs.url}"/>
+            <ex:property name="logEventName" value="民办非企业单位登记证书查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="MinZheng"/>
+            <ex:property name="dsfFlag" value="MinZheng"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/xgbmcx/mbfqydjzs/request/param.xml"/>
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+    </ex:bean>
+
+    <!--3.5 民政部-社会团体法人登记证书查询接口 -->
+    <ex:bean id="xgbmcx_shttfrdjzs">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${jiangsu.mzb.shttfrdjzs.url}"/>
+            <ex:property name="logEventName" value="社会团体法人登记证书查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="MinZheng"/>
+            <ex:property name="dsfFlag" value="MinZheng"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/xgbmcx/shttfrdjzs/request/param.xml"/>
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+    </ex:bean>
+
+    <!--3.6 民政部-婚姻登记信息核验（个人）接口 -->
+    <ex:bean id="xgbmcx_hyxxhygr">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${jiangsu.mzb.hyxxhygr.url}"/>
+            <ex:property name="logEventName" value="婚姻登记信息核验（个人）接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="MinZheng"/>
+            <ex:property name="dsfFlag" value="MinZheng"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/xgbmcx/hyxxhygr/request/param.xml"/>
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+    </ex:bean>
+
+    <!--3.7 民政部-婚姻登记信息核验（双方）接口 -->
+    <ex:bean id="xgbmcx_hyxxhysf">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${jiangsu.mzb.hyxxhysf.url}"/>
+            <ex:property name="logEventName" value="婚姻登记信息核验（双方）接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="MinZheng"/>
+            <ex:property name="dsfFlag" value="MinZheng"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/xgbmcx/hyxxhysf/request/param.xml"/>
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+    </ex:bean>
+
+    <!--3.10 中编办-党群机关信息查询接口-->
+    <ex:bean id="xgbmcx_dqjg">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${jiangsu.mzb.dqjg.url}"/>
+            <ex:property name="logEventName" value="党群机关信息查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZBB"/>
+            <ex:property name="dsfFlag" value="ZBB"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/xgbmcx/dqjg/request/param.xml"/>
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+    </ex:bean>
+
+    <!--3.11 中编办-事业单位信息查询接口-->
+    <ex:bean id="xgbmcx_sydw">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${jiangsu.mzb.sydw.url}"/>
+            <ex:property name="logEventName" value="事业单位信息查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZBB"/>
+            <ex:property name="dsfFlag" value="ZBB"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/xgbmcx/sydw/request/param.xml"/>
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+            <ex:element dozerXml="conf/dozer/sjpt/xgbmcx/sydw/response/data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!--3.14 民政部-收养登记信息查询 -->
+    <ex:bean id="xgbmcx_sydjxxcx">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${jiangsu.mzb.sydjxxcx.url}"/>
+            <ex:property name="logEventName" value="收养登记信息查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="MinZheng"/>
+            <ex:property name="dsfFlag" value="MinZheng"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/xgbmcx/sydjxxcx/request/param.xml"/>
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+    </ex:bean>
+
+    <!--3.15 民政部-收养登记信息校验 -->
+    <ex:bean id="xgbmcx_sydjxxjy">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${jiangsu.mzb.sydjxxjy.url}"/>
+            <ex:property name="logEventName" value="收养登记信息校验"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="MinZheng"/>
+            <ex:property name="dsfFlag" value="MinZheng"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/xgbmcx/sydjxxjy/request/param.xml"/>
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+    </ex:bean>
+
+    <!--3.16 民政部-殡葬服务火化信息接口 -->
+    <ex:bean id="xgbmcx_bzfwhhxx">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${jiangsu.mzb.bzfwhhxx.url}"/>
+            <ex:property name="logEventName" value="殡葬服务火化信息接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="MinZheng"/>
+            <ex:property name="dsfFlag" value="MinZheng"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/xgbmcx/bzfwhhxx/request/param.xml"/>
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+    </ex:bean>
+
+    <!--3.17 省卫健委-死亡医学证明 -->
+    <ex:bean id="xgbmcx_wjwswyxzm">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${jiangsu.mzb.wjwswyxzm.url}"/>
+            <ex:property name="logEventName" value="死亡医学证明"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="WJW"/>
+            <ex:property name="dsfFlag" value="WJW"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/xgbmcx/wjwswyxzm/request/param.xml"/>
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+    </ex:bean>
+
+    <!--3.18 省卫健委-死亡医学证明校验 -->
+    <ex:bean id="xgbmcx_wjwswyxzmjy">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${jiangsu.mzb.wjwswyxzmjy.url}"/>
+            <ex:property name="logEventName" value="死亡医学证明校验"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="WJW"/>
+            <ex:property name="dsfFlag" value="WJW"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/xgbmcx/wjwswyxzmjy/request/param.xml"/>
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+    </ex:bean>
+
+    <!--4.2 省公安厅-人像比对查询接口-->
+    <ex:bean id="xgbmcx_rxbd">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${sjpt.gxjk.url}"/>
+            <ex:property name="logEventName" value="省公安厅人像比对查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GongAn"/>
+            <ex:property name="dsfFlag" value="GongAn"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/xgbmcx/rxbd/request/param.xml"/>
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+    </ex:bean>
+
+    <!-- 请求参数处理-->
+    <ex:bean id="sfhc_requestParam">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="sjptCommonServiceImpl" />
+            <ex:property name="methodName" value="getSfhcRequestParam" />
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 省级平台查询请求单号-->
+    <ex:bean id="sjpt_cxqqdh">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="sjptCommonServiceImpl" />
+            <ex:property name="methodName" value="getCxqqdh" />
+            <ex:property name="noArgs" value="true" />
+        </ex:service-info>
+    </ex:bean>
+
+
+</beans>

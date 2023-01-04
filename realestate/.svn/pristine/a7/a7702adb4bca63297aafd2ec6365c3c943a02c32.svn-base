@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.etl.core.mapper.exchange.FcjyDataMapper">
+
+    <select id="listClfHtxxByPage" resultType="map">
+        SELECT t.htbh,t.qlrmc,t.qlrzjh,t.zl,t.ywrmc,t.ywrzjh,t.bdcqzh,t.jyzt FROM v_espba t
+        <where>
+            <if test="qlrzjh != null and qlrzjh !=''">
+                AND t.qlrzjh LIKE '%' || #{qlrzjh} || '%'
+            </if>
+            <if test="qlrmc != null and qlrmc !=''">
+                AND t.qlrmc LIKE '%' || #{qlrmc} || '%'
+            </if>
+            <if test="htbh != null and htbh !=''">
+                AND t.htbh LIKE '%' || #{htbh} || '%'
+            </if>
+        </where>
+    </select>
+
+    <select id="listSpfHtxxByPage" resultType="map">
+        SELECT t.htbh,t.qlrmc,t.qlrzjh,CASE WHEN t.fh IS NULL THEN t.hzdk || t.ckzh ||'幢'||t.ckh WHEN t.ckh IS NULL THEN t.hzdk || t.zh ||'幢'|| t.fh ||'室' ELSE t.hzdk || t.zh ||'幢'|| t.fh ||'室;' || t.hzdk || t.ckzh ||'幢'||t.ckh END AS zl, t.djzmdh as bdcqzh,t.jyzt,t.anj FROM v_spfba t
+        <where>
+            <if test="qlrzjh != null and qlrzjh !=''">
+                AND t.qlrzjh LIKE '%' || #{qlrzjh} || '%'
+            </if>
+            <if test="qlrmc != null and qlrmc !=''">
+                AND t.qlrmc LIKE '%' || #{qlrmc} || '%'
+            </if>
+            <if test="htbh != null and htbh !=''">
+                AND t.htbh LIKE '%' || #{htbh} || '%'
+            </if>
+        </where>
+    </select>
+
+    <select id="listClfHtByHtbh" resultType="map">
+        SELECT t.htbh,t.qlrmc,t.qlrzjh,t.zl,t.ywrmc,t.ywrzjh,t.bdcqzh,t.jyzt FROM v_espba t
+        WHERE t.htbh =#{htbh}
+    </select>
+
+    <select id="listSpfHtByHtbh" resultType="map">
+        SELECT t.htbh,t.qlrmc,t.qlrzjh,CASE WHEN t.fh IS NULL THEN t.hzdk || t.ckzh ||'幢'||t.ckh WHEN t.ckh IS NULL THEN t.hzdk || t.zh ||'幢'|| t.fh ||'室' ELSE t.hzdk || t.zh ||'幢'|| t.fh ||'室;' || t.hzdk || t.ckzh ||'幢'||t.ckh END AS zl, t.djzmdh as bdcqzh,t.jyzt,t.anj FROM v_spfba t
+        WHERE t.htbh =#{htbh}
+    </select>
+
+</mapper>

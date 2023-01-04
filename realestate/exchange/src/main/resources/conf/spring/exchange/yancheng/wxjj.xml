@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <!-- 盐城 维修基金相关接口 -->
+    <!--维修基金信息-->
+    <ex:bean id="wxjjxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="wxjjServiceImpl"/>
+            <ex:property name="methodName" value="queryWxjj"/>
+            <ex:property name="params" value="bdcdyh"/>
+        </ex:service-info>
+        <ex:log dsfFlag="WXJJ" logEventName="请求维修基金" requester="BDC" responser="WXJJ"/>
+    </ex:bean>
+
+    <ex:bean id="queryWxjjxx">
+        <ex:service-info request-type="httpGet">
+            <ex:property name="logEventName" value="维修基金状态"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="WXJJ"/>
+            <ex:property name="dsfFlag" value="WXJJ"/>
+            <ex:property name="url" value="${wxjj.url}"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/wxjj/response/data.xml"/>
+        </ex:response>
+    </ex:bean>
+</beans>

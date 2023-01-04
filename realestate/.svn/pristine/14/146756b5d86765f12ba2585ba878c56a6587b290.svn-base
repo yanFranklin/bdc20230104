@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--登簿信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.DjfDjDbxxMapper">
+
+    <select id="queryDjfDbxxList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.DjfDjDb">
+        select * from (SELECT DISTINCT '无' ysdm,
+        c.xmid as ywh,
+        c.dbr as dbryxm,
+        '审核通过' as dbyj,
+        c.djsj as dbsj,
+        '1' czjg,
+        substr(c.bdcdyh,0,6) qxdm,
+        '1' rn
+        FROM
+        bdc_xm c
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND c.xmid = #{ywh}
+            </if>
+        </where>
+        ) r where r.rn = 1
+    </select>
+
+</mapper>

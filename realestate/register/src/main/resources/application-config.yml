@@ -1,0 +1,129 @@
+# 权利接口实现定义
+register:
+  #非房屋的产权
+  ffwCqBeans:
+    bdcTdsyqServiceImpl,
+    bdcJsydsyqServiceImpl,
+    bdcTdcbnydsyqServiceImpl,
+    bdcLqServiceImpl,
+    bdcHysyqServiceImpl,
+    bdcQtxgqlServiceImpl
+  #房屋产权
+  fwCqBeans:
+    bdcFdcqServiceImpl,
+    bdcGjzwsyqServiceImpl,
+    bdcFdcq3ServiceImpl
+
+# 档案打印调用接口
+url:
+  # 南通档案接口地址
+  dady-url: http://192.168.188.87/neusoft/neusoft_index.aspx
+  td-dady-url: http://192.168.0.27:3000/dacx_nj/index
+  # 海门档案调用接口地址
+  haimen:
+    dady-url: http://win-08o8g1dqghj:8090/archive/gateway!checkArchive.action?slh=
+
+# 审批表配置
+shxx:
+  # 默认打印的节点数量，需要根据此参数设置打印参数的个数
+  jd-number: 3
+  # 非主房的房屋用途特殊字符,多个以"英文逗号"分隔（代码会判断对应的房屋用途的名称是否包含这些字符，包含的则不是主房。注意英文逗号分隔）
+  fwyt-fzf-tszf: 阁楼,车库,车位
+
+#  一审制流程打印-只有一个节点，审核信息需要展示在审核意见多个逗号分隔
+#  yszlc:
+#    gzldyid:
+# 打印子表空值替换符号，默认为空字符串
+print:
+  replaceNull:
+    # 子表ID
+    zbid: Yyxx
+    # 替换字符
+    symbol: "—"
+  spb.dylx: zyspb,zhspb,scspb,bdcSqSpbhb
+  onespb:
+    dylx: zyspb,dyspb,zhspb,bdcSqSpb
+# 合肥：登记历史关系台账需要合并展示一条记录的业务登记小类
+# 例如 房屋分割合并变更 、房屋分割合并转移
+djlsgx:
+#  djxl: 9000408,9000308,9000407,9000307
+  #  是否查询以当前项目为上一手的后续递归子项目： 1 查询 ， 其它不查
+  sfcxhs: 1
+#  bcxlsgxgzl: tbpYyyRfnQyZyr5C,zK2XnRRxFtPY8MaJ
+#  xzql: 37,95,97,98
+  gzldyid: tbpYyyRfnQyZyr5C,zK2XnRRxFtPY8MaJ
+  ajzt: 1,2,3,4
+  wlzsdy:
+    gzldyid: Wxh43r6si5zCpkbN
+# 信息补录 买卖预告登记登记小类
+xxblMmygdj:
+  djxl: 7000403,7000803
+# 登簿事件操作设置
+dbEvent:
+  # 同步更新权籍不动产单元状态
+  syncQjBdcdyZt: true
+  # 同步更新权籍不动产单元信息
+  syncQjBdcdyXx: false
+  # （合肥）房地一体业务，登记不需要推送更新权籍不动产单元信息,表数据更新配置（权籍数据库表：登记类型1,登记类型2...）,登记类型之间以英文逗号分隔。
+  # 不配置时,默认更新权籍所有的表
+  noPushQj-tdfw-table:
+    fw_fcqlr:
+    fw_hs: 100,200,400,600,700,800,900
+    fw_ljz:
+    fw_xmxx:
+    fw_ychs: 100,200,300,400,500,600,700,800,900
+#登记簿
+djb:
+  # 房屋不动产单元查看登记簿时，要加载该房屋隶属宗地的权利目录（true 为加载土地信息，false为不加载）
+  djbmlLoadZdBdcdyh: true
+#信息补录
+xxbl:
+  # 关联产权是否带入上一手产权证号（true 为带入，false为不带入，默认是带入）
+  glycqzh: true
+
+# 注销电子证照服务内聚在改变权属状态的服务里面，但是注销服务每个地市不一样
+# 这里做一下地市的注销服务版本配置
+zxdzzz:
+  version: hefei
+
+# 设置不动产单元展示顺序是否需要和受理添加不动产单元顺序一致
+# true: 需要 ； false: 不需要
+bdcdyxssx:
+  # 抵押物清单页面
+  dyawqd: true
+
+#抵押土地面积计算方式,不配置默认为2
+#1.计算抵押土地面积之和(不区分宗地求和)
+#2.计算抵押土地面积之和(同一宗地只收一个费用)
+dytdmj.jsfs: 1
+
+# 抵押注销证明 落款单位配置
+config:
+  lkdw: 海门市不动产登记中心
+
+xxbl.xmly: 3
+
+dajj.gzldyid: nCX7TQjMGzyyJCER
+# 特殊流程判断是否创建档案交接
+dajj.sfcjbyyzh.gzldyid: WR3msbJr8P335c8H,nCX7TQjMGzyyJCER
+
+
+# 使用首次登记表述方式的量化附记。 默认都采用抵押表述方式的量化附记
+lhxx:
+  scdjfj:
+    gzldyids: jsEKwceZQswjPAyx
+  dyaFjModelList:
+    - 本次抵押登记（除#{gxlz}外）对应的国有建设用地使用权共有份额为#{gxfe}。
+    - 本次抵押登记对应的楼幢为#{wgxlz}幢，对应的国有建设用地使用权共有份额为#{wgxfe}。
+  scdjFjModelList:
+    - 已经首次登记对应的楼幢为#{sdwgxlz}幢，对应的国有建设用地使用权份额为#{sdwgxfe}；剩余尚未首次登记的房屋对应的国有建设用地使用权共有份额为#{sdgxfe}。
+    - 已经首次登记对应的楼幢为除#{sdgxlz}外，对应的国有建设用地使用权份额为#{sdgxfe}；剩余尚未首次登记的房屋对应的国有建设用地使用权共有份额为#{sdwgxfe}。
+
+##撤销登记工作流定义ID
+cxdj.gzldyid: kQD4FJw6JBfew8Hi
+
+##属地审核区县代码与组织的对照
+sdsh.qxdmMap.340101: 340104
+
+xf:
+  jrcfcs: false

@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title class="bdc_subsystem"></title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../static/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../static/css/admin.css" media="all">
+    <link rel="stylesheet" href="../static/lib/calendar/easyui.css">
+    <link rel="stylesheet" href="../static/lib/bdcui/css/popup.css" media="all">
+    <link href="../static/lib/bdcui/css/mask.css" media="all" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/home-page-new.css" media="all" />
+</head>
+<body class="layui-layout-body">
+<object id="myPad" style="display: none"
+        classid="clsid:433E8BB0-CAB7-4490-B395-5D7A27BB6D6C"></object>
+<div id="LAY_app">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <!-- 头部区域 -->
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item layadmin-flexible" lay-unselect="">
+                    <a href="javascript:" layadmin-event="flexible" title="侧边伸缩" id="flexible">
+                        <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
+                    </a>
+                </li>
+            </ul>
+            <ul class="layui-nav layui-layout-right ul-margin-right">
+                <li class="layui-nav-item bdc-system-nav">
+                    <a href="#">
+                        <cite><img alt="" src="../static/image/system.png"/><span class="bdc_subsystem">不动产登记业务管理系统</span></cite>
+                    </a>
+                    <dl class="layui-nav-child bdc-system-child">
+                        <ul id="systemView">
+
+                        </ul>
+                    </dl>
+                </li>
+                <li class="layui-nav-item bdc-person-nav">
+                    <a href="javascript:">
+                        <cite><img alt="" src="../static/image/person.png"/><span class="bdc-user-name">    </span></cite>
+                    </a>
+                    <dl class="layui-nav-child bdc-person-child">
+                        <dd>
+                            <!--<a href="./basic-info.html?now=basic" target="_blank" class="bdc-message">基本资料</a>-->
+                            <a href="javascript:" class="bdc-message">基本资料</a>
+                        </dd>
+                        <dd>
+                            <!--<a href="./basic-info.html?now=update" target="_blank">修改密码</a>-->
+                            <a href="javascript:" class="bdc-update">修改密码</a>
+                        </dd>
+                        <dd>
+                            <a class="bdc-custom" href="javascript:">自定义区块
+                                <div class="bdc-custom-div bdc-hide">
+                                    <div class="layui-form">
+                                        <p>
+                                            <input checked data-index="1" lay-filter="showModuleFilter" lay-skin="primary" name="" title="办理情况" type="checkbox">
+                                        </p>
+                                        <p>
+                                            <input checked data-index="2" lay-filter="showModuleFilter" lay-skin="primary" name="" title="查封到期" type="checkbox">
+                                        </p>
+                                        <p>
+                                            <input checked data-index="3" lay-filter="showModuleFilter" lay-skin="primary" name="" title="工作提醒" type="checkbox">
+                                        </p>
+                                        <p>
+                                            <input checked data-index="4" lay-filter="showModuleFilter" lay-skin="primary" name="" title="数据分析" type="checkbox">
+                                        </p>
+                                        <p>
+                                            <input checked data-index="5" lay-filter="showModuleFilter" lay-skin="primary" name="" title="操作日志" type="checkbox">
+                                        </p>
+                                        <p>
+                                            <input checked data-index="6" lay-filter="showModuleFilter" lay-skin="primary" name="" title="版本更新" type="checkbox">
+                                        </p>
+                                        <p>
+                                            <input id="restoreDefault" lay-filter="showModuleFilter" lay-skin="primary" name="" title="恢复默认" type="checkbox">
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:" class="bdc-logout">退出</a>
+                        </dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item bdc-download-nav">
+                    <a id= "bdc-xtkj-download" class="bdc-download">
+                        <cite><img alt="" src="../static/image/download.png"/><span class="bdc-download">一键下载</span></cite></a></a>
+                </li>
+                <li class="layui-nav-item bdc-msg-nav">
+                    <a href="javascript:" id="msgTitleView">
+                        <cite><img alt="" src="../static/image/msg.png"/>消息中心</cite>
+                    </a>
+                    <div class="layui-nav-child bdc-msg-child">
+                        <p class="bdc-msg-title">消息</p>
+                        <div class="layui-tab layui-tab-brief" id="msgView" lay-filter="docDemoTabBrief">
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 侧边菜单 -->
+        <div class="layui-side layui-side-menu">
+            <div class="layui-side-scroll">
+                <div class="layui-logo">
+                    <img alt="" class="bdc-logo-img" src="../static/image/logo.png"/>
+                    <span class="bdc_subsystem">不动产登记业务管理系统</span>
+                </div>
+
+                <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
+                </ul>
+            </div>
+        </div>
+
+        <!-- 页面标签 -->
+        <div class="layadmin-pagetabs" id="LAY_app_tabs">
+            <div class="layui-icon layadmin-tabs-control layui-icon-prev" layadmin-event="leftPage"></div>
+            <div class="layui-icon layadmin-tabs-control layui-icon-next" layadmin-event="rightPage"></div>
+            <div class="layui-icon layadmin-tabs-control layui-icon-set-sm">
+                <img alt="" src="../static/image/tab/gj.png"/>
+                <ul class="layui-nav layadmin-tabs-select" lay-filter="layadmin-pagetabs-nav">
+                    <li class="layui-nav-item" lay-unselect="">
+                        <a href="javascript:"></a>
+                        <dl class="layui-nav-child layui-anim-fadein">
+                            <dd layadmin-event="closeThisTabs"><a href="javascript:">关闭当前标签页</a></dd>
+                            <dd layadmin-event="closeOtherTabs"><a href="javascript:">关闭其它标签页</a></dd>
+                            <dd layadmin-event="closeAllTabs"><a href="javascript:">关闭全部标签页</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+            <div class="layui-icon layadmin-tabs-control bdc-refresh-frame">
+                <img alt="" src="../static/image/tab/sx.png"/>
+            </div>
+            <div class="layui-tab bdc-outer-tab" lay-allowClose="true" lay-filter="layadmin-layout-tabs" lay-unauto="">
+                <ul class="layui-tab-title" id="LAY_app_tabsheader">
+                    <li><i class="layui-icon layui-icon-home"></i></li>
+                    <li class="layui-this" id="LAY_app_tabsheader_home" lay-id="console.html"><i class="layui-icon layui-icon-home"></i></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 主体内容 -->
+        <div class="layui-body" id="LAY_app_body">
+            <div class="layadmin-tabsbody-item"></div>
+            <div class="layadmin-tabsbody-item " id="homeDiv">
+                <div class="bdc-container clear">
+                    <div class="bdc-left" id="dom0">
+                        <div class="bdc-handle">
+                            <!--办理情况开始-->
+                            <div id="m0" class="bdc-module bdc-handle-info bdc-merge">
+                                <h3 class="bdc-common-title">
+                                    <span>办理情况</span>
+                                </h3>
+                                <div class="bdc-handle-container clear">
+                                    <div class="bdc-others">
+                                        <div class="bdc-others-more">
+                                            <img class="bdc-operate-default" src="../static/image/home-page/default.png" alt="">
+                                            <img class="bdc-operate-checked bdc-hide" src="../static/image/home-page/checked.png" alt="">
+                                            <p class="bdc-common-more bdc-hide">
+                                                <span onclick="deleteModule(1)">移除</span>
+                                                <span onclick="renderBlqk()">刷新</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="bdc-handle-msg-box">
+                                        <div class="bdc-handle-msg">
+                                            <a lay-href="/realestate-portal-ui/view/listTasks.html?clientId=initialClientId&moduleCode=100&loadHome=true&viewType=todo"
+                                               lay-text="待办量">
+                                                <p class="bdc-handle-name">待办量</p>
+                                                <p class="bdc-handle-num bdc-wait-handle-num">--</p>
+                                            </a>
+                                            <img src="../static/image/home-page/handle-wait.png" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="bdc-handle-msg-box">
+                                        <div class="bdc-handle-msg bdc-handle-done">
+                                            <a lay-href="/realestate-portal-ui/view/listTasks.html?clientId=initialClientId&moduleCode=100&loadHome=true&viewType=complete"
+                                               lay-text="已办量">
+                                                <p class="bdc-handle-name">已办量</p>
+                                                <p class="bdc-handle-num bdc-done-handle-num">--</p>
+                                            </a>
+                                            <img src="../static/image/home-page/handle-done.png" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="bdc-handle-msg-box">
+                                        <div class="bdc-handle-msg bdc-handle-warn">
+                                            <a lay-href="/realestate-portal-ui/view/listTasks.html?clientId=initialClientId&moduleCode=100&loadHome=true&viewType=out"
+                                               lay-text="超期量">
+                                                <p class="bdc-handle-name">超期量</p>
+                                                <p class="bdc-handle-num bdc-warn-handle-num">--</p>
+                                            </a>
+                                            <img src="../static/image/home-page/handle-warn.png" alt="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--办理情况结束-->
+
+                            <!--错误提示-->
+                            <div id="m1" class="bdc-module bdc-error-tips bdc-merge">
+                                <div class="bdc-common-title bdc-operate-more">
+
+                                </div>
+                                <div class="bdc-inner-content">
+                                    <div class="bdc-others">
+                                        <!--<span>MORE</span>-->
+                                        <div class="bdc-others-more">
+                                            <img class="bdc-operate-default" src="../static/image/home-page/default.png" alt="">
+                                            <img class="bdc-operate-checked bdc-hide" src="../static/image/home-page/checked.png" alt="">
+                                            <p class="bdc-common-more bdc-hide">
+                                                <span onclick="deleteModule(2)">移除</span>
+                                                <span onclick="renderCfdq()">刷新</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="layui-tab layui-tab-brief" lay-filter="errorTipsFilter">
+                                        <ul class="layui-tab-title">
+                                            <li class="layui-this">查封到期</li>
+                                            <!--<li>异常提醒</li>-->
+                                            <!--<li>新闻提示</li>-->
+                                        </ul>
+                                        <div class="layui-tab-content">
+                                            <!--错误提醒-->
+                                            <div class="layui-tab-item layui-show" id="CfdqView">
+                                                <button class="layui-btn layui-btn-sm bdc-cf-more">更多</button>
+                                            </div>
+                                            <!--<div class="layui-tab-item">异常提醒</div>-->
+                                            <!--<div class="layui-tab-item">新闻提示</div>-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--工作提醒开始-->
+                        <div id="m2" class="bdc-module bdc-work">
+                            <h3 class="bdc-common-title">
+                                <span>工作提醒</span>
+                            </h3>
+                            <div class="bdc-work-details clear">
+                                <div class="bdc-others">
+                                    <button class="layui-btn layui-btn-sm bdc-add-tips-btn">新增工作项</button>
+                                    <!--<span>MORE</span>-->
+                                    <div class="bdc-others-more">
+                                        <img class="bdc-operate-default" src="../static/image/home-page/default.png" alt="">
+                                        <img class="bdc-operate-checked bdc-hide" src="../static/image/home-page/checked.png" alt="">
+                                        <p class="bdc-common-more bdc-hide">
+                                            <span onclick="deleteModule(3)">移除</span>
+                                            <span onclick="workRemind()">刷新</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="bdc-work-time easyui-layout">
+                                    <div region="center">
+                                        <div class="easyui-fullCalendar" fit="true"></div>
+                                    </div>
+                                </div>
+                                <div class="bdc-work-msg" id="workView">
+
+                                </div>
+                            </div>
+                        </div>
+                        <!--工作提醒结束-->
+
+                        <!--数据分析开始-->
+                        <div id="m3" class="bdc-module bdc-analysis">
+                            <h3 class="bdc-common-title">
+                                <span>数据分析</span>
+                            </h3>
+                            <div class="bdc-inner-content">
+                                <div class="bdc-others">
+                                    <div class="bdc-others-more">
+                                        <img class="bdc-operate-default" src="../static/image/home-page/default.png" alt="">
+                                        <img class="bdc-operate-checked bdc-hide" src="../static/image/home-page/checked.png" alt="">
+                                        <p class="bdc-common-more bdc-hide">
+                                            <span onclick="deleteModule(4)">移除</span>
+                                            <span onclick="renderSjfx()">刷新</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="layui-tab layui-tab-card bdc-sjfx-tab" lay-filter="dateChangeFilter">
+                                    <ul class="layui-tab-title">
+                                        <li class="layui-this">日</li>
+                                        <li>周</li>
+                                        <li>月</li>
+                                        <!--<li>年</li>-->
+                                    </ul>
+                                    <div class="layui-tab-content">
+                                        <div class="layui-tab-item layui-show">
+                                            <div id="analysisCharDay" class="bdc-analysis-char"></div>
+                                        </div>
+                                        <div class="layui-tab-item">
+                                            <div id="analysisCharWeek" class="bdc-analysis-char"></div>
+                                        </div>
+                                        <div class="layui-tab-item">
+                                            <div id="analysisCharMonth" class="bdc-analysis-char"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--数据分析结束-->
+                    </div>
+                    <div class="bdc-right" id="dom1">
+                        <!--操作日志开始-->
+                        <div id="m4" class="bdc-module bdc-operate-log">
+                            <h3 class="bdc-common-title">
+                                <span>操作日志</span>
+
+                            </h3>
+                            <div class="bdc-edition-update-details">
+                                <div class="bdc-others">
+                                    <!--<span>MORE</span>-->
+                                    <div class="bdc-others-more">
+                                        <img class="bdc-operate-default" src="../static/image/home-page/default.png" alt="">
+                                        <img class="bdc-operate-checked bdc-hide" src="../static/image/home-page/checked.png" alt="">
+                                        <p class="bdc-common-more bdc-hide">
+                                            <span onclick="deleteModule(5)">移除</span>
+                                            <span onclick="renderCzrz()">刷新</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="bdc-operate-log-details" id="operateLogView">
+                                </div>
+                            </div>
+                        </div>
+                        <!--操作日志结束-->
+
+                        <!--版本更新 开始-->
+                        <div id="m5" class="bdc-module bdc-edition-update">
+                            <h3 class="bdc-common-title">
+                                <span>版本更新</span>
+                            </h3>
+                            <div class="bdc-edition-update-details">
+                                <div class="bdc-others">
+                                    <!--<span>MORE</span>-->
+                                    <div class="bdc-others-more">
+                                        <img class="bdc-operate-default" src="../static/image/home-page/default.png" alt="">
+                                        <img class="bdc-operate-checked bdc-hide" src="../static/image/home-page/checked.png" alt="">
+                                        <p class="bdc-common-more bdc-hide">
+                                            <span onclick="deleteModule(6)">移除</span>
+                                            <span onclick="renderBbgx()">刷新</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div id="systemVerView">
+                                </div>
+                            </div>
+                        </div>
+                        <!--版本更新 结束-->
+                    </div>
+                </div>
+                <!--异常 提示信息-->
+                <div class="bdc-other-tips-box bdc-hide">
+                    <div class="bdc-other-tips">
+                        <p>错误提示：<span class="bdc-close">不再提示</span></p>
+                        <div id="otherTips">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 辅助元素，一般用于移动设备下遮罩 -->
+        <div class="layadmin-body-shade" layadmin-event="shade"></div>
+
+        <!--叫号相关-->
+        <div id="jhDefault" class="bdc-hide">
+            <img src="../static/image/home-page/notice.png" alt="">
+            <p>窗口提醒</p>
+        </div>
+    </div>
+</div>
+
+<!--新增工作项-->
+<div id="bdc-popup-large" class="bdc-hide">
+    <!--<div class="bdc-tips"><p>提醒方式为系统消息提醒</p></div>-->
+    <form action="" class="layui-form" id="workMsg">
+        <input class="bdc-hide" id="id" type="text">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline bdc-complete-line">
+                <label class="layui-form-label">名称</label>
+                <div class="layui-input-inline">
+                    <input autocomplete="off" class="layui-input" id="msgTitle" lay-verify="title" placeholder="请输入" type="text">
+                </div>
+            </div>
+            <!--<div class="layui-inline bdc-complete-line">-->
+            <!--<label class="layui-form-label">提醒</label>-->
+            <!--<div class="layui-input-inline">-->
+            <!--<select name="city" lay-verify="">-->
+            <!--<option value="010">30分钟</option>-->
+            <!--<option value="021">1小时</option>-->
+            <!--<option value="0571">5小时</option>-->
+            <!--</select>-->
+            <!--</div>-->
+            <!--</div>-->
+            <div class="layui-inline bdc-complete-line bdc-time-select">
+                <label class="layui-form-label">开始时间</label>
+                <div class="layui-input-inline">
+                    <input class="layui-input" id="optStartTime" type="text">
+                </div>
+                <!--<div class="layui-input-inline">-->
+                <!--<select name="start" lay-verify="" id="startTime">-->
+
+                <!--</select>-->
+                <!--</div>-->
+                <label class="layui-form-label">结束时间</label>
+                <div class="layui-input-inline">
+                    <input class="layui-input" id="optEndTime" type="text">
+                </div>
+                <!--<div class="layui-input-inline">-->
+                <!--<select id="endTime" lay-verify="" name="end">-->
+
+                <!--</select>-->
+                <!--</div>-->
+            </div>
+            <div class="layui-inline bdc-complete-line bdc-all-day">
+                <label class="layui-form-label"></label>
+                <div class="layui-input-inline">
+                    <input type="checkbox" lay-filter="checkAllDay" name="" title="全天" lay-skin="primary">
+                </div>
+            </div>
+            <div class="layui-inline bdc-complete-line">
+                <label class="layui-form-label">描述</label>
+                <div class="layui-input-inline bdc-end-time-box">
+                    <textarea class="layui-textarea" id="msgContent" name="desc" placeholder="请输入"></textarea>
+                </div>
+            </div>
+            <!--<div class="layui-inline bdc-complete-line">-->
+            <!--<label class="layui-form-label">重复设置</label>-->
+            <!--<div class="layui-input-inline">-->
+            <!--<select name="city" lay-verify="">-->
+            <!--<option value="01">从不重复</option>-->
+            <!--<option value="02">每天</option>-->
+            <!--<option value="03">法定工作日(智能跳过节假日)</option>-->
+            <!--<option value="04">法定节假日(智能跳过工作日)</option>-->
+            <!--<option value="05">周一至周五</option>-->
+            <!--</select>-->
+            <!--</div>-->
+            <!--</div>-->
+            <div class="layui-inline bdc-complete-line">
+                <label class="layui-form-label">是否完成</label>
+                <div class="layui-input-inline" id="read">
+                    <input checked="" name="read" title="待办" type="radio" value="0">
+                    <input name="read" title="完成" type="radio" value="1">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--待处理消息提醒-->
+<div class="bdc-news-tips bdc-hide" id="newsTips">
+    <h3>提醒<i class="layui-icon layui-icon-close"></i></h3>
+    <p>不动产单元查封信息处理</p>
+</div>
+
+<!--集成叫号开始-->
+<div id="callNumber" class="bdc-jh clear bdc-hide">
+    <div class="current-num">
+        <p>当前号：<span class="bdc-current-num-details"></span></p>
+        <p>排队人数：<span class="bdc-current-num-pd-details"></span></p>
+
+    </div>
+    <div class="bdc-jh-operate">
+        <div  id="initdevice" class="bdc-types" title="">
+            <img src="../static/image/home-page/sign-in.png" alt="">
+            <p>窗口登录</p>
+        </div>
+        <div id="sendMessage" class="bdc-types" title="">
+            <img src="../static/image/home-page/call.png" alt="">
+            <p>窗口叫号</p>
+        </div>
+        <div id="recallnumber" class="bdc-types" title="">
+            <img src="../static/image/home-page/return.png" alt="">
+            <p>重新叫号</p>
+        </div>
+        <div id="ywzy" class="bdc-types" title="">
+            <img src="../static/image/home-page/transfer.png" alt="">
+            <p>业务转移</p>
+        </div>
+        <div id="pause" class="bdc-types" title="">
+            <img src="../static/image/home-page/pause.png" alt="">
+            <p>窗口暂停</p>
+        </div>
+        <div id="cancelpause" class="bdc-types" title="">
+            <img src="../static/image/home-page/start.png" alt="">
+            <p>窗口继续</p>
+        </div>
+        <div id="gxgg" class="bdc-types" title="">
+            <img src="../static/image/home-page/ad.png" alt="">
+            <p>更新广告</p>
+        </div>
+        <div id="updatewaitnumber" class="bdc-types" title="" hidden>
+            <img src="../static/image/home-page/ad.png" alt="">
+            <p>只做更细数据使用</p>
+        </div>
+
+
+    </div>
+</div>
+<!--集成叫号结束-->
+
+<!--业务转移弹出层-->
+<!--<script type="text/html" id="yezyTpl">-->
+    <div id="ywzyPopup" class="bdc-hide">
+        <form class="layui-form" action="">
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">业务转移</label>
+                <div class="layui-input-inline bdc-radio">
+                    <select lay-search="" name="ywzy-select" id="ywzy-select">
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+<!--</script>-->
+
+<!--侧边栏动态加载-->
+<script type="text/html" id="asideTpl">
+    {{#  layui.each(d, function(index, item){ }}
+    <li data-name="{{item.mark}}" class="layui-nav-item">
+        {{# if(item.childTree.length > 0){ }}
+        <a lay-tips="{{item.name}}" lay-direction="2">
+            <i class="layui-icon bdc-icon{{index+1}}"></i>
+            <cite>{{item.name}}</cite>
+        </a>
+        <dl class="layui-nav-child">
+            {{# layui.each(item.childTree, function(secondI, secondV){ }}
+            <dd data-name="{{secondV.mark}}">
+                {{# if(secondV.childTree.length > 0){ }}
+                <a>{{secondV.name}}</a>
+                <dl class="layui-nav-child">
+                    {{# layui.each(secondV.childTree, function(thirdI, thirdV){ }}
+                    <dd data-name="{{thirdV.mark}}">
+                        {{# if(thirdV.childTree.length > 0){ }}
+                        <a title="{{thirdV.name}}">{{thirdV.name}}</a>
+                        <div class="bdc-four-list">
+                            {{# layui.each(thirdV.childTree, function(fourthI, fourthV){ }}
+                            <p lay-href="{{fourthV.url}}" class="bdc-show-msg">{{fourthV.name}}</p>
+                            {{# }); }}
+                        </div>
+                        {{# }else if(thirdV.description == "blank") { }}
+                        <a href="{{thirdV.url}}" target="_blank">{{thirdV.name}}</a>
+                        {{# }else{ }}
+                        <a lay-href="{{thirdV.url}}" class="bdc-show-msg" title="{{thirdV.name}}">{{thirdV.name}}</a>
+                        {{# } }}
+                    </dd>
+                    {{# }); }}
+                </dl>
+                {{# }else if(secondV.description == "blank") { }}
+                <a href="{{secondV.url}}" target="_blank">{{secondV.name}}</a>
+                {{# }else{ }}
+                <a lay-href="{{secondV.url}}" class="bdc-show-msg">{{secondV.name}}</a>
+                {{# } }}
+            </dd>
+            {{# }); }}
+        </dl>
+        {{# }else if(item.description == "blank"){ }}
+        <a href="{{item.url}}" target="_blank" lay-tips="{{item.name}}" lay-direction="2">
+            <i class="layui-icon bdc-icon{{index+1}}"></i>
+            <cite>{{item.name}}</cite>
+        </a>
+        {{# }else { }}
+        <a lay-href="{{item.url}}" lay-tips="{{item.name}}" class="bdc-show-msg" lay-direction="2">
+            <i class="layui-icon bdc-icon{{index+1}}"></i>
+            <cite>{{item.name}}</cite>
+        </a>
+        {{# } }}
+    </li>
+    {{#  }); }}
+</script>
+
+<!--系统-->
+<script type="text/html" id="systemTyl">
+    {{#  layui.each(d, function(index, item){ }}
+    <li>
+    {{# if(item.description == "blank") { }}
+        <a href="{{item.url}}" target="_blank"><img src="../static/image/logo.png" alt="">{{item.name}}</a>
+    {{# } else {}}
+        <a href="{{item.url}}"><img src="../static/image/logo.png" alt="">{{item.name}}</a>
+    {{# } }}
+    </li>
+    {{#  }); }}
+
+</script>
+
+<!--查封到期模板-->
+<script id="cfdqTpl" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    {{#  if(index < 4){ }}
+    <p class="bdc-error-list">
+        <img src="../static/image/home-page/error-new.png" alt="">{{item.CFWH}}
+        <span class="bdc-error-date">{{item.CFJSSJ}}</span>
+    </p>
+    {{#  } }}
+    {{#  }); }}
+</script>
+
+<!--工作提醒模板-->
+<script type="text/html" id="workTpl">
+    {{#  layui.each(d, function(index, item){ }}
+    <p class="bdc-work-msg-content" data-id="{{item.id}}">{{ formatDate(item.optStartTime) }} {{item.msgTypeName}} <span class="bdc-work-msg-red">待办</span></p>
+    {{#  }); }}
+</script>
+
+<!--操作日志模板-->
+<script type="text/html" id="operateLogTpl">
+    <ul class="layui-timeline">
+        {{# var num = 1 }}
+        {{#
+        layui.each(d, function(index, item){
+        if (num < 19) { num = num + 1
+        }}
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis bdc-circle-icon-this">&#xe63f;</i>
+            <div class="layui-timeline-content layui-text">
+                <h3 class="layui-timeline-title">{{ item.time }}</h3>
+            </div>
+        </li>
+        {{# }}
+
+        {{#
+        layui.each(item.details, function(detailI, detail){
+        if (num < 19) { num = num + 1
+        }}
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis layui-icon-circle-dot"></i>
+            <div class="layui-timeline-content layui-text">
+                <p>【
+                    {{# if(detail.event == "LOGIN_SUCCESS") { }}
+                    登录
+                    {{# } else { }}
+                    登出
+                    {{# } }}
+                    】 IP：{{ detail.remoteaddr}} <span class="bdc_log_detail">{{ detail.time}}</span>
+                </p>
+            </div>
+        </li>
+        {{# } }}
+        {{# }); }}
+        {{# } }}
+        {{# }); }}
+    </ul>
+</script>
+
+<!--系統版本模板-->
+<script id="systemVerTpl" type="text/html">
+
+    <p class="bdc-edition-title">当前版本：{{ d[0].BBBH }}</p>
+    <ul class="layui-timeline">
+        {{# layui.each(d, function(index, item){ }}
+
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis bdc-circle-icon-this">&#xe63f;</i>
+            <div class="layui-timeline-content layui-text">
+                <h3 class="layui-timeline-title">{{ item.BBBH}} <span>{{ item.FBSJ}}</span></h3>
+            </div>
+        </li>
+        {{# layui.each(item.DETAILS, function(detailI, detail){ }}
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis layui-icon-circle-dot"></i>
+            <div class="layui-timeline-content layui-text">
+                <p>【{{ detail.GXLX}}】 {{ detail.GXSM}}
+                </p>
+            </div>
+        </li>
+        {{# }); }}
+        {{# }); }}
+    </ul>
+</script>
+
+<!--消息中心渲染 title-->
+<script id="msgTitleTpl" type="text/html">
+    <cite><img src="../static/image/msg.png" alt=""></img>消息中心</cite>
+    <!-- 如果有新消息，则显示数量 -->
+    <span class="bdc-num-tips">{{d.wbSize}}</span>
+</script>
+
+<!--消息中心渲染-->
+<script id="msgTpl" type="text/html">
+    <ul class="layui-tab-title">
+        <li class="layui-this">未读（{{d.wbSize}}）</li>
+        <li>已读（{{d.ybSize}}）</li>
+    </ul>
+    <p class="bdc-more-msg">更多>></p>
+    <div class="layui-tab-content">
+        <!--未读列表-->
+        <div class="layui-tab-item layui-show">
+            <ul>
+                {{# layui.each(d.wdList, function(index, item){ }}
+                <li>
+                    <a href="javascript:">{{item.msgTypeName}}({{item.msgTitle}})</a>
+                    <i class="layui-icon layui-icon-close" id='{{item.id}}'></i>
+                </li>
+                {{# }) }}
+            </ul>
+            <!--<button class="layui-btn layui-btn-primary bdc-btn-more">查看更多</button>-->
+        </div>
+        <!--已读列表-->
+        <div class="layui-tab-item">
+            <ul class="bdc-read">
+                {{# layui.each(d.ydList, function(index, item){ }}
+                <li>
+                    <a href="javascript:">{{item.msgTypeName}}({{item.msgTitle}})</a>
+                    <i class="layui-icon layui-icon-close" id='{{item.id}}'></i>
+                </li>
+                {{# }) }}
+            </ul>
+            <!--<button class="layui-btn layui-btn-primary bdc-btn-more">查看更多</button>-->
+        </div>
+    </div>
+</script>
+
+<!--已读消息中心渲染-->
+<script id="readMsgTpl" type="text/html">
+    <ul class="layui-tab-title">
+        <li>未读（{{d.wbSize}}）</li>
+        <li class="layui-this">已读（{{d.ybSize}}）</li>
+    </ul>
+    <p class="bdc-more-msg">更多>></p>
+    <div class="layui-tab-content">
+        <!--未读列表-->
+        <div class="layui-tab-item">
+            <ul>
+                {{# layui.each(d.wdList, function(index, item){ }}
+                <li>
+                    <a href="javascript:">{{item.msgTypeName}}({{item.msgTitle}})</a>
+                    <i class="layui-icon layui-icon-close" id='{{item.id}}'></i>
+                </li>
+                {{# }) }}
+            </ul>
+            <!--<button class="layui-btn layui-btn-primary bdc-btn-more">查看更多</button>-->
+        </div>
+        <!--已读列表-->
+        <div class="layui-tab-item  layui-show">
+            <ul class="bdc-read">
+                {{# layui.each(d.ydList, function(index, item){ }}
+                <li>
+                    <a href="javascript:">{{item.msgTypeName}}({{item.msgTitle}})</a>
+                    <i class="layui-icon layui-icon-close" id='{{item.id}}'></i>
+                </li>
+                {{# }) }}
+            </ul>
+            <!--<button class="layui-btn layui-btn-primary bdc-btn-more">查看更多</button>-->
+        </div>
+    </div>
+</script>
+
+<script src="../static/lib/jquery/jquery.min.js"></script>
+<script src="../static/lib/calendar/jquery.easyui.min.js"></script>
+<script src="../static/lib/echarts/echarts.js"></script>
+<script src="../static/layui/layui.js"></script>
+<script src="../static/js/common.js"></script>
+<script src="../static/lib/calendar/jquery.fullcalendar.js"></script>
+<script src="../static/js/home-page-new-changzhou.js"></script>
+
+<script>
+    layui.config({
+        base: '../static/' //静态资源所在路径
+    }).extend({
+        index: '/lib/index', //主入口模块
+    }).use('index').extend({
+        moduleAuthority: '../static/js/moduleAuthority'
+    }).use('moduleAuthority').extend({response: 'lib/bdcui/js/response'}).use('response');
+</script>
+<script src="../changzhou/js/client-ip.js"></script>
+<script src="../changzhou/js/pjq.js"></script>
+</body>
+</html>
+
+

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.accept.core.mapper.BdcDjxlPzMapper">
+    <select id="listBdcDjxlPzByPage" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcDjxlPzQO"
+            resultType="cn.gtmap.realestate.common.core.domain.accept.BdcDjxlPzDO">
+        SELECT t.pzid,t.djxl,t.gzldyid,t.qllx,t.ygdjzl,t.sxh,t.bdclx,t.dyhqllx,t.sfsf,t.yqllx,t.sjddylx,t.sqsdylx,t.spbdylx,t.damldylx,t.dafmdylx
+        FROM
+        BDC_DJXL_PZ t
+        <where>
+            <if test="gzldyid != null and gzldyid != ''">
+                AND t.gzldyid = #{gzldyid}
+            </if>
+            <if test="djxl != null and djxl != ''">
+                AND t.djxl = #{djxl}
+            </if>
+            <if test="slbh != null and slbh != ''">
+                AND t.gzldyid in (select gzldyid from BDC_SL_JBXX where slbh = #{slbh})
+                AND t.djxl in (select djxl from BDC_SL_XM where jbxxid in (select jbxxid from BDC_SL_JBXX where slbh = #{slbh}))
+            </if>
+        </where>
+        ORDER BY t.pzxgsj DESC NULLS LAST
+    </select>
+
+    <select id="queryDjxlPzMaxSxh" parameterType="cn.gtmap.realestate.common.core.domain.accept.BdcDjxlPzDO"
+            resultType="Integer">
+        SELECT NVL(MAX(sxh),0) AS sxh FROM bdc_djxl_pz t
+        <where>
+            <if test="gzldyid != null and gzldyid != ''">
+                AND t.gzldyid = #{gzldyid}
+            </if>
+            <if test="dyhqllx != null and dyhqllx != ''">
+                AND t.dyhqllx = #{dyhqllx}
+            </if>
+        </where>
+    </select>
+
+    <select id="listSfsbLcdyids" resultType="String" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcDjxlPzQO">
+        <if test="sfsb != null">
+        select t.gzldyid from bdc_djxl_pz t
+            where nvl(t.sfsb,0) = #{sfsb}
+        </if>
+    </select>
+</mapper>

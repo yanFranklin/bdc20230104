@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--户室信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.KttFwHMapper">
+
+    <!--业务数据库  各个地方权籍库不标准，比如hs里面的yt和hxjg应该是导入字典代码，他们导入的是汉字，导致不能入库-->
+    <select id="queryKttFwHList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.KttFwHDO">
+        select distinct a.bdcdyh,c.fwbm,d.zrzh,d.ljzh,nvl(c.ch,c.wlcs)ch,a.zl,'1' mjdw,c.wlcs as sjcs,c.sxh,c.fjh as
+        hh,c.fjh as
+        shbw, c.fwhx as hx,c.hxjg,a.dzwyt as fwyt1,'' fwyt2,'' fwyt3,round(c.ycjzmj,3) ycjzmj,
+        round(c.yctnjzmj,2) yctnjzmj, round(c.ycftjzmj,2) ycftjzmj,
+        '' ycftxs,round(c.scjzmj,3) scjzmj,round(c.sctnjzmj,3) sctnjzmj,round(c.scftjzmj,3) scftjzmj, C.SCQTJZMJ,C.YCQTJZMJ ,C.scdxbfjzmj,C.YCDXBFJZMJ,'' scftxs,c.gytdmj,
+        round(c.fttdmj,3) fttdmj,c.dytdmj,c.fwlx,c.fwxz,c.ytmc,c.pzyt,c.fwlx fwlxmc,substr(a.BDCDYH,0,19) zddm, '-1' zrzbsm,
+        c.sjyt,c.fwxzmc,
+        '' fcfht,'1' zt,substr(a.bdcdyh,0,6) qxdm from bdc_xm a
+        <if test="sfdz == null or sfdz == ''">
+            inner join (select * from (select t.fw_hs_index,t.fwbm,to_char(nvl(t.ch,t.wlcs)) ch,t.wlcs,
+            to_char(t.sxh) sxh,t.fjh,to_char(t.fwhx)
+            fwhx,to_char(t.hxjg) hxjg,t.ycjzmj,t.yctnjzmj,t.ycftjzmj,t.scjzmj,t.sctnjzmj,
+            t.scftjzmj,t.gytdmj,t.fttdmj,t.dytdmj,t.fwlx,t.fwxz,t.bdcdyh,t.fw_dcb_index,t.SCQTJZMJ,t.YCQTJZMJ,t.YCDXBFJZMJ
+            ,t.scdxbfjzmj,t.ytmc,t.pzyt,
+            t.sjyt,t.fwxzmc
+            from djsj_fwhs t
+            <where>
+                <if test="ywh != null and ywh !=''">
+                    and t.bdcdyh = (SELECT BDCDYH FROM BDC_XM WHERE XMID  = #{ywh})
+                </if>
+            </where>
+            UNION All
+            select t1.fw_hs_index,t1.fwbm,'' ch,t1.wlcs,to_char(t1.sxh) sxh,t1.fjh,'' fwhx,''
+            hxjg,t1.ycjzmj,t1.yctnjzmj,t1.ycftjzmj,t1.scjzmj,
+            t1.sctnjzmj,t1.scftjzmj,0
+            gytdmj,t1.fttdmj,t1.dytdmj,fwlx,t1.fwxz,t1.bdcdyh,t1.fw_dcb_index,t1.SCQTJZMJ,t1.YCQTJZMJ,t1.YCDXBFJZMJ,t1.scdxbfjzmj,
+            t1.ytmc,t1.pzyt,
+            t1.sjyt,t1.fwxzmc
+            from djsj_fwychs t1
+            <where>
+                <if test="ywh != null and ywh !=''">
+                    and t1.bdcdyh = (SELECT BDCDYH FROM BDC_XM WHERE XMID  = #{ywh})
+                </if>
+            </where>
+            ) where rownum = 1) c on c.bdcdyh = a.bdcdyh
+            left join djsj_fw_ljz d on c.fw_dcb_index=d.fw_dcb_index
+
+        </if>
+        <if test="sfdz != null and sfdz != ''">
+            inner join djsj_fw_ljz d on a.bdcdyh = d.bdcdyh
+            left join (select * from (select t.fw_hs_index,t.fwbm,to_char(nvl(t.ch,t.wlcs)) ch,t.wlcs,
+            to_char(t.sxh) sxh,t.fjh,to_char(t.fwhx)
+            fwhx,to_char(t.hxjg) hxjg,t.ycjzmj,t.yctnjzmj,t.ycftjzmj,t.scjzmj,t.sctnjzmj,
+            t.scftjzmj,t.gytdmj,t.fttdmj,t.dytdmj,t.fwlx,t.fwxz,t.bdcdyh,t.fw_dcb_index,t.SCQTJZMJ,t.YCQTJZMJ,t.YCDXBFJZMJ
+            ,t.scdxbfjzmj,
+            t.ytmc,t.pzyt,
+            t.sjyt,t.fwxzmc
+            from djsj_fwhs t
+            where t.fw_dcb_index = (SELECT fw_dcb_index FROM DJSJ_FW_LJZ
+            WHERE BDCDYH =(
+            SELECT BDCDYH FROM BDC_XM WHERE XMID = #{ywh}))
+            UNION All
+            select t1.fw_hs_index,t1.fwbm,'' ch,t1.wlcs,to_char(t1.sxh) sxh,t1.fjh,'' fwhx,''
+            hxjg,t1.ycjzmj,t1.yctnjzmj,t1.ycftjzmj,t1.scjzmj,
+            t1.sctnjzmj,t1.scftjzmj,0
+            gytdmj,t1.fttdmj,t1.dytdmj,fwlx,t1.fwxz,t1.bdcdyh,t1.fw_dcb_index,t1.SCQTJZMJ,t1.YCQTJZMJ,t1.YCDXBFJZMJ,t1.scdxbfjzmj,
+            t1.ytmc,t1.pzyt,
+            t1.sjyt,t1.fwxzmc
+            from djsj_fwychs t1
+            where t1.fw_dcb_index = (SELECT fw_dcb_index FROM DJSJ_FW_LJZ
+            WHERE BDCDYH =(
+            SELECT BDCDYH FROM BDC_XM WHERE XMID = #{ywh}))
+            ) where rownum = 1) c on c.fw_dcb_index = d.fw_dcb_index
+        </if>
+        <where>
+            <if test="ywh != null and ywh !=''">
+                and a.xmid = #{ywh}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryKttFwHListOld" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.yancheng.yth.old.KttFwHOldDO">
+        select distinct a.bdcdyh,c.fwbm,d.zrzh,d.ljzh,nvl(c.ch,c.wlcs)ch,a.zl,'1' mjdw,c.wlcs as sjcs,c.sxh,c.fjh as
+        hh,c.fjh as
+        shbw, c.fwhx as hx,c.hxjg,a.dzwyt as fwyt1,'' fwyt2,'' fwyt3,c.ycjzmj,
+        c.yctnjzmj,c.ycftjzmj,
+        '' ycftxs,c.scjzmj,c.sctnjzmj,c.scftjzmj, C.SCQTJZMJ,C.YCQTJZMJ ,C.scdxbfjzmj,C.YCDXBFJZMJ,'' scftxs,c.gytdmj,
+        c.fttdmj,c.dytdmj,c.fwlx,c.fwxz,
+        '' fcfht,'1' zt,A.qxdm from bdc_xm a
+        <if test="sfdz == null or sfdz == ''">
+            inner join (select * from (select t.fw_hs_index,t.fwbm,to_char(nvl(t.ch,t.wlcs)) ch,t.wlcs,
+            to_char(t.sxh) sxh,t.fjh,to_char(t.fwhx)
+            fwhx,to_char(t.hxjg) hxjg,t.ycjzmj,t.yctnjzmj,t.ycftjzmj,t.scjzmj,t.sctnjzmj,
+            t.scftjzmj,t.gytdmj,t.fttdmj,t.dytdmj,t.fwlx,t.fwxz,t.bdcdyh,t.fw_dcb_index,t.SCQTJZMJ,t.YCQTJZMJ,t.YCDXBFJZMJ
+            ,t.scdxbfjzmj
+            from djsj_fwhs t
+            <where>
+                <if test="ywh != null and ywh !=''">
+                    and t.bdcdyh = (SELECT BDCDYH FROM BDC_XM WHERE XMID = #{ywh})
+                </if>
+            </where>
+            UNION All
+            select t1.fw_hs_index,t1.fwbm,'' ch,t1.wlcs,to_char(t1.sxh) sxh,t1.fjh,'' fwhx,''
+            hxjg,t1.ycjzmj,t1.yctnjzmj,t1.ycftjzmj,t1.scjzmj,
+            t1.sctnjzmj,t1.scftjzmj,0
+            gytdmj,t1.fttdmj,t1.dytdmj,fwlx,t1.fwxz,t1.bdcdyh,t1.fw_dcb_index,t1.SCQTJZMJ,t1.YCQTJZMJ,t1.YCDXBFJZMJ,t1.scdxbfjzmj
+            from djsj_fwychs t1
+            <where>
+                <if test="ywh != null and ywh !=''">
+                    and t1.bdcdyh = (SELECT BDCDYH FROM BDC_XM WHERE XMID = #{ywh})
+                </if>
+            </where>
+            ) where rownum = 1) c on c.bdcdyh = a.bdcdyh
+            left join djsj_fw_ljz d on c.fw_dcb_index=d.fw_dcb_index
+        </if>
+        <if test="sfdz != null and sfdz != ''">
+            inner join djsj_fw_ljz d on a.bdcdyh = d.bdcdyh
+            left join (select * from (select t.fw_hs_index,t.fwbm,to_char(nvl(t.ch,t.wlcs)) ch,t.wlcs,
+            to_char(t.sxh) sxh,t.fjh,to_char(t.fwhx)
+            fwhx,to_char(t.hxjg) hxjg,t.ycjzmj,t.yctnjzmj,t.ycftjzmj,t.scjzmj,t.sctnjzmj,
+            t.scftjzmj,t.gytdmj,t.fttdmj,t.dytdmj,t.fwlx,t.fwxz,t.bdcdyh,t.fw_dcb_index,t.SCQTJZMJ,t.YCQTJZMJ,t.YCDXBFJZMJ
+            ,t.scdxbfjzmj
+            from djsj_fwhs t
+            where t.fw_dcb_index = (SELECT fw_dcb_index FROM DJSJ_FW_LJZ
+            WHERE BDCDYH =(
+            SELECT BDCDYH FROM BDC_XM WHERE XMID = #{ywh}))
+            UNION All
+            select t1.fw_hs_index,t1.fwbm,'' ch,t1.wlcs,to_char(t1.sxh) sxh,t1.fjh,'' fwhx,''
+            hxjg,t1.ycjzmj,t1.yctnjzmj,t1.ycftjzmj,t1.scjzmj,
+            t1.sctnjzmj,t1.scftjzmj,0
+            gytdmj,t1.fttdmj,t1.dytdmj,fwlx,t1.fwxz,t1.bdcdyh,t1.fw_dcb_index,t1.SCQTJZMJ,t1.YCQTJZMJ,t1.YCDXBFJZMJ,t1.scdxbfjzmj
+            from djsj_fwychs t1
+            where t1.fw_dcb_index = (SELECT fw_dcb_index FROM DJSJ_FW_LJZ
+            WHERE BDCDYH =(
+            SELECT BDCDYH FROM BDC_XM WHERE XMID = #{ywh}))
+            ) where rownum = 1) c on c.fw_dcb_index = d.fw_dcb_index
+        </if>
+        <where>
+            <if test="ywh != null and ywh !=''">
+                and a.xmid = #{ywh}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryKttFwHDzList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.KttFwHDO">
+        select distinct a.bdcdyh,'' fwbm,d.zrzh,d.ljzh,'' ch,a.zl,'1' mjdw,'' sjcs,'' sxh,'' shbw,
+        '' hx,'' hxjg,a.dzwyt as fwyt1,'' fwyt2,'' fwyt3,'' ycjzmj,'' yctnjzmj,'' ycftjzmj,'' ycdxbfjzmj,'' ycqtjzmj,
+        '' ycftxs,'' scjzmj,'' sctnjzmj,'' scftjzmj,'' scdxbfjzmj,'' scftxs,'' gytdmj,'' fttdmj,dytdmj,'' fwlx,'' fwxz,
+        '' fcfht,'1' zt,substr(a.bdcdyh,0,6) as qxdm from bdc_xm a
+        left join djsj_fw_xmxx c on a.bdcdyh=c.bdcdyh
+        left join djsj_fw_ljz d on c.fw_xmxx_index=d.fw_xmxx_index
+
+        <where>
+            <if test="ywh != null and ywh !=''">
+                and a.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                and a.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <!--蚌埠不动产调用供电公司推送房产过户用户接口 -->
+    <ex:bean id="dianPush">
+        <ex:service-info request-type="httpPostForBengbuDian">
+            <ex:property name="url" value="${bengbu.dian.push.url}"/>
+            <ex:property name="contentType" value="json"/>
+            <ex:property name="logEventName" value="蚌埠不动产调用供电公司推送房产过户用户接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="BBGD"/>
+            <ex:property name="dsfFlag" value="BBGD"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/bengbu/dian/param.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!--蚌埠不动产调用供电公司数据删除接口 -->
+    <ex:bean id="dianDelete">
+        <ex:service-info request-type="httpPostForBengbuDian">
+            <ex:property name="url" value="${bengbu.dian.delete.url}"/>
+            <ex:property name="contentType" value="json"/>
+            <ex:property name="logEventName" value="蚌埠不动产调用供电公司数据删除接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="BBGD"/>
+            <ex:property name="dsfFlag" value="BBGD"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/bengbu/dian/dianDelete/param.xml"/>
+        </ex:request>
+        <ex:log dsfFlag="BBGD" logEventName="蚌埠不动产调用供电公司数据删除接口" requester="BDC" responser="BBGD"/>
+    </ex:bean>
+
+    <!--蚌埠不动产调用供气公司推送房产过户用户接口 -->
+    <ex:bean id="qiPush">
+        <ex:service-info request-type="httpPostForBengbuQi">
+            <ex:property name="url" value="${bengbu.qi.push.url}"/>
+            <ex:property name="contentType" value="json"/>
+            <ex:property name="logEventName" value="蚌埠不动产调用供气公司推送房产过户用户接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="BBGD"/>
+            <ex:property name="dsfFlag" value="BBGD"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/bengbu/qi/param.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!--蚌埠不动产调用供气公司数据删除接口 -->
+    <ex:bean id="qiDelete">
+        <ex:service-info request-type="httpPostForBengbuQi">
+            <ex:property name="url" value="${bengbu.qi.delete.url}"/>
+            <ex:property name="contentType" value="json"/>
+            <ex:property name="logEventName" value="蚌埠不动产调用供气公司数据删除接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="BBGQ"/>
+            <ex:property name="dsfFlag" value="BBGQ"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/bengbu/qi/qiDelete/param.xml"/>
+        </ex:request>
+        <ex:log dsfFlag="BBGD" logEventName="蚌埠不动产调用供气公司数据删除接口" requester="BDC" responser="BBGD"/>
+    </ex:bean>
+
+    <!--蚌埠不动产调用供水公司获取token -->
+    <ex:bean id="shuiGetToken_req">
+        <ex:request>
+            <!-- beanName 为 shuiGetToken,方法为 getShuiGhToken，返回值为String token，tokenResponse.xml-->
+            <ex:element dozerXml="conf/dozer/bengbu/shui/token/request/tokenBeanName.xml" />
+        </ex:request>
+        <ex:response extendRequestBody="true">
+            <ex:element sourceService="getCurrentToken" />
+        </ex:response>
+    </ex:bean>
+
+    <!--蚌埠不动产调用供水公司获取token -->
+    <ex:bean id="shuiGetToken">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="蚌埠不动产调用供水公司获取token接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="BBGS"/>
+            <ex:property name="dsfFlag" value="BBGS"/>
+            <ex:property name="url" value="${bengbu.shui.token.url}"/>
+        </ex:service-info>
+        <ex:response resultKey="token">
+            <ex:element  dozerXml="conf/dozer/bengbu/shui/token/response/tokenResponse.xml" />
+        </ex:response>
+    </ex:bean>
+
+    <!--蚌埠不动产调用供水公司推送房产过户用户接口 -->
+    <ex:bean id="shuiPush">
+        <ex:service-info request-type="httpPostForBengbuShui">
+            <ex:property name="url" value="${bengbu.shui.push.url}"/>
+            <ex:property name="logEventName" value="蚌埠不动产调用供水公司推送房产过户用户接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="BBGS"/>
+            <ex:property name="dsfFlag" value="BBGS"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="data" dozerXml="conf/dozer/bengbu/shui/param.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!--蚌埠不动产调用供水公司过户推送附件接口 -->
+    <ex:bean id="shuiAttach">
+        <ex:service-info request-type="httpPostForBengbuShui">
+            <ex:property name="url" value="${bengbu.shui.attach.url}"/>
+            <ex:property name="logEventName" value="蚌埠不动产调用供水公司过户推送附件接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="BBGS"/>
+            <ex:property name="dsfFlag" value="BBGS"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="data" dozerXml="conf/dozer/bengbu/shui/fjxx/param.xml"/>
+        </ex:request>
+        <ex:log dsfFlag="LAGD" logEventName="舒城不动产调用供电公司过户推送附件接口" requester="BDC" responser="LAGD"/>
+
+    </ex:bean>
+
+    <!--蚌埠不动产调用供水公司数据删除接口 -->
+    <ex:bean id="shuiDelete">
+        <ex:service-info request-type="httpPostForBengbuShui">
+            <ex:property name="url" value="${bengbu.shui.delete.url}"/>
+            <ex:property name="logEventName" value="蚌埠不动产调用供水公司数据删除接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="BBGS"/>
+            <ex:property name="dsfFlag" value="BBGS"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="data" dozerXml="conf/dozer/bengbu/shui/shuiDelete/param.xml"/>
+        </ex:request>
+        <ex:log dsfFlag="BBGS" logEventName="蚌埠不动产调用供水公司数据删除接口" requester="BDC" responser="BBGS"/>
+    </ex:bean>
+</beans>

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="2020-01-14-fwhs" author="liyinqiao" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE FW_HS add(qsmyc NUMBER);
+            COMMENT ON COLUMN FW_HS.qsmyc IS '起始名义层';
+            ALTER TABLE FW_HS add(zzmyc NUMBER);
+            COMMENT ON COLUMN FW_HS.zzmyc IS '终止名义层';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2020-01-14-fwychs" author="liyinqiao" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE FW_YCHS add(qsmyc NUMBER);
+            COMMENT ON COLUMN FW_YCHS.qsmyc IS '起始名义层';
+            ALTER TABLE FW_YCHS add(zzmyc NUMBER);
+            COMMENT ON COLUMN FW_YCHS.zzmyc IS '终止名义层';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2020-03-25-fwljz" author="liyinqiao" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE FW_LJZ add(ysxkzh nvarchar2(100));
+            COMMENT ON COLUMN FW_LJZ.ysxkzh IS '预售许可证号';
+            ALTER TABLE FW_LJZ add(ghxkzh nvarchar2(100));
+            COMMENT ON COLUMN FW_LJZ.ghxkzh IS '规划许可证号';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2020-12-30-fwhs" author="liaoxiang" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE FW_HS add(xgyy CLOB);
+            COMMENT ON COLUMN FW_HS.xgyy IS '修改原因';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-4-12-fwjsydzrzxx" author="yaoyi" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE FW_JSYDZRZXX add(lhdyqlzt NUMBER(3,0));
+            COMMENT ON COLUMN FW_JSYDZRZXX.lhdyqlzt IS '量化抵押权利状态';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-7-28-fwjsydzrzxx" author="yaoyi" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE FW_JSYDZRZXX add(lhsdqlzt NUMBER(3,0));
+            COMMENT ON COLUMN FW_JSYDZRZXX.lhsdqlzt IS '量化首登权利状态';
+        </sql>
+    </changeSet>
+    <changeSet id="2021-8-10-fwjsydzrzxx" author="yaoyi" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE FW_JSYDZRZXX RENAME column lhdyqlzt to lhdycs;
+            COMMENT ON COLUMN FW_JSYDZRZXX.lhdycs IS '量化抵押次数';
+        </sql>
+    </changeSet>
+    <changeSet id="2021-11-01-xzssqydm" author="liaoxiang" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE ZD_DJDCB add(xzssqydm nvarchar2(255));
+            COMMENT ON COLUMN ZD_DJDCB.xzssqydm IS '所属区域代码';
+            ALTER TABLE FW_HS add(xzssqydm nvarchar2(255));
+            COMMENT ON COLUMN FW_HS.xzssqydm IS '所属区域代码';
+            ALTER TABLE FW_LJZ add(xzssqydm nvarchar2(255));
+            COMMENT ON COLUMN FW_LJZ.xzssqydm IS '所属区域代码';
+            ALTER TABLE FW_XMXX add(xzssqydm nvarchar2(255));
+            COMMENT ON COLUMN FW_XMXX.xzssqydm IS '所属区域代码';
+        </sql>
+    </changeSet>
+    <changeSet id="2022-1-10-fwjsydzrzxx" author="yaoyi" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE FW_JSYDZRZXX add(lhcfcs NUMBER(3,0));
+            COMMENT ON COLUMN FW_JSYDZRZXX.lhcfcs IS '量化查封次数';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2022-03-02-fwljz" author="liaoxiang" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE FW_LJZ add(ghyszmbh nvarchar2(255));
+            COMMENT ON COLUMN FW_LJZ.ghyszmbh IS '规划验收证明编号';
+            ALTER TABLE FW_LJZ add(ghysrq DATE);
+            COMMENT ON COLUMN FW_LJZ.ghysrq IS '规划验收日期';
+            ALTER TABLE FW_LJZ add(jgysbabh nvarchar2(255));
+            COMMENT ON COLUMN FW_LJZ.jgysbabh IS '竣工验收备案编号';
+            ALTER TABLE FW_LJZ add(jgysbasj DATE);
+            COMMENT ON COLUMN FW_LJZ.jgysbasj IS '竣工验收备案时间';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2022-03-31-jyq" author="liaoxiang" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE JYQDK_DCB add(qsxz nvarchar2(2));
+            COMMENT ON COLUMN JYQDK_DCB.qsxz IS '权属性质';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2022-04-07-jyq" author="liaoxiang" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE JYQDK_DCB add(tdyt nvarchar2(6));
+            COMMENT ON COLUMN JYQDK_DCB.tdyt IS '土地用途';
+            ALTER TABLE JYQDK_DCB add(qlxz nvarchar2(10));
+            COMMENT ON COLUMN JYQDK_DCB.qlxz IS '权利性质';
+            ALTER TABLE JYQDK_DCB add(jyyt nvarchar2(10));
+            COMMENT ON COLUMN JYQDK_DCB.jyyt IS '经营用途';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2022-04-12-nyd" author="liaoxiang" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE NYD_DJDCB add(tdyt2 nvarchar2(6));
+            COMMENT ON COLUMN NYD_DJDCB.tdyt IS '土地用途2';
+            ALTER TABLE NYD_DJDCB add(qsrq2 DATE);
+            COMMENT ON COLUMN NYD_DJDCB.qsrq2 IS '起始日期2';
+            ALTER TABLE NYD_DJDCB add(zzrq2 DATE);
+            COMMENT ON COLUMN NYD_DJDCB.zzrq2 IS '终止日期2';
+            ALTER TABLE NYD_DJDCB add(tdyt3 nvarchar2(6));
+            COMMENT ON COLUMN NYD_DJDCB.tdyt3 IS '土地用途3';
+            ALTER TABLE NYD_DJDCB add(qsrq3 DATE);
+            COMMENT ON COLUMN NYD_DJDCB.qsrq3 IS '起始日期3';
+            ALTER TABLE NYD_DJDCB add(zzrq3 DATE);
+            COMMENT ON COLUMN NYD_DJDCB.zzrq3 IS '终止日期3';
+        </sql>
+    </changeSet>
+    <changeSet id="2022-08-18-nyd" author="wangyinghao" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            alter table fw_ljz add pzjzmj NUMBER(15,3);
+            comment on column fw_ljz.pzjzmj is '批准建筑面积';
+            alter table fw_hs add pzjzmj NUMBER(15,3);
+            comment on column fw_hs.pzjzmj is '批准建筑面积';
+            alter table fw_xmxx add pzjzmj NUMBER(15,3);
+            comment on column fw_xmxx.pzjzmj is '批准建筑面积';
+        </sql>
+    </changeSet>
+    <changeSet id="2022-10-12-fwhs" author="liaoxiang" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            alter table FW_HS add tddysfsf nvarchar2(255);
+            comment on column FW_HS.tddysfsf is '土地抵押是否释放';
+            ALTER TABLE FW_HS add tddysfsj DATE;
+            comment on column FW_HS.tddysfsj is '土地抵押释放时间';
+            alter table FW_HS add tddysfczr nvarchar2(255);
+            comment on column FW_HS.tddysfczr is '土地抵押释放操作人';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

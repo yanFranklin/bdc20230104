@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>查询</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/common.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/bdcdyzt.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../static/ztree/metroStyle.css" />
+    <link rel="stylesheet" href="../../static/ztree/custom_tree.css" />
+    <style>
+        /*弹出层*/
+        #popBox {
+            display: none;
+            /*background-color: #FF0000;*/
+            z-index: 11;
+            width: 250px;
+            height: 180px;
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            margin: auto;
+            border-radius: 5px;
+        }
+
+        #popBox .close {
+            text-align: right;
+            margin-right: 5px;
+            background-color: #FFF785;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="bdc-percentage-container">
+    <div class="bdc-search-content">
+        <div id="searchdiv" class="bdc-search-box bdc-screen-search-box">
+            <form class="layui-form">
+                <div class="layui-form-item pf-form-item" id="search-div">
+                    <div id="cxtj-area">
+                    </div>
+                    <div id="gjSearch-area" active="false" hidden="hidden">
+                    </div>
+                    <div id="btn-url-area" active="false" hidden="hidden">
+                    </div>
+                    <div id="mhcx-area">
+                    </div>
+                    <div class="layui-inline bdc-button-box" id="btn-area">
+                        <button id="search" class="layui-btn bdc-major-btn" lay-submit="" lay-filter="search">查询
+                        </button>
+                        <button id='reset' type="reset" class="layui-btn bdc-secondary-btn reset-btn">重置</button>
+                        <button id="gjSearch" type="button" active="false"
+                                class="layui-btn bdc-secondary-btn high-btn-click"
+                                style="display: none" onclick="showGjSearch()">高级查询
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="bdc-table-box">
+        <table id="pageTable" lay-data="{id: 'pageTable'}" lay-filter="dataTable"></table>
+    </div>
+    <div id="popBox" style="width: 15%;height: 30%;">
+        <div class="tccontent" id="tccontent" style="text-align: left;background-color: #E6E6E6;">
+            <span id="span_id" style="">动态改变字体颜色大小</span>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/html" id="templetZdResult">
+    {{ convertZdDmToMc(d.ZDID,d[cxjg.zdid.toUpperCase()], 'zdList') }}
+</script>
+<!--表格上面按钮组-->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        {{# layui.each(globalToolbarList, function(index, item){ }}
+        <button class="layui-btn layui-btn-sm {{item.class}}" id="{{item.layEvent }}" lay-event="{{item.layEvent}}" model="{{item.model}}">
+            {{item.text}}
+        </button>
+        {{# }) }}
+    </div>
+</script>
+<!--隐藏form，为了Excel导出缓存数据使用-->
+<form style="display: none" action="/realestate-inquiry-ui/rest/v1.0/drcx/createExcel" method="POST" id="form">
+    <input type="hidden" id="data" name="excelList"/>
+</form>
+<!--隐藏form，下载指定文件用-->
+<form style="display: none" action="/realestate-inquiry-ui/rest/v1.0/drcx/downloadFile" method="POST" id="downloadFileForm">
+    <input type="hidden" id="fileName" name="fileName"/>
+</form>
+<!--行按钮组-->
+<script type="text/html" id="rowTools">
+    {{# layui.each(globalTooList, function(index, item){ }}
+    <button class="layui-btn layui-btn-xs {{item.class}} {{item.layEvent||''}} inline-btns"
+            lay-event="{{item.layEvent }}">{{item.text
+        }}
+    </button>
+    {{# }) }}
+</script>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layuigxh.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/client-ip.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/commonSearch.js"></script>
+<script src="../../static/js/table.js"></script>
+<script src="../../static/lib/bdcui/js/readIdCard.js"></script>
+<script src="../../static/js/readCard.js"></script>
+<script src="../../static/js/formCenter.js"></script>
+<script src="../../static/js/gxhpz.js"></script>
+<script src="../../static/lib/bdcui/js/print/print-common.js"></script>
+<!--base64加密-->
+<script src="../../static/js/bjjk/base64.js"></script>
+<!-- ztree -->
+<script src="../../static/ztree/jquery.ztree.core.js"></script>
+<script src="../../static/ztree/jquery.ztree.excheck.js"></script>
+<script src="../../static/ztree/jquery.ztree.exedit.js"></script>
+<script src="../../static/ztree/selectTree.js"></script>
+<script src="../../static/js/dtcx/commonCx.js"></script>
+<script src="../../static/lib/bdcui/js/makeZmzsRecord.js"></script>
+</html>

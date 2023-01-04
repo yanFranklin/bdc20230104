@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcDzzzCzMapper">
+    <select id="listDzzzZszmByPageOrder" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcDzzzQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcDzzzCxDTO">
+        SELECT z.zsid, q.bdcdyh, z.bdcqzh, z.zhlsh, z.nf
+        , z.qzysxlh, z.qlqtzk, z.qxdm, z.szsxqc, z.fzr
+        , z.fzsj, z.lzr, z.lzsj, z.lzrzjh,z.lzrdh,z.lzrzjzl, z.szr
+        , z.szsj, z.zslx, z.fj, q.zl, z.qlr
+        , z.ywr, z.gyfs, z.qllx, z.yt, z.mj
+        , z.qlxz, z.syqx,z.zmqlsx,z.ewmnr,z.zhxlh,z.sqsjc,z.dyzt,z.zzbs,z.storageid,q.slbh,q.xmid,q.GZLSLID,q.QSZT
+        , q.djsj,v.zzzt,z.dzzzzt
+        FROM bdc_zs z
+        LEFT JOIN bdc_xm_zs_gx x ON z.zsid = x.zsid
+        LEFT JOIN bdc_xm q ON q.xmid = x.xmid
+        LEFT JOIN bdc_dzzz_zzxx_vm v ON z.zsid = v.zsid
+        WHERE q.ajzt in (1,2,3,4,5)
+        <if test="qszt != null and qszt != ''">
+            AND q.qszt = #{qszt,jdbcType=INTEGER}
+        </if>
+        <if test="dzzzzt != null">
+            AND z.dzzzzt = #{dzzzzt,jdbcType=INTEGER}
+        </if>
+        <if test="zzzt != null and zzzt != ''">
+            AND v.zzzt = #{zzzt,jdbcType=INTEGER}
+        </if>
+        <if test="slbh != null and slbh != ''">
+            AND
+            <if test="slbhmhlx == null || slbhmhlx == 0">
+                q.slbh = #{slbh,jdbcType=VARCHAR}
+            </if>
+            <if test="slbhmhlx == 1">
+                q.slbh like #{slbh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="slbhmhlx == 2">
+                q.slbh like '%' || #{slbh,jdbcType=VARCHAR}
+            </if>
+            <if test="slbhmhlx == 3">
+                q.slbh like '%' || #{slbh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+        <if test="processDefKey != null and processDefKey != ''">
+            AND q.gzldyid = #{processDefKey}
+        </if>
+        <if test="lwgzldyid != null and lwgzldyid != ''">
+            AND q.gzldyid not in
+            <foreach collection="lwgzldyid.split(',')" item="item" open="(" close=")" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="cqzh != null and cqzh != ''">
+            AND
+            <if test="cqzhmhlx == null || cqzhmhlx == 0">
+                z.bdcqzh = #{cqzh,jdbcType=VARCHAR}
+            </if>
+            <if test="cqzhmhlx == 1">
+                z.bdcqzh like #{cqzh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="cqzhmhlx == 2">
+                z.bdcqzh like '%' || #{cqzh,jdbcType=VARCHAR}
+            </if>
+            <if test="cqzhmhlx == 3">
+                z.bdcqzh like '%' || #{cqzh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+        <if test="zl != null and zl != ''">
+            AND
+            <if test="zlmhlx == null || zlmhlx == 0">
+                z.zl = #{zl,jdbcType=VARCHAR}
+            </if>
+            <if test="zlmhlx == 1">
+                z.zl like #{zl,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="zlmhlx == 2">
+                z.zl like '%' || #{zl,jdbcType=VARCHAR}
+            </if>
+            <if test="zlmhlx == 3">
+                z.zl like '%' || #{zl,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+        <if test="zslx != null and zslx != ''">
+            AND
+            <if test="zscxlx == null || zscxlx == 0">
+                z.zslx = #{zslx}
+            </if>
+            <if test="zscxlx == null || zscxlx == 1">
+                z.zslx in
+                <foreach collection="zslx.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </if>
+        <if test="fzqsrq != null and fzqsrq != ''">
+            AND to_char(z.fzsj,'yyyy-MM-dd') >= #{fzqsrq}
+        </if>
+        <if test="fzjsrq != null and fzjsrq != ''">
+            AND to_char(z.fzsj,'yyyy-MM-dd') <![CDATA[<=]]> #{fzjsrq}
+        </if>
+        <if test="szqsrq != null and szqsrq != ''">
+            AND z.szsj <![CDATA[>=]]> to_date(#{szqsrq}, 'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="szjsrq != null and szjsrq != ''">
+            AND z.szsj <![CDATA[<=]]> to_date(#{szjsrq}, 'yyyy-mm-dd hh24:mi:ss')
+        </if>
+
+        <if test="djqsrq != null and djqsrq != ''">
+            AND q.djsj <![CDATA[>=]]> to_date(#{djqsrq}, 'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="djjsrq != null and djjsrq != ''">
+            AND q.djsj <![CDATA[<=]]> to_date(#{djjsrq}, 'yyyy-mm-dd hh24:mi:ss')
+        </if>
+
+        <if test="sfscpdf != null and sfscpdf == '1'.toString() ">
+            AND z.storageid is not null
+        </if>
+        <if test="sfscpdf != null and sfscpdf == '0'.toString() ">
+            AND z.storageid is null
+        </if>
+        <if test="sfsczzbs != null and sfsczzbs == '1'.toString() ">
+            AND z.zzbs is not null
+        </if>
+        <if test="sfsczzbs != null and sfsczzbs == '0'.toString() ">
+            AND z.zzbs is null
+        </if>
+        <!--区县代码 -->
+        <if test="qxdmList != null and qxdmList.size() > 0 ">
+            AND q.qxdm IN
+            <foreach collection="qxdmList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        ORDER BY
+        <choose>
+            <when test="fzsjOrder!=null and ''!= fzsjOrder">
+                z.fzsj ${fzsjOrder}
+            </when>
+            <otherwise>
+                z.fzsj DESC
+            </otherwise>
+        </choose>
+    </select>
+
+</mapper>

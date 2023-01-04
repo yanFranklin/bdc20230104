@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.building.core.mapper.CalculatedAreaMapper">
+
+    <select id="calculatedLjzJzmj" parameterType="Map" resultType="String">
+        <if test="table != null and table !=''">
+            SELECT sum(scjzmj) FROM ${table}
+        </if>
+        <where>
+            <if test="fwDcbIndex != null and fwDcbIndex != ''">
+                AND fw_dcb_index = #{fwDcbIndex}
+            </if>
+        </where>
+    </select>
+
+    <select id="calculatedLjzJzmjDxs" parameterType="Map" resultType="String">
+        <if test="table != null and table !=''">
+            SELECT sum(scdxbfjzmj) FROM ${table}
+        </if>
+        <where>
+            <if test="fwDcbIndex != null and fwDcbIndex != ''">
+                AND fw_dcb_index = #{fwDcbIndex}
+            </if>
+        </where>
+    </select>
+
+    <select id="calculatedljzJzmjZhs" parameterType="Map" resultType="String">
+        SELECT sum(scjzmj) FROM fw_zhs
+        <where>
+            <if test="fwHsIndex != null and fwHsIndex != ''">
+                AND fw_hs_index = #{fwHsIndex}
+            </if>
+        </where>
+    </select>
+
+    <select id="calculatedZdLjzJzmj" parameterType="Map" resultType="String">
+        SELECT sum(scjzmj) FROM fw_ljz
+        <where>
+            <if test="lszd != null and lszd != ''">
+                AND lszd = #{lszd}
+            </if>
+        </where>
+    </select>
+
+    <select id="calculatedZdZrzJzmj" parameterType="Map" resultType="String">
+        <if test="table != null and table !=''">
+            SELECT sum(jzmj) FROM ${table}
+        </if>
+        <where>
+            <if test="lszd != null and lszd != ''">
+                AND lszd = #{lszd}
+            </if>
+        </where>
+    </select>
+
+    <select id="calculatedZdZrzAllLjzJzmj" parameterType="Map" resultType="String">
+            SELECT sum(jzmj) FROM ${fwk}
+        <where>
+            <if test="lszd != null and lszd != ''">
+                AND lszd = #{lszd}
+            </if>
+            <if test="zrzh != null and zrzh != ''">
+                AND zrzh = #{zrzh}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryZrzZdmj" parameterType="map" resultType="String">
+        SELECT sum(t.zdmj) FROM ${fwk} t
+        <where>
+            <if test="lszd != null and lszd != ''">
+                AND t.lszd = #{lszd}
+            </if>
+            <if test="zrzh != null and zrzh != ''">
+                AND t.zrzh = #{zrzh}
+            </if>
+        </where>
+    </select>
+</mapper>

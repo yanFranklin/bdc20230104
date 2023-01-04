@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>流程配置</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../../static/lib/form-select/formSelects-v4.css"/>
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../../static/lib/registerui/css/percentage-layout.css"/>
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/popup.css"/>
+    <style type="text/css">
+        .search { /*用于查询标识*/
+        }
+    </style>
+</head>
+<body>
+<!--************ 条件搜索 ************-->
+<div class="bdc-percentage-container bdc-line-search-container">
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <form id="form" class="layui-form" action="">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label bdc-two-lines">工作流定义<br>名称</label>
+                        <div class="layui-input-inline bdc-radio">
+                            <select lay-filter="gzldyid" id="gzldyid" xm-select="selectPzGzldymc" xm-select-search=""
+                                    xm-select-height="34px" xm-select-search-type="dl" xm-select-radio name="djxl"
+                                    lay-search="" class="search">
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">登记小类</label>
+                        <div class="layui-input-inline bdc-radio">
+                            <select lay-filter="djxl" id="djxl" xm-select="selectDjxl" xm-select-search=""
+                                    xm-select-height="34px" xm-select-search-type="dl" xm-select-radio name="djxl"
+                                    lay-search="" class="search">
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">受理编号</label>
+                        <div class="layui-input-inline pf-start-time-box">
+                            <input type="text" id="slbh" name="slbh" placeholder="请输入受理编号" autocomplete="off"
+                                   class="layui-input search">
+                        </div>
+                    </div>
+                    <div>
+                        <input id="gzldymc" name="gzldymc" type="hidden" class="search">
+                    </div>
+
+                    <div class="layui-inline bdc-button-box">
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                        <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="bdc-table-box">
+        <table id="lcpzTable" lay-filter="lcpzTable"></table>
+    </div>
+</div>
+
+<!--表格上面功能按钮-->
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="add">新增</button>
+        <button class="layui-btn layui-btn-sm bdc-delete-btn" lay-event="delete">删除</button>
+        <!--<button class="layui-btn layui-btn-sm bdc-delete-btn" lay-event="delete">删除</button>-->
+        <!--<button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="edit">编辑</button>-->
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="pz">配置</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="fz">复制</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="sbpzjy">上报配置校验</button>
+    </div>
+</script>
+
+<!--是否收费模板-->
+<script type="text/html" id="sfsfTpl">
+    {{#  if(d.sfsf == 1){ }}
+    <p>是</p>
+    {{#  } else if(d.sfsf == 0) { }}
+    <p>否</p>
+    {{#  } else { }}
+    <p ></p>
+    {{#  } }}
+</script>
+
+<script src="../../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../../static/lib/bdcui/js/common.js"></script>
+<script src="../../../static/lib/form-select/formSelects-v4.js"/>
+<script src="../../../static/lib/bdcui/js/mask.js"></script>
+<script src="../../../static/js/config/common.js"></script>
+<script src="../../../static/js/config/lcpz/lcpzList.js"></script>
+</body>
+</html>

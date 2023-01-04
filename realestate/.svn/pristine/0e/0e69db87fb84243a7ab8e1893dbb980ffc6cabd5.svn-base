@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.certificate.core.mapper.BdcDzzzSignatureMapper">
+
+    <select id="querySignatureBySealName" parameterType="string"
+            resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzSignatureDo">
+        SELECT SEAL_ID AS sealId, SEAL_NAME AS sealName, SEAL_PUBLIC_KEY AS sealPublicKey, SEAL_CJSJ AS sealCjsj, SEAL_PRIVATE_KEY as sealPrivateKey
+        FROM BDC_DZZZ_SIGNATURE WHERE SEAL_NAME = #{sealName}
+    </select>
+
+    <insert id="insertSignature" parameterType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzSignatureDo">
+        INSERT INTO BDC_DZZZ_SIGNATURE t (t.SEAL_ID, t.SEAL_NAME, t.SEAL_PUBLIC_KEY, t.SEAL_CJSJ, t.SEAL_PRIVATE_KEY)
+        VALUES (#{sealId,jdbcType=VARCHAR},#{sealName,jdbcType=VARCHAR},#{sealPublicKey,jdbcType=VARCHAR},#{sealCjsj,jdbcType=TIMESTAMP}
+        ,#{sealPrivateKey,jdbcType=VARCHAR})
+    </insert>
+
+    <delete id="deleteSignatureBySealName" parameterType="String">
+        DELETE BDC_DZZZ_SIGNATURE WHERE SEAL_NAME = #{sealName}
+    </delete>
+
+    <update id="updateSignatureBySealName" parameterType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzSignatureDo">
+        UPDATE BDC_DZZZ_SIGNATURE t
+        <set>
+            <if test="sealPublicKey != null and sealPublicKey !=''">
+                t.SEAL_PUBLIC_KEY = #{sealPublicKey}
+            </if>
+            <if test="sealPrivateKey != null and sealPrivateKey !=''">
+                ,t.SEAL_PRIVATE_KEY = #{sealPrivateKey}
+            </if>
+        </set>
+        WHERE t.SEAL_NAME = #{sealName}
+    </update>
+
+</mapper>

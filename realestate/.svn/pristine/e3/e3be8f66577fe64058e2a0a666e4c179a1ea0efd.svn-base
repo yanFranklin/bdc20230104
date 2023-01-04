@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.register.core.mapper.BdcBdcdjbMapper">
+    <select id="listBdcQlDjMlByPage" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.dto.register.BdcQlDjMlDTO">
+        <if test="zdzhh != null and zdzhh != ''">
+            <choose>
+                <when test="bdcdyh != null and bdcdyh != ''">
+                    SELECT r.xh,r.bdcdyh,r.bdclx,r.bz FROM (
+                    SELECT rownum AS xh, n.bdcdyh, n.bdclx, NULL AS bz
+                    FROM (
+                    SELECT m.bdcdyh, m.bdclx
+                    FROM (
+                    SELECT ROW_NUMBER() OVER (PARTITION BY x.bdcdyh ORDER BY x.djsj ASC) AS rn, x.bdcdyh, x.bdclx, x.djsj
+                    FROM bdc_xm x
+                    <choose>
+                        <when test="isxn != null and isxn == true">
+                            WHERE x.bdcdyh = #{bdcdyh}
+                        </when>
+                        <otherwise>
+                            WHERE x.bdcdyh LIKE (#{zdzhh}||'%')
+                        </otherwise>
+                    </choose>
+                    AND x.bdclx IS NOT NULL
+                    AND x.djsj IS NOT NULL
+                    ) m
+                    WHERE m.rn = 1
+                    ORDER BY m.bdclx, m.djsj
+                    ) n
+                    )r WHERE r.bdcdyh = #{bdcdyh}
+                </when>
+                <otherwise>
+                    SELECT rownum AS xh, n.bdcdyh, n.bdclx, NULL AS bz
+                    FROM (
+                    SELECT m.bdcdyh, m.bdclx
+                    FROM (
+                    SELECT ROW_NUMBER() OVER (PARTITION BY x.bdcdyh ORDER BY x.djsj ASC) AS rn, x.bdcdyh, x.bdclx, x.djsj
+                    FROM bdc_xm x
+                    WHERE x.bdcdyh LIKE (#{zdzhh}||'%')
+                    AND x.bdclx IS NOT NULL
+                    AND x.djsj IS NOT NULL
+                    ) m
+                    WHERE m.rn = 1
+                    ORDER BY m.bdclx, m.djsj
+                    ) n
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <!--将gzlslid查询到的项目信息按照bdcndyh，qllx分组后取第一条数据，避免查询的结果重复-->
+    <update id="updateZdDjbxx" parameterType="cn.gtmap.realestate.register.core.qo.DbxxQO">
+        <if test="gzlslid != null and gzlslid != ''">
+            MERGE INTO bdc_bdcdjb_zdjbxx a
+            USING (
+            SELECT d.xmid, d.zl, d.zdzhmj, d.qlxz, d.bdclx, d.bdcdyh, d.qllx
+            FROM (
+            SELECT ROW_NUMBER() OVER (PARTITION BY e.bdcdyh, e.qllx ORDER BY e.xmid DESC) AS rn, e.xmid, e.zl, e.zdzhmj,
+            e.qlxz, e.bdclx, e.bdcdyh, e.qllx
+            FROM bdc_xm e
+            WHERE e.gzlslid = #{gzlslid} AND substr(e.bdcdyh, 20, 1) = 'W'
+            ) d
+            WHERE rn = 1
+            ) c ON (a.bdcdyh = c.bdcdyh AND a.qllx = c.qllx)
+            WHEN MATCHED
+            THEN UPDATE SET a.zl = c.zl
+            , a.zdmj = c.zdzhmj
+            , a.qlxz = c.qlxz
+            , a.dbr = #{dbr,jdbcType=VARCHAR}
+            , a.djsj = #{djsj,jdbcType=TIMESTAMP}
+        </if>
+    </update>
+
+    <!--如果对应宗地登记时间信息为空则更新一下-->
+    <update id="updateZdJbxxWhenDjsjIsNull" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        <if test="bdcdyh != null and bdcdyh != ''">
+            UPDATE
+                BDC_BDCDJB_ZDJBXX
+            SET
+                DBR = #{dbr,jdbcType=VARCHAR},
+                DJSJ = #{djsj,jdbcType=TIMESTAMP}
+            WHERE
+                BDCDYH = #{bdcdyh,jdbcType=VARCHAR}
+                AND
+                DJSJ IS NULL
+        </if>
+    </update>
+
+    <update id="updateZhDjbxx" parameterType="cn.gtmap.realestate.register.core.qo.DbxxQO">
+        <if test="gzlslid != null and gzlslid != ''">
+            MERGE INTO bdc_bdcdjb_zhjbxx a
+            USING bdc_xm c ON (a.bdcdyh = c.bdcdyh)
+            WHEN MATCHED THEN
+            UPDATE SET a.hdwz = c.zl
+            , a.zhmj = c.zdzhmj
+            , a.dbr = #{dbr,jdbcType=VARCHAR}
+            , a.djsj = #{djsj,jdbcType=TIMESTAMP}
+            WHERE c.gzlslid = #{gzlslid} AND substr(c.bdcdyh,20,1)='H'
+        </if>
+    </update>
+</mapper>

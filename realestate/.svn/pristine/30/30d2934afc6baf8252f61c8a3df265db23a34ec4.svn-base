@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>转发列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link href="../../static/lib/layui/css/layui.css" media="all" rel="stylesheet">
+    <link href="../../static/lib/bdcui/css/mask.css" media="all" rel="stylesheet">
+    <link href="../../static/lib/bdcui/css/search.css" media="all" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/jjd/new-page.css">
+    <link rel="stylesheet" href="../../static/css/jjd/send.css">
+</head>
+<body>
+<div class="bdc-send-content" id="sendContainer">
+    <div class="layui-tab layui-tab-brief" lay-filter="sendFilter">
+        <div class="layui-tab-content portal_send">
+            <!--任务转发-->
+            <div class="layui-tab-item bdc-zf-table layui-show">
+                <table id="checkboxTable" lay-filter="checkboxTableFilter"></table>
+            </div>
+        </div>
+    </div>
+    <div class="bdc-send-button">
+        <button class="layui-btn layui-btn-normal bdc-major-btn bdc-send-btn">转发</button>
+        <button class="layui-btn layui-btn-normal bdc-secondary-btn bdc-cancel-btn">取消</button>
+    </div>
+</div>
+
+
+<!--转发相关-->
+<!--参与角色-->
+<script type="text/html" id="roleTpl">
+    <select name="role" lay-filter="roleFilter" id="roleSelect" lay-search="">
+        {{# layui.each(d.roleDtoList, function(index, item){ }}
+        <option value="{{item.id}}">{{item.alias}}</option>
+        {{# }); }}
+    </select>
+</script>
+
+<!--参与人-->
+<script type="text/html" id="personTpl">
+    <select name="person" lay-verify="personFilter" id="personSelect" lay-search="">
+        <option value="">请选择</option>
+        <!--<option value="allUser">全部</option>-->
+        {{# layui.each(d.personList, function(index, item){ }}
+        <option value="{{item.id}}">{{item.alias}}</option>
+        {{# }); }}
+    </select>
+</script>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/lsgx/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/standard/xxbl/send.js"></script>
+</body>
+</html>

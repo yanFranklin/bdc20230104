@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!-- 6.11 省级平台 实时查询BDC -->
+    <ex:bean id="sjpt_sscx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="cxjgServiceImpl" />
+            <ex:property name="methodName" value="getCxjgListByPeCxDO" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/sjpt/sscx/request/data.xml" />
+        </ex:request>
+        <ex:response dozerXml="conf/dozer/sjpt/sscx/response/head.xml">
+            <ex:element name="data" dozerXml="conf/dozer/sjpt/sscx/response/data.xml"/>
+        </ex:response>
+        <ex:log dsfFlag="SJPT" logEventName="省级平台实时查询" requester="SJPT" responser="BDC" />
+    </ex:bean>
+
+    <!-- 验证openid -->
+    <ex:bean id="check_openid">
+        <ex:service-info request-type="restGet">
+            <ex:property name="url" value="${sjpt.checkopenid.url}" />
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 盐城市本级实时查询（精准查询）验证openid -->
+    <ex:bean id="yc_check_openid">
+        <ex:service-info request-type="restGet">
+            <ex:property name="url" value="${ycsscx.checkopenid.url}" />
+        </ex:service-info>
+    </ex:bean>
+</beans>

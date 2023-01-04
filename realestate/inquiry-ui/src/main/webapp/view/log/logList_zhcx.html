@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>综合查询日志查询</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css"/>
+    <link rel="stylesheet" href="../../static/css/bjjk/bjjk.css"/>
+    <!--    ztree-->
+    <link rel="stylesheet" href="../../static/ztree/metroStyle.css" />
+    <link rel="stylesheet" href="../../static/ztree/custom_tree.css" />
+</head>
+<body>
+<div class="bdc-percentage-container">
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <form class="layui-form" action="">
+                <div class="layui-form-item pf-form-item">
+
+                    <div class="layui-inline">
+                        <label id="rzlxLabel"  class="layui-form-label">日志类型</label>
+                        <div id="rzlxDiv" class="layui-input-inline">
+                            <select id ="eventName" class="search" name="eventName" lay-filter="eventName" lay-search placeholder="请选择日志类型">
+                                <option value="">请选择</option>
+                                <option value="ZHCXLOG" class ='source'>综合查询</option>
+                                <option value="ZHCXLSGX" class ='source'>综合查询-查看登记历史</option>
+                                <option value="ZHCXLPB" class ='source'>综合查询-查看楼盘表</option>
+                                <option value="ZHCXDJB" class ='source'>综合查询-查看登记簿</option>
+                                <option value="ZHCXDADY" class ='source'>综合查询-档案调用</option>
+                                <option value="ZHCXTXDW" class ='source'>综合查询-图形定位</option>
+                                <option value="ZHCXDJDCB" class ='source'>综合查询-地籍调查表</option>
+                            </select>
+                            <i class="layui-icon layui-icon-close bdc-hide reseticon" style="right: 29px!important;"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label label-lqbm">部门</label>
+                        <div class="layui-input-inline" style="display: flex;">
+                            <input type="text" name="organization" autocomplete="off" placeholder="请选择" class="layui-input" style="width: 100%;">
+                            <input type="hidden" name="orgId">
+                            <div class="layui-btn layui-btn-sm bdc-table-second-btn org_select_show">选择</div>
+                        </div>
+                        <div class="org_select_tree">
+                            <dd lay-value="" class="xm-select-tips divInput"> <i class="xm-iconfont icon-sousuo"></i>
+                                <input type="text" name="selvalue" id="deptsel"  class="xm-input xm-select-input" placeholder="请搜索" ></dd>
+                            <div class="menuContent">
+                                <dd class="xm-select-tips xm-select-none  xm-select-empty">无匹配项</dd>
+                                <ul id="select_tree" class="ztree"></ul>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div id="zhcx-search-content">
+                    </div>
+
+                    <div id="search-btn-area" class="layui-inline bdc-button-box">
+                        <a href="javascript:" id="search" lay-filter="search" lay-submit="" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                        <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+                        <a href="javascript:" class="layui-btn layui-btn-normal bdc-secondary-btn" id="seniorSearch" style="display:none;">高级查询</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="bdc-table-box">
+        <table id="logTable" lay-filter="logTable"></table>
+    </div>
+
+
+
+    <!--表格上面功能按钮-->
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="exportExcel">导出Excel</button>
+            <button class="layui-btn layui-btn-sm bdc-secondary-btn" lay-event="exportAllExcel">导出全部</button>
+        </div>
+    </script>
+
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="xq">详情</a>
+    </script>
+
+</div>
+
+<!--隐藏form，为了Excel导出缓存数据使用-->
+<form style="display: none" action="/realestate-inquiry-ui/excel/export" method="POST" id="form">
+    <input type="hidden" id="fileName"   name="fileName"/>
+    <input type="hidden" id="sheetName"  name="sheetName"/>
+    <input type="hidden" id="cellTitle"  name="cellTitle"/>
+    <input type="hidden" id="cellWidth"  name="cellWidth"/>
+    <input type="hidden" id="cellKey"    name="cellKey"/>
+    <input type="hidden" id="data"       name="data"/>
+</form>
+</body>
+<script type="text/html" id="zhcxSearchTpl">
+    <div class="layui-inline">
+        <label class="layui-form-label">开始时间</label>
+        <div class="layui-input-inline">
+            <input type="text" id="begin" name="beginTime" class="layui-input test-item search" placeholder="请选择">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">结束时间</label>
+        <div class="layui-input-inline">
+            <input type="text" id="end" name="endTime" class="layui-input test-item search" placeholder="请选择">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">用户名</label>
+        <div class="layui-input-inline">
+            <input type="text" name="alias" class="layui-input search" placeholder="请输入">
+            <i class="layui-icon layui-icon-close bdc-hide"></i>
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">内容搜索</label>
+        <div class="layui-input-inline bdc-third-column-select">
+            <select class="search" lay-search="" lay-filter="conditionKey" name="conditionKey">
+                <option value="">请选择</option>
+                {{# if(d && isNotBlank(d.zdList) && isNotBlank(d.cols)){ }}
+                {{# layui.each(d.zdList.eszdmc, function(index, item){ }}
+                {{# if(d.cols.indexOf(item.DM) > -1){ }}
+                <option value="{{item.DM || '0'}}">{{item.MC || ''}}</option>
+                {{# } }}
+                {{# }); }}
+                {{# }   }}
+            </select>
+        </div>
+        <div class="layui-input-inline bdc-third-column-input">
+            <input type="text" name="conditionValue" placeholder="请输入" autocomplete="off" class="layui-input search">
+            <i class="layui-icon layui-icon-close bdc-hide"></i>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="zhcxDetailsSearchTpl">
+    <div class="layui-inline">
+        <label class="layui-form-label">受理编号</label>
+        <div class="layui-input-inline">
+            <input type="text" id="slbh" name="slbh" class="layui-input search" placeholder="请输入">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">坐落</label>
+        <div class="layui-input-inline">
+            <input type="text" id="zl" name="zl" class="layui-input search" placeholder="请输入">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">不动产单元号</label>
+        <div class="layui-input-inline">
+            <input type="text" id="bdcdyh" name="bdcdyh" class="layui-input search" placeholder="请输入">
+        </div>
+    </div>
+
+    <div class="layui-inline">
+        <label class="layui-form-label">开始时间</label>
+        <div class="layui-input-inline">
+            <input type="text" id="begin" name="beginTime" class="layui-input test-item search" placeholder="请选择">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">结束时间</label>
+        <div class="layui-input-inline">
+            <input type="text" id="end" name="endTime" class="layui-input test-item search" placeholder="请选择">
+        </div>
+    </div>
+
+    <div class="pf-senior-show bdc-hide">
+        <div class="layui-inline">
+            <label class="layui-form-label">登记小类</label>
+            <div class="layui-input-inline">
+                <select class="" lay-search="" id="djxl" lay-filter="djxl search" name="djxl">
+                    <option value="">请选择</option>
+                    {{# if(d && isNotBlank(d.zdList)){ }}
+                    {{# layui.each(d.zdList.djxl, function(index, item){ }}
+                    <option value="{{item.DM || '0'}}">{{item.MC || ''}}</option>
+                    {{# }); }}
+                    {{# }   }}
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">工作流实例ID</label>
+            <div class="layui-input-inline">
+                <input type="text" id="gzlslid" name="gzlslid" class="layui-input search" placeholder="请输入">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label id="principalNameLabel" class="layui-form-label">用户名</label>
+            <div id="principalNameDiv" class="layui-input-inline">
+                <input type="text" id="alias" name="alias" class="layui-input search" placeholder="请输入">
+                <i class="layui-icon layui-icon-close bdc-hide"></i>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">规划用途</label>
+            <div class="layui-input-inline">
+                <select class="search" lay-search="" id="ghyt" lay-filter="ghyt" name="ghyt">
+                    <option value="">请选择</option>
+                    {{# if(d && isNotBlank(d.zdList)){ }}
+                    {{# layui.each(d.zdList.fwyt, function(index, item){ }}
+                    <option value="{{item.DM || '0'}}">{{item.MC || ''}}</option>
+                    {{# }); }}
+                    {{# }   }}
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">权属状态</label>
+            <div class="layui-input-inline">
+                <select class="search" lay-search="" id="qszt" lay-filter="qszt" name="qszt">
+                    <option value="">请选择</option>
+                    {{# if(d && isNotBlank(d.zdList)){ }}
+                    {{# layui.each(d.zdList.qszt, function(index, item){ }}
+                    <option value="{{item.DM || '0'}}">{{item.MC || ''}}</option>
+                    {{# }); }}
+                    {{# }   }}
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">项目来源</label>
+            <div class="layui-input-inline">
+                <select class="search" lay-search="" id="xmly" lay-filter="xmly" name="xmly">
+                    <option value="">请选择</option>
+                    {{# if(d && isNotBlank(d.zdList)){ }}
+                    {{# layui.each(d.zdList.xmly, function(index, item){ }}
+                    <option value="{{item.DM || '0'}}">{{item.MC || ''}}</option>
+                    {{# }); }}
+                    {{# }   }}
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">证书类型</label>
+            <div class="layui-input-inline">
+                <select class="search" lay-search="" id="zslx" lay-filter="zslx" name="zslx">
+                    <option value="">请选择</option>
+                    {{# if(d && isNotBlank(d.zdList)){ }}
+                    {{# layui.each(d.zdList.zslx, function(index, item){ }}
+                    <option value="{{item.DM || '0'}}">{{item.MC || ''}}</option>
+                    {{# }); }}
+                    {{# }   }}
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">内容搜索</label>
+            <div class="layui-input-inline bdc-third-column-select">
+                <select class="search" lay-search="" lay-filter="conditionKey" name="conditionKey">
+                    <option value="">请选择</option>
+                    {{# if(d && isNotBlank(d.zdList) && isNotBlank(d.cols)){ }}
+                        {{# layui.each(d.zdList.eszdmc, function(index, item){ }}
+                        {{# if(d.cols.indexOf(item.DM) > -1){ }}
+                        <option value="{{item.DM || '0'}}">{{item.MC || ''}}</option>
+                        {{# } }}
+                        {{# }); }}
+                    {{# }   }}
+                </select>
+            </div>
+            <div class="layui-input-inline bdc-third-column-input">
+                <input type="text" name="conditionValue" placeholder="请输入" autocomplete="off" class="layui-input">
+                <i class="layui-icon layui-icon-close bdc-hide"></i>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<!--base64加密-->
+<script src="../../static/js/bjjk/base64.js"></script>
+<script src="../../static/js/commonSearch.js"></script>
+<script src="../../static/js/formCenter.js"></script>
+<!-- ztree -->
+<script src="../../static/ztree/jquery.ztree.core.js"></script>
+<script src="../../static/ztree/jquery.ztree.excheck.js"></script>
+<script src="../../static/ztree/jquery.ztree.exedit.js"></script>
+<script src="../../static/ztree/jquery.ztree.exhide.js"></script>
+<script src="../../static/js/log/logList_common.js"></script>
+<script src="../../static/js/log/logList_zhcx.js"></script>
+</html>

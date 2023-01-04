@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <ex:bean id="hfDealDaFjxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="daxxDealServiceImpl"/>
+            <ex:property name="methodName" value="getFjxx"/>
+        </ex:service-info>
+    </ex:bean>
+    <ex:bean id="hfDaMlxx">
+        <ex:service-info request-type="axisWebService">
+            <ex:property name="url" value="${daxx.url}"/>
+            <ex:property name="uri" value="${daxx.uri}"/>
+            <ex:property name="logEventName" value="档案目录信息接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="DA"/>
+            <ex:property name="dsfFlag" value="DA"/>
+            <ex:property name="methodName" value="${daxx.mlxx.method}"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element sourceService="hfDealDaMlxx"/>
+        </ex:response>
+    </ex:bean>
+    <ex:bean id="hfDealDaMlxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="daxxDealServiceImpl"/>
+            <ex:property name="methodName" value="getMlxx"/>
+        </ex:service-info>
+    </ex:bean>
+    <ex:bean id="hfDaFjxx">
+        <ex:service-info request-type="httpGet">
+            <ex:property name="url" value="${daxx.fjxx.url}"/>
+            <ex:property name="logEventName" value="读取档案的附件接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="DA"/>
+            <ex:property name="dsfFlag" value="DA"/>
+            <ex:property name="contentType" value="${http.content.type.xml}"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element sourceService="hfDealDaFjxx"/>
+        </ex:response>
+    </ex:bean>
+    <ex:bean id="hfDealDaJbxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="daxxDealServiceImpl"/>
+            <ex:property name="methodName" value="getArchid"/>
+        </ex:service-info>
+    </ex:bean>
+    <ex:bean id="hfDaJbxx">
+        <ex:service-info request-type="axisWebService">
+            <ex:property name="url" value="${daxx.url}"/>
+            <ex:property name="uri" value="${daxx.uri}"/>
+            <ex:property name="logEventName" value="档案基本信息接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="DA"/>
+            <ex:property name="dsfFlag" value="DA"/>
+            <ex:property name="methodName" value="${daxx.jbxx.method}"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element sourceService="hfDealDaJbxx"/>
+        </ex:response>
+    </ex:bean>
+</beans>

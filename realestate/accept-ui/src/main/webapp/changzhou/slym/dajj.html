@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>档案交接</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <!--popup.css放到form-tab.css，防止样式冲突-->
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/slymzh.css"/>
+</head>
+<body>
+<div class="bdc-form-div bdc-not-full-bg">
+    <!--全局 标题和操作按钮 开始-->
+    <form class="layui-form sl-from bdc-form-table" id="all">
+        <div class="bdc-content-fix">
+            <div class="content-title layui-clear">
+                <p>不动产登记档案交接信息</p>
+                <div class="title-btn-area">
+                    <button class="layui-btn bdc-major-btn print-btn" type="button" id="printButton">打印</button>
+                    <ul class="title-ui" id="print">
+                        <li class="print" onclick="printDajj('bdcSqSpb')" id="printSpb">审批表</li>
+                        <li class="print" onclick="printDajj('daml')" id="printDaml">档案目录</li>
+                        <li class="print" onclick="printDajj('dafm')" id="printDafm">档案封面</li>
+                        <li class="print" onclick="printDajj('spbdaml')" id="printSpbDaml">全部(市)</li>
+                        <li class="print" onclick="printDajj('spbdamlWJ')" id="printSpbDamlWJ">全部(武)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--全局 标题和操作按钮 结束-->
+        <div class="layui-tab fixed-content" lay-filter="tabFilter">
+            <ul class="layui-tab-title" id="liTbale">
+                <li class="layui-this" id="jbxx">基本信息</li>
+            </ul>
+            <div class="layui-tab-content" id="contentTable">
+                <div class="layui-tab-item layui-show">
+                    <div class="form-margin-area">
+                        <div id="dajbXx"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<!--小数计算防精度缺失-->
+<script src="../../static/lib/mathjs/math.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/lib/bdcui/js/print/print-common.js"></script>
+
+<script type="text/javascript">
+
+
+</script>
+<!--为了获取参数方便，将formCenter.js放在参数之后 -->
+<script src='../../static/js/formCenter.js'></script>
+<!--权利页面tab标题展示-->
+<!--表单按钮展示-->
+<!--基本信息展示-->
+<script type="text/html" id="jbxxTpl">
+    {{#  if(d.daxx){ }}
+    {{# var jbxx=d.daxx.bdcSlJbxxDO }}
+    {{# var jjd=d.daxx.bdcJjdDO }}
+    <form class="layui-form setOverflow" id="bdcXmForm">
+        <div class="basic-info">
+            <div class="title-sign">
+                <p>基本信息</p>
+            </div>
+            <div class="layui-form-item">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">收件编号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="sjbh" disabled="off" class="layui-input"
+                               value="{{jbxx.slbh || ''}}" title="{{jbxx.slbh || ''}}">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">承诺期限(天)</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="cnqx" disabled="off" class="layui-input"
+                               value="{{jbxx.cnqx || ''}}">
+                    </div>
+                </div>
+
+
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">收件人</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="slr" disabled="off" class="layui-input"
+                               value="{{jbxx.slr || ''}}" title="{{jbxx.slr || ''}}">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">收件时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="slsj" disabled="off" class="layui-input test-item"
+                               value="{{jbxx.slsj || ''}}" title="{{jbxx.slsj || ''}}">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">业务类型</label>
+                    <div class="layui-input-inline bdc-one-icon">
+                        <input type="text"
+                               title="{{jbxx.lcmc || ''}}" id="lcmc" disabled="off" class="layui-input"
+                               value="{{jbxx.lcmc || ''}}">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">状态</label>
+                    <div class="layui-input-inline bdc-one-icon">
+                        <input type="text"
+                               title="{{d.daxx.ajzt || ''}}" id="ajzt" disabled="off" class="layui-input"
+                               value="{{d.daxx.ajzt || ''}}">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">权利人</label>
+                    <div class="layui-input-inline bdc-one-icon">
+                        <input type="text"
+                               title="{{d.daxx.qlr || ''}}" id="qlr" disabled="off" class="layui-input"
+                               value="{{d.daxx.qlr || ''}}">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">退回时间</label>
+                    <div class="layui-input-inline bdc-one-icon">
+                        <input type="text"
+                               title="{{d.daxx.thsj || ''}}" id="thsj" disabled="off" class="layui-input"
+                               value="{{d.daxx.thsj || ''}}">
+                    </div>
+                </div>
+
+                <div class="layui-inline bdc-two-column">
+                    <label class="layui-form-label change-label-width">坐落</label>
+                    <div class="layui-input-inline bdc-one-icon">
+                        <input type="text"
+                               title="{{jbxx.zl || ''}}" id="zl" disabled="off" class="layui-input"
+                               value="{{jbxx.zl || ''}}">
+                    </div>
+                </div>
+                <div class="layui-inline bdc-two-column">
+                    <label class="layui-form-label change-label-width">退回原因</label>
+                    <div class="layui-input-inline bdc-one-icon">
+                        <input type="text"
+                               title="{{d.daxx.thyy || ''}}" id="thyy" disabled="off" class="layui-input"
+                               value="{{d.daxx.thyy || ''}}">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">交接人</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="zfr" disabled="off" class="layui-input"
+                               value="{{jjd.zfr || ''}}" title="{{jjd.zfr || ''}}">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">交接时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="zfsj" disabled="off" class="layui-input test-item"
+                               value="{{jjd.zfsj || ''}}" title="{{jjd.zfsj || ''}}">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="basic-info sjcl" id="sjcl"></div>
+    </form>
+    {{#  } }}
+</script>
+
+<!--收件信息信息展示-->
+<script type="text/html" id="sjclTpl">
+    <div class="title-sign bdc-title-sign-btn">
+        <p>原流程收件材料</p>
+        <div class="bdc-title-sign-btn-box">
+            <button type="button" class="layui-btn layui-btn-sm sjclscbtn bdc-secondary-btn"
+                    onclick="showSjcl()"
+                    id="clck">材料查看
+            </button>
+        </div>
+    </div>
+    <input type="hidden" name="xmid" value="{{d.xmid || ''}}">
+    <form class="common-form sl-from layui-form bdc-form-table" name="sjclForm">
+        <div class="layui-form-item">
+            <div class="sjclForm" id="sjclForm">
+                <table class="slym layui-table bdc-jt-table" border="1" name="addsjcl" id="addSjclTable">
+                    <thead>
+                    <tr class="gray-tr">
+                        <th width="50px">序号</th>
+                        <th style="min-width: 200px">材料名称</th>
+                        <th>份数</th>
+                        <th>页数</th>
+                        <th>类型</th>
+                        <th>收取部门</th>
+                    </tr>
+                    </thead>
+                    {{# if(d.bdcSlSjclDOList.length==0) { }}
+                    <tr class="bdc-table-none">
+                        <td colspan="8">
+                            <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据
+                            </div>
+                        </td>
+                    </tr>
+                    {{# } else { }}
+                    {{# layui.each(d.bdcSlSjclDOList, function(i, bdcSlSjcl){ }}
+                    <tr>
+                        <input type="hidden" name="xmid" value="{{bdcSlSjcl.xmid || ''}}" class="sjcl">
+                        <input type="hidden" name="gzlslid" value="{{bdcSlSjcl.gzlslid || ''}}"
+                               class="sjcl{{d.index || ''}}">
+                        <input type="hidden" name="sjclid" value="{{bdcSlSjcl.sjclid || ''}}" class="sjcl">
+                        <input type="hidden" name="wjzxid" value="{{bdcSlSjcl.wjzxid || ''}}" class="sjcl">
+                        <input type="hidden" name="xh" value="{{bdcSlSjcl.xh || ''}}" class="sjcl">
+                        <td>{{i+1}}</td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <input type="text" lay-verify="" id="clmc" name="clmc" value="{{bdcSlSjcl.clmc || ''}}"
+                                       class="layui-input sjcl{{d.index || ''}}" title="{{bdcSlSjcl.clmc || ''}}">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <input type="text" lay-verify="" id="fs" name="fs" value="{{bdcSlSjcl.fs || ''}}"
+                                       class="layui-input sjcl">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <input type="text" lay-verify="" id="ys" name="ys" value="{{bdcSlSjcl.ys || ''}}"
+                                       class="layui-input sjcl">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <select name="sjlx" lay-search="" lay-filter="sjlx" class="sjcl" id="sjlx">
+                                    <option value="">请选择</option>
+                                    {{# layui.each(d.zd.sjlx, function(index, item){ }}
+                                    <option value="{{item.DM || '0'}}" {{# if(bdcSlSjcl.sjlx==item.DM ){ }}
+                                            selected="selected"
+                                            {{#
+                                            } }}>{{item.MC || ''}}
+                                    </option>
+                                    {{# }); }}
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <select name="sqbm" lay-search="" lay-filter="sqbm" class="sjcl" id="sqbm">
+                                    <option value="">请选择</option>
+                                    {{# layui.each(d.zd.sqbm, function(index, item){ }}
+                                    <option value="{{item.MC || ''}}" {{# if(bdcSlSjcl.sqbm==item.MC ){ }}
+                                            selected="selected"
+                                            {{#
+                                            } }}>{{item.MC || ''}}
+                                    </option>
+                                    {{# }); }}
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    {{# }); }}
+                    {{# } }}
+                </table>
+            </div>
+        </div>
+    </form>
+</script>
+
+<script src="../../static/js/slymCommon.js"></script>
+
+<script src='../../static/js/changzhou/slym/dajj.js'></script>
+<!--表单验证公共方法-->
+<script src='../../static/js/slymyz.js'></script>
+<script src='../../static/js/slym/print.js'></script>
+<!--收件材料公共方法-->
+<script src='../../static/js/slym/sjclCommon.js'></script>
+<!--规则验证公共方法-->
+<script src='../../static/js/gzyzCommon.js'></script>
+</html>

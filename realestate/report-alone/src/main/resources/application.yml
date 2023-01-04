@@ -1,0 +1,147 @@
+info:
+  name: ReportAloneApp
+  component: ReportAloneApp Application
+
+
+server:
+  context-path: /realestate-report-alone
+  port: ${port:9996}
+
+logging:
+  level:
+    org.springframework: WARN
+    cn.gtmap.gtc.plugins: DEBUG
+    cn.gtmap.realestate.exchange.core.mapper: DEBUG
+
+spring:
+  datasource:
+    server:
+      url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+      username: bdcdj_hefei
+      password: gtis
+    gx:
+      url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+      username: bdcsl_hefei
+      password: gtis
+    qj:
+      url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+      username: bdcsjgl_hefei
+      password: gtis
+
+  #    server:
+  #      url: jdbc:oracle:thin:@192.168.2.111:1521/orcl
+  #      username: bdcdj_pz
+  #      password: Njgtis
+  #    gx:
+  #      url: jdbc:oracle:thin:@192.168.2.111:1521/orcl
+  #      username: bdcdj_pz
+  #      password: Njgtis
+  #    qj:
+  #      url: jdbc:oracle:thin:@192.168.2.111:1521/orcl
+  #      username: bdcsjgl
+  #      password: Njgtis
+  mvc:
+    static-path-pattern: /**
+
+#  定时任务配置
+quartz:
+  tsgxsj:
+    enable: true
+    # 每一份种执行一次
+    #cron: 0 */1 * * * ?
+    cron: 0 */1 * * * ?
+
+
+# 抵押业务工作流定义id
+access.dyaGzldyidArr: smMwR2SaARTp8MYm
+# 抵押上报不超过几个月配置，为整数型
+dyaMonth: 6
+# 是否过滤存量历史数据上报
+access.filter.history.data.flag: true
+
+#判断是否在上报批量抵押业务时  处理业务号为SLBH,默认不处理
+access.pldy.dealYwh: true
+
+#判断是否在上报批量抵押业务时  处理抵押金额(true/false),默认不处理
+access.pldy.dealDyje: false
+
+# 是否需要保存共享库（gx数据源）默认不保存
+nationalAccessSaveGxDb: false
+
+nationalAccessSftp:           # 国家 sftp 上报
+  nationalQuartz: false
+  ip: #'114.115.167.164'       # sftp 主机 ip
+  port: '22'                  # sftp 主机 端口
+  username: 'root'            # sftp 主机用户名
+  password: '123456'   # sftp 主机密码
+  connenttimes: 3             # 尝试连接次数
+  path: '/home/xml'           # 上传路径
+  respath: '/home/xml'        # 获取响应报文路径
+  xsdpath: 'D:\bs5\bdcdj_exchange\egov-home\bdc\conf\exchange\xsd'   # 本地 xsd 校验文件路径
+  reEditFileEnable: false     # 是否开启编辑文件（防止文件未传完被读）
+  # 上报后获取响应报文的重试次数 默认0 -1为不获取
+  downResponseRetryTimes: -1
+
+provinceAccessFtp:              # 省级 ftp 上报
+  nationalQuartz: false
+  version: hefei
+  #ip: '11.48.6.4'              # ftp 主机 ip
+  ip: '192.168.10.84'
+  port: '21'                    # ftp 主机 端口
+  username: 'gt'
+  password: 'gtis'
+  #username: '340000'     # ftp 主机用户名
+  #password: '123456'         # ftp 主机密码
+  path: ''                  # 上传路径
+  respath: ''          # 获取响应报文路径
+  xsdpath: 'D:\xsd'     # 本地 xsd 校验文件路径
+  #isConvert: true       #字典转换
+  # 上报后获取响应报文的重试次数 默认0 -1为不获取
+  downResponseRetryTimes: 0
+
+# 登簿日志上报配置
+accessLog:
+  zszmh-default: /   #默认值设置
+  turn-on-cheating: true   #是否开启作弊模式
+  turn-on-details: false     #是否开启登簿日志详情
+  zszmhfgf: ;    #证书证明好分割符
+  nationalEnble: false                    #判断是否开启国家上报日志
+  provinceEnble: true                     #判断是否开启省级上报日志
+  nationalUrl:                            #上报国家地址
+  provinceUrl: http://11.48.6.4:70/UploadLogWebService.asmx         #省级上报登簿日志地址(url)
+  conditionTime:                          #配置日志接入查询登簿量是以项目办结时间还是登簿时间(bjsj/dbsj),不配置或配空默认为dbsj
+  provinceType: anhui                     #根据各地区配置相应的名字 ex:standard,anhui(目前只包含这几种，只能从以上中选择一个配置)
+  nationalType: standard                  #根据各地区配置相应的名字 ex:standard(目前只包含这几种，只能从以上中选择一个配置)
+  quartztime: 0 30 21 * * ?             # 0 0 22 * * ? *   每晚9点
+  xmlPath:
+
+#定时任务获取响应数据配置
+#第一种模式：每次触发定时任务 获取3天内，根据上报日期升序排序 的 前2千条
+#定时表达式
+accessResponse.sjjr.cron: 0 0 9,11,13,15,17,19,21,23 * * ?
+#开关
+accessResponse.sjjr.switch: false
+#第二种模式：每次触发查询所有未获取响应的报文 执行获取响应报文请求
+#是否启动定时获取响应报文：true /false  默认false
+access.response.enable: false
+#定时获取响应报文的时间： 默认 0 0 20 * * ? *
+access.response.quartztime: 0 50 10 * * ?
+
+#虚拟BDCDYH的项目是否上报 默认为 false
+access.xnbdcdyh: false
+#上报需要过滤的XZQDM
+access.filter.xzqdm: 340101
+
+# 是否开启定时上报： false 不开启， true 开启
+access.report.enable: false
+# 定时上报时间配置：
+access.report.quartztime: 0 */1 * * * ?
+
+# 省级上报方式及开关配置
+provinceAccess:
+  type: ftp
+  switch: true
+# 国家上报方式及开关配置
+nationalAccess:
+  type: sftp
+  switch: false

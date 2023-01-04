@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>家庭成员信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+
+</head>
+<body style="background-color: #fff">
+<!--身份证读卡器控件-->
+<object id="CertCtl" TYPE="application/cert-reader" width=0 height=0" style="display: none"></object>
+<div id="bdc-popup-large">
+    <form class="layui-form bdc-form-table" style="padding:15px 25px;" action="" lay-filter="form">
+        <div class="layui-form-item pf-form-item">
+            <table class="slym layui-table bdc-jt-table" border="1">
+                <colgroup>
+                    <col width="150">
+                    <col width="120">
+                    <col width="120">
+                    <col width="150">
+                    <col width="50">
+                </colgroup>
+                <thead>
+                <tr class="gray-tr">
+                    <td>配偶姓名</td>
+                    <td>配偶国籍</td>
+                    <td>配偶证件类型</td>
+                    <td colspan="2">配偶证件号</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <input  name ="jtcyid" type="hidden" value="">
+                    <input id="po_ysqrgx" name ="ysqrgx" type="hidden" value="配偶">
+                    <td>
+                        <div class="bdc-td-box">
+                            <input type="text" name="jtcymc" value="" id="po_jtcymc" ondbclick = "readxxByIdCard(this,'zjzl','zjh')"
+                                   class="layui-input" style="position:absolute;z-index:2;width:94%;" autocomplete="off">
+
+                            <select lay-search="" class='' name='jtcymcselect' lay-filter="jtcymcselect" id="jtcymcselect">
+                                <option value="" data-zjh="" data-zjzl="">请选择</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="bdc-td-box">
+                            <select name="gj" class="" lay-search="" id="po_gj" lay-filter="gj" >
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="bdc-td-box">
+                            <select name="zjzl" class="" lay-search="" id="po_zjzl" lay-filter="zjzl" >
+                            </select>
+                        </div>
+                    </td>
+                    <td colspan="2">
+                        <div class="bdc-td-box">
+                            <input type="text" class="layui-input" name="zjh" id="po_zjh" value="">
+                        </div>
+                    </td>
+                </tr>
+                <!--子女信息-->
+                <thead>
+                    <tr class="gray-tr">
+                    <td>子女姓名</td>
+                    <td>子女国籍</td>
+                    <td>子女证件类型</td>
+                    <td>子女证件号</td>
+                    <td>操作</td>
+                </tr>
+                </thead>
+                <tbody id="tbody2">
+
+                </tbody>
+
+
+
+                </tbody>
+            </table>
+            <div class="layui-inline bdc-frame-button-box">
+                <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" lay-submit=""
+                   lay-filter="saveJtcyData" id="savejtcy">保存</a>
+            </div>
+        </div>
+    </form>
+
+</div>
+</body>
+
+<!--子女模块-->
+<script type="text/html" id="znxxTpl">
+    {{# if(d.znList && d.znList.length > 0){ }}
+    {{# for(var i = 0, len = d.znList.length; i < len; i++){ }}
+    <tr>
+        <td>
+            <input  name ="jtcyid" type="hidden" value="{{ d.znList[i].jtcyid  || '' }}">
+            <input id="zn_ysqrgx" name ="ysqrgx" type="hidden" value="未成年子女">
+            <div class="bdc-td-box">
+                <input type="text" class="layui-input" name="jtcymc" id="zn_jtcymc"
+                       value="{{ d.znList[i].jtcymc  || '' }}" ondblclick="readxxByIdCard(this,'zjzl','zjh')">
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <select name="gj" class="" lay-search="" id="zn_gj" lay-filter="gj" >
+                    <option value="">请选择</option>
+                    {{# layui.each(d.zd.gj, function(index, item){ }}
+                    <option value="{{item.DM}}"{{# if(d.znList[i].gj==item.DM ){ }} selected="selected" {{# }
+                            }}>
+                        {{item.MC || ''}}
+                    </option>
+                    {{# }); }}
+                </select>
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <select name="zjzl" class="" lay-search="" id="zn_zjzl" lay-filter="zjzl">
+                    <option value="">请选择</option>
+                    {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                    <option value="{{item.DM}}"{{# if(d.znList[i].zjzl==item.DM ){ }} selected="selected" {{# }
+                            }}>
+                        {{item.MC || ''}}
+                    </option>
+                    {{# }); }}
+                </select>
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-input" name="zjh" id="zn_zjh"
+                       value="{{ d.znList[i].zjh  || '' }}">
+            </div>
+        </td>
+        <td>
+            <button type="button" class="layui-btn layui-btn-xs bdc-major-btn znxx-add" id="znxx-add" name="znxx-add">增加</button>
+            <button type="button" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn" id="znxx-delete" name="znxx-delete">删除</button>
+        </td>
+    </tr>
+    {{# } }}
+    {{# } }}
+</script>
+
+<!--新增子女模块-->
+<script type="text/html" id="addZnxxTpl">
+    <tr>
+        <input  name ="jtcyid" type="hidden" value="">
+        <input id="zn_ysqrgx" name ="ysqrgx" type="hidden" value="未成年子女">
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-input" name="jtcymc" id="zn_jtcymc"  value="" ondblclick="readxxByIdCard(this,'zjzl','zjh')">
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <select name="gj" class="" lay-search="" id="zn_gj" lay-filter="gj" >
+                    <option value="">请选择</option>
+                    {{# layui.each(d.zd.gj, function(index, item){ }}
+                    <option value="{{item.DM || ''}}">
+                        {{item.MC || ''}}
+                    </option>
+                    {{# }); }}
+                </select>
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <select name="zjzl" class="" lay-search="" id="zn_zjzl" lay-filter="zjzl" >
+                    <option value="">请选择</option>
+                    {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                    <option value="{{item.DM || ''}}">
+                        {{item.MC || ''}}
+                    </option>
+                    {{# }); }}
+                </select>
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-input" name="zjh" id="zn_zjh" value="">
+            </div>
+        </td>
+        <td>
+            <button type="button" class="layui-btn layui-btn-xs bdc-major-btn znxx-add" id="znxx-add" name="znxx-add">增加</button>
+            <button type="button" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn" id="zvxx-delete" name="znxx-delete">删除</button>
+        </td>
+    </tr>
+</script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.all.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src='../../static/js/changzhou/slym/jtcy.js'></script>
+<script src='../../static/js/formCenter.js'></script>
+<script src='../../static/js/readCard.js'></script>
+</html>

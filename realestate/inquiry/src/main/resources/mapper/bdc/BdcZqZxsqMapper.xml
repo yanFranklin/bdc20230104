@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcZqZxsqMapper">
+
+    <update id="updateZxsq" parameterType="cn.gtmap.realestate.common.core.domain.inquiry.BdcZqZxsqDO">
+        update bdc_zq_zxsq
+        <trim prefix="set" suffixOverrides=",">
+            <if test="shzt != null">
+                shzt = #{shzt,jdbcType=INTEGER},
+            </if>
+            <if test="zxyy != null and zxyy != ''">
+                zxyy = #{zxyy,jdbcType=VARCHAR},
+            </if>
+            <if test="zxsqr != null and zxsqr != ''">
+                zxsqr = #{zxsqr,jdbcType=VARCHAR},
+            </if>
+            <if test="zxsqrid != null and zxsqrid != ''">
+                zxsqrid = #{zxsqrid,jdbcType=VARCHAR},
+            </if>
+            <if test="zxsqsj != null">
+                zxsqsj = #{zxsqsj,jdbcType=Date},
+            </if>
+            <if test="scyy != null and scyy != ''">
+                scyy = #{scyy,jdbcType=VARCHAR} ,
+            </if>
+            <if test="scr != null and scr != ''">
+                scr = #{scr,jdbcType=VARCHAR},
+            </if>
+            <if test="scrid != null and scrid != ''">
+                scrid = #{scrid,jdbcType=VARCHAR},
+            </if>
+            <if test="scsj != null">
+                scsj = #{scsj,jdbcType=DATE},
+            </if>
+            <if test="bz != null and bz != ''">
+                bz = #{bz,jdbcType=VARCHAR},
+            </if>
+        </trim>
+        where sqxxid = #{sqxxid,jdbcType=VARCHAR}
+    </update>
+
+    <select id="queryBdcZsByZhList" resultType="cn.gtmap.realestate.common.core.domain.BdcZsDO">
+        select
+            distinct zsid, bdcqzh
+        from
+            bdc_zs
+        where
+            bdcqzh in
+            <foreach collection="list" item="item" index="index"  open="(" separator="," close=")">
+                #{item, jdbcType=VARCHAR}
+            </foreach>
+    </select>
+</mapper>

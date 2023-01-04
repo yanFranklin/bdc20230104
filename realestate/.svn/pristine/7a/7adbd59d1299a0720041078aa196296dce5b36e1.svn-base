@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--更正登记信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.QlfQlGzdjMapper">
+
+    <select id="queryQlfQlGzdjList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.QlfQlGzdjDO">
+        SELECT DISTINCT
+        c.bdcdyh,
+        c.xmid as ywh,
+        l.yxmid as ssywh,
+        case WHEN zs.ZSLX = '2' THEN zs.BDCQZH ELSE '' END as bdczmh,
+        case WHEN zs.ZSLX in ('1','3') THEN zs.BDCQZH ELSE '' END as bdcqzh,
+        t.gzdjlx,
+        t.gzyj,
+        t.gzgt,
+        t.gznr,
+        substr(c.bdcdyh,0,6) qxdm,
+        -- t.djjg,
+        c.dbr,
+        c.djsj,
+        c.QSZT
+        FROM bdc_gzdj t
+        LEFT JOIN bdc_xm c ON c.xmid = t.xmid
+        LEFT JOIN bdc_xm_lsgx l ON l.xmid=c.xmid and nvl(l.WLXM,0) = 0
+        LEFT JOIN bdc_xm_zs_gx gx ON gx.xmid = c.xmid
+        LEFT JOIN bdc_zs zs ON zs.ZSID = gx.ZSID
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND c.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND c.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+
+</mapper>

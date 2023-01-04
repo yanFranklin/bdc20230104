@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+	<!-- server事务管理器 -->
+	<bean id="serverTransactionManager"
+		  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource">
+			<ref bean="serverDataSource"/>
+		</property>
+		<qualifier value="server" />
+	</bean>
+	<tx:annotation-driven transaction-manager="serverTransactionManager" proxy-target-class="true"/>
+
+	<!-- 共享事务管理器 -->
+	<bean id="gxTransactionManager"
+		  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource">
+			<ref bean="gxDataSource"/>
+		</property>
+		<qualifier value="gx" />
+	</bean>
+	<tx:annotation-driven transaction-manager="gxTransactionManager" proxy-target-class="true"/>
+
+
+	<!-- 权籍事务管理器 -->
+	<bean id="qjTransactionManager"
+		  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource">
+			<ref bean="qjDataSource"/>
+		</property>
+		<qualifier value="qj" />
+	</bean>
+	<tx:annotation-driven transaction-manager="qjTransactionManager" proxy-target-class="true"/>
+
+</beans>

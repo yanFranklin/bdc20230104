@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+
+    <property name="max.file.size" value="100MB"/>
+    <!--日志文件保留天数-->
+    <property name="max.history" value="30"/>
+    <!--日志文件保留路径-->
+    <property name="log.path" value="logs"/>
+    <property name="log.name" value="etl"/>
+
+    <!--    <springProperty scope="context" name="log.name" source="spring.application.name" defaultValue="etl"/>-->
+    <springProperty scope="context" name="logging.level.sql" source="logging.level.sql" defaultValue="INFO"/>
+
+    <contextName>${log.name}</contextName>
+
+    <!-- 控制台输出 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}  %-5level %logger{50} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--输出到文件-->
+    <!-- 时间滚动输出 全量 日志 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 正在记录的日志文件的路径及文件名 -->
+        <file>${log.path}/${log.name}-all.log</file>
+        <!--日志文件输出格式-->
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <charset>UTF-8</charset> <!-- 设置字符集 -->
+        </encoder>
+        <!-- 日志记录器的滚动策略，按日期，按大小记录 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 日志归档 -->
+            <fileNamePattern>${log.path}/${log.name}-all-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${max.file.size}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>${max.history}</maxHistory>
+        </rollingPolicy>
+        <!-- 大于或等于此级别的日志信息 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>info</level>
+        </filter>
+    </appender>
+
+    <!--myibatis log configure-->
+    <logger name="com.apache.ibatis" level="ERROR"/>
+    <logger name="java.sql.Connection" level="ERROR"/>
+    <logger name="java.sql.Statement" level="ERROR"/>
+    <logger name="java.sql.PreparedStatement" level="ERROR"/>
+    <logger name="cn.gtmap.gtc.plugins" level="ERROR"/>
+    <logger name="org.springframework" level="ERROR"/>
+
+    <!--sql -->
+    <logger name="cn.gtmap.realestate.elt.core.mapper" level="${logging.level.sql}" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>

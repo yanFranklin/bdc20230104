@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--注销登记信息 有问题 没有单独的权利表 登簿人和备注、登记时间无值-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.QlfQlZxdjMapper">
+
+    <select id="queryQlfQlZxdjList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.QlfQlZxdjDO">
+        SELECT DISTINCT '无' ysdm,
+        a.bdcdyh,
+        b.bdcqzh  bdcqzh,
+        a.xmid AS ywh,
+        m.yxmid AS zxywh,
+        nvl(a.DJSJ, sysdate) zxsj,
+        substr(a.bdcdyh,0,6) qxdm,
+        a.djjg,
+        a.dbr,
+        a.jssj AS djsj,
+        a.bz
+        FROM bdc_xm a
+        LEFT JOIN bdc_xm_lsgx m ON m.XMID = a.xmid and nvl(m.WLXM,0) = 0
+        LEFT JOIN BDC_XM B ON M.YXMID = B.XMID
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND a.XMID = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND a.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryQlfQlZxdjListOld" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.yancheng.yth.old.QlfQlZxdjOldDO">
+        SELECT DISTINCT '无' ysdm,
+        a.bdcdyh,
+        b.bdcqzh bdcqzh,
+        a.xmid AS ywh,
+        m.yxmid AS zxywh,
+        nvl(a.DJSJ, sysdate) zxsj,
+        substr(a.bdcdyh,0,6) qxdm,
+        a.djjg,
+        a.dbr,
+        a.jssj AS djsj,
+        a.bz
+        FROM bdc_xm a
+        LEFT JOIN bdc_xm_lsgx m ON m.XMID = a.xmid and nvl(m.WLXM,0) = 0
+        LEFT JOIN BDC_XM B ON M.YXMID = B.XMID
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND a.XMID = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND a.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryWlqlQlfQlZxdjList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.QlfQlZxdjDO">
+        SELECT DISTINCT '无' ysdm,
+        a.bdcdyh,
+        nvl(a.bdcqzh, '/') AS bdcqzh,
+        m.yxmid AS zxywh,
+        x.djsj zxsj,
+        substr(a.bdcdyh,0,6) as qxdm,
+        x.djjg,
+        x.dbr,
+        x.djsj,
+        x.bz,
+        a.qllx
+        FROM bdc_xm a
+        LEFT JOIN bdc_xm_lsgx m ON m.YXMID = a.xmid
+        and m.wlxm = 1 and m.zxyql = 1
+        left join bdc_xm x on m.xmid=x.xmid
+        <where>
+            rownum=1  and x.xmid is not null
+            <if test="ywh != null and ywh !=''">
+                AND a.XMID = #{ywh}
+            </if>
+        </where>
+    </select>
+</mapper>

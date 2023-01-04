@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>不动产证书预览</title>
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="../../static/css/zsxx/bdcZs.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+</head>
+<body>
+<div class="content-div content-hide-title">
+    <form class="layui-form setOverflow" action="" lay-filter="form">
+        <div class="content-title-box">
+            <div class="content-title layui-clear">
+                <p></p>
+                <div class="title-btn-area">
+                    <button type="button" class="layui-btn bdc-secondary-btn bdc-yl-btn" id="zsyl" name="ylBtn">
+                        预览<i class="layui-icon layui-icon-down"></i>
+                    </button>
+                    <div class="bdc-table-btn-more bdc-yl-more">
+                        <a type="button" id="openZdtView">宗地图</a>
+                        <a type="button" id="openHstView">分层分户图</a>
+                    </div>
+                    <button type="button" class="layui-btn bdc-secondary-btn" id="zsfbyl">证书附表</button>
+                </div>
+                <div class="title-btn-area">
+                    <button type="button" class="layui-btn bdc-secondary-btn" id="jtcyfb" style="display: none">家庭成员附表</button>
+                </div>
+                <!--<div class="title-btn-area">-->
+                <!--<button type="button" class="layui-btn bdc-secondary-btn" id="fwqdyl">房屋清单</button>-->
+                <!--</div>-->
+            </div>
+        </div>
+        <div id="detail" style="padding-top: 58px;"></div>
+    </form>
+</div>
+</body>
+<!--插入证书信息-->
+<script type="text/html" id="zsxxTpl">
+    {{# if(d && d.length > 0){ }}
+    {{# for(var i = 0, len = d.length; i < len; i++){ }}
+    <div class="details clear">
+        <div class="bdc-details-left">
+            <p class="bdc-table-tips">
+                <input type="text" class="layui-input" placeholder="" value="{{d[i].bdcqzh|| ''}}" name="bdcqzh" readonly="readonly">
+            </p>
+            <table class="layui-table bdc-zs-details-table">
+                <colgroup>
+                    <col width="160">
+                    <col>
+                </colgroup>
+                <tbody>
+                <tr>
+                    <td class="bdc-title-td">权利人</td>
+                    <td>
+                        {{d[i].qlr|| ''}}
+<!--                        <input type="text" class="layui-input" placeholder="" value="{{d[i].qlr|| ''}}" name="qlr" readonly="readonly">-->
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bdc-title-td">共有情况</td>
+                    <td>
+                        <input type="text" class="layui-input" placeholder="" value="{{d[i].gyfsmc|| ''}}" name="gyfsmc" readonly="readonly">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bdc-title-td">坐落</td>
+                    <td>
+                        <input type="text" class="layui-input bdc-special-input" title="{{d[i].zl|| ''}}" placeholder="" value="{{d[i].zl|| ''}}" name="gyfsmc" readonly="readonly">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bdc-title-td">不动产单元号</td>
+                    <td>
+                        <input type="text" class="layui-input" placeholder="" value="{{d[i].bdcdyh|| ''}}" name="bdcdyh" readonly="readonly">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bdc-title-td">权利类型</td>
+                    <td>
+                        <input type="text" class="layui-input" placeholder="" value="{{d[i].qllxmc|| ''}}" name="qllxmc" readonly="readonly">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bdc-title-td">权利性质</td>
+                    <td>
+                        <input type="text" class="layui-input" placeholder="" value="{{d[i].qlxz|| ''}}" name="qlxz"
+                               readonly="readonly">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bdc-title-td">用途</td>
+                    <td>
+                        <input type="text" class="layui-input" placeholder="" value="{{d[i].yt|| ''}}" name="yt" readonly="readonly">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bdc-title-td">面积</td>
+                    <td>
+                        <input type="text" class="layui-input bdc-special-input" placeholder="" value="{{d[i].mj|| ''}}" title="{{d[i].mj|| ''}}" name="mj" readonly="readonly">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bdc-title-td">使用期限</td>
+                    <td>
+                        <input type="text" class="layui-input" placeholder="" value="{{d[i].syqx|| ''}}" name="syqx" readonly="readonly">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bdc-title-td bdc-title-td-qt">权利其他状况</td>
+                    <td class="bdc-title-nr">
+                        <textarea name="qlqtzk" style="resize: none;" class="layui-textarea" disabled="disabled">{{d[i].qlqtzk||''}}
+                        </textarea>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!--右侧-->
+        <div class="bdc-details-right">
+            <div class="bdc-notes-top clearBoth">
+                <span class="bdc-notes-top-tips">编号NO.</span>
+                <span class="bdc-notes-top-content">
+                           <span><input type="text" class="layui-input" placeholder="" value="{{d[i].qzysxlh|| ''}}" name="qzysxlh" readonly="readonly"></span>
+                           <span><input type="text" class="layui-input" placeholder="" value="{{d[i].szrq|| ''}}" name="szrq" readonly="readonly"></span>
+                    </span>
+                <div id="qrcode_{{i}}" class="qrcodeDiv" style=""></div>
+
+            </div>
+            <p class="bdc-notes-title">附&nbsp;&nbsp;&nbsp;&nbsp;记</p>
+            <div class="bdc-notes">
+                <textarea name="fj" style="resize: none;" placeholder="" class="layui-textarea" disabled="disabled">{{d[i].fj||''}}
+                </textarea>
+            </div>
+        </div>
+    </div>
+    {{# } }}
+    {{# }}}
+</script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script type="text/javascript" src="../../static/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="../../static/lib/qrcode/jquery.qrcode.js"></script>
+<script type="text/javascript" src="../../static/lib/qrcode/qrcode.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/bdcQrcode.js"></script>
+<script src="../../static/lib/bdcui/js/print/print-common.js"></script>
+
+<script src="../../static/js/zsxx/bdcZsCommon.js"></script>
+<script src="../../static/js/zsxx/zsPreview.js"></script>
+</html>

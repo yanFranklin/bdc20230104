@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.certificate.core.mapper.BdcDzzzQqjlMapper">
+    <insert id="insertBdcDzzzQqjl" parameterType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzQqjlDo">
+        INSERT INTO BDC_DZZZ_QQJL (qqid,qqmc,qqbm,qqsj,jkmc)
+        VALUES (#{qqid,jdbcType=VARCHAR},#{qqmc,jdbcType=VARCHAR},#{qqbm,jdbcType=VARCHAR}
+        ,#{qqsj,jdbcType=TIMESTAMP},#{jkmc,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="countRecordMonth" parameterType="java.util.Map"
+            resultType="java.util.Map">
+        SELECT  a.use_month,b.use_count FROM
+        (SELECT  to_char(sysdate, 'yyyy-MM') use_month FROM dual
+        UNION ALL
+        SELECT to_char(add_months(sysdate,-1), 'yyyy-MM') use_month FROM dual
+        UNION ALL
+        SELECT to_char(add_months(sysdate,-2), 'yyyy-MM') use_month FROM dual
+        UNION ALL
+        SELECT to_char(add_months(sysdate,-3), 'yyyy-MM') use_month FROM dual
+        UNION ALL
+        SELECT to_char(add_months(sysdate,-4), 'yyyy-MM') use_month FROM dual
+        UNION ALL
+        SELECT to_char(add_months(sysdate,-5), 'yyyy-MM') use_month FROM dual
+        UNION ALL
+        SELECT to_char(add_months(sysdate,-6), 'yyyy-MM') use_month FROM dual
+        ) a
+        left join
+        (
+        SELECT to_char(qqsj, 'yyyy-MM') AS cjsj, COUNT(*) AS use_count
+        FROM BDC_DZZZ_QQJL
+        WHERE 1=1 GROUP BY to_char(qqsj, 'yyyy-MM')
+        ) b
+        ON a.use_month = b.cjsj
+        ORDER BY a.use_month
+    </select>
+
+    <select id="countRecordYear" parameterType="java.util.Map"
+            resultType="java.util.Map">
+        SELECT  a.use_year,b.use_count FROM
+        (SELECT  to_char(sysdate, 'yyyy') use_year FROM dual
+        UNION ALL
+        SELECT to_char(add_months(sysdate,-12), 'yyyy') use_year FROM dual
+        UNION ALL
+        SELECT to_char(add_months(sysdate,-24), 'yyyy') use_year FROM dual
+        UNION ALL
+        SELECT to_char(add_months(sysdate,-36), 'yyyy') use_year FROM dual
+        UNION ALL
+        SELECT to_char(add_months(sysdate,-48), 'yyyy') use_year FROM dual
+        UNION ALL
+        SELECT to_char(add_months(sysdate,-54), 'yyyy') use_year FROM dual) a
+        left join
+        (
+        SELECT to_char(qqsj, 'yyyy') AS cjsj, COUNT(*) AS use_count
+        FROM BDC_DZZZ_QQJL
+        WHERE 1=1 GROUP BY to_char(qqsj, 'yyyy')) b
+        ON a.use_year = b.cjsj
+        ORDER BY a.use_year
+    </select>
+
+    <select id="countRecordWeek" parameterType="java.util.Map"
+            resultType="java.util.Map">
+        SELECT  to_char(use_week1, 'MM-DD') use_week ,use_count FROM (
+        SELECT  use_week1 ,use_count FROM (
+        SELECT  sysdate  use_week1, COUNT(*) use_count  FROM  BDC_DZZZ_QQJL b  WHERE  to_date(to_char(b.qqsj, 'YYYY-MM-DD'),'YYYY-MM-DD') > sysdate-7  AND to_date(to_char(b.qqsj, 'YYYY-MM-DD'),'YYYY-MM-DD') <![CDATA[ <= ]]> sysdate
+        ORDER BY use_week1)
+        UNION ALL
+        SELECT use_week1 ,use_count FROM (
+        SELECT  sysdate-7 use_week1, COUNT(*) use_count  FROM  BDC_DZZZ_QQJL b  WHERE  to_date(to_char(b.qqsj, 'YYYY-MM-DD'),'YYYY-MM-DD') > sysdate-14 AND to_date(to_char(b.qqsj, 'YYYY-MM-DD'),'YYYY-MM-DD')  <![CDATA[ <= ]]> sysdate-7
+        ORDER BY use_week1)
+        UNION ALL
+        SELECT use_week1 ,use_count FROM (
+        SELECT  sysdate-14 use_week1, COUNT(*) use_count  FROM  BDC_DZZZ_QQJL b  WHERE  to_date(to_char(b.qqsj, 'YYYY-MM-DD'),'YYYY-MM-DD') > sysdate-21 AND to_date(to_char(b.qqsj, 'YYYY-MM-DD'),'YYYY-MM-DD') <![CDATA[ <= ]]> sysdate-14
+        ORDER BY use_week1)
+        UNION ALL
+        SELECT use_week1 ,use_count FROM (
+        SELECT  sysdate-21 use_week1, COUNT(*) use_count  FROM  BDC_DZZZ_QQJL b  WHERE  to_date(to_char(b.qqsj, 'YYYY-MM-DD'),'YYYY-MM-DD') > sysdate-28 AND to_date(to_char(b.qqsj, 'YYYY-MM-DD'),'YYYY-MM-DD') <![CDATA[ <= ]]> sysdate-21
+        ORDER BY use_week1)
+        UNION ALL
+        SELECT use_week1 ,use_count FROM (
+        SELECT  sysdate-28 use_week1, COUNT(*) use_count  FROM  BDC_DZZZ_QQJL b  WHERE  to_date(to_char(b.qqsj, 'YYYY-MM-DD'),'YYYY-MM-DD') > sysdate-35 AND to_date(to_char(b.qqsj, 'YYYY-MM-DD'),'YYYY-MM-DD') <![CDATA[ <= ]]> sysdate-28
+        ORDER BY use_week1)
+        UNION ALL
+        SELECT use_week1 ,use_count FROM (
+        SELECT  sysdate-35 use_week1, COUNT(*) use_count  FROM  BDC_DZZZ_QQJL b  WHERE  to_date(to_char(b.qqsj, 'YYYY-MM-DD'),'YYYY-MM-DD') > sysdate-42 AND to_date(to_char(b.qqsj, 'YYYY-MM-DD'),'YYYY-MM-DD') <![CDATA[ <= ]]> sysdate-35
+        ORDER BY use_week1)
+        UNION ALL
+        SELECT use_week1 ,use_count FROM (
+        SELECT  sysdate-42 use_week1, COUNT(*) use_count  FROM  BDC_DZZZ_QQJL b  WHERE  to_date(to_char(b.qqsj, 'YYYY-MM-DD'),'YYYY-MM-DD') > sysdate-49 AND to_date(to_char(b.qqsj, 'YYYY-MM-DD'),'YYYY-MM-DD') <![CDATA[ <= ]]> sysdate-42
+        ORDER BY use_week1)
+        )
+        ORDER BY use_week1
+    </select>
+
+    <select id="countDepart" parameterType="java.util.Map"
+            resultType="java.util.Map">
+        SELECT a.depart_mc,a.count_use_department from
+        (SELECT
+        d.bmmc depart_mc
+        , COUNT(*) count_use_department
+        FROM BDC_DZZZ_QQJL t
+        LEFT JOIN BDC_DZZZ_ZD_bm d ON t.qqbm = d.bmdm
+        GROUP BY d.bmmc
+        ORDER BY count_use_department desc)a
+        WHERE rownum &lt;= 5
+        ORDER BY a.count_use_department
+    </select>
+
+    <select id="countPortPercent" parameterType="java.util.Map"
+            resultType="java.util.Map">
+        SELECT
+        SUM(CASE WHEN t.jkmc IN
+        <foreach item="item" index="index" collection="regionZzpdf" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        THEN 1 ELSE 0  END) zzpdf ,
+        SUM(CASE WHEN t.jkmc IN
+        <foreach item="item" index="index" collection="regionZzzx" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        THEN 1 ELSE 0  END) zzzx ,
+        SUM(CASE WHEN t.jkmc IN
+        <foreach item="item" index="index" collection="regionZzcx" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        THEN 1 ELSE 0  END) zzcx ,
+        SUM(CASE WHEN t.jkmc IN
+        <foreach item="item" index="index" collection="regionZzjs" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        THEN 1 ELSE 0  END) zzjs ,
+        SUM(CASE WHEN t.jkmc IN
+        <foreach item="item" index="index" collection="regionZzxxxz" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        THEN 1 ELSE 0  END) zzxxxz ,
+        SUM(CASE WHEN t.jkmc IN
+        <foreach item="item" index="index" collection="regionZzdzxz" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        THEN 1 ELSE 0  END) zzdzxz,
+        SUM(CASE WHEN t.jkmc IN
+        <foreach item="item" index="index" collection="regionZzysj" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        THEN 1 ELSE 0  END) zzysj,
+        SUM(CASE WHEN t.jkmc IN
+        <foreach item="item" index="index" collection="regionZzwjyz" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        THEN 1 ELSE 0  END) zzwjyz
+        FROM bdc_dzzz_qqjl t
+    </select>
+
+    <select id="countRegionUse" parameterType="java.util.Map"
+            resultType="java.util.Map">
+        SELECT c.szsmc mc,SUM(a.zzpdf) zzpdf,SUM(a.zzzx) zzzx,SUM(a.zzcx) zzcx,SUM(a.zzjs) zzjs,SUM(a.zzxxxz) zzxxxz
+        ,SUM(a.zzdzxz) zzdzxz,SUM(a.zzysj) zzysj,SUM(a.zzwjyz) zzwjyz from (
+        SELECT t.qqmc,
+        SUM(CASE WHEN t.jkmc IN
+        <foreach item="item" index="index" collection="regionZzpdf" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        THEN 1 ELSE 0  END) zzpdf ,
+        SUM(CASE WHEN t.jkmc IN
+        <foreach item="item" index="index" collection="regionZzzx" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        THEN 1 ELSE 0  END) zzzx ,
+        SUM(CASE WHEN t.jkmc IN
+        <foreach item="item" index="index" collection="regionZzcx" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        THEN 1 ELSE 0  END) zzcx ,
+        SUM(CASE WHEN t.jkmc IN
+        <foreach item="item" index="index" collection="regionZzjs" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        THEN 1 ELSE 0  END) zzjs ,
+        SUM(CASE WHEN t.jkmc IN
+        <foreach item="item" index="index" collection="regionZzxxxz" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        THEN 1 ELSE 0  END) zzxxxz ,
+        SUM(CASE WHEN t.jkmc IN
+        <foreach item="item" index="index" collection="regionZzdzxz" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        THEN 1 ELSE 0  END) zzdzxz,
+        SUM(CASE WHEN t.jkmc IN
+        <foreach item="item" index="index" collection="regionZzysj" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        THEN 1 ELSE 0  END) zzysj,
+        SUM(CASE WHEN t.jkmc IN
+        <foreach item="item" index="index" collection="regionZzwjyz" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        THEN 1 ELSE 0  END) zzwjyz
+        FROM bdc_dzzz_qqjl t
+        WHERE t.jkmc IS NOT NULL GROUP BY t.qqmc ORDER BY t.qqmc) a
+        LEFT JOIN bdc_dzzz_config c ON a.qqmc = c.yymc
+        WHERE c.szsmc IS NOT NULL
+        GROUP BY c.szsmc,c.szsdwdm
+        ORDER BY c.szsdwdm DESC
+    </select>
+</mapper>

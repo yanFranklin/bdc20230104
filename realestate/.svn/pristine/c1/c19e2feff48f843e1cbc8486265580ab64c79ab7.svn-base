@@ -1,0 +1,62 @@
+info:
+  name: ${spring.application.name}
+  component: natural-ui application
+
+app:
+  center: http://192.168.2.99:8000/eureka/
+  oauth: http://192.168.2.99:8002/account
+  security:
+    moduleAuthPath: http://account/account
+    ignores: /image/**,/css/**,/js/**,/webjars/**,/static/**
+    authorities:
+      permitAll: /index2
+      hasUrlAuthority('read'): /auth/users,/auth/orgs
+      hasModuleAuthority('yhgl:add'): /auth/user/create
+      hasAnyAuthority('ROLE_USER'): /resource1/**,/catalog1/**,/index
+      authenticated: true
+    resources:
+      authenticated: /resource/**
+  services:
+    natural-app: natural-app-yan
+spring:
+  rabbitmq:
+    host: 192.168.0.60
+    port: 5672
+    username: guest
+    password: guest
+  redis:
+    port: 6379
+    host: 192.168.0.60
+  messages:
+    basename: message/messages, message/errors
+  mvc:
+      static-path-pattern: /**
+#  thymeleaf:
+#    prefix: classpath:/META-INF/resources/view/
+#    suffix: .html
+#    cache: false
+
+server:
+  port: ${port:8702}
+  context-path: /realestate-natural-ui
+  session:
+    timeout: 3600
+  # 解除POST提交请求数据量限制，避免Excel导出数据量过大导出不了
+  tomcat:
+      max-http-post-size: -1
+
+logging:
+  security:
+    collection:
+      authorizationSuccess: false
+      authenticationSuccess: false
+
+
+url:
+  sign:
+    image: http://192.168.2.99:8019/storage/rest/files/download/
+
+
+zrzy:
+  cqdwurl: http://2.82.2.138/account/redirect?username=test001&password=gtis@123&authUrl=login&redirect=http://2.82.2.138/mapp/build/preview/66SB3012GX59Y005?resourceId=58Q923342759Y508&djdyh=
+  fjckurl: http://2.82.2.138/account/redirect?username=test001&password=gtis@123&authUrl=login&redirect=http://2.82.2.138/portal/zrzy-manage/index.html#/resultManage?flag=forlink&zrzydjdyh=

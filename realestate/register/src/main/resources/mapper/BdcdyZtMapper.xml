@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.register.core.mapper.BdcdyZtMapper">
+
+    <select id="listDjBdcdyXszt" parameterType="java.util.List" resultType="cn.gtmap.realestate.common.core.domain.register.BdcBdcdyhxsztDO">
+        SELECT
+        T.BDCDYH, T.BDCDYZT, T.BDCLX, T.CLFKS, T.CLFYS, T.DJZT, T.KS,
+        T.QLR, T.XJSPFKS, T.XJSPFYS, T.XSCFCS, T.XSDYACS, T.XSDYICS, T.XSSDCS,
+        T.XSYCFCS, T.XSYDYACS, T.XSYGCS, T.XSYYCS, T.XSZJGCDYCS, T.YS, T.YT,
+        T.ZL, T.sfba,T.XSJZQCS,T.LQLZZT
+        FROM
+        s_sj_bdcdyhxszt T
+        WHERE
+        bdcdyh in
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

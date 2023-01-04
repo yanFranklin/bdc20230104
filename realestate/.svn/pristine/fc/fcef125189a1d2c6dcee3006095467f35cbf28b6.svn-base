@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcSzgzlTjMapper">
+
+    <select id="yzhlylmxTj" resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcSzgzlTjDTO"
+            parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.BdcYzhTjQO">
+        select  syr as name,
+        sum(case when syqk=2 and zslx = 1  then 1 else 0 end) as zsyzhzfl,
+        sum(case when syqk=3 and zslx = 1  then 1 else 0 end) as zsyzhsyl,
+        sum(case when syqk=2 and zslx = 2  then 1 else 0 end) as zmyzhzfl,
+        sum(case when syqk=3 and zslx = 2  then 1 else 0 end) as zmyzhsyl
+        from (
+        select distinct b.yzhid, b.syr, b.SYBMMC, a.syqk,a.zslx
+        from BDC_YZH a left join BDC_YZHSYMX b on a.yzhid = b.yzhid
+        <where>
+            <if test="null != rymc and '' != rymc">
+                and b.syr in
+                <foreach collection="rymc.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="null != djbmmc and '' != djbmmc">
+                and b.sybmmc in
+                <foreach collection="djbmmc.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="kssj != null and kssj != ''">
+                AND to_char(b.sysj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{kssj}
+            </if>
+            <if test="jzsj != null and jzsj != ''">
+                AND to_char(b.sysj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{jzsj}
+            </if>
+        </where>
+        )
+        group by syr
+    </select>
+
+    <select id="yzhlylTj" resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcSzgzlTjDTO"
+            parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.BdcSzgzlTjQO">
+        select lqr as name,sum(case when zslx = 1  then 1 else 0 end) as zsyzhlyl,
+        sum(case when  zslx = 2  then 1 else 0 end) as zmyzhlyl from BDC_YZH
+        <where>
+            <if test="null != rymc and '' != rymc">
+                and lqr in
+                <foreach collection="rymc.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="kssj != null and kssj != ''">
+                AND to_char(cjsj,'yyyy-MM-dd') <![CDATA[>=]]> #{kssj}
+            </if>
+            <if test="jzsj != null and jzsj != ''">
+                AND to_char(cjsj,'yyyy-MM-dd') <![CDATA[<=]]> #{jzsj}
+            </if>
+        </where>
+        group by lqr
+    </select>
+
+
+    <select id="ywblzlTj" resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcSzgzlTjDTO"
+            parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.BdcSzgzlTjQO">
+        select szr as name,count(1) as ywblzl  from bdc_zs
+        <where>
+            <if test="null != rymc and '' != rymc">
+                and szr in
+                <foreach collection="rymc.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="kssj != null and kssj != ''">
+                AND to_char(szsj,'yyyy-MM-dd') <![CDATA[>=]]> #{kssj}
+            </if>
+            <if test="jzsj != null and jzsj != ''">
+                AND to_char(szsj,'yyyy-MM-dd') <![CDATA[<=]]> #{jzsj}
+            </if>
+        </where>
+        group by  szr
+    </select>
+
+</mapper>

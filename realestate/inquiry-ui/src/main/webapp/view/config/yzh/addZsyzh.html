@@ -1,0 +1,123 @@
+<!--
+ * @author  <a href="mailto:zhuyong@gtmap.cn>zhuyong</a>
+ * @version 1.0, 2019/01/31
+ * @description 不动产系统业务配置UI应用：新增证书印制号配置页面
+-->
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>新增证书印制号配置</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/popup.css">
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/mask.css" />
+    <link rel="stylesheet" href="../../../static/ztree/metroStyle.css" />
+    <link rel="stylesheet" href="../../../static/css/config/zsyzh/zsyzh.css" />
+</head>
+<body>
+    <div id="bdc-popup-large">
+        <form class="layui-form" action="" id="yzhform" lay-filter="yzhform">
+            <input type="hidden" name="lqbmid" class="search"/>
+            <input type="hidden" name="lqrid" class="search"/>
+
+            <div class="layui-form-item pf-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>年份</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="nf" lay-verify="required|nf" autocomplete="off" class="layui-input" placeholder="请输入">
+                    </div>
+                </div>
+
+                <div class="layui-inline xzq-sele">
+                    <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>区县名称</label>
+                    <div class="layui-input-inline">
+                        <select lay-filter="qxdm" id="qxdm" name="qxdm" lay-search="" class="search" lay-verify="required">
+                            <option value="">请选择或输入</option>
+                        </select>
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+
+                <div class="layui-inline xzq-sele">
+                    <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>证书类型</label>
+                    <div class="layui-input-inline">
+                        <select lay-filter="zslx" id="zslx" name="zslx" lay-search="" lay-verify="required">
+                            <option value="">请选择或输入</option>
+                        </select>
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>编号位数</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="bhws" lay-verify="required|bhws" autocomplete="off" class="layui-input" placeholder="请输入">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>起始编号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="qsbh" lay-verify="required|number|qsbh" autocomplete="off" class="layui-input" placeholder="请输入流水号（例如：1）">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>结束编号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="jsbh" lay-verify="required|number" autocomplete="off" class="layui-input" placeholder="请输入流水号（例如：10）">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>省区代码</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="sqdm" lay-verify="required|number" autocomplete="off" class="layui-input" placeholder="请输入（只允许数字）">
+                    </div>
+                </div>
+
+                <div class="layui-inline" id="lqbm_div">
+                    <label class="layui-form-label">领取部门</label>
+                    <div class="layui-input-inline" style="display: flex;">
+                        <input type="text" name="lqbm" lay-verify="lqbm" autocomplete="off"
+                               placeholder="请选择" class="layui-input search" style="width: 100%;">
+                        <div class="layui-btn layui-btn-sm bdc-table-second-btn org_select_show">选择</div>
+                    </div>
+                    <div class="org_select_tree">
+                        <ul id="select_tree" class="ztree"></ul>
+                    </div>
+                </div>
+
+                <div class="layui-inline" id="lqr_div">
+                    <label class="layui-form-label">领取人员</label>
+                    <div class="layui-input-inline" style="display: flex;">
+                        <input type="text" name="lqr" lay-verify="lqr" autocomplete="off"
+                               placeholder="请选择"
+                               class="layui-input search" style="width: 100%;">
+                        <div class="layui-btn layui-btn-sm bdc-table-second-btn org_select_show2">选择</div>
+                    </div>
+                    <div class="org_select_tree2">
+                        <ul id="select_tree2" class="ztree"></ul>
+                    </div>
+                </div>
+
+                <div class="layui-inline bdc-frame-button-box">
+                    <button class="layui-btn layui-btn-normal bdc-major-btn" lay-submit="" lay-filter="submitBtn">保存</button>
+                    <button class="layui-btn layui-btn-normal bdc-secondary-btn bdc-frame-close" lay-filter="closeBtn" onclick="closeWin();">取消</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="../../../static/lib/jquery/jquery.min.js"></script>
+    <script src="../../../static/lib/layui/layui.all.js"></script>
+    <script src="../../../static/ztree/jquery.ztree.core.js"></script>
+    <script src="../../../static/ztree/jquery.ztree.excheck.js"></script>
+    <script src="../../../static/ztree/jquery.ztree.exedit.js"></script>
+    <script src="../../../static/js/config/common.js"></script>
+    <script src="../../../static/js/config/yzh/selectTree.js"></script>
+    <script src="../../../static/js/config/yzh/addZsyzh.js"></script>
+</body>
+</html>

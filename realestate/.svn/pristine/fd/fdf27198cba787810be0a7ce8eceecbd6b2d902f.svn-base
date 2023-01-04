@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.config.core.mapper.BdcXtQlqtzkFjPzMapper">
+
+    <!--分页查询-->
+    <select id="listBdcXtQlqtzkFjPzByPage" parameterType="cn.gtmap.realestate.common.core.qo.config.BdcXtQlqtzkFjPzQO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcXtQlqtzkFjPzDO">
+        SELECT
+        t.pzid,
+        t.djxl,
+        t.qllx,
+        t.qlqtzksjy,
+        t.qlqtzkmb,
+        t.fjmb,
+        t.fjsjy,
+        T.PZRQ,
+        t.zxqlfjmb,
+        t.zxqlfjsjy
+        FROM BDC_XT_QLQTZK_FJ_PZ t
+        <where>
+            <if test="pzid != null and pzid != ''">
+                AND t.pzid = #{pzid}
+            </if>
+            <if test="djxl != null and djxl != ''">
+                AND t.djxl = #{djxl}
+            </if>
+            <if test="qllx != null and qllx != ''">
+                AND t.qllx = #{qllx}
+            </if>
+            <if test="slbh != null and slbh != ''">
+                AND t.djxl in (select djxl from bdc_xm where slbh=#{slbh})
+                AND t.qllx in (select qllx from bdc_xm where slbh=#{slbh})
+            </if>
+        </where>
+        ORDER BY T.PZRQ DESC NULLS LAST
+
+    </select>
+
+    <!--运行sql-->
+    <select id="runConfigSql" resultType="map" parameterType="map">
+        ${sql}
+    </select>
+
+</mapper>

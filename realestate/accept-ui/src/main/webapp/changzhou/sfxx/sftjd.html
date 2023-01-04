@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>税费统缴单页面</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/slymForm.css"/>
+</head>
+<body>
+<div class="bdc-form-div bdc-not-full-bg">
+    <!--全局 标题和操作按钮 开始-->
+    <form class="layui-form sl-from" id="all">
+        <div class="bdc-content-fix">
+            <div class="content-title layui-clear">
+                <p>税费统缴单</p>
+                <div id="buttonArea"></div>
+            </div>
+        </div>
+        <!--表单信息-->
+        <div class="layui-tab fixed-content" lay-filter="tabFilter">
+            <div class="layui-tab-content" id="contentTable">
+                <div class="layui-tab-item layui-show">
+                    <div class="form-margin-area">
+                        <div class="basic-info" id="qlrsfxx"></div>
+                        <div class="basic-info" id="ywrsfxx"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--根据合同号获取税票信息弹框-->
+<div id="popup" class="bdc-hide">
+    <!--查询条件-->
+    <div class="bdc-percentage-container" style="padding: 53px 10px 10px 10px">
+        <div class="bdc-search-content">
+            <!--************ 条件搜索 ************-->
+            <div class="bdc-search-box">
+                <form id="form" class="layui-form" action="">
+                    <div class="layui-form-item pf-form-item">
+                        <div class="layui-inline" style="width: 35%">
+                            <label class="layui-form-label">合同编号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="htbh" name="htbh" placeholder="请输入" autocomplete="off" class="layui-input search">
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            </div>
+                        </div>
+                        <div class="layui-inline" style="width: 35%">
+                            <label class="layui-form-label">纳税人识别号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="nsrsbh" name="nsrsbh" placeholder="请输入" autocomplete="off" class="layui-input search">
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            </div>
+                        </div>
+                        <div class="layui-inline bdc-button-box">
+                            <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="qureySfxxByHtbh">查询</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="bdc-table-box">
+            <table id="viewTable" lay-filter="viewFilter">
+            </table>
+        </div>
+    </div>
+</div>
+
+<!--付款码-->
+<div id="fkm-div" class="bdc-layer-input bdc-hide">
+    <form class="layui-form" action="">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline" style="width: 420px;padding-left: 5px">
+                <div class="layui-input-inline" style="width: 400px;padding-left: 10px">
+                    <input type="text" name="fkm" placeholder="请输入" id="fkm" class="layui-input" />
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--合同号查询弹窗-->
+<div id="bdc-popup-small" class="bdc-hide layui-layer-wrap" style="display: none;">
+    <form class="layui-form" action="">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">合同编号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="wsxxhtbh" autocomplete="off" placeholder="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">纳税人识别号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="wsxxnsrsbh" autocomplete="off" placeholder="" class="layui-input">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--查询契税税票-->
+<div id="bdc-popup-qssp" class="bdc-popup-small bdc-hide">
+    <form class="layui-form" action="">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">合同编号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="qssphtbh" id="qssphtbh" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label bdc-label-newline">电子税票号码</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="dzspNo" id="dzspNo" lay-verify="title" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline xzq-sele">
+                <label class="layui-form-label">是否存量房</label>
+                <div class="layui-input-inline bdc-radio">
+                    <select name="slfType" id="slfType" lay-verify="required" xm-select-height="34px">
+                        <option value=""></option>
+                        <option value="2">是</option>
+                        <option value="1">否</option>
+                    </select>
+                </div>
+            </div>
+<!--            <div class="layui-inline bdc-frame-button-box">
+                <a id="queryQssp" href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn">查询</a>
+            </div>-->
+        </div>
+    </form>
+</div>
+
+</body>
+<script type="text/html" id="buttonAreaTpl">
+    <div class="title-btn-area">
+
+    </div>
+</script>
+<!--税费统缴单展示分为权利人和义务人展现-->
+<script type="text/html" id="sfxxTpl">
+    {{# if(d.qlrlb){ }}
+    <div class="bdcsfxxForm">
+        <form class="layui-form setOverflow bdcsfxxForm" id="bdcsfxxForm{{d.qlrlb}}">
+            <div class="title-sign bdc-title-sign-btn">
+                {{#if(d.qlrlb == 1){ }}
+                <p>权利人税费统缴单</p>
+                {{# } else if(d.qlrlb == 2) { }}
+                <p>义务人税费统缴单</p>
+                {{# } }}
+                <div class="bdc-title-sign-btn-box">
+                    <button type="button" class="layui-btn layui-btn-sm bdc-secondary-btn hqsfxx" onclick="hqsfxx('{{d.qlrlb || \'\'}}', '{{d.zjh || \'\'}}')"
+                            id="hqsfxx{{d.qlrlb || ''}}">获取税费信息
+                    </button>
+                    <button type="button" class="layui-btn layui-btn-sm bdc-secondary-btn hqsp" onclick="hqsp('{{d.qlrlb || \'\'}}')"
+                            id="hqsp{{d.qlrlb || ''}}">契税税票查询
+                    </button>
+                    <button type="button" class="layui-btn layui-btn-sm bdc-secondary-btn hqwsxx" onclick="hqwsxx('{{d.qlrlb || \'\'}}', '{{d.zjh || \'\'}}')"
+                            id="hqwsxx{{d.qlrlb || ''}}">获取完税信息
+                    </button>
+                    <button type="button" class="layui-btn layui-btn-sm bdc-secondary-btn smxd" onclick="smxd('{{d.qlrlb || \'\'}}')"
+                            id="smxd{{d.qlrlb || ''}}">生成一码
+                    </button>
+                    <button type="button" class="layui-btn layui-btn-sm bdc-secondary-btn posxd" onclick="posxd('{{d.qlrlb || \'\'}}')"
+                            id="posxd{{d.qlrlb || ''}}">POS下单
+                    </button>
+                    <button type="button" class="layui-btn layui-btn-sm bdc-secondary-btn tsjkm" onclick="tsjkm('{{d.qlrlb || \'\'}}')"
+                            id="tsjkm{{d.qlrlb || ''}}">推送缴款码
+                    </button>
+                    <button type="button" class="layui-btn layui-btn-sm bdc-secondary-btn cxjfqk" onclick="cxjfqk('{{d.qlrlb || \'\'}}')"
+                            id="cxjfqk{{d.qlrlb || ''}}">查询缴费情况
+                    </button>
+                    <button type="button" class="layui-btn layui-btn-sm bdc-secondary-btn poszfcg" onclick="poszfcg('{{d.qlrlb || \'\'}}')"
+                            id="poszfcg{{d.qlrlb || ''}}">POS支付成功推送
+                    </button>
+                    <button type="button" class="layui-btn layui-btn-sm bdc-secondary-btn printSftjd" onclick="printSftjd('{{d.qlrlb || \'\'}}')"
+                            id="printSftjd{{d.qlrlb || ''}}">打印
+                    </button>
+                    <button class="layui-btn layui-btn-sm bdc-secondary-btn more-btn{{d.qlrlb || ''}}" type="button" id="moreButton{{d.qlrlb || ''}}">更多</button>
+                    <ul class="title-ui" id="moreBtn{{d.qlrlb || ''}}">
+                        <li class="bdc-btn-more print" onclick="yhkzf('{{d.qlrlb || \'\'}}')" id="yhkzf{{d.qlrlb || ''}}">银行卡支付</li>
+                        <li class="bdc-btn-more print" onclick="fkmzf('{{d.qlrlb || \'\'}}')" id="fkmzf{{d.qlrlb || ''}}">付款码支付</li>
+                        <li class="bdc-btn-more print" onclick="yhkcx('{{d.qlrlb || \'\'}}')" id="yhkcx{{d.qlrlb || ''}}">银行卡撤销</li>
+                        <li class="bdc-btn-more print" onclick="yhktk('{{d.qlrlb || \'\'}}')" id="yhktk{{d.qlrlb || ''}}">银行卡退款</li>
+                        <li class="bdc-btn-more print" onclick="fkmtk('{{d.qlrlb || \'\'}}')" id="fkmtk{{d.qlrlb || ''}}">付款码退款</li>
+                        <li class="bdc-btn-more print" onclick="cdxp('{{d.qlrlb || \'\'}}')" id="cdxp{{d.qlrlb || ''}}">重打小票</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <input type="hidden" class="sfxx" name="qlrlb" value="{{d.qlrlb || ''}}" id="qlrlb">
+                <div class="layui-inline">
+                    {{#if(d.qlrlb == 1){}}
+                    <label class="layui-form-label change-label-width"><span class="required-span"></span>权利人名称</label>
+                    {{# } else { }}
+                    <label class="layui-form-label change-label-width"><span class="required-span"></span>义务人名称</label>
+                    {{# } }}
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" title="{{d.qlrmc || ''}}" class="layui-input"
+                               value="{{d.qlrmc || ''}}"
+                               id="qlrmc{{d.qlrlb}}" name="qlrmc" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline bdc-two-column">
+                    <label class="layui-form-label change-label-width"><span class="required-span"></span>证件号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" title="{{d.zjh || ''}}" class="layui-input"
+                               value="{{d.zjh || ''}}" id="zjh{{d.qlrlb}}" name="zjh" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width bdc-label-newline"><span class="required-span"></span>申请人<br>联系电话</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" title="{{d.lxdh || ''}}" class="layui-input"
+                               value="{{d.lxdh || ''}}" id="lxdh{{d.qlrlb}}" name="lxdh" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    {{#if(d.qlrlb == 1){}}
+                    <label class="layui-form-label change-label-width bdc-label-newline">税费统缴码</label>
+                    {{# } else { }}
+                    <label class="layui-form-label change-label-width bdc-label-newline">缴税二维码</label>
+                    {{# } }}
+                    <img class="bdc-inline-code ewm{{d.qlrlb}}"  src=""  alt="未生成二维码">
+                </div>
+                <div id="outerdiv" style="position:fixed;top:0;left:0;background:rgba(0,0,0,0.7);z-index:2;width:100%;height:100%;display:none;">
+                    <div id="innerdiv" style="position:absolute;">
+                        <img id="bigimg" style="border:5px solid #fff;" src="" />
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        {{#if(d.qlrlb == 1){ }}
+        <div class="basic-info" id="qlrsfxm"></div>
+        {{# }else{ }}
+        <div class="basic-info" id="ywrsfxm"></div>
+        {{# } }}
+    </div>
+    {{#  } }}
+</script>
+<!--收费项目-->
+<script type="text/html" id="sfxmTpl">
+    <form class="common-form sl-from layui-form" id="bdcSfxmForm">
+        <table class="layui-table bdc-table-box bdcSfxxTable" border="1" name="bdcSfxxTable" id="bdcSfxxTable">
+            <thead>
+            <tr class="gray-tr">
+                <td width="50px">序号</td>
+                <td style="min-width: 200px">收费项目</td>
+                <td>收费金额</td>
+                <td>缴费状态</td>
+            </tr>
+            </thead>
+            {{# if(d.bdcSlSfxmDOList.length==0) { }}
+            <tr class="bdc-table-none">
+                <td colspan="7">
+                    <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无相关统缴单信息
+                    </div>
+                </td>
+            </tr>
+            {{# } else { }}
+            <tbody>
+            {{# layui.each(d.bdcSlSfxmDOList, function(i, bdcsfxm){ }}
+            <tr id="sfxmTrTpl">
+                <td>{{i+1}}</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" name="sfxmdm" attr="sfxmmc" lay-filter="sfxmdm{{d.qlrlb}}" value="{{bdcsfxm.sfxmdm || ''}}" id="sfxmdm{{d.qlrlb}}" class="sfxm" disabled>
+                    </div>
+                </td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="number" lay-verify="" attr="ysje" name="ysje" value="{{bdcsfxm.ysje || ''}}" disabled
+                               id="ysje" class="layui-input sfxm bdc-ysje">
+                    </div>
+                </td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" lay-verify="" attr="sfzt" name="sfzt" value="{{convertSfztDmToMc(bdcsfxm.sfxmdm, bdcsfxm.sfzt) || ''}}"
+                               id="sfzt" class="layui-input sfxm" disabled>
+                    </div>
+                </td>
+            </tr>
+            {{# }); }}
+            </tbody>
+            {{# } }}
+            <tr>
+                <td>合计</td>
+                <td colspan="6">
+                    <div class="sfxxtext">
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input sfxx" lay-verify="" id="hj" name="hj" disabled="off"
+                                   style="text-align:left;padding-left: 6px" value=''>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </form>
+</script>
+
+
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/bdcui/js/print/print-common.js"></script>
+<script src="../../static/lib/mathjs/math.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src='../../static/js/form-not-full.js'></script>
+<script src='../../static/js/slym/loadButton.js'></script>
+<script src="../../static/js/sfxx/sftjd.js"></script>
+<script src="../../static/js/slym/print.js"></script>
+<script src='../../static/js/formCenter.js'></script>
+<!--规则验证公共方法-->
+<script src='../../static/js/gzyzCommon.js'></script>
+<script type="text/javascript">
+    var processInsId = getQueryString("processInsId");
+    var xmid = getQueryString("xmid");
+    var formStateId = getQueryString("formStateId");
+    var readOnly = getQueryString("readOnly");
+    var printValue = getQueryString("print");
+    var zxlc = getQueryString("zxlc")
+</script>
+</html>

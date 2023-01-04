@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcZhjgMapper">
+
+    <select id="listBdcZhjgByPageOrder" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcZhjgQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcZhjgDTO">
+        select distinct m.xmid, case
+        when m.zdzhyt = '061' then
+        m.qlr
+        else
+        (case
+        when m.qlr like '%公司' then
+        m.qlr
+        else
+        ''
+        end)
+        end qlr,
+        case
+        when m.ywr like '%公司' then
+        m.ywr
+        else
+        ''
+        end ywr,
+        s.szsxqc ssqx,
+        m.zl,
+        z.mc qlxz,
+        m.bdcdyh,
+        d.mc zdzhyt,
+        m.zdzhmj,
+        q.jzmj,
+        t.mc ghyt,
+        round(q.jyjg, 2) jyjg,
+        m.bdcqzh,
+        s.fzsj
+        from bdc_xm m
+        inner join bdc_xm_zs_gx l
+        on m.xmid = l.xmid
+        left join bdc_zs s
+        on s.zsid = l.zsid
+        left join bdc_fdcq q
+        on q.xmid = m.xmid
+        left join bdc_zd_fwyt t
+        on t.dm = q.ghyt
+        left join bdc_zd_tdyt d
+        on d.dm = m.zdzhyt
+        left join bdc_zd_fwxz z
+        on z.dm = q.fwxz
+        where m.djlx in ('100', '200')
+        and s.zslx = '1'
+        and (m.qlr like '%公司' or m.ywr like '%公司')
+        <if test="startTime != null and startTime != ''">
+            AND to_char(s.fzsj,'yyyy-MM-dd') >= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            AND to_char(s.fzsj,'yyyy-MM-dd') <![CDATA[<=]]> #{endTime}
+        </if>
+
+        union all
+        select distinct m.xmid,m.qlr,
+        case
+        when m.ywr like '%公司%' then
+        m.ywr
+        else
+        ''
+        end ywr,
+        s.szsxqc ssqx,
+        m.zl,
+        z.mc qlxz,
+        m.bdcdyh,
+        d.mc zdzhyt,
+        m.zdzhmj,
+        q.jzmj,
+        t.mc ghyt,
+        round(q.jyjg, 2) jyjg,
+        m.bdcqzh,
+        s.fzsj
+        from bdc_xm m
+        inner join bdc_xm_zs_gx l
+        on m.xmid = l.xmid
+        left join bdc_zs s
+        on s.zsid = l.zsid
+        left join bdc_fdcq q
+        on q.xmid = m.xmid
+        left join bdc_zd_fwyt t
+        on t.dm = q.ghyt
+        left join bdc_zd_tdyt d
+        on d.dm = m.zdzhyt
+        left join bdc_zd_fwxz z
+        on z.dm = q.fwxz
+        where m.djlx in ('100', '200')
+        and s.zslx = '1'
+        and (m.zdzhyt = '061'
+        and (m.qlr not like '%公司' and m.ywr not like '%公司'))
+        <if test="startTime != null and startTime != ''">
+            AND to_char(s.fzsj,'yyyy-MM-dd') >= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            AND to_char(s.fzsj,'yyyy-MM-dd') <![CDATA[<=]]> #{endTime}
+        </if>
+
+    </select>
+
+
+    <select id="listBdcZhjg" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcZhjgQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcZhjgDTO">
+        select distinct m.xmid, case
+        when m.zdzhyt = '061' then
+        m.qlr
+        else
+        (case
+        when m.qlr like '%公司' then
+        m.qlr
+        else
+        ''
+        end)
+        end qlr,
+        case
+        when m.ywr like '%公司' then
+        m.ywr
+        else
+        ''
+        end ywr,
+        s.szsxqc ssqx,
+        m.zl,
+        z.mc qlxz,
+        m.bdcdyh,
+        d.mc zdzhyt,
+        m.zdzhmj,
+        q.jzmj,
+        t.mc ghyt,
+        round(q.jyjg, 2) jyjg,
+        m.bdcqzh,
+        s.fzsj
+        from bdc_xm m
+        inner join bdc_xm_zs_gx l
+        on m.xmid = l.xmid
+        left join bdc_zs s
+        on s.zsid = l.zsid
+        left join bdc_fdcq q
+        on q.xmid = m.xmid
+        left join bdc_zd_fwyt t
+        on t.dm = q.ghyt
+        left join bdc_zd_tdyt d
+        on d.dm = m.zdzhyt
+        left join bdc_zd_fwxz z
+        on z.dm = q.fwxz
+        where m.djlx in ('100', '200')
+        and s.zslx = '1'
+        and (m.qlr like '%公司' or m.ywr like '%公司')
+        <if test="startTime != null and startTime != ''">
+            AND to_char(s.fzsj,'yyyy-MM-dd') >= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            AND to_char(s.fzsj,'yyyy-MM-dd') <![CDATA[<=]]> #{endTime}
+        </if>
+
+        union all
+        select distinct m.xmid,m.qlr,
+        case
+        when m.ywr like '%公司%' then
+        m.ywr
+        else
+        ''
+        end ywr,
+        s.szsxqc ssqx,
+        m.zl,
+        z.mc qlxz,
+        m.bdcdyh,
+        d.mc zdzhyt,
+        m.zdzhmj,
+        q.jzmj,
+        t.mc ghyt,
+        round(q.jyjg, 2) jyjg,
+        m.bdcqzh,
+        s.fzsj
+        from bdc_xm m
+        inner join bdc_xm_zs_gx l
+        on m.xmid = l.xmid
+        left join bdc_zs s
+        on s.zsid = l.zsid
+        left join bdc_fdcq q
+        on q.xmid = m.xmid
+        left join bdc_zd_fwyt t
+        on t.dm = q.ghyt
+        left join bdc_zd_tdyt d
+        on d.dm = m.zdzhyt
+        left join bdc_zd_fwxz z
+        on z.dm = q.fwxz
+        where m.djlx in ('100', '200')
+        and s.zslx = '1'
+        and (m.zdzhyt = '061'
+        and (m.qlr not like '%公司' and m.ywr not like '%公司'))
+        <if test="startTime != null and startTime != ''">
+            AND to_char(s.fzsj,'yyyy-MM-dd') >= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            AND to_char(s.fzsj,'yyyy-MM-dd') <![CDATA[<=]]> #{endTime}
+        </if>
+
+    </select>
+
+</mapper>

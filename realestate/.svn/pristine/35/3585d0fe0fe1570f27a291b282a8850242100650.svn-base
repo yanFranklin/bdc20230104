@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>评价统计</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css">
+    <link rel="stylesheet" href="../../static/css/common.css"/>
+    <style>
+        .bdc-switch {
+            height: 50px;
+            line-height: 50px;
+            background-color: #f3f4f6;
+            border: 1px solid #d0d5da;
+            border-bottom: none;
+            padding-left: 15px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        .bdc-wd-inline{
+            position: absolute;
+            top: 19px;
+            right: 65px;
+            z-index: 999;
+        }
+        #exportExcel{
+            position: absolute;
+            top: 13px;
+            left: 30px;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+<div class="bdc-percentage-container">
+    <!--查询条件-->
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <!--默认一行的-->
+            <form class="layui-form" action="">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">部门名称</label>
+                        <div class="layui-input-inline bdc-radio">
+                            <select class="bdc-pjtj bdc-bmmc" name="bmmc" xm-select="selectBmmc" xm-select-radio xm-select-height="34px">
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">办理人员</label>
+                        <div class="layui-input-inline bdc-radio">
+                            <select  class="bdc-pjtj bdc-blry" name="blry" xm-select="selectBlry" xm-select-radio xm-select-height="34px">
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">开始时间</label>
+                        <div class="layui-input-inline">
+                            <input id="kssj" autocomplete="off" class="layui-input test-item bdc-pjtj" type="text"
+                                   name="kssj" placeholder="请选择"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">截止时间</label>
+                        <div class="layui-input-inline">
+                            <input id="jssj" autocomplete="off" class="layui-input test-item bdc-pjtj" type="text"
+                                   name="jzsj" placeholder="请选择"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">流程名称</label>
+                        <div class="layui-input-inline bdc-radio">
+                            <select class="bdc-pjtj bdc-ywmc" lay-filter="lcmcFilter" name="ywmc" xm-select="selectYwmc" xm-select-radio xm-select-height="34px">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">节点名称</label>
+                        <div class="layui-input-inline bdc-radio">
+                            <select class="bdc-pjtj bdc-jdmc" lay-filter="jdmcFilter" name="jdmc" xm-select="selectJdmc" xm-select-radio xm-select-height="34px">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">受理编号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="ywbh" placeholder="请输入" autocomplete="off" class="layui-input bdc-pjtj">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                        <button type="reset" id="reset" class="layui-btn bdc-secondary-btn reset-btn">重置</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <!--表格-->
+    <div class="bdc-table-box">
+            <div class="layui-input-inline bdc-wd-inline layui-form">
+                <select lay-filter="wdFilter" name="wd">
+                    <option value="default" selected>请选择</option>
+                    <option value="dept">部门</option>
+                    <option value="user">人员</option>
+                    <option value="process">流程</option>
+                    <option value="node">节点</option>
+                    <option value="userAndProcess">人员+流程</option>
+                </select>
+            </div>
+        <table class="layui-table" id="pjtjTable" lay-filter="pjtjFilter"></table>
+    </div>
+</div>
+<!--表格上面功能按钮-->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn bdc-hide" lay-event="exportExcel" id="exportExcel">导出Excel</button>
+    </div>
+</script>
+<!--隐藏form，为了Excel导出缓存数据使用-->
+<form style="display: none" action="/realestate-inquiry-ui/excel/export" method="POST" id="form">
+    <input type="hidden" id="fileName"   name="fileName"/>
+    <input type="hidden" id="sheetName"  name="sheetName"/>
+    <input type="hidden" id="cellTitle"  name="cellTitle"/>
+    <input type="hidden" id="cellWidth"  name="cellWidth"/>
+    <input type="hidden" id="cellKey"    name="cellKey"/>
+    <input type="hidden" id="mergeSameCell"    name="mergeSameCell"/>
+    <input type="hidden" id="mergeCellKey"    name="mergeCellKey"/>
+    <input type="hidden" id="data"       name="data"/>
+</form>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/count/pjtj.js"></script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: natural-ui-app
+    admin:
+      enabled: true
+  cloud:
+    config:
+      name: natural-ui-app
+      enabled: false
+      failFast: false
+      discovery:
+        enabled: false
+        service-id: config-app
+  sleuth:
+    sampler:
+      percentage: 1
+  http:
+    encoding:
+      charset: UTF-8
+      force: true
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 1000MB
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+
+
+eureka:
+  instance:
+    hostname: ${spring.application.name}
+    preferIpAddress: true
+#    ip-address: 192.168.50.36
+    #instance-id: lyqpc:8666
+    #status-page-url-path: ${server.context-path}/info
+  client:
+    serviceUrl:
+      defaultZone: ${app.center}
+    healthcheck:
+      enabled: true
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 10000
+        loggerLevel: basic
+  httpclient:
+    enabled: true
+  hystrix:
+    enabled: true
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+#          strategy: THREAD
+          strategy: SEMAPHORE
+          semaphore:
+            maxConcurrentRequests: 1000
+          thread:
+            timeoutInMilliseconds: 300000
+
+ribbon:
+  okhttp:
+    enabled: true
+  eureka:
+    enabled: true
+  ConnectTimeout: 1000000
+  ReadTimeout: 2000000
+#  超时后最大重连次数
+  MaxAutoRetries: 0
+  MaxAutoRetriesNextServer: 0
+
+management:
+  security:
+    enabled: false
+
+endpoints:
+  enabled: true
+  shutdown:
+    enabled: true
+
+security:
+  basic:
+    enabled: false
+  oauth2:
+    sso:
+      login-path: /login
+    client:
+      access-token-uri: ${app.oauth}/oauth/token
+      user-authorization-uri: ${app.oauth}/oauth/authorize
+      client-id: naturalUiClient
+      client-secret: naturalUiClientSecret
+    resource:
+      prefer-token-info: true
+      user-info-uri: ${app.oauth}/oauth/user
+      token-info-uri: ${app.oauth}/oauth/check_token
+      loadBalanced: true

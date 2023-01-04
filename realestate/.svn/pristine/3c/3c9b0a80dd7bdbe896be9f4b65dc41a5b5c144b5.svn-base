@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.check.core.mapper.RuleSqlMapper">
+    <!-- 检查是否存在在注销（不动产数据）状态下的权利创建变更、转移、换证、遗失补证、更正、期转现等登记流程-->
+    <select id="selectBdcZxDoXm" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        select x.xmid,x.slbh,x.djxl,x.bdcdyh,r1.bdcqzh xzwh,r1.xmid xzwhxmid,x.gzldyid from bdc_xm x
+        inner join bdc_xm_lsgx r on x.xmid = r.xmid
+        <if test="xmid != null and xmid !=''">
+            and x.xmid = #{xmid}
+        </if>
+        left join bdc_xm r1 on r1.xmid = r.yxmid
+        <![CDATA[ where r1.qszt = 2  and nvl(x.ajzt,1)=1 and x.djsj is null and x.dbr is null ]]>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!--检查已登簿（不动产数据）的变更、转移、注销、换证、遗失补证、更正、期转现等登记流程在登簿时产权证是否已被注销-->
+    <select id="selectBdcZxDoXmYdb" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO" resultType="java.util.Map">
+        select x.xmid,x.slbh,x.djxl,x.bdcdyh,z.bdcqzh xzwh,z.xmid xzwhxmid,x.gzldyid from bdc_xm x
+        inner join bdc_xm_lsgx r on x.xmid = r.xmid
+        <if test="xmid != null and xmid !=''">
+            and x.xmid = #{xmid}
+        </if>
+        inner join bdc_xm z on z.xmid = r.yxmid
+        inner join bdc_xm_lsgx c on c.yxmid = z.xmid and c.xmid!=x.xmid
+        left join (
+        select zxywh,xmid,qszt,ZXDJSJ  from BDC_TDSYQ
+        UNION ALL
+        select zxywh,xmid,qszt,ZXDJSJ  from Bdc_Jsydsyq
+        UNION ALL
+        select zxywh,xmid,qszt,ZXDJSJ  from BDC_FDCQ
+        UNION ALL
+        select zxywh,xmid,qszt,ZXDJSJ  from Bdc_Gjzwsyq
+        UNION ALL
+        select zxywh,xmid,qszt,ZXDJSJ  from BDC_TDCBNYDSYQ
+        UNION ALL
+        select zxywh,xmid,qszt,ZXDJSJ  from BDC_LQ
+        UNION ALL
+        select zxywh,xmid,qszt,ZXDJSJ  from BDC_HYSYQ
+        UNION ALL
+        select zxywh,xmid,qszt,ZXDJSJ  from BDC_FDCQ3
+        UNION ALL
+        select zxywh,xmid,qszt,ZXDJSJ  from Bdc_Qtxgql
+        UNION ALL
+        select ZXDYYWH zxywh,xmid,qszt,ZXDYDJSJ ZXDJSJ  from Bdc_Dyiq
+        UNION ALL
+        select ZXDYYWH zxywh,xmid,qszt,ZXDYDJSJ ZXDJSJ from BDC_DYAQ
+        UNION ALL
+        select JFYWH zxywh,xmid,qszt,JFDJSJ ZXDJSJ from BDC_CF
+        UNION ALL
+        select ZXYGYWH zxywh,xmid,qszt,ZXYGDJSJ ZXDJSJ from BDC_YG
+        UNION ALL
+        select ZXYYYWH zxywh,xmid,qszt,ZXYYDJSJ ZXDJSJ from BDC_YY
+        ) t on c.xmid = t.xmid
+        inner join bdc_xm m on m.xmid=c.xmid
+        <![CDATA[ where z.qszt = 2  and t.xmid is null and  m.djsj is not null and  x.djsj > m.djsj  ]]>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+</mapper>        

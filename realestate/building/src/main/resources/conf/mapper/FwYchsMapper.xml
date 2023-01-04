@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.building.core.mapper.FwYchsMapper">
+
+    <select id="listYchsByPageOrder" parameterType="map" resultType="cn.gtmap.realestate.common.core.domain.building.FwYchsDO">
+        SELECT T.FW_HS_INDEX,T.FW_DCB_INDEX,T.YSDM,T.BDCDYH,T.WLCS,T.DYCS,T.SXH,T.FJH,T.QLID,T.CG,T.DYH,
+        T.CH,T.YCJZMJ,T.YCTNJZMJ,T.YCFTJZMJ,T.YCDXBFJZMJ,T.YCQTJZMJ,T.YCFTXS,T.SCJZMJ,T.SCTNJZMJ,T.SCFTJZMJ,
+        T.SCDXBFJZMJ,T.SCQTJZMJ,T.SCFTXS,T.GYTDMJ,T.FTTDMJ,T.DYTDMJ,T.ZL,T.JYJG,T.GHYT,T.GHYT2,T.GHYT3,T.FWLX,
+        T.FWXZ,T.D,T.N,T.X,T.B,T.CQLY,T.FJSM,T.DCYJ,T.DCZ,T.DCSJ,T.FWHX,T.HXJG,T.JCZXCD,T.QLZT,T.HBFX,T.HBHS,
+        T.GYQK,T.SFCSBH,T.FCDAH,T.FW_HST_INDEX,T.BDCZT,T.BZ,T.FWBM,T.BGBH,T.ISFSSS,T.QSRQ,T.SYFTTDMJJS,T.TDSYQLX,
+        T.TDYT,T.ZZRQ,T.YSFWBM  FROM fw_ychs T
+        <where>
+            <if test="fwbms != null and fwbms.size() >0 ">
+                <foreach collection="fwbms" item="item" open="(" separator=" or " close=")">
+                    (t.fwbm = #{item} OR t.fwbm LIKE '%;'||#{item} OR t.fwbm LIKE #{item}||';%')
+                </foreach>
+            </if>
+            <if test="fwDcbIndex != null and fwDcbIndex != ''">
+                AND t.fw_dcb_index = #{fwDcbIndex}
+            </if>
+            <if test="zl != null and zl != ''">
+                AND t.zl like '%' || #{zl} || '%'
+            </if>
+            <if test="fjh != null and fjh != ''">
+                AND t.fjh = #{fjh}
+            </if>
+            <if test="dyh != null and dyh != ''">
+                AND t.dyh = #{dyh}
+            </if>
+            <if test="fwbm != null and fwbm != ''">
+                AND t.fwbm = #{fwbm}
+            </if>
+            <if test="fcdah != null and fcdah != ''">
+                AND t.fcdah = #{fcdah}
+            </if>
+            <if test="fwhsIndexList != null and fwhsIndexList.size > 0">
+                AND t.fw_hs_index in
+                <foreach collection="fwhsIndexList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="listYchsWithQlr" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.dto.building.FwhsQlrDTO">
+        SELECT T.FW_HS_INDEX,T.FW_DCB_INDEX,T.YSDM,T.BDCDYH,T.WLCS,T.DYCS,T.SXH,T.FJH,T.QLID,T.CG,T.DYH,
+        T.CH,T.YCJZMJ,T.YCTNJZMJ,T.YCFTJZMJ,T.YCDXBFJZMJ,T.YCQTJZMJ,T.YCFTXS,T.SCJZMJ,T.SCTNJZMJ,T.SCFTJZMJ,
+        T.SCDXBFJZMJ,T.SCQTJZMJ,T.SCFTXS,T.GYTDMJ,T.FTTDMJ,T.DYTDMJ,T.ZL,T.JYJG,T.GHYT,T.GHYT2,T.GHYT3,T.FWLX,
+        T.FWXZ,T.D,T.N,T.X,T.B,T.CQLY,T.FJSM,T.DCYJ,T.DCZ,T.DCSJ,T.FWHX,T.HXJG,T.JCZXCD,T.QLZT,T.HBFX,T.HBHS,
+        T.GYQK,T.SFCSBH,T.FCDAH,T.FW_HST_INDEX,T.BDCZT,T.BZ,T.FWBM,T.BGBH,T.ISFSSS,T.QSRQ,T.SYFTTDMJJS,T.TDSYQLX,
+        T.TDYT,T.Fwbm,T.ZZRQ,T.YSFWBM,T.QSMYC,T.ZZMYC,l.fwjg ,wm_concat(to_char(f.qlr)) qlr FROM fw_ychs T
+        left join fw_fcqlr f on f.fw_index = t.FW_HS_INDEX
+        left join fw_ljz l on l.fw_dcb_index = t.fw_dcb_index
+        <where>
+            <if test="fwDcbIndex != null and fwDcbIndex != ''">
+                AND t.fw_dcb_index = #{fwDcbIndex}
+            </if>
+        </where>
+        group by (T.FW_HS_INDEX,T.FW_DCB_INDEX,T.YSDM,T.BDCDYH,T.WLCS,T.DYCS,T.SXH,T.FJH,T.QLID,T.CG,T.DYH,
+        T.CH,T.YCJZMJ,T.YCTNJZMJ,T.YCFTJZMJ,T.YCDXBFJZMJ,T.YCQTJZMJ,T.YCFTXS,T.SCJZMJ,T.SCTNJZMJ,T.SCFTJZMJ,
+        T.SCDXBFJZMJ,T.SCQTJZMJ,T.SCFTXS,T.GYTDMJ,T.FTTDMJ,T.DYTDMJ,T.ZL,T.JYJG,T.GHYT,T.GHYT2,T.GHYT3,T.FWLX,
+        T.FWXZ,T.D,T.N,T.X,T.B,T.CQLY,T.FJSM,T.DCYJ,T.DCZ,T.DCSJ,T.FWHX,T.HXJG,T.JCZXCD,T.QLZT,T.HBFX,T.HBHS,
+        T.GYQK,T.SFCSBH,T.FCDAH,T.FW_HST_INDEX,T.BDCZT,T.BZ,T.FWBM,T.BGBH,T.ISFSSS,T.QSRQ,T.SYFTTDMJJS,T.TDSYQLX,
+        T.TDYT,T.FWBM,T.ZZRQ,T.ysFWBM,T.QSMYC,T.ZZMYC,l.FWJG)
+    </select>
+
+    <select id="listFwYchsByHouseId" parameterType="map" resultType="map">
+        SELECT T.FW_HS_INDEX,T.FW_DCB_INDEX,T.YSDM,T.BDCDYH,T.WLCS,T.DYCS,T.SXH,T.FJH,T.QLID,T.CG,T.DYH,
+        T.CH,T.YCJZMJ,T.YCTNJZMJ,T.YCFTJZMJ,T.YCDXBFJZMJ,T.YCQTJZMJ,T.YCFTXS,T.SCJZMJ,T.SCTNJZMJ,T.SCFTJZMJ,
+        T.SCDXBFJZMJ,T.SCQTJZMJ,T.SCFTXS,T.GYTDMJ,T.FTTDMJ,T.DYTDMJ,T.ZL,T.JYJG,T.GHYT,T.GHYT2,T.GHYT3,T.FWLX,
+        T.FWXZ,T.D,T.N,T.X,T.B,T.CQLY,T.FJSM,T.DCYJ,T.DCZ,T.DCSJ,T.FWHX,T.HXJG,T.JCZXCD,T.QLZT,T.HBFX,T.HBHS,
+        T.GYQK,T.SFCSBH,T.FCDAH,T.FW_HST_INDEX,T.BDCZT,T.BZ,T.FWBM,T.BGBH,T.ISFSSS,T.QSRQ,T.SYFTTDMJJS,T.TDSYQLX,
+        T.TDYT,T.ZZRQ,T.YSFWBM,t.HOUSE_ID FROM fw_ychs T
+        <where>
+            <if test="houseid != null and houseid != ''">
+                AND t.HOUSE_ID = #{houseid}
+            </if>
+        </where>
+    </select>
+
+    <select id="listFwYchsByZl" parameterType="map" resultType="map">
+        SELECT T.FW_HS_INDEX,T.FW_DCB_INDEX,T.YSDM,T.BDCDYH,T.WLCS,T.DYCS,T.SXH,T.FJH,T.QLID,T.CG,T.DYH,
+        T.CH,T.YCJZMJ,T.YCTNJZMJ,T.YCFTJZMJ,T.YCDXBFJZMJ,T.YCQTJZMJ,T.YCFTXS,T.SCJZMJ,T.SCTNJZMJ,T.SCFTJZMJ,
+        T.SCDXBFJZMJ,T.SCQTJZMJ,T.SCFTXS,T.GYTDMJ,T.FTTDMJ,T.DYTDMJ,T.ZL,T.JYJG,T.GHYT,T.GHYT2,T.GHYT3,T.FWLX,
+        T.FWXZ,T.D,T.N,T.X,T.B,T.CQLY,T.FJSM,T.DCYJ,T.DCZ,T.DCSJ,T.FWHX,T.HXJG,T.JCZXCD,T.QLZT,T.HBFX,T.HBHS,
+        T.GYQK,T.SFCSBH,T.FCDAH,T.FW_HST_INDEX,T.BDCZT,T.BZ,T.FWBM,T.BGBH,T.ISFSSS,T.QSRQ,T.SYFTTDMJJS,T.TDSYQLX,
+        T.TDYT,T.ZZRQ,T.YSFWBM,t.HOUSE_ID FROM fw_ychs T
+        <where>
+            <if test="zl != null and zl != ''">
+                AND t.ZL like '%' || #{zl} || '%'
+            </if>
+        </where>
+    </select>
+
+    <select id="listFwYchsByYsfwbm" parameterType="map" resultType="cn.gtmap.realestate.common.core.domain.building.FwYchsDO">
+        SELECT T.FW_HS_INDEX,T.FW_DCB_INDEX,T.YSDM,T.BDCDYH,T.WLCS,T.DYCS,T.SXH,T.FJH,T.QLID,T.CG,T.DYH,
+        T.CH,T.YCJZMJ,T.YCTNJZMJ,T.YCFTJZMJ,T.YCDXBFJZMJ,T.YCQTJZMJ,T.YCFTXS,T.SCJZMJ,T.SCTNJZMJ,T.SCFTJZMJ,
+        T.SCDXBFJZMJ,T.SCQTJZMJ,T.SCFTXS,T.GYTDMJ,T.FTTDMJ,T.DYTDMJ,T.ZL,T.JYJG,T.GHYT,T.GHYT2,T.GHYT3,T.FWLX,
+        T.FWXZ,T.D,T.N,T.X,T.B,T.CQLY,T.FJSM,T.DCYJ,T.DCZ,T.DCSJ,T.FWHX,T.HXJG,T.JCZXCD,T.QLZT,T.HBFX,T.HBHS,
+        T.GYQK,T.SFCSBH,T.FCDAH,T.FW_HST_INDEX,T.BDCZT,T.BZ,T.FWBM,T.BGBH,T.ISFSSS,T.QSRQ,T.SYFTTDMJJS,T.TDSYQLX,
+        T.TDYT,T.ZZRQ,T.YSFWBM FROM fw_ychs T
+        <where>
+            <if test="YSFWBM != null and YSFWBM != ''">
+                AND t.YSFWBM = #{YSFWBM}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--宗地基本信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.KttZdjbxxMapper">
+
+    <select id="queryKttZdjbxxList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.KttZdjbxxDO">
+        SELECT 0 AS bsm,
+
+        b.zddm,
+        x.bdcdyh,
+        b.zdtzm,
+        b.zl,
+        b.zdmj,
+        b.mjdw,
+        b.yt,
+        b.dj,
+        round(b.jg,4) jg,
+        b.qllx,
+        b.qlxz,
+        b.qlsdfs,
+        b.rjl,
+        b.jzmd,
+        b.jzxg,
+        b.zdszd,
+        b.zdszb,
+        b.zdszn,
+        b.zdszx,
+        '/' AS zdt,
+        b.zddm djh,
+        '/' dah,
+        b.fj bz,
+        nvl(b.zt,'0') zt,
+        substr(x.bdcdyh,0,6) as qxdm,
+        nvl(y.mc,'/') as ghytmc,
+        nvl(h.ydyhfldm,'/') as ydyhfl,
+        t.dkbm as dkdm,
+        j.jedw as jgdw,
+        a.jd jdh,
+        a.jf jfh,
+        a.zu zh
+        FROM bdc_bdcdjb_zdjbxx b
+        LEFT JOIN bdc_bdcdjb a ON a.zdzhh = b.zddm
+        LEFT JOIN bdc_xm x ON substr(x.BDCDYH,0,19) = b.zddm
+        LEFT JOIN BDC_ZD_TDYT y ON y.dm = b.yt
+        LEFT JOIN BDC_TDCBNYDSYQ t ON substr(t.BDCDYH,0,19) = b.zddm
+        LEFT JOIN tdyt_ydyhfl_dzb h ON h.tdytdm = b.yt
+        left join BDC_JSYDSYQ j on substr(j.BDCDYH,0,19) = b.zddm
+        where x.bdcdyh is not null
+        <if test="ywh != null and ywh !=''">
+            AND x.xmid = #{ywh}
+        </if>
+        <if test="bdcdyh != null and bdcdyh !=''">
+            AND x.bdcdyh = #{bdcdyh}
+        </if>
+    </select>
+
+</mapper>

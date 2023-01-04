@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.certificate.core.mapper.BdcDzzzLogMapper">
+
+    <insert id="insertBdcDzzzLog" parameterType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzLogDO">
+        INSERT INTO bdc_dzzz_log ( logid,username,userid,czrq,controller, parmjson,ip,mac, computername, reason, bdcqzh, ywh, zzbs, status, message, dwdm)
+        VALUES (#{logId,jdbcType=VARCHAR},#{userName,jdbcType=VARCHAR},#{userId,jdbcType=VARCHAR},#{czrq},#{controller,jdbcType=VARCHAR}
+        ,#{paramJson,jdbcType=VARCHAR},#{ip,jdbcType=VARCHAR},#{mac,jdbcType=VARCHAR},#{computerName,jdbcType=DATE},#{reason,jdbcType=VARCHAR}
+        ,#{bdcqzh,jdbcType=VARCHAR},#{ywh,jdbcType=VARCHAR},#{zzbs,jdbcType=VARCHAR},#{status,jdbcType=INTEGER},#{message,jdbcType=VARCHAR}
+        ,#{dwdm,jdbcType=VARCHAR})
+     </insert>
+
+    <update id="updateBdcDzzzLogByLogid" parameterType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzLogDO">
+        UPDATE bdc_dzzz_log t
+        <set>
+            <if test="message != null and message != ''">
+                t.message = #{message} ,
+            </if>
+            <if test="status != null">
+                t.status = #{status} ,
+            </if>
+        </set>
+        WHERE t.logid = #{logId}
+    </update>
+
+    <select id="queryBdcDzzzLogByLogid" parameterType="string"
+            resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzLogDO">
+        SELECT t.logid,t.username,t.userid,t.czrq,t.controller,t.parmjson AS paramJson,t.ip,t.mac,t.computername,t.reason
+        ,t.bdcqzh,t.ywh,t.status,t.message FROM bdc_dzzz_log t WHERE t.logid = #{logId}
+    </select>
+
+    <select id="queryByDzzzLogByczlx"
+            parameterType="cn.gtmap.realestate.common.core.dto.realestate_e_certificate.DzzzLogDO"
+            resultType="cn.gtmap.realestate.common.core.dto.realestate_e_certificate.DzzzLogDO">
+        SELECT t.logid,t.username,t.userid,t.czrq,t.controller,t.parmjson AS
+        paramJson,t.ip,t.mac,t.computername,t.reason
+        ,t.bdcqzh,t.ywh,t.status,t.message FROM bdc_dzzz_log t
+        <where>
+            <if test="null != bdcqzh and bdcqzh != ''">
+                and t.bdcqzh = #{bdcqzh}
+            </if>
+            <if test="null != controller and controller != ''">
+                and t.controller like '%' || #{controller} || '%'
+            </if>
+            and rownum = 1
+        </where>
+
+        order by t.czrq desc
+
+    </select>
+
+    <select id="listZzxxLogByPage" parameterType="map"
+            resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzLogDO">
+        SELECT t.logid AS logId,t.username AS userName,t.userid,t.czrq,t.controller,t.parmjson AS
+        paramJson,t.ip,t.mac,t.computername,t.reason
+        ,t.zzbs,t.bdcqzh,t.ywh,t.status,t.message,t.dwdm FROM bdc_dzzz_log t
+        <where>
+            1=1
+            <if test="username != null and username != ''">
+                AND t.username LIKE '%' || #{username} || '%'
+            </if>
+            <if test="controller != null and controller != ''">
+                AND t.controller LIKE '%' || #{controller} || '%'
+            </if>
+            <if test="bdcqzh != null and bdcqzh != ''">
+                AND t.bdcqzh LIKE '%' || #{bdcqzh} || '%'
+            </if>
+            <if test="zzbs != null and zzbs != ''">
+                AND t.zzbs LIKE '%' || #{zzbs} || '%'
+            </if>
+            <if test="status != null and status != ''">
+                AND t.status = #{status}
+            </if>
+            <if test="dwdm != null and dwdm != ''">
+                AND t.dwdm LIKE '%' || #{dwdm} || '%'
+            </if>
+        </where>
+        ORDER BY t.czrq DESC
+    </select>
+
+    <select id="listDzzzClLogByPage" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+        l.BDCQZH, y.ZL, z.ZZBFRQ, 'status' as status , z.ZZQZSJ,z.ZZQZLJ, l.MESSAGE, z.ZZBS, l.CONTROLLER, l.LOGID,
+        z.qzzt
+        FROM ( select * from (
+        select LOGID, MESSAGE, CONTROLLER, BDCQZH, CZRQ, row_number() over(partition by BDCQZH order by CZRQ desc) as n
+        from BDC_DZZZ_LOG
+        ) where n = 1
+        <if test="qfzt != null and qfzt !=''">
+            <if test="qfzt == 1">
+                -- log 表无下载信息
+                AND LOGID not in (SELECT LOGID FROM (
+                select LOGID, row_number() over(partition by BDCQZH order by CZRQ desc) as n from BDC_DZZZ_LOG
+                WHERE CONTROLLER LIKE '%zzxxxz'
+                <if test="bdcqzh != null and bdcqzh !=''">
+                    AND bdcqzh = #{bdcqzh}
+                </if>
+                ) WHERE N= 1)
+            </if>
+            <if test="qfzt == 3">
+                AND LOGID in (SELECT LOGID FROM (
+                select LOGID, row_number() over(partition by BDCQZH order by CZRQ desc) as n from BDC_DZZZ_LOG
+                WHERE bdcqzh is not NULL AND message != 'success' AND CONTROLLER LIKE '%clzzpdf'
+                <if test="bdcqzh != null and bdcqzh !=''">
+                    AND bdcqzh = #{bdcqzh}
+                </if>
+                ) WHERE N= 1)
+            </if>
+            <if test="qfzt == 4">
+                -- log 表存在下载失败信息
+                AND LOGID in (SELECT LOGID FROM (
+                select LOGID, row_number() over(partition by BDCQZH order by CZRQ desc) as n from BDC_DZZZ_LOG
+                WHERE message != 'success' AND CONTROLLER LIKE '%zzxxxz'
+                <if test="bdcqzh != null and bdcqzh !=''">
+                    AND bdcqzh = #{bdcqzh}
+                </if>
+                ) WHERE N= 1)
+            </if>
+        </if>
+        <if test="bdcqzh != null and bdcqzh !=''">
+            AND bdcqzh = #{bdcqzh}
+        </if>
+        ) l
+        LEFT JOIN BDC_DZZZ_YWXX y ON l.bdcqzh = y.bdcqzh
+        LEFT JOIN BDC_DZZZ_ZZXX z ON z.ZZID = y.ZZID
+        <where>
+            <if test="bdcqzh != null and bdcqzh !=''">
+                AND l.bdcqzh = #{bdcqzh}
+            </if>
+            <if test="szrqStart != null and szrqStart !=''">
+                AND to_char(z.zzbfrq,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{szrqStart}
+            </if>
+            <if test="szrqEnd != null and szrqEnd !=''">
+                AND to_char(z.zzbfrq,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{szrqEnd}
+            </if>
+            <if test="qfrqStart != null and qfrqStart !=''">
+                AND to_char(z.zzqzsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{qfrqStart}
+            </if>
+            <if test="qfrqEnd != null and qfrqEnd !=''">
+                AND to_char(z.zzqzsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{qfrqEnd}
+            </if>
+            <if test="qfzt != null and qfzt !=''">
+                <if test="qfzt == 1">
+                    AND z.qzzt = 2
+                </if>
+                <if test="qfzt == 2">
+                    AND z.qzzt = 2
+                    AND z.ZZQZLJ is not NULL
+                </if>
+                <if test="qfzt == 3">
+                    AND z.qzzt IS NULL
+                </if>
+                <if test="qfzt == 4">
+                    AND z.qzzt = 2
+                    AND z.ZZQZLJ is NULL
+                </if>
+            </if>
+            <if test="message != null and message !=''">
+                AND l.MESSAGE = #{message}
+            </if>
+        </where>
+        ORDER BY l.czrq DESC
+    </select>
+</mapper>

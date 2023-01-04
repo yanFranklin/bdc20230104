@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="2020-12-16-01-init" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            INSERT INTO BDC_ZD_ZQSHZT VALUES(1,'正在编辑');
+            INSERT INTO BDC_ZD_ZQSHZT VALUES(2,'已提交');
+            INSERT INTO BDC_ZD_ZQSHZT VALUES(3,'审核通过');
+
+            INSERT INTO BDC_ZD_ZQSHJD VALUES(1,'确认阶段');
+            INSERT INTO BDC_ZD_ZQSHJD VALUES(2,'审核阶段');
+        </sql>
+    </changeSet>
+
+    <changeSet id="2020-12-17-01-inquiry" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE BDC_ZQ_ZXSQ MODIFY ZXYY NUMBER(2);
+        </sql>
+    </changeSet>
+
+    <changeSet id="2020-12-17-02-inquiry" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE BDC_ZQ_ZXSQ MODIFY QLLX NUMBER(3);
+            ALTER TABLE BDC_ZQ_ZXSQ MODIFY DJLX NUMBER(3);
+            ALTER TABLE BDC_ZQ_ZXSQ MODIFY BDCLX NUMBER(3);
+        </sql>
+    </changeSet>
+
+    <changeSet id="2020-12-17-03-inquiry" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE BDC_ZQ_ZXSQ MODIFY BDCQZH VARCHAR2(500);
+        </sql>
+    </changeSet>
+
+    <changeSet id="2020-12-17-04-inquiry" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE BDC_ZQ_FJCL MODIFY WJZXID VARCHAR2(32);
+        </sql>
+    </changeSet>
+
+
+    <changeSet id="2020-12-21-01-inquiry" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            INSERT INTO BDC_ZD_ZQSHZT VALUES(4,'已删除');
+        </sql>
+    </changeSet>
+
+    <changeSet id="2020-12-22-01-inquiry" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE BDC_ZQ_ZXSQ ADD ZXLCXMID VARCHAR2(32);
+            ALTER TABLE BDC_ZQ_ZXSQ ADD ZXLCSLBH VARCHAR2(32);
+            ALTER TABLE BDC_ZQ_ZXSQ ADD ZXLCGZLSLID VARCHAR2(32);
+        </sql>
+    </changeSet>
+
+    <changeSet id="2020-12-23-01-inquiry" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE BDC_ZQ_DJ DROP COLUMN DJSJQ;
+            ALTER TABLE BDC_ZQ_DJ DROP COLUMN DJSJZ;
+        </sql>
+    </changeSet>
+
+    <changeSet id="2020-12-29-01-inquiry" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE BDC_ZQ_DJ MODIFY QLLX NUMBER(3);
+            ALTER TABLE BDC_ZQ_DJ MODIFY DJLX NUMBER(3);
+            ALTER TABLE BDC_ZQ_DJ MODIFY BDCLX NUMBER(3);
+        </sql>
+    </changeSet>
+
+    <changeSet id="2020-12-30-01-init" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            INSERT INTO BDC_ZD_ZQSHZT VALUES(5,'流程删除');
+            INSERT INTO BDC_ZD_ZQSHZT VALUES(6,'流程退回');
+            INSERT INTO BDC_ZD_ZQSHZT VALUES(7,'已退回');
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-01-14-01-inquiry" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            INSERT INTO BDC_ZD_ZQDJZT VALUES(1,'已冻结');
+            INSERT INTO BDC_ZD_ZQDJZT VALUES(2,'未冻结');
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-01-15-01-inquiry" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE BDC_ZQ_DJ ADD BDCDYWYBH VARCHAR2(100);
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-03-26-01-inquiry" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE BDC_ZQ_DJ ADD DJKSSJ DATE;
+            comment on column BDC_ZQ_DJ.DJKSSJ is '冻结开始时间';
+
+            ALTER TABLE BDC_ZQ_DJ ADD DJJSSJ DATE;
+            comment on column BDC_ZQ_DJ.DJJSSJ is '冻结结束时间';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-08-31-01-inquiry" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE BDC_XT_CX_LOG ADD yhid VARCHAR2(32);
+            comment on column BDC_XT_CX_LOG.yhid is '用户ID';
+
+            ALTER TABLE BDC_XT_CX_LOG ADD szbm VARCHAR2(100);
+            comment on column BDC_XT_CX_LOG.szbm is '所在部门';
+
+            ALTER TABLE BDC_XT_CX_LOG ADD szbmid VARCHAR2(32);
+            comment on column BDC_XT_CX_LOG.szbmid is '所在部门ID';
+
+            ALTER TABLE BDC_XT_CX_LOG ADD qlrmc VARCHAR2(200);
+            comment on column BDC_XT_CX_LOG.qlrmc is '权利人名称';
+
+            ALTER TABLE BDC_XT_CX_LOG ADD qlrzjh VARCHAR2(100);
+            comment on column BDC_XT_CX_LOG.qlrzjh is '权利人证件号';
+
+            ALTER TABLE BDC_XT_CX_LOG ADD zl VARCHAR2(1000);
+            comment on column BDC_XT_CX_LOG.zl is '坐落';
+
+            ALTER TABLE BDC_XT_CX_LOG ADD bdcdyh VARCHAR2(100);
+            comment on column BDC_XT_CX_LOG.bdcdyh is '不动产单元号';
+
+            ALTER TABLE BDC_XT_CX_LOG ADD bdcqzh VARCHAR2(100);
+            comment on column BDC_XT_CX_LOG.bdcqzh is '不动产权证号';
+
+            ALTER TABLE BDC_XT_CX_LOG ADD rzlx VARCHAR2(10);
+            comment on column BDC_XT_CX_LOG.rzlx is '日志类型';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2022-02-28-01-inquiry" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false" runAlways="false">
+        <sql>
+            ALTER TABLE DTCX_CXTJ ADD drcxbl NUMBER(1);
+            comment on column DTCX_CXTJ.drcxbl is '导入查询保留（条件）';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2022-04-18-01-inquiry" author="zhangxinyu" dbms="oracle" runOnChange="true" failOnError="false" runAlways="false">
+        <sql>
+            ALTER TABLE BDC_GZYZ_LOG MODIFY YZCS VARCHAR2(4000);
+            ALTER TABLE BDC_GZYZ_LOG MODIFY YZJG VARCHAR2(4000);
+            comment on column BDC_GZYZ_LOG.ZHBS is '组合规则标示';
+            comment on column BDC_GZYZ_LOG.ZHMC is '组合规则名称';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2022-05-23-inquiry" author="fanghao" dbms="oracle" runOnChange="true" failOnError="false" runAlways="false">
+        <sql>
+            ALTER TABLE BDC_XT_LSCS ADD csz1 VARCHAR2(32);
+            ALTER TABLE BDC_XT_LSCS ADD csz2 VARCHAR2(64);
+            ALTER TABLE BDC_XT_LSCS ADD csz3 VARCHAR2(32);
+        </sql>
+    </changeSet>
+
+    <changeSet id="2022-05-31-01-exchange" author="gaoyu" dbms="oracle" runOnChange="true" failOnError="false" runAlways="false">
+        <sql>
+            ALTER TABLE bdc_jr_sjjl ADD qllx VARCHAR2(32);
+            comment on column bdc_jr_sjjl.qllx is '权利类型';
+
+            ALTER TABLE bdc_jr_sjjl ADD djlx VARCHAR2(32);
+            comment on column bdc_jr_sjjl.djlx is '登记类型';
+
+            ALTER TABLE bdc_jr_sjjl ADD bdcqzsh VARCHAR2(200);
+            comment on column bdc_jr_sjjl.bdcqzsh is '不动产权证书号';
+        </sql>
+    </changeSet>
+    <changeSet id="2022-06-23-01-exchange" author="huangjian" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE bdc_jr_gjjl ADD qllx VARCHAR2(32);
+            comment on column bdc_jr_gjjl.qllx is '权利类型';
+
+            ALTER TABLE bdc_jr_gjjl ADD djlx VARCHAR2(32);
+            comment on column bdc_jr_gjjl.djlx is '登记类型';
+
+            ALTER TABLE bdc_jr_gjjl ADD bdcqzsh VARCHAR2(2000);
+            comment on column bdc_jr_gjjl.bdcqzsh is '不动产权证书号';
+        </sql>
+    </changeSet>
+    <changeSet id="2022-06-23-02-exchange" author="huangjian" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE bdc_jr_shijjl ADD qllx VARCHAR2(32);
+            comment on column bdc_jr_shijjl.qllx is '权利类型';
+
+            ALTER TABLE bdc_jr_shijjl ADD djlx VARCHAR2(32);
+            comment on column bdc_jr_shijjl.djlx is '登记类型';
+
+            ALTER TABLE bdc_jr_shijjl ADD bdcqzsh VARCHAR2(2000);
+            comment on column bdc_jr_shijjl.bdcqzsh is '不动产权证书号';
+        </sql>
+    </changeSet>
+    <changeSet id="2022-07-26-01-inquiry" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE dtcx_cxtj ADD mrz VARCHAR2(200);
+            comment on column dtcx_cxtj.mrz is '默认值';
+        </sql>
+    </changeSet>
+    <changeSet id="2022-07-26-02-inquiry" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE dtcx_cxtj ADD dkqsjzj NUMBER(1);
+            comment on column dtcx_cxtj.dkqsjzj is '读卡器数据追加';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2022-08-22-01-inquiry" author="wutao" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE bdc_zs ADD dzzzzt NUMBER(1) default 0;
+            comment on column bdc_zs.dzzzzt is '电子证照状态，未制证：0，已制证：1，已注销：2';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2022-10-24-01-inquiry" author="wutao" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            ALTER TABLE DTCX_CXJG ADD DClK VARCHAR2(10);
+            comment on column DTCX_CXJG.DClK is '导出excel的列宽';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2022-11-09-01-inquiry" author="wangyinghao" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            Alter table BDC_XT_QTDJ_YW add fdbjsxlx varchar2(10);
+            Alter table BDC_XT_QTDJ_YW add applytype varchar2(10);
+            Alter table BDC_XT_QTDJ_YW add qlkind varchar2(10);
+            comment on column BDC_XT_QTDJ_YW.fdbjsxlx is '法定办结时限';
+            comment on column BDC_XT_QTDJ_YW.applytype is '法定办结时限类型';
+            comment on column BDC_XT_QTDJ_YW.qlkind is '办件类型';
+        </sql>
+    </changeSet>
+    <changeSet id="2022-11-10-01-inquiry" author="wangyinghao" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            Alter table BDC_XT_QTDJ_YW add promise NUMBER(2);
+            Alter table BDC_XT_QTDJ_YW add promisetype varchar2(10);
+            comment on column BDC_XT_QTDJ_YW.promise is '承诺办结时间';
+            comment on column BDC_XT_QTDJ_YW.promisetype is '承诺办结时间计量单位';
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

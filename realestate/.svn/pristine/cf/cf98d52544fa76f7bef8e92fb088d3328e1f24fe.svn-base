@@ -1,0 +1,74 @@
+<!--/**-->
+<!--* author: 前端组-->
+<!--* date: 2019-1-8-->
+<!--* version 3.0.0-->
+<!--* describe: 多级表头，每一行不限高，向下拓展-->
+<!--*/-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>多级表头的表格</title>
+    <link rel="stylesheet" href="../../../layui/css/layui.css">
+    <link rel="stylesheet" href="../css/multistep-header-table.css">
+</head>
+<body>
+<div class="bdc-container">
+    <p class="bdc-table-tips">第 9 本 &nbsp;&nbsp; 第 4 页</p>
+    <table class="layui-table">
+        <!--colgroup内col对应一行的宽度，可不写colgroup，表格会自动分配，如果设置的col宽度总和超过屏幕宽度，会重新自动分配-->
+        <!--<colgroup>-->
+            <!--<col width="100">-->
+            <!--<col width="100">-->
+            <!--<col width="100">-->
+            <!--<col width="100">-->
+            <!--<col width="100">-->
+            <!--<col width="200">-->
+            <!--<col width="200">-->
+            <!--<col>-->
+        <!--</colgroup>-->
+        <thead>
+        <tr>
+            <th class="bdc-table-title" colspan="8">建筑物区分所有权业主共有部分登记信息</th>
+        </tr>
+        <tr>
+            <th colspan="2">建筑物区分所有权业主共有部分权利人</th>
+            <th colspan="6">小区全体业主</th>
+        </tr>
+        <tr>
+            <th>业务号</th>
+            <th>建(构)筑物编号</th>
+            <th>建(构)筑物名称</th>
+            <th>建(构)筑物数量或者面积(m²)</th>
+            <th>分摊土地面积</th>
+            <th>登记时间</th>
+            <th>登簿人</th>
+            <th>附记</th>
+        </tr>
+        </thead>
+        <tbody id="tableView">
+        </tbody>
+    </table>
+</div>
+</body>
+<script type="text/html" id="tableTpl">
+    {{#  layui.each(d, function(index, item){ }}
+    <tr>
+        <td>{{item.ywh}}</td>
+        <td>{{item.bh}}</td>
+        <td>{{item.mc}}</td>
+        <td>{{item.mj}}</td>
+        <td>{{item.ftmj}}</td>
+        <td>{{item.djsj}}</td>
+        <td>{{item.dbr}}</td>
+        <td>{{item.fj}}</td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.length === 0){ }}
+    无数据
+    {{#  } }}
+</script>
+<script src="../../../layui/layui.js"></script>
+<script src="../js/multistep-header-table.js"></script>
+</html>

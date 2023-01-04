@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.accept.core.mapper.BdcDjxlPzMapper">
+    <select id="listBdcGzlwShByPage" parameterType="cn.gtmap.realestate.common.core.domain.accept.BdcGzlwShDO"
+            resultType="Map">
+        SELECT DISTINCT t.gzlwid,
+        t.slbh,
+        t.bdcdyh,
+        t.gzmc,
+        t.shzt,
+        t.cjrmc,
+        t.cjsj,
+        t.xmid,
+        t.gzlslid,
+        t.lwyy,
+        t.shr,
+        t.shsj,
+        t.shyj,
+        t.shrmc,
+        t.zl
+        FROM BDC_GZLW_SH t
+        <where>
+            <if test="slbh != null and slbh != ''">
+                AND t.slbh = #{slbh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND t.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="cjrmc != null and cjrmc != ''">
+                AND t.cjrmc = #{cjrmc}
+            </if>
+            <if test="shzt != null ">
+                AND t.shzt = #{shzt}
+            </if>
+            <if test="gzlslid != null ">
+                AND t.gzlslid = #{gzlslid}
+            </if>
+            <if test="gzlslid == null or gzlslid == ''">
+                AND t.gzlslid is null
+            </if>
+            <if test="zl != null and zl != ''">
+                AND t.zl like '%' || #{zl} || '%'
+            </if>
+            <if test="cqzh != null and cqzh != ''">
+                AND t.bdcqzh like '%' || #{cqzh} || '%'
+            </if>
+        </where>
+        order by t.cjsj DESC
+    </select>
+
+    <select id="listBdcGzlwShBdcdyhByPage" parameterType="cn.gtmap.realestate.common.core.domain.accept.BdcGzlwShDO"
+            resultType="Map">
+        SELECT t.slbh,t.bdcdyh,t.gzmc,gzlslid,lwyy,zl FROM BDC_GZLW_SH t
+        <where>
+            <if test="slbh != null and slbh != ''">
+                AND t.slbh = #{slbh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND t.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="cjrmc != null and cjrmc != ''">
+                AND t.cjrmc = #{cjrmc}
+            </if>
+            <if test="shzt != null ">
+                AND t.shzt = #{shzt}
+            </if>
+            <if test="gzlslid != null ">
+                AND t.gzlslid = #{gzlslid}
+            </if>
+            <if test="gzlslid == null or gzlslid == ''">
+                AND t.gzlslid is null
+            </if>
+        </where>
+        group by t.slbh,t.bdcdyh,t.gzmc,gzlslid,lwyy,zl
+        order by t.zl
+    </select>
+</mapper>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <title>房屋附属设施</title>
+    <meta name="renderer" content="webkit">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/common.css"/>
+    <link rel="stylesheet" href="../../static/css/slym.css">
+</head>
+<body>
+<div lay-filter="fwfsss" id="fwfsss"></div>
+</body>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<!--小数计算防精度缺失-->
+<script src="../../static/lib/mathjs/math.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/slym/fwfsss.js"></script>
+<script type="text/javascript">
+    var xmid = getQueryString("xmid");
+</script>
+<!--附属设施信息展示-->
+<script type="text/html" id="fwfsssTpl">
+    <input type="hidden" name="xmid" value="{{d.xmid || ''}}">
+    <form class="common-form sl-from layui-form" name="fwfsssForm" id="fwfsssForm">
+        <table class="layui-table" border="1" name="">
+            <tr class="gray-tr">
+                <td width="50px">序号</td>
+                <td>建筑面积</td>
+                <td>套内建筑面积</td>
+                <td style="min-width: 200px">坐落</td>
+                <td>规划用途</td>
+            </tr>
+            {{# layui.each(d.bdcfwfsssDOList, function(m, bdcfwfsss){ }}
+            <input type="hidden" name="fwfsssid" value="{{bdcfwfsss.fwfsssid || ''}}" class="">
+            <tr>
+                <td>{{m+1}}</td>
+                <td><input type="text" lay-verify="" name="jzmj" value="{{bdcfwfsss.jzmj || ''}}"></td>
+                <td><input type="text" lay-verify="" name="zyjzmj" value="{{bdcfwfsss.zyjzmj || ''}}"></td>
+                <td><input type="text" lay-verify="" name="zl" value="{{bdcfwfsss.zl || ''}}"
+                           title="{{bdcfwfsss.zl || ''}}"></td>
+                <td>
+                    <select name="ghyt" lay-search="" id="ghyt">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.fwyt, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(bdcfwfsss.ghyt==item.DM ){ }} selected="selected" {{#
+                                } }}>{{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </td>
+            </tr>
+            {{# }); }}
+        </table>
+        <div class="pannel-container">
+            <div class="pannel-form-btns">
+                <button class="layui-btn bdc-major-btn" lay-submit="" id="updateFwfsss" lay-filter="updateFwfsss">保存
+                </button>
+            </div>
+        </div>
+    </form>
+</script>
+</html>

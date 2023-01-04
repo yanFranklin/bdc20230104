@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <ex:bean id="hsxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="logEventName" value="外网查询户室信息"/>
+            <ex:property name="requester" value="WWSQ"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="WWSQ"/>
+            <ex:property name="beanName" value="bdcFwhsSetvicesImpl"/>
+            <ex:property name="methodName" value="queryHsZt"/>
+        </ex:service-info>
+        <!--   <ex:request>
+               <ex:element dozerXml="conf/dozer/yancheng/hlw/fwxx.xml"/>
+           </ex:request>-->
+
+    </ex:bean>
+    <ex:bean id="zzj_cxsfxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="bdcFwQsxxServiceImpl"/>
+            <ex:property name="methodName" value="queryZsSfxx"/>
+
+        </ex:service-info>
+        <ex:log dsfFlag="ZZCXJ" logEventName="自助查询机查询收费信息" requester="ZZCXJ" responser="BDC"/>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/zzcxj/param.xml"/>
+        </ex:request>
+
+    </ex:bean>
+</beans>

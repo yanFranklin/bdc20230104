@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>备案信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <!--popup.css放到form-tab.css，防止样式冲突-->
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css"/>
+    <style>
+        .msr-tr td,
+        .msr-tr td input{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<object id="CertCtl" TYPE="application/cert-reader" width=0 height=0" style="display: none"></object>
+<div class="content-div">
+    <div class="bdc-content-box">
+        <form class="layui-form setOverflow htbaform" action="">
+            <div class="bdc-content-fix">
+                <div class="content-title">
+                    <p>备案合同信息</p>
+                    <div class="title-btn-area .layui-layout-right">
+                        <button class="layui-btn bdc-major-btn bdc-hide" lay-submit="" lay-filter="saveHtbaxx" id="saveHtbaxx">保存</button>
+                        <button type="button" class="layui-btn bdc-secondary-btn bdc-hide" id="selectHs">选择附属设施</button>
+                        <button type="button" class="layui-btn bdc-secondary-btn bdc-hide" id="printBtn">打印</button>
+                        <button type="button" class="layui-btn bdc-secondary-btn bdc-hide" id="downloadPDF">下载PDF</button>
+                    </div>
+                </div>
+            </div>
+            <div class="content-main">
+                <div class="table-name">合同备案信息</div>
+                <div class="bdc-table-box" id="htbaxx"></div>
+            </div>
+
+            <div class="content-main">
+                <div class="table-name">房屋信息</div>
+                <div class="bdc-table-box" id="fwxx"></div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/html" id="htbaxxTpl">
+    <table class="layui-table" border="1">
+        <colgroup>
+            <col width="150">
+            <col width="200">
+            <col width="150">
+            <col width="200">
+            <col width="150">
+            <col width="200">
+        </colgroup>
+        <tbody>
+        <tr>
+            <input name="baid" id="baid" type="text" class="bdc-hide htbaspf" value="{{d.htbaspf.baid || ''}}">
+            <td class="set-back-color set-center">受理编号</td>
+            <td><input type="text" class="layui-table-edit" readonly id="slbh" value="{{d.htbaspf.slbh || ''}}"></td>
+            <td class="set-back-color set-center">合同编号</td>
+            <td><input name="htbh" id="htbh" type="text" class="layui-table-edit htbaspf"
+                       value="{{d.htbaspf.htbh || ''}}"></td>
+            <td class="set-back-color set-center">签订日期</td>
+            <td><input name="qdsj" id="qdsj" type="text" class="layui-input test-item htbaspf" value="{{d.htbaspf.qdsj || ''}}"></td>
+        </tr>
+        <tr>
+            <td class="set-back-color set-center">成交价</td>
+            <td><input name="cjj" id="cjj" type="text" class="layui-table-edit htbaspf" value="{{d.htbaspf.cjj || ''}}"></td>
+            <td class="set-back-color set-center">付款方式</td>
+            <td>
+                <select name="fkfs" lay-search="" id="fkfs" lay-filter="fkfs" class="htbaspf">
+                    <option value="">请选择</option>
+                    {{# layui.each(d.zd.fkfs, function(index, item){ }}
+                    <option value="{{item.DM || '0'}}" title="{{item.MC || ''}}" {{# if(d.htbaspf.fkfs == item.DM){ }} selected="selected" {{# } }}>{{item.MC || ''}}
+                    </option>
+                    {{# }); }}
+                </select>
+                <i class="layui-icon layui-icon-close bdc-hide"></i>
+            </td>
+            <td class="set-back-color set-center">备案日期</td>
+            <td><input name="basj" id="basj" type="text" class="layui-input test-item htbaspf" value="{{d.htbaspf.basj || ''}}"></td>
+        </tr>
+        <tr>
+            <input name="baid" id="baid" type="text" class="bdc-hide htbaspf" value="{{d.htbaspf.baid || ''}}">
+            <td class="set-back-color set-center">首付款金额</td>
+            <td><input type="text" name="dksfkxx" id="dksfkxx"  class="layui-table-edit htbaspf"  value="{{d.htbaspf.dksfkxx || ''}}"></td>
+            <td class="set-back-color set-center">贷款方式</td>
+            <td>
+                <select lay-search="" name="dkfs" id="dkfs" class="htbaspf">
+                    <option value="">请选择</option>
+                    {{# layui.each(dkfs, function(index, item){ }}
+                    <option value="{{item|| ''}}" {{# if(d.htbaspf.dkfs==item ){ }} selected="selected" {{#
+                            } }}>{{item|| ''}}
+                    </option>
+                    {{# }); }}
+                </select>
+            </td>
+            <td class="set-back-color set-center">合同总价款</td>
+            <td><input name="htzjk" id="htzjk" type="text" class="layui-input  htbaspf" value="{{d.htbaspf.htzjk || ''}}"></td>
+        </tr>
+        <tr>
+            <td class="set-back-color set-center">备注</td>
+            <td colspan="5"><input type="text" name="bz" id="bz" class="layui-input htbaspf" value="{{d.htbaspf.bz || ''}}"></td>
+        </tr>
+        <tr>
+            <td class="set-back-color set-center">买受人</td>
+            <td class="set-back-color set-center">证件种类</td>
+            <td colspan="2" class="set-back-color set-center">证件号</td>
+            <td class="set-back-color set-center">联系电话</td>
+            <td class="set-back-color set-center">操作</td>
+        </tr>
+        {{# if(d.htbaqlr.length !='0'){ }}
+        {{# layui.each(d.htbaqlr, function(i, qlr){ }}
+        <tr class="msr-tr">
+            <td class="bdc-hide"><input type="text" name="qlrlb" class="bdc-hide htbaqlr" value="1"></td>
+            <td class="bdc-hide"><input type="text" name="qlrid" id="qlrid" class="bdc-hide htbaqlr" value="{{qlr.qlrid || ''}}"></td>
+            <td><input type="text" ondblclick="sqrReadIdCard(this)" name="qlrmc" id="qlrmc" class="layui-table-edit htbaqlr" value="{{qlr.qlrmc || ''}}"></td>
+            <td>
+                <select name="zjzl" lay-search="" lay-filter="zjzl" id="zjzl" class="htbaqlr">
+                    <option value="">请选择</option>
+                    {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                    <option value="{{item.DM || ''}}" {{#if(qlr.zjzl == item.DM){ }} selected="selected" {{# } }}>
+                        {{item.MC || ''}}
+                    </option>
+                    {{# }); }}
+                </select>
+            </td>
+            <td colspan="2">
+                <input type="text" name="zjh" id="zjh" class="layui-table-edit htbaqlr" value="{{qlr.zjh || ''}}">
+            </td>
+            <td>
+                <input type="text" name="lxdh" id="lxdh" lay-verify="lxdh" class="layui-table-edit htbaqlr" value="{{qlr.lxdh || ''}}">
+            </td>
+            <td>
+                <button type="button" class="layui-btn layui-btn-xs bdc-major-btn add-msr" id="addQlr">新增</button>
+                <button type="button" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn del-msr" id="delQlr" onclick="deleteHtbaQlr('{{qlr.qlrid || \'\'}}')">删除</button>
+            </td>
+        </tr>
+        {{# }); }}
+        {{# }else{ }}
+        <tr class="msr-tr">
+            <td class="bdc-hide"><input type="text" name="qlrlb" class="bdc-hide htbaqlr" value="1"></td>
+            <td><input ondblclick="sqrReadIdCard(this)" name="qlrmc" type="text" class="layui-table-edit htbaqlr" value=""></td>
+            <td>
+                <select name="zjzl" lay-search="" lay-filter="zjzl" id="zjzl" class="htbaqlr">
+                    <option value="">请选择</option>
+                    {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                    <option value="{{item.DM || ''}}">
+                        {{item.MC || ''}}
+                    </option>
+                    {{# }); }}
+                </select>
+            </td>
+            <td colspan="2">
+                <input name="zjh" id="zjh" type="text" class="layui-table-edit htbaqlr" value="">
+            </td>
+            <td>
+                <input name="lxdh" type="text" lay-verify="lxdh" class="layui-table-edit htbaqlr" value="">
+            </td>
+            <td>
+                <button type="button" class="layui-btn layui-btn-xs bdc-major-btn add-msr">新增</button>
+                <button type="button" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn del-msr">删除</button>
+            </td>
+        </tr>
+        {{# } }}
+        </tbody>
+    </table>
+</script>
+
+<!--新增买受人-->
+<script type="text/html" id="addMsrTpl">
+    <tr class="msr-tr">
+        <td class="bdc-hide"><input type="text" name="qlrlb" class="bdc-hide htbaqlr" value="1"></td>
+        <td><input ondblclick="sqrReadIdCard(this)" name="qlrmc" type="text" class="layui-table-edit htbaqlr" value=""></td>
+        <td>
+            <select name="zjzl" lay-search="" lay-filter="zjzl" id="zjzl" class="htbaqlr">
+                <option value="">请选择</option>
+                {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                <option value="{{item.DM || ''}}">
+                    {{item.MC || ''}}
+                </option>
+                {{# }); }}
+            </select>
+        </td>
+        <td colspan="2">
+            <input name="zjh" id="zjh" type="text" class="layui-table-edit htbaqlr" value="">
+        </td>
+        <td>
+            <input name="lxdh" type="text" lay-verify="lxdh" class="layui-table-edit htbaqlr" value="">
+        </td>
+        <td>
+            <button type="button" class="layui-btn layui-btn-xs bdc-major-btn add-msr">新增</button>
+            <button type="button" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn del-msr rowbtn">删除</button>
+        </td>
+    </tr>
+</script>
+<script type="text/html" id="htbafwxxTpl">
+    <table class="layui-table" border="1">
+        <colgroup>
+            <col width="150">
+            <col width="200">
+            <col width="150">
+            <col width="200">
+            <col width="150">
+            <col width="200">
+        </colgroup>
+        {{# layui.each(d.htbafwxx, function(i, fwxx){ }}
+        <tbody>
+        <tr>
+            <td class="set-back-color set-center">坐落</td>
+            <td colspan="5"><input type="text" class="layui-table-edit" readonly value="{{fwxx.zl || ''}}"></td>
+        </tr>
+        <tr>
+            <td class="set-back-color set-center">房屋编码</td>
+            <td><input type="text" class="layui-table-edit" readonly value="{{fwxx.fwbm || ''}}"></td>
+            <td class="set-back-color set-center">房间号</td>
+            <td><input type="text" class="layui-table-edit" readonly value="{{fwxx.fjh || ''}}"></td>
+            <td class="set-back-color set-center">结构</td>
+            <td>
+                <select lay-search="" name="fwjg" class="qlxx" id="fwjg" disabled>
+                <option value="">请选择</option>
+                {{# layui.each(d.zd.fwjg, function(index, item){ }}
+                <option value="{{item.DM || '0'}}" {{#if(d.htbaljz.fwjg == item.DM){ }} selected="selected" {{# } }}>{{item.MC || ''}}
+                </option>
+                {{# }); }}
+            </select>
+                <i class="layui-icon layui-icon-close bdc-hide"></i>
+            </td>
+        </tr>
+        <tr>
+            <td class="set-back-color set-center">建筑面积</td>
+            <td><input type="text" class="layui-table-edit" readonly value="{{fwxx.scjzmj || ''}}"></td>
+            <td class="set-back-color set-center">套内面积</td>
+            <td><input type="text" class="layui-table-edit" readonly value="{{fwxx.sctnjzmj || ''}}"></td>
+            <td class="set-back-color set-center">分摊面积</td>
+            <td><input type="text" class="layui-table-edit" readonly value="{{fwxx.scftjzmj || ''}}"></td>
+        </tr>
+        <tr>
+            <td class="set-back-color set-center">规划用途</td>
+            <td>
+                <select lay-search="" name="ghyt" class="qlxx" id="ghyt" disabled>
+                <option value="">请选择</option>
+                {{# layui.each(d.zd.fwyt, function(index, item){ }}
+                <option value="{{item.DM || '0'}}" {{#if(fwxx.ghyt == item.DM){ }} selected="selected" {{# } }}>{{item.MC || ''}}
+                </option>
+                {{# }); }}
+            </select>
+                <i class="layui-icon layui-icon-close bdc-hide"></i>
+            </td>
+            <td class="set-back-color set-center">所在层</td>
+            <td><input type="text" class="layui-table-edit" readonly value="{{fwxx.dycs || ''}}"></td>
+            <td class="set-back-color set-center">总层数</td>
+            <td><input type="text" class="layui-table-edit" readonly value="{{d.htbaljz.fwcs || ''}}"></td>
+        </tr>
+        </tbody>
+        {{#}); }}
+    </table>
+</script>
+</body>
+<!--引入js部分一般放在最下面-->
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src='../../static/lib/bdcui/js/readIdCard.js'></script>
+<script src="../../static/lib/mathjs/math.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/print.js"></script>
+<script src="../../static/js/htbaspf/baxx.js"></script>
+</html>

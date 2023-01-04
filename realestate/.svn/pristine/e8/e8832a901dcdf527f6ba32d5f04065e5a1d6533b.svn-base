@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>批量抵押查封查询</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/common.css"/>
+
+</head>
+<body>
+<!--************ 条件搜索 ************-->
+<div class="bdc-percentage-container">
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+
+            <form class="layui-form" action="" >
+                <div class="layui-form-item pf-form-item">
+                    <!--IP地址-->
+                    <input type="hidden" id="ipaddress"  name="ipaddress"/>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">权利人名称</label>
+                        <div class="layui-input-inline">
+                            <input class="layui-input" id="qlrmc" name="qlrmc" placeholder="请输入" type="text" />
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">权利人证件号</label>
+                        <div class="layui-input-inline ">
+                            <input class="layui-input" id="qlrzjh" name="qlrzjh" placeholder="请输入" type="text" />
+                        </div>
+                    </div>
+
+
+                    <div class="layui-inline xzq-sele">
+                        <label class="layui-form-label">权属状态</label>
+                        <div class="layui-input-inline">
+                            <select lay-filter="qszt" id="qszt" name="qszt" lay-search="" class="search">
+                                <option value="">正常</option>
+                                <option value="0">抵押</option>
+                                <option value="1">查封</option>
+                            </select>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">查询类型</label>
+                        <div class="layui-input-inline">
+                            <select lay-filter="cxlx" id="cxlx" name="cxlx" lay-search="" class="search">
+                                <option value="0">精确</option>
+                                <option value="1">模糊</option>
+                            </select>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline bdc-button-box-four">
+                        <button lay-submit="" lay-filter="search" class="layui-btn layui-btn-normal bdc-major-btn" id="search">
+                            查询
+                        </button>
+
+                        <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="bdc-table-box">
+        <table id="pldycfcxTable" lay-filter="pldycfcxTable"></table>
+    </div>
+</div>
+
+<button  id="importHide" style="display: none;"></button>
+
+<!--表格上面功能按钮-->
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="download" id="download">下载模板</button>
+        <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="import" id="import">导入查询条件</button>
+        <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="exportExcel">导出Excel</button>
+    </div>
+</script>
+
+<div id="popup" class="bdc-hide">
+    <form class="layui-form" action="" >
+        <div class="layui-form-item pf-form-item">
+            <div class="check col-box" style="padding: 10px">
+                <div class="layui-row">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <input class="chooseAll" checked type="checkbox" name="all" title="全选"  lay-skin="primary" value="all" lay-filter="chooseAll" id="chooseAll">
+                    </div>
+                </div>
+                <div class="layui-row">
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <input class="chooseCol" checked type="checkbox" name="col" title="产权证号"  lay-skin="primary" value="bdcqzh" lay-filter="chooseCol">
+                    </div>
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <input class="chooseCol" checked type="checkbox" name="col" title="房屋面积"  lay-skin="primary" value="fwmj" lay-filter="chooseCol">
+                    </div>
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <input class="chooseCol" checked type="checkbox" name="col" title="土地面积"  lay-skin="primary" value="tdmj" lay-filter="chooseCol">
+                    </div>
+                </div>
+                <div class="layui-row">
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <input class="chooseCol" checked type="checkbox" name="col" title="坐落"  lay-skin="primary" value="zl" lay-filter="chooseCol">
+                    </div>
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <input class="chooseCol" checked type="checkbox" name="col" title="查封信息"  lay-skin="primary" value="cfxx" lay-filter="chooseCol">
+                    </div>
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <input class="chooseCol" checked type="checkbox" name="col" title="抵押信息"  lay-skin="primary" value="dyxx" lay-filter="chooseCol">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--隐藏form，为了Excel导出缓存数据使用-->
+<form style="display: none" action="/realestate-inquiry-ui/excel/export" method="POST" id="form">
+    <input type="hidden" id="fileName" name="fileName"/>
+    <input type="hidden" id="sheetName" name="sheetName"/>
+    <input type="hidden" id="cellTitle" name="cellTitle"/>
+    <input type="hidden" id="cellWidth" name="cellWidth"/>
+    <input type="hidden" id="cellKey" name="cellKey"/>
+    <input type="hidden" id="data" name="data"/>
+</form>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/lib/form-select/formSelects-v4.js"/>
+<script src="../../static/lib/bdcui/js/mask.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/lib/bdcui/js/readIdCard.js"></script>
+<script src="../../static/js/readCard.js"></script>
+<script src="../../static/js/commonSearch.js"></script>
+<script src="../../static/js/formCenter.js"></script>
+<script src="../../static/js/rugao/pldycfcx/pldycfcx.js"></script>
+
+<!--IE获取IP地址-->
+<object classid="CLSID:76A64158-CB41-11D1-8B02-00600806D9B6" id="locator" style="display:none;visibility:hidden"></object>
+<object classid="CLSID:75718C9A-F029-11d1-A1AC-00C04FB6C223" id="foo" style="display:none;visibility:hidden"></object>
+<script language="javascript">
+    try{
+        var service = locator.ConnectServer();
+        service.Security_.ImpersonationLevel = 3;
+        service.InstancesOfAsync(foo, 'Win32_NetworkAdapterConfiguration');
+    } catch(err) {
+        // do nothing
+    }
+</script>
+<script FOR="foo" EVENT="OnObjectReady(objObject,objAsyncContext)" LANGUAGE="JScript">
+    try{
+        if (objObject.IPEnabled != null && objObject.IPEnabled != "undefined" && objObject.IPEnabled == true) {
+            if (objObject.IPEnabled && objObject.IPAddress(0) != null && objObject.IPAddress(0) != "undefined")
+                $("#ipaddress").val( objObject.IPAddress(0));
+        }
+    } catch(err) {
+        // do nothing
+    }
+</script>
+</body>
+</html>

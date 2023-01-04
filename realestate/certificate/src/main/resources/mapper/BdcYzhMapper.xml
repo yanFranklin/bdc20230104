@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.certificate.core.mapper.BdcYzhMapper">
+
+    <!--该查询为获取印制号和验证印制号是否可用时所用，如果需要增加其他查询条件，请慎重考虑-->
+    <select id="queryBdcYzh" resultType="cn.gtmap.realestate.common.core.dto.certificate.BdcYzhDTO"
+            parameterType="cn.gtmap.realestate.common.core.qo.certificate.BdcYzhQO">
+        <if test="num !=null">
+            SELECT yzhid, nf, qxdm, zslx, qzysxlh, syqk, cjr, cjsj, zsid, bz, sccs,lqrid,lqbmid FROM (
+        </if>
+        SELECT distinct a.yzhid, a.nf, a.qxdm, a.zslx, a.qzysxlh, a.syqk, a.cjr, a.cjsj, a.zsid, a.bz,
+        a.sccs,a.lqrid,a.lqbmid
+        FROM bdc_yzh a
+        <where>
+            <if test="null != yzhid">
+                and a.yzhid = #{yzhid}
+            </if>
+            <if test="null != zsid">
+                and a.zsid = #{zsid}
+            </if>
+            <if test="null != zslx">
+                and a.zslx = #{zslx}
+            </if>
+            <if test="null != syqk">
+                and a.syqk = #{syqk}
+            </if>
+            <if test="null != qzysxlh and '' != qzysxlh">
+                and a.qzysxlh = #{qzysxlh}
+            </if>
+            <if test="null != qxdm and ''!=qxdm">
+                and a.qxdm = #{qxdm}
+            </if>
+            <if test="null != lqrid and ''!=lqrid">
+                and a.lqrid = #{lqrid}
+            </if>
+            <if test="null != lqbmid and ''!=lqbmid">
+                and a.lqbmid = #{lqbmid}
+            </if>
+
+        </where>
+
+        ORDER BY
+        <choose>
+            <when test="orderField!=null and ''!=orderField">
+                ${orderField}
+                <if test="orderType!=null and ''!=orderType">
+                    ${orderType}
+                </if>
+            </when>
+            <otherwise>
+                a.qzysxlh ASC
+            </otherwise>
+        </choose>
+
+        <if test="num !=null">
+            ) C WHERE  <![CDATA[ ROWNUM <= #{num}  ]]>
+
+        </if>
+    </select>
+    <update id="updateYzhSyqk" parameterType="cn.gtmap.realestate.common.core.domain.certificate.BdcYzhDO">
+        <if test="null != yzhid and ''!=yzhid and null !=syqk">
+            UPDATE bdc_yzh t
+            <set>
+                t.syqk = #{syqk,jdbcType=INTEGER},
+                t.zsid = #{zsid,jdbcType=VARCHAR},
+                t.sysj = #{sysj,jdbcType=DATE}
+            </set>
+            WHERE t.yzhid =#{yzhid} AND t.syqk != #{syqk}
+        </if>
+    </update>
+
+    <delete id="deleteYzhSymx" parameterType="cn.gtmap.realestate.common.core.domain.certificate.BdcYzhDO">
+        <if test="null != yzhid and ''!=yzhid">
+            delete from bdc_yzhsymx t WHERE t.yzhid =#{yzhid}
+        </if>
+    </delete>
+
+    <update id="updateYzhToNull" parameterType="String">
+        update bdc_zs set qzysxlh = null where zsid = #{zsid}
+    </update>
+
+
+    <sql id="tjwdcolumn">
+        <if test="tjwd=='user'">syr</if>
+        <if test="tjwd=='dept'">sybmmc</if>
+    </sql>
+
+    <select id="yzhFzlTj" resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcYzhFzlTjDTO"
+            parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.BdcYzhTjQO">
+        select  syr,
+                sum(case when syqk=2 then 1 else 0 end) as zf,
+                sum(case when syqk=3 then 1 else 0 end) as ysy
+        from (
+            select distinct b.yzhid, b.syr, b.SYBMMC, a.syqk
+            from BDC_YZH a left join BDC_YZHSYMX b on a.yzhid = b.yzhid
+            <where>
+                <if test="null != rymc and '' != rymc">
+                    and b.syr in
+                    <foreach collection="rymc.split(',')" item="item" open="(" close=")" separator=",">
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+                <if test="null != bmmc and '' != bmmc">
+                    and b.sybmmc in
+                    <foreach collection="bmmc.split(',')" item="item" open="(" close=")" separator=",">
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+                <if test="kssj != null and kssj != ''">
+                    AND to_char(b.sysj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{kssj}
+                </if>
+                <if test="jzsj != null and jzsj != ''">
+                    AND to_char(b.sysj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{jzsj}
+                </if>
+            </where>
+        )
+        group by syr
+        <choose>
+            <when test="order == 'ysy'">
+                order by to_number(nvl(ysy, 0))
+            </when>
+            <otherwise>
+                order by zf
+            </otherwise>
+        </choose>
+
+    </select>
+
+    <select id="yzhLyTj" resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcYzhFzlTjDTO"
+            parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.BdcYzhTjQO">
+        select count(1) as lyl, lqr as syr from BDC_YZH
+        <where>
+            <if test="null != rymc and '' != rymc">
+                and lqr in
+                <foreach collection="rymc.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="kssj != null and kssj != ''">
+                AND to_char(cjsj,'yyyy-MM-dd') <![CDATA[>=]]> #{kssj}
+            </if>
+            <if test="jzsj != null and jzsj != ''">
+                AND to_char(cjsj,'yyyy-MM-dd') <![CDATA[<=]]> #{jzsj}
+            </if>
+        </where>
+        group by lqr
+    </select>
+
+    <select id="queryBdcYzhSymx" resultType="cn.gtmap.realestate.common.core.dto.certificate.BdcYzhExcelDTO"
+            parameterType="list">
+        SELECT DISTINCT
+            A.YZHID,
+            A.LQBM,
+            A.LQR,
+            A.ZSLX,
+            A.QZYSXLH,
+            B.SYQK,
+            B.SYYY,
+            B.SYSJ
+
+        FROM
+            BDC_YZH A
+                LEFT JOIN BDC_YZHSYMX B ON
+                A.YZHID = B.YZHID
+        <where>
+            <if test="yzhidList != null and yzhidList.size>0">
+                A.YZHID IN
+                <foreach collection="yzhidList" item="zyhid" open="(" close=")" separator=",">
+                    #{zyhid}
+                </foreach>
+            </if>
+        </where>
+
+        ORDER BY
+         A.QZYSXLH DESC,
+         B.SYSJ DESC
+    </select>
+
+</mapper>

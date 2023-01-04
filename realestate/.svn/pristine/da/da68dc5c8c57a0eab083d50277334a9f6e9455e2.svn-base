@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.gtmap.realestate.init.core.mapper.BdcCshFwkgSlMapper">
+	<select id="queryBdcCshFwkgSlByGzlslid" resultType="cn.gtmap.realestate.common.core.dto.accept.BdcSlCshFwkgDataDTO"
+			parameterType="String">
+		select a.sfsczs, a.zszl, b.bdcdyh
+		from BDC_CSH_FWKG_SL  a left join BDC_XM b ON a.id = b.xmid
+		where
+			b.gzlslid = #{gzlslid}
+	</select>
+
+	<update id="batchUpdateCshFwkgSlSfhz">
+		update BDC_CSH_FWKG_SL s set s.sfhz = #{sfhz}
+		<where>
+			<if test="xmids != null">
+				AND s.id IN
+				<foreach collection="xmids" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</update>
+</mapper>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!-- 南通 读取住建局商品房交易信息接口 -->
+    <ex:bean id="nt_spfjyxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="读取住建局商品房交易信息接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="url" value="${nt.spfjyxx.url}"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/nantong/spfjyxx/response/data.xml" saveNull="java.util.ArrayList"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 南通 一人办系统获取到合同数据后，将获取结果推送给房产交易系统 -->
+    <ex:bean id="yrb_hqjg">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="一人办_获取结果推送房产交易系统接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="contentType" value="application/text"/>
+            <ex:property name="url" value="${yrb.hqjg.url}"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 南通 一人办系统通过此接口查询商品房买卖合同数据 -->
+    <ex:bean id="yrb_htxx">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="一人办_合同查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="contentType" value="application/text"/>
+            <ex:property name="url" value="${yrb.htxx.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/nantong/clfhtxx/yrbhtxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/nantong/clfhtxx/yrbhtxx/response/data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+
+    <!-- 南通 一人办系统通过此接口 交易核验接口 -->
+    <ex:bean id="yrb_clfhy">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="一人办_交易核验接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="contentType" value="application/text"/>
+            <ex:property name="url" value="${yrb.clfhy.url}"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 南通 一人办_存量房合同获取结果通知房产交易接口 -->
+    <ex:bean id="yrb_clfhqjg">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="一人办_存量房合同获取结果通知房产交易接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="contentType" value="application/text"/>
+            <ex:property name="url" value="${yrb.clfhthq.url}"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 南通 一人办_存量房合同主动获取接口 -->
+    <ex:bean id="yrb_zd_clfhqjg">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="一人办_存量房合同主动获取接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="contentType" value="application/text"/>
+            <ex:property name="url" value="${yrb.clfzdhthq.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/nantong/clfhtxx/yrbclf/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/nantong/clfhtxx/yrbclf/response/data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 南通 一人办_2.4交易启动接口（推送住建） -->
+    <ex:bean id="yrb_clfqd">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="一人办_交易启动接口（推送住建）"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="contentType" value="application/text"/>
+            <ex:property name="url" value="${yrb.clfqd.url}"/>
+        </ex:service-info>
+    </ex:bean>
+</beans>

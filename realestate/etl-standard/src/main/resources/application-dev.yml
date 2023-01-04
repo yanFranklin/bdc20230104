@@ -1,0 +1,173 @@
+info:
+  name: ${spring.application.name}
+  component: Etl Application
+
+app:
+  center: http://192.168.2.99:8000/eureka/
+  oauth: http://192.168.2.99:8002/account
+  security:
+    moduleAuthPath: http://account/account
+    ignores: /index/**,/image/**,/css/**,/js/**,/webjars/**,/realestate-etl/rest/v1.0/wwsq/**,/realestate-etl/wwsq/**,/realestate-etl/rest/v1.0/old/system/**
+    authorities:
+      permitAll: /index2
+      hasUrlAuthority('read'): /auth/users,/auth/orgs
+      hasModuleAuthority('yhgl:add'): /auth/user/create
+      hasAnyAuthority('ROLE_USER'): /resource1/**,/catalog1/**,/index
+      hasAnyAuthority('ROLE_ADMIN_2'): /call
+      authenticated : true
+    resources:
+      authenticated: /resource/**,/realestate-etl/rest/v1.0/**
+  services:
+#    etl-app: etl-app
+#    exchange-app: exchange-app0
+
+
+spring:
+  rabbitmq:
+    host: 192.168.0.60
+    port: 5672
+    username: guest
+    password: guest
+  redis:
+    host: 192.168.0.60
+    port: 6379
+  datasource:
+    # （盐城登记库）
+    url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+    username: bdcdj_hefei
+    password: e/lWYHJj7d9rXmgsItIxLw2oWP4XasfqoDXA0AKNYHgeSJQK8IKgU8/+ia1ax4mr9ki4QZbrQrCW9WMkHDOPAA==
+    publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK8ev+xi3qANIZpQGhndeKtc2EOlsPd48VIhphnl3OoOKqynJuQo7qZrJekk8iqXHgvze3bnFrFyTtf3vxGIamsCAwEAAQ==
+    # （合肥登记库）
+    bdcdj:
+      url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+      username: bdcdj_hefei
+      password: gtis
+    # 互联网库数据源（常州、淮安）
+    hlw:
+      url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+      username: bdcdj_hefei
+      password: gtis
+    # 不动产登记库数据源
+    exchange:
+      url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+      username: bdcdj_hefei
+      password: gtis
+    # 土地库登记数据源（常州）
+    td:
+      url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+      username: bdcdj_hefei
+      password: gtis
+    # 房产交易数据源（常州、连云港）
+    fcjy:
+      url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+      username: bdcdj_hefei
+      password: gtis
+    # 一张网数据源（淮安、南通）
+    yzw:
+      url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+      username: bdcdj_hefei
+      password: gtis
+    #（淮安）
+    ydjzh:
+      url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+      username: bdcdj_hefei
+      password: gtis
+    #（淮安）
+    ydjbf:
+      url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+      username: bdcdj_hefei
+      password: gtis
+    #（南通）
+    qzk:
+      url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+      username: bdcdj_hefei
+      password: gtis
+    #（南通）
+    bjzjk:
+      url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+      username: bdcdj_hefei
+      password: gtis
+    #（合肥大数据共享数据库）
+    gxsj:
+      url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+      username: bdcdj_hefei
+      password: gtis
+  messages:
+    basename: conf/message/messages
+  mvc:
+    static-path-pattern: /realestate-etl/**
+
+sftp:
+  host: 192.168.2.125 # 服务器ip
+  port: 22 # ssh端口
+  username: root # 用户名
+  password: abc123!@# # 密码
+  # 连接池参数
+  pool:
+    max-total: 50
+    max-idle: 50
+    min-idle: 10
+
+server:
+  port: ${port:8800}
+
+liquibase:
+  enabled: false
+logging:
+  level:
+    org.springframework: WARN
+    cn.gtmap.gtc.plugins: DEBUG
+    cn.gtmap.realestate.etl.core.mapper: DEBUG
+
+print.path: C:\GTIS\print\
+# 打印访问的ip地址
+url.print-ip: http://127.0.0.1:8800
+
+#证照信息开关 （默认推送，true则不推送）
+yzw.zzxx.enable: true
+
+fcjy.htfjurl: http://112.86.222.211:8002
+
+#非税配置项，可以根据qxdm配置,例如： fs.src.340104: test,如果未配置，取默认值fs.src
+fs:
+  src: K3206820002    #支持qxdm
+  des: F320682        #支持qxdm
+  app: CNNONTAX       #支持qxdm
+  ver: 1.0            #支持qxdm
+  token: bank_default_token #支持qxdm
+  socket:
+    host: 127.0.0.1   #支持qxdm
+    port: 8088        #支持qxdm
+    timeout: 3000     #支持qxdm
+    #    serverPort: 10009
+    serverPort: 10009
+    # 线程池 - 保持线程数 20
+    pool-keep: 20
+    # 线程池 - 核心线程数 10
+    pool-core: 10
+    # 线程池 - 最大线程数 20
+    pool-max: 30
+    # 线程队列容量 10
+    pool-queue-init: 10
+
+
+wwsq.fjxx.bcfs: ftp
+wwsq.ftp.ip: 192.168.2.86
+wwsq.ftp.username: FtpAdmin
+wwsq.ftp.password: Gtmap123
+wwsq.ftp.port: 21
+wwsq.ftp.ftpFilePath: /test/
+
+##共享外网创建定时任务
+##定时任务是否开启,true开启
+gx.wwsqcj.enable: false
+##定时任务表达式（默认半小时扫描一次）
+gx.wwsqcj.cron: 0 0/30 * * * ?
+##定时任务一次创建数量（默认100件,最大数量1000）
+gx.wwsqcj.cjsl: 100
+
+data:
+  version: yancheng
+
+html:
+  version: yancheng

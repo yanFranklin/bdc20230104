@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title class="bdc_subsystem">不动产电子证照信息</title>
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <link rel="stylesheet" href="../../static/thirdControl/layui/css/layui.css" media="all">
+    <script src="../../static/thirdControl/layui/layui.js"></script>
+    <script src="../../static/thirdControl/jquery/jquery.min.js"></script>
+    <script src="../../static/js/common.js?v=1.1"></script>
+    <link rel="stylesheet" href="../../static/thirdControl/bdcui/css/table.css">
+    <link rel="stylesheet" href="../../static/thirdControl/bdcui/css/search.css">
+</head>
+<body>
+<div class="bdc-table-box">
+
+    <!--表单模块-->
+    <form class="layui-form">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">不动产单元号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="bdcdyh" class="layui-input" placeholder="请输入不动产单元号">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">持证主体</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="czzt" class="layui-input" placeholder="请输入持证主体">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <button class="layui-btn layui-btn-normal bdc-major-btn" lay-submit="" id="query" lay-filter="query"
+                        type="button">
+                    查询
+                </button>
+                <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+            </div>
+        </div>
+    </form>
+    <hr class="layui-bg-gray">
+    <table id="dzzzZzxxList" lay-filter="dataTable"></table>
+</div>
+<script type="text/html" id="zzxxListToolBarTmpl">
+    <div class="layui-btn-container">
+        <span class="layui-btn layui-btn-xs bdc-major-btn" lay-event="save">生成证照</span>
+        <span class="layui-btn layui-btn-xs bdc-major-btn" lay-event="view">查看证照</span>
+    </div>
+</script>
+<script src="../../static/thirdControl/bdcui/js/table.js"></script>
+
+<script>
+    layui.use(['jquery', 'layer', 'element', 'form', 'table', 'util'], function () {
+        var $ = layui.jquery;
+        var element = layui.element;
+        var form = layui.form;
+        var table = layui.table;
+        var util = layui.util;
+        //提交表单
+        form.on("submit(query)", function (data) {
+            tableReload('dzzzZzxxList', data.field);
+            return false;
+        });
+
+        var tableConfig = {
+            elem: '#dzzzZzxxList'
+            , method: "POST"
+            , url: '/realestate-e-certificate/listDzzzZzxxByPageJson' //数据接口
+            , cols: [[ //表头
+                {field: 'zzmc', title: '证照名称'}
+                , {field: 'bdcdyh', title: '不动产单元号'}
+                , {field: 'zzbs', title: '证照标识'}
+                , {field: 'zzbfjg', title: '证照颁发机构'}
+                , {field: 'czzt', title: '证照持证主体'}
+                , {field: 'zzbgyy', title: '证照变更原因'
+                    , templet: function (d) {
+                        if (notNull(d.zzbgyy)) {
+                            return zzbgyyDict(d.zzbgyy);
+                        } else {
+                            return "";
+                        }
+                    }
+                }
+                , {
+                    field: 'zzyxqjzrq', title: '证照有效截止时间', sort: true
+                    , templet: function (d) {
+                        if (notNull(d.zzyxqjzrq)) {
+                            return util.toDateString(d.zzyxqjzrq, "yyyy/MM/dd");
+                        } else {
+                            return "";
+                        }
+                    }
+                }
+                , {
+                    field: 'zzzt', title: '证照状态'
+                    , templet: function (d) {
+                        return zzztDict(d.zzzt);
+                    }
+                }
+                , {
+                    field: 'zzqzlj', title: '生成PDF'
+                    , templet: function (d) {
+                        return isCreatePdf(d.zzqzlj);
+                    }
+                }
+                , {title: '操作', align: 'center', fixed: 'right', width:200, toolbar: '#zzxxListToolBarTmpl'}
+            ]]
+        };
+        //加载表格
+        loadDataTablbeByUrl("#dzzzZzxxList", tableConfig);
+
+        table.on('tool(dataTable)', function (obj) {
+            var data = obj.data;
+            if (data && data.zzid) {
+                if (obj.event === "save") {
+                    createZzxxPdf(data);
+                    return false;
+                } else if (obj.event === "view") {
+                    viewPdf(data.zzqzlj);
+                    return false;
+                }
+            } else {
+                layer.alert("当前数据主键缺失，请检查数据");
+                return false
+            }
+        });
+
+    });
+    function createZzxxPdf(data) {
+        postDataToServer("/realestate-e-certificate/createPdfBdcDzzzByZzid", {zzid: data.zzid}, "post" , false
+                , 'application/x-www-form-urlencoded');
+        refreshView();
+    }
+
+    function viewPdf(zzqzlj){
+        if (notNull(zzqzlj)) {
+            var zzqzljArr = zzqzlj.split("fid=");
+            var fid = zzqzljArr[1];
+            if (isNull(fid)) {
+                layer.msg("未获取到证照附件ID！");
+                return false;
+            }
+            var view = layer.open({
+                type: 2,
+                title: "证照查看",
+                maxmin: true,
+                area: ['70%', '100%'],
+                fixed: false, //不固定
+                content: '/realestate-e-certificate/showPdf?fid=' + fid
+                , end: function (index, layero) {
+                    return false;
+                }
+            });
+        } else {
+            layer.msg("未生成PDF！");
+        }
+
+    }
+
+    function zzbgyyDict(zzbgyy){
+        if ("1" == zzbgyy) {
+            return "正常办理登记业务注销";
+        } else if ("2" == zzbgyy) {
+            return "电子证照签发错误注销";
+        } else {
+            return zzbgyy;
+        }
+    }
+
+    function zzztDict(zzzt) {
+        if ("1" == zzzt) {
+            return "现势";
+        } else if ("2" == zzzt) {
+            return "注销";
+        } else {
+            return "其它";
+        }
+    }
+
+    function isCreatePdf(zzqzlj) {
+        if (isNull(zzqzlj)) {
+            return "否";
+        }
+        return "是";
+    }
+
+</script>
+</body>
+</html>
+
+

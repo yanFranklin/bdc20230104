@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--宗地基本信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.QltFwFdcqDzMapper">
+
+    <select id="queryQltFwFdcqDzList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.QltFwFdcqDzDO">
+        SELECT DISTINCT
+        t.bdcdyh,
+        l.yxmid as ssywh,
+        t.ghyt,
+        t.ytmc,
+        t.pzyt,
+        t.sjyt,
+        t.jedw,
+        c.zdzhyt yt,
+        fb.syqx as tdsyqx,
+        c.xmid AS ywh,
+        t.qllx,
+        t.djlx,
+        nvl(t.djyy, '/') djyy,
+        t.zl AS fdzl,
+        nvl(t.tdsyqr, '/') AS tdsyqr,
+        t.dytdmj,
+        t.fttdmj,
+        nvl(t.tdsyqssj,
+        to_date('1949-10-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss')) AS tdsyqssj,
+        nvl(t.tdsyjssj,
+        to_date('2999-12-31 00:00:00', 'yyyy-mm-dd hh24:mi:ss')) AS tdsyjssj,
+        trunc(t.jyjg/10000,4) fdcjyjg,
+        replace(c.bdcqzh, '/', '、') AS bdcqzh,
+        substr(c.bdcdyh,0,6) as qxdm,
+        t.djjg,
+        t.dbr,
+        t.djsj,
+        t.fj,
+        t.qszt
+        FROM bdc_fdcq t
+        LEFT JOIN bdc_xm c ON c.xmid = t.xmid
+        LEFT JOIN bdc_xm_lsgx l ON l.xmid=c.xmid and nvl(l.WLXM,0) = 0
+        LEFT JOIN bdc_xmfb fb ON fb.xmid = c.xmid
+        <if test="yywh != null and yywh !=''">
+            LEFT JOIN bdc_xm_lsgx r ON r.yxmid=c.xmid and nvl(r.WLXM,0) = 0
+        </if>
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND t.xmid = #{ywh}
+            </if>
+            <if test="yywh != null and yywh !=''">
+                AND r.xmid=#{yywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND t.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryQlfFwFdcqDzXmList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.QlfFwFdcqDzXmDO">
+        SELECT t2.bdcdyh,t.xmmc,t.zh,t.zcs,t.ghyt,t.fwjg,t.jzmj,nvl(t.jgsj,'1949-10-01') jgsj,
+        nvl(t.zts,1) zts,substr(t2.bdcdyh,0,6) as qxdm,t1.fwlx,nvl(t.fwxz,'99') fwxz,t.fwjg,t.bdcdywybh,t2.xmid ywh FROM bdc_fdcq_fdcqxm t
+        LEFT JOIN bdc_fdcq t1 ON t.qlid = t1.qlid
+        LEFT JOIN bdc_xm t2 ON t1.xmid = t2.xmid
+        <if test="yywh != null and yywh !=''">
+            LEFT JOIN bdc_xm_lsgx t3 ON t3.yxmid = t2.xmid and nvl(t3.WLXM,0) = 0
+        </if>
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND t2.xmid = #{ywh}
+            </if>
+            <if test="yywh != null and yywh !=''">
+                AND t3.xmid=#{yywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND t2.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+    <select id="queryQltFwFdcqDzListOld" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.yancheng.yth.old.QltFwFdcqDzOldDO">
+        SELECT DISTINCT
+        t.bdcdyh,
+        c.xmid AS ywh,
+        t.qllx,
+        t.djlx,
+        nvl(t.djyy, '/') djyy,
+        t.zl AS fdzl,
+        nvl(t.tdsyqr, '/') AS tdsyqr,
+        t.dytdmj,
+        t.fttdmj,
+        nvl(t.tdsyqssj,
+        to_date('1949-10-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss')) AS tdsyqssj,
+        nvl(t.tdsyjssj,
+        to_date('2999-12-31 00:00:00', 'yyyy-mm-dd hh24:mi:ss')) AS tdsyjssj,
+        trunc(t.jyjg/10000,4) fdcjyjg,
+        replace(c.bdcqzh, '/', '、') AS bdcqzh,
+        substr(c.bdcdyh,0,6) as qxdm,
+        t.djjg,
+        t.dbr,
+        t.djsj,
+        t.fj,
+        t.qszt
+        FROM bdc_fdcq t
+        LEFT JOIN bdc_xm c ON c.xmid = t.xmid
+        <if test="yywh != null and yywh !=''">
+            LEFT JOIN bdc_xm_lsgx r ON r.yxmid=c.xmid and nvl(r.WLXM,0) = 0
+        </if>
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND t.xmid = #{ywh}
+            </if>
+            <if test="yywh != null and yywh !=''">
+                AND r.xmid=#{yywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND t.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+    <select id="queryQlfFwFdcqDzXmListOld" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.yancheng.yth.old.QlfFwFdcqDzXmOldDO">
+        SELECT t2.bdcdyh,t.xmmc,t.zh,t.zcs,t.ghyt,t.fwjg,t.jzmj,nvl(t.jgsj,'1949-10-01') jgsj,
+        nvl(t.zts,1) zts,substr(t2.bdcdyh,0,6) as qxdm,t1.fwlx,nvl(t.fwxz,'99') fwxz,t.fwjg,t.bdcdywybh,t2.xmid ywh FROM
+        bdc_fdcq_fdcqxm t
+        LEFT JOIN bdc_fdcq t1 ON t.qlid = t1.qlid
+        LEFT JOIN bdc_xm t2 ON t1.xmid = t2.xmid
+        <if test="yywh != null and yywh !=''">
+            LEFT JOIN bdc_xm_lsgx t3 ON t3.yxmid = t2.xmid and nvl(t3.WLXM,0) = 0
+        </if>
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND t2.xmid = #{ywh}
+            </if>
+            <if test="yywh != null and yywh !=''">
+                AND t3.xmid=#{yywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND t2.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+</mapper>

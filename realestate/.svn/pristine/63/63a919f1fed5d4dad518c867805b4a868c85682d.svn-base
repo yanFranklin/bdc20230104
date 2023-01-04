@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>登簿日志明细预览</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/common.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css"/>
+</head>
+<body>
+<div class="content-div">
+    <div class="bdc-content-box" id="dbrzmx">
+
+    </div>
+</div>
+</body>
+
+<script type="text/html" id="dbrzmxTpl">
+    <table class="layui-table new-table" border="1">
+        <colgroup>
+            <col width="50">
+            <col width="50">
+            <col width="50">
+            <col width="50">
+            <col width="50">
+            <col width="50">
+            <col width="50">
+            <col width="50">
+            <col width="50">
+            <col width="50">
+            <col width="50">
+            <col width="50">
+            <col width="50">
+            <col width="50">
+            <col width="50">
+        </colgroup>
+        <tbody>
+        <tr>
+            <td rowspan="2">行政编码</td>
+            <td rowspan="2">行政名称</td>
+            <td rowspan="2">日期</td>
+            <td rowspan="2">备注</td>
+            <td colspan="11">明细</td>
+        </tr>
+        <tr>
+            <td>类型</td>
+            <td>总数量</td>
+            <td>首次登记</td>
+            <td>转移登记</td>
+            <td>变更登记</td>
+            <td>注销登记</td>
+            <td>更正登记</td>
+            <td>异议登记</td>
+            <td>预告登记</td>
+            <td>查封登记</td>
+            <td>其他登记</td>
+        </tr>
+        <tr>
+            <td rowspan="2">{{d.xzqdm}}</td>
+            <td rowspan="2">
+                {{# layui.each(d.zd, function(index, item){ }}
+                {{# if(d.xzqdm==item.DM ){ }}
+                {{item.MC || ''}}
+                {{# } }}
+                {{# }); }}
+            </td>
+            <td rowspan="2">{{d.accessDate}}</td>
+            <td rowspan="2"></td>
+            <td>登簿量</td>
+            <td>{{d.accessLog.registerInfo.totalNum}}</td>
+            <td>{{d.accessLog.registerInfo.firstReg}}</td>
+            <td>{{d.accessLog.registerInfo.transferReg}}</td>
+            <td>{{d.accessLog.registerInfo.changeReg}}</td>
+            <td>{{d.accessLog.registerInfo.logoutReg}}</td>
+            <td>{{d.accessLog.registerInfo.riviseReg}}</td>
+            <td>{{d.accessLog.registerInfo.dissentingReg}}</td>
+            <td>{{d.accessLog.registerInfo.advanceReg}}</td>
+            <td>{{d.accessLog.registerInfo.seizeReg}}</td>
+            <td>{{d.accessLog.registerInfo.otherReg}}</td>
+        </tr>
+        <tr>
+            <td>接入量</td>
+            <td>{{d.accessLog.accessInfo.totalNum}}</td>
+            <td>{{d.accessLog.accessInfo.firstReg}}</td>
+            <td>{{d.accessLog.accessInfo.transferReg}}</td>
+            <td>{{d.accessLog.accessInfo.changeReg}}</td>
+            <td>{{d.accessLog.accessInfo.logoutReg}}</td>
+            <td>{{d.accessLog.accessInfo.riviseReg}}</td>
+            <td>{{d.accessLog.accessInfo.dissentingReg}}</td>
+            <td>{{d.accessLog.accessInfo.advanceReg}}</td>
+            <td>{{d.accessLog.accessInfo.seizeReg}}</td>
+            <td>{{d.accessLog.accessInfo.otherReg}}</td>
+        </tr>
+        </tbody>
+    </table>
+</script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/table.js"></script>
+<script src="../../static/js/dbrz/dbrzmxyl.js"></script>

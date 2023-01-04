@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>推送收费台账</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/common.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css"/>
+    <link rel="stylesheet" href="../../static/css/changzhou/tssfxx.css"/>
+</head>
+<style>
+</style>
+<body>
+<div id="mainDiv" class="bdc-percentage-container tssfxx">
+    <!--查询条件-->
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <!--默认两行的-->
+            <form class="layui-form" action="" onsubmit="return false;">
+                <div class="layui-form-item pf-form-item">
+                    <div class="cxtj" id="cxtj">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!--表格-->
+    <div class="bdc-table-box">
+        <div class="bdc-table-zj bdc-table-zj-cz bdc-hide">
+            <span><img src="../../static/image/plzj.png" alt="">总计</span>
+            <div><span>流程总数： <i id="lcCount"></i></span></div>
+            <div><span>合计： <i id="sumhj"></i></span></div>
+            <div class="lcslbh"><span>大受理编号： <i id="lcslbh"></i></span></div>
+        </div>
+        <table id="tssfxxTable" lay-filter="tssfxxTable"></table>
+    </div>
+
+    <!--表格上面功能按钮-->
+    <script type="text/html" id="toolbar">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="push" id="push">推送</button>
+            <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="jfcx" id="jfcx">缴费查询</button>
+            <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="jffs" id="jffs">缴费方式</button>
+            <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="jfzt" id="jfzt">缴费状态</button>
+            <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="export" id="export">导出</button>
+            {{#  var url = d.url; if(isNotBlank(url) && url.indexOf("dyaq")> -1){ }}
+            <button class="layui-btn layui-btn-sm bdc-table-second-btn dyatslxr" lay-event="dyatslxr" name="dyatslxr" id="dyatslxr">抵押推送联系人</button>
+            {{# } }}
+            <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="getFph" id="getFph">纸质票取号</button>
+            <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="printjfs" id="printjfs">纸质票打印</button>
+            <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="zfFph" id="zfFph">纸质票作废</button>
+            <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="revokeFph" id="revokeFph">纸质票取消取号</button>
+            <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="reCountSfxm" id="reCountSfxm">重新计算</button>
+            <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="plth" name="plth" id="plth">批量退回</button>
+            <button class="layui-btn layui-btn-sm bdc-delete-btn" lay-event="del" id="del">删除</button>
+        </div>
+    </script>
+
+    <!--产权搜索条件tpl-->
+    <script type="text/html" id="searchTpl">
+        {{# if(d.ymlx === "cq"){ }}
+        <div class="layui-inline">
+            <label id="slbhLabel" class="layui-form-label">受理编号</label>
+            <div id="slbhDiv" class="layui-input-inline">
+                <input type="text" id="slbh" name="slbh" autocomplete="off" placeholder="请输入" value="{{d.slbhList || ''}}"
+                       class="layui-input search required slbh">
+                <i class="layui-icon layui-icon-close bdc-hide"></i>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">权利人名称</label>
+            <div class="layui-input-inline">
+                <input type="text" id="qlrmc" name="qlrmc" autocomplete="off" placeholder="请输入" ondblclick="readxxByIdCard(this,'','qlrzjh')"
+                       class="layui-input search required">
+                <i class="layui-icon layui-icon-close bdc-hide"></i>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">权利人证件号</label>
+            <div class="layui-input-inline">
+                <input type="text" id="qlrzjh" name="qlrzjh" autocomplete="off" placeholder="请输入"
+                       class="layui-input search required">
+                <i class="layui-icon layui-icon-close bdc-hide"></i>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label change-label-width">查询方式</label>
+            <div class="layui-input-inline">
+                <input type="radio" name="mhlx" value="0"
+                       lay-filter="mhlx" class="change-radio-top"
+                       title="精确" checked="checked">
+                <input type="radio" name="mhlx" value="1" class="change-radio-top"
+                       lay-filter="mhlx" title="模糊">
+            </div>
+        </div>
+        <div class="layui-inline bdc-button-box-four">
+            <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+        </div>
+        {{# }else{ }}
+        <div class="layui-inline">
+            <label id="slbhLabel" class="layui-form-label">受理编号</label>
+            <div id="slbhDiv" class="layui-input-inline">
+                <input type="text" id="slbh" name="slbh" autocomplete="off" placeholder="请输入" value="{{d.slbhList || ''}}"
+                       class="layui-input search required slbh">
+                <i class="layui-icon layui-icon-close bdc-hide"></i>
+            </div>
+        </div>
+        <div class="layui-inline xzq-sele">
+            <label class="layui-form-label change-label-width">抵押方式</label>
+            <div class="layui-input-inline select-height">
+                <select id="dyfs" class="required" name="dyfs" lay-search="" lay-filter="xgjfyy">
+                    <option value="">请选择</option>
+                    <option value="1">一般抵押</option>
+                    <option value="2">最高额抵押</option>
+                </select>
+                <i class="layui-icon layui-icon-close bdc-hide"></i>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label" name="dyaqrmc" id="dyaqrmc">抵押权人</label>
+            <div class="layui-input-inline bdc-radio" ondblclick="readxxByIdCard(this)">
+                <select name="dyaqr" id="dyaqr" lay-search="" lay-filter="dyaqr" class="dyaqr required"
+                        xm-select="dyaqr" xm-select-radio xm-select-search="" xm-select-height="34px"
+                        xm-select-search-type="dl" xm-select-create="">
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline xzq-sele">
+            <label class="layui-form-label change-label-width">代理人</label>
+            <div class="layui-input-inline">
+                <input class="layui-input" id="dlr" name="dlr" type="text" ondblclick="readxxByIdCard(this)">
+                <i class="layui-icon layui-icon-close bdc-hide"></i>
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">开始时间</label>
+            <div class="layui-input-inline">
+                <input id="slkssj" autocomplete="off" class="layui-input test-item" type="text" name="slkssj" placeholder="请选择"/>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">结束时间</label>
+            <div class="layui-input-inline">
+                <input id="sljssj" autocomplete="off" class="layui-input test-item" type="text" name="sljssj" placeholder="请选择"/>
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label change-label-width">查询方式</label>
+            <div class="layui-input-inline">
+                <input type="radio" name="mhlx" value="0"
+                       lay-filter="mhlx" class="change-radio-top"
+                       title="精确" checked="checked">
+                <input type="radio" name="mhlx" value="1" class="change-radio-top"
+                       lay-filter="mhlx" title="模糊">
+            </div>
+        </div>
+        <div class="layui-inline bdc-button-box">
+            <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+        </div>
+        {{# } }}
+    </script>
+
+    <div id="bdc-popup-large" class="bdc-hide bdc-big-layer-css">
+        <form class="layui-form" action="">
+            <div class="layui-form-item change-textarea-margin">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>受理编号</label>
+                <div class="layui-input-inline">
+                    <textarea style="height: 250px" id="slbhs" name="desc" placeholder="请输入内容"
+                              class="layui-textarea"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div id="bdc-popup-small" class="bdc-hide bdc-big-layer-css">
+        <form class="layui-form" action="">
+            <div class="layui-form-item" style="width:100%;text-align:center;">
+                <div class="layui-input-inline" style="width:450px;">
+                    <input type="radio" name="jffs" value="3" title="现金" checked>
+                    <input type="radio" name="jffs" value="2" title="网银">
+                    <input type="radio" name="jffs" value="1" title="刷卡">
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div id="bdc-popup-small-lxrxx" class="bdc-hide bdc-big-layer-css">
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="lxrmc" name="lxrmc" autocomplete="off" placeholder="请输入"
+                               class="layui-input">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">联系电话</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="lxdh" name="lxdh" autocomplete="off" placeholder="请输入"
+                               class="layui-input">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div id="bdc-popup-small-jfzt" class="bdc-hide bdc-big-layer-css">
+        <form class="layui-form" action="">
+            <div class="layui-form-item" style="width:100%;text-align:center;">
+                <div class="layui-input-inline" style="width:450px;">
+                    <input type="radio" name="jfzt" value="1" title="未缴费">
+                    <input type="radio" name="jfzt" value="2" title="已缴费">
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div id="bdc-popup-large-jfsbm" class="bdc-hide bdc-big-layer-css">
+        <form class="layui-form" action="">
+            <div class="layui-tab-content">
+                <div class="basic-info">
+                    <div class="title-sign">
+                        <p>以下存在缴费书编码：</p>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="jfsbm-chk"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!--隐藏form，为了Excel导出缓存数据使用-->
+    <form style="display: none" action="/realestate-accept-ui/excel/export" method="POST" id="form">
+        <input type="hidden" id="fileName" name="fileName"/>
+        <input type="hidden" id="sheetName" name="sheetName"/>
+        <input type="hidden" id="cellTitle" name="cellTitle"/>
+        <input type="hidden" id="cellWidth" name="cellWidth"/>
+        <input type="hidden" id="cellKey" name="cellKey"/>
+        <input type="hidden" id="addBorder" name="addBorder"/>
+        <input type="hidden" id="fontSize" name="fontSize"/>
+        <input type="hidden" id="data" name="data"/>
+    </form>
+    <script src="../../static/lib/jquery/jquery.min.js"></script>
+    <script src="../../static/lib/layui/layui.js"></script>
+
+    <!--添加水印-->
+    <script src="../../static/lib/bdcui/js/common.js"></script>
+    <script src="../../static/lib/bdcui/js/print/print-common.js"></script>
+    <script src="../../static/js/common.js"></script>
+    <script src='../../static/js/formCenter.js'></script>
+    <script src='../../static/js/readCard.js'></script>
+    <script src="../../static/js/table.js"></script>
+    <script src="../../static/js/changzhou/slym/print.js"></script>
+    <script src="../../static/js/changzhou/sfxx/tssfxx.js"></script>
+</div>
+
+</body>
+</html>

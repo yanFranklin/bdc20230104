@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.BdcDwJkMapper">
+
+    <insert id="batchInsertApiInfo">
+        BEGIN
+        <foreach collection="list" item="item" separator=";">
+            insert into bdc_dw_jk
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.jkid != null and item.jkid != ''">
+                    jkid,
+                </if>
+                <if test="item.qxrz != null and item.qxrz != ''">
+                    qxrz,
+                </if>
+                <if test="item.jkdz != null and item.qxrz != ''">
+                    jkdz,
+                </if>
+                <if test="item.jkqqfs != null and item.jkqqfs != ''">
+                    jkqqfs,
+                </if>
+                <if test="item.jkmc != null and item.jkmc != ''">
+                    jkmc,
+                </if>
+                <if test="item.jkms != null and item.jkms != ''">
+                    jkms,
+                </if>
+                <if test="item.jklx != null">
+                    jklx,
+                </if>
+                <if test="item.sjkjb != null and item.sjkjb != ''">
+                    sjkjb,
+                </if>
+                <if test="item.yyid != null and item.yyid != ''">
+                    yyid,
+                </if>
+                <if test="item.jkxff != null and item.jkxff != ''">
+                    jkxff,
+                </if>
+                <if test="item.sfjlrz != null">
+                    sfjlrz,
+                </if>
+                <if test="item.cjsj != null">
+                    cjsj,
+                </if>
+                <if test="item.cjr != null and item.cjr != ''">
+                    cjr,
+                </if>
+                <if test="item.xgsj != null">
+                    xgsj,
+                </if>
+                <if test="item.xgr != null and item.xgr != ''">
+                    xgr,
+                </if>
+                <if test="item.sfsc != null">
+                    sfsc,
+                </if>
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.jkid != null and item.jkid != ''">
+                    #{item.jkid,jdbcType=VARCHAR},
+                </if>
+                <if test="item.qxrz != null and item.qxrz != ''">
+                    #{item.qxrz,jdbcType=VARCHAR},
+                </if>
+                <if test="item.jkdz != null and item.qxrz != ''">
+                    #{item.jkdz,jdbcType=VARCHAR},
+                </if>
+                <if test="item.jkqqfs != null and item.jkqqfs != ''">
+                    #{item.jkqqfs,jdbcType=VARCHAR},
+                </if>
+                <if test="item.jkmc != null and item.jkmc != ''">
+                    #{item.jkmc,jdbcType=VARCHAR},
+                </if>
+                <if test="item.jkms != null and item.jkms != ''">
+                    #{item.jkms,jdbcType=VARCHAR},
+                </if>
+                <if test="item.jklx != null">
+                    #{item.jklx,jdbcType=INTEGER},
+                </if>
+                <if test="item.sjkjb != null and item.sjkjb != ''">
+                    #{item.sjkjb,jdbcType=VARCHAR},
+                </if>
+                <if test="item.yyid != null and item.yyid != ''">
+                    #{item.yyid,jdbcType=VARCHAR},
+                </if>
+                <if test="item.jkxff != null and item.jkxff != ''">
+                    #{item.jkxff,jdbcType=VARCHAR},
+                </if>
+                <if test="item.sfjlrz != null">
+                    #{item.sfjlrz,jdbcType=VARCHAR},
+                </if>
+                <if test="item.cjsj != null">
+                    SYSDATE,
+                </if>
+                <if test="item.cjr != null and item.cjr != ''">
+                    #{item.cjr,jdbcType=VARCHAR},
+                </if>
+                <if test="item.xgsj != null">
+                    SYSDATE,
+                </if>
+                <if test="item.xgr != null and item.xgr != ''">
+                    #{item.xgr,jdbcType=VARCHAR},
+                </if>
+                <if test="item.sfsc != null">
+                    #{item.sfsc,jdbcType=INTEGER},
+                </if>
+            </trim>
+        </foreach>
+        ;COMMIT;
+        END;
+    </insert>
+
+    <insert id="batchInsertApiInfoMerge">
+        MERGE INTO bdc_dw_jk t
+        USING (
+        <foreach collection="list" item="item" index="index" separator="union">
+            SELECT
+            #{item.jkid,jdbcType=VARCHAR} as jkid,
+            #{item.qxrz,jdbcType=VARCHAR} as qxrz,
+            #{item.jkdz,jdbcType=VARCHAR} as jkdz,
+            #{item.jkqqfs,jdbcType=VARCHAR} as jkqqfs,
+            #{item.jkmc,jdbcType=VARCHAR} as jkmc,
+            #{item.jkms,jdbcType=VARCHAR} as jkms,
+            #{item.jklx,jdbcType=INTEGER} as jklx,
+            #{item.sjkjb,jdbcType=VARCHAR} as sjkjb,
+            #{item.yyid,jdbcType=VARCHAR} as yyid,
+            #{item.jkxff,jdbcType=VARCHAR} as jkxff,
+            #{item.sfjlrz,jdbcType=VARCHAR} as sfjlrz,
+            SYSDATE as cjsj,
+            #{item.cjr,jdbcType=VARCHAR} as cjr,
+            SYSDATE as xgsj,
+            #{item.xgr,jdbcType=VARCHAR} as xgr,
+            #{item.sfsc,jdbcType=INTEGER} as sfsc,
+            #{item.fbzt,jdbcType=INTEGER} as fbzt
+            FROM DUAL
+        </foreach>) t1
+        ON (t.jkmc = t1.jkmc)
+        WHEN MATCHED THEN
+        UPDATE SET
+        xgsj = sysdate
+        WHEN NOT MATCHED THEN
+        INSERT(
+        <trim suffixOverrides=",">
+            <if test="item.jkid != null and item.jkid != ''">
+                jkid,
+            </if>
+            <if test="item.qxrz != null and item.qxrz != ''">
+                qxrz,
+            </if>
+            <if test="item.jkdz != null and item.jkdz != ''">
+                jkdz,
+            </if>
+            <if test="item.jkqqfs != null and item.jkqqfs != ''">
+                jkqqfs,
+            </if>
+            <if test="item.jkmc != null and item.jkmc != ''">
+                jkmc,
+            </if>
+            <if test="item.jkms != null and item.jkms != ''">
+                jkms,
+            </if>
+            <if test="item.jklx != null">
+                jklx,
+            </if>
+            <if test="item.sjkjb != null and item.sjkjb != ''">
+                sjkjb,
+            </if>
+            <if test="item.yyid != null and item.yyid != ''">
+                yyid,
+            </if>
+            <if test="item.jkxff != null and item.jkxff != ''">
+                jkxff,
+            </if>
+            <if test="item.sfjlrz != null">
+                sfjlrz,
+            </if>
+            cjsj,
+            <if test="item.cjr != null and item.cjr != ''">
+                cjr,
+            </if>
+            <if test="item.sfsc != null">
+                sfsc,
+            </if>
+            <if test="item.fbzt != null">
+                fbzt,
+            </if>
+        </trim>
+        )
+        VALUES (
+        <trim suffixOverrides=",">
+            <if test="item.jkid != null and item.jkid != ''">
+                t1.jkid,
+            </if>
+            <if test="item.qxrz != null and item.qxrz != ''">
+                t1.qxrz,
+            </if>
+            <if test="item.jkdz != null and item.jkdz != ''">
+                t1.jkdz,
+            </if>
+            <if test="item.jkqqfs != null and item.jkqqfs != ''">
+                t1.jkqqfs,
+            </if>
+            <if test="item.jkmc != null and item.jkmc != ''">
+                t1.jkmc,
+            </if>
+            <if test="item.jkms != null and item.jkms != ''">
+                t1.jkms,
+            </if>
+            <if test="item.jklx != null">
+                t1.jklx,
+            </if>
+            <if test="item.sjkjb != null and item.sjkjb != ''">
+                t1.sjkjb,
+            </if>
+            <if test="item.yyid != null and item.yyid != ''">
+                t1.yyid,
+            </if>
+            <if test="item.jkxff != null and item.jkxff != ''">
+                t1.jkxff,
+            </if>
+            <if test="item.sfjlrz != null">
+                t1.sfjlrz,
+            </if>
+            sysdate,
+            <if test="item.cjr != null and item.cjr != ''">
+                t1.cjr,
+            </if>
+            <if test="item.sfsc != null">
+                t1.sfsc,
+            </if>
+            <if test="item.fbzt != null">
+                t1.fbzt,
+            </if>
+        </trim>
+        )
+
+    </insert>
+
+    <insert id="insertApiInfo" parameterType="cn.gtmap.realestate.common.core.domain.exchange.BdcDwJkDO">
+        insert into bdc_dw_jk
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="jkid != null and jkid != ''">
+                jkid,
+            </if>
+            <if test="qxrz != null and qxrz != ''">
+                qxrz,
+            </if>
+            <if test="jkdz != null and qxrz != ''">
+                jkdz,
+            </if>
+            <if test="jkqqfs != null and jkqqfs != ''">
+                jkqqfs,
+            </if>
+            <if test="jkmc != null and jkmc != ''">
+                jkmc,
+            </if>
+            <if test="jkms != null and jkms != ''">
+                jkms,
+            </if>
+            <if test="jklx != null">
+                jklx,
+            </if>
+            <if test="sjkjb != null and sjkjb != ''">
+                sjkjb,
+            </if>
+            <if test="yyid != null and yyid != ''">
+                yyid,
+            </if>
+            <if test="jkxff != null and jkxff != ''">
+                jkxff,
+            </if>
+            <if test="sfjlrz != null">
+                sfjlrz,
+            </if>
+            <if test="rzjlfs != null">
+                rzjlfs,
+            </if>
+            cjsj,
+            <if test="cjr != null and cjr != ''">
+                cjr,
+            </if>
+            <if test="xgsj != null">
+                xgsj,
+            </if>
+            <if test="xgr != null and xgr != ''">
+                xgr,
+            </if>
+            <if test="sfsc != null">
+                sfsc,
+            </if>
+            <if test="cssl != null">
+                cssl,
+            </if>
+            <if test="fbzt != null">
+                fbzt,
+            </if>
+            <if test="updatetime != null">
+                updatetime,
+            </if>
+            <if test="packageResponse != null">
+                package_response,
+            </if>
+            <if test="responseHead != null">
+                response_head,
+            </if>
+            <if test="responseBodyDefaultValue != null">
+                response_body_default_value,
+            </if>
+            <if test="packageResponseDetail != null">
+                package_response_detail,
+            </if>
+            <if test="responseDetail != null">
+                response_detail,
+            </if>
+            <if test="dataIsList != null">
+                data_is_list,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="jkid != null and jkid != ''">
+                #{jkid,jdbcType=VARCHAR},
+            </if>
+            <if test="qxrz != null and qxrz != ''">
+                #{qxrz,jdbcType=VARCHAR},
+            </if>
+            <if test="jkdz != null and qxrz != ''">
+                #{jkdz,jdbcType=VARCHAR},
+            </if>
+            <if test="jkqqfs != null and jkqqfs != ''">
+                #{jkqqfs,jdbcType=VARCHAR},
+            </if>
+            <if test="jkmc != null and jkmc != ''">
+                #{jkmc,jdbcType=VARCHAR},
+            </if>
+            <if test="jkms != null and jkms != ''">
+                #{jkms,jdbcType=VARCHAR},
+            </if>
+            <if test="jklx != null">
+                #{jklx,jdbcType=INTEGER},
+            </if>
+            <if test="sjkjb != null and sjkjb != ''">
+                #{sjkjb,jdbcType=VARCHAR},
+            </if>
+            <if test="yyid != null and yyid != ''">
+                #{yyid,jdbcType=VARCHAR},
+            </if>
+            <if test="jkxff != null and jkxff != ''">
+                #{jkxff,jdbcType=VARCHAR},
+            </if>
+            <if test="sfjlrz != null">
+                #{sfjlrz,jdbcType=VARCHAR},
+            </if>
+            <if test="rzjlfs != null">
+                #{rzjlfs,jdbcType=VARCHAR},
+            </if>
+            SYSDATE,
+            <if test="cjr != null and cjr != ''">
+                #{cjr,jdbcType=VARCHAR},
+            </if>
+            <if test="xgsj != null">
+                #{xgsj,jdbcType=TIMESTAMP},
+            </if>
+            <if test="xgr != null and xgr != ''">
+                #{xgr,jdbcType=VARCHAR},
+            </if>
+            <if test="sfsc != null">
+                #{sfsc,jdbcType=INTEGER},
+            </if>
+            <if test="cssl != null">
+                #{cssl,jdbcType=VARCHAR},
+            </if>
+            <if test="fbzt != null">
+                #{fbzt,jdbcType=INTEGER},
+            </if>
+            <if test="updatetime != null">
+                #{updatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="packageResponse != null">
+                #{packageResponse,jdbcType=INTEGER},
+            </if>
+            <if test="responseHead != null">
+                #{responseHead,jdbcType=VARCHAR},
+            </if>
+            <if test="responseBodyDefaultValue != null">
+                #{responseBodyDefaultValue,jdbcType=VARCHAR},
+            </if>
+            <if test="packageResponseDetail != null">
+                #{packageResponseDetail,jdbcType=INTEGER},
+            </if>
+            <if test="responseDetail != null">
+                #{responseDetail,jdbcType=VARCHAR},
+            </if>
+            <if test="dataIsList != null">
+                #{dataIsList,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="listPageApiInfoByPage" resultType="cn.gtmap.realestate.common.core.domain.exchange.BdcDwJkDO"
+            parameterType="map">
+        select * from bdc_dw_jk where
+        1=1
+        <if test="consumerList != null and consumerList.size() > 0">
+            and jkxff in
+            <foreach collection="consumerList" item="item" open="(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="name != null and name != ''">
+            and jkmc like concat（concat('%',#{name,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="url != null and url != ''">
+            and jkdz like concat（concat('%',#{url,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="description != null and description != ''">
+            and jkms like concat（concat('%',#{description,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="releaseStatus != null and releaseStatus != ''">
+            and fbzt = #{releaseStatus,jdbcType=VARCHAR}
+        </if>
+        <choose>
+            <when test="sortParameter != null and sortParameter != ''">
+                order by ${sortParameter}
+            </when>
+            <otherwise>
+                order by cjsj desc NULLS last
+            </otherwise>
+        </choose>
+
+    </select>
+
+    <select id="searchApiInfoById" resultType="cn.gtmap.realestate.common.core.domain.exchange.BdcDwJkDO">
+        select * from bdc_dw_jk where
+        1=1
+        <if test="jkid != null and jkid != ''">
+            and jkid = #{jkid,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="listSearchApiInfo" resultType="cn.gtmap.realestate.common.core.domain.exchange.BdcDwJkDO">
+        select * from bdc_dw_jk where
+        1=1
+        <if test="jkids != null">
+            and jkid in
+            <foreach collection="jkids" item="jkid" index="index" open="(" close=")" separator=",">
+                #{jkid}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="listSearchApiIds" resultType="java.lang.String">
+        select jkid from bdc_dw_jk where
+        1=1
+        <if test="jkids != null">
+            and jkid in
+            <foreach collection="jkids" item="jkid" index="index" open="(" close=")" separator=",">
+                #{jkid}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="searchApiInfo" parameterType="cn.gtmap.realestate.common.core.domain.exchange.BdcDwJkDO"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.BdcDwJkDO">
+        select * from bdc_dw_jk where
+        1=1
+        <if test="jkid != null and jkid != ''">
+            and jkid = #{jkid,jdbcType=VARCHAR}
+        </if>
+        <if test="jkdz != null and jkdz != ''">
+            and jkdz = #{jkdz,jdbcType=VARCHAR}
+        </if>
+        <if test="jkmc != null and jkmc != ''">
+            and jkmc = #{jkmc,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="querySimpleApiUrl" resultType="cn.gtmap.realestate.common.core.domain.exchange.BdcDwJkDO">
+        select jkid,jkdz from bdc_dw_jk where jklx = 0
+    </select>
+
+    <update id="updateApiInfo" parameterType="cn.gtmap.realestate.common.core.domain.exchange.BdcDwJkDO">
+        update bdc_dw_jk
+        <trim prefix="set" suffixOverrides=",">
+            <if test="jkdz != null and qxrz != ''">
+                jkdz = #{jkdz,jdbcType=VARCHAR},
+            </if>
+            <if test="jkqqfs != null and jkqqfs != ''">
+                jkqqfs = #{jkqqfs,jdbcType=VARCHAR},
+            </if>
+            <if test="jkmc != null and jkmc != ''">
+                jkmc = #{jkmc,jdbcType=VARCHAR},
+            </if>
+            <if test="jkms != null and jkms != ''">
+                jkms = #{jkms,jdbcType=VARCHAR},
+            </if>
+            <if test="jklx != null">
+                jklx = #{jklx,jdbcType=INTEGER},
+            </if>
+            <if test="sjkjb != null and sjkjb != ''">
+                sjkjb = #{sjkjb,jdbcType=VARCHAR} ,
+            </if>
+            <if test="yyid != null and yyid != ''">
+                yyid = #{yyid,jdbcType=VARCHAR},
+            </if>
+            <if test="jkxff != null and jkxff != ''">
+                jkxff = #{jkxff,jdbcType=VARCHAR},
+            </if>
+            <if test="jkxff == null or jkxff == ''">
+                jkxff = null ,
+            </if>
+            <if test="sfjlrz != null">
+                sfjlrz = #{sfjlrz,jdbcType=INTEGER},
+            </if>
+            <if test="rzjlfs != null">
+                rzjlfs = #{rzjlfs,jdbcType=INTEGER},
+            </if>
+            xgsj = SYSDATE,
+            <if test="xgr != null and xgr != ''">
+                xgr = #{xgr,jdbcType=VARCHAR},
+            </if>
+            <if test="fbzt != null">
+                fbzt = #{fbzt,jdbcType=VARCHAR},
+            </if>
+            <if test="cssl != null and cssl !=''">
+                cssl = #{cssl,jdbcType=VARCHAR},
+            </if>
+            <if test="packageResponse != null">
+                package_response = #{packageResponse,jdbcType=INTEGER},
+            </if>
+            <if test="responseHead != null">
+                response_head = #{responseHead,jdbcType=VARCHAR},
+            </if>
+            <if test="responseHead == null">
+                response_head = null,
+            </if>
+            <if test="packageResponseDetail != null">
+                package_response_detail = #{packageResponseDetail,jdbcType=INTEGER},
+            </if>
+            <if test="responseDetail != null">
+                response_detail = #{responseDetail,jdbcType=VARCHAR},
+            </if>
+            <if test="responseDetail == null">
+                response_detail = null,
+            </if>
+            <if test="dataIsList != null">
+                data_is_list = #{dataIsList,jdbcType=INTEGER},
+            </if>
+            <if test="responseBodyDefaultValue != null">
+                response_body_default_value = #{responseBodyDefaultValue,jdbcType=VARCHAR},
+            </if>
+            <if test="responseBodyDefaultValue == null">
+                response_body_default_value = null,
+            </if>
+        </trim>
+        where jkid=#{jkid,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateReleaseStatus" parameterType="cn.gtmap.realestate.common.core.dto.exchange.openapi.BdcOpenApiDTO">
+        update bdc_dw_jk set fbzt = #{releaseStatus,jdbcType=INTEGER},xgr = #{updatedBy,jdbcType=VARCHAR},xgsj = sysdate where jkid = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="deleteApi">
+        delete from bdc_dw_jk where jkid = #{jkid,jdbcType=VARCHAR}
+    </delete>
+
+    <delete id="batchDeleteApi">
+        delete from bdc_dw_jk where
+        1=1
+        <if test='list != null and list.size() > 0'>
+            and jkid in
+            <foreach collection="list" item="item" open="(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </delete>
+
+    <delete id="deleteApiWithoutUpdate">
+        delete from bdc_dw_jk where
+        UPDATETIME IS NULL AND JKLX IN (1,2)
+    </delete>
+
+    <select id="queryApiByName" resultType="cn.gtmap.realestate.common.core.domain.exchange.BdcDwJkDO">
+        select * from bdc_dw_jk where 1=1 and jkmc = #{jkmc,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryApiByUrl" resultType="cn.gtmap.realestate.common.core.domain.exchange.BdcDwJkDO">
+        select * from bdc_dw_jk where 1=1 and jkdz = #{jkdz,jdbcType=VARCHAR}
+    </select>
+</mapper>

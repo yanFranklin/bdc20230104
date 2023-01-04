@@ -1,0 +1,55 @@
+info:
+  name: ${spring.application.name}
+  component: building application
+
+app:
+  center: http://192.168.10.87:8000/eureka/
+  oauth: http://192.168.10.87:8002/account
+  storage: http://192.168.10.87:8019/storage
+  portal: http://200.1.1.168:8030/realestate-portal-ui
+  security:
+    moduleAuthPath: http://account/account
+    ignores: /image/**,/css/**,/js/**,/webjars/**,/lib/**
+    authorities:
+      permitAll: /test/**
+      hasUrlAuthority('read'): /auth/users,/auth/orgs
+      hasModuleAuthority('yhgl:add'): /auth/user/create
+      hasAnyAuthority('ROLE_USER'): /resource1/**,/catalog1/**,/index
+      hasAnyAuthority('ROLE_ADMIN_2'): /call
+      authenticated : true
+      preFlight: false
+    resources:
+      hasScope('get_resource_info'): /resource/**,/catalog/**,/building-ui/rest/v1.0/**
+
+spring:
+  rabbitmq:
+    host: 192.168.10.87
+    port: 5672
+    username: guest
+    password: guest
+#    virtual-host: 200.200.202.241
+  redis:
+    port: 6379
+    host: 192.168.10.87
+  messages:
+    basename: conf/message/messages, conf/message/errors
+  freemarker:
+    settings:
+      datetime_format: yyyy-MM-dd
+      auto_import: common/common.ftl as com, common/globalVars.ftl as glo
+      url_escaping_charset: UTF-8
+      number_format: 0
+    cache: false
+server:
+  port: ${port:8999}
+  context-path: /building-ui
+
+# 功能前规则验证 优先级3及以上为alert级别
+gnqyz: 3
+
+#页面状态配置
+lpbzt:
+  pzMap:
+    #交易状态: 颜色
+    可售,限售: 00ff00
+    配套用房: 00ff01

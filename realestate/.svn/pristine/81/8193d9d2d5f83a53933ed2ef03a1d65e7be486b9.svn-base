@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--收费信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.DjfDjSfMapper">
+
+    <select id="queryDjfDjSfList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.DjfDjSfDO">
+        SELECT DISTINCT s.sfxmid,
+        x.xmid ywh,
+        nvl(t.sfdcsr, nvl(t.jfrxm, NULL)) jfry,
+        t.SFSJ jfrq,
+        nvl(s.sfxmmc, '/') sfkmmc,
+        '0' sfewsf,
+        s.sfbl sfjs,
+        s.sflx,
+        s.ysje as ysje,
+        '' zkhysje,
+        nvl(t.sfdcsr, nvl(t.sfrxm, '/')) sfry,
+        t.SFSJ sfrq,
+        t.fff,
+        nvl(t.jfrxm, '/') sjffr,
+        s.ssje as ssje,
+        nvl(zd.mc, '/') sfdw,
+        SUBSTR(X.BDCDYH,0,6) qxdm
+        FROM bdcsl_sfxx t
+        LEFT JOIN bdcsl_sfxm s ON t.sfxxid = s.sfxxid
+        LEFT JOIN bdc_xm x ON x.xmid = t.xmid
+        left join bdc_zd_jedw zd on t.JEDW = zd.dm
+        WHERE s.ysje IS NOT NULL
+        <if test="gzlslid != null and gzlslid !=''">
+            and x.gzlslid = #{gzlslid}
+        </if>
+        <if test="ywh != null and ywh !=''">
+            and x.xmid = #{ywh}
+        </if>
+    </select>
+
+    <select id="queryDjfDjSfListOld" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.yancheng.yth.old.DjfDjSfOldDO">
+        SELECT DISTINCT s.sfxmid,
+        x.xmid ywh,
+        nvl(t.sfdcsr, nvl(t.jfrxm, NULL)) jfry,
+        t.SFSJ jfrq,
+        nvl(s.sfxmmc, '/') sfkmmc,
+        '0' sfewsf,
+        s.sfbl sfjs,
+        s.sflx,
+        s.ysje as ysje,
+        '' zkhysje,
+        nvl(t.sfdcsr, nvl(t.sfrxm, '/')) sfry,
+        t.SFSJ sfrq,
+        t.fff,
+        nvl(t.jfrxm, '/') sjffr,
+        s.ssje as ssje,
+        nvl(zd.mc, '/') sfdw,
+        SUBSTR(X.BDCDYH,0,6) qxdm
+        FROM bdcsl_sfxx t
+        LEFT JOIN bdcsl_sfxm s ON t.sfxxid = s.sfxxid
+        LEFT JOIN bdc_xm x ON x.xmid = t.xmid
+        left join bdc_zd_jedw zd on t.JEDW = zd.dm
+        WHERE s.ysje IS NOT NULL
+        <if test="gzlslid != null and gzlslid !=''">
+            and x.gzlslid = #{gzlslid}
+        </if>
+        <if test="ywh != null and ywh !=''">
+            and x.xmid = #{ywh}
+        </if>
+    </select>
+</mapper>

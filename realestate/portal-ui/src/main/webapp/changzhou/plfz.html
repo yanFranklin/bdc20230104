@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title class="bdc_subsystem">批量发证</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
+    <meta content="IE=Edge,no-cache" http-equiv="X-UA-Compatible"/>
+    <meta content="no-cache" http-equiv="Pragma"/>
+    <meta content="no-cache" http-equiv="Cache-Control"/>
+    <meta content="0" http-equiv="Expires"/>
+    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+    <link rel="stylesheet" href="../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../static/lib/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="../static/lib/bdcui/css/application.css"/>
+    <link rel="stylesheet" href="../static/lib/bdcui/css/table.css" media="all" />
+    <link rel="stylesheet" href="../static/lib/registerui/css/percentage-layout.css">
+    <link rel="stylesheet" href="../static/lib/bdcui/css/search.css" media="all" />
+    <link rel="stylesheet" href="../static/lib/bdcui/css/mask.css" media="all" />
+    <link rel="stylesheet" href="../static/lib/bdcui/css/popup.css" />
+    <link rel="stylesheet" href="../static/css/list-tasks.css" media="all" />
+    <script src="../static/lib/jquery/jquery.min.js"></script>
+    <style type="text/css">
+        .bdc-percentage-container {
+            width: 100%;
+            height: 100%;
+            padding: 61px 10px 10px;
+            box-sizing: border-box;
+            position: relative;
+            background-color: #eaedf1;
+        }
+        #bdc-popup-slbh .change-textarea-margin .layui-input-inline {
+            width: 80%;
+        }
+    </style>
+</head>
+<body>
+<div class="bdc-percentage-container">
+    <!--查询条件-->
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <!--默认一行的-->
+            <form class="layui-form" action="">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">受理编号</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input slbh" name="slbh" id="slbh" placeholder="请输入" type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">流程名称</label>
+                        <div class="layui-input-inline">
+                            <select class="bdc-lcmc" id="selectLcmc" name="lcmc" lay-filter="lcmcFilter" lay-search="">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                        <button type="reset" id="reset" class="layui-btn bdc-secondary-btn reset-btn">重置</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <!--表格-->
+    <div class="bdc-table-box">
+        <table class="layui-table" id="plfzTable" lay-filter="plfzFilter"></table>
+    </div>
+
+    <!-- 受理编号弹出层-->
+    <div id="bdc-popup-slbh" class="bdc-hide bdc-big-layer-css">
+        <form class="layui-form" action="">
+            <div class="layui-form-item change-textarea-margin">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>受理编号</label>
+                <div class="layui-input-inline">
+                    <textarea style="height: 250px" id="slbhs" name="slbhs" placeholder="请输入内容"
+                              class="layui-textarea"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- 受理编号弹出层-->
+    <div id="bdc-popup-large" class="bdc-hide bdc-big-layer-css">
+            <div class="bdc-content-box">
+                <form class="layui-form setOverflow" action="">
+                    <div class="content-main">
+                        <div class="bdc-table-box">
+                            <table class="layui-table" border="1">
+                                <colgroup>
+                                    <col width="187">
+                                    <col width="264">
+                                    <col width="187">
+                                    <col width="264">
+                                </colgroup>
+                                <tr>
+                                    <td class="set-back-color" colspan="1">领证人</td>
+                                    <td>
+                                        <input type="text" class="layui-table-edit" name="lzr" id="lzr" ondblclick="readxxByIdCard(this,'lzrzjzl', 'lzrzjh')">
+                                    </td>
+                                    <td class="set-back-color" rowspan="4">
+                                        <a onclick="lzrqz();">领证人签字<i class="layui-icon layui-icon-edit"></i></a>
+                                    </td>
+                                    <td rowspan="4" style="text-align: center">
+                                        <img class="lzrqz" style="width: 150px;height: 100px;display:none;">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="set-back-color" colspan="1">领证人证件种类</td>
+                                    <td colspan="1">
+                                        <select id="lzrzjzl" name="lzrzjzl" lay-filter="lzrzjzl" lay-search="">
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="set-back-color" colspan="1">领证人证件号</td>
+                                    <td colspan="1">
+                                        <input type="text" class="layui-table-edit" name="lzrzjh" lay-verify="identity" id="lzrzjh" value="">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="set-back-color" colspan="1">领证人电话</td>
+                                    <td colspan="1">
+                                        <input type="text" class="layui-table-edit" name="lzrdh" id="lzrdh" value="">
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            </div>
+    </div>
+
+</div>
+
+<!--表格上面功能按钮-->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="send" id="send">转发</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="editLzr" id="editLzr">修改领证人</button>
+    </div>
+</script>
+
+<!--流程模板-->
+<script id="lcTpl" type="text/html">
+    <img src="../static/image/lc.png" alt="" onclick="viewLct('{{d.processInstanceId}}')"/>
+</script>
+<!-- 受理编号模板 -->
+<script id="slbhTpl" type="text/html">
+    {{#  if(d.slbh != undefined){ }}
+    <span style="color:#1d87d1;cursor:pointer">
+        {{d.slbh}}
+    </span>
+    {{#  } else { }}
+    <span></span>
+    {{#  } }}
+</script>
+<!--状态模板-->
+<script id="stateTpl" type="text/html">
+    {{# if(d.priority == 200){  }}
+    <span class="bdc-table-state-th">特急</span>
+    {{#  } }}
+    {{#  if(d.state == 2){ }}
+    <span class="bdc-table-state-th">挂起</span>
+    {{#  } else if(d.backStatus == 2) { }}
+    <span class="bdc-table-state-blz">退回</span>
+    {{#  } else if(d.taskTimeoutStatusName == '超期') { }}
+    <span class="bdc-table-state-th">超期</span>
+    {{#  } else { }}
+    <span class="bdc-table-state-jh">正常</span>
+    {{#  } }}
+</script>
+<!-- 流程名称模板 -->
+<script id="lcmcTpl" type="text/html">
+    {{#  if(d.processDefName != undefined){ }}
+    {{#  if(d.sply == '3'){ }}
+    (互联网){{d.processDefName}}
+    {{#  } else if(d.sply == '5'){ }}
+    (互联网+一窗){{d.processDefName}}
+    {{#  } else { }}
+    {{d.processDefName}}
+    {{#  } }}
+    {{#  } else { }}
+
+    {{#  } }}
+</script>
+<!--不动产单元号分层展示-->
+<script id="bdcdyhTpl" type="text/html">
+    {{#  if(d.bdcdyh != undefined){ }}
+    <span>{{ queryBdcdyh(d.bdcdyh) }}</span>
+    {{#  } else { }}
+    <span></span>
+    {{#  } }}
+</script>
+<!--任务名称模板-->
+<script id="rwNameTpl" type="text/html">
+    {{#  if(d.processDefName != undefined){ }}
+    {{#  if(d.priority == 200){ }}
+    <p class="bdc-table-name"><span>【特急】</span>{{d.processDefName}}</p>
+    {{# } else if(d.priority == 150){ }}
+    <p class="bdc-table-name"><span>【紧急】</span>{{d.processDefName}}</p>
+    {{#  } else if(d.priority == 100) { }}
+    <p class="bdc-table-name-pd"><span>【一般】</span>{{d.processDefName}}</p>
+    {{#  } else if(d.priority == 50) { }}
+    <p class="bdc-table-name-pd">【普通】{{d.processDefName}}</p>
+    {{#  } }}
+    {{#  } else { }}
+    <p class="bdc-table-name"><span></span></p>
+    {{#  } }}
+</script>
+<!--缴费状态模板-->
+<script id="jfztTpl" type="text/html">
+    {{#  if(d.jfzt != undefined && d.jfzt !== '' && d.jfzt != null){ }}
+    {{#  if(d.jfzt == 1){ }}
+    <span class="">未缴费</span>
+    {{#  } else if(d.jfzt == 2) { }}
+    <span class="">已缴费</span>
+    {{#  } else if(d.jfzt == 3) { }}
+    <span class="">部分缴费</span>
+    {{#  } else if(d.jfzt == 4) { }}
+    <span class="">退款中</span>
+    {{#  } else if(d.jfzt == 5) { }}
+    <span class="">退款成功</span>
+    {{#  } else if(d.jfzt == 6) { }}
+    <span class="">退款失败</span>
+    {{#  } else if(d.jfzt == 7) { }}
+    <span class="">已核验</span>
+    {{#  } else if(d.jfzt == 8) { }}
+    <span class="">已失效</span>
+    {{#  } else if(d.jfzt == 0) { }}
+    <span class="">不收费</span>
+    {{#  } }}
+    {{#  } else{ }}
+    <span>未缴费</span>
+    {{#  } }}
+</script>
+<script src="../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../static/lib/bdcui/js/common.js"></script>
+<script src="../static/js/common.js"></script>
+<script src="../static/lib/drag/move.js"></script>
+<!-- 读卡器 -->
+<script src='../static/lib/bdcui/js/readIdCard.js'></script>
+<script src='../changzhou/js/readCard.js'></script>
+<script src="../changzhou/js/plfz.js"></script>
+<script>
+    layui.config({
+        base: '../static/' //静态资源所在路径
+    }).extend({
+        index: '/lib/index' //主入口模块
+    }).use('index').extend({
+        workflow: 'js/workflow-handle'
+    }).use('workflow').extend({response: 'lib/bdcui/js/response'}).use('response').extend({
+        moduleAuthority: 'js/moduleAuthority'
+    }).use('moduleAuthority');
+</script>
+</body>
+</html>
+
+

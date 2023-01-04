@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcLqCxMapper">
+
+    <select id="queryBdcLqxx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.BdcLqtjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.xuancheng.BdcLqtjDTO">
+        <choose>
+            <when test="djlx != null and djlx != '' ">
+                <if test="djlx == 'cfdj' ">
+                    select  nvl(count( distinct x.bdcdyh),0) ldzs,nvl(sum(l.syqmj),0) ldzmj,nvl(count( distinct x.slbh),0) bjl
+                    from bdc_xm x
+                    left join bdc_lq l on  x.bdcdyh = l.bdcdyh
+                </if>
+                <if test="djlx == 'dyzxdj' ">
+                    select  nvl(count( distinct x.bdcdyh),0) ldzs,nvl(sum(l.tddymj),0) ldzmj,nvl(count( distinct x.slbh),0) bjl
+                    from bdc_xm x
+                    left join bdc_xm_lsgx gx  on  x.xmid = gx.xmid
+                    left join bdc_dyaq l on  gx.yxmid = l.xmid
+                </if>
+                <if test="djlx == 'zxdj' ">
+                    select  nvl(count( distinct x.bdcdyh),0) ldzs,nvl(sum(l.syqmj),0) ldzmj,nvl(count( distinct x.slbh),0) bjl
+                    from bdc_xm x
+                    left join bdc_xm_lsgx gx  on  x.xmid = gx.xmid
+                    left join bdc_lq l on  gx.yxmid = l.xmid
+                </if>
+                <if test="djlx == 'dy' ">
+                    select  nvl(count( distinct x.bdcdyh),0) ldzs,nvl(sum(dya.tddymj),0) ldzmj,nvl(count( distinct x.slbh),0) bjl,nvl(count( distinct z.bdcqzh),0) fzs,nvl(nvl(sum(dya.bdbzzqse),sum(dya.zgzqe)),0) dyje
+                    From bdc_xm x
+                    left join bdc_lq l on  x.xmid = l.xmid
+                    left join bdc_xm_zs_gx gx on gx.xmid = x.xmid
+                    left join bdc_zs z on gx.zsid = z.zsid
+                    left join bdc_dyaq dya on dya.xmid = x.xmid
+                </if>
+            </when>
+            <otherwise>
+                select  nvl(count( distinct x.bdcdyh),0) ldzs,nvl(sum(l.syqmj),0) ldzmj,nvl(count( distinct x.slbh),0) bjl,nvl(count( distinct z.bdcqzh),0) fzs
+                From bdc_xm x
+                left join bdc_lq l on  x.xmid = l.xmid
+                left join bdc_xm_zs_gx gx on gx.xmid = x.xmid
+                left join bdc_zs z on gx.zsid = z.zsid
+            </otherwise>
+        </choose>
+        where 1=1
+        <if test="djxlList != null and djxlList.size>0 ">
+            and x.djxl in
+            <foreach collection="djxlList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="kssj != null and kssj != ''">
+            AND x.djsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyy-mm-dd')
+        </if>
+        <if test="jzsj != null and jzsj != ''">
+            AND x.djsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyy-mm-dd') +1
+        </if>
+        <if test="qxdmList != null and qxdmList.size>0">
+            and x.qxdm in
+            <foreach collection="qxdmList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+
+    <select id="queryBdcLqxxmx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.BdcLqtjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.xuancheng.BdcLqtjMxDTO">
+        <choose>
+            <when test="djlx != null and djlx != '' ">
+                <if test="djlx == 'cfdj' ">
+                    select  nvl(count( distinct x.bdcdyh),0) ldzs,nvl(sum(l.syqmj),0) ldzmj
+                    from bdc_xm x
+                    left join bdc_lq l on  x.bdcdyh = l.bdcdyh
+                </if>
+                <if test="djlx == 'zxdj' ">
+                    select  nvl(count( distinct x.bdcdyh),0) ldzs,nvl(sum(l.syqmj),0) ldzmj
+                    from bdc_xm x
+                    left join bdc_xm_lsgx gx  on  x.xmid = gx.xmid
+                    left join bdc_lq l on  gx.yxmid = l.xmid
+                </if>
+                <if test="djlx == 'dyzxdj' ">
+                    select  nvl(count( distinct x.bdcdyh),0) ldzs,nvl(sum(l.tddymj),0) ldzmj
+                    from bdc_xm x
+                    left join bdc_xm_lsgx gx  on  x.xmid = gx.xmid
+                    left join bdc_dyaq l on  gx.yxmid = l.xmid
+                </if>
+                <if test="djlx == 'dy' ">
+                    select  nvl(count( distinct x.bdcdyh),0) ldzs,nvl(nvl(sum(l.syqmj),sum(dya.tddymj)),0) ldzmj
+                    From bdc_xm x
+                    left join bdc_lq l on  x.xmid = l.xmid
+                    left join bdc_dyaq dya on dya.xmid = x.xmid
+                </if>
+            </when>
+            <otherwise>
+                select  nvl(count( distinct x.bdcdyh),0) ldzs,nvl(nvl(sum(l.syqmj),sum(dya.tddymj)),0) ldzmj
+                From bdc_xm x
+                left join bdc_lq l on  x.xmid = l.xmid
+                left join bdc_dyaq dya on dya.xmid = x.xmid
+            </otherwise>
+        </choose>
+        where 1=1
+        <if test="djxlList != null and djxlList.size>0">
+            and x.djxl in
+            <foreach collection="djxlList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="djxl != null and djxl != ''">
+            and x.djxl = #{djxl,jdbcType=VARCHAR}
+        </if>
+        <if test="kssj != null and kssj != ''">
+            AND x.djsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyy-mm-dd')
+        </if>
+        <if test="jzsj != null and jzsj != ''">
+            AND x.djsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyy-mm-dd') +1
+        </if>
+        <if test="qxdmList != null and qxdmList.size>0">
+            and x.qxdm in
+            <foreach collection="qxdmList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="ldzl != null and ldzl != ''">
+            AND x.bdcdyh like '%' || #{ldzl,jdbcType=VARCHAR} || '%'
+        </if>
+    </select>
+
+</mapper>

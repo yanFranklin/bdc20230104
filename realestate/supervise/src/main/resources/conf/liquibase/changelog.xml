@@ -1,0 +1,686 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet id="2021-09-07-01-supervise" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            <!-- 质检信息表 BDC_LF_DCZJJG_ZJXX-->
+            CREATE TABLE "BDC_LF_DCZJJG_ZJXX"
+            (
+                "ID" VARCHAR2(32) NOT NULL ENABLE,
+                "ZJRYID" VARCHAR2(32),
+                "ZJRY" VARCHAR2(200),
+                "ZJBMID" VARCHAR2(32),
+                "ZJBM" VARCHAR2(200),
+                "ZJSJ" DATE,
+                "ZJWJMC" VARCHAR2(200),
+                "ZJWJID" VARCHAR2(32),
+                "ZJWJLJ" VARCHAR2(500),
+                "ZJQKBZ" VARCHAR2(4000),
+                "ZJWJSCSJ" DATE,
+                "SFWC" NUMBER(1,0),
+                "SCYJ" VARCHAR2(4000),
+                "SCRYID" VARCHAR2(32),
+                "SCRY" VARCHAR2(200),
+                "SCBMID" VARCHAR2(32),
+                "SCBM" VARCHAR2(200),
+                "SCSJ" DATE,
+                 CONSTRAINT "BDC_LF_DCZJJG_ZJXX" PRIMARY KEY ("ID")
+            );
+
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZJXX"."ID" IS '主键';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZJXX"."ZJRYID" IS '质检人员ID';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZJXX"."ZJRY" IS '质检人员';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZJXX"."ZJBMID" IS '质检部门ID';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZJXX"."ZJBM" IS '质检部门';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZJXX"."ZJSJ" IS '质检时间';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZJXX"."ZJWJMC" IS '质检文件名称';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZJXX"."ZJWJID" IS '质检文件ID';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZJXX"."ZJWJLJ" IS '质检文件路径';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZJXX"."ZJQKBZ" IS '质检情况备注';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZJXX"."ZJWJSCSJ" IS '质检文件上传时间';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZJXX"."SFWC" IS '是否完成';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZJXX"."SCYJ" IS '审查意见';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZJXX"."SCRYID" IS '审查人员ID';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZJXX"."SCRY" IS '审查人员';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZJXX"."SCBMID" IS '审查部门ID';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZJXX"."SCBM" IS '审查部门';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZJXX"."SCSJ" IS '审查时间';
+
+            <!--整改情况表 BDC_LF_DCZJJG_ZGQK-->
+            CREATE TABLE "BDC_LF_DCZJJG_ZGQK"
+            (
+                "ID" VARCHAR2(32) NOT NULL ENABLE,
+                "ZJXXID" VARCHAR2(32),
+                "SCRYID" VARCHAR2(32),
+                "SCRY" VARCHAR2(200),
+                "ZGBMID" VARCHAR2(32),
+                "ZGBM" VARCHAR2(200),
+                "ZGSJ" DATE,
+                "ZGWJMC" VARCHAR2(200),
+                "ZGWJID" VARCHAR2(32),
+                "ZGWJLJ" VARCHAR2(500),
+                "ZGQKSM" VARCHAR2(4000),
+                "ZGSFWC" NUMBER(1,0),
+                "ZGWJSCSJ" DATE,
+                 CONSTRAINT "BDC_LF_DCZJJG_ZGQK" PRIMARY KEY ("ID")
+            );
+
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZGQK"."ID" IS '主键';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZGQK"."ZJXXID" IS '质检信息ID';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZGQK"."SCRYID" IS '上传人员ID';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZGQK"."SCRY" IS '上传人员';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZGQK"."ZGBMID" IS '整改部门ID';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZGQK"."ZGBM" IS '整改部门';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZGQK"."ZGSJ" IS '整改时间';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZGQK"."ZGWJMC" IS '整改文件名称';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZGQK"."ZGWJID" IS '整改文件ID';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZGQK"."ZGWJLJ" IS '整改文件路径';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZGQK"."ZGWJSCSJ" IS '整改文件上传时间';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZGQK"."ZGQKSM" IS '整改情况说明';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZGQK"."ZGSFWC" IS '整改是否完成';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-09-10-01-supervise" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            <!-- 诚信机制建设表 BDC_LF_CXJZJS-->
+            CREATE TABLE "BDC_LF_CXJZJS"
+            (
+                "ID" VARCHAR2(32) NOT NULL ENABLE,
+                "WGRYJGMC" VARCHAR2(200),
+                "WGRYJGZJH" VARCHAR2(100),
+                "WGRYJGDZ" VARCHAR2(500),
+                "WGXW" VARCHAR2(4000),
+                "ZMWJMC" VARCHAR2(200),
+                "ZMWJID" VARCHAR2(32),
+                "ZMWJLJ" VARCHAR2(500),
+                "ZMWJSCSJ" DATE,
+                "JLR" VARCHAR2(200),
+                "JLRID" VARCHAR2(32),
+                "JLSJ" DATE,
+                 CONSTRAINT "BDC_LF_CXJZJS" PRIMARY KEY ("ID")
+            );
+
+            COMMENT ON COLUMN "BDC_LF_CXJZJS"."ID" IS '主键';
+            COMMENT ON COLUMN "BDC_LF_CXJZJS"."WGRYJGMC" IS '违规人员机构名称';
+            COMMENT ON COLUMN "BDC_LF_CXJZJS"."WGRYJGZJH" IS '违规人员机构证件号';
+            COMMENT ON COLUMN "BDC_LF_CXJZJS"."WGRYJGDZ" IS '违规人员机构地址';
+            COMMENT ON COLUMN "BDC_LF_CXJZJS"."WGXW" IS '违规行为';
+            COMMENT ON COLUMN "BDC_LF_CXJZJS"."ZMWJMC" IS '证明文件名称';
+            COMMENT ON COLUMN "BDC_LF_CXJZJS"."ZMWJID" IS '证明文件ID';
+            COMMENT ON COLUMN "BDC_LF_CXJZJS"."ZMWJLJ" IS '证明文件路径';
+            COMMENT ON COLUMN "BDC_LF_CXJZJS"."ZMWJSCSJ" IS '证明文件上传时间';
+            COMMENT ON COLUMN "BDC_LF_CXJZJS"."JLR" IS '记录人';
+            COMMENT ON COLUMN "BDC_LF_CXJZJS"."JLRID" IS '记录人ID';
+            COMMENT ON COLUMN "BDC_LF_CXJZJS"."JLSJ" IS '记录时间';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-09-13-01-supervise" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            <!--职责权能监管-授权信息管理 BDC_LF_SQXX-->
+            CREATE TABLE "BDC_LF_SQXX"
+            (
+                "ID" VARCHAR2(32) NOT NULL ENABLE,
+                "SQSM" VARCHAR2(4000),
+                "SPWJMC" VARCHAR2(200),
+                "SPWJID" VARCHAR2(32),
+                "SPWJLJ" VARCHAR2(500),
+                "SPWJSCSJ" DATE,
+                "CZR" VARCHAR2(200),
+                "CZRID" VARCHAR2(32),
+                "CZSJ" DATE,
+                 CONSTRAINT "BDC_LF_SQXX_ID" PRIMARY KEY ("ID")
+            );
+
+            COMMENT ON COLUMN "BDC_LF_SQXX"."ID" IS '主键';
+            COMMENT ON COLUMN "BDC_LF_SQXX"."SQSM" IS '授权说明';
+            COMMENT ON COLUMN "BDC_LF_SQXX"."SPWJMC" IS '审批文件名称';
+            COMMENT ON COLUMN "BDC_LF_SQXX"."SPWJID" IS '审批文件ID';
+            COMMENT ON COLUMN "BDC_LF_SQXX"."SPWJLJ" IS '审批文件路径';
+            COMMENT ON COLUMN "BDC_LF_SQXX"."SPWJSCSJ" IS '审批文件上传时间';
+            COMMENT ON COLUMN "BDC_LF_SQXX"."CZR" IS '操作人';
+            COMMENT ON COLUMN "BDC_LF_SQXX"."CZRID" IS '操作人ID';
+            COMMENT ON COLUMN "BDC_LF_SQXX"."CZSJ" IS '操作时间';
+
+            <!--职责权能监管-授权信息管理-授权人员 BDC_LF_SQXX_SQRY-->
+            CREATE TABLE "BDC_LF_SQXX_SQRY"
+            (
+                "ID" VARCHAR2(32) NOT NULL ENABLE,
+                "SQXXID" VARCHAR2(32),
+                "SQRY" VARCHAR2(200),
+                "SQRYID" VARCHAR2(32),
+                "SQSJ" DATE,
+                 CONSTRAINT "BDC_LF_SQXX_SQRY_ID" PRIMARY KEY ("ID")
+            );
+
+            COMMENT ON COLUMN "BDC_LF_SQXX_SQRY"."ID" IS '主键';
+            COMMENT ON COLUMN "BDC_LF_SQXX_SQRY"."SQXXID" IS '授权信息ID';
+            COMMENT ON COLUMN "BDC_LF_SQXX_SQRY"."SQRY" IS '授权人员';
+            COMMENT ON COLUMN "BDC_LF_SQXX_SQRY"."SQRYID" IS '授权人员ID';
+            COMMENT ON COLUMN "BDC_LF_SQXX_SQRY"."SQSJ" IS '授权时间';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-09-15-01-supervise" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"  runAlways="false">
+       <sql>
+           CREATE TABLE "BDC_XT_CX_LOG"
+           (
+               "ID" VARCHAR2(32) NOT NULL ENABLE,
+               "YHM" VARCHAR2(100),
+               "YHZH" VARCHAR2(100),
+               "DLIP" VARCHAR2(50),
+               "CXTJ" VARCHAR2(4000),
+               "EXCEL" VARCHAR2(500),
+               "CXJG" CLOB,
+               "CZSJ" DATE,
+               "YHID" VARCHAR2(32),
+               "SZBM" VARCHAR2(100),
+               "SZBMID" VARCHAR2(32),
+               "QLRMC" VARCHAR2(200),
+               "QLRZJH" VARCHAR2(100),
+               "ZL" VARCHAR2(1000),
+               "BDCDYH" VARCHAR2(100),
+               "BDCQZH" VARCHAR2(100),
+               "RZLX" VARCHAR2(10)
+           );
+
+           ALTER TABLE "BDC_XT_CX_LOG" MODIFY ("ID" NOT NULL ENABLE);
+
+           COMMENT ON COLUMN "BDC_XT_CX_LOG"."YHID" IS '用户ID';
+           COMMENT ON COLUMN "BDC_XT_CX_LOG"."SZBM" IS '所在部门';
+           COMMENT ON COLUMN "BDC_XT_CX_LOG"."SZBMID" IS '所在部门ID';
+           COMMENT ON COLUMN "BDC_XT_CX_LOG"."QLRMC" IS '权利人名称';
+           COMMENT ON COLUMN "BDC_XT_CX_LOG"."QLRZJH" IS '权利人证件号';
+           COMMENT ON COLUMN "BDC_XT_CX_LOG"."ZL" IS '坐落';
+           COMMENT ON COLUMN "BDC_XT_CX_LOG"."BDCDYH" IS '不动产单元号';
+           COMMENT ON COLUMN "BDC_XT_CX_LOG"."BDCQZH" IS '不动产权证号';
+           COMMENT ON COLUMN "BDC_XT_CX_LOG"."RZLX" IS '日志类型';
+       </sql>
+    </changeSet>
+
+    <changeSet id="2021-09-15-02-supervise" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"  runAlways="false">
+       <sql>
+           CREATE TABLE "BDC_YZH"
+           (
+               "YZHID" VARCHAR2(32) NOT NULL ENABLE,
+               "NF" VARCHAR2(4),
+               "QXDM" VARCHAR2(6),
+               "ZSLX" NUMBER(1,0),
+               "QZYSXLH" VARCHAR2(100) NOT NULL ENABLE,
+               "SYQK" VARCHAR2(2),
+               "CJR" VARCHAR2(50),
+               "CJRID" VARCHAR2(32),
+               "CJSJ" DATE,
+               "ZSID" VARCHAR2(32),
+               "BZ" VARCHAR2(400),
+               "SCCS" VARCHAR2(100),
+               "LQR" VARCHAR2(50),
+               "LQRID" VARCHAR2(32),
+               "LQBM" VARCHAR2(50),
+               "LQBMID" VARCHAR2(32),
+               "SYR" VARCHAR2(50),
+               "SYBMMC" VARCHAR2(200),
+               "SLBH" NUMBER(1,0)
+           );
+
+           ALTER TABLE "BDC_YZH" MODIFY ("YZHID" NOT NULL ENABLE);
+           ALTER TABLE "BDC_YZH" MODIFY ("QZYSXLH" NOT NULL ENABLE);
+
+           COMMENT ON COLUMN "BDC_YZH"."YZHID" IS '主键';
+           COMMENT ON COLUMN "BDC_YZH"."NF" IS '年份';
+           COMMENT ON COLUMN "BDC_YZH"."QXDM" IS '区县代码';
+           COMMENT ON COLUMN "BDC_YZH"."ZSLX" IS '证书类型';
+           COMMENT ON COLUMN "BDC_YZH"."QZYSXLH" IS '权证印刷序列号 唯一约束';
+           COMMENT ON COLUMN "BDC_YZH"."SYQK" IS '使用情况';
+           COMMENT ON COLUMN "BDC_YZH"."CJR" IS '创建人';
+           COMMENT ON COLUMN "BDC_YZH"."CJRID" IS '创建人ID';
+           COMMENT ON COLUMN "BDC_YZH"."CJSJ" IS '创建时间';
+           COMMENT ON COLUMN "BDC_YZH"."ZSID" IS '证书ID';
+           COMMENT ON COLUMN "BDC_YZH"."BZ" IS '备注';
+           COMMENT ON COLUMN "BDC_YZH"."SCCS" IS '生产厂商';
+           COMMENT ON COLUMN "BDC_YZH"."LQR" IS '领取人';
+           COMMENT ON COLUMN "BDC_YZH"."LQRID" IS '领取人ID';
+           COMMENT ON COLUMN "BDC_YZH"."LQBM" IS '领取部门';
+           COMMENT ON COLUMN "BDC_YZH"."LQBMID" IS '领取部门id';
+           COMMENT ON COLUMN "BDC_YZH"."SYR" IS '使用人';
+           COMMENT ON COLUMN "BDC_YZH"."SYBMMC" IS '使用部门';
+           COMMENT ON COLUMN "BDC_YZH"."SLBH" IS '受理编号';
+           COMMENT ON TABLE "BDC_YZH"  IS '不动产印制号管理';
+       </sql>
+    </changeSet>
+
+    <changeSet id="2021-09-15-03-supervise" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"  runAlways="false">
+       <sql>
+           CREATE TABLE "BDC_YZHSYMX"
+           (
+               "YZHSYMXID" VARCHAR2(32) NOT NULL ENABLE,
+               "YZHID" VARCHAR2(32),
+               "SYR" VARCHAR2(50),
+               "SYRID" VARCHAR2(32),
+               "SYSJ" DATE,
+               "SYYY" VARCHAR2(100),
+               "SYQK" NUMBER,
+               "SLBH" VARCHAR2(50),
+               "SYBMMC" VARCHAR2(200)
+           );
+
+           ALTER TABLE "BDC_YZHSYMX" MODIFY ("YZHSYMXID" NOT NULL ENABLE);
+
+           COMMENT ON COLUMN "BDC_YZHSYMX"."YZHSYMXID" IS '主键';
+           COMMENT ON COLUMN "BDC_YZHSYMX"."YZHID" IS '印制号ID';
+           COMMENT ON COLUMN "BDC_YZHSYMX"."SYR" IS '使用人';
+           COMMENT ON COLUMN "BDC_YZHSYMX"."SYRID" IS '使用人ID';
+           COMMENT ON COLUMN "BDC_YZHSYMX"."SYSJ" IS '使用时间 YYYY-MM-DD HH:MM:SS';
+           COMMENT ON COLUMN "BDC_YZHSYMX"."SYYY" IS '使用原因';
+           COMMENT ON COLUMN "BDC_YZHSYMX"."SYQK" IS '使用情况';
+           COMMENT ON COLUMN "BDC_YZHSYMX"."SLBH" IS '受理编号';
+           COMMENT ON COLUMN "BDC_YZHSYMX"."SYBMMC" IS '使用部门名称';
+           COMMENT ON TABLE "BDC_YZHSYMX"  IS '不动产印制号使用明细';
+       </sql>
+    </changeSet>
+
+    <changeSet id="2021-09-15-04-supervise" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"  runAlways="false">
+        <sql>
+            CREATE TABLE "BDC_ZD_ZSLX"
+            (
+                "DM" NUMBER(1),
+                "MC" VARCHAR2(10)
+            );
+
+            CREATE TABLE "BDC_ZD_ZSSYQK"
+            (
+                "DM" NUMBER(2),
+                "MC" VARCHAR2(20)
+            );
+
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-09-22-01-supervise" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"  runAlways="false">
+        <sql>
+            CREATE TABLE "BDC_LF_YCBJYJ_CQBJ"
+            (
+                "ID" VARCHAR2(32) NOT NULL ENABLE,
+                "GZLDYMC" VARCHAR2(200),
+                "GZLDYID" VARCHAR2(50),
+                "GZLSLID" VARCHAR2(50),
+                "DQJDMC" VARCHAR2(200),
+                "GZLCQSJ" VARCHAR2(50),
+                "LCQDZ" VARCHAR2(200),
+                "LCXGRY" VARCHAR2(500)
+            );
+
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CQBJ"."ID" IS '主键';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CQBJ"."GZLDYMC" IS '工作流定义名称';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CQBJ"."GZLDYID" IS '工作流定义ID';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CQBJ"."GZLSLID" IS '工作流实例ID';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CQBJ"."DQJDMC" IS '当前节点名称';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CQBJ"."GZLCQSJ" IS '工作流超期时间';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CQBJ"."LCQDZ" IS '流程启动者';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CQBJ"."LCXGRY" IS '流程相关人员';
+            COMMENT ON TABLE "BDC_LF_YCBJYJ_CQBJ"  IS '超期办件表';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-09-22-02-supervise" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"  runAlways="false">
+        <sql>
+            ALTER TABLE BDC_LF_YCBJYJ_CQBJ ADD SJTBSJ DATE;
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CQBJ"."SJTBSJ" IS '数据同步时间';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-09-23-01-supervise" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"  runAlways="false">
+        <sql>
+            CREATE TABLE "BDC_LF_YCBJYJ_PZ"
+            (
+                "GZLDYKEY" VARCHAR2(100),
+                "CKBJSC" NUMBER(4)
+            );
+
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_PZ"."GZLDYKEY" IS '工作流定义KEY';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_PZ"."CKBJSC" IS '超快办件时长';
+            COMMENT ON TABLE "BDC_LF_YCBJYJ_PZ"  IS '异常办件预警-配置表';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-09-23-02-supervise" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"  runAlways="false">
+        <sql>
+            CREATE TABLE "BDC_LF_YCBJYJ_CKBJ"
+            (
+            "ID" VARCHAR2(32) NOT NULL ENABLE,
+            "GZLDYMC" VARCHAR2(200),
+            "GZLDYID" VARCHAR2(50),
+            "GZLSLID" VARCHAR2(50),
+            "LCKSSJ" VARCHAR2(50),
+            "LCJSSJ" VARCHAR2(50),
+            "LCQDZ" VARCHAR2(200),
+            "SJTBSJ" DATE
+            );
+
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CKBJ"."ID" IS '主键';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CKBJ"."GZLDYMC" IS '工作流定义名称';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CKBJ"."GZLDYID" IS '工作流定义ID';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CKBJ"."GZLSLID" IS '工作流实例ID';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CKBJ"."LCKSSJ" IS '流程开始时间';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CKBJ"."LCJSSJ" IS '流程结束时间';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CKBJ"."LCQDZ" IS '流程启动者';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CKBJ"."SJTBSJ" IS '数据同步时间';
+            COMMENT ON TABLE "BDC_LF_YCBJYJ_CKBJ"  IS '超快办件表';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-09-27-01-supervise" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"  runAlways="false">
+        <sql>
+            ALTER TABLE BDC_LF_YCBJYJ_CKBJ ADD BJSC NUMBER(6,2);
+            ALTER TABLE BDC_LF_YCBJYJ_CKBJ ADD CKBJSCBZ NUMBER(4);
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CKBJ"."BJSC" IS '办件时长';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CKBJ"."CKBJSCBZ" IS '超快办件时长标准';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-09-27-02-supervise" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"  runAlways="false">
+        <sql>
+            ALTER TABLE BDC_LF_YCBJYJ_PZ ADD LCTJJD VARCHAR2(200);
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_PZ"."LCTJJD" IS '流程统计节点';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-09-23-03-supervise" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"  runAlways="false">
+        <sql>
+            CREATE TABLE "BDC_LF_YCBJYJ_FGZSJBJ"
+            (
+                "ID" VARCHAR2(32) NOT NULL ENABLE,
+                "GZLDYMC" VARCHAR2(200),
+                "GZLDYID" VARCHAR2(50),
+                "GZLSLMC" VARCHAR2(200),
+                "GZLSLID" VARCHAR2(50),
+                "JDKSSJ" VARCHAR2(50),
+                "JDJSSJ" VARCHAR2(50),
+                "JDMC" VARCHAR2(100),
+                "JDBJR" VARCHAR2(200),
+                "SJTBSJ" DATE
+            );
+
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_FGZSJBJ"."ID" IS '主键';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_FGZSJBJ"."GZLDYMC" IS '工作流定义名称';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_FGZSJBJ"."GZLDYID" IS '工作流定义ID';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_FGZSJBJ"."GZLSLMC" IS '工作流实例名称';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_FGZSJBJ"."GZLSLID" IS '工作流实例ID';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_FGZSJBJ"."JDKSSJ" IS '节点开始时间';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_FGZSJBJ"."JDJSSJ" IS '节点结束时间';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_FGZSJBJ"."JDMC" IS '节点名称';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_FGZSJBJ"."JDBJR" IS '节点办件人';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_FGZSJBJ"."SJTBSJ" IS '数据同步时间';
+            COMMENT ON TABLE "BDC_LF_YCBJYJ_FGZSJBJ"  IS '异常办件预警-非工作时间办件表';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-10-15-01-supervise" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"  runAlways="false">
+        <sql>
+            CREATE TABLE "BDC_LF_FJXX"
+            (
+                "ID" VARCHAR2(32) NOT NULL ENABLE,
+                "YWID" VARCHAR2(32),
+                "WJMC" VARCHAR2(200),
+                "WJID" VARCHAR2(32),
+                "WJLJ" VARCHAR2(500),
+                "WJSCSJ" DATE,
+                CONSTRAINT "BDC_LF_FJXX" PRIMARY KEY ("ID")
+            );
+
+            COMMENT ON COLUMN "BDC_LF_FJXX"."ID" IS '主键';
+            COMMENT ON COLUMN "BDC_LF_FJXX"."YWID" IS '业务ID';
+            COMMENT ON COLUMN "BDC_LF_FJXX"."WJMC" IS '文件名称';
+            COMMENT ON COLUMN "BDC_LF_FJXX"."WJID" IS '文件ID';
+            COMMENT ON COLUMN "BDC_LF_FJXX"."WJLJ" IS '文件路径';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-10-15-02-supervise" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"  runAlways="false">
+        <sql>
+            ALTER TABLE BDC_LF_SQXX ADD SQLX NUMBER(2);
+            COMMENT ON COLUMN "BDC_LF_SQXX"."SQLX" IS '授权类型';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-10-21-01-supervise" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"  runAlways="false">
+        <sql>
+            CREATE TABLE "BDC_LF_YCQKSB"
+            (
+                "ID" VARCHAR2(32) NOT NULL ENABLE,
+                "SLBH" VARCHAR2(50),
+                "SLSJ" DATE,
+                "GZLSLID" VARCHAR2(50),
+                "TBR" VARCHAR2(200),
+                "TBRID" VARCHAR2(50),
+                "TBRZH" VARCHAR2(200),
+                "TBSJ" DATE,
+                "YYSM" VARCHAR2(2000),
+                 CONSTRAINT "BDC_LF_YCQKSB" PRIMARY KEY ("ID")
+            );
+
+            COMMENT ON COLUMN "BDC_LF_YCQKSB"."ID" IS '主键';
+            COMMENT ON COLUMN "BDC_LF_YCQKSB"."SLBH" IS '受理编号';
+            COMMENT ON COLUMN "BDC_LF_YCQKSB"."SLSJ" IS '受理时间';
+            COMMENT ON COLUMN "BDC_LF_YCQKSB"."GZLSLID" IS '工作流实例ID';
+            COMMENT ON COLUMN "BDC_LF_YCQKSB"."TBR" IS '填报人';
+            COMMENT ON COLUMN "BDC_LF_YCQKSB"."TBRID" IS '填报人ID';
+            COMMENT ON COLUMN "BDC_LF_YCQKSB"."TBRZH" IS '填报人账号';
+            COMMENT ON COLUMN "BDC_LF_YCQKSB"."TBSJ" IS '填报时间';
+            COMMENT ON COLUMN "BDC_LF_YCQKSB"."YYSM" IS '原因说明';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-10-22-01-supervise" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"  runAlways="false">
+        <sql>
+            ALTER TABLE BDC_LF_YCBJYJ_CKBJ ADD SLBH VARCHAR2(32);
+            ALTER TABLE BDC_LF_YCBJYJ_CKBJ ADD SLR VARCHAR2(200);
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CKBJ"."SLBH" IS '受理编号';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CKBJ"."SLR" IS '受理人';
+
+            ALTER TABLE BDC_LF_YCBJYJ_CQBJ ADD SLBH VARCHAR2(32);
+            ALTER TABLE BDC_LF_YCBJYJ_CQBJ ADD SLR VARCHAR2(200);
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CQBJ"."SLBH" IS '受理编号';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CQBJ"."SLR" IS '受理人';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-10-22-02-supervise" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"  runAlways="false">
+        <sql>
+            ALTER TABLE BDC_LF_CXJZJS ADD SHR VARCHAR2(32);
+            ALTER TABLE BDC_LF_CXJZJS ADD SHRID VARCHAR2(200);
+            ALTER TABLE BDC_LF_CXJZJS ADD SHYJ VARCHAR2(200);
+            ALTER TABLE BDC_LF_CXJZJS ADD SHSJ DATE;
+            ALTER TABLE BDC_LF_CXJZJS ADD SHZT VARCHAR2(200);
+
+            COMMENT ON COLUMN "BDC_LF_CXJZJS"."SHR" IS '审核人';
+            COMMENT ON COLUMN "BDC_LF_CXJZJS"."SHRID" IS '审核人ID';
+            COMMENT ON COLUMN "BDC_LF_CXJZJS"."SHSJ" IS '审核时间';
+            COMMENT ON COLUMN "BDC_LF_CXJZJS"."SHYJ" IS '审核意见';
+            COMMENT ON COLUMN "BDC_LF_CXJZJS"."SHZT" IS '审核状态';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-10-25-01-supervise" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"  runAlways="false">
+        <sql>
+            ALTER TABLE BDC_LF_YCBJYJ_CQBJ ADD GZLCQSC VARCHAR2(100);
+
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CQBJ"."GZLCQSC" IS '工作流超期时长';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-10-25-02-supervise" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"  runAlways="false">
+        <sql>
+            ALTER TABLE BDC_LF_YCBJYJ_CQBJ ADD SHR VARCHAR2(32);
+            ALTER TABLE BDC_LF_YCBJYJ_CQBJ ADD SHRID VARCHAR2(200);
+            ALTER TABLE BDC_LF_YCBJYJ_CQBJ ADD SHYJ VARCHAR2(200);
+            ALTER TABLE BDC_LF_YCBJYJ_CQBJ ADD SHSJ DATE;
+            ALTER TABLE BDC_LF_YCBJYJ_CQBJ ADD SHZT VARCHAR2(200);
+
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CQBJ"."SHR" IS '审核人';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CQBJ"."SHRID" IS '审核人ID';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CQBJ"."SHSJ" IS '审核时间';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CQBJ"."SHYJ" IS '审核意见';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CQBJ"."SHZT" IS '审核状态';
+
+            ALTER TABLE BDC_LF_YCBJYJ_CKBJ ADD SHR VARCHAR2(32);
+            ALTER TABLE BDC_LF_YCBJYJ_CKBJ ADD SHRID VARCHAR2(200);
+            ALTER TABLE BDC_LF_YCBJYJ_CKBJ ADD SHYJ VARCHAR2(200);
+            ALTER TABLE BDC_LF_YCBJYJ_CKBJ ADD SHSJ DATE;
+            ALTER TABLE BDC_LF_YCBJYJ_CKBJ ADD SHZT VARCHAR2(200);
+
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CKBJ"."SHR" IS '审核人';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CKBJ"."SHRID" IS '审核人ID';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CKBJ"."SHSJ" IS '审核时间';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CKBJ"."SHYJ" IS '审核意见';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CKBJ"."SHZT" IS '审核状态';
+
+            ALTER TABLE BDC_LF_YCBJYJ_FGZSJBJ ADD SHR VARCHAR2(32);
+            ALTER TABLE BDC_LF_YCBJYJ_FGZSJBJ ADD SHRID VARCHAR2(200);
+            ALTER TABLE BDC_LF_YCBJYJ_FGZSJBJ ADD SHYJ VARCHAR2(200);
+            ALTER TABLE BDC_LF_YCBJYJ_FGZSJBJ ADD SHSJ DATE;
+            ALTER TABLE BDC_LF_YCBJYJ_FGZSJBJ ADD SHZT VARCHAR2(200);
+
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_FGZSJBJ"."SHR" IS '审核人';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_FGZSJBJ"."SHRID" IS '审核人ID';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_FGZSJBJ"."SHSJ" IS '审核时间';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_FGZSJBJ"."SHYJ" IS '审核意见';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_FGZSJBJ"."SHZT" IS '审核状态';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-10-26-01-supervise" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"  runAlways="false">
+        <sql>
+            ALTER TABLE BDC_LF_YCBJYJ_CQBJ DROP COLUMN SHR;
+            ALTER TABLE BDC_LF_YCBJYJ_CKBJ DROP COLUMN SHR;
+            ALTER TABLE BDC_LF_YCBJYJ_FGZSJBJ DROP COLUMN SHR;
+            ALTER TABLE BDC_LF_CXJZJS DROP COLUMN SHR;
+
+
+            ALTER TABLE BDC_LF_YCBJYJ_CQBJ ADD SHRY VARCHAR2(200);
+            ALTER TABLE BDC_LF_YCBJYJ_CKBJ ADD SHRY VARCHAR2(200);
+            ALTER TABLE BDC_LF_YCBJYJ_FGZSJBJ ADD SHRY VARCHAR2(200);
+            ALTER TABLE BDC_LF_CXJZJS ADD SHRY VARCHAR2(200);
+
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CQBJ"."SHRY" IS '审核人';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CKBJ"."SHRY" IS '审核人';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_FGZSJBJ"."SHRY" IS '审核人';
+            COMMENT ON COLUMN "BDC_LF_CXJZJS"."SHRY" IS '审核人';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-10-26-02-supervise" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"  runAlways="false">
+        <sql>
+            CREATE TABLE "BDC_LF_YCBJYJ_YCYY"
+            (
+                "ID" VARCHAR2(32) NOT NULL ENABLE,
+                "GZLDYMC" VARCHAR2(200),
+                "GZLDYID" VARCHAR2(50),
+                "GZLSLID" VARCHAR2(50),
+                "SLBH" VARCHAR2(32),
+                "LRR" VARCHAR2(200),
+                "LRRID" VARCHAR2(32),
+                "LRSJ" DATE,
+                "YCBJYY" VARCHAR2(2000),
+                CONSTRAINT "BDC_LF_YCBJYJ_YCYY" PRIMARY KEY ("ID")
+            );
+
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_YCYY"."ID" IS '主键ID';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_YCYY"."GZLDYMC" IS '工作流定义名称';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_YCYY"."GZLDYID" IS '工作流定义ID';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_YCYY"."GZLSLID" IS '工作流实例ID';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_YCYY"."SLBH" IS '受理编号';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_YCYY"."LRR" IS '录入人';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_YCYY"."LRRID" IS '录入人ID';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_YCYY"."LRSJ" IS '录入时间';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_YCYY"."YCBJYY" IS '异常办件原因';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-10-26-03-supervise" author="zhuyong" dbms="oracle" runOnChange="true" failOnError="false"  runAlways="false">
+        <sql>
+            ALTER TABLE BDC_LF_YCBJYJ_FGZSJBJ ADD SLBH VARCHAR2(32);
+            ALTER TABLE BDC_LF_YCBJYJ_FGZSJBJ ADD SLR VARCHAR2(200);
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_FGZSJBJ"."SLBH" IS '受理编号';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_FGZSJBJ"."SLR" IS '受理人';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-12-07-supervise" author="caolu" dbms="oracle" runOnChange="true" failOnError="false"  runAlways="false">
+        <sql>
+            ALTER TABLE BDC_LF_YCBJYJ_CQBJ ADD SLSJ DATE;
+            ALTER TABLE BDC_LF_YCBJYJ_CQBJ DROP COLUMN GZLDQSJ;
+            ALTER TABLE BDC_LF_YCBJYJ_CQBJ ADD GZLDQSJ VARCHAR2(50);
+
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CQBJ"."SLSJ" IS '受理时间';
+            COMMENT ON COLUMN "BDC_LF_YCBJYJ_CQBJ"."GZLDQSJ" IS '工作流到期时间';
+
+            ALTER TABLE BDC_LF_DCZJJG_ZJXX ADD ZJLX NUMBER;
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZJXX"."ZJLX" IS '质检类型';
+
+            CREATE TABLE "BDC_ZD_ZJLX"
+            (
+                "DM" NUMBER(2),
+                "MC" VARCHAR2(10)
+            );
+
+            ALTER TABLE BDC_LF_DCZJJG_ZJXX ADD SFASSCZJWJ VARCHAR2(10);
+            ALTER TABLE BDC_LF_DCZJJG_ZJXX ADD SFASSCZGWJ VARCHAR2(10);
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZJXX"."SFASSCZJWJ" IS '是否按时上传质检文件';
+            COMMENT ON COLUMN "BDC_LF_DCZJJG_ZJXX"."SFASSCZGWJ" IS '是否按时上传整改文件';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2022-02-14-supervise" author="caolu" dbms="oracle" runOnChange="true" failOnError="false"  runAlways="false">
+        <sql>
+            CREATE TABLE "BDC_ZD_YCBJYY"
+            (
+                "DM" NUMBER(2),
+                "MC" VARCHAR2(50)
+            );
+            ALTER TABLE BDC_LF_YCQKSB ADD YCBJYY NUMBER;
+            COMMENT ON COLUMN "BDC_LF_YCQKSB"."YCBJYY" IS '异常办件原因';
+
+            CREATE TABLE "BDC_ZD_YZHZFYY"
+            (
+                "DM" NUMBER(2),
+                "MC" VARCHAR2(20)
+            );
+            ALTER TABLE BDC_YZHSYMX ADD ZFYY NUMBER;
+            COMMENT ON COLUMN BDC_YZHSYMX.ZFYY IS '作废原因';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2022-02-25-supervise" author="caolu" dbms="oracle" runOnChange="true" failOnError="false"  runAlways="false">
+        <sql>
+            alter table BDC_LF_YCBJYJ_PZ rename column CKBJSC to CKBJSC_TEMP;
+            alter table BDC_LF_YCBJYJ_PZ add CKBJSC NUMBER(4,1);
+            update BDC_LF_YCBJYJ_PZ set CKBJSC= CKBJSC_TEMP;
+            alter table BDC_LF_YCBJYJ_PZ drop column CKBJSC_TEMP;
+            COMMENT ON COLUMN BDC_LF_YCBJYJ_PZ.CKBJSC IS '超快办件时长';
+
+            alter table BDC_LF_YCBJYJ_CKBJ rename column CKBJSCBZ to CKBJSCBZ_TEMP;
+            alter table BDC_LF_YCBJYJ_CKBJ add CKBJSCBZ NUMBER(4,1);
+            update BDC_LF_YCBJYJ_CKBJ set CKBJSCBZ= CKBJSCBZ_TEMP;
+            alter table BDC_LF_YCBJYJ_CKBJ drop column CKBJSCBZ_TEMP;
+            COMMENT ON COLUMN BDC_LF_YCBJYJ_CKBJ.CKBJSCBZ IS '超快办件时长标准';
+        </sql>
+    </changeSet>
+    <changeSet id="2022-08-18-supervise" author="caolu" dbms="oracle" runOnChange="true" failOnError="false"  runAlways="false">
+        <sql>
+            alter table BDC_LF_SQXX_SQRY add BMID VARCHAR2(32);
+            COMMENT ON COLUMN BDC_LF_SQXX_SQRY.BMID IS '部门ID';
+            alter table BDC_LF_SQXX_SQRY add BMMC VARCHAR2(200);
+            COMMENT ON COLUMN BDC_LF_SQXX_SQRY.BMMC IS '部门名称';
+            alter table BDC_LF_SQXX_SQRY add KS VARCHAR2(200);
+            COMMENT ON COLUMN BDC_LF_SQXX_SQRY.KS IS '科室';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

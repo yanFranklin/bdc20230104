@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--界址线信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.KttGyJzxMapper">
+
+    <select id="queryKttGyJzxList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.KttGyJzxDO">
+        SELECT T.* FROM
+        (SELECT A.DJH ZDZHDM,A.jzxcd,A.jzxlb,A.jzxwz
+        FROM DJSJ_ZD_JZBSB A
+        UNION ALL
+        SELECT A.zhdm ZDZHDM,A.jzxcd,A.jzxlb,A.jzxwz
+        FROM DJSJ_ZH_JZBSB A ) T
+        LEFT JOIN BDC_XM B
+        ON T.ZDZHDM = SUBSTR(B.BDCDYH,0,19)
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND B.XMID = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND B.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+
+</mapper>

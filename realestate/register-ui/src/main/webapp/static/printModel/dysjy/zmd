@@ -1,0 +1,59 @@
+---参数
+zsid,ewmUrl,ysxkzh,xmid,djh
+
+--sql
+select z.bdcqzh,z.zl,z.bdcdyh,z.fj,z.szr from bdc_zs z where z.zsid= #{zsid};
+select f1.mc fwxz,f2.mc dzwyt,f3.mc fwjg,f.zcs,f.szc,f.jzmj dzwmj,f.ftjzmj
+,f.zyjzmj tnjzmj,f.jgsj jgsj,f.slbh,to_char(f.djsj,'yyyy"年"mm"月"dd"日"') djsj,f.djjg
+from bdc_fdcq f
+left join bdc_zd_fwxz f1 on f.fwxz = f1.dm
+left join bdc_zd_fwyt f2 on f.ghyt = f2.dm
+left join bdc_zd_fwjg f3 on f.fwjg = f3.dm
+where f.xmid = #{xmid};
+select s.dytdmj,s.fttdmj,to_char(s.syqjssj,'yyyy"年"mm"月"dd"日"') tdsyjssj,s.bdcdywybh zdzhh,t2.mc tdqlxz,t1.mc tdqllx
+,x.zdzhmj,t.mc zdzhyt,x.bdcqzh tdcqzh
+from bdc_jsydsyq s
+left join bdc_xm x on s.xmid = x.xmid
+left join bdc_zd_tdyt t on x.zdzhyt = t.dm
+left join bdc_zd_qllx t1 on s.qllx = t1.dm
+left join bdc_zd_qlxz t2 on s.qlxz = t2.dm
+where s.bdcdyh = #{djh}||'W00000000' and s.qszt=1;
+select #{ewmUrl} ewmnr,#{ysxkzh} ysxkzh from dual
+
+--------xml
+<?xml version="1.0" encoding="utf-8"?>
+<fetchdatas>
+    <page>
+        <datas>
+				    <data name="slbh" type="String">$SLBH</data>
+            <data name="bdcqzh" type="String">$BDCQZH</data>
+						<data name="ysxkzh" type="String">$YSXKZH</data>
+				    <data name="zl" type="String">$ZL</data>
+						<data name="bdcdyh" type="String">$BDCDYH</data>
+						<data name="fwxz" type="String">$FWXZ</data>
+						<data name="dzwyt" type="String">$DZWYT</data>
+						<data name="fwjg" type="String">$FWJG</data>
+						<data name="zcs" type="String">$ZCS</data>
+						<data name="szc" type="String">$SZC</data>
+						<data name="jgsj" type="String">$JGSJ</data>
+						<data name="dzwmj" type="String">$DZWMJ</data>
+						<data name="dzwyt" type="String">$DZWYT</data>
+						<data name="ftjzmj" type="String">$FTJZMJ</data>
+						<data name="tnjzmj" type="String">$TNJZMJ</data>
+						<data name="tdcqzh" type="String">$TDCQZH</data>
+						<data name="zdzhh" type="String">$ZDZHH</data>
+						<data name="tdsyjssj" type="String">$TDSYJSSJ</data>
+						<data name="tdqlxz" type="String">$TDQLXZ</data>
+						<data name="tdqllx" type="String">$TDQLLX</data>
+						<data name="zdzhyt" type="String">$ZDZHYT</data>
+            <data name="zdzhmj" type="String">$ZDZHMJ</data>
+					  <data name="dytdmj" type="String">$DYTDMJ</data>
+            <data name="fttdmj" type="String">$FTTDMJ</data>
+						<data name="fj" type="String">$FJ</data>
+            <data name="djsj" type="String">$DJSJ</data>
+						<data name="szr" type="String">$SZR</data>
+						<data name="djjg" type="String">$DJJG</data>
+            <data name="ewmnr" type="Image">$EWMNR</data>
+        </datas>
+    </page>
+</fetchdatas>

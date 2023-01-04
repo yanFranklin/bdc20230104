@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>不动产登记审批表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/common.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css"/>
+    <link rel="stylesheet" href="../../static/css/shxx/bdcShxx.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+</head>
+<body>
+
+<div class="content-div">
+    <div class="bdc-content-box">
+        <form class="layui-form setOverflow" action="">
+            <div class="bdc-content-fix">
+                <div class="content-title">
+                    <p>不动产登记审批表</p>
+                    <div class="title-btn-area .layui-layout-right">
+                        <button type="button" class="layui-btn bdc-major-btn" id="saveBtn" lay-submit=""
+                                lay-filter="saveBtn">
+                            保存
+                        </button>
+                        <!--  <button type="button" class="layui-btn bdc-secondary-btn" id="spbyl" name="printBtn" lay-submit="" lay-filter="spbyl">
+                              审批表预览
+                          </button>-->
+
+                        <button type="button" class="layui-btn bdc-secondary-btn" id="fdcq3Fwqd" name="printBtn"
+                                lay-submit="" lay-filter="fdcq3FwqdBtn" style="display: none">
+                            房屋清单
+                        </button>
+                        <button type="button" class="layui-btn bdc-secondary-btn" id="zsView" name="printBtn"
+                                lay-submit="" lay-filter="zsView">
+                            证书预览
+                        </button>
+
+                        <button type="button" id="printSpb" lay-submit="" lay-filter="printBtn"
+                                class="layui-btn bdc-secondary-btn print-btn-grspb"
+                                name="printBtn">打印审批表
+                        </button>
+                        <!--<button type="button" class="layui-btn bdc-secondary-btn" id="grSpbBtn" name="printBtn" lay-submit="" lay-filter="grSpbBtn" style="display:none;">
+                            个人审批表
+                        </button>-->
+                        <!--<button type="button" class="layui-btn bdc-secondary-btn" id="dwSpbBtn" name="printBtn" lay-submit="" lay-filter="dwSpbBtn" style="display:none;">
+                            单位审批表
+                        </button>-->
+
+                        <!--<button type="button" class="layui-btn bdc-secondary-btn" id="dyaSpbBtn" name="printBtn" lay-submit="" lay-filter="dyaSpbBtn" style="display:none;">
+                            抵押审批表
+                        </button>
+                        <button type="button" class="layui-btn bdc-secondary-btn" id="plSpbBtn" name="printBtn" lay-submit="" lay-filter="plSpbBtn" style="display:none;">
+                            汇总审批表
+                        </button>
+                        <button type="button" class="layui-btn bdc-secondary-btn" id="scSpbBtn" name="printBtn" lay-submit="" lay-filter="scSpbBtn" style="display:none;">
+                            首次审批表
+                        </button>
+                        <button type="button" class="layui-btn bdc-secondary-btn" id="hySpbBtn" name="printBtn" lay-submit="" lay-filter="hySpbBtn" style="display:none;">
+                            海域审批表
+                        </button>-->
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-main">
+                <div class="table-name"></div>
+                <div id="templateFatherDiv"></div>
+                <script type="text/html" id="qmyjDiv">
+                    <!--模板主键-->
+                    <table class="layui-table shxx_table" border="1" lay-filter="shxxTable">
+                        <colgroup>
+                        </colgroup>
+                        <tbody>
+                        {{# layui.each(d, function(index, item){ }}
+                        <tr>
+                            <td class="set-back-color set-jd-font" rowspan="2">{{item.jdmc}}</td>
+                            <td class="shxx_yj" colspan="4">
+                                <div>
+                                    <div class="pre bdc-text" id="{{item.jdid}}_pre">{{item.shyj||""}}</div>
+                                    <textarea id="{{item.jdid}}_shyj" name="desc" class="layui-textarea bdc-text"
+                                              oninput="changeContent(event)">{{item.shyj||""}}</textarea>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="set-back-color qm_label">{{item.jdmc ||""}}人</td>
+                            <td class="sign_img">
+                                <img id="{{item.jdid}}_img" src="{{item.qmtpdz==undefined?'':item.qmtpdz}}"/></td>
+                            <td class="set-back-color qm_label">
+                                <p class="sign-p">
+                                    <a id="{{item.jdid}}_sign" class="{{item.jdid}}_sign" href="javascript:void(0)"
+                                       onclick="sign('{{item.jdmc}}','{{item.shxxid}}')">
+                                        <i class="layui-icon layui-icon-edit"></i>签名
+                                    </a>
+                                </p>
+                                <p class="delete-p">
+                                    <a id="{{item.jdid}}_deleteSign" class="{{item.jdid}}_deleteSign"
+                                       href="javascript:void(0)"
+                                       onclick="deleteSign('{{item.jdmc}}','{{item.shxxid}}')">
+                                        <i class="layui-icon layui-icon-delete"></i>
+                                        删除
+                                    </a>
+                                </p>
+                            </td>
+                            <td class="sign_date" id="{{item.jdid}}_time">
+                                {{item.qmsj ||""}}
+                            </td>
+                        </tr>
+                        {{# }); }}
+                        </tbody>
+                    </table>
+                </script>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="bdc-kxyj-content bdc-hide" id="kxyjContainer">
+    <div class="layui-tab layui-tab-brief" lay-filter="kxyjFilter">
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <table id="checkboxTable" lay-filter="checkboxTableFilter"></table>
+            </div>
+        </div>
+    </div>
+    <div class="bdc-kxyj-button">
+        <button class="layui-btn layui-btn-normal bdc-major-btn bdc-kxyj-sure-btn">确定</button>
+        <button class="layui-btn layui-btn-normal bdc-secondary-btn bdc-kxyj-cancel">取消</button>
+    </div>
+</div>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/lib/bdcui/js/print/print-common.js"></script>
+<script src="../../static/js/formCenter.js"></script>
+<script src="../../static/js/changzhou/shxx/bdcShxx.js"></script>
+</body>
+</html>

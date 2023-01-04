@@ -1,0 +1,91 @@
+info:
+  name: ${spring.application.name}
+  component: inquiry application
+
+app:
+  center: http://192.168.2.99:8000/eureka/
+  oauth: http://192.168.2.99:8002/account
+  security:
+    moduleAuthPath: http://account/account
+    # 开放权限：静态资源、打印接口、住房查询接口
+    ignores: /image/**,/css/**,/js/**,/webjars/**,/realestate-inquiry/rest/v1.0/print/**,/realestate-inquiry/rest/v1.0/zfxx/**,/realestate-inquiry/rest/v1.0/test/**
+    authorities:
+      permitAll: /index2
+      hasUrlAuthority('read'): /auth/users,/auth/orgs
+      hasModuleAuthority('yhgl:add'): /auth/user/create
+      hasAnyAuthority('ROLE_USER'): /resource1/**,/catalog1/**,/index
+      hasAnyAuthority('ROLE_ADMIN_2'): /call
+      authenticated: true
+    resources:
+      authenticated: /realestate-inquiry/**
+  services:
+    accept-app: accept-app
+
+spring:
+  rabbitmq:
+    host: 192.168.0.60
+    port: 5672
+    username: guest
+    password: guest
+  redis:
+    port: 6379
+    host: 192.168.0.60
+  datasource:
+    url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+    username: bdcdj_hefei
+    password: e/lWYHJj7d9rXmgsItIxLw2oWP4XasfqoDXA0AKNYHgeSJQK8IKgU8/+ia1ax4mr9ki4QZbrQrCW9WMkHDOPAA==
+    publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK8ev+xi3qANIZpQGhndeKtc2EOlsPd48VIhphnl3OoOKqynJuQo7qZrJekk8iqXHgvze3bnFrFyTtf3vxGIamsCAwEAAQ==
+
+  cloud-data-source:
+    url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+    username: bdcdj_hefei
+    password: e/lWYHJj7d9rXmgsItIxLw2oWP4XasfqoDXA0AKNYHgeSJQK8IKgU8/+ia1ax4mr9ki4QZbrQrCW9WMkHDOPAA==
+    publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK8ev+xi3qANIZpQGhndeKtc2EOlsPd48VIhphnl3OoOKqynJuQo7qZrJekk8iqXHgvze3bnFrFyTtf3vxGIamsCAwEAAQ==
+  messages:
+    basename: conf/message/messages, conf/message/errors
+  profiles:
+    include: config
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 1000MB
+  zipkin:
+    # base-url: http://localhost:8003
+    sender:
+      type: rabbit
+    service:
+      name: ${spring.application.name}
+  main:
+    allow-bean-definition-overriding: true
+  # 查询子系统 liquibase 配置
+  liquibase:
+    change-log: classpath:changelog/master.xml
+    enabled: true
+    drop-first: false
+
+management:
+  endpoint:
+    health:
+      show-details: always
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+server:
+  port: ${port:8599}
+
+logging:
+  level:
+    org.springframework: WARN
+    cn.gtmap.gtc.plugins: DEBUG
+    cn.gtmap.realestate.inquiry.core.mapper: DEBUG
+
+# 打印fr3文件保存服务器路径
+print:
+  path: C:\\GTIS\\print\\

@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title class="bdc_subsystem"></title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
+    <meta content="IE=Edge,no-cache" http-equiv="X-UA-Compatible"/>
+    <meta content="no-cache" http-equiv="Pragma"/>
+    <meta content="no-cache" http-equiv="Cache-Control"/>
+    <meta content="0" http-equiv="Expires"/>
+    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0"
+          name="viewport"/>
+    <!--下拉框需要-->
+    <link rel="stylesheet" href="../static/lib/form-select/formSelects-v4.css">
+
+    <link href="../static/lib/layui/css/layui.css" media="all" rel="stylesheet"/>
+    <link href="../static/lib/bdcui/css/search.css" media="all" rel="stylesheet"/>
+    <link href="../static/lib/bdcui/css/table.css" media="all" rel="stylesheet"/>
+    <link href="../static/lib/bdcui/css/mask.css" media="all" rel="stylesheet"/>
+    <link href="../static/lib/bdcui/css/popup.css" rel="stylesheet"/>
+    <link href="../static/css/home-page.css" media="all" rel="stylesheet"/>
+    <link href="../static/css/listTasks.css" media="all" rel="stylesheet"/>
+    <script src="../static/lib/jquery/jquery.min.js"></script>
+</head>
+<body>
+<div class="bdc-container">
+    <div class="bdc-content-box">
+        <!--任务栏tab切开始-->
+        <div class="layui-tab layui-tab-brief bdc-container-tab bdc-task-tab" lay-filter="task">
+            <ul class="layui-tab-title">
+                <li>新建任务</li>
+            </ul>
+            <div class="layui-tab-content bdc-task-content bdc-hide">
+                <!--新建任务-->
+                <div class="layui-tab-item bdc-build-task">
+                    <div class="layui-carousel" id="buildTask">
+                        <div carousel-item="" id="carouselView">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+<!--            <div class="bdc-search-content bdc-hide" id="searchView">-->
+
+<!--            </div>-->
+        </div>
+        <!--任务栏tab切结束-->
+
+        <!--任务列表开始-->
+        <div class="layui-tab layui-tab-brief bdc-container-tab bdc-list-tab" lay-filter="listFilter">
+            <ul class="layui-tab-title">
+
+            </ul>
+            <div class="layui-tab-content">
+
+            </div>
+        </div>
+        <!--任务列表结束-->
+    </div>
+</div>
+
+<!--隐藏form，为了Excel导出缓存数据使用-->
+<form style="display: none" action="/realestate-portal-ui/excel/export" method="POST" id="form">
+    <input type="hidden" id="fileName" name="fileName"/>
+    <input type="hidden" id="sheetName" name="sheetName"/>
+    <input type="hidden" id="cellTitle" name="cellTitle"/>
+    <input type="hidden" id="cellWidth" name="cellWidth"/>
+    <input type="hidden" id="cellKey" name="cellKey"/>
+    <input type="hidden" id="data" name="data"/>
+    <input type="hidden" id="addBorder" name="addBorder"/>
+    <input type="hidden" id="mergeSameCell" name="mergeSameCell"/>
+</form>
+<!--轮播图动态渲染模板-->
+<script id="carouselTpl" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    <div class="bdc-carousel-father">
+        {{# layui.each(item, function(ind, value){ }}
+        <div class="bdc-carousel-son">
+            <div class="bdc-carousel-title">{{value.description}}<span class="bdc-sprite-img"></span></div>
+            {{# if(value.processList != null && value.processList.length>0){ }}
+            <div class="bdc-carousel-details bdc-hide">
+                <i class="layui-icon layui-icon-close bdc-carousel-close"></i>
+                <div class="bdc-details-type">
+                    <p class="bdc-details-type-content clear">
+                        {{# layui.each(value.processList, function(i, v){ }}
+                        {{# if(v.commonUse == 0){ }}
+                        <a href="javascript:"><span {{#
+                                                    if(v.name.length> 14){ }} title="{{v.name}}" {{# } }}>{{v.name}}</span>
+                            <i class="layui-icon bdc-visible layui-icon-rate" data-type="{{v.category}}"
+                               data-code="{{v.processDefKey}}" data-name="{{v.name}}" data-id="{{v.id}}"></i>
+                        </a>
+                        {{# }else{ }}
+                        <a href="javascript:"><span {{#
+                                                    if(v.name.length> 14){ }} title="{{v.name}}" {{# } }}>{{v.name}}</span>
+                            <i class="layui-icon layui-icon-rate-solid" data-type="{{v.category}}"
+                               data-code="{{v.processDefKey}}" data-name="{{v.name}}" data-id="{{v.id}}"></i>
+                        </a>
+                        {{# } }}
+                        {{# }); }}
+                    </p>
+                    {{# if(value.processList != null && value.processList.length > 4){ }}
+                    <a href="javascript:" class="bdc-details-type-tool"><span class="bdc-retract">收起-</span><span
+                            class="bdc-open bdc-hide">展开+</span></a>
+                    {{# } }}
+                </div>
+            </div>
+            {{# } }}
+        </div>
+        {{# }); }}
+    </div>
+    {{#  }); }}
+</script>
+
+
+<!--删除原因弹出框-->
+<div class="bdc-layer-textarea bdc-hide" id="delete-reason">
+    <form action="" class="layui-form">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>删除原因</label>
+                <div class="layui-input-inline bdc-end-time-box">
+                    <textarea class="layui-textarea" id="deletereason" name="desc" placeholder="请输入内容"></textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--退回的弹出框-->
+<div class="bdc-layer-textarea bdc-hide" id="back-reason">
+    <form action="" class="layui-form">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>退回原因</label>
+                <div class="layui-input-inline bdc-end-time-box">
+                    <textarea class="layui-textarea" id="backreason" name="desc" placeholder="请输入内容"></textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!--挂起的弹出框-->
+<div class="bdc-hide" id="bdc-popup-textarea">
+    <form action="" class="layui-form">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label" id="gqjgyyLab"><span
+                        class="required-span"><sub>*</sub></span>挂起原因</label>
+                <div class="layui-input-inline bdc-end-time-box">
+                    <textarea class="layui-textarea" id="gqjgyy" name="reason" placeholder="请输入内容"></textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script id="rlContent" type="text/html">
+    <div class="layui-tab-item">
+        <!--查询条件-->
+        <div class="bdc-search-box bdc-search-rl">
+            <form action="" class="layui-form">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">受理编号</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input rlSearch" name="slbh" placeholder="请输入"
+                                   type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label bdc-label-newline">自然资源<br/>单元号</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input rlSearch" name="zrzydjdyh" placeholder="请输入"
+                                   type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">坐落</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input rlSearch" name="zl" placeholder="请输入"
+                                   type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="pf-senior-rl-show bdc-hide">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">起始时间</label>
+                            <div class="layui-input-inline pf-start-time-box">
+                                <input autocomplete="off" class="layui-input date rlSearch test-item" id="rlkssjdy"
+                                       name="startTime_todo_ks" placeholder="请输入" type="text"/>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">结束时间</label>
+                            <div class="layui-input-inline pf-end-time-box">
+                                <input autocomplete="off" class="layui-input date rlSearch test-item" id="rlkssjxy"
+                                       name="startTime_todo_js" placeholder="请输入" type="text"/>
+                            </div>
+                        </div>
+<!--                        <div class="layui-inline">-->
+<!--                            <label class="layui-form-label">登记原因</label>-->
+<!--                            <div class="layui-input-inline">-->
+<!--                                <select xm-select="rl_djyy_select"-->
+<!--                                        xm-select-skin="default" xm-select-search=""-->
+<!--                                        xm-select-search-type="dl" xm-select-show-count="1" xm-select-height="34px"-->
+<!--                                        class="rlSearch bdc-djyy" lay-filter="djyyFilter" name="djyy">-->
+<!--                                </select>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                        <div class="layui-inline">
+                            <label class="layui-form-label">节点名称</label>
+                            <div class="layui-input-inline">
+                                <select  xm-select="rl_jdmc_select" xm-select-skin="default" xm-select-show-count="1" class="bdc-jdmc rlSearch" lay-filter="selectedJdFilter" lay-search="" name="taskName" xm-select-height="34px">
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <a class="layui-btn layui-btn-normal bdc-major-btn searchBtn" href="javascript:" id="rlSearch">查询</a>
+                        <button class="layui-btn layui-btn-normal bdc-secondary-btn" type="reset">重置</button>
+                        <a class="layui-btn layui-btn-normal bdc-secondary-btn" href="javascript:" id="seniorrlSearch">高级查询</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!--表格-->
+        <div class="bdc-table-box">
+            <table id="rlTable" lay-filter="rlTableFilter"></table>
+        </div>
+    </div>
+</script>
+<script id="dbContent" type="text/html">
+    <div class="layui-tab-item">
+        <!--查询条件-->
+        <div class="bdc-search-box bdc-search-db">
+            <form action="" class="layui-form">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">受理编号</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input dbSearch" name="slbh" placeholder="请输入"
+                                   type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label bdc-label-newline">自然资源登记<br/>单元号</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input dbSearch" name="zrzydjdyh" placeholder="请输入" type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">坐落</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input dbSearch" name="zl" placeholder="请输入" type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="pf-senior-show bdc-hide">
+<!--                        <div class="layui-inline">-->
+<!--                            <label class="layui-form-label">登记原因</label>-->
+<!--                            <div class="layui-input-inline">-->
+<!--                                <select xm-select="db_djyy_select"-->
+<!--                                        xm-select-skin="default" xm-select-search=""-->
+<!--                                        xm-select-search-type="dl" xm-select-show-count="1" xm-select-height="34px"-->
+<!--                                        class="dbSearch bdc-djyy" lay-filter="djyyFilter" name="djyy">-->
+<!--                                </select>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                        <div class="layui-inline">
+                            <label class="layui-form-label">起始时间</label>
+                            <div class="layui-input-inline pf-start-time-box">
+                                <input autocomplete="off" class="layui-input date dbSearch test-item" id="kssjdy"
+                                       name="startTime_todo_ks" placeholder="请输入" type="text"/>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">结束时间</label>
+                            <div class="layui-input-inline pf-end-time-box">
+                                <input autocomplete="off" class="layui-input date dbSearch test-item" id="kssjxy"
+                                       name="startTime_todo_js" placeholder="请输入" type="text"/>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">任务状态</label>
+                            <div class="layui-input-inline">
+                                <select class="dbSearch" id="taskStatus"  lay-search="" name="taskStatus">
+                                    <option value="">请选择</option>
+                                    <option value="normal">正常</option>
+                                    <option value="backed">退回</option>
+                                    <option value="hang">挂起</option>
+                                    <option value="timeout">超期</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <a class="layui-btn layui-btn-normal bdc-major-btn searchBtn" href="javascript:" id="dbSearch">查询</a>
+                        <button class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset" type="reset">重置</button>
+                        <a class="layui-btn layui-btn-normal bdc-secondary-btn" href="javascript:" id="seniorSearch">高级查询</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!--表格-->
+        <div class="bdc-table-box bdc-table-wait-css">
+            <table id="waitTable" lay-filter="waitTableFilter"></table>
+        </div>
+    </div>
+</script>
+<script id="ybContent" type="text/html">
+    <div class="layui-tab-item">
+        <!--查询条件-->
+        <div class="bdc-search-box">
+            <form action="" class="layui-form">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">受理编号</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input ybSearch" name="slbh" placeholder="请输入"
+                                   type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label bdc-label-newline">自然资源登记<br/>单元号</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input ybSearch" name="zrzydjdyh" placeholder="请输入"
+                                   type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">坐落</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input ybSearch" name="zl" placeholder="请输入"
+                                   type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="pf-senior-yb-show bdc-hide">
+<!--                        <div class="layui-inline">-->
+<!--                            <label class="layui-form-label">登记原因</label>-->
+<!--                            <div class="layui-input-inline">-->
+<!--                                <select xm-select="yb_djyy_select"-->
+<!--                                        xm-select-skin="default" xm-select-search=""-->
+<!--                                        xm-select-search-type="dl" xm-select-show-count="1" xm-select-height="34px"-->
+<!--                                        class="ybSearch bdc-djyy" lay-filter="djyyFilter" name="djyy">-->
+<!--                                </select>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                        <div class="layui-inline">
+                            <label class="layui-form-label">起始时间</label>
+                            <div class="layui-input-inline pf-start-time-box">
+                                <input autocomplete="off" class="layui-input date ybSearch test-item" id="ybkssjdy"
+                                       name="startTime_complete_ks" placeholder="请输入" type="text"/>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">结束时间</label>
+                            <div class="layui-input-inline pf-end-time-box">
+                                <input autocomplete="off" class="layui-input date ybSearch test-item" id="ybkssjxy"
+                                       name="startTime_complete_js" placeholder="请输入" type="text"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <a class="layui-btn layui-btn-normal bdc-major-btn searchBtn" href="javascript:" id="ybSearch">查询</a>
+                        <button class="layui-btn layui-btn-normal bdc-secondary-btn" type="reset">重置</button>
+                        <a class="layui-btn layui-btn-normal bdc-secondary-btn" href="javascript:" id="seniorybSearch">高级查询</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!--表格-->
+        <div class="bdc-table-box">
+            <table id="doneTable" lay-filter="doneTableFilter"></table>
+        </div>
+    </div>
+</script>
+<script id="xmContent" type="text/html">
+    <div class="layui-tab-item">
+        <!--查询条件-->
+        <div class="bdc-search-box">
+            <form action="" class="layui-form">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">受理编号</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input xmSearch" name="slbh" placeholder="请输入"
+                                   type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label bdc-label-newline">自然资源登记<br/>单元号</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input xmSearch" name="zrzydjdyh" placeholder="请输入"
+                                   type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">坐落</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input xmSearch" name="zl" placeholder="请输入"
+                                   type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="pf-senior-xm-show bdc-hide">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">流程状态</label>
+                            <div class="layui-input-inline">
+                                <select class="xmSearch" id="selectedXmState" lay-filter="selectedDefName" lay-search=""
+                                        name="procStatus">
+                                    <option value="">请输入</option>
+                                    <option value="3">挂起</option>
+                                    <option value="2">办结</option>
+                                    <option value="1">办理中</option>
+                                </select>
+                            </div>
+                        </div>
+<!--                        <div class="layui-inline">-->
+<!--                            <label class="layui-form-label">登记原因</label>-->
+<!--                            <div class="layui-input-inline">-->
+<!--                                <select xm-select="xm_djyy_select"-->
+<!--                                        xm-select-skin="default" xm-select-search=""-->
+<!--                                        xm-select-search-type="dl" xm-select-show-count="1" xm-select-height="34px"-->
+<!--                                        class="xmSearch bdc-djyy" lay-filter="djyyFilter" name="djyy"-->
+<!--                                        xm-select-height="34px">-->
+<!--                                </select>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                        <div class="layui-inline">
+                            <label class="layui-form-label">起始时间</label>
+                            <div class="layui-input-inline">
+                                <input autocomplete="off" class="layui-input xmSearch test-item" id="xmkssjdy"
+                                       name="startTime_list_ks" placeholder="请输入" type="text"/>
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">结束时间</label>
+                            <div class="layui-input-inline">
+                                <input autocomplete="off" class="layui-input xmSearch test-item" id="xmkssjxy"
+                                       name="startTime_list_js" placeholder="请输入" type="text"/>
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <a class="layui-btn layui-btn-normal bdc-major-btn searchBtn" href="javascript:" id="xmSearch">查询</a>
+                        <button class="layui-btn layui-btn-normal bdc-secondary-btn" type="reset">重置</button>
+                        <a class="layui-btn layui-btn-normal bdc-secondary-btn" href="javascript:" id="seniorxmSearch">高级查询</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!--表格-->
+        <div class="bdc-table-box">
+            <table id="listTable" lay-filter="listTableFilter"></table>
+        </div>
+    </div>
+</script>
+
+<!--表格相关模板-->
+<!-- 受理编号模板 -->
+<script id="slbhTpl" type="text/html">
+    {{#  if(d.slbh != undefined){ }}
+    <span style="color:#1d87d1;cursor:pointer">
+        {{d.slbh}}
+    </span>
+    {{#  } else { }}
+    <span></span>
+    {{#  } }}
+</script>
+<!-- 认领列表受理编号模板 -->
+<script id="rlslbhTpl" type="text/html">
+    {{#  if(d.slbh != undefined){ }}
+    {{# if(d.priority == 200){  }}
+    <span style="color:#f54743;cursor:pointer">
+                {{d.slbh}}
+            </span>
+    {{#  } else { }}
+    <span style="color:#1d87d1;cursor:pointer">
+                {{d.slbh}}
+            </span>
+    {{# } }}
+    {{#  } else { }}
+    <span></span>
+    {{#  } }}
+</script>
+
+
+<!--任务名称模板-->
+<script id="rwNameTpl" type="text/html">
+    {{#  if(d.processDefName != undefined){ }}
+    {{#  if(d.priority == 200){ }}
+    <p class="bdc-table-name"><span>【特急】</span>{{d.processDefName}}</p>
+    {{# } else if(d.priority == 150){ }}
+    <p class="bdc-table-name"><span>【紧急】</span>{{d.processDefName}}</p>
+    {{#  } else if(d.priority == 100) { }}
+    <p class="bdc-table-name-pd"><span>【一般】</span>{{d.processDefName}}</p>
+    {{#  } else if(d.priority == 50) { }}
+    <p class="bdc-table-name-pd">【普通】{{d.processDefName}}</p>
+    {{#  } }}
+    {{#  } else { }}
+    <p class="bdc-table-name"><span></span></p>
+    {{#  } }}
+</script>
+<!--流程模板-->
+<script id="lcTpl" type="text/html">
+    <img src="../static/image/lc.png" alt="" onclick="viewLct('{{d.processInstanceId}}')"/>
+</script>
+<!--状态模板-->
+<script id="stateTpl" type="text/html">
+    {{# if(d.priority == 200){  }}
+    <span class="bdc-table-state-th">特急</span>
+    {{#  } }}
+    {{#  if(d.state == 2){ }}
+    <span class="bdc-table-state-th">挂起</span>
+    {{#  } else if(d.backStatus == 2) { }}
+    <span class="bdc-table-state-blz">退回</span>
+    {{#  } else if(d.taskTimeoutStatusName == '超期') { }}
+    <span class="bdc-table-state-th">超期</span>
+    {{#  } else { }}
+    <span class="bdc-table-state-jh">正常</span>
+    {{#  } }}
+</script>
+
+<!--流程运行状态模板-->
+<script id="flowStateTpl" type="text/html">
+    {{# if(d.priority == 200){  }}
+    <span class="bdc-table-state-th">特急</span>
+    {{#  } }}
+    {{#  if(d.procStatus != undefined){ }}
+    {{#  if(d.procStatus == 2){ }}
+    <span class="bdc-table-state-jh">办结</span>
+    {{#  } else if(d.procStatus == 3) { }}
+    <span class="bdc-table-state-th">挂起</span>
+    {{#  } else { }}
+    <span class="bdc-table-state-jh">办理中</span>
+    {{#  } }}
+    {{#  } else{ }}
+    <span class="bdc-table-state-jh"></span>
+    {{#  } }}
+</script>
+
+<!--超期状态模板-->
+<script id="overStateTpl" type="text/html">
+    {{#  if(d.procTimeoutStatus != undefined){ }}
+    {{#  if(d.procTimeoutStatus == 1){ }}
+    <p class="bdc-table-state-zt">已超期</p>
+    {{#  } else { }}
+    <p class="bdc-table-state-jh">未超期</p>
+    {{#  } }}
+    {{#  } else{ }}
+    <p class="bdc-table-state-jh"></p>
+    {{#  } }}
+</script>
+
+<!--表格上面功能按钮-->
+<!--待办表格按钮-->
+<script id="toolbarDemo" type="text/html">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn" invalid="hidden" authority="forward"
+                lay-event="forward-process">转发
+        </button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" invalid="hidden" authority="back"
+                lay-event="back-process">退回
+        </button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" authority="hang-up" invalid="hidden"
+                lay-event="hang-up-process">挂起
+        </button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" authority="active" invalid="hidden"
+                lay-event="active-process">激活
+        </button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" authority="forward" invalid="hidden"
+                lay-event="bind-forward">绑定转发
+        </button>
+        <button class="layui-btn layui-btn-sm bdc-delete-btn" authority="delete" invalid="hidden"
+                lay-event="delete-process">删除
+        </button>
+    </div>
+</script>
+
+<!--项目 表格按钮-->
+<script id="toolbarAllDemo" type="text/html">
+    <div class="layui-btn-container">
+        {{# if(queryXmDeleteButton() == "false" || queryXmDeleteButton() == false){ }}
+
+        {{# } else {}}
+        <button class="layui-btn layui-btn-sm bdc-delete-btn" authority="delete" invalid="hidden"
+                lay-event="delete-process">删除
+        </button>
+
+        {{# } }}
+    </div>
+</script>
+<!--认领-->
+<script id="rlTableToolbar" type="text/html">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn" authority="claim" invalid="hidden"
+                lay-event="claim-process">认领
+        </button>
+    </div>
+</script>
+
+<!--js-->
+<script src="../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../static/lib/bdcui/js/common.js"></script>
+<!-- 打印-->
+<!--<script src="../static/lib/bdcui/js/print/print-common.js"></script>-->
+<script src="../static/js/common.js"></script>
+<script src="../static/lib/drag/move.js"></script>
+<script src="../static/js/zrzy/zrzy-list-tasks.js"></script>
+<script src="../static/js/zrzy/zrzyListTaskCommon.js"></script>
+<script src='../static/lib/bdcui/js/readIdCard.js'></script>
+<script src='../changzhou/js/readCard.js'></script>
+
+<!--不动产单元号分层展示-->
+<script>
+    layui.config({
+        base: '../static/' //静态资源所在路径
+    }).extend({
+        index: '/lib/index' //主入口模块
+    }).use('index').extend({
+        workflow: 'js/zrzy/zrzy-workflow-handle'
+    }).use('workflow').extend({response: 'lib/bdcui/js/response'}).use('response').extend({
+        moduleAuthority: 'js/moduleAuthority'
+    }).use('moduleAuthority');
+</script>
+</body>
+</html>
+
+

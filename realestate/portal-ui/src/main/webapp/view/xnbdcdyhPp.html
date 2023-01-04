@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title class="bdc_subsystem"></title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
+    <meta content="IE=Edge,no-cache" http-equiv="X-UA-Compatible"/>
+    <meta content="no-cache" http-equiv="Pragma"/>
+    <meta content="no-cache" http-equiv="Cache-Control"/>
+    <meta content="0" http-equiv="Expires"/>
+    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0"
+          name="viewport"/>
+    <link href="../static/lib/layui/css/layui.css" media="all" rel="stylesheet"/>
+    <link href="../static/lib/bdcui/css/search.css" media="all" rel="stylesheet"/>
+    <link href="../static/lib/bdcui/css/table.css" media="all" rel="stylesheet"/>
+    <link href="../static/lib/bdcui/css/mask.css" media="all" rel="stylesheet"/>
+    <link href="../static/lib/bdcui/css/popup.css" rel="stylesheet"/>
+    <link href="../static/css/home-page.css" media="all" rel="stylesheet"/>
+    <script src="../static/lib/jquery/jquery.min.js"></script>
+</head>
+<body>
+<div class="bdc-percentage-container" style="padding: 10px 10px 10px">
+
+    <div class="bdc-search-content">
+        <!--查询条件-->
+        <div class="bdc-search-box" >
+            <form action="" class="layui-form">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">受理编号</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input dbSearch" name="slbh" placeholder="请输入" type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">不动产单元号</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input dbSearch" name="bdcdyh" placeholder="请输入" type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">权利人</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input dbSearch" name="qlr" placeholder="请输入" type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="pf-senior-show bdc-hide">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">坐落</label>
+                            <div class="layui-input-inline">
+                                <input autocomplete="off" class="layui-input dbSearch" name="zl" placeholder="请输入" type="text"/>
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">流程名称</label>
+                            <div class="layui-input-inline">
+                                <select class="dbSearch" id="selectedDefName" lay-filter="selectedDefName" lay-search="" name="processDefName">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">起始时间</label>
+                            <div class="layui-input-inline pf-start-time-box">
+                                <input autocomplete="off" class="layui-input date dbSearch test-item" id="kssjdy" name="kssjdy" placeholder="请输入" type="text"/>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">结束时间</label>
+                            <div class="layui-input-inline pf-end-time-box">
+                                <input autocomplete="off" class="layui-input date dbSearch test-item" id="kssjxy" name="kssjxy" placeholder="请输入" type="text"/>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">义务人</label>
+                            <div class="layui-input-inline">
+                                <input autocomplete="off" class="layui-input dbSearch" name="ywr" placeholder="请输入" type="text"/>
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">受理人</label>
+                            <div class="layui-input-inline">
+                                <input autocomplete="off" class="layui-input dbSearch" name="slr" placeholder="请输入" type="text"/>
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <a class="layui-btn layui-btn-normal bdc-major-btn searchBtn" href="javascript:" id="dbSearch">查询</a>
+                        <button class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset" type="reset">重置</button>
+                        <a class="layui-btn layui-btn-normal bdc-secondary-btn" href="javascript:" id="seniorSearch">高级查询</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!--表格-->
+    <div class="bdc-table-box" style="padding: 10px 10px">
+        <table id="waitTable" lay-filter="waitTableFilter"></table>
+    </div>
+
+    <div class="layui-hide">
+        <div lay-filter="tsxx" id="tsxx"></div>
+    </div>
+</div>
+
+<!--表格相关模板-->
+<!-- 受理编号模板 -->
+<script id="slbhTpl" type="text/html">
+    {{#  if(d.slbh != undefined){ }}
+    <span style="color:#1d87d1;cursor:pointer">
+        {{d.slbh}}
+    </span>
+    {{#  } else { }}
+    <span></span>
+    {{#  } }}
+</script>
+<!--任务名称模板-->
+<script id="rwNameTpl" type="text/html">
+    {{#  if(d.priority == 150){ }}
+    <p class="bdc-table-name"><span>【紧急】</span>{{d.processDefName}}</p>
+    {{# } else if(d.priority == 150){ }}
+    <p class="bdc-table-name"><span>【特别紧急】</span>{{d.processDefName}}</p>
+    {{#  } else if(d.priority == 100) { }}
+    <p class="bdc-table-name-pd"><span>【一般】</span>{{d.processDefName}}</p>
+    {{#  } else if(d.priority == 50) { }}
+    <p class="bdc-table-name-pd">【普通】{{d.processDefName}}</p>
+    {{#  } }}
+</script>
+<!--流程模板-->
+<script id="lcTpl" type="text/html">
+    <img src="../static/image/lc.png" alt="" onclick="viewLct('{{d.processInstanceId}}')"/>
+</script>
+<!--状态模板-->
+<script id="stateTpl" type="text/html">
+    {{#  if(d.state == 2){ }}
+    <span class="bdc-table-state-th">挂起</span>
+    {{#  } else if(d.backStatus == 2) { }}
+    <span class="bdc-table-state-blz">退回</span>
+    {{#  } else if(d.taskTimeoutStatusName == '超期') { }}
+    <span class="bdc-table-state-th">超期</span>
+    {{#  } else { }}
+    <span class="bdc-table-state-jh">正常</span>
+    {{#  } }}
+</script>
+
+<!--流程运行状态模板-->
+<script id="flowStateTpl" type="text/html">
+    {{#  if(d.procStatus == 2){ }}
+    <p class="bdc-table-state-jh">办结</p>
+    {{#  } else if(d.procStatus == 3) { }}
+    <p class="bdc-table-state-th">挂起</p>
+    {{#  } else { }}
+    <p class="bdc-table-state-jh">办理中</p>
+    {{#  } }}
+</script>
+
+<!--超期状态模板-->
+<script id="overStateTpl" type="text/html">
+    {{#  if(d.procTimeoutStatus == 1){ }}
+    <p class="bdc-table-state-zt">已超期</p>
+    {{#  } else { }}
+    <p class="bdc-table-state-jh">未超期</p>
+    {{#  } }}
+</script>
+
+<!--不动产单元号分层展示-->
+<script id="bdcdyhTpl" type="text/html">
+    {{#  if(d.bdcdyh != undefined){ }}
+    <span>{{ queryBdcdyh(d.bdcdyh) }}</span>
+    {{#  } else { }}
+    <span></span>
+    {{#  } }}
+</script>
+<!-- 是否可以匹配 -->
+<script id="isPpTpl" type="text/html">
+    {{#  if(d.processInstanceId != undefined){}}
+    <span class="{{d.processInstanceId}}">加载中</span>
+    {{#  } else { }}
+    <span></span>
+    {{#  } }}
+</script>
+<!--表格上面功能按钮-->
+<script id="toolbarDemo" type="text/html">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="match">匹配</button>
+    </div>
+</script>
+
+<!--验证提示信息-->
+<script type="text/html" id="tsxxTpl">
+    <div class="bdc-right-tips-box" id="bottomTips">
+        <!--<h3>提示信息<i class="layui-icon layui-icon-close"></i></h3>-->
+        <div class="tsxx" id="alertInfo"></div>
+        <div class="tsxx" id="confirmInfo"></div>
+    </div>
+</script>
+
+<script src="../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../static/lib/bdcui/js/common.js"></script>
+<script src="../static/js/common.js"></script>
+<script src="../static/js/xnbdcdyhPp.js"></script>
+<script>
+    layui.config({
+        base: '../static/' //静态资源所在路径
+    }).extend({
+        index: '/lib/index' //主入口模块
+    }).use('index').extend({response:'lib/bdcui/js/response'}).use('response');
+</script>
+</body>
+</html>

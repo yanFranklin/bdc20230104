@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>遗失证明</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css"/>
+    <!--页面遮罩样式-->
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/yszm.css">
+</head>
+<body>
+<div class="content-div">
+    <div class="bdc-content-box">
+        <div class="bdc-ysgg"></div>
+    </div>
+</div>
+
+</body>
+<!--表单遗失公告模板-->
+<script type="text/html" id="ysggTpl">
+    <div class="bdc-content-fix">
+        <div class="content-title">
+            <p>遗失证明</p>
+            <div class="title-btn-area .layui-layout-right">
+                <button class="layui-btn bdc-secondary-btn" type="button" id="printyszm" onclick="printData('yszm')">打印</button>
+
+            </div>
+        </div>
+    </div>
+    <form class="layui-form setOverflow" action="">
+        <div class="content-main">
+            <div class="table-name">不动产权属证书遗失证明（{{d.zslx || ''}}
+                <!--                        <div class="bdc-select-box">-->
+                <!--                            <select name="city" lay-verify="required">-->
+                <!--                                <option value="">请选择</option>-->
+                <!--                                <option value="320001">土地使用权证</option>-->
+                <!--                                <option value="320002">不动产权证</option>-->
+                <!--                                <option value="320003">不动产证明</option>-->
+                <!--                                <option value="320004">不动产权利证明书</option>-->
+                <!--                            </select>-->
+                <!--                        </div>-->
+                ）
+            </div>
+            <div class="bdc-table-box">
+                <table class="layui-table" border="1">
+                    <colgroup>
+                        <col width="200">
+                        <col width="200">
+                        <col>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <td class="set-back-color">使用权人</td>
+                        <td class="set-back-color">证书编号</td>
+                        <td class="set-back-color">坐落</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{# layui.each(d.bdcxmList, function(i, bdcxm){ }}
+                    <tr>
+                        <td>{{bdcxm.qlr || ''}}</td>
+                        <td>{{bdcxm.ycqzh || ''}}</td>
+                        <td>{{bdcxm.zl || ''}}</td>
+                    </tr>
+                    {{# }); }}
+                    <tr>
+                        <td>/</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <p class="bdc-mark">注：此材料仅供办理个人不动产权属证书遗失声明作废使用。</p>
+    </form>
+</script>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--需要复选框时引用-->
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/bdcui/js/print/print-common.js"></script>
+<!--小数计算防精度缺失-->
+<script src="../../static/lib/mathjs/math.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/formCenter.js"></script>
+<script src="../../static/js/slym/yszm.js"></script>
+<script src="../../static/js/slym/print.js"></script>
+<script type="text/javascript">
+    var processInsId = getQueryString("processInsId");
+    var readOnly = getQueryString("readOnly");
+    var zxlc = getQueryString("zxlc");
+</script>
+</html>

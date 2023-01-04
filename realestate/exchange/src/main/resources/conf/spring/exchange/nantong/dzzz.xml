@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!-- 南通 电子证照查询 -->
+    <ex:bean id="nt_dzzzcx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.realestate_e_certificate.BdcDzzzFeignService"/>
+            <ex:property name="methodName" value="zzcx2"/>
+            <ex:property name="params" value="yymc,jsonString"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerRelXml="param.xml"/>
+            <ex:element name="jsonString" dozerRelXml="jsonstring.xml" objectToJsonString="true"/>
+        </ex:request>
+        <ex:log dsfFlag="ZHDYCXZZ" logEventName="招行抵押业务查询电子证照" requester="ZHDYCXZZ" responser="BDC"/>
+    </ex:bean>
+
+    <!-- 南通 电子证照下载 -->
+    <ex:bean id="nt_dzzzxz">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.realestate_e_certificate.BdcDzzzFeignService"/>
+            <ex:property name="methodName" value="zzxxxz2"/>
+            <ex:property name="params" value="yymc,jsonString"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerRelXml="param.xml"/>
+            <ex:element name="jsonString" dozerRelXml="jsonstring.xml" objectToJsonString="true"/>
+        </ex:request>
+        <ex:log dsfFlag="ZHDYXZZZ" logEventName="招行抵押业务查询电子证照" requester="ZHDYXZZZ" responser="BDC"/>
+    </ex:bean>
+
+    <!-- 南通 电子证照查询下载 -->
+    <ex:bean id="nt_dzzzcxxz">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.realestate_e_certificate.BdcDzzzFeignService"/>
+            <ex:property name="methodName" value="zzcxxz"/>
+            <ex:property name="params" value="yymc,jsonString"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerRelXml="param.xml"/>
+            <ex:element name="jsonString" dozerRelXml="jsonstring.xml" objectToJsonString="true"/>
+        </ex:request>
+        <ex:log dsfFlag="ZHDYXZZZ" logEventName="招行抵押业务查询电子证照" requester="ZHDYXZZZ" responser="BDC"/>
+    </ex:bean>
+
+    <!-- 南通 电子证照查询通过受理编号查询 -->
+    <ex:bean id="nt_dzzzcx_slbh">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="ntDzzzService" />
+            <ex:property name="methodName" value="dzzzcxBySlbh" />
+<!--            <ex:property name="params" value="yymc,slbh"/>-->
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerRelXml="param.xml"/>
+        </ex:request>
+        <ex:log dsfFlag="WWSQ" logEventName="根据受理编号查询电子证照" requester="WWSQ" responser="BDC"/>
+    </ex:bean>
+</beans>

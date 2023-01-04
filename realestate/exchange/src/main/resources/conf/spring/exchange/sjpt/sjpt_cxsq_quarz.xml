@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <!-- 请求外 包一层 日志处理  -->
+    <ex:bean id="sjpt_saveCxsqWithLog">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="exchangeInterfaceRestController" />
+            <ex:property name="methodName" value="sjptRequestInterface" />
+            <ex:property name="params" value="beanName,requestObject" />
+            <ex:property name="paramRequired" value="false" />
+        </ex:service-info>
+        <ex:request>
+            <!-- 获取beanName  sjpt_cxsq_zhcz -->
+            <ex:element dozerXml="conf/dozer/sjpt/cxsq/request/ctrlParam.xml" />
+        </ex:request>
+    </ex:bean>
+
+    <ex:bean id="sjpt_cxsq_zhcz">
+        <ex:request>
+            <ex:element sourceService="sjpt_cxsq"/>
+        </ex:request>
+        <ex:response extendRequestBody="true">
+            <ex:element sourceService="sjpt_saveCxsq"/>
+            <ex:element sourceService="sjpt_cxsq_fk" />
+        </ex:response>
+    </ex:bean>
+
+    <ex:bean id="sjpt_cxsq">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="省级平台获取查询申请"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SJPT"/>
+            <ex:property name="dsfFlag" value="SJPT"/>
+            <ex:property name="url" value="${sjpt.cxsq.url}"/>
+            <ex:property name="soTimeout" value="${sjpt.cxsq.soTimeout}"/>
+            <ex:property name="contentType" value="application/x-www-form-urlencoded"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/cxsq/request/param.xml"/>
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+    </ex:bean>
+
+    <!--省级平台以接口方式为市县端提供其接入质量评分数据 -->
+    <ex:bean id="sjpt_zlpf">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="省级平台接入质量评分数据"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SJPT"/>
+            <ex:property name="dsfFlag" value="SJPT"/>
+            <ex:property name="url" value="${sjpt.zlpf.url}"/>
+            <ex:property name="soTimeout" value="${sjpt.zlpf.soTimeout}"/>
+            <ex:property name="contentType" value="application/x-www-form-urlencoded"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/zlpf/request.xml"/>
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+    </ex:bean>
+
+    <!--省级平台以接口方式为市县端提供其信息共享质量评分数据 -->
+    <ex:bean id="sjpt_xxgxzlpf">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="省级平台接入信息共享质量评分数据"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SJPT"/>
+            <ex:property name="dsfFlag" value="SJPT"/>
+            <ex:property name="url" value="${sjpt.xxgxzlpf.url}"/>
+            <ex:property name="soTimeout" value="${sjpt.xxgxzlpf.soTimeout}"/>
+            <ex:property name="contentType" value="application/x-www-form-urlencoded"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/xxgxzlpf/request.xml"/>
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+    </ex:bean>
+
+    <ex:bean id="sjpt_saveCxsq">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="cxsqServiceImpl"/>
+            <ex:property name="methodName" value="saveCxsq"/>
+            <ex:property name="params" value="data"/>
+        </ex:service-info>
+    </ex:bean>
+
+
+    <!--推送区县上报销账数据  -->
+    <ex:bean id="sjpt_tsqxxz">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="推送区县上报销账数据"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SJPT"/>
+            <ex:property name="dsfFlag" value="SJPT"/>
+            <ex:property name="url" value="${sjpt.qxxz.url}"/>
+            <ex:property name="contentType" value="application/x-www-form-urlencoded"/>
+        </ex:service-info>
+        <ex:request name="gxData">
+            <ex:element dozerXml="conf/dozer/sjpt/tsqxxz/request.xml"/>
+
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token"></ex:response>
+    </ex:bean>
+
+</beans>

@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>变更信息对比</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/bgdb/bgxxdb.css"/>
+</head>
+<body>
+<div class="bdc-form-div bdc-form-not-full bdc-not-full-bg">
+    <form class="layui-form bdc-form-table setOverflow" action="">
+        <div class="bdc-content-fix bdc-hide">
+            <div class="content-title layui-clear">
+                <p>变更信息对比</p>
+            </div>
+        </div>
+        <div class="form-margin-area">
+            <div class="basic-info" id="bdcdyxx">
+                <div class="title-sign">
+                    <p>不动产单元信息</p>
+                </div>
+            </div>
+            <div class="basic-info" id="qlxx">
+                <div class="title-sign">
+                    <p>权利信息</p>
+                </div>
+            </div>
+            <div class="basic-info" id="qlrxx">
+
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+
+<!-- 不动产单元信息 -->
+<script type="text/html" id="bdcdyxxTpl">
+    <div class="layui-form-item bdcdyxx">
+        {{# if(!d.bgxx || d.bgxx.length === 0) { }}
+
+        <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据</div>
+
+        {{# } else { }}
+        {{# layui.each(d.bgxx, function(i, val){ }}
+        <div class="bdc-jt-table">
+            <table class="layui-table" border="1">
+                <tr>
+                    <td class="set-back-color" width="160px">不动产单元号</td>
+                    <td colspan="2"><input type="text" class="layui-input" title="{{val.bdcXm.bdcdyh|| '——'}}"
+                                           value="{{val.bdcXm.bdcdyh|| '——'}}" disabled="off"></td>
+                </tr>
+                <tr>
+                    <td class="set-back-color" width="230px"><i class="bdc-outer bdc-outer-second-line "></i></td>
+                    <td class="set-back-color set-edit-back-color">变更后</td>
+                    <td class="set-back-color">变更前</td>
+                </tr>
+                <tr>
+                    <td class="set-back-color">坐落</td>
+                    <td><input type="text" class="layui-input str1" title="{{val.bdcXm.zl|| '——'}}"
+                               value="{{val.bdcXm.zl|| '——'}}" disabled="off"></td>
+                    <td><input type="text" class="layui-input str2" title="{{val.yBdcXm.zl|| '——'}}"
+                               value="{{val.yBdcXm.zl|| '——'}}" disabled="off"></td>
+                </tr>
+                <tr>
+                    <td class="set-back-color" >登记原因</td>
+                    <td><input type="text" class="layui-input str1" value="{{val.bdcXm.djyy||'——'}}" disabled="off"></td>
+                    <td><input type="text" class="layui-input str2" value="{{val.yBdcXm.djyy||'——'}}" disabled="off"></td>
+                </tr>
+                <tr>
+                    <td class="set-back-color" >是否分别持证</td>
+                    <td><input type="text" class="layui-input str1" value="{{getZdMc('sf', val.bdcXm.sqfbcz)||'——'}}" disabled="off"></td>
+                    <td><input type="text" class="layui-input str2" value="{{getZdMc('sf', val.yBdcXm.sqfbcz)||'——'}}" disabled="off"></td>
+                </tr>
+                <tr>
+                    <td class="set-back-color" >原产权证号</td>
+                    <td><input type="text" class="layui-input str1" value="{{val.bdcXm.ycqzh||'——'}}" disabled="off"></td>
+                    <td><input type="text" class="layui-input str2" value="{{val.yBdcXm.ycqzh||'——'}}" disabled="off"></td>
+                </tr>
+                <tr>
+                    <td class="set-back-color" >合同号</td>
+                    <td><input type="text" class="layui-input str1" value="{{val.bdcXm.jyhth||'——'}}" disabled="off"></td>
+                    <td><input type="text" class="layui-input str2" value="{{val.yBdcXm.jyhth||'——'}}" disabled="off"></td>
+                </tr>
+                <tr>
+                    <td class="set-back-color" >宗地用途</td>
+                    <td><input type="text" class="layui-input str1" value="{{getZdMc('tdyt', val.bdcXm.zdzhyt)||'——'}}" disabled="off"></td>
+                    <td><input type="text" class="layui-input str2" value="{{getZdMc('tdyt', val.yBdcXm.zdzhyt)||'——'}}" disabled="off"></td>
+                </tr>
+                <tr>
+                    <td class="set-back-color">宗地用途2</td>
+                    <td><input type="text" class="layui-input str1" value="{{getZdMc('tdyt', val.bdcXm.zdzhyt2)|| '——'}}" disabled="off"></td>
+                    <td><input type="text" class="layui-input str2" value="{{getZdMc('tdyt', val.yBdcXm.zdzhyt2)|| '——'}}" disabled="off"></td>
+                </tr>
+                <tr>
+                    <td class="set-back-color">宗地用途3</td>
+                    <td><input type="text" class="layui-input str1" value="{{getZdMc('tdyt', val.bdcXm.zdzhyt3)|| '——'}}" disabled="off"></td>
+                    <td><input type="text" class="layui-input str2" value="{{getZdMc('tdyt', val.yBdcXm.zdzhyt3) || '——'}}" disabled="off"></td>
+                </tr>
+                <tr>
+                    <td class="set-back-color">原土地用途名称</td>
+                    <td><input type="text" class="layui-input str1" value="{{val.bdcXm.ytdytmc|| '——'}}" disabled="off"></td>
+                    <td><input type="text" class="layui-input str2" value="{{val.yBdcXm.ytdytmc|| '——'}}" disabled="off"></td>
+                </tr>
+                <tr>
+                    <td class="set-back-color">宗地面积</td>
+                    <td><input type="text" class="layui-input str1" value="{{val.bdcXm.zdzhmj|| '——'}}" disabled="off"></td>
+                    <td><input type="text" class="layui-input str2" value="{{val.yBdcXm.zdzhmj|| '——'}}" disabled="off"></td>
+                </tr>
+                <tr>
+                    <td class="set-back-color">权利性质</td>
+                    <td><input type="text" class="layui-input str1" value="{{getZdMc('qlxz', val.bdcXm.qlxz)|| '——'}}" disabled="off"></td>
+                    <td><input type="text" class="layui-input str2" value="{{getZdMc('qlxz', val.yBdcXm.qlxz)|| '——'}}" disabled="off"></td>
+                </tr>
+                <tr>
+                    <td class="set-back-color">定着物面积</td>
+                    <td><input type="text" class="layui-input str1" value="{{val.bdcXm.dzwmj|| '——'}}" disabled="off"></td>
+                    <td><input type="text" class="layui-input str2" value="{{val.yBdcXm.dzwmj|| '——'}}" disabled="off"></td>
+                </tr>
+                <tr>
+                    <td class="set-back-color">定着物用途</td>
+                    <td><input type="text" class="layui-input str1" value="{{getZdMc('fwyt', val.bdcXm.dzwyt)|| '——'}}" disabled="off"></td>
+                    <td><input type="text" class="layui-input str2" value="{{getZdMc('fwyt', val.yBdcXm.dzwyt)|| '——'}}" disabled="off"></td>
+                </tr>
+                <tr>
+                    <td class="set-back-color">不动产类型</td>
+                    <td><input type="text" class="layui-input str1" value="{{getZdMc('bdclx', val.bdcXm.bdclx)|| '——'}}" disabled="off"></td>
+                    <td><input type="text" class="layui-input str2" value="{{getZdMc('bdclx', val.yBdcXm.bdclx)|| '——'}}" disabled="off"></td>
+                </tr>
+                <tr>
+                    <td class="set-back-color">构筑物类型</td>
+                    <td><input type="text" class="layui-input str1" value="{{getZdMc('gzwlx', val.bdcXm.gzwlx)|| '——'}}" disabled="off"></td>
+                    <td><input type="text" class="layui-input str2" value="{{getZdMc('gzwlx', val.yBdcXm.gzwlx)|| '——'}}" disabled="off"></td>
+                </tr>
+                <tr>
+                    <td class="set-back-color">用海类型</td>
+                    <td><input type="text" class="layui-input str1" value="{{getZdMc('hysylxa', val.bdcXm.yhlxa)|| '——'}}" disabled="off"></td>
+                    <td><input type="text" class="layui-input str2" value="{{getZdMc('hysylxa', val.yBdcXm.yhlxa)|| '——'}}" disabled="off"></td>
+                </tr>
+                <tr>
+                    <td class="set-back-color">用海类型B</td>
+                    <td><input type="text" class="layui-input str1" value="{{getZdMc('hysylxb', val.bdcXm.yhlxb)|| '——'}}" disabled="off"></td>
+                    <td><input type="text" class="layui-input str2" value="{{getZdMc('hysylxb', val.yBdcXm.yhlxb)|| '——'}}" disabled="off"></td>
+                </tr>
+                <tr>
+                    <td class="set-back-color">林种</td>
+                    <td><input type="text" class="layui-input str1" value="{{getZdMc('lz', val.bdcXm.lz) || '——'}}" disabled="off"></td>
+                    <td><input type="text" class="layui-input str2" value="{{getZdMc('lz', val.yBdcXm.lz)|| '——'}}" disabled="off"></td>
+                </tr>
+                <tr>
+                    <td class="set-back-color">预售房屋编码</td>
+                    <td><input type="text" class="layui-input str1" value="{{val.bdcXm.ysfwbm|| '——'}}" disabled="off"></td>
+                    <td><input type="text" class="layui-input str2" value="{{val.yBdcXm.ysfwbm|| '——'}}" disabled="off"></td>
+                </tr>
+                {{# if(val.bdcXm.qllx == '95' ||val.bdcXm.qllx == '37'){ }}
+                <tr>
+                    <td class="set-back-color">抵押人</td>
+                    <td><input type="text" class="layui-input str1" value="{{val.bdcXm.ywr|| '——'}}" disabled="off"></td>
+                    <td><input type="text" class="layui-input str2" value="{{val.yBdcXm.ywr|| '——'}}" disabled="off"></td>
+                </tr>
+                {{# } }}
+                {{# if(val.bdcXm.qllx == '19'){ }}
+                <tr>
+                    <td class="set-back-color">供役地权利人</td>
+                    <td><input type="text" class="layui-input str1" value="{{val.bdcXm.ywr|| '——'}}" disabled="off"></td>
+                    <td><input type="text" class="layui-input str2" value="{{val.yBdcXm.ywr|| '——'}}" disabled="off"></td>
+                </tr>
+                <tr>
+                    <td class="set-back-color">需役地权利人</td>
+                    <td><input type="text" class="layui-input str1" value="{{val.bdcXm.qlr|| '——'}}" disabled="off"></td>
+                    <td><input type="text" class="layui-input str2" value="{{val.yBdcXm.qlr|| '——'}}" disabled="off"></td>
+                </tr>
+                {{# } }}
+            </table>
+        </div>
+        {{# }); }}
+        {{# } }}
+    </div>
+</script>
+<!-- 权利人信息 -->
+<script type="text/html" id="qlrxxTpl">
+    {{# if(!d.bgxx || d.bgxx.length === 0) { }}
+    <div class="title-sign">
+        <p>权利人信息</p>
+    </div>
+    <div class="layui-form-item qlrxx">
+        <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据</div>
+    </div>
+    {{# } else { }}
+    {{# layui.each(d.bgxx, function(i, val){ }}
+    <div class="basic-info inner-basic">
+        <div class="title-sign">
+            <p>权利人信息</p>
+            <div class="bdc-tab-a">
+                <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn bdc-show-more">收起</a>
+            </div>
+        </div>
+        <div class="layui-form-item qlrxx">
+            <div class="bdc-jt-table">
+                <table class="layui-table" border="1">
+                    {{# if(val.type =='1'){ }}
+                    <tr>
+                        <td class="set-back-color" width="230px"><i class="bdc-outer"></i></td>
+                        <td class="set-back-color set-add-back-color">新增信息</td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color" width="160px">权利人名称</td>
+                        <td colspan="2"><input type="text" class="layui-input" title="{{val.bdcQlr.qlrmc|| '——'}}"
+                                               value="{{val.bdcQlr.qlrmc|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">权利人类别</td>
+                        <td colspan="2"><input type="text" class="layui-input str1" value="{{getZdMc('qlrlb', val.bdcQlr.qlrlb)||'——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color" >权利人类型</td>
+                        <td colspan="2"><input type="text" class="layui-input str1" value="{{getZdMc('qlrlx', val.bdcQlr.qlrlx)||'——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">是否持证人</td>
+                        <td colspan="2"><input type="text" class="layui-input str1" value="{{getZdMc('sf', val.bdcQlr.sfczr)|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">申请人联系电话</td>
+                        <td colspan="2"><input type="text" class="layui-input str1" value="{{val.bdcQlr.dh|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">身份证件种类</td>
+                        <td colspan="2"><input type="text" class="layui-input str1" value="{{getZdMc('zjzl', val.bdcQlr.zjzl)|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">证件号</td>
+                        <td colspan="2"><input type="text" class="layui-input str1" value="{{val.bdcQlr.zjh|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">权利人分摊面积</td>
+                        <td colspan="2"><input type="text" class="layui-input str1" value="{{val.bdcQlr.qlrftmj|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">共有方式</td>
+                        <td colspan="2"><input type="text" class="layui-input str1" value="{{getZdMc('gyfs', val.bdcQlr.gyfs)|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">共有比例</td>
+                        <td colspan="2"><input type="text" class="layui-input str1" value="{{val.bdcQlr.qlbl|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">邮编</td>
+                        <td colspan="2"><input type="text" class="layui-input str1" value="{{val.bdcQlr.yb|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">通讯地址</td>
+                        <td colspan="2"><input type="text" class="layui-input str1"
+                                               title="{{val.bdcQlr.txdz|| '——'}}" value="{{val.bdcQlr.txdz|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">代理人名称</td>
+                        <td colspan="2"><input type="text" class="layui-input str1" title="{{val.bdcQlr.dlrmc|| '——'}}"
+                                               value="{{val.bdcQlr.dlrmc|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">代理机构名称</td>
+                        <td colspan="2"><input type="text" class="layui-input str1" title="{{val.bdcQlr.dljg|| '——'}}"
+                                               value="{{val.bdcQlr.dljg|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">代理人联系电话</td>
+                        <td colspan="2"><input type="text" class="layui-input str1" value="{{val.bdcQlr.dlrdh|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">代理人证件种类</td>
+                        <td colspan="2"><input type="text" class="layui-input str1" value="{{getZdMc('zjzl', val.bdcQlr.dlrzjzl)|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">代理人证件号</td>
+                        <td colspan="2"><input type="text" class="layui-input str1" value="{{val.bdcQlr.dlrzjh|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">法定代表人</td>
+                        <td colspan="2"><input type="text" class="layui-input str1" title="{{val.bdcQlr.frmc|| '——'}}"
+                                               value="{{val.bdcQlr.frmc|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">法人代表证件种类</td>
+                        <td colspan="2"><input type="text" class="layui-input str1" value="{{getZdMc('zjzl', val.bdcQlr.frzjzl)|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">法人代表证件号</td>
+                        <td colspan="2"><input type="text" class="layui-input str1" value="{{val.bdcQlr.frdh|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">权利人状态</td>
+                        <td colspan="2"><input type="text" class="layui-input str1" value="{{val.bdcQlr.qlrwbzt|| '——'}}" disabled="off"></td>
+                    </tr>
+                    {{# }else if(val.type =='-1'){ }}
+                    <tr>
+                        <td class="set-back-color" width="230px"><i class="bdc-outer"></i></td>
+                        <td class="set-back-color set-dele-back-color">删除信息</td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color" width="160px">权利人名称</td>
+                        <td colspan="2"><input type="text" class="layui-input" title="{{val.ybdcQlr.qlrmc|| '——'}}"
+                                               value="{{val.ybdcQlr.qlrmc|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">权利人类别</td>
+                        <td colspan="2"><input type="text" class="layui-input str2" value="{{getZdMc('qlrlb', val.ybdcQlr.qlrlb)||'——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color" >权利人类型</td>
+                        <td colspan="2"><input type="text" class="layui-input str2" value="{{getZdMc('qlrlx', val.ybdcQlr.qlrlx)||'——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">是否持证人</td>
+                        <td colspan="2"><input type="text" class="layui-input str2" value="{{getZdMc('sf', val.ybdcQlr.sfczr) || '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">申请人联系电话</td>
+                        <td colspan="2"><input type="text" class="layui-input str2" value="{{val.ybdcQlr.dh|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">身份证件种类</td>
+                        <td colspan="2"><input type="text" class="layui-input str2" value="{{getZdMc('zjzl', val.ybdcQlr.zjzl)|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">证件号</td>
+                        <td colspan="2"><input type="text" class="layui-input str2" value="{{val.ybdcQlr.zjh|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">权利人分摊面积</td>
+                        <td colspan="2"><input type="text" class="layui-input str2" value="{{val.ybdcQlr.qlrftmj|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">共有方式</td>
+                        <td colspan="2"><input type="text" class="layui-input str2" value="{{getZdMc('gyfs', val.ybdcQlr.gyfs)|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">共有比例</td>
+                        <td colspan="2"><input type="text" class="layui-input str2" value="{{val.ybdcQlr.qlbl|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">邮编</td>
+                        <td colspan="2"><input type="text" class="layui-input str2" value="{{val.ybdcQlr.yb|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">通讯地址</td>
+                        <td colspan="2"><input type="text" class="layui-input str2"
+                                   title="{{val.ybdcQlr.txdz|| '——'}}" value="{{val.ybdcQlr.txdz|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">代理人名称</td>
+                        <td colspan="2"><input type="text" class="layui-input str2" title="{{val.ybdcQlr.dlrmc|| '——'}}"
+                                   value="{{val.ybdcQlr.dlrmc|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">代理机构名称</td>
+                        <td colspan="2"><input type="text" class="layui-input str2" title="{{val.ybdcQlr.dljg|| '——'}}"
+                                   value="{{val.ybdcQlr.dljg|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">代理人联系电话</td>
+                        <td colspan="2"><input type="text" class="layui-input str2" value="{{val.ybdcQlr.dlrdh|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">代理人证件种类</td>
+                        <td colspan="2"><input type="text" class="layui-input str2" value="{{getZdMc('zjzl', val.ybdcQlr.dlrzjzl)|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">代理人证件号</td>
+                        <td colspan="2"><input type="text" class="layui-input str2" value="{{val.ybdcQlr.dlrzjh|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">法定代表人</td>
+                        <td colspan="2"><input type="text" class="layui-input str2" title="{{val.ybdcQlr.frmc|| '——'}}"
+                                   value="{{val.ybdcQlr.frmc|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">法人代表证件种类</td>
+                        <td colspan="2"><input type="text" class="layui-input str2" value="{{getZdMc('zjzl', val.ybdcQlr.frzjzl)|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">法人代表证件号</td>
+                        <td colspan="2"><input type="text" class="layui-input str2" value="{{val.ybdcQlr.frdh|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">权利人状态</td>
+                        <td colspan="2"><input type="text" class="layui-input str2" value="{{val.ybdcQlr.qlrwbzt|| '——'}}" disabled="off"></td>
+                    </tr>
+                    {{# } else { }}
+                    {{# if(val.bdcQlr.qlrmc ==val.ybdcQlr.qlrmc){ }}
+                    <tr class="qlrmc-tr">
+                        <td class="set-back-color" width="160px">权利人名称</td>
+                        <td colspan="2"><input type="text" class="layui-input" title="{{val.bdcQlr.qlrmc|| '——'}}"
+                                               value="{{val.bdcQlr.qlrmc|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color" width="230px"><i class="bdc-outer bdc-outer-second-line "></i></td>
+                        <td class="set-back-color set-edit-back-color">变更后</td>
+                        <td class="set-back-color">变更前</td>
+                    </tr>
+                    {{# }else{ }}
+                    <tr>
+                        <td class="set-back-color" width="230px"><i class="bdc-outer"></i></td>
+                        <td class="set-back-color set-edit-back-color">变更后</td>
+                        <td class="set-back-color">变更前</td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color" width="160px">权利人名称</td>
+                        <td><input type="text" class="layui-input str1" title="{{val.bdcQlr.qlrmc|| '——'}}"
+                                               value="{{val.bdcQlr.qlrmc|| '——'}}" disabled="off"></td>
+                        <td><input type="text" class="layui-input str2" title="{{val.bdcQlr.qlrmc|| '——'}}"
+                                   value="{{val.bdcQlr.qlrmc|| '——'}}" disabled="off"></td>
+                    </tr>
+                    {{# }}}
+                    <tr>
+                        <td class="set-back-color">权利人类别</td>
+                        <td><input type="text" class="layui-input str1" value="{{getZdMc('qlrlb', val.bdcQlr.qlrlb)||'——'}}" disabled="off"></td>
+                        <td><input type="text" class="layui-input str2" value="{{getZdMc('qlrlb', val.ybdcQlr.qlrlb)||'——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color" >权利人类型</td>
+                        <td><input type="text" class="layui-input str1" value="{{getZdMc('qlrlx', val.bdcQlr.qlrlx)||'——'}}" disabled="off"></td>
+                        <td><input type="text" class="layui-input str2" value="{{getZdMc('qlrlx', val.ybdcQlr.qlrlx)||'——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">是否持证人</td>
+                        <td><input type="text" class="layui-input str1" value="{{getZdMc('sf', val.bdcQlr.sfczr)|| '——'}}" disabled="off"></td>
+                        <td><input type="text" class="layui-input str2" value="{{getZdMc('sf', val.ybdcQlr.sfczr) || '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">申请人联系电话</td>
+                        <td><input type="text" class="layui-input str1" value="{{val.bdcQlr.dh|| '——'}}" disabled="off"></td>
+                        <td><input type="text" class="layui-input str2" value="{{val.ybdcQlr.dh|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">身份证件种类</td>
+                        <td><input type="text" class="layui-input str1" value="{{getZdMc('zjzl', val.bdcQlr.zjzl)|| '——'}}" disabled="off"></td>
+                        <td><input type="text" class="layui-input str2" value="{{getZdMc('zjzl', val.ybdcQlr.zjzl)|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">证件号</td>
+                        <td><input type="text" class="layui-input str1" value="{{val.bdcQlr.zjh|| '——'}}" disabled="off"></td>
+                        <td><input type="text" class="layui-input str2" value="{{val.ybdcQlr.zjh|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">权利人分摊面积</td>
+                        <td><input type="text" class="layui-input str1" value="{{val.bdcQlr.qlrftmj|| '——'}}" disabled="off"></td>
+                        <td><input type="text" class="layui-input str2" value="{{val.ybdcQlr.qlrftmj|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">共有方式</td>
+                        <td><input type="text" class="layui-input str1" value="{{getZdMc('gyfs', val.bdcQlr.gyfs)|| '——'}}" disabled="off"></td>
+                        <td><input type="text" class="layui-input str2" value="{{getZdMc('gyfs', val.ybdcQlr.gyfs)|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">共有比例</td>
+                        <td><input type="text" class="layui-input str1" value="{{val.bdcQlr.qlbl|| '——'}}" disabled="off"></td>
+                        <td><input type="text" class="layui-input str2" value="{{val.ybdcQlr.qlbl|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">邮编</td>
+                        <td><input type="text" class="layui-input str1" value="{{val.bdcQlr.yb|| '——'}}" disabled="off"></td>
+                        <td><input type="text" class="layui-input str2" value="{{val.ybdcQlr.yb|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">通讯地址</td>
+                        <td><input type="text" class="layui-input str1"
+                                   title="{{val.bdcQlr.txdz|| '——'}}" value="{{val.bdcQlr.txdz|| '——'}}" disabled="off"></td>
+                        <td><input type="text" class="layui-input str2"
+                                   title="{{val.ybdcQlr.txdz|| '——'}}" value="{{val.ybdcQlr.txdz|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">代理人名称</td>
+                        <td><input type="text" class="layui-input str1" title="{{val.bdcQlr.dlrmc|| '——'}}"
+                                   value="{{val.bdcQlr.dlrmc|| '——'}}" disabled="off"></td>
+                        <td><input type="text" class="layui-input str2" title="{{val.ybdcQlr.dlrmc|| '——'}}"
+                                   value="{{val.ybdcQlr.dlrmc|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">代理机构名称</td>
+                        <td><input type="text" class="layui-input str1" title="{{val.bdcQlr.dljg|| '——'}}"
+                                   value="{{val.bdcQlr.dljg|| '——'}}" disabled="off"></td>
+                        <td><input type="text" class="layui-input str2" title="{{val.ybdcQlr.dljg|| '——'}}"
+                                   value="{{val.ybdcQlr.dljg|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">代理人联系电话</td>
+                        <td><input type="text" class="layui-input str1" value="{{val.bdcQlr.dlrdh|| '——'}}" disabled="off"></td>
+                        <td><input type="text" class="layui-input str2" value="{{val.ybdcQlr.dlrdh|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">代理人证件种类</td>
+                        <td><input type="text" class="layui-input str1" value="{{getZdMc('zjzl', val.bdcQlr.dlrzjzl)|| '——'}}" disabled="off"></td>
+                        <td><input type="text" class="layui-input str2" value="{{getZdMc('zjzl', val.ybdcQlr.dlrzjzl)|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">代理人证件号</td>
+                        <td><input type="text" class="layui-input str1" value="{{val.bdcQlr.dlrzjh|| '——'}}" disabled="off"></td>
+                        <td><input type="text" class="layui-input str2" value="{{val.ybdcQlr.dlrzjh|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">法定代表人</td>
+                        <td><input type="text" class="layui-input str1" title="{{val.bdcQlr.frmc|| '——'}}"
+                                   value="{{val.bdcQlr.frmc|| '——'}}" disabled="off"></td>
+                        <td><input type="text" class="layui-input str2" title="{{val.ybdcQlr.frmc|| '——'}}"
+                                   value="{{val.ybdcQlr.frmc|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">法人代表证件种类</td>
+                        <td><input type="text" class="layui-input str1" value="{{getZdMc('zjzl', val.bdcQlr.frzjzl)|| '——'}}" disabled="off"></td>
+                        <td><input type="text" class="layui-input str2" value="{{getZdMc('zjzl', val.ybdcQlr.frzjzl)|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">法人代表证件号</td>
+                        <td><input type="text" class="layui-input str1" value="{{val.bdcQlr.frdh|| '——'}}" disabled="off"></td>
+                        <td><input type="text" class="layui-input str2" value="{{val.ybdcQlr.frdh|| '——'}}" disabled="off"></td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">权利人状态</td>
+                        <td><input type="text" class="layui-input str1" value="{{val.bdcQlr.qlrwbzt|| '——'}}" disabled="off"></td>
+                        <td><input type="text" class="layui-input str2" value="{{val.ybdcQlr.qlrwbzt|| '——'}}" disabled="off"></td>
+                    </tr>
+                    {{# }}}
+                </table>
+            </div>
+        </div>
+    </div>
+    {{# }); }}
+    {{# }}}
+</script>
+<!-- 权利信息标题 -->
+<script type="text/html" id="qlxxTitleTpl">
+    <div class="layui-form-item qlxx">
+        {{# if(!d.bgxx || d.bgxx.length === 0) { }}
+        <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据</div>
+        {{# } }}
+    </div>
+</script>
+
+<!-- 权利信息:房地产权 -->
+<script type="text/html" id="bdc_fdcq">
+    {{# var val = d.bgxx;}}
+    <div class="bdc-jt-table">
+        <table class="layui-table" border="1">
+            <tr>
+                <td class="set-back-color" width="230px"><i class="bdc-outer"></i></td>
+                <td class="set-back-color set-edit-back-color">变更后</td>
+                <td class="set-back-color">变更前</td>
+            </tr>
+            <tr>
+                <td class="set-back-color">房屋编号</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.bdcdywybh||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.bdcdywybh||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">房屋类型</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('fwlx', val.bdcQl.fwlx)||'——'}}"
+                           disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('fwlx', val.ybdcQl.fwlx)||'——'}}"
+                           disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">房屋性质</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('fwxz', val.bdcQl.fwxz)||'——'}}"
+                           disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('fwxz', val.ybdcQl.fwxz)||'——'}}"
+                           disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">土地使用权人</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.tdsyqr||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.tdsyqr||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">独用土地面积（m<sup>2</sup>）</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.dytdmj||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.dytdmj||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">房屋结构</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('fwjg', val.bdcQl.fwjg)||'——'}}"
+                           disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('fwjg', val.ybdcQl.fwjg)||'——'}}"
+                           disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">分摊土地面积（m<sup>2</sup>）</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.fttdmj||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.fttdmj||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">规划用途</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('fwyt', val.bdcQl.ghyt)||'——'}}"
+                           disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('fwyt', val.ybdcQl.ghyt)||'——'}}"
+                           disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">所在物理层</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.szc||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.szc||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">所在名义层</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.szmyc||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.szmyc||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">总层数</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.zcs||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.zcs||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">房地产交易价格(万元)</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.jyjg||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.jyjg||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">土地使用起始时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.tdsyqssj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.tdsyqssj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">土地使用结束时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.tdsyjssj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.tdsyjssj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">建筑面积（m<sup>2</sup>）</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.jzmj||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.jzmj||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">专有建筑面积（m<sup>2</sup>）</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.zyjzmj||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.zyjzmj||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">分摊建筑面积（m<sup>2</sup>）</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.ftjzmj||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.ftjzmj||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">竣工时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.jgsj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.jgsj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">房屋共有情况</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.gyqk||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.gyqk||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">幢号</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.zh||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.zh||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">房间号</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.fjh||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.fjh||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >登簿人</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.dbr||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.dbr||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >登记时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.djsj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.djsj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">附记</td>
+                <td><textarea class="layui-textarea change-textarea-width str1"
+                              disabled="off">{{val.bdcQl.fj||'——'}}</textarea></td>
+                <td><textarea class="layui-textarea change-textarea-width str2"
+                              disabled="off">{{val.ybdcQl.fj||'——'}}</textarea></td>
+            </tr>
+        </table>
+    </div>
+</script>
+<!-- 权利信息:建筑物区分所有权业主共有部分登记信息 -->
+<script type="text/html" id="bdc_fdcq3">
+    {{# var val = d.bgxx;}}
+    <div class="bdc-jt-table">
+        <table class="layui-table" border="1">
+            <tr>
+                <td class="set-back-color" width="230px"><i class="bdc-outer"></i></td>
+                <td class="set-back-color set-edit-back-color">变更后</td>
+                <td class="set-back-color">变更前</td>
+            </tr>
+            <tr>
+                <td class="set-back-color">登簿人</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.dbr||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.dbr||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">登记时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.djsj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.djsj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">附记</td>
+                <td><textarea class="layui-textarea change-textarea-width str1"
+                              disabled="off">{{val.bdcQl.fj||'——'}}</textarea></td>
+                <td><textarea class="layui-textarea change-textarea-width str2"
+                              disabled="off">{{val.ybdcQl.fj||'——'}}</textarea></td>
+            </tr>
+        </table>
+    </div>
+</script>
+<!-- 权利信息:房地产权多幢 -->
+<script type="text/html" id="bdc_fdcq1">
+    {{# var val = d.bgxx;}}
+    <div class="bdc-jt-table">
+        <table class="layui-table" border="1">
+            <tr>
+                <td class="set-back-color" width="230px"><i class="bdc-outer"></i></td>
+                <td class="set-back-color set-edit-back-color">变更后</td>
+                <td class="set-back-color">变更前</td>
+            </tr>
+            <tr>
+                <td class="set-back-color">房屋类型</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('fwlx', val.bdcQl.fwlx)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('fwlx', val.ybdcQl.fwlx)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >房屋性质</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('fwxz', val.bdcQl.fwxz)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('fwxz', val.ybdcQl.fwxz)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >独用土地面积（m<sup>2</sup>）</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.dytdmj||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.dytdmj||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >土地使用权人</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.tdsyqr||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.tdsyqr||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >土地使用起始时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.tdsyqssj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.tdsyqssj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >土地使用结束时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.tdsyjssj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.tdsyjssj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >附记</td>
+                <td><textarea class="layui-textarea change-textarea-width str1"  disabled="off">{{val.bdcQl.fj||'——'}}</textarea></td>
+                <td><textarea class="layui-textarea change-textarea-width str2"  disabled="off">{{val.ybdcQl.fj||'——'}}</textarea></td>
+            </tr>
+        </table>
+    </div>
+</script>
+<!-- 权利信息:抵押权 -->
+<script type="text/html" id="bdc_dyaq">
+    {{# var val = d.bgxx;}}
+    <div class="bdc-jt-table">
+        <table class="layui-table" border="1">
+            <tr>
+                <td class="set-back-color" width="230px"><i class="bdc-outer"></i></td>
+                <td class="set-back-color set-edit-back-color">变更后</td>
+                <td class="set-back-color">变更前</td>
+            </tr>
+            <tr>
+                <td class="set-back-color">抵押不动产类型</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('dybdclx', val.bdcQl.dybdclx)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('dybdclx', val.ybdcQl.dybdclx)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">登记类型</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('djlx', val.bdcQl.djlx)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('djlx', val.ybdcQl.djlx)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">抵押方式</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('dyfs', val.bdcQl.dyfs)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('dyfs', val.ybdcQl.dyfs)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >被担保主债权数额(万元)</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.bdbzzqse||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.bdbzzqse||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >担保范围</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.dbfw||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.dbfw||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >债务履行起始时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.zwlxqssj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.zwlxqssj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >债务履行结束时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.zwlxjssj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.zwlxjssj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >抵押土地面积（m<sup>2</sup>）</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.tddymj||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.tddymj||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >抵押房产面积（m<sup>2</sup>）</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.fwdymj||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.fwdymj||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >贷款方式</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('dkfs', val.bdcQl.dkfs)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('dkfs', val.ybdcQl.dkfs)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >在建建筑物抵押范围</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.zjjzwdyfw||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.zjjzwdyfw||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >注销抵押业务号</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.zxdyywh||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.zxdyywh||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >登簿人</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.dbr||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.dbr||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >登记时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.djsj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.djsj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >在建建筑物坐落</td>
+                <td><input type="text" class="layui-input str1" title="{{val.bdcQl.zjjzwzl||'——'}}"
+                           value="{{val.bdcQl.zjjzwzl||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" title="{{val.ybdcQl.zjjzwzl||'——'}}"
+                           value="{{val.ybdcQl.zjjzwzl||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >注销登簿人</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.zxdydbr||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.zxdydbr||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >注销登记时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.zxdydjsj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.zxdydjsj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >注销抵押原因</td>
+                <td><textarea class="layui-textarea change-textarea-width str1"  disabled="off">{{val.bdcQl.zxdyyy||'——'}}</textarea></td>
+                <td><textarea class="layui-textarea change-textarea-width str2"  disabled="off">{{val.ybdcQl.zxdyyy||'——'}}</textarea></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >附记</td>
+                <td><textarea class="layui-textarea change-textarea-width str1"  disabled="off">{{val.bdcQl.fj||'——'}}</textarea></td>
+                <td><textarea class="layui-textarea change-textarea-width str2"  disabled="off">{{val.ybdcQl.fj||'——'}}</textarea></td>
+            </tr>
+        </table>
+    </div>
+</script>
+<!-- 权利信息:查封 -->
+<script type="text/html" id="bdc_cf">
+    {{# var val = d.bgxx;}}
+    <div class="bdc-jt-table">
+        <table class="layui-table" border="1">
+            <tr>
+                <td class="set-back-color" width="230px"><i class="bdc-outer"></i></td>
+                <td class="set-back-color set-edit-back-color">变更后</td>
+                <td class="set-back-color">变更前</td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >查封类型</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('cflx', val.bdcQl.cflx)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('cflx', val.ybdcQl.cflx)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >查封文件</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('cfwj', val.bdcQl.cfwj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('cfwj', val.ybdcQl.cfwj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >查封文号</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.cfwh||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.cfwh||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">查封机关</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.cfjg||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.cfjg||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >送达时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.cfsj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.cfsj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >执行申请人</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.zxsqr||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.zxsqr||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >被查封权利人</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.bzxr||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.bzxr||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >查封起始时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.cfqssj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.cfqssj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >查封结束时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.cfjssj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.cfjssj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >查封范围</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.cffw||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.cffw||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >轮候查封期限</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.lhcfqx||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.lhcfqx||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >解封机关</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.jfjg||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.jfjg||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >解封文件</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.jfwj||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.jfwj||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >解封文号</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.jfwh||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.jfwh||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >解封登簿人</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.jfdbr||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.jfdbr||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >解封登记时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.jfdjsj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.jfdjsj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >法院送达人姓名</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.fysdr||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.fysdr||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >法院送达人联系电话</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.fysdrlxfs||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.fysdrlxfs||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >登簿人</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.dbr||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.dbr||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >登记时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.djsj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.djsj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >附记</td>
+                <td><textarea class="layui-textarea change-textarea-width str1"  disabled="off">{{val.bdcQl.fj||'——'}}</textarea></td>
+                <td><textarea class="layui-textarea change-textarea-width str2"  disabled="off">{{val.ybdcQl.fj||'——'}}</textarea></td>
+            </tr>
+        </table>
+    </div>
+</script>
+<!-- 权利信息:预告 -->
+<script type="text/html" id="bdc_yg">
+    {{# var val = d.bgxx;}}
+    <div class="bdc-jt-table">
+        <table class="layui-table" border="1">
+            <tr>
+                <td class="set-back-color" width="230px"><i class="bdc-outer"></i></td>
+                <td class="set-back-color set-edit-back-color">变更后</td>
+                <td class="set-back-color">变更前</td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >登记类型</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('djlx', val.bdcQl.djlx)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('djlx', val.ybdcQl.djlx)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">预告登记种类</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('ygdjzl', val.bdcQl.ygdjzl)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('ygdjzl', val.ybdcQl.ygdjzl)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >土地使用权人</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.tdsyqr||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.tdsyqr||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">房屋性质</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('fwxz', val.bdcQl.fwxz)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('fwxz', val.ybdcQl.fwxz)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">规划用途</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('ghyt', val.bdcQl.ghyt)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('ghyt', val.ybdcQl.ghyt)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >总层数</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.zcs||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.zcs||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >所在物理层</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.szc||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.szc||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >取得价格（万元）</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.qdjg||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.qdjg||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >被担保主债权数额(万元)</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.qdjg||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.qdjg||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >债务履行起始时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.zwlxqssj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.zwlxqssj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >债务履行结束时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.zwlxjssj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.zwlxjssj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >抵押方式</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('dyfs', val.bdcQl.dyfs)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('dyfs', val.ybdcQl.dyfs)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >土地使用起始时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.tdsyqssj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.tdsyqssj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >土地使用结束时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.tdsyjssj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.tdsyjssj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >交易金额(万元)</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.jyje||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.jyje||'——'}}" disabled="off"></td>
+            </tr>
+
+            <tr>
+                <td class="set-back-color" >所在名义层</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.szmyc||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.szmyc||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >建筑面积（m<sup>2</sup>）</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.jzmj||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.jzmj||'——'}}" disabled="off"></td>
+            </tr>
+
+            <tr>
+                <td class="set-back-color" >注销预告登记证明号</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.zxygywh||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.zxygywh||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >注销预告登记时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.zxygdjsj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.zxygdjsj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >注销预告登记原因</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.zxygyy||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.zxygyy||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >登簿人</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.dbr||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.dbr||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >登记时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.djsj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.djsj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >附记</td>
+                <td><textarea class="layui-textarea change-textarea-width str1"  disabled="off">{{val.bdcQl.fj||'——'}}</textarea></td>
+                <td><textarea class="layui-textarea change-textarea-width str2"  disabled="off">{{val.ybdcQl.fj||'——'}}</textarea></td>
+            </tr>
+        </table>
+    </div>
+</script>
+<!-- 权利信息:异议 -->
+<script type="text/html" id="bdc_yy">
+    {{# var val = d.bgxx;}}
+    <div class="bdc-jt-table">
+        `<table class="layui-table" border="1">
+        <tr>
+            <td class="set-back-color" width="230px"><i class="bdc-outer"></i></td>
+            <td class="set-back-color set-edit-back-color">变更后</td>
+            <td class="set-back-color">变更前</td>
+        </tr>
+        <tr>
+            <td class="set-back-color">异议事项</td>
+            <td><input type="text" class="layui-input str1" value="{{val.bdcQl.yysx||'——'}}" disabled="off"></td>
+            <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.yysx||'——'}}" disabled="off"></td>
+        </tr>
+        <tr>
+            <td class="set-back-color" >注销异议业务号</td>
+            <td><input type="text" class="layui-input str1" value="{{val.bdcQl.zxyyywh||'——'}}" disabled="off"></td>
+            <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.zxyyywh||'——'}}" disabled="off"></td>
+        </tr>
+        <tr>
+            <td class="set-back-color" >注销登簿人</td>
+            <td><input type="text" class="layui-input str1" value="{{val.bdcQl.zxyydbr||'——'}}" disabled="off"></td>
+            <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.zxyydbr||'——'}}" disabled="off"></td>
+        </tr>
+        <tr>
+            <td class="set-back-color" >注销登记时间</td>
+            <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.zxyydjsj)||'——'}}" disabled="off"></td>
+            <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.zxyydjsj)||'——'}}" disabled="off"></td>
+        </tr>
+        <tr>
+            <td class="set-back-color" >注销异议原因</td>
+            <td><input type="text" class="layui-input str1" value="{{val.bdcQl.zxyyyy||'——'}}" disabled="off"></td>
+            <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.zxyyyy||'——'}}" disabled="off"></td>
+        </tr>
+        <tr>
+            <td class="set-back-color" >登簿人</td>
+            <td><input type="text" class="layui-input str1" value="{{val.bdcQl.dbr||'——'}}" disabled="off"></td>
+            <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.dbr||'——'}}" disabled="off"></td>
+        </tr>
+        <tr>
+            <td class="set-back-color" >登记时间</td>
+            <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.djsj)||'——'}}" disabled="off"></td>
+            <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.djsj)||'——'}}" disabled="off"></td>
+        </tr>
+        <tr>
+            <td class="set-back-color" >附记</td>
+            <td><textarea class="layui-textarea change-textarea-width str1"  disabled="off">{{val.bdcQl.fj||'——'}}</textarea></td>
+            <td><textarea class="layui-textarea change-textarea-width str2"  disabled="off">{{val.ybdcQl.fj||'——'}}</textarea></td>
+        </tr>
+    </table>
+    </div>`
+</script>
+<!-- 权利信息:林权 -->
+<script type="text/html" id="bdc_lq">
+    {{# var val = d.bgxx;}}
+    <div class="bdc-jt-table">
+        <table class="layui-table" border="1">
+            <tr>
+                <td class="set-back-color" width="230px"><i class="bdc-outer"></i></td>
+                <td class="set-back-color set-edit-back-color">变更后</td>
+                <td class="set-back-color">变更前</td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >发包方</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.fbf||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.fbf||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >林地共有情况</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.gyqk||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.gyqk||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >使用权（承包）面积（亩）</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.syqmj||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.syqmj||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >林地所有权性质</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('tdsyqxz', val.bdcQl.ldsyqxz)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('tdsyqxz', val.ybdcQl.ldsyqxz)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >森林、林木所有权人</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.sllmsyqr1||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.sllmsyqr1||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >主要树种</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.zysz||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.zysz||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >森林、林木使用权人</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.sllmsyqr2||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.sllmsyqr2||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >株数</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.zs||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.zs||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >林种</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('lz', val.bdcQl.lz)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('lz', val.ybdcQl.lz)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >起源</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('qy', val.bdcQl.qy)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('qy', val.ybdcQl.qy)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >造林年度</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.zlnd||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.zlnd||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >小地名</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.xdm||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.xdm||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >林班</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.lb||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.lb||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >小班</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.xb||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.xb||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >林地使用（承包）起始时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.ldsyqssj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.ldsyqssj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >终止日期</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.ldsyjssj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.ldsyjssj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >登簿人</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.dbr||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.dbr||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >登记时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.djsj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.djsj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >附记</td>
+                <td><textarea class="layui-textarea change-textarea-width str1"  disabled="off">{{val.bdcQl.fj||'——'}}</textarea></td>
+                <td><textarea class="layui-textarea change-textarea-width str2"  disabled="off">{{val.ybdcQl.fj||'——'}}</textarea></td>
+            </tr>
+        </table>
+    </div>
+</script>
+<!-- 权利信息:承包农用地 -->
+<script type="text/html" id="bdc_tdcbnydsyq">
+    {{# var val = d.bgxx;}}
+    <div class="bdc-jt-table">
+        <table class="layui-table" border="1">
+            <tr>
+                <td class="set-back-color" width="230px"><i class="bdc-outer"></i></td>
+                <td class="set-back-color set-edit-back-color">变更后</td>
+                <td class="set-back-color">变更前</td>
+            </tr>
+            <tr>
+                <td class="set-back-color">发包方</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.fbfmc||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.fbfmc||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">共有情况</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.gyqk||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.gyqk||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >承包(使用)面积（亩）</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.cbmj||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.cbmj||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >土地所有权性质</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('tdsyqxz',val.bdcQl.tdsyqxz)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('tdsyqxz',val.ybdcQl.tdsyqxz)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >水域滩涂类型</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('syttlx',val.bdcQl.syttlx)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('syttlx',val.ybdcQl.syttlx)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >养殖业方式</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('yzyfs',val.bdcQl.yzyfs)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('yzyfs',val.ybdcQl.yzyfs)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >草原质量</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.cyzl||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.cyzl||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >适宜载畜量</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.syzcl||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.syzcl||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >承包(使用)起始时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.cbqssj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.cbqssj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >承包(使用)结束时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.cbjssj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.cbjssj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >登簿人</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.dbr||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.dbr||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >登记时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.djsj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.djsj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >附记</td>
+                <td><textarea class="layui-textarea change-textarea-width str1"  disabled="off">{{val.bdcQl.fj||'——'}}</textarea></td>
+                <td><textarea class="layui-textarea change-textarea-width str2"  disabled="off">{{val.ybdcQl.fj||'——'}}</textarea></td>
+            </tr>
+        </table>
+    </div>
+</script>
+<!-- 权利信息:地役权 -->
+<script type="text/html" id="bdc_dyiq">
+    {{# var val = d.bgxx;}}
+    <div class="bdc-jt-table">
+        <table class="layui-table" border="1">
+            <tr>
+                <td class="set-back-color" width="230px"><i class="bdc-outer"></i></td>
+                <td class="set-back-color set-edit-back-color">变更后</td>
+                <td class="set-back-color">变更前</td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >需役地坐落</td>
+                <td><input type="text" class="layui-input str1" title="{{val.bdcQl.xydzl||'——'}}"
+                           value="{{val.bdcQl.xydzl||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" title="{{val.ybdcQl.xydzl||'——'}}"
+                           value="{{val.ybdcQl.xydzl||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >登记类型</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('djlx', val.bdcQl.djlx)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('djlx', val.ybdcQl.djlx)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >地役权起始时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.qlqssj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.qlqssj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >地役权结束时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.qljssj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.qljssj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >登簿人</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.dbr||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.dbr||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >登记时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.djsj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.djsj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">供役地不动产单元号</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.gydbdcdyh||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.gydbdcdyh||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >需役地不动产单元号</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.xydbdcdyh||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.xydbdcdyh||'——'}}" disabled="off"></td>
+            </tr>
+
+            <tr>
+                <td class="set-back-color" >地役权内容</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.dyqnr||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.dyqnr||'——'}}" disabled="off"></td>
+            </tr>
+
+            <tr>
+                <td class="set-back-color" >附记</td>
+                <td><textarea class="layui-textarea change-textarea-width str1"  disabled="off">{{val.bdcQl.fj||'——'}}</textarea></td>
+                <td><textarea class="layui-textarea change-textarea-width str2"  disabled="off">{{val.ybdcQl.fj||'——'}}</textarea></td>
+            </tr>
+        </table>
+    </div>
+</script>
+<!-- 权利信息:建设用地使用权 -->
+<script type="text/html" id="bdc_jsydsyq">
+    {{# var val = d.bgxx;}}
+    <div class="bdc-jt-table">
+        <table class="layui-table" border="1">
+            <tr>
+                <td class="set-back-color" width="230px"><i class="bdc-outer"></i></td>
+                <td class="set-back-color set-edit-back-color">变更后</td>
+                <td class="set-back-color">变更前</td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >登记类型</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('djlx', val.bdcQl.djlx)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('djlx', val.ybdcQl.djlx)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >使用权面积（m<sup>2</sup>）</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.syqmj||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.syqmj||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >权利设定方式</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('qlsdfs', val.bdcQl.qlsdfs)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('qlsdfs', val.ybdcQl.qlsdfs)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >独用土地面积（m<sup>2</sup>）</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.dytdmj||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.dytdmj||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >分摊土地面积（m<sup>2</sup>）</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.fttdmj||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.fttdmj||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >取得价格（万元）</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.qdjg||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.qdjg||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >登簿人</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.dbr||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.dbr||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >登记时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.djsj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.djsj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">使用权起始时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.syqqssj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.syqqssj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >使用权结束时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.syqjssj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.syqjssj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >使用权起始时间2</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.syqqssj2)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.syqqssj2)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >使用权结束时间2</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.syqjssj2)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.syqjssj2)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >使用权起始时间3</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.syqqssj3)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.syqqssj3)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >使用权结束时间3</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.syqjssj3)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.syqjssj3)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >附记</td>
+                <td><textarea class="layui-textarea change-textarea-width str1"  disabled="off">{{val.bdcQl.fj||'——'}}</textarea></td>
+                <td><textarea class="layui-textarea change-textarea-width str2"  disabled="off">{{val.ybdcQl.fj||'——'}}</textarea></td>
+            </tr>
+        </table>
+    </div>
+</script>
+<!-- 权利信息:构筑物所有权 -->
+<script type="text/html" id="bdc_gjzwsyq">
+    {{# var val = d.bgxx;}}
+    <div class="bdc-jt-table">
+        <table class="layui-table" border="1">
+            <tr>
+                <td class="set-back-color" width="230px"><i class="bdc-outer"></i></td>
+                <td class="set-back-color set-edit-back-color">变更后</td>
+                <td class="set-back-color">变更前</td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >登记类型</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('djlx', val.bdcQl.djlx)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('djlx', val.ybdcQl.djlx)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >构（建）筑物共有情况</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.gyqk||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.gyqk||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">土地/海域使用权人</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.tdhysyqr||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.tdhysyqr||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >土地/海域使用面积（m<sup>2</sup>）</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.tdhysymj||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.tdhysymj||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >土地/海域使用起始时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.tdhysyqssj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.tdhysyqssj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >土地/海域使用结束时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.tdhysyjssj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.tdhysyjssj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >构(建)筑物类型</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('gjzwlx',val.bdcQl.gjzwlx)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('gjzwlx',val.ybdcQl.gjzwlx)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >坐落</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.zl||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.zl||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >构(建)筑物规划用途</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.gjzwghyt||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.gjzwghyt||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >构(建)筑物面积（m<sup>2</sup>）</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.gjzwmj||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.gjzwmj||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >竣工时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.jgsj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.jgsj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >登簿人</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.dbr||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.dbr||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >登记时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.djsj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.djsj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >附记</td>
+                <td><textarea class="layui-textarea change-textarea-width str1"  disabled="off">{{val.bdcQl.fj||'——'}}</textarea></td>
+                <td><textarea class="layui-textarea change-textarea-width str2"  disabled="off">{{val.ybdcQl.fj||'——'}}</textarea></td>
+            </tr>
+        </table>
+    </div>
+</script>
+<!-- 权利信息:海域使用权 -->
+<script type="text/html" id="bdc_hysyq">
+    {{# var val = d.bgxx;}}
+    <div class="bdc-jt-table">
+        <table class="layui-table" border="1">
+            <tr>
+                <td class="set-back-color" width="230px"><i class="bdc-outer"></i></td>
+                <td class="set-back-color set-edit-back-color">变更后</td>
+                <td class="set-back-color">变更前</td>
+            </tr>
+            <tr>
+                <td class="set-back-color">项目名称</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.xmmc||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.xmmc||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >登记类型</td>
+                <td><input type="text" class="layui-input str1" value="{{getZdMc('djlx', val.bdcQl.djlx)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{getZdMc('djlx', val.ybdcQl.djlx)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">共有情况</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.gyqk||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.gyqk||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">使用权面积(公顷)</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.syqmj||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.syqmj||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >使用总金额（万元）</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.syzje||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.syzje||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >使用权起始时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.syqqssj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.syqqssj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >使用权结束时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.syqjssj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.syqjssj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >使用金缴纳情况</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.syjjnqk||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.syjjnqk||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >使用金标准依据</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.syjbzyj||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.syjbzyj||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >登簿人</td>
+                <td><input type="text" class="layui-input str1" value="{{val.bdcQl.dbr||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{val.ybdcQl.dbr||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >登记时间</td>
+                <td><input type="text" class="layui-input str1" value="{{formatDate(val.bdcQl.djsj)||'——'}}" disabled="off"></td>
+                <td><input type="text" class="layui-input str2" value="{{formatDate(val.ybdcQl.djsj)||'——'}}" disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color" >附记</td>
+                <td><textarea class="layui-textarea change-textarea-width str1"  disabled="off">{{val.bdcQl.fj||'——'}}</textarea></td>
+                <td><textarea class="layui-textarea change-textarea-width str2"  disabled="off">{{val.ybdcQl.fj||'——'}}</textarea></td>
+            </tr>
+        </table>
+    </div>
+</script>
+
+<!-- 无数据模版 -->
+<script type="text/html" id="noDataTpl">
+    <div class="layui-form-item">
+        <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据</div>
+    </div>
+</script>
+
+
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/bgdb/bgxxdb.js"></script>
+
+</html>

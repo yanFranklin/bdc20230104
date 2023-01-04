@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--宗地变化情况-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.KtfZdbhqkMapper">
+
+    <select id="queryKtfZdbhqkList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.KtfZdbhqkDO">
+        SELECT DISTINCT
+        l.yxmid as ssywh,a.zddm,a.bhyy,a.bhnr,a.djsj,a.dbr,'' fj,d.qxdm,k.ybh as BHQZDDM FROM bdc_bdcdjb_zdjbxx_zdbhqk a
+        LEFT JOIN bdc_bdcdjb_zdjbxx b ON a.zddm=b.zddm
+        LEFT JOIN bdc_xm d ON b.bdcdyh=d.bdcdyh
+        left join bdc_xm_lsgx l on l.xmid=d.xmid and nvl(l.WLXM,0) = 0
+        left join DJSJ_ZD_BHQK k on k.bh=a.zddm
+        <if test="yywh != null and yywh !=''">
+            LEFT JOIN BDC_XM_LSGX L ON L.YXMID = d.XMID and nvl(l.WLXM,0) = 0
+        </if>
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND d.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND d.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+    <select id="queryKtfZdbhqkListOld" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.yancheng.yth.old.KtfZdbhqkOldDO">
+        SELECT a.zddm,a.bhyy,a.bhnr,a.djsj,a.dbr,'' fj,d.qxdm FROM bdc_bdcdjb_zdjbxx_zdbhqk a
+        LEFT JOIN bdc_bdcdjb_zdjbxx b ON a.zddm=b.zddm
+        LEFT JOIN bdc_xm d ON b.bdcdyh=d.bdcdyh
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND d.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND d.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+</mapper>

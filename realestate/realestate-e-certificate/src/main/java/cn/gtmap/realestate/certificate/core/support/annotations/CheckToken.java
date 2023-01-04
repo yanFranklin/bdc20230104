@@ -1,0 +1,16 @@
+package cn.gtmap.realestate.certificate.core.support.annotations;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * @author <a href="mailto:chenyongqiang@gtmap.cn">chenyongqiang</a>
+ * @Version 1.0
+ * @description 1.0，2019/3/19
+ */
+@Target({ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface CheckToken {
+}

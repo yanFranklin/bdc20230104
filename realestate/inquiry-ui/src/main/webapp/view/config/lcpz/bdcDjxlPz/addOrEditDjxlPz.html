@@ -1,0 +1,190 @@
+<!--/**-->
+<!--* author: 前端组-->
+<!--* date: 2019-01-28-->
+<!--* version 3.0.0-->
+<!--* describe: 筛选弹窗的常用尺寸有宽度440px和宽度900px。
+                宽度440px用于单行文本框，适用于查询条件不多的情况；
+                宽度900px用于有筛选项和文本框较多，一行两个或者三个，input较长时独占一行-->
+<!--*/-->
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>新增或者编辑登记小类配置</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../../../static/lib/bdcui/css/popup.css"/>
+    <style type="text/css">
+        .bdc-not-null .layui-form-label.bdc-two-lines{
+            line-height: 14px;
+        }
+    </style>
+</head>
+
+<body>
+<div id="bdc-popup-large">
+    <form class="layui-form bdc-not-full-bg" action="" lay-filter="bdcDjxlPzForm">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline bdc-not-null">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>工作流名称</label>
+                <div class="layui-input-inline bdc-radio">
+                    <select name="gzldyid" xm-select="selectGzldymc" id="gzldyid" lay-verify="required"
+                            xm-select-radio xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline bdc-not-null">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>登记小类</label>
+                <div class="layui-input-inline bdc-radio">
+                    <select name="djxl" id="djxl" xm-select="selectDjxl" lay-verify="required"
+                            xm-select-radio xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline bdc-not-null">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>权利类型</label>
+                <div class="layui-input-inline bdc-radio">
+                    <select name="qllx" id="qllx" xm-select="selectQllx" lay-verify="required"
+                            xm-select-radio xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline bdc-not-null">
+                <label class="layui-form-label bdc-two-lines"><span class="required-span"><sub>*</sub></span>单元号<br>权利类型</label>
+                <div class="layui-input-inline bdc-radio">
+                    <select name="dyhqllx" id="dyhqllx" xm-select="selectDyhqllx" lay-verify="required"
+                            xm-select-radio xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline bdc-not-null">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>是否收费</label>
+                <div class="layui-input-inline bdc-radio">
+                    <select  xm-select="selectSfsf" lay-verify="required" name="sfsf" id="sfsf" xm-select-radio xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">不动产类型</label>
+                <div class="layui-input-inline bdc-radio">
+                    <select  xm-select="selectBdclx" name="bdclx" id="bdclx" xm-select-radio xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline bdc-not-null">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>顺序号</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" lay-verify="required|number" placeholder="请输入"
+                           class="layui-input" name="sxh" id="sxh">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label bdc-two-lines">收件单<br>打印类型</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="sjddylx" name="sjddylx" autocomplete="off" placeholder="请输入"
+                           class="layui-input">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label bdc-two-lines">申请书<br>打印类型</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="sqsdylx" name="sqsdylx" autocomplete="off" placeholder="请输入"
+                           class="layui-input">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label bdc-two-lines">审批表<br>打印类型</label>
+                <div class="layui-input-inline bdc-radio">
+                    <input type="text" id="spbdylx" name="spbdylx" autocomplete="off" placeholder="请输入"
+                           class="layui-input">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label bdc-two-lines">档案目录<br>打印类型</label>
+                <div class="layui-input-inline bdc-radio">
+                    <input type="text" id="damldylx" name="damldylx" autocomplete="off" placeholder="请输入"
+                           class="layui-input">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label bdc-two-lines">档案封面<br>打印类型</label>
+                <div class="layui-input-inline bdc-radio">
+                    <input type="text" id="dafmdylx" name="dafmdylx" autocomplete="off" placeholder="请输入"
+                           class="layui-input">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">预告登记种类</label>
+                <div class="layui-input-inline bdc-radio">
+                    <select xm-select="selectYgdjzl"  name="ygdjzl" id="ygdjzl" xm-select-radio xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+            <!--     原权利类型     -->
+            <div class="layui-inline">
+                <label class="layui-form-label">原权利类型</label>
+                <div class="layui-input-inline bdc-radio">
+                    <select xm-select="selectYqllx"  name="yqllx" id="yqllx" xm-select-radio xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">流程删除收费</label>
+                <div class="layui-input-inline bdc-radio">
+                    <select xm-select="selectLcscSfxx" lay-verify="" name="lcscsfxx" id="lcscsfxx"
+                            xm-select-radio
+                            xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                        <option value="1">是</option>
+                        <option value="0">否</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <input type="hidden" name="pzid" id="pzid"/>
+            </div>
+
+            <div class="layui-inline bdc-frame-button-box">
+                <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" lay-submit=""
+                   lay-filter="submitBtn">保存</a>
+                <a href="javascript:;" class="layui-btn layui-btn-normal bdc-secondary-btn bdc-frame-close"
+                   lay-filter="closeBtn" onclick="closeWin();">取消</a>
+            </div>
+        </div>
+
+        <!--异常 提示信息-->
+        <div class="bdc-other-tips-box bdc-hide">
+            <div class="bdc-other-tips">
+                <p>错误提示：<span class="bdc-close">不再提示</span></p>
+                <div id="otherTips">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+
+<script src="../../../../static/lib/layui/layui.js"></script>
+<script src="../../../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../../../static/lib/layui/layui.all.js"></script>
+<!--添加水印-->
+<script src="../../../../static/lib/bdcui/js/common.js"></script>
+<script src="../../../../static/js/config/common.js"></script>
+<script src="../../../../static/lib/bdcui/js/mask.js"></script>
+<script src="../../../../static/js/config/lcpz/bdcDjxlPz.js"></script>
+
+</html>

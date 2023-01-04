@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--土地所有权-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.exchange.ShareDataMapper">
+
+    <select id="queryQlfQlTdsyqList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.QlfQlTdsyqDO">
+        SELECT t.ysdm,
+        t.zddm,
+        t.bdcdyh,
+        t.ywh,
+        t.qllx,
+        t.djlx,
+        t.djyy,
+        t.mjdw,
+        t.nydmj,
+        t.gdmj,
+        t.ldmj,
+        t.cdmj,
+        t.qtnydmj,
+        t.jsydmj,
+        t.wlydmj,
+        t.bdcqzh,
+        t.qxdm,
+        t.djjg,
+        t.dbr,
+        t.djsj,
+        t.fj,
+        t.qszt
+        FROM qlf_ql_tdsyq t
+        <where>
+            <if test="YWH != null and YWH !=''">
+                AND t.ywh = #{YWH}
+            </if>
+            <if test="BDCDYH != null and BDCDYH !=''">
+                AND t.bdcdyh = #{BDCDYH}
+            </if>
+        </where>
+    </select>
+
+</mapper>

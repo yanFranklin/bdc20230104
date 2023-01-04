@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <ex:bean id="sw_wsxx_yc">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SW"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="url" value="${sw.wsxx.url}"/>
+        </ex:service-info>
+        <ex:log dsfFlag="SW" logEventName="查询税务房屋完税信息" requester="BDC" responser="SW"/>
+        <!-- 输入结构体 -->
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/sw/req/sw_wsxx_req.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/sw/resp/sw_wsxx_resp_yc.xml"/>
+
+        </ex:response>
+    </ex:bean>
+
+    <!--查询交易备案信息 -->
+    <ex:bean id="clfwqxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="JY"/>
+            <ex:property name="dsfFlag" value="JY"/>
+            <ex:property name="url" value="${jy.clfwq.url}"/>
+        </ex:service-info>
+        <!-- 输入结构体 -->
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/jy/clfwx/request/param.xml"/>
+        </ex:request>
+
+    </ex:bean>
+</beans>

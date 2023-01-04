@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.building.core.mapper.FwXmxxMapper">
+    <!--分页查询项目信息 -->
+    <select id="listXmxxByPageOrder" parameterType="map" resultType="cn.gtmap.realestate.common.core.dto.building.XmxxResponseDTO">
+        SELECT t.fw_xmxx_index,t.xmmc,t.bdcdyh,t.zl,t.lszd,t.bdczt,t.dytdmj FROM fw_xmxx t
+        <where>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND t.bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+            </if>
+            <if test="zl != null and zl != ''">
+                AND t.zl LIKE '%'|| #{zl} || '%'
+            </if>
+            <if test="lszd != null and lszd != ''">
+                AND t.lszd LIKE '%'|| #{lszd} || '%'
+            </if>
+            <if test="xmmc != null and xmmc != ''">
+                AND t.xmmc LIKE '%'|| #{xmmc} || '%'
+            </if>
+            <if test="fwXmxxIndexList != null and fwXmxxIndexList.size > 0">
+                AND fw_xmxx_index in
+                <foreach collection="fwXmxxIndexList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+</mapper>

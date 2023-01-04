@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <ex:bean id="cz_ddquery">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${czzf.ddquery.url}"/>
+            <ex:property name="httpsRequest" value="true"/>
+            <ex:property name="logEventName" value="交易结果轮询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SFXT"/>
+            <ex:property name="dsfFlag" value="SFXT"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/changzhou/sf/ddquery.xml"/>
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="cz_ddcx">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${czzf.ddcx.url}"/>
+            <ex:property name="httpsRequest" value="true"/>
+            <ex:property name="logEventName" value="订单撤销"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SFXT"/>
+            <ex:property name="dsfFlag" value="SFXT"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/changzhou/sf/ddcx.xml"/>
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="jfpt_jfztcx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${fssr.dzh.url}"/>
+            <ex:property name="httpsRequest" value="true"/>
+            <ex:property name="logEventName" value="缴费查询信息同步接口(data方式)"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="JFPT"/>
+            <ex:property name="dsfFlag" value="JFPT_CZ"/>
+        </ex:service-info>
+
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/changzhou/fssr/jfbl/jfcx/request/request.xml"
+                        encodeMethod="cn.gtmap.realestate.exchange.service.impl.inf.changzhou.ChangzhouSwServiceImpl.encodeQr"
+                        name="param"/>
+        </ex:request>
+        <!-- 输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/changzhou/fssr/jfbl/jfcx/response/response.xml"/>
+        </ex:response>
+    </ex:bean>
+    <ex:bean id="fs_jftb">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${fssr.dzh.url}"/>
+            <ex:property name="httpsRequest" value="true"/>
+            <ex:property name="logEventName" value="缴费办理信息同步接口(data方式)"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="JFPT"/>
+            <ex:property name="dsfFlag" value="JFPT_CZ"/>
+        </ex:service-info>
+
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/changzhou/fssr/jfbl/request/request.xml"
+                        encodeMethod="cn.gtmap.realestate.exchange.service.impl.inf.changzhou.ChangzhouSwServiceImpl.encodeBl"
+                        name="param"/>
+        </ex:request>
+        <!-- 输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/changzhou/fssr/jfbl/response/response.xml"/>
+        </ex:response>
+    </ex:bean>
+    <ex:bean id="cz_smxd">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${czzf.smxd.url}"/>
+            <ex:property name="httpsRequest" value="true"/>
+            <ex:property name="logEventName" value="主扫动态码统一下单"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SFXT"/>
+            <ex:property name="dsfFlag" value="SFXT"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/changzhou/sf/smxd.xml"/>
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="cz_ddtk">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${czzf.ddtk.url}"/>
+            <ex:property name="httpsRequest" value="true"/>
+            <ex:property name="logEventName" value="订单退款"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SFXT"/>
+            <ex:property name="dsfFlag" value="SFXT"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/changzhou/sf/ddtk.xml"/>
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="ccsf_jgtz">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="cn.gtmap.realestate.common.core.service.feign.accept.BdcSlSfxxFeignService"/>
+            <ex:property name="methodName" value="gxSfxxSfzt"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/changzhou/sf/jgtz.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!-- 缴费办理 -->
+    <ex:bean id="jfbl">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="bdcSfServiceImpl"/>
+            <ex:property name="methodName" value="jfbl"/>
+            <ex:property name="logEventName" value="缴费办理信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="JFPT"/>
+            <ex:property name="dsfFlag" value="JFPT"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/jfblRequest.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!-- 缴费确认信息同步接口业务  业务唯一码（business_id）、缴款码（businessnumber）、预
+留字段（hold1）传空、预留字段（hold2）传空-->
+    <ex:bean id="jfqr">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="bdcSfServiceImpl"/>
+            <ex:property name="methodName" value="jfqr"/>
+            <ex:property name="logEventName" value="缴费确认信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="JFPT"/>
+            <ex:property name="dsfFlag" value="JFPT"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 票据作废信息同步接口 传参 入业务唯一码（business_id）、缴款码（businessnumber）、预
+留字段（hold1）传空、预留字段（hold2）传空 -->
+    <ex:bean id="pjzf">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="bdcSfServiceImpl"/>
+            <ex:property name="methodName" value="pjzf"/>
+            <ex:property name="logEventName" value="票据作废信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="JFPT"/>
+            <ex:property name="dsfFlag" value="JFPT"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 电子票据信息同步接口 传参 入业务唯一码（business_id）、缴款码（businessnumber）、预
+留字段（hold1）传空、预留字段（hold2）传空 -->
+    <ex:bean id="dzpj">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="bdcSfServiceImpl"/>
+            <ex:property name="methodName" value="dzpj"/>
+            <ex:property name="logEventName" value="电子票据信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="JFPT"/>
+            <ex:property name="dsfFlag" value="JFPT"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 非税增强接口，推送登记收费信息接口（8994）-->
+    <ex:bean id="fs_jfpt_tsdjfxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="nantongSfServiceImpl"/>
+            <ex:property name="methodName" value="tsdjfxx"/>
+        </ex:service-info>
+        <ex:log dsfFlag="FS" logEventName="输入模式电子缴款单信息（8994）" requester="FS" responser="BDC"/>
+    </ex:bean>
+
+    <!-- 非税增强接口，查询应缴信息报文接口（8997）-->
+    <ex:bean id="fs_jfpt_jfztcx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="nantongSfServiceImpl"/>
+            <ex:property name="methodName" value="jfztcx"/>
+        </ex:service-info>
+        <ex:log dsfFlag="FS" logEventName="查询应缴信息报文（8997）" requester="FS" responser="BDC"/>
+    </ex:bean>
+
+    <!-- 政融支付平台 3.1	生成支付订单接口）-->
+    <ex:bean id="zr_payOrder">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="zrZfServiceImpl"/>
+            <ex:property name="methodName" value="payOrder"/>
+            <ex:property name="logEventName" value="生成支付订单接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZR"/>
+            <ex:property name="dsfFlag" value="ZR"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/standard/sf/payorder/request.xml"/>
+        </ex:request>
+        <ex:log dsfFlag="ZR" logEventName="生成支付订单" requester="BDC" responser="ZR"/>
+    </ex:bean>
+
+<!--    2.4缴费结果服务器通知接口-->
+    <ex:bean id="zr_payResultNotice">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="zrZfServiceImpl"/>
+            <ex:property name="methodName" value="payResultNotice"/>
+            <ex:property name="logEventName" value="缴费结果服务器通知接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZR"/>
+            <ex:property name="dsfFlag" value="ZR"/>
+        </ex:service-info>
+        <ex:log dsfFlag="ZR" logEventName="缴费结果服务器通知接口" requester="BDC" responser="ZR"/>
+    </ex:bean>
+
+    <!-- 政融支付平台 3.2 查询缴费结果接口-->
+    <ex:bean id="zr_payResult">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="zrZfServiceImpl"/>
+            <ex:property name="methodName" value="payResult"/>
+            <ex:property name="logEventName" value="查询缴费结果接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZR"/>
+            <ex:property name="dsfFlag" value="ZR"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/standard/sf/payresult/request.xml"/>
+        </ex:request>
+        <ex:log dsfFlag="ZR" logEventName="查询缴费结果接口" requester="BDC" responser="ZR"/>
+    </ex:bean>
+
+<!--    2.7	对账文件推送-->
+    <ex:bean id="zr_dzwjts">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="zrZfServiceImpl"/>
+            <ex:property name="methodName" value="dzwjts"/>
+            <ex:property name="logEventName" value="对账文件推送"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZR"/>
+            <ex:property name="dsfFlag" value="ZR"/>
+        </ex:service-info>
+        <ex:log dsfFlag="ZR" logEventName="对账文件推送" requester="BDC" responser="ZR"/>
+    </ex:bean>
+
+    <!--  3.8 对账文件下载-->
+    <ex:bean id="zr_dzwjxz">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="zrZfServiceImpl"/>
+            <ex:property name="methodName" value="dzwjxz"/>
+            <ex:property name="logEventName" value="对账文件下载"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZR"/>
+            <ex:property name="dsfFlag" value="ZR"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/standard/sf/dzwjxz/request.xml"/>
+        </ex:request>
+        <ex:log dsfFlag="ZR" logEventName="对账文件下载" requester="BDC" responser="ZR"/>
+    </ex:bean>
+
+    <!-- 政融支付平台 3.7 POS支付成功通知接口-->
+    <ex:bean id="zr_posPaySuccess">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="zrZfServiceImpl"/>
+            <ex:property name="methodName" value="posPaySuccess"/>
+            <ex:property name="logEventName" value="POS支付成功通知接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZR"/>
+            <ex:property name="dsfFlag" value="ZR"/>
+        </ex:service-info>
+        <ex:log dsfFlag="ZR" logEventName="POS支付成功通知接口" requester="BDC" responser="ZR"/>
+    </ex:bean>
+
+
+    <!-- 政融支付平台 3.5	线上退款申请）-->
+    <ex:bean id="zr_xstksq">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="zrZfServiceImpl"/>
+            <ex:property name="methodName" value="xstksq"/>
+            <ex:property name="logEventName" value="线上退款申请接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZR"/>
+            <ex:property name="dsfFlag" value="ZR"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/standard/sf/payorder/request.xml"/>
+        </ex:request>
+        <ex:log dsfFlag="ZR" logEventName="线上退款申请" requester="BDC" responser="ZR"/>
+    </ex:bean>
+
+    <!-- 政融支付平台 3.6 线上退款结果查询接口）-->
+    <ex:bean id="zr_xstkjgcx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="zrZfServiceImpl"/>
+            <ex:property name="methodName" value="xstkjgcx"/>
+            <ex:property name="logEventName" value="线上退款结果查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZR"/>
+            <ex:property name="dsfFlag" value="ZR"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/standard/sf/payorder/request.xml"/>
+        </ex:request>
+        <ex:log dsfFlag="ZR" logEventName="线上退款结果查询" requester="BDC" responser="ZR"/>
+    </ex:bean>
+</beans>

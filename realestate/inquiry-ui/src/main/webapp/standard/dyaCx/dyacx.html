@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>抵押查询标准版</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css">
+    <link rel="stylesheet" href="../../static/css/common.css"/>
+    <style type="text/css">
+        #popupTwoRows .bdc-filter .layui-form-select {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 80px;
+        }
+        #popupTwoRows .bdc-filter .layui-input-inline > .layui-input {
+            padding-left: 90px;
+        }
+        #popupTwoRows .bdc-filter .layui-input-inline > .normal-padding {
+            padding-left: 10px;
+        }
+        .bdc-screen-search-box .layui-form-item .layui-input-inline .layui-input {
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="bdc-percentage-container">
+    <!--查询条件-->
+    <div class="bdc-search-content">
+        <div class="bdc-search-box bdc-screen-search-box" id="popupTwoRows">
+            <!--默认两行的-->
+            <form class="layui-form" action="">
+                <!--IP地址-->
+                <input type="hidden" id="ipaddress"  name="ipaddress"/>
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline bdc-filter cxtj" id="bdcdyh">
+                        <label id="bdcdyhLabel" class="layui-form-label">不动产单元号</label>
+                        <div id="bdcdyhDiv" class="layui-input-inline">
+                            <input name="bdcdyh" type="text" autocomplete="off" placeholder="请输入" class="layui-input search required">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            <select id="bdcdyhmhlx" name="bdcdyhmhlx" class="bdc-filter-select search">
+                                <option value="0">精确</option>
+                                <option value="1">左匹配</option>
+                                <option value="2">右匹配</option>
+                                <option value="3">全模糊</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline bdc-filter cxtj" id="dyzmh">
+                        <label id="bdcqzhLabel" class="layui-form-label">抵押证明号</label>
+                        <div id="bdcqzhDiv" class="layui-input-inline">
+                            <input type="text" name="bdcqzh" autocomplete="off" placeholder="请输入" class="layui-input search required">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            <select id="bdcqzhmhlx" name="bdcqzhmhlx" class="bdc-filter-select search">
+                                <option value="0">精确</option>
+                                <option value="1">左匹配</option>
+                                <option value="2">右匹配</option>
+                                <option value="3">全模糊</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline bdc-filter cxtj" id="cqzh">
+                        <label id="ycqzhLabel" class="layui-form-label">产权证号</label>
+                        <div id="ycqzhDiv" class="layui-input-inline">
+                            <input type="text" name="ycqzh" autocomplete="off" placeholder="请输入" class="layui-input search required">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            <select id="ycqzhmhlx" name="ycqzhmhlx" class="bdc-filter-select search">
+                                <option value="0">精确</option>
+                                <option value="1">左匹配</option>
+                                <option value="2">右匹配</option>
+                                <option value="3">全模糊</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline bdc-filter cxtj" id="ywr">
+                        <label id="ywrLabel" class="layui-form-label">义务人</label>
+                        <div id="ywrDiv" class="layui-input-inline">
+                            <input name="ywr" type="text" autocomplete="off" placeholder="请输入义务人" ondblclick="readxxByIdCard(this,'zjzl','ywrzjh')"
+                                   class="layui-input search required">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            <select id="ywrmhlx" name="ywrmhlx" class="bdc-filter-select search">
+                                <option value="0">精确</option>
+                                <option value="1">左匹配</option>
+                                <option value="2">右匹配</option>
+                                <option value="3">全模糊</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-filter cxtj" id="ywrzjh">
+                        <label id="ywrzjhLabel" class="layui-form-label">义务人证件号</label>
+                        <div id="ywrzjhDiv" class="layui-input-inline">
+                            <input name="ywrzjh" type="text" autocomplete="off" placeholder="请输入义务人证件号"
+                                   class="layui-input search required">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            <select id="ywrzjhmhlx" name="ywrzjhmhlx" class="bdc-filter-select search">
+                                <option value="0">精确</option>
+                                <option value="1">左匹配</option>
+                                <option value="2">右匹配</option>
+                                <option value="3">全模糊</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="pf-senior-show-normal bdc-hide" id="qlr">
+                        <div class="layui-inline bdc-filter cxtj">
+                            <label id="qlrmcLabel"  class="layui-form-label">权利人</label>
+                            <div id="qlrmcDiv"  class="layui-input-inline">
+                                <input name="qlrmc" type="text" autocomplete="off" placeholder="请输入权利人" ondblclick="readxxByIdCard(this,'zjzl','qlrzjh')"
+                                       class="layui-input search required">
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                                <select id="qlrmcmhlx" name="qlrmcmhlx" class="bdc-filter-select search">
+                                    <option value="0">精确</option>
+                                    <option value="1">左匹配</option>
+                                    <option value="2">右匹配</option>
+                                    <option value="3">全模糊</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline bdc-filter cxtj" id="qlrzjh">
+                            <label id="qlrzjhLabel" class="layui-form-label">权利人证件号</label>
+                            <div id="qlrzjhDiv" class="layui-input-inline">
+                                <input name="qlrzjh" type="text" autocomplete="off" placeholder="请输入权利人证件号"
+                                       class="layui-input search required">
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                                <select id="qlrzjhmhlx" name="qlrzjhmhlx" class="bdc-filter-select search">
+                                    <option value="0">精确</option>
+                                    <option value="1">左匹配</option>
+                                    <option value="2">右匹配</option>
+                                    <option value="3">全模糊</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline cxtj" id="dyqszt">
+                            <label id="qsztLabel"  class="layui-form-label">权属状态</label>
+                            <div id="qsztDiv"  class="layui-input-inline">
+                                <select lay-filter="qszt" id="qszt" name="qszt" lay-search="" class="layui-input search">
+                                    <option value="">请选择</option>
+                                    <option value="0">临时</option>
+                                    <option value="1">现势</option>
+                                    <option value="2">历史</option>
+                                    <option value="3">终止</option>
+                                </select>
+                                <i class="layui-icon layui-icon-close bdc-hide reseticon" style="right: 29px!important;"></i>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline bdc-filter cxtj" id="zl">
+                            <label id="zlLabel" class="layui-form-label">坐落</label>
+                            <div id="zlDiv" class="layui-input-inline">
+                                <input name="zl" type="text" autocomplete="off" placeholder="请输入坐落" class="layui-input search required">
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                                <select id="zlmhlx" name="zlmhlx" class="bdc-filter-select search">
+                                    <option value="0">精确</option>
+                                    <option value="1">左匹配</option>
+                                    <option value="2">右匹配</option>
+                                    <option value="3">全模糊</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!--55989 【淮安市】3.0版本_新增预告查询台账需求 去掉抵押查询预告证明号-->
+                        <!--<div class="layui-inline bdc-filter">
+                            <label id="ygzmhLabel" class="layui-form-label">预告证明号</label>
+                            <div id="ygzmhDiv" class="layui-input-inline">
+                                <input type="text" name="ygzmh" autocomplete="off" placeholder="请输入" class="layui-input search required">
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                                <select id="ygzmhmhlx" name="ygzmhmhlx" class="bdc-filter-select search">
+                                    <option value="0">精确</option>
+                                    <option value="1">左匹配</option>
+                                    <option value="2">右匹配</option>
+                                    <option value="3">全模糊</option>
+                                </select>
+                            </div>
+                        </div>-->
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                        <button type="reset" id="reset" class="layui-btn bdc-secondary-btn reset-btn">重置</button>
+                        <a class="layui-btn layui-btn-normal bdc-secondary-btn" href="javascript:" id="seniorSearchNormal">高级查询</a>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <!--表格-->
+    <div class="bdc-table-box">
+        <table id="bdcdyTable" lay-filter="bdcdyTable"></table>
+    </div>
+
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="xq">详情</a>
+    </script>
+
+    <!--表格上面功能按钮-->
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="exportExcel" id="exportExcel">导出Excel</button>
+            <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="exportAllExcel">导出全部</button>
+            <label id="choosecount" class="layui-btn layui-btn-sm bdc-table-second-btn" >已选0条</label>
+        </div>
+    </script>
+
+    <!--隐藏form，为了Excel导出缓存数据使用-->
+    <form style="display: none" action="/realestate-inquiry-ui/excel/export" method="POST" id="form">
+        <input type="hidden" id="fileName"   name="fileName"/>
+        <input type="hidden" id="sheetName"  name="sheetName"/>
+        <input type="hidden" id="cellTitle"  name="cellTitle"/>
+        <input type="hidden" id="cellWidth"  name="cellWidth"/>
+        <input type="hidden" id="cellKey"    name="cellKey"/>
+        <input type="hidden" id="data"       name="data"/>
+    </form>
+
+    <script src="../../static/lib/jquery/jquery.min.js"></script>
+    <script src="../../static/lib/layui/layui.js"></script>
+    <script src="../../static/js/common.js"></script>
+    <script src="../../static/js/zszm/format.js"></script>
+    <script src="../../static/lib/bdcui/js/readIdCard.js"></script>
+    <script src="../../static/js/readCard.js"></script>
+    <script src="../../static/js/formCenter.js"></script>
+    <script src="../../static/js/dyaCx/standard/dyaCx.js"></script>
+
+    <!--IE获取IP地址-->
+    <object classid="CLSID:76A64158-CB41-11D1-8B02-00600806D9B6" id="locator" style="display:none;visibility:hidden"></object>
+    <object classid="CLSID:75718C9A-F029-11d1-A1AC-00C04FB6C223" id="foo" style="display:none;visibility:hidden"></object>
+    <script language="javascript">
+        try{
+            var service = locator.ConnectServer();
+            service.Security_.ImpersonationLevel = 3;
+            service.InstancesOfAsync(foo, 'Win32_NetworkAdapterConfiguration');
+        } catch(err) {
+            // do nothing
+        }
+    </script>
+    <script FOR="foo" EVENT="OnObjectReady(objObject,objAsyncContext)" LANGUAGE="JScript">
+        try{
+            if (objObject.IPEnabled != null && objObject.IPEnabled != "undefined" && objObject.IPEnabled == true) {
+                if (objObject.IPEnabled && objObject.IPAddress(0) != null && objObject.IPAddress(0) != "undefined")
+                    $("#ipaddress").val( objObject.IPAddress(0));
+            }
+        } catch(err) {
+            // do nothing
+        }
+    </script>
+
+</div>
+</body>
+</html>

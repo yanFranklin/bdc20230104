@@ -1,0 +1,85 @@
+info:
+  name: ${spring.application.name}
+  component: init application
+
+app:
+  center: http://192.168.2.99:8000/eureka/
+  oauth: http://192.168.2.99:8002/account
+  security:
+    moduleAuthPath: http://account/account
+    ignores: /image/**,/css/**,/js/**,/webjars/**,/init/rest/v1.0/xmxx/list,/init/rest/v1.0/**/fwkgsl,/init/rest/v1.0/xmxx/**/ajzt,/init/rest/v1.0/delete/ywxx/**,/init/rest/v1.0/qlr/list,/init/rest/v1.0/pz/**,/init/rest/v1.0/fileXm/**,/init/rest/v1.0/qlxx/**,/init/rest/v1.0/lz/**/**,/init/rest/v1.0/qxlz/**/**
+    authorities:
+      permitAll:
+      hasUrlAuthority('read'): /auth/users,/auth/orgs
+      hasModuleAuthority('yhgl:add'): /auth/user/create
+      hasAnyAuthority('ROLE_USER'): /resource1/**,/catalog1/**
+      hasAnyAuthority('ROLE_ADMIN_2'): /call
+      authenticated: true
+    resources:
+      authenticated: /init/rest/v1.0/**
+
+
+spring:
+  rabbitmq:
+    host: 192.168.0.60
+    port: 5672
+    username: guest
+    password: guest
+  redis:
+    port: 6379
+    host: 192.168.0.60
+  datasource:
+    url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+    username: bdcdj_hefei
+    password: e/lWYHJj7d9rXmgsItIxLw2oWP4XasfqoDXA0AKNYHgeSJQK8IKgU8/+ia1ax4mr9ki4QZbrQrCW9WMkHDOPAA==
+    publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK8ev+xi3qANIZpQGhndeKtc2EOlsPd48VIhphnl3OoOKqynJuQo7qZrJekk8iqXHgvze3bnFrFyTtf3vxGIamsCAwEAAQ==
+  profiles:
+    include: config,dzgx
+  messages:
+    basename: dozer/message/messages
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 1000MB
+  zipkin:
+    # base-url: http://localhost:8003
+    sender:
+      type: rabbit
+    service:
+      name: ${spring.application.name}
+  main:
+    allow-bean-definition-overriding: true
+  #数据库用户要求有select_catalog_role角色  需要查询v$parameter
+  liquibase:
+    #检查变更日志位置是否存在(默认值 true)
+#    check-change-log-location: false
+    #变更日志配置路径(默认值 classpath:/db/changelog/db.changelog-master.yaml)
+    change-log: classpath:conf/liquibase/master.xml
+    #开启liquibase支持(默认值 true)
+    enabled: true
+    #先删除数据库schema(默认值 false)
+    drop-first: false
+
+management:
+  endpoint:
+    health:
+      show-details: always
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+server:
+  port: ${port:8888}
+
+
+logging:
+  classify:
+    defaulted: platform
+#    path:
+#      test: /rest/**, /test/**

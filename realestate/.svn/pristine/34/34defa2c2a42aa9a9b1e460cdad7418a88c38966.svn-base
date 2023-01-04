@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.etl.core.mapper.exchange.FgFyMapper">
+    <select id="selectFgHtfyxx" resultType="cn.gtmap.realestate.common.core.vo.etl.FgHtfyVO" parameterType="map">
+        select
+        t.bdcdyh,t.msr,t.gmrzjhm,t.gmrlxdh,t.htbabm,t.kfsmc,t.fwyt,t.fwdj,f.XMLDFH,t.fwxz,t.jzmj,t.cs,t.mylc,t.fycg,t.fyjg,fk.htzjk,
+        td.ZZSYJZRQ,td.SYSYJZRQ, td.ghyt tdyt,to_char(t.basj,'yyyy-MM-dd') basj,fk.dksfkxx,fk.dkfs,t.cxsj from FG_HTFY t inner join fg_fyxx f on
+        t.bdcdyh=f.bdcdyh
+        left join FG_FKFS fk on fk.htbabm = t.htbabm
+        left join FG_HTBA_TDZXX td on td.htbabm = t.htbabm
+        <where>
+            <if test="htbazt != null and htbazt != ''">
+                and t.htbazt=#{htbazt}
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                and t.bdcdyh=#{bdcdyh}
+            </if>
+            <if test="htbabm != null and htbabm != ''">
+                AND t.htbabm=#{htbabm}
+            </if>
+            <if test="msr != null and msr != ''">
+                AND instr(t.msr ,#{msr} )>0
+            </if>
+            <if test="gmrzjhm != null and gmrzjhm != ''">
+                AND instr(t.gmrzjhm ,#{gmrzjhm} )>0
+            </if>
+            <if test="basj != null and basj != ''">
+                <![CDATA[and to_char(t.basj,'yyyy-mm-dd')= #{basj}]]>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectFgHtfyxxByPage" resultType="cn.gtmap.realestate.common.core.vo.etl.FgHtfyVO"
+            parameterType="cn.gtmap.realestate.common.core.qo.etl.HtbaxxQO">
+        select t.bdcdyh,t.msr,t.htbabm,f.XMLDFH,to_char(t.basj,'yyyy-MM-dd') basj,
+        t.gmrzjhm,t.gmrlxdh,t.kfsmc,t.fwyt,t.fwdj,t.fwxz,t.jzmj,t.cs,t.mylc,t.fycg,t.fyjg,fk.htzjk,
+        td.ZZSYJZRQ,td.SYSYJZRQ, td.ghyt tdyt
+        from FG_HTFY t inner join fg_fyxx f on t.bdcdyh=f.bdcdyh
+        left join FG_FKFS fk on fk.htbabm = t.htbabm
+        left join FG_HTBA_TDZXX td on td.htbabm = t.htbabm
+        <where>
+            and t.htbazt='已备案'
+            <if test="bdcdyh != null and bdcdyh != ''">
+                and t.bdcdyh=#{bdcdyh}
+            </if>
+            <if test="htbh != null and htbh != ''">
+                AND t.htbabm=#{htbh}
+            </if>
+            <if test="basjq != null and basjq != ''">
+                <![CDATA[ AND (t.basj>= to_date(#{basjq},'YYYY-MM-DD')) ]]>
+            </if>
+            <if test="basjz != null and basjz != ''">
+                <![CDATA[and (t.basj <= to_date(#{basjz},'YYYY-MM-DD'))]]>
+            </if>
+            <if test="tbzt != null and tbzt != '' and tbzt == '1'.toString()">
+                and t.bdcdyh in (select t1.bdcdyh as bdcdyh from htba_spf t
+                inner join htba_fwxx t1 on t.baid=t1.baid )
+            </if>
+        </where>
+        <if test="tbzt != null and tbzt != '' and tbzt == '0'.toString()">
+            and t.bdcdyh not in
+            (select t1.bdcdyh as bdcdyh from htba_spf t
+            inner join htba_fwxx t1 on t.baid=t1.baid where bdcdyh is not null)
+        </if>
+
+    </select>
+</mapper>

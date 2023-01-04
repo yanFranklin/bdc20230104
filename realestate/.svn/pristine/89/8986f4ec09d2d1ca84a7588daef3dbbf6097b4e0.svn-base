@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.building.core.mapper.NydQlrMapper">
+    <!-- 查询林权权利人 -->
+    <select id="listLqNydQlr" parameterType="map" resultType="cn.gtmap.realestate.common.core.domain.building.NydQlrDO">
+        SELECT T.NYD_QLR_INDEX, T.DJDCB_INDEX, T.DJH, T.XH, T.QLRMC, T.QLRLX, T.QLRZJLX,
+        T.QLRZJH, T.QSDWDM, T.DWXZ, T.SJZGBM, T.MJDW, T.SYMJ, T.DYMJ, T.FTMJ, T.TXDZ,
+        T.FRDBXM, T.FRDBZJLX, T.FRDBZJH, T.FRDBDHHM, T.DLRXM, T.DLRZJLX,
+        T.DLRZJH, T.DLRSFZMS, T.YZBM, T.DLRDHHM, T.SFLDSYQR, T.SFLMSUQR, T.SFLMSYQR, T.BZ, T.JLRQ, T.GXRQ, T.BGBH
+        FROM NYD_QLR T
+        <where>
+            AND (NVL(T.SFLDSYQR,'0') = '1' OR NVL(T.SFLMSUQR,'0') = '1' OR NVL(T.SFLMSYQR,'0') = '1')
+            <if test="djh != null and djh != ''">
+               AND T.DJH = #{djh}
+            </if>
+            <if test="sfldsyqr != null and sfldsyqr != ''">
+                AND NVL(T.SFLDSYQR,'0') = '1'
+            </if>
+            <if test="sflmsuqr != null and sflmsuqr != ''">
+                AND NVL(T.SFLMSUQR,'0') = '1'
+            </if>
+            <if test="sflmsyqr != null and sflmsyqr != ''">
+                AND NVL(T.SFLMSYQR,'0') = '1'
+            </if>
+        </where>
+    </select>
+</mapper>

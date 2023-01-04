@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>其他相关权利登记信息（取水权、探矿权、采矿权等）</title>
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table-vertical.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+
+    <script src="../../static/lib/jquery/jquery.min.js"></script>
+    <!--添加水印-->
+    <script src="../../static/lib/bdcui/js/common.js"></script>
+    <script src="../../static/js/common.js"></script>
+    <script src="../../static/lib/layui/layui.js"></script>
+</head>
+<style>
+    .layui-carousel > [carousel-item] > * {
+        background: 0;
+    }
+
+    .layui-carousel {
+        background: 0;
+    }
+</style>
+<body>
+<!--内容页-->
+<div class="bdc-table">
+    <p class="bsc-table-tips">第<span id="bs"></span>本 &nbsp;&nbsp; 第<span id="ys"></span>页</p>
+    <div class="bdc-table-box clearBoth">
+        <div class="bdc-register-catalog bdc-td-20">
+            <div class="bdc-tr-box">
+                <div class="bdc-catalog-title">其他相关权利登记信息（取水权、探矿权、采矿权等）</div>
+            </div>
+            <div class="bdc-tr-box bdc-syq-msg clearBoth">
+                <span id="bdcdyh"></span>
+                <span id="qllxmc"></span>
+            </div>
+
+            <div class="bdc-change-tr-contain clearBoth">
+                <div class="bdc-change-tr bdc-change-tr-title">
+                    <div class="bdc-table-line bdc-tr-box">
+                        <i class="bdc-outer"></i>
+                        <span class="bdc-table-bottom">内容</span>
+                        <span class="bdc-table-top">业务号</span>
+                    </div>
+                    <div class="bdc-tr-box">权利人</div>
+                    <div class="bdc-tr-box">证件种类</div>
+                    <div class="bdc-tr-box">证件号</div>
+                    <div class="bdc-tr-box">共有情况</div>
+                    <div class="bdc-tr-box">权利人类型</div>
+                    <div class="bdc-tr-box">登记类型</div>
+                    <div class="bdc-tr-box">登记原因</div>
+                    <div class="bdc-tr-box">权利期限</div>
+                    <div class="bdc-tr-box">取水方式</div>
+                    <div class="bdc-tr-box">水源类型</div>
+                    <div class="bdc-tr-box">取水量</div>
+                    <div class="bdc-tr-box">取水用途</div>
+                    <div class="bdc-tr-box">勘察面积（平方公里）</div>
+                    <div class="bdc-tr-box">开采矿种</div>
+                    <div class="bdc-tr-box">开采方式</div>
+                    <div class="bdc-tr-box">生产规模</div>
+                    <div class="bdc-tr-box">......</div>
+                    <div class="bdc-tr-box">不动产权证书号</div>
+                    <div class="bdc-tr-box">登记时间</div>
+                    <div class="bdc-tr-box">登簿人</div>
+                    <div class="bdc-tr-box bdc-fj">附记</div>
+                </div>
+
+                <form id="form" class="layui-form">
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="tablePage"></div>
+</div>
+<!--附图页-->
+<div class="bdc-table" style="height: 600px">
+    <p class="" style="text-align: center;font-size: 16px">附 &nbsp;&nbsp; 图<br/>
+        （取水或探矿、采矿范围图，可附页）</p>
+    <div class="bdc-table-box clearBoth">
+    </div>
+</div>
+
+<!--插入权利模块-->
+<script type="text/html" id="qlTpl">
+    {{# for(var i = 0, len = d.list.length; i < len; i++){ }}
+    <div class="bdc-change-tr bdc-tr-width">
+        <div class="bdc-tr-box" data-title="{{d.list[i].slbh || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].slbh || ''}}</div>
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].qlr || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].qlr || ''}}</div>
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].qlrzjzl || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].qlrzjzl || ''}}</div>
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].qlrzjh || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].qlrzjh || ''}}</div>
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].gyqk || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].gyqk || ''}}</div>
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].qlrlx || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].qlrlx || ''}}</div>
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].djlxmc || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].djlxmc || ''}}</div>
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].djyy || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].djyy || ''}}</div>
+        </div>
+        <div class="bdc-year bdc-tr-box">
+            {{# if(d.list[i].qlqsrq){ }}
+            <p>{{d.list[i].qlqsrq}}&nbsp;&nbsp;&nbsp;&nbsp;起</p>
+            {{# }else{}}
+
+            {{# }}}
+
+            {{# if(d.list[i].qljsrq){ }}
+            <p>{{d.list[i].qljsrq}}&nbsp;&nbsp;&nbsp;&nbsp;止</p>
+            {{# }else{}}
+
+            {{# }}}
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].qsfs || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].qsfs || ''}}</div>
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].sylx || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].sylx || ''}}</div>
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].qsl || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].qsl || ''}}</div>
+        </div>
+
+        <div class="bdc-tr-box" data-title="{{d.list[i].qsyt || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].qsyt || ''}}</div>
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].kcmj || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].kcmj || ''}}</div>
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].kckz || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].kckz || ''}}</div>
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].kcfs || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].kcfs || ''}}</div>
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].scgm || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].scgm || ''}}</div>
+        </div>
+        <div class="bdc-tr-box" data-title="">
+            <div class="bdc-tr-box-content"></div>
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].bdcqzh || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].bdcqzh || ''}}</div>
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].djrq || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].djrq || ''}}</div>
+        </div>
+        <div class="bdc-tr-box" data-title="{{d.list[i].dbr || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].dbr || ''}}</div>
+        </div>
+        <div class="bdc-tr-box bdc-fj" data-title="{{d.list[i].fj || ''}}">
+            <div class="bdc-tr-box-content">{{d.list[i].fj || ''}}</div>
+        </div>
+    </div>
+    {{# } }}
+
+    <!--如果数据不足4条，那么补充显示空内容，避免页面样式问题-->
+    {{# for(var i = 0, len = 4 - d.list.length; i < len; i++){ }}
+    <div class="bdc-change-tr bdc-tr-width">
+        {{# for(var j = 0; j < 21; j++){ }}
+        <div class="bdc-tr-box" data-title="">
+            <div class="bdc-tr-box-content"></div>
+        </div>
+        {{# } }}
+        <div class="bdc-tr-box bdc-fj" data-title="">
+            <div class="bdc-tr-box-content"></div>
+        </div>
+    </div>
+    {{# } }}
+</script>
+</body>
+
+<script src="../../static/js/djbxx/bdcDjbQtxgql.js"></script>
+<script src="../../static/js/djbxx/bdcDjbYm.js"></script>
+<script src="../../static/js/djbxx/djbCss.js"></script>
+</html>

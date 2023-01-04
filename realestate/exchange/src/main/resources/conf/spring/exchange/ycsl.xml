@@ -1,0 +1,174 @@
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+<!--<beans xmlns="http://www.springframework.org/schema/beans"-->
+<!--       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
+<!--       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"-->
+<!--       xsi:schemaLocation="http://www.springframework.org/schema/beans-->
+<!--       http://www.springframework.org/schema/beans/spring-beans.xsd-->
+<!--    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">-->
+
+<!--    &lt;!&ndash; 根据XMID查询产权信息和权利人信息  &ndash;&gt;-->
+<!--    <ex:bean id="ycsl_cqxxbyxmid">-->
+<!--        <ex:request>-->
+<!--            <ex:element dozerXml="conf/dozer/hefei/ycsl/cqxxbyxmid/response/data.xml"/>-->
+<!--        </ex:request>-->
+<!--        <ex:response extendRequestBody="true" excludeKey="xmid">-->
+<!--            <ex:element sourceService="ycsl_cqxxbyxmid_sqxx"/>-->
+<!--            <ex:element sourceService="ycsl_cqxxbyxmid_cqxx"/>-->
+<!--            <ex:element sourceService="ycsl_dscsbybdcdyh"/>-->
+<!--            <ex:element name="qlr" sourceService="ycsl_cqxxbyxmid_qlrxx"/>-->
+<!--        </ex:response>-->
+<!--        <ex:log dsfFlag="YCSL" logEventName="根据XMID查询产权信息和权利人信息" requester="YCSL" responser="BDC" />-->
+<!--    </ex:bean>-->
+
+<!--    <ex:bean id="ycsl_cqxxbyxmid_sqxx">-->
+<!--        <ex:request>-->
+<!--            <ex:element sourceService="querybdcxmbyxmid"/>-->
+<!--        </ex:request>-->
+<!--        <ex:response extendRequestBody="true">-->
+<!--            <ex:element dozerXml="conf/dozer/hefei/ycsl/cqxxbyxmid/response/sqxx.xml"/>-->
+<!--        </ex:response>-->
+<!--    </ex:bean>-->
+
+<!--    <ex:bean id="ycsl_cqxxbyxmid_cqxx">-->
+<!--        <ex:request>-->
+<!--            <ex:element sourceService="queryfdcqbyxmid"/>-->
+<!--        </ex:request>-->
+<!--        <ex:response extendRequestBody="true">-->
+<!--            <ex:element dozerXml="conf/dozer/hefei/ycsl/cqxxbyxmid/response/cqxx.xml"/>-->
+<!--        </ex:response>-->
+<!--    </ex:bean>-->
+
+<!--    <ex:bean id="ycsl_cqxxbyxmid_qlrxx">-->
+<!--        <ex:request>-->
+<!--            <ex:element sourceService="queryqlrbyxmid"/>-->
+<!--        </ex:request>-->
+<!--        <ex:response extendRequestBody="true">-->
+<!--            <ex:element dozerXml="conf/dozer/hefei/ycsl/cqxxbyxmid/response/qlrxx.xml"/>-->
+<!--        </ex:response>-->
+<!--    </ex:bean>-->
+
+<!--    <ex:bean id="ycsl_dscsbybdcdyh">-->
+<!--        <ex:service-info request-type="beanReq">-->
+<!--            <ex:property name="beanName"-->
+<!--                         value="cn.gtmap.realestate.common.core.service.feign.building.BdcdyFeignService"/>-->
+<!--            <ex:property name="methodName" value="queryBdcdy"/>-->
+<!--            <ex:property name="params" value="bdcdyh,bdcdyfwlx"/>-->
+<!--        </ex:service-info>-->
+<!--        <ex:response>-->
+<!--            <ex:element dozerXml="conf/dozer/hefei/ycsl/cqxxbyxmid/response/dscs.xml"/>-->
+<!--        </ex:response>-->
+<!--    </ex:bean>-->
+
+<!--    &lt;!&ndash; 根据 BDCDYH查询限制权利 &ndash;&gt;-->
+<!--    <ex:bean id="ycsl_xzqlbybdcdyh">-->
+<!--        <ex:request dozerXml="conf/dozer/hefei/ycsl/xzqlbybdcdyh/response/data.xml">-->
+<!--            <ex:element dozerXml="conf/dozer/hefei/ycsl/xzqlbybdcdyh/request/param.xml"/>-->
+<!--            <ex:element name="xmid" sourceService="ycsl_xzqlbybdcdyh_xmid"/>-->
+<!--            <ex:element name="dyxx" sourceService="ycsl_xzqlbybdcdyh_dyxx" saveNull="java.util.ArrayList"/>-->
+<!--            <ex:element name="cfxx" sourceService="ycsl_xzqlbybdcdyh_cfxx" saveNull="java.util.ArrayList"/>-->
+<!--            <ex:element name="yyxx" sourceService="ycsl_xzqlbybdcdyh_yyxx" saveNull="java.util.ArrayList"/>-->
+<!--            <ex:element name="sdxx" sourceService="ycsl_xzqlbybdcdyh_sdxx" saveNull="java.util.ArrayList"/>-->
+<!--            <ex:element name="ydyxx" sourceService="ycsl_xzqlbybdcdyh_ydyxx" saveNull="java.util.ArrayList"/>-->
+<!--        </ex:request>-->
+<!--        <ex:log dsfFlag="YCSL" logEventName="根据BDCDYH查询限制权利" requester="YCSL" responser="BDC" />-->
+<!--    </ex:bean>-->
+
+<!--    &lt;!&ndash; 根据BDCDYH 查产权XMID &ndash;&gt;-->
+<!--    <ex:bean id="ycsl_xzqlbybdcdyh_xmid" >-->
+<!--        <ex:service-info request-type="beanReq">-->
+<!--            <ex:property name="beanName" value="gxWwSqxxServiceImpl"/>-->
+<!--            <ex:property name="methodName" value="getCqXmidByBdcdyh"/>-->
+<!--            <ex:property name="params" value="bdcdyh" />-->
+<!--        </ex:service-info>-->
+<!--    </ex:bean>-->
+
+<!--    <ex:bean id="ycsl_xzqlbybdcdyh_dyxx">-->
+<!--        <ex:request>-->
+<!--            <ex:element sourceService="listDyaqByBdcdyh"/>-->
+<!--        </ex:request>-->
+<!--        <ex:response extendRequestBody="true">-->
+<!--            <ex:element dozerXml="conf/dozer/hefei/ycsl/xzqlbybdcdyh/response/dyxx.xml"/>-->
+<!--        </ex:response>-->
+<!--    </ex:bean>-->
+<!--    <ex:bean id="ycsl_xzqlbybdcdyh_ydyxx">-->
+<!--        <ex:service-info request-type="beanReq">-->
+<!--            <ex:property name="beanName" value="commonServiceImpl"/>-->
+<!--            <ex:property name="methodName" value="listYgDyaqByBdcdyh"/>-->
+<!--        </ex:service-info>-->
+<!--        <ex:response extendRequestBody="true">-->
+<!--            <ex:element dozerXml="conf/dozer/hefei/ycsl/xzqlbybdcdyh/response/ydyxx.xml"/>-->
+<!--        </ex:response>-->
+<!--    </ex:bean>-->
+<!--    <ex:bean id="ycsl_xzqlbybdcdyh_sdxx">-->
+<!--        <ex:service-info request-type="beanReq">-->
+<!--            <ex:property name="beanName" value="commonServiceImpl"/>-->
+<!--            <ex:property name="methodName" value="listSdxxByBdcdyh"/>-->
+<!--            <ex:property name="params" value="bdcdyh"/>-->
+<!--        </ex:service-info>-->
+<!--    </ex:bean>-->
+
+<!--    <ex:bean id="ycsl_xzqlbybdcdyh_cfxx">-->
+<!--        <ex:request>-->
+<!--            <ex:element sourceService="listCfByBdcdyh"/>-->
+<!--        </ex:request>-->
+<!--        <ex:response extendRequestBody="true">-->
+<!--            <ex:element dozerXml="conf/dozer/hefei/ycsl/xzqlbybdcdyh/response/cfxx.xml"/>-->
+<!--        </ex:response>-->
+<!--    </ex:bean>-->
+
+<!--    <ex:bean id="ycsl_xzqlbybdcdyh_yyxx">-->
+<!--        <ex:request>-->
+<!--            <ex:element sourceService="listYyByBdcdyh"/>-->
+<!--        </ex:request>-->
+<!--        <ex:response extendRequestBody="true">-->
+<!--            <ex:element dozerXml="conf/dozer/hefei/ycsl/xzqlbybdcdyh/response/yyxx.xml"/>-->
+<!--        </ex:response>-->
+<!--    </ex:bean>-->
+
+<!--    &lt;!&ndash; 根据XMID更新完税状态&ndash;&gt;-->
+<!--    <ex:bean id="ycsl_hsztbyxmid">-->
+<!--        <ex:request>-->
+<!--            <ex:element sourceService="querybdcxmbyxmid"/>-->
+<!--            <ex:element name="wszt" sourceService="ycsl_hsztbyxmid_http"/>-->
+<!--        </ex:request>-->
+<!--        <ex:response resultKey="wszt" extendRequestBody="true">-->
+<!--            <ex:element name="wszt" dozerXml="conf/dozer/hefei/ycsl/hsztbyxmid/response/wszt.xml"/>-->
+<!--        </ex:response>-->
+<!--    </ex:bean>-->
+
+<!--    <ex:bean id="ycsl_hsztbyxmid_http">-->
+<!--        <ex:service-info request-type="httpPostJson">-->
+<!--            <ex:property name="logEventName" value="根据XMID更新完税状态" />-->
+<!--            <ex:property name="requester" value="BDC"/>-->
+<!--            <ex:property name="responser" value="YCSL"/>-->
+<!--            <ex:property name="dsfFlag" value="YCSL"/>-->
+<!--            <ex:property name="url" value="${ycsl.hszt.url}"/>-->
+<!--        </ex:service-info>-->
+<!--        <ex:request>-->
+<!--            <ex:element dozerXml="conf/dozer/hefei/ycsl/hsztbyxmid/request/data.xml"/>-->
+<!--        </ex:request>-->
+<!--    </ex:bean>-->
+
+<!--    &lt;!&ndash; 登记系统退件请求&ndash;&gt;-->
+<!--    <ex:bean id="ycsl_tjqq">-->
+<!--        <ex:request resultKey="ycslparam">-->
+<!--            <ex:element name="ycslparam" sourceService="ycsl_tjqq_getdata" saveNull="cn.gtmap.realestate.exchange.core.dto.ycsl.tjqq.request.YcslTjqqRequestBody"/>-->
+<!--        </ex:request>-->
+<!--        <ex:service-info request-type="httpPostJson">-->
+<!--            <ex:property name="logEventName" value="登记系统退件请求" />-->
+<!--            <ex:property name="requester" value="BDC"/>-->
+<!--            <ex:property name="responser" value="YCSL"/>-->
+<!--            <ex:property name="dsfFlag" value="YCSL"/>-->
+<!--            <ex:property name="url" value="${ycsl.tjqq.url}"/>-->
+<!--            <ex:property name="paramClass"-->
+<!--                         value="cn.gtmap.realestate.exchange.core.dto.ycsl.tjqq.request.YcslTjqqRequestBody"/>-->
+<!--        </ex:service-info>-->
+<!--    </ex:bean>-->
+
+<!--    <ex:bean id="ycsl_tjqq_getdata">-->
+<!--        <ex:service-info request-type="beanReq">-->
+<!--            <ex:property name="beanName" value="ycslTjqqServiceImpl"/>-->
+<!--            <ex:property name="methodName" value="getTjqq"/>-->
+<!--        </ex:service-info>-->
+<!--    </ex:bean>-->
+<!--</beans>-->

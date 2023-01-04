@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>对比页面</title>
+    <link href="../../static/lib/layui/css/layui.css" media="all" rel="stylesheet" />
+    <link href="../../static/lib/bdcui/css/form.css" media="all" rel="stylesheet" />
+    <link href="../../static/lib/bdcui/css/table.css" media="all" rel="stylesheet" />
+    <link href="../../static/lib/bdcui/css/mask.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../../static/css/xxbl/dbym.css">
+</head>
+<body>
+<div class="bdc-form-div bdc-not-full-bg">
+    <form class="layui-form setOverflow bdc-form-table" action="">
+        <!--全局 标题和操作按钮 开始-->
+        <div class="bdc-content-fix">
+            <div class="content-title layui-clear">
+                <p>对比信息</p>
+            </div>
+        </div>
+        <!--全局 标题和操作按钮 结束-->
+        <div class="form-margin-area" id="tableView"></div>
+    </form>
+</div>
+</body>
+<script type="text/html" id="tableTpl">
+    {{#  layui.each(d, function(index, item){ }}
+    {{#  if(item.data.length === 1){ }}
+    <div class="basic-info">
+        <div class="title-sign bdc-title-sign-btn">
+            <p><a href="javascript:">{{item.title}}</a></p>
+            <a href="javascript:" class="layui-btn layui-btn-sm bdc-secondary-btn bdc-operate-btn">{{#
+                if(item.data[0].data.length === 0){ }}展开{{# }else{ }}收起{{# } }}</a>
+        </div>
+        <div class="layui-form-item">
+            <div class="bdc-jt-table {{#  if(item.data[0].data.length === 0){ }}bdc-hide{{#  } }}">
+                <table class="layui-table" border="1">
+                    <colgroup>
+                        <col width="142">
+                        <col width="600">
+                        <col width="600">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th style="min-width: 111px">
+                            <div class="bdc-th-box">
+                                <i class="bdc-outer"></i>
+                            </div>
+                        </th>
+                        <th>修改前信息</th>
+                        <th>修改后信息</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#  layui.each(item.data[0].data, function(i, value){ }}
+                    {{# if(value.csxx.length != 0 || value.xgxx.length !=0 ){ }}
+                    <tr>
+                        <td>{{value.name}}</td>
+                        <td>{{value.csxx}}</td>
+                        <td>{{value.xgxx}}</td>
+                    </tr>
+                    {{# } }}
+                    {{#  }); }}
+                    {{#  if(item.data[0].data.length === 0){ }}
+                    <tr class="bdc-table-none">
+                        <td colspan="3">
+                            <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据</div>
+                        </td>
+                    </tr>
+                    {{#  } }}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {{#  }else{ }}
+    <div class="basic-info">
+        <div class="title-sign bdc-title-sign-btn">
+            <p><a href="javascript:">{{item.title}}</a></p>
+            <a href="javascript:" class="layui-btn layui-btn-sm bdc-secondary-btn bdc-operate-btn">{{#
+                if(item.data.length === 0){ }}展开{{# }else{ }}收起{{# } }}</a>
+        </div>
+        <div class="layui-form-item">
+            <div class="bdc-jt-table {{#  if(item.data.length === 0){ }}bdc-hide{{#  } }}">
+                <table class="layui-table" border="1">
+                    <colgroup>
+                        <col width="80">
+                        <col width="142">
+                        <col width="600">
+                        <col width="600">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th colspan="2">名称</th>
+                        <th>修改前信息</th>
+                        <th>修改后信息</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{# var trIndex = 0; }}
+                    {{#  layui.each(item.data, function(ind, v){ }}
+                        {{#  layui.each(v.data, function(i, value){ }}
+                            {{# trIndex++ }}
+                            {{#  if(i === 0){ }}
+                            <tr>
+                                <td rowspan="{{v.data.length}}" class="bdc-title-td">
+                                    <div class="bdc-td-box">
+                                        <p class="bdc-qlr-title-content">{{v.title}}</p>
+                                        {{# if(v.type == 'NEW'){ }}
+                                        <img src="../../static/image/qlr-add.png" class="bdc-qlr-title-mark" alt="">
+                                        {{# }else if(v.type == 'DELETE'){ }}
+                                        <img src="../../static/image/qlr-delete.png" class="bdc-qlr-title-mark" alt="">
+                                        {{# } }}
+                                    </div>
+                                </td>
+                                <td class="bdc-title-td">{{value.name}}</td>
+                                <td>{{value.csxx}}</td>
+                                <td>{{value.xgxx}}</td>
+                            </tr>
+                            {{# }else{ }}
+                            <tr>
+                                <td class="bdc-title-td">{{value.name}}</td>
+                                <td>{{value.csxx}}</td>
+                                <td>{{value.xgxx}}</td>
+                            </tr>
+                            {{#  } }}
+                        {{#  }); }}
+                    {{#  }); }}
+                    {{# if(trIndex == 0){ }}
+                    <tr class="bdc-table-none">
+                        <td colspan="4">
+                            <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据</div>
+                        </td>
+                    </tr>
+                    {{# } }}
+                    {{#  if(item.data.length === 0){ }}
+                    <tr class="bdc-table-none">
+                        <td colspan="4">
+                            <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据</div>
+                        </td>
+                    </tr>
+                    {{#  } }}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {{#  } }}
+    {{#  }); }}
+</script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/xxbl/dbym.js"></script>
+</html>

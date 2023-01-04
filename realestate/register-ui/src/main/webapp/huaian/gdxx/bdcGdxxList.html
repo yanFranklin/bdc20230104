@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>归档信息台账</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <style type="text/css">
+        .search { /*用于查询标识*/
+        }
+
+        .table-name {
+            font-size: 16px;
+            font-weight: 700;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+<div class="bdc-percentage-container">
+    <!--查询条件 八个-->
+    <div class="bdc-search-content">
+        <!--************ 条件搜索 ************-->
+        <div class="bdc-search-box">
+            <form id="form" class="layui-form" action="">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">扫码枪输入</label>
+                        <div class="layui-input-inline pf-start-time-box">
+                            <input type="text" id="smqsr" name="smqsr" placeholder="(精确)请输入" autocomplete="off" class="layui-input search">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">受理编号</label>
+                        <div class="layui-input-inline pf-start-time-box">
+                            <input type="text" id="slbh" name="slbh" placeholder="(精确)请输入" autocomplete="off" class="layui-input search">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">不动产单元号</label>
+                        <div class="layui-input-inline pf-start-time-box">
+                            <input type="text" id="bdcdyh" name="bdcdyh" placeholder="(模糊)请输入" autocomplete="off" class="layui-input search">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">不动产权证号</label>
+                        <div class="layui-input-inline pf-start-time-box">
+                            <input type="text" id="bdcqzh" name="bdcqzh" placeholder="(模糊)请输入" autocomplete="off" class="layui-input search">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">坐落</label>
+                        <div class="layui-input-inline pf-start-time-box">
+                            <input type="text" id="zl" name="zl" placeholder="(模糊)请输入" autocomplete="off" class="layui-input search">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">归档状态</label>
+                        <div class="layui-input-inline">
+                            <select id='sfygd' name="sfygd" lay-filter="sfygd" placeholder="请选择归档状态" class="search">
+                                <option value="">请选择</option>
+                                <option value="1" class='source'>已归档</option>
+                                <option value="0" class='source'>未归档</option>
+                            </select>
+                            <i class="layui-icon layui-icon-close bdc-hide reseticon" style="right: 29px!important;"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">移交状态</label>
+                        <div class="layui-input-inline">
+                            <select id='sfyyj' name="sfyyj" lay-filter="sfyyj" placeholder="请选择移交状态" class="search">
+                                <option value="">请选择</option>
+                                <option value="1" class='source'>已移交</option>
+                                <option value="0" class='source'>未移交</option>
+                            </select>
+                            <i class="layui-icon layui-icon-close bdc-hide reseticon" style="right: 29px!important;"></i>
+                        </div>
+                    </div>
+                    <div class="pf-senior-show bdc-hide">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">归档人</label>
+                            <div class="layui-input-inline pf-start-time-box">
+                                <input type="text" id="gdrxm" name="gdrxm" placeholder="(精确)请输入" autocomplete="off" class="layui-input search">
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <button class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</button>
+                        <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-secondary-btn" id="seniorSearch">高级查询</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--主表单-->
+    <div class="bdc-table-box">
+        <table id="gdxxTable" lay-filter="gdxxTable"></table>
+    </div>
+    <!--弹框表单-->
+    <div id="popup" class="bdc-hide">
+        <div class="bdc-table-box">
+            <p class="table-name">移交单编号：<span id="yjdbh"></span> <input type="hidden" id="yjdid" value=""></p>
+            <table id="viewTable" lay-filter="viewFilter">
+            </table>
+        </div>
+    </div>
+    <div id="bdc-popup-large" class="bdc-hide bdc-big-layer-css">
+        <form class="layui-form" action="">
+            <div class="layui-form-item pf-form-item">
+                <div class="layui-inline xzq-sele">
+                    <label class="layui-form-label">档案归属地</label>
+                    <div class="layui-input-inline bdc-radio">
+                        <select name="dagsd" id="dagsd" xm-select="selectPage" xm-select-radio xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+<!--表格上面功能按钮-->
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="gd">归档</button>
+        <button class="layui-btn layui-btn-sm bdc-delete-btn" lay-event="resetData">重置</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="addToDataArr">添加</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="viewData" id="viewData">
+            查看已添加<span id="dataNum"></span></button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="dagsdBtn" id="dagsdBtn">档案归属地</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="smsMsgBtn" id="smsMsgBtn">发送短信</button>
+    </div>
+</script>
+<!--表格内部操作按钮-->
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn" lay-event="del">删除</a>
+</script>
+
+<!--清单页面功能按钮-->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="generateYjd" id="generateYjd">获取移交单编号</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="printYjd">打印</button>
+    </div>
+</script>
+
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/lib/bdcui/js/print/print-common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/gdxx/gdxx.js"></script>
+<script src="../../static/js/gdxx/yjdCommon.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <ex:bean id="hf_zhdp">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.inquiry.BdcZhdpCxFeignService"/>
+            <ex:property name="methodName" value="listBdcZhdp"/>
+            <ex:property name="logEventName" value="互联网+查询综合大屏信息"/>
+            <ex:property name="noArgs" value="true"/>
+        </ex:service-info>
+        <ex:log dsfFlag="WWSQ" logEventName="查询综合大屏信息" requester="WWSQ" responser="BDC"/>
+    </ex:bean>
+
+    <!--通州 调用摩科评价器进行评价操作-->
+    <ex:bean id="mk_pj">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="MKPJQ"/>
+            <ex:property name="dsfFlag" value="MKPJQ"/>
+            <ex:property name="url" value="${mk.pj.url}"/>
+        </ex:service-info>
+        <ex:log dsfFlag="MK" logEventName="调用摩科评价器进行评价操作" requester="BDC" responser="MK"/>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/standard/mkpjq/responData.xml"/>
+        </ex:response>
+    </ex:bean>
+
+
+    <!--摩科  登记系统发起人证比对接口  -->
+    <ex:bean id="mk_fqrzdb">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="MKPJQ"/>
+            <ex:property name="dsfFlag" value="MKPJQ"/>
+            <ex:property name="url" value="${mk.fqrzdb.url}"/>
+        </ex:service-info>
+    </ex:bean>
+
+
+    <!--摩科 登记系统获取pad人证比对信息-->
+    <ex:bean id="mk_hqrzdb">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="MKPJQ"/>
+            <ex:property name="dsfFlag" value="MKPJQ"/>
+            <ex:property name="url" value="${mk.hqrzdb.url}"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/standard/mkpjq/rldbRespon/data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <ex:bean id="mk_rlsb">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="pjqServiceImpl"/>
+            <ex:property name="methodName" value="queryPjqRzdb"/>
+            <ex:property name="logEventName" value="摩科评价器人证比对"/>
+            <!--            <ex:property name="noArgs" value="true"/>-->
+        </ex:service-info>
+        <ex:log dsfFlag="MK" logEventName="摩科评价器人证比对" requester="BDC" responser="MK"/>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/standard/mkpjq/rldbRespon/param.xml"/>
+
+        </ex:request>
+    </ex:bean>
+
+    <!-- 摩科 发起读取身份证功能，成功后调用获取身份证信息接口 2合一-->
+    <ex:bean id="mk_sfzxx_rh">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="pjqServiceImpl"/>
+            <ex:property name="methodName" value="queryPjqSfzxx"/>
+            <ex:property name="logEventName" value="摩科评价器获取身份证信息"/>
+            <!--            <ex:property name="noArgs" value="true"/>-->
+        </ex:service-info>
+        <ex:log dsfFlag="MK" logEventName="摩科评价器获取身份证信息" requester="BDC" responser="MK"/>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/standard/mkpjq/sfzxx/param.xml"/>
+
+        </ex:request>
+    </ex:bean>
+
+    <!--通州  登记系统发起读取身份证功能接口  -->
+    <ex:bean id="mk_fqsfzxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="MKPJQ"/>
+            <ex:property name="dsfFlag" value="MKPJQ"/>
+            <ex:property name="url" value="${mk.fqsfzxx.url}"/>
+        </ex:service-info>
+    </ex:bean>
+    <!--通州 登记系统获取身份证信息-->
+    <ex:bean id="mk_hqsfzxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="MKPJQ"/>
+            <ex:property name="dsfFlag" value="MKPJQ"/>
+            <ex:property name="url" value="${mk.hqsfzxx.url}"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/standard/mkpjq/sfzxx/data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!--摩科连云港 相关接口   开始 -->
+
+    <!--登记系统发起评价接口 -连云港 -->
+    <ex:bean id="mk_evaluate">
+        <ex:service-info request-type="httpGet">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="MKPJQ"/>
+            <ex:property name="dsfFlag" value="MKPJQ"/>
+            <ex:property name="url" value="${mk.evaluate.url}"/>
+            <ex:property name="replaceUrl" value="mk.evaluate.url"/>
+            <ex:property name="replaceUrlHandlerType" value="ReplaceUrlByQxdmServiceImpl"/>
+            <ex:property name="logEventName" value="登记系统发起评价接口 -连云港"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/lianyungang/fqpj/param.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!--登记系统发起人证比对接口 -连云港 -->
+    <ex:bean id="mk_facevalidateWithidCard">
+        <ex:service-info request-type="httpGet">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="MKPJQ"/>
+            <ex:property name="dsfFlag" value="MKPJQ"/>
+            <ex:property name="url" value="${mk.facevalidateWithidCard.url}"/>
+            <ex:property name="replaceUrl" value="mk.facevalidateWithidCard.url"/>
+            <ex:property name="replaceUrlHandlerType" value="ReplaceUrlByQxdmServiceImpl"/>
+            <ex:property name="logEventName" value="登记系统发起人证比对接口 -连云港"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/lianyungang/facevalidateWithidCard/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/lianyungang/facevalidateWithidCard/response.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!--登记系统发起签名接口 -连云港 -->
+    <ex:bean id="mk_sendTxQm">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="MKPJQ"/>
+            <ex:property name="dsfFlag" value="MKPJQ"/>
+            <ex:property name="url" value="${mk.sendtxqm.url}"/>
+            <ex:property name="replaceUrl" value="mk.sendtxqm.url"/>
+            <ex:property name="replaceUrlHandlerType" value="ReplaceUrlByQxdmServiceImpl"/>
+            <ex:property name="logEventName" value="登记系统发起签名接口 -连云港"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/lianyungang/sendQm/data.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!--登记系统接收签名图片接口 -连云港 -->
+    <ex:bean id="mk_saveQm">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.certificate.bdcFzjlFeignService"/>
+            <ex:property name="methodName" value="saveFzjlLzrQzxx"/>
+            <ex:property name="requester" value="MKPJQ"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="MKPJQ"/>
+
+            <ex:property name="logEventName" value="登记系统接收签名图片接口 -连云港"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/lianyungang/saveQm/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/lianyungang/saveQm/data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!--接收评价结果   -连云港 -->
+    <ex:bean id="mk_updatePjsj">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.accept.BdcSlPjqFeignService"/>
+            <ex:property name="methodName" value="savePjjl"/>
+            <ex:property name="requester" value="MKPJQ"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="MKPJQ"/>
+            <ex:property name="logEventName" value="接收评价结果 -连云港"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/lianyungang/updatePjsj/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/lianyungang/updatePjsj/data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!--自动触发评价结果数据     -连云港 -->
+    <ex:bean id="mk_sendProv">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${mk.sendProv.url}"/>
+            <ex:property name="replaceUrl" value="mk.sendProv.url"/>
+            <ex:property name="replaceUrlHandlerType" value="ReplaceUrlByQxdmServiceImpl"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="MKPJQ"/>
+            <ex:property name="dsfFlag" value="MKPJQ"/>
+            <ex:property name="logEventName" value="自动触发评价结果数据 -连云港"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/lianyungang/sendProv/param.xml"/>
+        </ex:request>
+
+    </ex:bean>
+    <!--摩科连云港 相关接口   结束 -->
+
+    <!--新版摩科 登记系统发起签名接口 -宣城 -->
+    <ex:bean id="mk_txQm">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="MKPJQ"/>
+            <ex:property name="dsfFlag" value="MKPJQ"/>
+            <ex:property name="url" value="${mk.sign.url}"/>
+            <ex:property name="logEventName" value="登记系统发起签名接口 -宣城"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!--新版摩科 自动触发登记系统附件签名后上传 -宣城 -->
+    <ex:bean id="mk_qmsc">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.accept.BdcSlPjqFeignService"/>
+            <ex:property name="methodName" value="mkqzhc"/>
+            <ex:property name="requester" value="MKPJQ"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="MKPJQ"/>
+            <ex:property name="logEventName" value="摩科回传签名申请书接口 -宣城"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/xuancheng/saveQm/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/xuancheng/saveQm/data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!--新版摩科 打开网址 -宣城 -->
+    <ex:bean id="mk_dkwz">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="requester" value="MKPJQ"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="MKPJQ"/>
+            <ex:property name="url" value="${mk.dkwz.url}"/>
+            <ex:property name="logEventName" value="摩科打开网址接口 -宣城"/>
+        </ex:service-info>
+    </ex:bean>
+
+
+    <!-- 摩科500A标准版对接文档 需求号：63787-->
+    <!--登记系统发起人员信息展示接口
+            请求参数示例：
+        {
+            "sysIp": "192.168.0.101",
+            "name": "张某",
+        "jobNum": "1001",
+        "winNum":"窗口号"
+        }
+        -->
+    <ex:bean id="mk_sendUserMes">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="requester" value="MKPJQ"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="MKPJQ"/>
+            <ex:property name="url" value="${mk.sendUserMes.url}"/>
+            <ex:property name="logEventName" value="摩科-登记系统发起人员信息展示接口"/>
+        </ex:service-info>
+    </ex:bean>
+
+
+    <!--登记系统关闭当前业务接口
+           请求参数示例：
+               {
+        "sysIp": "192.168.0.101"
+        }
+       -->
+    <ex:bean id="mk_closeCurrent">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="requester" value="MKPJQ"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="MKPJQ"/>
+            <ex:property name="url" value="${mk.closeCurrent.url}"/>
+            <ex:property name="logEventName" value="摩科-登记系统关闭当前业务接口"/>
+        </ex:service-info>
+    </ex:bean>
+</beans>

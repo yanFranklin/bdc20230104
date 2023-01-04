@@ -1,0 +1,71 @@
+info:
+  name: ${spring.application.name}
+  component: Etl Application
+
+app:
+#  center: http://192.168.0.43:8000/eureka/
+  #  oauth: http://192.168.0.43:8002/account
+  #center: http://127.0.0.1:8000/eureka/
+  #oauth: http://127.0.0.1:8002/account
+  center: http://192.168.2.70:8000/eureka/
+  oauth: http://192.168.2.70:8002/account
+  security:
+    moduleAuthPath: http://account/account
+    ignores: /**,/index/**,/image/**,/css/**,/js/**,/webjars/**,/static/**,/realestate-etl/rest/v1.0/htbaqlr/**,/realestate-etl/rest/v1.0/print/**,/realestate-etl/static/printmodel/**,/realestate-etl/rest/v1.0/htbaxx/**
+    authorities:
+      permitAll: /**，/index2
+      hasUrlAuthority('read'): /auth/users,/auth/orgs
+      hasModuleAuthority('yhgl:add'): /auth/user/create
+      hasAnyAuthority('ROLE_USER'): /resource1/**,/catalog1/**
+      authenticated: true
+    resources:
+      authenticated: /resource/**
+  services:
+#     accept-app: accept-app-gln
+#    building-app: building-app-gln
+#    engine-app: engine-app-gln
+#    register-app: register-app-gln
+
+spring:
+  rabbitmq:
+    host: 192.168.2.72
+    port: 5672
+    username: guest
+    password: guest
+  redis:
+    port: 6379
+    host: 127.0.0.1
+
+  messages:
+    basename: message/messages, message/errors
+  mvc:
+    static-path-pattern: /realestate-etl/**
+  thymeleaf:
+    prefix: classpath:/META-INF/resources/view/
+    suffix: .html
+    cache: false
+  #  thymeleaf:
+  #    prefix: classpath:/view/  # 访问template下的html文件需要配置模板，映射
+  #    cache: false # 开发时关闭缓存,不然没法看到实时页面
+  #    suffix: .html
+  #    mode: LEGACYHTML5
+  profiles:
+    include: config  #引入配置文件 application-config.yml
+  datasource:
+    url: jdbc:oracle:thin:@192.168.2.111:1521/orcl
+    username: bdcdj_pz
+    password: Njgtis
+#    publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK8ev+xi3qANIZpQGhndeKtc2EOlsPd48VIhphnl3OoOKqynJuQo7qZrJekk8iqXHgvze3bnFrFyTtf3vxGIamsCAwEAAQ==
+
+server:
+  port: ${port:8800}
+#  context-path: realestate-etl
+
+logging:
+  level:
+    org.springframework.security: INFO
+    cn.gtmap.realestate.common.core.support.mybatis: DEBUG
+    cn.gtmap.gtc.plugins: DEBUG
+    sql: DEBUG
+
+

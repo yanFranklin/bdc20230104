@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcZhxpCxMapper">
+    <select id="listBdcZhxpDqhj" parameterType="String" resultType="java.util.Map">
+        select c.ckh,(case c.ckzt when 1 then '暂停服务' else c.hjh end) hjh,c.gxsj
+          from bdc_ckxx c
+         where c.zxmc = #{zxmc}
+         order by c.ckh
+    </select>
+
+    <select id="listBdcZhxpDdhjHjh" parameterType="java.util.Map" resultType="String">
+        select h.hjh
+          from bdc_hjxx h
+         where h.zxmc = #{zxmc}
+           and h.ywmc = #{ywmc}
+           and h.scsj >= #{starttime}
+           and #{endtime} >= h.scsj
+           and h.hjzt = 0
+         order by h.hjh
+    </select>
+
+    <update id="updateCkxx">
+        update bdc_ckxx c
+        <set>
+            c.ckzt = 0,
+            c.hjh = ''，
+            c.gxsj = sysdate
+        </set>
+    </update>
+
+    <update id="updateHjxx" parameterType="String">
+        update bdc_hjxx h
+        <set>
+            h.hjzt = 1,
+            h.gxsj = sysdate
+        </set>
+        WHERE h.hjzt = 0
+    </update>
+</mapper>

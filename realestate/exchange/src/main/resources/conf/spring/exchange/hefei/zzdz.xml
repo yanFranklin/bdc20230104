@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <!-- 合肥自助打证机 接口 -->
+
+    <!-- 查询打证信息 -->
+    <ex:bean id="hf_zzdz">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.inquiry.BdcZzdzFeignService"/>
+            <ex:property name="methodName" value="getBdcZzdz"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/hefei/zzdzj/zzdz.xml"/>
+        </ex:response>
+        <ex:log dsfFlag="ZZDZJ" logEventName="自助打证机查询打证信息" requester="ZZDZJ" responser="BDC" />
+    </ex:bean>
+
+
+</beans>

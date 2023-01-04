@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <!--<title>匹配不动产单元</title>-->
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/bdcdyzt.css"/>
+    <link rel="stylesheet" href="../../static/css/selectbdcdyh.css">
+    <link rel="stylesheet" href="../../static/css/yztsxx.css">
+    <script src="../../static/lib/layui/layui.js"></script>
+    <script src="../../static/lib/jquery/jquery.min.js"></script>
+    <!--小数计算防精度缺失-->
+    <script src="../../static/lib/mathjs/math.js"></script>
+    <!--添加水印-->
+    <script src="../../static/lib/bdcui/js/common.js"></script>
+    <script src="../../static/js/common.js"></script>
+    <script src="../../static/js/table.js"></script>
+    <script src="../../static/js/huaian/query/matchDyh.js"></script>
+    <script src="../../static/js/query/matchDataCommon.js"></script>
+    <script src='../../static/js/formCenter.js'></script>
+    <script type="text/javascript">
+        var xnbdcdyh = getQueryString("xnbdcdyh");
+        var xnxmid = getQueryString("xnxmid");
+        var xztzlx = getQueryString("xztzlx");
+        var bdcdyhzl = getQueryString("zl");
+        var bdcdywybh = getQueryString("bdcdywybh");
+    </script>
+</head>
+<body>
+<div class="bdc-form-div dataPic" style="padding: 10px">
+    <div class="layui-tab" lay-filter="tabFilter">
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div class="bdc-percentage-container dataPic">
+                    <div class="bdc-search-content">
+                        <div class="bdc-search-box">
+                            <form class="layui-form">
+                                <div class="layui-form-item pf-form-item">
+                                    <div class="layui-form-item">
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">单元查询类型</label>
+                                            <div class="layui-input-inline">
+                                                <select name="dyhcxlx" id="dyhcxlx" lay-filter="dyhcxlx">
+                                                    <option value="1">土地和房屋</option>
+                                                    <option value="2">海域</option>
+                                                    <option value="3">构筑物</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">权利人</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="qlrmc" autocomplete="off" placeholder="请输入"
+                                                       class="layui-input">
+                                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">坐落</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" class="layui-input" name="zl" placeholder="请输入">
+                                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">不动产单元号</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" class="layui-input" name="bdcdyh" placeholder="请输入">
+                                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline bdc-button-box-four">
+                                            <button class="layui-btn layui-btn-normal bdc-major-btn" type="button"
+                                                    lay-submit="" id="queryBdcdyh"
+                                                    lay-filter="queryBdcdyh">查询
+                                            </button>
+                                            <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn">重置
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="bdc-table-box">
+                        <table class="layui-hide" id="bdcdyhList" lay-data="{id: 'bdcdyhList'}"
+                               lay-filter="bdcdyhList"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="layui-hide">
+    <div lay-filter="tsxx" id="tsxx"></div>
+</div>
+</body>
+
+
+<!--不动产单元列表状态-->
+<script type="text/html" id="bdcdyzt">
+    {{#  if(d.bdcdyh){ }}
+    {{  getBdcdyZt(d.bdcdyh,d.qjgldm) }}
+    {{#  } }}
+</script>
+
+<!--验证提示信息-->
+<script type="text/html" id="tsxxTpl">
+    <div class="bdc-right-tips-box" id="bottomTips">
+        <!--<h3>提示信息<i class="layui-icon layui-icon-close"></i></h3>-->
+        <div class="tsxx" id="alertInfo"></div>
+        <div class="tsxx" id="confirmInfo"></div>
+    </div>
+</script>
+
+</html>

@@ -1,0 +1,174 @@
+<!--
+    综合查询结果日志展示
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>综合查询结果日志展示</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css" />
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css" />
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css" />
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css"/>
+    <style type="text/css">
+        .bdc-percentage-container {
+            width: 100%;
+            height: 100%;
+            padding: 229px 10px 10px;
+            box-sizing: border-box;
+            position: relative;
+            background-color: #eaedf1;
+        }
+    </style>
+</head>
+<body>
+<div class="bdc-percentage-container">
+    <!--查询条件-->
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <!--默认两行的-->
+            <form class="layui-form" action="" lay-filter="searchform">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline xzq-sele">
+                        <label class="layui-form-label">证书类型</label>
+                        <div class="layui-input-inline">
+                            <select lay-filter="zslx" id="zslx" name="zslx" lay-search="" class="search">
+                                <option value="">请选择</option>
+                                <option value="1">证书</option>
+                                <option value="2">证明</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline xzq-sele">
+                        <label class="layui-form-label">权属状态</label>
+                        <div class="layui-input-inline">
+                            <select lay-filter="qszt" id="qszt" name="qszt" lay-search="" class="search">
+                                <option value="">请选择</option>
+                                <option value="0">临时</option>
+                                <option value="1">现势</option>
+                                <option value="2">历史</option>
+                                <option value="3">终止</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline needhide">
+                        <label class="layui-form-label">不动产权证号</label>
+                        <div class="layui-input-inline">
+                            <input name="bdcqzh" type="text" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-filter">
+                        <label class="layui-form-label">原产权证号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="ycqzh" name="ycqzh" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">权利人名称</label>
+                        <div class="layui-input-inline">
+                            <input id="qlrmc" name="qlrmc" type="text" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">权利人证件号</label>
+                        <div class="layui-input-inline">
+                            <input id="qlrzjh" name="qlrzjh" type="text" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="pf-senior-show-normal needhide">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">义务人名称</label>
+                            <div class="layui-input-inline">
+                                <input name="ywrmc" type="text" autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">义务人证件号</label>
+                        <div class="layui-input-inline">
+                            <input name="ywrzjh" type="text" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline needhide">
+                        <label class="layui-form-label">证号流水号</label>
+                        <div class="layui-input-inline">
+                            <input name="zhlsh" type="text" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline needhide">
+                        <label class="layui-form-label">坐落</label>
+                        <div class="layui-input-inline">
+                            <input name="zl" type="text" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline needhide">
+                        <label class="layui-form-label">不动产单元号</label>
+                        <div class="layui-input-inline">
+                            <input name="bdcdyh" type="text" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline needhide">
+                        <label class="layui-form-label">受理编号</label>
+                        <div class="layui-input-inline">
+                            <input name="slbh" type="text" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-filter">
+                        <label class="layui-form-label">幢号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="zh" name="zh" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-filter">
+                        <label class="layui-form-label">房间号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="fjh" name="fjh" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-filter">
+                        <label class="layui-form-label">房屋编号</label>
+                        <div class="layui-input-inline">
+                            <input searchformtype="text" id="fwbh" name="fwbh" autocomplete="off" 
+                                   class="layui-input required">
+                        </div>
+                    </div>
+                    <div class="layui-inline xzq-sele">
+                        <label class="layui-form-label">不动产类型</label>
+                        <div class="layui-input-inline">
+                            <select lay-filter="bdclx" id="bdclx" name="bdclx" lay-search="" class="search">
+                                <option value="">请选择</option>
+                                <option value="1">土地</option>
+                                <option value="2">房屋</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-filter">
+                        <label class="layui-form-label">原地籍号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="ybdcdyh" name="ybdcdyh" autocomplete="off"  class="layui-input required">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!--表格-->
+    <div class="bdc-table-box">
+        <table class="layui-table" id="pageTable" lay-filter="pageTable"></table>
+    </div>
+
+    <script src="../../static/lib/jquery/jquery.min.js"></script>
+    <script src="../../static/lib/layui/layui.js"></script>
+    <!--添加水印-->
+    <script src="../../static/lib/bdcui/js/common.js"></script>
+    <script src="../../static/js/common.js"></script>
+    <script src="../../static/js/zszm/format_nt.js"></script>
+    <script src="../../static/js/zszm/zhcxjg.js"></script>
+</div>
+</body>
+</html>

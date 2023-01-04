@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.engine.core.mapper.BdcGzBmdMapper">
+    <select id="listBdcBmdByPage" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.domain.engine.BdcGzBmdDO">
+        select t.CZRY,t.CZRYID,t.CZRYMM from BDC_GZ_BMD t
+        <where>
+            <if test="czry !='' and czry !=null">
+                and t.czry like '%'|| #{czry} || '%'
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

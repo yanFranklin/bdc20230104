@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <ex:bean id="dyhlzzt">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="logEventName" value="查询落宗状态"/>
+            <ex:property name="requester" value="COURT"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="COURT"/>
+            <ex:property name="beanName" value="bdcCourtServiceImpl"/>
+            <ex:property name="methodName" value="cxlzztByBdcdyh"/>
+            <ex:property name="params" value="param"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/court/lzzt/request/param.xml" name="param"/>
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="initCourtCfjfdj_acceptCjParam">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="gxWwSqxxServiceImpl"/>
+            <ex:property name="methodName" value="initCfParamDTO"/>
+        </ex:service-info>
+    </ex:bean>
+    <ex:bean id="bdczssdjs">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="logEventName" value="解锁不动产证书"/>
+            <ex:property name="requester" value="COURT"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="COURT"/>
+            <ex:property name="beanName" value="bdcCourtServiceImpl"/>
+            <ex:property name="methodName" value="jsBdczs"/>
+            <ex:property name="params" value="param"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/court/sdjs/bdczs/request/data.xml" name="param" notEmpty="true"/>
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="jsdjbjjg">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="接受登记办件结果信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="COURT"/>
+            <ex:property name="dsfFlag" value="COURT"/>
+            <ex:property name="url" value="${court.jsdjbjjg.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/court/jsdjbjjg/request/data.xml" name="data"/>
+            <ex:element dozerXml="conf/dozer/yancheng/court/jsdjbjjg/request/head.xml" name="head"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/court/jsdjbjjg/response/data.xml"/>
+        </ex:response>
+    </ex:bean>
+    <ex:bean id="bdcdysdjs">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="logEventName" value="解锁不动产单元"/>
+            <ex:property name="requester" value="COURT"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="COURT"/>
+            <ex:property name="beanName" value="bdcCourtServiceImpl"/>
+            <ex:property name="methodName" value="jsBdcdy"/>
+            <ex:property name="params" value="param"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/court/sdjs/bdcdy/request/data.xml" name="param" notEmpty="true"/>
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="bdcdysd">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="logEventName" value="锁定不动产单元"/>
+            <ex:property name="requester" value="COURT"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="COURT"/>
+            <ex:property name="beanName" value="bdcCourtServiceImpl"/>
+            <ex:property name="methodName" value="sdBdcdy"/>
+            <ex:property name="params" value="param"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/court/sd/bdcdy/request/data.xml" name="param" objectToList="true"/>
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="updateCjywzt">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="更新业务状态为未创建"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="COURT"/>
+            <ex:property name="dsfFlag" value="COURT"/>
+            <ex:property name="url" value="${court.update.cjywzt.url}"/>
+        </ex:service-info>
+        <ex:request dozerXml="conf/dozer/yancheng/court/updateYwcjzt/request/param.xml">
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="bdczssd">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="logEventName" value="锁定不动产证书"/>
+            <ex:property name="requester" value="COURT"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="COURT"/>
+            <ex:property name="beanName" value="bdcCourtServiceImpl"/>
+            <ex:property name="methodName" value="sdBdczs"/>
+            <ex:property name="params" value="param"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/court/sd/bdczs/request/data.xml" name="param" notEmpty="true" objectToList="true"/>
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="cfjfdj">
+        <ex:request>
+            <ex:element name="acceptCjParam" sourceService="initCourtCfjfdj_acceptCjParam"/>
+            <ex:element dozerXml="conf/dozer/wwsq/init/zy/request/fjcl.xml" name="fjclList"/>
+            <ex:element dozerXml="conf/dozer/wwsq/init/cfjfdj/request/spxtywh.xml" listToObject="true"/>
+        </ex:request>
+        <ex:response extendRequestBody="true" resultKey="result">
+            <ex:element name="cjResponse" sourceService="acceptCjServiceForCourt"/>
+            <ex:element appendRequestBody="true" name="result" sourceService="acceptCjService_response_court"/>
+        </ex:response>
+        <ex:log dsfFlag="COURT" logEventName="盐城法院创建流程接口" requester="COURT" responser="BDC"/>
+    </ex:bean>
+    <ex:bean id="wwztxg">
+        <ex:service-info request-type="httpGet">
+            <ex:property name="logEventName" value="外网状态修改"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="COURT"/>
+            <ex:property name="dsfFlag" value="COURT"/>
+            <ex:property name="url" value="${court.wwztxg.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/court/wwztxg/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/court/wwztxg/response/data.xml"/>
+        </ex:response>
+    </ex:bean>
+    <ex:bean id="fy_qlrbdcqlxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="logEventName" value="查询当前权利人的所有现势登记业务信息"/>
+            <ex:property name="requester" value="COURT"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="COURT"/>
+            <ex:property name="beanName" value="bdcCourtServiceImpl"/>
+            <ex:property name="methodName" value="ywxxcx"/>
+            <ex:property name="params" value="param"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/court/ywxxcx/request/param.xml" name="param"/>
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="accept_receipt_info">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="接收回执信息接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="COURT"/>
+            <ex:property name="dsfFlag" value="COURT"/>
+            <ex:property name="url" value="${court.accept.receipt.info.url}"/>
+        </ex:service-info>
+        <ex:request dozerXml="conf/dozer/yancheng/court/accept_receipt_info/request/param.xml">
+            <ex:element dozerXml="conf/dozer/yancheng/court/accept_receipt_info/request/head.xml" name="head"/>
+            <ex:element dozerXml="conf/dozer/yancheng/court/accept_receipt_info/request/data.xml" name="data"/>
+        </ex:request>
+    </ex:bean>
+
+
+<!--    &lt;!&ndash; 1.2.1.1 调用该接口返回法院请求的司法控制信息 &ndash;&gt;-->
+<!--    <ex:bean id="kzBdcQL">-->
+<!--        <ex:service-info request-type="httpPostJson">-->
+<!--            <ex:property name="logEventName" value="法院查控系统"/>-->
+<!--            <ex:property name="requester" value="BDC"/>-->
+<!--            <ex:property name="responser" value="FGF"/>-->
+<!--            <ex:property name="dsfFlag" value="FGF"/>-->
+<!--            <ex:property name="url" value="${fgf.mdyz.url}"/>-->
+<!--        </ex:service-info>-->
+<!--    </ex:bean>-->
+
+
+<!--    &lt;!&ndash; 1.2.1.2 调用该接口将司法控制结果信息反馈请求单位 &ndash;&gt;-->
+<!--    <ex:bean id="feedkzBdcQL">-->
+<!--        <ex:service-info request-type="httpPostJson">-->
+<!--            <ex:property name="logEventName" value="法院查控系统"/>-->
+<!--            <ex:property name="requester" value="BDC"/>-->
+<!--            <ex:property name="responser" value="FGF"/>-->
+<!--            <ex:property name="dsfFlag" value="FGF"/>-->
+<!--            <ex:property name="url" value="${fgf.mdyz.url}"/>-->
+<!--        </ex:service-info>-->
+<!--    </ex:bean>-->
+
+
+<!--    &lt;!&ndash; 1.2.1.3 调用该接口将司法控制结果信息反馈请求单位 &ndash;&gt;-->
+<!--    <ex:bean id="feedkzhzBdcQL">-->
+<!--        <ex:service-info request-type="httpPostJson">-->
+<!--            <ex:property name="logEventName" value="法院查控系统"/>-->
+<!--            <ex:property name="requester" value="BDC"/>-->
+<!--            <ex:property name="responser" value="FGF"/>-->
+<!--            <ex:property name="dsfFlag" value="FGF"/>-->
+<!--            <ex:property name="url" value="${fgf.mdyz.url}"/>-->
+<!--        </ex:service-info>-->
+<!--    </ex:bean>-->
+
+
+<!--    &lt;!&ndash; 1.2.1.4 调用该接口获取请求单位各控制申请涉及的相关文书信息 &ndash;&gt;-->
+<!--    <ex:bean id="kzwsInfo">-->
+<!--        <ex:service-info request-type="httpPostJson">-->
+<!--            <ex:property name="logEventName" value="法院查控系统"/>-->
+<!--            <ex:property name="requester" value="BDC"/>-->
+<!--            <ex:property name="responser" value="FGF"/>-->
+<!--            <ex:property name="dsfFlag" value="FGF"/>-->
+<!--            <ex:property name="url" value="${fgf.mdyz.url}"/>-->
+<!--        </ex:service-info>-->
+<!--    </ex:bean>-->
+
+
+<!--    &lt;!&ndash; 1.2.1.5 调用该接口获取请求单位各控制申请涉及的法官证件信息 &ndash;&gt;-->
+<!--    <ex:bean id="zjInfo">-->
+<!--        <ex:service-info request-type="httpPostJson">-->
+<!--            <ex:property name="logEventName" value="法院查控系统"/>-->
+<!--            <ex:property name="requester" value="BDC"/>-->
+<!--            <ex:property name="responser" value="FGF"/>-->
+<!--            <ex:property name="dsfFlag" value="FGF"/>-->
+<!--            <ex:property name="url" value="${fgf.mdyz.url}"/>-->
+<!--        </ex:service-info>-->
+<!--    </ex:bean>-->
+</beans>

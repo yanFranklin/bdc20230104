@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="zh-CN">
+<head>
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <title></title>
+
+    <style type="">
+        body {
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+
+        .main-container {
+            width: 30%;
+            float: right;
+            margin-top: 3%;
+            margin-bottom: 3%;
+            text-align: center;
+        }
+
+        .main-container::before {
+            width: 30%;
+        }
+
+        .page-content {
+            padding: 0px 12px 24px;
+        }
+
+        form input[type='text'], select, textarea {
+            border-radius: 4px !important;
+            width: 100% !important;
+        }
+
+        .modelFooter {
+            top: 80%;
+            background: none;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .row {
+            margin: 10px 0px 10px 0px;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        .row .col-xs-10 {
+            text-align: center;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        .img {
+            align-content: center;
+            position: relative;
+            top: 20%;
+            left: 100%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+    <script type="text/javascript">
+
+        function savecallback(url) {
+
+        }
+
+        function closecallback(url) {
+            alert(1);
+
+        }
+
+    </script>
+</head>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script type="text/javascript">
+    // var paramJson = JSON.parse($.getUrlParam("paramJson"));
+
+</script>
+<body onunload="DisposeControl()">
+<object id="cardReader1" classid="clsid:ACA1E246-6AC1-4442-B2CB-E7D5E116ED81"
+        width="660" height="459">
+
+</object>
+<input type="hidden" id="ActivityPhoto">
+<input type="hidden" id="ScreenPhoto">
+<div class="main-container">
+    <div class="page-content">
+        <form class="form advancedSearchTable">
+            <div class="row">
+                <div class="col-xs-12">
+                    <label>拍照照片</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-4" style="height: 220px;">
+                </div>
+                <div class="col-xs-4" style="height: 220px;width:220px;border: 1px; solid:#c3c3d6;">
+                    <img type="text" class="img" id="cameraPhoto" src="" style="height:200px;width:200px"/>
+                </div>
+            </div>
+            <input type="hidden" id="proid" value="">
+        </form>
+    </div>
+    <div class="modelFooter">
+        <button type="button" class="layui-btn layui-btn-normal bdc-major-btn" id="btnTakePhoto" onclick="ReadPhoto()">
+            抓拍并识别
+        </button>
+    </div>
+</div>
+<script type="text/javascript">
+    var paramJson = JSON.parse(getQueryString("paramJson"));
+
+    function DisposeControl() {
+        cardReader1.CtrDispose();
+    }
+
+    function ReadPhoto() {
+        var sID = cardReader1.TakePhoto();
+        document.all['ScreenPhoto'].value = sID;
+        document.getElementById('cameraPhoto').setAttribute('src', 'data:image/png;base64,' + sID);
+        comparePhotos();
+    }
+
+    function comparePhotos() {
+        layui.use(['jquery', 'element', 'form', 'table', 'laydate'], function () {
+            layer = layui.layer;
+            debugger;
+            var cameraPhoto = $("#ScreenPhoto").val();
+            var rxdbObj = {};
+            rxdbObj.xm = paramJson.mc;
+            rxdbObj.gmsfhm = paramJson.zjh;
+            rxdbObj.img = cameraPhoto;
+            $.ajax({
+                url: paramJson.url + "/rest/v1.0/gx/rxdb",
+                type: 'post',
+                cache: false,
+                contentType: 'application/json;charset=UTF-8',
+                dataType: 'json',
+                asyType: false,
+                data: JSON.stringify(rxdbObj),
+                success: function (data) {
+                    // window.close();
+                    window.parent.setCxjg(data);
+                    alert("比对完成");
+                },
+                error: function (data) {
+                    alert("请求异常");
+                    window.parent.dealCxjgxx("fail", "shengjjk_gmjbxxrxbd");
+                }
+            })
+        })
+
+    }
+</script>
+</body>
+</html>

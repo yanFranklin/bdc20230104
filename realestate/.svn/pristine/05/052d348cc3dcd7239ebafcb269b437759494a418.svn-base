@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--申请人信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.exchange.ShareDataMapper">
+
+    <select id="queryDjfDjSqrList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.DjfDjSqrDO">
+        SELECT t.ysdm,
+        t.ywh,
+        t.qlrmc,
+        t.qlrzjzl,
+        t.qlrzjh,
+        t.qlrtxdz,
+        t.qlryb,
+        t.qlrfrmc,
+        t.qlrfrdh,
+        t.qlrdlrmc,
+        t.qlrdlrdh,
+        t.qlrdljg,
+        t.ywrmc,
+        t.ywrzjzl,
+        t.ywrzjh,
+        t.ywrtxdz,
+        t.ywryb,
+        t.ywrfrmc,
+        t.ywrfrdh,
+        t.ywrdlrmc,
+        t.ywrdlrdh,
+        t.ywrdljg,
+        t.bz,
+        t.qxdm,
+        t.createtime
+        FROM djf_dj_sqr t
+        <where>
+            <if test="YWH != null and YWH !=''">
+                AND t.ywh = #{YWH}
+            </if>
+        </where>
+    </select>
+
+</mapper>

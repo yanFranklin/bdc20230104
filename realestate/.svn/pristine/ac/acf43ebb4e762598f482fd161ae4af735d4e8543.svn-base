@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.building.core.mapper.CbzdMapper">
+    <!--分页查询承包宗地信息 -->
+    <select id="listCbzdByPageOrder" parameterType="map"
+            resultType="map">
+        <choose>
+            <when test="qlr != null and qlr !=''">
+                SELECT Z.BDCDYH,Z.DJH,N.NYD_DJDCB_INDEX,'CBZD' AS LX ,Z.CBZD_DCB_INDEX AS QJID,N.TDZL AS ZL,N.SCMJ,N.FZMJ
+                FROM NYD_DJDCB N
+                INNER JOIN CBZD_DCB Z ON N.DJH=Z.DJH
+                INNER JOIN (SELECT DJH FROM NYD_QLR WHERE QLRMC LIKE '%'|| #{qlr} || '%' GROUP BY DJH) Q ON Z.DJH=Q.DJH
+            </when>
+            <otherwise>
+                SELECT Z.BDCDYH,Z.DJH,N.NYD_DJDCB_INDEX,'CBZD' AS LX ,Z.CBZD_DCB_INDEX AS QJID,N.TDZL AS ZL,N.SCMJ,N.FZMJ
+                FROM NYD_DJDCB N
+                INNER JOIN CBZD_DCB Z ON N.DJH=Z.DJH
+            </otherwise>
+        </choose>
+        <where>
+            <if test="djh != null and djh != ''">
+                AND Z.djh LIKE '%'|| #{djh} || '%'
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND Z.bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+            </if>
+            <if test="zl != null and zl != ''">
+                AND n.tdzl LIKE '%'|| #{zl} || '%'
+            </if>
+        </where>
+    </select>
+    <select id="listCbfJtcy" parameterType="String"
+            resultType="cn.gtmap.realestate.common.core.domain.building.NydJtcyDO">
+        SELECT y.* FROM cbzd_dcbcbf_rel r
+            JOIN NYD_JTCY y ON r.cbzd_cbf_index = y.jt_index
+            WHERE r.bdcdyh=#{bdcdyh}
+    </select>
+    <select id="listCbf" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.domain.building.CbzdCbfDO">
+        SELECT c.* FROM cbzd_dcbcbf_rel r
+        JOIN cbzd_cbf c ON r.cbzd_cbf_index = c.cbzd_cbf_index
+        <where>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND r.bdcdyh=#{bdcdyh}
+            </if>
+            <if test="cbzdDcbcbfrelIndex != null and cbzdDcbcbfrelIndex != ''">
+                AND r.cbzd_dcbcbfrel_index=#{cbzdDcbcbfrelIndex}
+            </if>
+        </where>
+    </select>
+    <select id="listHCbf" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.domain.building.HCbzdCbfDO">
+        SELECT c.* FROM cbzd_dcbcbf_rel r
+        JOIN h_cbzd_cbf c ON r.cbzd_cbf_index = c.cbzd_cbf_index
+        <where>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND r.bdcdyh=#{bdcdyh}
+            </if>
+        </where>
+    </select>
+</mapper>

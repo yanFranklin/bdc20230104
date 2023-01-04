@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--界址线信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.exchange.ShareDataMapper">
+
+    <select id="queryZdKList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.ZdKDO">
+        select t.bdcdyh,
+        t.zdx,
+        t.xh,
+        t.xzb,
+        t.yzb
+        from ZD_K_103 t
+        <where>
+            <if test="YWH != null and YWH !=''">
+                and t.ywh = #{YWH}
+            </if>
+            <if test="BDCDYH != null and BDCDYH !=''">
+                and t.bdcdyh = #{BDCDYH}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryGzwZhList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.ZdKDO">
+        select h.bdcdyh,nvl(a.tzjb,0)+1 zdx,a.xh,a.xzbz xzb,a.yzbz yzb from djsj_zh_jzbsb a
+        left join bdc_bdcdjb b on a.zhdm=b.zdzhh
+        left join bdc_bdcdy c on b.djbid=c.djbid
+        left join bdc_xm d on d.bdcdyid=c.bdcdyid
+        left join bdc_hy h on h.zdzhh=a.zhdm
+        <where>
+            <if test="ywh != null and ywh !=''">
+                and d.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                and c.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+
+</mapper>

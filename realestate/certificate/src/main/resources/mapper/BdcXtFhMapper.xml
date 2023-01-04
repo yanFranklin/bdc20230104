@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.certificate.core.mapper.BdcXtFhMapper">
+
+    <!--获取指定区域当前年度可用废号-->
+    <select id="queryAvailableBdcXtFh"
+            parameterType="cn.gtmap.realestate.common.core.dto.certificate.BdcXtZsfhDTO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcXtZsfhDO">
+        SELECT
+            FCZHID, XMID, BDCQZH, ZHLSH, NF, ZSLX, SQSJC, SZSXQC, SYQK, QXDM, ZHXLH
+        FROM
+            BDC_XT_ZSFH
+        <where>
+            NVL(syqk, 0) = 0
+
+            <if test="nf != null and nf !=''">
+                AND nf =  #{nf}
+            </if>
+            <if test="qxdm != null and qxdm !=''">
+                AND qxdm =  #{qxdm}
+            </if>
+            <if test="djbmdm != null and djbmdm !=''">
+                AND djbmdm =  #{djbmdm}
+            </if>
+            <if test="zslx != null and zslx !=''">
+                AND zslx =  #{zslx}
+            </if>
+        </where>
+
+        ORDER BY
+          scrq ASC
+    </select>
+
+</mapper>

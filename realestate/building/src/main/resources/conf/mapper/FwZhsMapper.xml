@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.building.core.mapper.FwZhsMapper">
+    <!-- 分页查询子户室信息 -->
+    <select id="listZhsByPageOrder" parameterType="map" resultType="cn.gtmap.realestate.common.core.domain.building.FwZhsDO">
+        SELECT T.FW_ZHS_INDEX,T.FW_HS_INDEX,T.CG,T.FJH,T.DYH,T.CH,T.QLID,T.GYTDMJ,
+        T.YCJZMJ,T.FTTDMJ,T.YCTNJZMJ,T.YCFTJZMJ,T.YCDXBFJZMJ,T.DYTDMJ,T.YCQTJZMJ,
+        T.YCFTXS,T.ZL,T.SCJZMJ,T.SCFTJZMJ,T.SCTNJZMJ,T.JYJG,T.SCDXBFJZMJ,T.SCQTJZMJ,
+        T.SCFTXS,T.GHYT,T.FWLX,T.FWXZ,T.D,T.N,T.X,T.B,T.CQLY,T.FJSM,T.DCYJ,T.DCZ,
+        T.DCSJ,T.WLCS,T.DYCS,T.SXH,T.FWHX,T.JCZXCD,T.GYQK,T.HXJG,T.GHYT2,T.GHYT3,T.FWBM FROM fw_zhs T
+        <where>
+            <if test="fwHsIndex != null and fwHsIndex != ''">
+                AND t.FW_HS_INDEX = #{fwHsIndex}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+
+    <property name="max.file.size" value="100MB"/>
+    <!--日志文件保留天数-->
+    <property name="max.history" value="30"/>
+    <!--日志文件保留路径-->
+    <property name="log.path" value="logs"/>
+    <property name="log.name" value="accept"/>
+<!--    <springProperty scope="context" name="log.name" source="spring.application.name" defaultValue="accept"/>-->
+
+    <!-- 日志系统记录开关、日志忽略配置、日志系统记录logback级别-->
+    <springProperty scope="context" name="log_logbackswitch" source="log.logback-switch" defaultValue="false"/>
+    <springProperty scope="context" name="log_ignores" source="log.appender.ignores" defaultValue="Apollo"/>
+    <springProperty scope="context" name="log_level" source="log.appender.level" defaultValue="error"/>
+
+    <contextName>${log.name}</contextName>
+
+    <!-- 彩色日志 -->
+    <!-- 彩色日志依赖的渲染类 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex"
+                    converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx"
+                    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+    <!-- 彩色日志格式 -->
+    <property name="CONSOLE_LOG_PATTERN"
+              value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+
+    <!-- 控制台输出 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}  %-5level %logger{50} - %msg%n</pattern>
+            <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+        </encoder>
+    </appender>
+
+    <!--输出到文件-->
+    <!-- 时间滚动输出 全量 日志 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 正在记录的日志文件的路径及文件名 -->
+        <file>${log.path}/${log.name}-all.log</file>
+        <!--日志文件输出格式-->
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <charset>UTF-8</charset> <!-- 设置字符集 -->
+        </encoder>
+        <!-- 日志记录器的滚动策略，按日期，按大小记录 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 日志归档 -->
+            <fileNamePattern>${log.path}/${log.name}-all-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${max.file.size}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>${max.history}</maxHistory>
+        </rollingPolicy>
+        <!-- 大于或等于此级别的日志信息 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>info</level>
+        </filter>
+    </appender>
+
+    <appender name="GTLOG" class="cn.gtmap.realestate.common.core.support.log.RedisAppender">
+        <appName>accept</appName>
+        <logbackSwitch>${log_logbackswitch}</logbackSwitch>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>${log_level}</level>
+        </filter>
+    </appender>
+
+
+    <!--myibatis log configure-->
+    <logger name="com.apache.ibatis" level="ERROR"/>
+    <logger name="java.sql.Connection" level="ERROR"/>
+    <logger name="java.sql.Statement" level="ERROR"/>
+    <logger name="java.sql.PreparedStatement" level="ERROR"/>
+    <logger name="cn.gtmap.gtc.plugins" level="ERROR"/>
+    <logger name="org.springframework" level="ERROR"/>
+    <logger name="com.ctrip" level="ERROR"/>
+    <logger name="cn.gtmap.gtc.starter.gscas" level="ERROR"/>
+    <logger name="com.deepoove.poi" level="ERROR"/>
+    <logger name="org.docx4j" level="ERROR"/>
+    <logger name="org.apache.fop" level="ERROR"/>
+
+    <!--sql -->
+    <logger name="cn.gtmap.realestate.accept.core.mapper" level="${logging.level.sql}" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="GTLOG"/>
+    </root>
+
+</configuration>

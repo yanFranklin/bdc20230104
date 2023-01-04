@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+
+    <bean id="DataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <!-- 基本属性 url、user、password -->
+        <property name="url" value="${spring.datasource.url}"/>
+        <property name="username" value="${spring.datasource.username}"/>
+        <property name="password" value="${spring.datasource.password}"/>
+        <property name="defaultAutoCommit" value="false"/>
+        <property name="defaultTransactionIsolation" value="2"/>
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="${spring.datasource.initialSize:10}"/>
+        <property name="minIdle" value="${spring.datasource.minIdle:10}"/>
+        <property name="maxActive" value="${spring.datasource.maxActive:100}"/>
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="10000"/>
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+        <property name="validationQuery" value="SELECT SYSDATE FROM DUAL"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="true"/>
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="20"/>
+        <property name="removeAbandoned" value="true"/>
+        <property name="removeAbandonedTimeout" value="1800"/>
+        <property name="logAbandoned" value="true"/>
+        <!-- 配置监控统计拦截的filters，去掉后监控界面sql无法统计 -->
+        <property name="filters" value="config"/>
+        <property name="connectionProperties" value="config.decrypt=true;config.decrypt.key=${spring.datasource.publickey}" />
+    </bean>
+
+    <!--支持分页 -->
+    <bean id="repository" class="cn.gtmap.realestate.common.core.support.mybatis.page.repository.TotalRepository">
+        <property name="sqlSessionTemplate" ref="sqlSessionTemplate"/>
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="DataSource"/>
+        <property name="configLocation" value="classpath:conf/spring/mybatis-configuration.xml"/>
+        <property name="mapperLocations" value="classpath:conf/mapper/*.xml"/>
+        <property name="plugins">
+            <list>
+                <ref bean="mybatisPaginationInterceptor"/>
+                <ref bean="mybatisPaginationOrderInterceptor"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg ref="sqlSessionFactory"/>
+    </bean>
+    <bean name="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="cn.gtmap.realestate.certificate.core.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+    <bean id="commonMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="cn.gtmap.realestate.common.core.support.mybatis.mapper.CommonMapper"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+    <bean id="entityMapper" class="cn.gtmap.realestate.common.core.support.mybatis.mapper.EntityMapper">
+        <property name="commonMapper" ref="commonMapper"/>
+    </bean>
+
+    <bean id="mybatisPaginationInterceptor"
+          class="cn.gtmap.realestate.common.core.support.mybatis.page.PaginationInterceptor">
+        <property name="properties">
+            <props>
+                <prop key="dialect">oracle</prop>
+                <prop key="stmtIdRegex">*.*ByPage</prop>
+            </props>
+        </property>
+        <property name="pageSqlLimitStr" value="${page.sql.limit:}"/>
+        <property name="notLimitSqlSetStr" value="${page.sql.nolimit:}"/>
+    </bean>
+
+    <bean id="mybatisPaginationOrderInterceptor"
+          class="cn.gtmap.realestate.common.core.support.mybatis.page.PaginationInterceptor">
+        <property name="properties">
+            <props>
+                <prop key="dialect">oracleorder</prop>
+                <prop key="stmtIdRegex">*.*ByPageOrder</prop>
+            </props>
+        </property>
+        <property name="pageSqlLimitStr" value="${page.sql.limit:}"/>
+        <property name="notLimitSqlSetStr" value="${page.sql.nolimit:}"/>
+    </bean>
+
+</beans>

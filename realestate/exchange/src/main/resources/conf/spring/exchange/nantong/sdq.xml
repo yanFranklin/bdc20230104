@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <!-- 南通 为业务系统提供电过户查询接口-->
+    <ex:bean id="dian_cxyhxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${dian.cx.url}"/>
+            <ex:property name="logEventName" value="业务系统申请电过户查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="DIAN"/>
+            <ex:property name="dsfFlag" value="DIAN"/>
+        </ex:service-info>
+
+    </ex:bean>
+
+
+    <!-- 南通 为业务系统提供电过户接口-->
+    <ex:bean id="dian_gh">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${dian.gh.url}"/>
+            <ex:property name="logEventName" value="业务系统申请电过户"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="DIAN"/>
+            <ex:property name="dsfFlag" value="DIAN"/>
+        </ex:service-info>
+
+    </ex:bean>
+
+    <!--2.3 南通 为业务系统提供查询过户结果接口-->
+    <ex:bean id="dian_ghjg">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${dian.ghjg.url}"/>
+            <ex:property name="logEventName" value="业务系统申请电过户查询结果接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="DIAN"/>
+            <ex:property name="dsfFlag" value="DIAN"/>
+        </ex:service-info>
+
+    </ex:bean>
+
+    <!-- 南通 为业务系统提供气过户接口-->
+    <ex:bean id="qi_gh">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="default"/>
+            <ex:property name="replaceUrl" value="ntsqReplaceUrl"/>
+            <ex:property name="contentType" value="application/json"/>
+            <ex:property name="logEventName" value="业务系统申请气过户"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="qgh"/>
+            <ex:property name="dsfFlag" value="qgh"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 南通 为业务系统提供气过户前核验接口-->
+    <ex:bean id="qi_ghhy">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="default"/>
+            <ex:property name="replaceUrl" value="ntsqReplaceUrl"/>
+            <ex:property name="contentType" value="application/json"/>
+            <ex:property name="logEventName" value="业务系统申请气过户前校验"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="qghhy"/>
+            <ex:property name="dsfFlag" value="qghhy"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/nantong/sdq/qi/ghhy/request/param.xml" />
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/nantong/sdq/qi/ghhy/response/data.xml" />
+        </ex:response>
+    </ex:bean>
+
+    <!-- 南通 为业务系统提供水过户接口-->
+    <ex:bean id="shui_gh">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="default"/>
+            <ex:property name="replaceUrl" value="ntsqReplaceUrl"/>
+            <ex:property name="contentType" value="application/json"/>
+            <ex:property name="logEventName" value="业务系统申请水过户"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="sgh"/>
+            <ex:property name="dsfFlag" value="sgh"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/nantong/sdq/shui/gh/response/data.xml" />
+        </ex:response>
+    </ex:bean>
+
+    <!-- 南通 为业务系统提供水过户前核验接口-->
+    <ex:bean id="shui_ghhy">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="default"/>
+            <ex:property name="replaceUrl" value="ntsqReplaceUrl"/>
+            <ex:property name="contentType" value="application/json"/>
+            <ex:property name="logEventName" value="业务系统申请水过户前校验"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="sghhy"/>
+            <ex:property name="dsfFlag" value="sghhy"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/nantong/sdq/shui/ghhy/request/param.xml" />
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/nantong/sdq/shui/ghhy/response/data.xml" />
+        </ex:response>
+    </ex:bean>
+
+    <!-- 通州 为业务系统提供气过户接口-->
+    <ex:bean id="tzqi_gh">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="appKey" value="${sdq.tzsq.appkey}"/>
+            <ex:property name="contentType" value="application/x-www-form-urlencoded"/>
+            <ex:property name="url" value="default"/>
+            <ex:property name="replaceUrl" value="ntsqReplaceUrl"/>
+            <ex:property name="logEventName" value="业务系统申请气过户"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="qgh"/>
+            <ex:property name="dsfFlag" value="qgh"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 通州 为业务系统提供水过户接口-->
+    <ex:bean id="tzshui_gh">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="appKey" value="${sdq.tzsq.appkey}"/>
+            <ex:property name="contentType" value="application/x-www-form-urlencoded"/>
+            <ex:property name="url" value="default"/>
+            <ex:property name="replaceUrl" value="ntsqReplaceUrl"/>
+            <ex:property name="logEventName" value="业务系统申请水过户"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="sgh"/>
+            <ex:property name="dsfFlag" value="sgh"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/nantong/sdq/tzshui/gh/response/data.xml" />
+        </ex:response>
+    </ex:bean>
+
+    <!-- 通州 为业务系统提供水过户前核验接口-->
+    <ex:bean id="tzshui_ghhy">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="appKey" value="${sdq.tzsq.appkey}"/>
+            <ex:property name="contentType" value="application/x-www-form-urlencoded"/>
+            <ex:property name="url" value="default"/>
+            <ex:property name="replaceUrl" value="ntsqReplaceUrl"/>
+            <ex:property name="logEventName" value="业务系统申请水过户前校验"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="sghhy"/>
+            <ex:property name="dsfFlag" value="sghhy"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="body" dozerXml="conf/dozer/nantong/sdq/tzshui/ghhy/request/param.xml" />
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/nantong/sdq/tzshui/ghhy/response/data.xml" />
+        </ex:response>
+    </ex:bean>
+
+    <!-- 通州 为业务系统提供气过户前核验接口-->
+    <ex:bean id="tzqi_ghhy">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="appKey" value="${sdq.tzsq.appkey}"/>
+            <ex:property name="contentType" value="application/x-www-form-urlencoded"/>
+            <ex:property name="url" value="default"/>
+            <ex:property name="replaceUrl" value="ntsqReplaceUrl"/>
+            <ex:property name="logEventName" value="业务系统申请气过户前校验"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="qghhy"/>
+            <ex:property name="dsfFlag" value="qghhy"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="body" dozerXml="conf/dozer/nantong/sdq/qi/ghhy/request/param.xml" />
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/nantong/sdq/qi/ghhy/response/data.xml" />
+        </ex:response>
+    </ex:bean>
+
+</beans>

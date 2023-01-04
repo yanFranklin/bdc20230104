@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.config.core.mapper.BdcTsywPzMapper">
+
+    <!-- 查询配置 -->
+    <select id="listBdcTsywPz" resultType="cn.gtmap.realestate.common.core.domain.BdcTsywPzDO"
+            parameterType="cn.gtmap.realestate.common.core.qo.config.BdcTsywPzQO">
+        SELECT * FROM BDC_TSYW_PZ A
+        <where>
+            <if test="pzid != null and pzid !=''">
+                AND A.pzid=#{pzid}
+            </if>
+            <if test="pzmc != null and pzmc !=''">
+                AND A.pzmc=#{pzmc}
+            </if>
+            <if test="pzlx != null and pzlx !=''">
+                AND A.pzlx=#{pzlx}
+            </if>
+            <if test="pzzzdxbs != null and pzzzdxbs !=''">
+                AND A.pzzzdxbs=#{pzzzdxbs}
+            </if>
+            <if test="pzsm != null and pzsm !=''">
+                AND A.pzsm=#{pzsm}
+            </if>
+            <if test="pzdfbb != null and pzdfbb !=''">
+                AND A.pzdfbb=#{pzdfbb}
+            </if>
+            <if test="pzzt != null">
+                AND NVL(A.pzzt,0)=#{pzzt}
+            </if>
+        </where>
+        ORDER BY A.PZLX
+    </select>
+
+    <select id="listBdcTsywPzByPage" resultType="cn.gtmap.realestate.common.core.domain.BdcTsywPzDO"
+            parameterType="map">
+        SELECT t.pzid,t.pzmc,t.pzlx,t.pzzt,t.pzsm,t.pzz,t.pzyzzhbs,t.pzzxt,t.gnmk,t.sfxycq FROM BDC_TSYW_PZ t
+        <where>
+            <if test="pzid != null and pzid !=''">
+                AND t.pzid=#{pzid}
+            </if>
+            <if test="pzmc != null and pzmc !=''">
+                AND t.pzmc LIKE '%'|| #{pzmc} || '%'
+            </if>
+            <if test="pzlx != null and pzlx !=''">
+                AND t.pzlx=#{pzlx}
+            </if>
+            <if test="pzsm != null and pzsm !=''">
+                AND t.pzsm LIKE '%'|| #{pzsm} || '%'
+            </if>
+            <if test="pzzt != null">
+                AND NVL(t.pzzt,0)= #{pzzt}
+            </if>
+            <choose>
+                <when test="pzdfbb != null and pzdfbb !=''">
+                    AND (t.pzdfbb=#{pzdfbb} OR t.pzdfbb IS NULL )
+                </when>
+                <otherwise>
+                    AND t.pzdfbb IS NULL
+                </otherwise>
+            </choose>
+            <if test="gnmk != null and gnmk !=''">
+                AND t.gnmk=#{gnmk}
+            </if>
+            <if test="pzzxt != null and pzzxt !=''">
+                AND
+                <foreach collection="pzzxt.split(',')" item="item" separator="or" open="(" close=")">
+                     INSTR(t.pzzxt, #{item})> 0
+                </foreach>
+            </if>
+            <if test="qzdmh != null and qzdmh != ''">
+                AND t.pzmc || t.pzsm || t.pzz like '%' || #{qzdmh} || '%'
+            </if>
+        </where>
+        <choose>
+            <when test="sortParameter != null and sortParameter != ''">
+                ORDER BY ${sortParameter}
+            </when>
+            <otherwise>
+                ORDER BY t.pzlx,t.pzxgsj DESC NULLS LAST
+            </otherwise>
+        </choose>
+
+    </select>
+
+
+</mapper>

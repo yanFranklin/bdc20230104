@@ -1,0 +1,2270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--收件信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.BdcdjMapper">
+    <select id="getZsNum" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM bdc_xm xm
+        LEFT JOIN bdc_qlr qlr ON xm.xmid = qlr.xmid
+        LEFT JOIN bdc_zs zs ON zs.zsid = qlr.zsid
+        <where>
+            <if test="zstype != null and zstype != '' ">
+                AND zs.zslx = #{zstype}
+            </if>
+            <if test="proid != null and proid != ''">
+                AND xm.xmid = #{proid}
+            </if>
+        </where>
+    </select>
+
+    <select id="getBdcdyhByXmid" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT xm.BDCDYH,fb.QJGLDM,xm.xmid
+        FROM bdc_xm xm
+        inner JOIN BDC_XMFB fb ON xm.xmid = fb.xmid
+        <where>
+            <if test="xmid != null and xmid != '' ">
+                AND xm.xmid = #{xmid}
+            </if>
+        </where>
+    </select>
+
+    <select id="getZsbsxxByXmid" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcZsDO">
+        SELECT zs.ZZBS,zs.BDCQZH
+        FROM bdc_zs zs
+        LEFT JOIN bdc_xm_zs_gx gx ON gx.zsid = zs.zsid
+        <where>
+            <if test="xmid != null and xmid != '' ">
+                AND gx.xmid = #{xmid}
+            </if>
+        </where>
+    </select>
+
+    <select id="getSffzflagByXmid" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcCshFwkgSlDO">
+        SELECT a.SFSCZS
+        FROM bdc_csh_fwkg_sl a
+        <where>
+            <if test="xmid != null and xmid != '' ">
+                AND a.ID = #{xmid}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="queryBdcXm" parameterType="java.lang.String"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT xm.xmid, xm.slbh, xm.qllx, xm.djlx, xm.djyy, xm.sqzsbs, xm.sqfbcz,
+               xm.bz, xm.sqrsm, xm.ajzt, xm.sfwtaj, xm.gzljdmc, xm.qxdm, xm.slsj,
+               xm.slrid, xm.slr, xm.xmly, xm.jssj, xm.djxl, xm.bdclx, xm.ycqzh, xm.yfczh,
+               xm.ytdzh, xm.gzlslid, xm.spxtywh, xm.ssxz, xm.djjg, xm.spxtblzt, xm.spxtblztmc,
+               xm.bdcdyh, xm.bdcdywybh, xm.gyfs, xm.djsj, xm.dbr, xm.qszt, xm.zl, xm.dzwmj,
+               xm.dzwyt, xm.dzwyt2, xm.dzwyt3, xm.yhlxa, xm.yhlxb, xm.gzwlx, xm.lz,
+               xm.mjdw, xm.zdzhmj, xm.zdzhyt, xm.zdzhyt2, xm.zdzhyt3, xm.qlr,
+               xm.qlrzjh, xm.ywr, xm.ywrzjh, xm.jyhth, xm.bdcdyfwlx, xm.bdcqzh, xm.qlxz
+        FROM bdc_xm xm
+        WHERE xm.xmid = #{proid}
+    </select>
+
+    <select id="listBdcXmBySlbh" parameterType="java.lang.String"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT xm.xmid, xm.slbh, xm.qllx, xm.djlx, xm.djyy, xm.sqzsbs, xm.sqfbcz,
+               xm.bz, xm.sqrsm, xm.ajzt, xm.sfwtaj, xm.gzljdmc, xm.qxdm, xm.slsj,
+               xm.slrid, xm.slr, xm.xmly, xm.jssj, xm.djxl, xm.bdclx, xm.ycqzh, xm.yfczh,
+               xm.ytdzh, xm.gzlslid, xm.spxtywh, xm.ssxz, xm.djjg, xm.spxtblzt, xm.spxtblztmc,
+               xm.bdcdyh, xm.bdcdywybh, xm.gyfs, xm.djsj, xm.dbr, xm.qszt, xm.zl, xm.dzwmj,
+               xm.dzwyt, xm.dzwyt2, xm.dzwyt3, xm.yhlxa, xm.yhlxb, xm.gzwlx, xm.lz,
+               xm.mjdw, xm.zdzhmj, xm.zdzhyt, xm.zdzhyt2, xm.zdzhyt3, xm.qlr,
+               xm.qlrzjh, xm.ywr, xm.ywrzjh, xm.jyhth, xm.bdcdyfwlx, xm.bdcqzh, xm.qlxz
+        FROM bdc_xm xm
+        WHERE xm.slbh = #{slbh}
+    </select>
+
+
+    <select id="queryZsXmByZsid" parameterType="string" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        <if test="_parameter !=null and _parameter !=''">
+            SELECT distinct x.xmid, x.slbh, x.gzlslid,x.djjg,x.qszt,x.bdcdyh,x.djsj,x.dbr,x.sqfbcz,x.dzwyt,x.qllx,x.qlr,x.qlrzjh,x.gzldyid, x.djxl,x.bdcdywybh
+            FROM bdc_xm x
+            LEFT JOIN bdc_xm_zs_gx g ON x.xmid = g.xmid
+            WHERE g.zsid = #{_parameter}
+            ORDER BY x.qszt ASC
+        </if>
+    </select>
+
+    <select id="queryPreInfo" parameterType="java.lang.String" resultType="java.util.HashMap">
+        SELECT yxm.bdcqzh, yxm.bdcdyh, yxm.ybdcdyh
+        FROM bdc_xm xm
+                 INNER JOIN bdc_xm_lsgx lsgx ON xm.xmid = lsgx.xmid
+                 LEFT JOIN bdc_xm yxm ON lsgx.yxmid = yxm.xmid
+        WHERE  xm.xmid = #{proid}
+    </select>
+
+    <select id="queryXndyhPpgx" parameterType="map" resultType="cn.gtmap.realestate.common.core.domain.BdcXnbdcdyhGxDO">
+        select t.bdcdyh, t.xnbdcdyh,t.xnbdcdyhxmid from BDC_XNBDCDYH_GX t
+        <where>
+            <if test="xnbdcdyh != null and xnbdcdh != ''">
+                and t.xnbdcdyh= #{xnbdcdyh}
+            </if>
+            <if test="xnbdcdyhxmid != null and xnbdcdyhxmid != ''">
+                and t.xnbdcdyhxmid = #{xnbdcdyhxmid}
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                and t.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+
+    <select id="getzdlx" resultType="java.lang.String">
+        select distinct zdlx from BDC_EXCHANGE_ZDDZ t
+    </select>
+
+    <select id="getBdcExchangeZddzList"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.sjpt.BdcExchangeZddz">
+        SELECT id, bdcdjdm, bdcdjmc, zdlx, stddm, stdmc
+        FROM BDC_EXCHANGE_ZDDZ t
+    </select>
+
+
+    <select id="queryBdcExchangeZddzList"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.sjpt.BdcExchangeZddz">
+        SELECT id, bdcdjdm, bdcdjmc, zdlx, stddm, stdmc FROM BDC_EXCHANGE_ZDDZ t
+        <where>
+            <if test="zdlx != null and zdlx != ''">
+                AND t.zdlx=#{zdlx}
+            </if>
+        </where>
+    </select>
+
+    <select id="getBdcExchangeZddz" resultType="cn.gtmap.realestate.common.core.domain.exchange.sjpt.BdcExchangeZddz">
+        SELECT id, bdcdjdm, bdcdjmc, zdlx, stddm, stdmc FROM BDC_EXCHANGE_ZDDZ t
+        where rownum=1
+        <if test="bdcdjdm != null and bdcdjdm != ''">
+            AND t.bdcdjdm=#{bdcdjdm}
+        </if>
+        <if test="zdlx != null and zdlx != ''">
+            AND t.zdlx=#{zdlx}
+        </if>
+    </select>
+
+    <select id="queryBdcZdQx" resultType="java.util.Map">
+        SELECT DISTINCT x.dm,x.mc
+        FROM BDC_ZD_QX x
+    </select>
+
+    <select id="getDjsl" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT t.ywdm nationalywdm
+        FROM (
+        select x.djlx as ywdm from bdc_xm x left join ${logTable} a
+        on a.ywlsh = x.xmid
+        <where>
+            (a.cgbs <![CDATA[ <> ]]> -2 and a.cgbs <![CDATA[ <> ]]> 9 or a.cgbs is null )
+            <choose>
+                <when test="qxdmgl != null and qxdmgl == true">
+                    AND x.qxdm=#{qxdm}
+                </when>
+                <otherwise>
+                    <if test="qxdm != '' and qxdm != null">
+                        AND substr(x.bdcdyh,0,6)=#{qxdm}
+                    </if>
+                </otherwise>
+            </choose>
+            <if test="accessDate != null">
+                AND trunc(x.djsj) = trunc(#{accessDate})
+            </if>
+            <if test="bsblcdyid != null and bsblcdyid.size()>0">
+                and nvl(x.gzldyid,'****') not in
+                <foreach collection="bsblcdyid" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        ) t
+    </select>
+
+    <select id="getCheatDbsj" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT t.ywdm nationalywdm
+        FROM (
+        SELECT x.djlx as ywdm
+        FROM ${logTable} a
+        left join bdc_xm x on x.xmid=a.ywlsh
+        <where>
+            a.cgbs in (0,1,2)
+            <choose>
+                <when test="qxdmgl != null and qxdmgl == true">
+                    AND x.qxdm=#{qxdm}
+                </when>
+                <otherwise>
+                    <if test="qxdm != '' and qxdm != null">
+                        AND substr(x.bdcdyh,0,6)=#{qxdm}
+                    </if>
+                </otherwise>
+            </choose>
+            <if test="accessDate != null">
+                AND trunc(a.sjjrrq) = trunc(#{accessDate})
+            </if>
+        </where>
+        union all
+        SELECT 400 as ywdm
+        FROM ${logTable} a
+        left join bdc_xm_lsgx l on l.gxid=a.ywlsh
+        left join bdc_xm x on x.XMID=l.yxmid
+        <where>
+        a.cgbs in(0,1,2)
+            <choose>
+                <when test="qxdmgl != null and qxdmgl == true">
+                    AND x.qxdm=#{qxdm}
+                </when>
+                <otherwise>
+                    <if test="qxdm != '' and qxdm != null">
+                        AND substr(x.bdcdyh,0,6)=#{qxdm}
+                    </if>
+                </otherwise>
+            </choose>
+            <if test="accessDate != null">
+                AND trunc(a.sjjrrq) = trunc(#{accessDate})
+            </if>
+        </where>
+        ) t
+    </select>
+
+    <select id="getJrYwdm" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT substr(t.ywdm,0,3) nationalywdm
+        FROM (
+        SELECT CASE substr(a.ywdm,3)
+        WHEN '901' THEN '900000'
+        when '902' then '900000'
+        ELSE
+        a.ywdm
+        END ywdm
+        FROM ${logTable} a
+        <where>
+            a.cgbs <![CDATA[ <> ]]> -2 and a.cgbs <![CDATA[ <> ]]> 9
+            <if test="cgbsList != null and cgbsList.size() > 0">
+                AND a.cgbs in
+                <foreach collection="cgbsList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="qxdm != '' and qxdm != null">
+                AND substr(a.bdcdyh,0,6)=#{qxdm}
+            </if>
+            <if test="accessDate != null">
+                AND trunc(a.sjjrrq) = trunc(#{accessDate})
+            </if>
+        </where>
+        ) t
+    </select>
+
+    <select id="listWlzxXm" parameterType="java.util.Map" resultType="java.util.Map">
+        <!--外联注销业务登记类型统一为注销登记-->
+        SELECT t.ywdm nationalywdm
+        FROM (
+        SELECT ROW_NUMBER() OVER(PARTITION BY gx.yxmid ORDER BY gx.gxid ASC) AS rn, '400' as ywdm
+        FROM BDC_XM xm
+        LEFT JOIN BDC_XM_LSGX gx
+        ON gx.YXMID = xm.XMID and gx.wlxm=1 and gx.zxyql=1
+        LEFT JOIN BDC_XM yxm
+        ON yxm.XMID = gx.XMID
+        left join ${logTable} s
+        on s.ywlsh = gx.gxid
+        <where>
+            (s.cgbs <![CDATA[ <> ]]> -2 and s.cgbs <![CDATA[ <> ]]> 9 or s.cgbs is null)
+            <choose>
+                <when test="qxdmgl != null and qxdmgl == true">
+                    AND xm.qxdm=#{qxdm}
+                </when>
+                <otherwise>
+                    <if test="qxdm != '' and qxdm != null">
+                        AND substr(xm.bdcdyh,0,6)=#{qxdm}
+                    </if>
+                </otherwise>
+            </choose>
+            <if test="accessDate != null">
+                AND trunc(yxm.djsj) = trunc(#{accessDate})
+            </if>
+            <if test="bsblcdyid != null and bsblcdyid.size()>0">
+                and nvl(xm.gzldyid,'****') not in
+                <foreach collection="bsblcdyid" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        ) t where t.rn=1
+    </select>
+
+    <select id="getXnDjsl" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT t.ywdm nationalywdm
+        FROM (
+        --区分抵押权和地役权，地役权仍为9000102，抵押权9000101用0000101代替
+        SELECT x.djlx as ywdm
+        FROM ${logTable} a
+        left join bdc_xm x on x.xmid = a.ywlsh
+        <where>
+            a.cgbs <![CDATA[ <> ]]> -2 and a.cgbs <![CDATA[ <> ]]> 9
+            <if test="cgbsList != null and cgbsList.size() > 0">
+                AND a.cgbs in
+                <foreach collection="cgbsList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="qxdm != '' and qxdm != null">
+                AND x.qxdm=#{qxdm}
+            </if>
+            <if test="accessDate != null">
+                AND trunc(a.sjjrrq) = trunc(#{accessDate})
+            </if>
+        </where>
+        ) t
+    </select>
+    <select id="getRegisterDetails" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.bo.accessnewlog.Register">
+        SELECT
+        x.xmid ywh,x.djlx,
+        x.qllx,
+        x.bdcdyh,
+        a.ywbwid bwid
+        FROM bdc_xm x left join
+        ${logTable} a
+        ON a.ywlsh = x.xmid
+        <where>
+            (a.cgbs <![CDATA[ <> ]]> -2 and a.cgbs <![CDATA[ <> ]]> 9 or a.cgbs is null)
+            <choose>
+                <when test="qxdmgl != null and qxdmgl == true">
+                    AND x.qxdm=#{qxdm}
+                </when>
+                <otherwise>
+                    <if test="qxdm != '' and qxdm != null">
+                        AND substr(x.bdcdyh,0,6)=#{qxdm}
+                    </if>
+                </otherwise>
+            </choose>
+            <if test="accessDate != null">
+                AND trunc(x.djsj) = trunc(#{accessDate})
+            </if>
+            <if test="bsblcdyid != null and bsblcdyid.size()>0">
+                and nvl(x.gzldyid,'****') not in
+                <foreach collection="bsblcdyid" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="getCheatRegisterDetails" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.bo.accessnewlog.Register">
+        SELECT
+        a.ywlsh ywh,
+        x.djlx,
+        x.qllx,
+        a.bdcdyh,
+        a.ywbwid bwid
+        FROM
+        ${logTable} a
+        LEFT JOIN bdc_xm x ON a.ywlsh = x.xmid
+        <where>
+            a.cgbs in (0,1,2)
+            <choose>
+                <when test="qxdmgl != null and qxdmgl == true">
+                    AND x.qxdm=#{qxdm}
+                </when>
+                <otherwise>
+                    <if test="qxdm != '' and qxdm != null">
+                        AND substr(x.bdcdyh,0,6)=#{qxdm}
+                    </if>
+                </otherwise>
+            </choose>
+            <if test="accessDate != null">
+                AND trunc(a.sjjrrq) = trunc(#{accessDate})
+            </if>
+        </where>
+        union all
+        SELECT a.ywlsh ywh,400 as djlx, x.qllx, x.bdcdyh, a.ywbwid bwid FROM ${logTable} a
+        left join bdc_xm_lsgx l on l.gxid=a.ywlsh
+        left join bdc_xm x on x.xmid=l.yxmid
+        <where>
+            a.cgbs in (0,1,2)
+            <choose>
+                <when test="qxdmgl != null and qxdmgl == true">
+                    AND x.qxdm=#{qxdm}
+                </when>
+                <otherwise>
+                    <if test="qxdm != '' and qxdm != null">
+                        AND substr(x.bdcdyh,0,6)=#{qxdm}
+                    </if>
+                </otherwise>
+            </choose>
+            <if test="accessDate != null">
+                AND trunc(a.sjjrrq) = trunc(#{accessDate})
+            </if>
+        </where>
+    </select>
+
+    <select id="getJrRegisterDetails" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.bo.accessnewlog.Register" >
+        SELECT
+        a.ywlsh ywh,
+        a.djlx,
+        a.qllx,
+        a.bdcdyh,
+        a.bdcqzsh as zszmh,
+        a.ywbwid bwid
+        FROM
+        ${logTable} a
+        <where>
+            a.cgbs in (0,1,2)
+            <if test="qxdm != '' and qxdm != null">
+                AND substr(a.bdcdyh,0,6)=#{qxdm}
+            </if>
+            <if test="accessDate != null">
+                AND trunc(a.sjjrrq) = trunc(#{accessDate})
+            </if>
+        </where>
+    </select>
+
+    <select id="listWlxmRegsiterDetails" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.bo.accessnewlog.Register">
+        select * from (SELECT ROW_NUMBER() OVER(PARTITION BY gx.yxmid ORDER BY gx.gxid ASC) AS rn, gx.gxid as ywh,400 as
+        djlx,
+        xm.qllx,
+        xm.bdcdyh,
+        s.ywbwid bwid
+        FROM BDC_XM xm
+        LEFT JOIN BDC_XM_LSGX gx
+        ON gx.YXMID = xm.XMID and gx.ZXYQL = 1 AND gx.WLXM = 1
+        LEFT JOIN BDC_XM yxm
+        ON yxm.XMID = gx.XMID
+        left join ${logTable} s
+        on s.ywlsh = gx.gxid
+        <where>
+            (s.cgbs <![CDATA[ <> ]]> -2 and s.cgbs <![CDATA[ <> ]]> 9 or s.cgbs is null)
+            <choose>
+                <when test="qxdmgl != null and qxdmgl == true">
+                    AND xm.qxdm=#{qxdm}
+                </when>
+                <otherwise>
+                    <if test="qxdm != '' and qxdm != null">
+                        AND substr(xm.bdcdyh,0,6)=#{qxdm}
+                    </if>
+                </otherwise>
+            </choose>
+            <if test="accessDate != null">
+                AND trunc(yxm.djsj) = trunc(#{accessDate})
+            </if>
+            <if test="bsblcdyid != null and bsblcdyid.size()>0">
+                and nvl(xm.gzldyid,'****') not in
+                <foreach collection="bsblcdyid" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        ) where rn = 1
+    </select>
+
+    <select id="listBdczsByXmid" parameterType="String" resultType="cn.gtmap.realestate.common.core.domain.BdcZsDO">
+        <if test="xmid != null and xmid != ''">
+            SELECT DISTINCT z.zsid, z.bdcdyh, z.bdcqzh, z.zhlsh, z.nf
+            , z.qzysxlh, z.qlqtzk, z.qxdm, z.szsxqc, z.fzr
+            , z.fzsj, z.lzr, z.lzsj, z.lzrzjh,z.lzrdh,z.lzrzjzl, z.szr
+            , z.szsj, z.zslx, z.fj, z.zl, z.qlr
+            , z.ywr, z.gyfs, z.qllx, z.yt, z.mj
+            , z.qlxz, z.syqx,z.zmqlsx,z.ewmnr,z.zhxlh,z.sqsjc,z.dyzt,z.zzbs
+            , z.zzid, z.zzdz, z.zzmlbm, z.zzqfsj, z.bdcqzhjc,z.storageid
+            FROM bdc_zs z
+            LEFT JOIN bdc_xm_zs_gx x ON z.zsid = x.zsid
+            LEFT JOIN bdc_xm q ON q.xmid = x.xmid
+            where q.xmid = #{xmid}
+        </if>
+
+    </select>
+
+    <select id="getAccessSl" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT COUNT(t.ywdm) num, l.djlx
+        FROM (
+        --区分抵押权和地役权，地役权仍为9000102，抵押权9000101用0000101代替
+        SELECT case x.djlx when 901 then 900 when 902 then 900 else x.djlx end as ywdm
+        FROM ${logTable} a
+        left join bdc_xm x on x.xmid=a.ywlsh
+        WHERE a.cgbs in (0,1,2)
+        <choose>
+            <when test="qxdmgl != null and qxdmgl == true">
+                AND x.qxdm=#{qxdm}
+            </when>
+            <otherwise>
+                <if test="qxdm != '' and qxdm != null">
+                    AND substr(x.bdcdyh,0,6)=#{qxdm}
+                </if>
+            </otherwise>
+        </choose>
+        <if test="accessDate != null">
+            AND trunc(a.sjjrrq) = trunc(#{accessDate})
+        </if>
+        ) t
+        RIGHT JOIN (<![CDATA[ SELECT (LEVEL-1)||'00' djlx FROM dual CONNECT BY  LEVEL < 11  ]]>) l ON l.djlx = t.ywdm
+        GROUP BY l.djlx ORDER BY l.djlx
+    </select>
+
+    <select id="getAccessJrYwdm" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT COUNT(t.ywdm) num, l.djlx
+        FROM (
+        SELECT CASE substr(a.ywdm,3)
+        WHEN '901' THEN '900000'
+        when '902' then '900000'
+        ELSE
+        a.ywdm
+        END ywdm
+        FROM ${logTable} a
+        WHERE a.cgbs in (0,1,2)
+        <if test="qxdm != '' and qxdm != null">
+            AND substr(a.bdcdyh,0,6)=#{qxdm}
+        </if>
+        <if test="accessDate != null">
+            AND trunc(a.sjjrrq) = trunc(#{accessDate})
+        </if>
+        ) t
+        RIGHT JOIN (<![CDATA[ SELECT (LEVEL-1)||'00' djlx FROM dual CONNECT BY  LEVEL < 11  ]]>) l ON l.djlx =
+        substr(t.ywdm,0,3)
+        GROUP BY l.djlx ORDER BY l.djlx
+    </select>
+
+    <select id="getXnAccessSl" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT COUNT(t.ywdm) num, l.djlx
+        FROM (
+        --区分抵押权和地役权，地役权仍为9000102，抵押权9000101用0000101代替
+        SELECT case b.djlx when 901 then 900 when 902 then 900 else b.djlx end as ywdm
+        FROM ${logTable} a
+        left join bdc_xm b on b.xmid = a.ywlsh
+        WHERE a.cgbs=1
+        <if test="qxdm != '' and qxdm != null">
+            AND b.qxdm=#{qxdm}
+        </if>
+        <if test="accessDate != null">
+            AND trunc(a.sjjrrq) = trunc(#{accessDate})
+        </if>
+        ) t
+        RIGHT JOIN (<![CDATA[ SELECT (LEVEL-1)||'00' djlx FROM dual CONNECT BY  LEVEL < 11  ]]>) l ON l.djlx = t.ywdm
+        GROUP BY l.djlx ORDER BY l.djlx
+    </select>
+    <select id="getAccessDetails" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.bo.accessnewlog.Access">
+        SELECT
+        a.ywlsh ywh,
+        a.bdcdyh,
+        a.ywbwid bwid
+        FROM
+        ${logTable} a
+        left join bdc_xm x on x.xmid=a.ywlsh
+        WHERE a.cgbs in (0,1,2)
+        <choose>
+            <when test="qxdmgl != null and qxdmgl == true">
+                AND x.qxdm=#{qxdm}
+            </when>
+            <otherwise>
+                <if test="qxdm != '' and qxdm != null">
+                    AND substr(a.bdcdyh,0,6)=#{qxdm}
+                </if>
+            </otherwise>
+        </choose>
+        <if test="accessDate != null">
+            AND trunc(a.sjjrrq) = trunc(#{accessDate})
+        </if>
+
+
+    </select>
+
+    <select id="getXnAccessDetails" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.bo.accessnewlog.Access">
+        SELECT
+        a.ywlsh ywh,
+        a.ywbwid bwid,
+        a.bdcdyh
+        FROM
+        ${logTable} a left join bdc_xm b on b.xmid = a.ywlsh
+        WHERE
+        a.cgbs IN ( 0, 1, 2 )
+        <if test="qxdm != '' and qxdm != null">
+            AND b.qxdm=#{qxdm}
+        </if>
+        <if test="accessDate != null">
+            AND trunc(a.sjjrrq) = trunc(#{accessDate})
+        </if>
+
+
+    </select>
+    <select id="getBsm" resultType="java.lang.Integer">
+        select BSM.nextVal from dual
+    </select>
+
+    <select id="queryFdcqBdcQlr" resultType="cn.gtmap.realestate.common.core.domain.BdcQlrDO">
+        SELECT A.QLRID, A.XMID, A.QLRMC,
+        A.ZJZL, A.ZJH, A.TXDZ, A.YB, A.XB,
+        A.FRMC, A.FRDH, A.DLRMC, A.DLRDH, A.DLJG,
+        A.QLRLX, A.QLRLB, A.GYFS, A.GYQK, A.DH,
+        A.SSHY, A.BZ, A.SFCZR, A.SXH, A.BDCQZH,
+        A.ZSID, A.FRZJZL, A.FRZJH, A.DLRZJZL, A.DLRZJH,
+        A.QLRFTMJ, A.QLBL, A.LZR, A.LZRZJZL, A.LZRZJH, A.LZRDH, A.QLRWBZT
+        FROM BDC_QLR A INNER JOIN BDC_FDCQ B ON A.XMID = B.XMID
+        <where>
+            AND B.QSZT = 1
+            <if test="qlrmc != null and qlrmc != ''">
+                and A.QLRMC = #{qlrmc}
+            </if>
+            <if test="qlrlb != null and qlrlb != ''">
+                and A.QLRLB = #{qlrlb}
+            </if>
+            <if test="bdcqzh != null and bdcqzh != ''">
+                and A.bdcqzh = #{bdcqzh}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryBdcdyhSfzb" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT * FROM (
+                          SELECT A.XMID,A.SLBH,A.QLLX FROM BDC_XM A
+                          WHERE A.QLLX IN ('4','6','8') AND NVL(A.AJZT,'1') != '2' AND A.BDCDYH = #{bdcdyh}
+                          UNION ALL
+                          SELECT A.XMID,A.SLBH,A.QLLX FROM BDC_XM A INNER JOIN BDC_DYAQ B ON A.XMID = B.XMID
+                          WHERE NVL(A.AJZT,'1') != '2' AND B.QSZT=0 AND A.BDCDYH = #{bdcdyh}
+                          UNION ALL
+                          SELECT A.XMID,A.SLBH,A.QLLX FROM BDC_XM A INNER JOIN BDC_CF B ON A.XMID = B.XMID
+                          WHERE NVL(A.AJZT,'1') != '2' AND B.QSZT=0 AND A.BDCDYH = #{bdcdyh}
+                          UNION ALL
+                          SELECT A.XMID,A.SLBH,A.QLLX FROM BDC_XM A INNER JOIN BDC_YY B ON A.XMID = B.XMID
+                          WHERE NVL(A.AJZT,'1') != '2' AND B.QSZT=0 AND A.BDCDYH = #{bdcdyh}
+                      )
+    </select>
+
+
+    <!-- 南通自助查询收费信息 -->
+    <select id="queryZzjfCxSfxxByPageOrder" resultType="map" parameterType="map">
+        SELECT ROWNUM ,A.SLSJ SJSJ ,C.JZMJ SCJZMJ,A.XMID YWH,C.GHYT FWYT,
+        A.SLBH SLH,A.BDCDYH, C.FTTDMJ ,A.ZL,A.GZLJDMC SLDMC,A.QLR,A.YWR FROM BDCSL_SFXX T
+        INNER JOIN BDC_XM A ON T.GZLSLID = A.GZLSLID
+        INNER JOIN BDC_FDCQ C ON A.BDCDYH = C.BDCDYH AND C.QSZT = '1'
+        <where>
+            <if test="slbh != null and slbh !=''">
+                AND a.slbh = #{slbh}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询FDCQ实体 -->
+    <select id="queryBdcFdcq" resultType="cn.gtmap.realestate.common.core.domain.BdcFdcqDO"
+            parameterType="cn.gtmap.realestate.exchange.core.dto.wwsq.grdacx.request.GrdacxRequestBody">
+        SELECT A.* FROM BDC_FDCQ A
+        INNER JOIN BDC_XM B ON A.XMID = B.XMID
+        <if test="(qlrmc != null and qlrmc != '') or (qlrzjhList != null and qlrzjhList.size > 0)">
+            INNER JOIN BDC_QLR C ON A.XMID = C.XMID
+            <if test="cqQlrlb != null and cqQlrlb != ''">
+                AND C.QLRLB = #{cqQlrlb}
+            </if>
+        </if>
+        <if test="bdcqzh != null and bdcqzh != ''">
+            INNER JOIN
+            (SELECT T.XMID FROM BDC_XM_ZS_GX T INNER JOIN BDC_ZS T1 ON T.ZSID = T1.ZSID
+            WHERE T1.BDCQZH = #{bdcqzh} GROUP BY T.XMID ) D ON B.XMID = D.XMID
+        </if>
+        <if test="bdcqzhmh != null and bdcqzhmh != ''">
+            INNER JOIN
+            (SELECT T.XMID FROM BDC_XM_ZS_GX T INNER JOIN BDC_ZS T1 ON T.ZSID = T1.ZSID
+            WHERE T1.BDCQZH LIKE '%' || #{bdcqzhmh} || '%' GROUP BY T.XMID ) D ON B.XMID = D.XMID
+        </if>
+        <!-- 南通要求对带，数据进行模糊查询 -->
+        <if test="ntbdcqzh != null and ntbdcqzh != ''">
+            INNER JOIN
+            (SELECT T.XMID FROM BDC_XM_ZS_GX T INNER JOIN BDC_ZS T1 ON T.ZSID = T1.ZSID
+            WHERE instr(','|| T1.BDCQZH ||',',','|| #{ntbdcqzh} ||',') > 0 GROUP BY T.XMID ) D ON B.XMID = D.XMID
+        </if>
+        <if test="likebdcqzh != null and likebdcqzh != ''">
+            INNER JOIN
+            (SELECT T.XMID FROM BDC_XM_ZS_GX T INNER JOIN BDC_ZS T1 ON T.ZSID = T1.ZSID
+            WHERE T1.BDCQZH LIKE '%' ||#{likebdcqzh}|| '%' GROUP BY T.XMID ) D ON B.XMID = D.XMID
+        </if>
+        <where>
+            AND A.QSZT = '1'
+            <if test="xmid != null and xmid != ''">
+                AND b.xmid = #{xmid}
+            </if>
+            <if test="slbh != null and slbh != ''">
+                AND b.slbh = #{slbh}
+            </if>
+            <if test="likeBdcdyh != null and likeBdcdyh != ''">
+                AND b.bdcdyh like '%' || #{likeBdcdyh} || '%'
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND b.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="qlrmc != null and qlrmc != ''">
+                AND C.QLRMC = #{qlrmc}
+            </if>
+            <if test="qlrmcmh != null and qlrmcmh != ''">
+                AND C.qlrmc like '%'||#{qlrmcmh}|| '%'
+            </if>
+            <if test="qlrzjhmh != null and qlrzjhmh != ''">
+                AND C.zjh like '%'||#{qlrzjhmh}|| '%'
+            </if>
+            <if test="qlrzjhList != null and qlrzjhList.size > 0">
+                AND C.zjh in
+                <foreach collection="qlrzjhList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="likeZl != null and likeZl != ''">
+                AND b.zl like '%' || #{likeZl} || '%'
+            </if>
+            <if test="xzqdm != null and xzqdm != ''">
+                AND B.qxdm = #{xzqdm}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询BdcTdsyq实体 -->
+    <select id="queryBdcTdsyq" resultType="cn.gtmap.realestate.common.core.domain.BdcTdsyqDO"
+            parameterType="cn.gtmap.realestate.exchange.core.dto.wwsq.grdacx.request.GrdacxRequestBody">
+        SELECT A.* FROM BDC_TDSYQ A
+        INNER JOIN BDC_XM B ON A.XMID = B.XMID
+        <!--        <if test="(qlrmc != null and qlrmc != '') or (qlrzjhList != null and qlrzjhList.size > 0) or (qlrmcmh != null and qlrmcmh != '')">-->
+        INNER JOIN BDC_QLR C ON A.XMID = C.XMID
+
+        <!--        </if>-->
+        <if test="(bdcqzh != null and bdcqzh != '') or (zhlsh != null and zhlsh != '')">
+            INNER JOIN
+            (SELECT T.XMID FROM BDC_XM_ZS_GX T INNER JOIN BDC_ZS T1 ON T.ZSID = T1.ZSID
+            WHERE 1=1
+            <if test="bdcqzh != null and bdcqzh != ''">
+                AND T1.BDCQZH = #{bdcqzh}
+            </if>
+            <if test="zhlsh != null and zhlsh != ''">
+                AND T1.ZHLSH = #{zhlsh}
+            </if>
+            GROUP BY T.XMID ) D ON B.XMID = D.XMID
+        </if>
+        <where>
+            AND A.QSZT = '1'
+            <if test="xmid != null and xmid != ''">
+                AND b.xmid = #{xmid}
+            </if>
+            <if test="slbh != null and slbh != ''">
+                AND b.slbh = #{slbh}
+            </if>
+            <if test="likeBdcdyh != null and likeBdcdyh != ''">
+                AND b.bdcdyh like '%' || #{likeBdcdyh} || '%'
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND b.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="bdcdybh != null and bdcdybh != ''">
+                AND b.BDCDYWYBH = #{bdcdybh}
+            </if>
+            <if test="likebdcqzh != null and likebdcqzh != ''">
+                AND b.bdcqzh like '%' || #{likebdcqzh} || '%'
+            </if>
+            <if test="qlrmc != null and qlrmc != ''">
+                AND C.QLRMC = #{qlrmc}
+            </if>
+            <if test="qlrmcmh != null and qlrmcmh != ''">
+                AND C.QLRMC like '%' || #{qlrmcmh} || '%'
+            </if>
+            <if test="cqQlrlb != null and cqQlrlb != ''">
+                AND C.QLRLB = #{cqQlrlb}
+            </if>
+            <if test="qlrzjhmh != null and qlrzjhmh != ''">
+                AND C.zjh like '%'||#{qlrzjhmh}|| '%'
+            </if>
+            <if test="qlrzjhList != null and qlrzjhList.size > 0">
+                AND C.zjh in
+                <foreach collection="qlrzjhList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="likeZl != null and likeZl != ''">
+                AND b.zl like '%' || #{likeZl} || '%'
+            </if>
+            <if test="zl != null and zl != ''">
+                AND b.zl = #{zl}
+            </if>
+            <if test="xzqdm != null and xzqdm != ''">
+                AND B.qxdm = #{xzqdm}
+            </if>
+        </where>
+    </select>
+    <!-- 查询 BdcJsydsyq 实体 -->
+    <select id="queryBdcJsydsyq" resultType="cn.gtmap.realestate.common.core.domain.BdcJsydsyqDO"
+            parameterType="cn.gtmap.realestate.exchange.core.dto.wwsq.grdacx.request.GrdacxRequestBody">
+        SELECT A.* FROM BDC_JSYDSYQ A
+        <if test="(xzqdm != null and xzqdm != '') or (likebdcqzh != null and likebdcqzh != '')">
+            INNER JOIN BDC_XM B ON A.XMID = B.XMID
+        </if>
+        <if test="(qlrmc != null and qlrmc != '') or (qlrzjhmh != null and qlrzjhmh != '')
+                  or (qlrmcmh != null and qlrmcmh != '') or (qlrzjhList != null and qlrzjhList.size > 0)">
+            INNER JOIN BDC_QLR C ON A.XMID = C.XMID
+        </if>
+
+        <if test="(bdcqzh != null and bdcqzh != '') or (zhlsh != null and zhlsh != '')">
+            INNER JOIN
+            (SELECT T.XMID FROM BDC_XM_ZS_GX T INNER JOIN BDC_ZS T1 ON T.ZSID = T1.ZSID
+            WHERE 1=1
+            <if test="bdcqzh != null and bdcqzh != ''">
+                AND T1.BDCQZH = #{bdcqzh}
+            </if>
+            <if test="zhlsh != null and zhlsh != ''">
+                AND T1.ZHLSH = #{zhlsh}
+            </if>
+            GROUP BY T.XMID ) D ON A.XMID = D.XMID
+        </if>
+        <where>
+            AND A.QSZT = '1'
+            <if test="xmid != null and xmid != ''">
+                AND a.xmid = #{xmid}
+            </if>
+            <if test="likeBdcdyh != null and likeBdcdyh != ''">
+                AND a.bdcdyh like '%' || #{likeBdcdyh} || '%'
+            </if>
+            <if test="bdcdybh != null and bdcdybh != ''">
+                AND a.BDCDYWYBH = #{bdcdybh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND a.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="likeZl != null and likeZl != ''">
+                AND a.zl like '%' || #{likeZl} || '%'
+            </if>
+            <if test="zl != null and zl != ''">
+                AND a.zl = #{zl}
+            </if>
+            <if test="(cqQlrlb != null and cqQlrlb != '')  and (
+                 (qlrmc != null and qlrmc != '') or (qlrzjhmh != null and qlrzjhmh != '')
+                  or (qlrmcmh != null and qlrmcmh != '') or (qlrzjhList != null and qlrzjhList.size > 0)
+             ) ">
+                AND C.QLRLB = #{cqQlrlb}
+            </if>
+            <if test="qlrmc != null and qlrmc != ''">
+                AND C.QLRMC = #{qlrmc}
+            </if>
+            <if test="qlrzjhmh != null and qlrzjhmh != ''">
+                AND C.zjh like '%'||#{qlrzjhmh}|| '%'
+            </if>
+            <if test="qlrmcmh != null and qlrmcmh != ''">
+                AND C.QLRMC like '%' || #{qlrmcmh} || '%'
+            </if>
+            <if test="qlrzjhList != null and qlrzjhList.size > 0">
+                AND C.zjh in
+                <foreach collection="qlrzjhList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="xzqdm != null and xzqdm != ''">
+                AND b.qxdm = #{xzqdm}
+            </if>
+            <if test="likebdcqzh != null and likebdcqzh != ''">
+                AND b.bdcqzh like '%' || #{likebdcqzh} ||'%'
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询YG实体 -->
+    <select id="queryBdcYg" resultType="cn.gtmap.realestate.common.core.domain.BdcYgDO"
+            parameterType="cn.gtmap.realestate.exchange.core.dto.wwsq.grdacx.request.GrdacxRequestBody">
+        SELECT A.* FROM BDC_YG A
+        <if test="(likebdcqzh != null and likebdcqzh != '') or (xzqdm != null and xzqdm != '')">
+            INNER JOIN BDC_XM B ON A.XMID = B.XMID
+        </if>
+        <if test="(qlrmc != null and qlrmc != '') or (qlrzjhList != null and qlrzjhList.size > 0)
+               or (qlrmcmh != null and qlrmcmh != '') or (qlrzjhmh != null and qlrzjhmh != '')">
+            INNER JOIN BDC_QLR C ON A.XMID = C.XMID
+            <if test="cqQlrlb != null and cqQlrlb != ''">
+                AND C.QLRLB = #{cqQlrlb}
+            </if>
+        </if>
+        <if test="(bdcqzh != null and bdcqzh != '') or (zhlsh != null and zhlsh != '')">
+            INNER JOIN
+            (SELECT T.XMID FROM BDC_XM_ZS_GX T INNER JOIN BDC_ZS T1 ON T.ZSID = T1.ZSID
+            WHERE 1=1
+            <if test="bdcqzh != null and bdcqzh != ''">
+                AND T1.BDCQZH = #{bdcqzh}
+            </if>
+            <if test="zhlsh != null and zhlsh != ''">
+                AND T1.ZHLSH = #{zhlsh}
+            </if>
+            GROUP BY T.XMID ) D ON A.XMID = D.XMID
+        </if>
+        <where>
+            AND A.QSZT = '1'
+            <if test="xmid != null and xmid != ''">
+                AND a.xmid = #{xmid}
+            </if>
+            <if test="slbh != null and slbh != ''">
+                AND a.slbh = #{slbh}
+            </if>
+            <if test="likeBdcdyh != null and likeBdcdyh != ''">
+                AND a.bdcdyh like '%' || #{likeBdcdyh} || '%'
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND a.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="likeZl != null and likeZl != ''">
+                AND a.zl like '%' || #{likeZl} || '%'
+            </if>
+            <if test="zl != null and zl != ''">
+                AND a.zl = #{zl}
+            </if>
+            <if test="qlrmc != null and qlrmc != ''">
+                AND C.QLRMC = #{qlrmc}
+            </if>
+            <if test="qlrmcmh != null and qlrmcmh != ''">
+                AND C.QLRMC like '%' || #{qlrmcmh} || '%'
+            </if>
+            <if test="qlrzjhmh != null and qlrzjhmh != ''">
+                AND C.zjh like '%'||#{qlrzjhmh}|| '%'
+            </if>
+            <if test="qlrzjhList != null and qlrzjhList.size > 0">
+                AND C.zjh in
+                <foreach collection="qlrzjhList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="likebdcqzh != null and likebdcqzh != ''">
+                AND b.bdcqzh like '%' || #{likebdcqzh} || '%'
+            </if>
+            <if test="xzqdm != null and xzqdm != ''">
+                AND b.qxdm = #{xzqdm}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="queryFwxx" parameterType="cn.gtmap.realestate.exchange.core.dto.nantong.gjj.request.GjjRequestData"
+            resultType="cn.gtmap.realestate.exchange.core.dto.nantong.gjj.response.GjjFwxxResponseData">
+        SELECT
+        f.ZL AS FWZL,
+        y.mc AS FWYT,
+        f.ghyt AS GHYT,
+        f.JZMJ AS JZMJ,
+        f.jyjg AS JYZJ,
+        to_char(f.DJSJ,'yyyy-MM-dd') AS DJRQ,
+        to_char(z.fzSJ,'yyyy-MM-dd') AS CZRQ,
+        q.qlrmc AS QLRXM,
+        q.zjh AS QLRZJHM,
+        q.qlbl AS YDZBFE,
+        x.mc AS TDQLXZ
+        FROM
+        bdc_fdcq f
+        LEFT JOIN BDC_QLR q ON q.xmid = f.xmid
+        LEFT JOIN bdc_zs z ON z.zsid = q.zsid
+        LEFT JOIN bdc_xm m ON m.xmid = f.xmid
+        LEFT JOIN bdc_zd_qlxz x ON x.dm = m.qlxz
+        LEFT JOIN bdc_zd_fwyt y ON y.dm = f.ghyt
+        <where>
+            f.qszt = 1 and q.qlrlb =1
+            <if test="null !=cqzh  and '' != cqzh ">
+                AND Z.BDCQZH = #{cqzh}
+            </if>
+            <if test="null !=xm  and '' != xm ">
+                AND Q.QLRMC = #{xm}
+            </if>
+            <if test="null !=zjhm  and '' != zjhm ">
+                AND Q.ZJH = #{zjhm}
+            </if>
+        </where>
+    </select>
+    <select id="queryCzxx" parameterType="cn.gtmap.realestate.exchange.core.dto.nantong.gjj.request.GjjRequestData"
+            resultType="cn.gtmap.realestate.exchange.core.dto.nantong.gjj.response.GjjCzxxResponseData">
+        SELECT
+        f.zl AS FWZL,
+        y.mc as FWYT,
+        to_char(f.DJSJ,'yyyy-MM-dd') AS DJRQ,
+        z.bdcqzh AS BDCDJZMH
+        FROM
+        bdc_fdcq f
+        LEFT JOIN BDC_QLR q ON q.xmid = f.xmid
+        LEFT JOIN bdc_zs z ON z.zsid = q.zsid
+        LEFT JOIN bdc_zd_fwyt y on y.dm = f.ghyt
+        <where>
+            q.qlrlb=1 and f.qszt = 1
+            <if test="null !=xm  and '' != xm ">
+                AND Q.QLRMC = #{xm}
+            </if>
+            <if test="null !=zjhm  and '' != zjhm ">
+                AND Q.ZJH = #{zjhm}
+            </if>
+        </where>
+
+    </select>
+    <select id="queryBdczsZzbs" parameterType="cn.gtmap.realestate.exchange.core.qo.DzzzXzQO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcZsDO">
+        SELECT * FROM
+        bdc_zs z
+        LEFT JOIN bdc_qlr q ON q.zsid = z.zsid
+        LEFT JOIN bdc_fdcq f ON f.xmid = q.xmid
+        <where>
+            <if test="null !=bdcdyh  and '' != bdcdyh ">
+                AND f.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="null !=qlrmc  and '' != qlrmc ">
+                AND Q.qlrmc = #{qlrmc}
+            </if>
+            <if test="null !=zjh  and '' != zjh ">
+                AND Q.ZJH = #{zjh}
+            </if>
+            <if test="null !=zzlx  and '' != zzlx ">
+                AND z.zslx = #{zzlx}
+            </if>
+            <!--  <if test="null !=qszt  and '' != qszt ">
+                  AND Q.ZJH = #{zjhm}
+              </if>-->
+            <if test="null !=bdcqzh  and '' != bdcqzh ">
+                AND z.bdcqzh = #{bdcqzh}
+            </if>
+            AND F.QSZT = 1
+        </where>
+
+
+    </select>
+
+    <update id="batchUpdateAccessLogCgbs" parameterType="map">
+        UPDATE BDC_JR_SJJL t
+        <set>
+            <if test="cgbs != null">
+                t.CGBS = #{cgbs,jdbcType=INTEGER}
+            </if>
+            <if test="fjxx != null and fjxx !='' and cgbs !=null">
+                ,t.fjxx = #{fjxx}
+            </if>
+        </set>
+        <where>
+            <if test="xmids != null">
+                AND t.YWLSH IN
+                <foreach collection="xmids" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="bdcdyhs != null">
+                AND t.bdcdyh IN
+                <foreach collection="bdcdyhs" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </update>
+
+    <update id="batchUpdateAccessLogCgbsCity" parameterType="map">
+        UPDATE bdc_jr_shijjl t
+        <set>
+            <if test="cgbs != null">
+                t.CGBS = #{cgbs,jdbcType=INTEGER}
+            </if>
+            <if test="fjxx != null and fjxx !='' and cgbs !=null">
+                ,t.fjxx = #{fjxx}
+            </if>
+        </set>
+        <where>
+            <if test="xmids != null">
+                AND t.YWLSH IN
+                <foreach collection="xmids" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="bdcdyhs != null">
+                AND t.bdcdyh IN
+                <foreach collection="bdcdyhs" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </update>
+
+    <update id="batchUpdateAccessLogCgbsNational" parameterType="map">
+        UPDATE BDC_JR_GJJL t
+        <set>
+            <if test="cgbs != null">
+                t.CGBS = #{cgbs,jdbcType=INTEGER}
+            </if>
+        </set>
+        <where>
+            <if test="xmids != null">
+                AND t.YWLSH IN
+                <foreach collection="xmids" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="bdcdyhs != null">
+                AND t.bdcdyh IN
+                <foreach collection="bdcdyhs" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </update>
+
+    <select id="listBdcZsxx" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.zfxxcx.BdcZsResponseDTO">
+        SELECT DISTINCT zs.ZSID,zs.QLR qlr,zs.BDCDYH,zs.BDCQZH,zs.ZL,zs.MJ,zs.YT,zs.gyfs as
+        GYQK,zs.QLXZ,zs.QLLX,zs.SYQX,zs.SQSJC,xm.DJSJ,xm.DJJG,zs.ZSLX
+        FROM
+        BDC_ZS zs
+        LEFT JOIN BDC_QLR qlr ON zs.ZSID = qlr.ZSID
+        LEFT JOIN BDC_XM_ZS_GX gx ON zs.ZSID = gx.ZSID
+        LEFT JOIN BDC_XM xm ON xm.XMID = gx.XMID
+        <where>
+            <if test="(qlrmc != null and qlrmc !='') or (zjh != null and zjh != '') or (zjhList != null) ">
+                AND qlr.QLRLB =1
+                <if test="qlrmc != null and qlrmc != ''">
+                    AND qlr.QLRMC = #{qlrmc}
+                </if>
+                <if test="zjh != null and zjh != ''">
+                    AND qlr.ZJH = #{zjh}
+                </if>
+                <if test="zjhList != null">
+                    AND qlr.ZJH IN
+                    <foreach collection="zjhList" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND xm.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="qszt != null and qszt != ''">
+                AND xm.qszt = #{qszt}
+            </if>
+
+        </where>
+
+    </select>
+
+    <select id="listBdcQlrByZsid" parameterType="java.lang.String"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcQlrDO">
+        SELECT t.qlrmc,t.zjh,t.zjzl FROM BDC_QLR t
+        WHERE t.zsid =#{zsid}
+    </select>
+
+    <insert id="insertBdcJrDbrzjlWithXnjrbw" parameterType="map">
+        INSERT INTO BDC_JR_DBRZJL  (id,jrrq,xzqdm,jrbw,cgbs,xyxx,sjcgbs,sjxyxx,xnjrbw,accessdate)
+        VALUES (#{id,jdbcType=VARCHAR},to_date(#{jrrq,jdbcType=VARCHAR},'yyyy-mm-dd hh24:mi:ss'),#{xzqdm,jdbcType=VARCHAR},#{jrbw,jdbcType=CLOB}
+               ,#{cgbs,jdbcType=INTEGER},#{xyxx,jdbcType=VARCHAR},#{sjcgbs,jdbcType=INTEGER},#{sjxyxx,jdbcType=VARCHAR},#{xnjrbw,jdbcType=CLOB},to_date(#{accessdate,jdbcType=VARCHAR},'yyyy-mm-dd hh24:mi:ss'))
+    </insert>
+
+    <select id="queryBdcJrDbrzjlXnjrbwWithXnjrbwById" parameterType="java.lang.String" resultType="java.lang.String">
+        select xnjrbw from BDC_JR_DBRZJL where id = #{id}
+    </select>
+
+    <select id="queryQlrList" parameterType="map" resultType="cn.gtmap.realestate.common.core.domain.BdcQlrDO">
+        SELECT q.qlrid, q.xmid, q.qlrmc, q.zjzl, q.zjh, q.txdz, q.yb, q.xb, q.frmc, q.frdh, q.dlrmc, q.dlrdh, q.dljg,
+        q.qlrlx, q.qlrlb, q.gyfs, q.gyqk, q.dh, q.sshy, q.bz, q.sfczr, q.sxh, q.bdcqzh, q.zsid, q.frzjzl, q.frzjh,
+        q.dlrzjzl, q.dlrzjh, q.qlrftmj, q.qlbl
+        FROM bdc_xm t
+        RIGHT JOIN bdc_qlr q ON q.xmid = t.xmid
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND t.gzlslid = #{gzlslid}
+            </if>
+            <if test="qlrlb != null and qlrlb != ''">
+                AND q.qlrlb = #{qlrlb}
+            </if>
+            <if test="djxl != null and djxl != ''">
+                AND t.djxl = #{djxl}
+            </if>
+            <if test="slbh != null and slbh != ''">
+                AND t.slbh = #{slbh}
+            </if>
+            <if test="qszt != null and qszt != ''">
+                AND t.qszt = #{qszt}
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND t.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="qllxs != null and qllxs.size() > 0">
+                AND t.qllx IN
+                <foreach collection="qllxs" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="qlrmc != null and qlrmc != ''">
+                AND q.qlrmc = #{qlrmc}
+            </if>
+            <if test="xmid != null and xmid != ''">
+                AND t.xmid = #{xmid}
+            </if>
+        </where>
+        order by q.sxh
+    </select>
+
+    <select id="queryXmxxListByQlrAndZlAndBdcdyh"
+            parameterType="cn.gtmap.realestate.exchange.core.dto.yctb.YctbZxcdRequest"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcQszmQO">
+        SELECT DISTINCT xm.gzlslid,xm.qszt,xm.bdcdyh FROM BDC_XM xm
+        <if test="cxlx != null and cxlx == '1'.toString()">
+            LEFT JOIN BDC_QLR qlr ON qlr.xmid = xm.XMID
+        </if>
+        <if test="bdcqzs != null and bdcqzs != ''">
+            LEFT JOIN BDC_XM_ZS_GX gx ON gx.xmid = xm.xmid
+            LEFT JOIN BDC_ZS zs ON zs.zsid = gx.zsid
+        </if>
+        <where>
+            xm.qszt = 1
+            <!--合肥省平台控制qllx=4 -->
+            and xm.qllx = 4
+            <if test="cxlx != null and cxlx == '1'.toString()">
+                AND qlr.QLRLB = 1
+            </if>
+            <!-- <if test="sqrList != null and sqrList.size() > 0">
+                 AND qlr.qlrmc IN
+                 <foreach collection="sqrList" item="item" open="(" separator="," close=")">
+                     #{item.name,jdbcType=VARCHAR}
+                 </foreach>
+                 AND qlr.zjh IN
+                 <foreach collection="sqrList" item="item" open="(" separator="," close=")">
+                     #{item.zjh,jdbcType=VARCHAR}
+                 </foreach>
+             </if>-->
+            <if test="cxlx != null and cxlx == '1'.toString()">
+                <if test="name != null and name != ''">
+                    AND qlr.qlrmc =#{name}
+                </if>
+                <if test="zjh != null and zjh != ''">
+                    AND qlr.zjh = #{zjh}
+                </if>
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND xm.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="zl != null and zl != ''">
+                AND xm.zl = #{zl}
+            </if>
+            <if test="bdcqzs != null and bdcqzs != ''">
+                AND zs.bdcqzh = #{bdcqzs}
+            </if>
+            <if test="qxdmConfig != null and qxdmConfig != ''">
+                AND xm.qxdm in
+                <foreach item="item" index="index" collection="qxdmConfig.split(',')" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="queryZzbsByQlrmcAndZjh" resultType="cn.gtmap.realestate.common.core.domain.BdcZsDO"
+            parameterType="cn.gtmap.realestate.exchange.core.dto.yancheng.yth.YthQueryDzzzxxDTO">
+        SELECT zs.ZL,zs.BDCDYH,zs.ZZBS,zs.STORAGEID,zs.bdcqzh FROM BDC_ZS zs
+        LEFT JOIN BDC_XM_ZS_GX gx ON gx.ZSID = zs.ZSID
+        LEFT JOIN BDC_XM xm ON xm.XMID = gx.XMID
+        LEFT JOIN BDC_QLR qlr ON qlr.XMID = xm.XMID
+        <where>
+            qlr.QLRLB = 1 and xm.qszt = 1
+            <if test="grzjhm != null and grzjhm != ''">
+                AND qlr.ZJH = #{grzjhm}
+            </if>
+            <if test="grqch != null and grqch != ''">
+                AND qlr.QLRMC = #{grqch}
+            </if>
+            <if test="zzbm != null and zzbm != ''">
+                AND zs.bdcqzh = #{zzbm}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryXmxxByBdcqzhAndBdcDyh" parameterType="cn.gtmap.realestate.common.core.dto.inquiry.BdcQszmQO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT xm.xmid,xm.djsj,xm.gzlslid,xm.bdcdyh FROM BDC_XM xm
+        LEFT JOIN BDC_XM_ZS_GX gx ON gx.xmid = xm.xmid
+        LEFT JOIN BDC_ZS zs ON zs.zsid = gx.zsid
+        <where>
+            xm.qszt = 1
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND xm.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="bdcqzh != null and bdcqzh != ''">
+                AND zs.bdcqzh = #{bdcqzh}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryXmxxByBdcqzhAndBdcDyh_map" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT xm.xmid,xm.djsj,xm.gzlslid,xm.bdcdyh FROM BDC_XM xm
+        LEFT JOIN BDC_XM_ZS_GX gx ON gx.xmid = xm.xmid
+        LEFT JOIN BDC_ZS zs ON zs.zsid = gx.zsid
+        <where>
+            xm.qszt = 1
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND xm.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="bdcqzh != null and bdcqzh != ''">
+                AND zs.bdcqzh = #{bdcqzh}
+            </if>
+            <if test="qllx != null and qllx != ''">
+                AND xm.qllx = #{qllx}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="queryXzxxForYthQltQlXzxzByBdcdyhList" parameterType="list"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.yth.QltQlXzxzDO">
+        SELECT DISTINCT dysd.dysdid as ywh,dysd.bdcdyh,dysd.sdyy as djyy,dysd.sdr as xzrqc,dysd.sdsj as djsj FROM
+        BDC_DYSD dysd
+        LEFT JOIN bdc_xm xm ON xm.bdcdyh = dysd.bdcdyh and xm.qszt = '1'
+        WHERE dysd.bdcdyh in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.xmid, jdbcType=VARCHAR}
+        </foreach>
+        and dysd.sdzt = '1'
+        UNION ALL
+        SELECT DISTINCT zssd.zssdid as ywh,xm.bdcdyh,zssd.sdyy as djyy,zssd.sdr as xzrqc,zssd.sdsj as djsj FROM BDC_ZSSD
+        zssd
+        LEFT JOIN BDC_ZS zs ON zs.BDCQZH = zssd.CQZH
+        LEFT JOIN BDC_XM_ZS_GX gx on gx.zsid = zs.zsid
+        LEFT JOIN bdc_xm xm ON xm.xmid = gx.xmid and xm.qszt = '1'
+        WHERE xm.bdcdyh in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.xmid, jdbcType=VARCHAR}
+        </foreach>
+        AND zssd.SDZT = '1'
+    </select>
+
+    <select id="queryXzxxForYthQltQlXzxzByBdcdyh" parameterType="String"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.yth.QltQlXzxzDO">
+        SELECT DISTINCT dysd.dysdid as ywh,dysd.bdcdyh,dysd.sdyy as djyy,dysd.sdr as xzrqc,dysd.sdsj as djsj FROM BDC_DYSD dysd
+                                                                                                                      LEFT JOIN bdc_xm xm ON xm.bdcdyh = dysd.bdcdyh and xm.qszt = '1'
+        WHERE dysd.bdcdyh = #{bdcdyh}
+          and dysd.sdzt = '1'
+        UNION ALL
+        SELECT DISTINCT zssd.zssdid as ywh,xm.bdcdyh,zssd.sdyy as djyy,zssd.sdr as xzrqc,zssd.sdsj as djsj FROM BDC_ZSSD zssd
+                                                                                                                    LEFT JOIN BDC_ZS zs ON zs.BDCQZH = zssd.CQZH
+                                                                                                                    LEFT JOIN BDC_XM_ZS_GX gx on gx.zsid = zs.zsid
+                                                                                                                    LEFT JOIN bdc_xm xm ON xm.xmid = gx.xmid and xm.qszt = '1'
+        WHERE xm.bdcdyh = #{bdcdyh}
+          AND zssd.SDZT = '1'
+    </select>
+
+    <select id="queryFdcqxx" resultType="cn.gtmap.realestate.common.core.domain.BdcFdcqDO"
+            parameterType="java.util.Map">
+        SELECT
+        f.jgsj jgrq,
+        f.zcs,
+        f.ghyt,
+        f.fwjg,
+        f.zzdmj
+        from bdc_xm a
+        inner join bdc_fdcq f on f.xmid = a.xmid
+        <where>
+            <if test="ywh != null and ywh !=''">
+                and a.xmid = #{ywh}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryYgQlxxForSjpt" resultType="cn.gtmap.realestate.common.core.domain.BdcYgDO"
+            parameterType="cn.gtmap.realestate.exchange.core.domain.sjpt.PeCxDO">
+        SELECT yg.* FROM BDC_XM xm
+        LEFT JOIN BDC_QLR qlr ON qlr.XMID = xm.XMID
+        LEFT JOIN BDC_YG yg ON yg.xmid = xm.xmid
+        <where>
+            qlr.QLRLB = 1 AND xm.QSZT = 1 AND yg.QSZT = 1
+            AND yg.YGDJZL IN (1,2)
+            <if test="qlrmc != null and qlrmc !=''">
+                AND qlr.QLRMC in (to_multi_byte(#{qlrmc}),to_single_byte(#{qlrmc}))
+            </if>
+            <if test="qlrzjhArr != null and qlrzjhArr !=''">
+                and UPPER(qlr.ZJH) in
+                <foreach item="item" index="index" collection="qlrzjhArr.split(',')" open="(" separator="," close=")">
+                    UPPER(#{item})
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="queryReqmapForYctb" resultType="cn.gtmap.realestate.exchange.core.dto.yctb.YctbOldBusinessReqmap"
+            parameterType="String">
+        SELECT
+            CASE WHEN zs.ZSLX = 1 OR zs.ZSLX = 3 THEN zs.BDCQZH ELSE '' END AS BDCQZH,
+            CASE WHEN zs.ZSLX = 2 THEN zs.BDCQZH ELSE '' END AS BDCQZMH,
+            zs.ZSLX,dya.DYFS,dya.BDBZZQSE,dya.ZWLXQSSJ,dya.ZWLXJSSJ FROM BDC_ZS zs
+                                                                             LEFT JOIN BDC_XM_ZS_GX gx ON gx.ZSID = zs.ZSID
+                                                                             LEFT JOIN BDC_DYAQ dya ON dya.XMID = gx.XMID
+        WHERE gx.XMID = #{xmid}
+    </select>
+    <select id="queryReqmapForYctb_bf" resultType="cn.gtmap.realestate.exchange.core.dto.yctb.YctbOldBusinessReqmap"
+            parameterType="String">
+        SELECT xm.bdcqzh,dya.DYFS,
+               case when dya.dyfs = 1 then dya.BDBZZQSE else dya.zgzqe end as BDBZQSE,
+               dya.ZWLXQSSJ zwlxqxs,dya.ZWLXJSSJ zwlxqxz from bdc_xm xm
+                                                                  LEFT JOIN BDC_DYAQ dya ON dya.XMID = xm.XMID
+        WHERE xm.XMID = #{xmid}
+    </select>
+
+
+    <select id="queryQdjgForYctb" resultType="java.util.Map"
+            parameterType="String">
+        SELECT
+            yg.JYJE as ygqdjg,fdcq.JYJG as fdcqqdjg,jsydsyq.QDJG as jsydsyqqdjg
+        FROM BDC_ZS zs
+                 LEFT JOIN BDC_XM_ZS_GX gx ON gx.ZSID = zs.ZSID
+                 LEFT JOIN BDC_FDCQ fdcq ON fdcq.XMID = gx.XMID
+                 LEFT JOIN BDC_JSYDSYQ jsydsyq ON jsydsyq.XMID = gx.XMID
+                 LEFT JOIN BDC_YG yg ON yg.XMID = gx.XMID
+        WHERE gx.XMID = #{xmid}
+    </select>
+
+    <select id="queryQjgldm" resultType="String"
+            parameterType="String">
+        SELECT
+            QJGLDM
+        FROM BDC_XMFB
+        WHERE XMID = #{xmid}
+    </select>
+
+    <select id="queryBdcdyhxxForYctb" parameterType="cn.gtmap.realestate.common.core.dto.inquiry.BdcQszmQO"
+            resultType="cn.gtmap.realestate.exchange.core.dto.yctb.YctbGetHouseInfoResponse">
+        SELECT
+        xm.xmid,
+        xm.djsj,
+        xm.gzlslid,
+        xm.bdcdyh,
+        xm.QXDM,
+        CASE WHEN zs.ZSLX = 1 OR zs.ZSLX = 3 THEN zs.BDCQZH ELSE '' END AS BDCQZH,
+        CASE WHEN zs.ZSLX = 2 THEN zs.BDCQZH ELSE '' END AS BDCQZMH,
+        xm.ZL AS tdzl,
+        xm.ZL AS hzl,
+        xm.DZWYT AS fwyt1,
+        xm.QLXZ,
+        xm.ZDZHYT AS tdyt,
+        fdcq.zcs,
+        fdcq.szc AS sjc,
+        fdcq.szc AS zzlc,
+        fdcq.szmyc AS myc,
+        fdcq.tdsyqssj AS kssynx,
+        fdcq.tdsyjssj AS jssynx,
+        fdcq.fwxz,
+        fdcq.fwlx,
+        fdcq.dytdmj,
+        fdcq.fttdmj,
+        fdcq.fwjg,
+        jsydsyq.syqmj AS tdmj,
+        xm.BDCLX AS bdclx
+        FROM
+        BDC_XM xm
+        LEFT JOIN BDC_XM_ZS_GX gx ON gx.xmid = xm.xmid
+        LEFT JOIN BDC_ZS zs ON zs.zsid = gx.zsid
+        LEFT JOIN bdc_fdcq fdcq ON fdcq.xmid = xm.xmid AND fdcq.qszt = '1'
+        LEFT JOIN bdc_jsydsyq jsydsyq ON jsydsyq.xmid = xm.xmid AND jsydsyq.qszt = '1'
+        <where>
+            xm.qszt = 1
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND xm.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="bdcqzh != null and bdcqzh != ''">
+                AND zs.bdcqzh = #{bdcqzh}
+            </if>
+        </where>
+    </select>
+
+    <select id="countErrorJrxx" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.common.BdcAccessCountResultDTO">
+        SELECT
+        COUNT( 1 ) AS num,
+        jr.cgbs
+        FROM
+        BDC_XM xm
+        LEFT JOIN ${logTable} jr ON jr.YWLSH = xm.XMID
+        WHERE
+        ( jr.CGBS IN ( 1,- 1, 2, 0 ) OR jr.CGBS IS NULL )
+        <if test="accessDate != null">
+            AND trunc( jr.jrrq ) = trunc( #{accessDate} )
+        </if>
+        GROUP BY
+        jr.CGBS
+    </select>
+
+    <select id="queryZhjbxxByGzlslid" parameterType="String"
+            resultType="cn.gtmap.realestate.common.core.dto.exchange.naturalresources.sea.ZhJbxxDTO">
+        SELECT
+        DISTINCT
+        zhjbxx.ZHDM,zhjbxx.BDCDYH,zhjbxx.ZHTZM,zhjbxx.XMMC,zhjbxx.XMXZ,zhjbxx.YHZMJ,zhjbxx.ZHMJ,zhjbxx.DB,zhjbxx.ZHAX,zhjbxx.YHLXA,zhjbxx.YHLXB,zhjbxx.YHWZSM,zhjbxx.HDMC,zhjbxx.HDWZ,zhjbxx.HDYT,xm.qszt
+        as zt
+        FROM
+        bdc_bdcdjb_zhjbxx zhjbxx
+        LEFT JOIN bdc_xm xm ON xm.bdcdyh = zhjbxx.bdcdyh
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND xm.GZLSLID = #{gzlslid}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryZhYhzkByGzlslid" parameterType="String"
+            resultType="cn.gtmap.realestate.common.core.dto.exchange.naturalresources.sea.ZhYhzkDTO">
+        SELECT DISTINCT yhzk.* FROM BDC_BDCDJB_ZHJBXX_YHZK yhzk
+        LEFT JOIN bdc_bdcdjb_zhjbxx zhjbxx ON zhjbxx.ZHDM = yhzk.ZHDM
+        LEFT JOIN bdc_xm xm ON xm.bdcdyh = zhjbxx.bdcdyh
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND xm.GZLSLID = #{gzlslid}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryZhYhzbByGzlslid" parameterType="String"
+            resultType="cn.gtmap.realestate.common.core.dto.exchange.naturalresources.sea.ZhYhzbDTO">
+        SELECT
+        DISTINCT zb.*
+        FROM
+        BDC_BDCDJB_ZHJBXX_YHYDZB zb
+        LEFT JOIN bdc_bdcdjb_zhjbxx zhjbxx ON zhjbxx.ZHDM = zb.ZHHDDM
+        LEFT JOIN bdc_xm xm ON xm.bdcdyh = zhjbxx.bdcdyh
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND xm.GZLSLID = #{gzlslid}
+            </if>
+        </where>
+        UNION ALL
+        SELECT
+        DISTINCT zb.*
+        FROM
+        BDC_BDCDJB_ZHJBXX_YHYDZB zb
+        LEFT JOIN bdc_bdcdjb_zhjbxx zhjbxx ON zhjbxx.HDDM = zb.ZHHDDM
+        LEFT JOIN bdc_xm xm ON xm.bdcdyh = zhjbxx.bdcdyh
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND xm.GZLSLID = #{gzlslid}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryZhZhbhqkByGzlslid" parameterType="String"
+            resultType="cn.gtmap.realestate.common.core.dto.exchange.naturalresources.sea.ZhZhbhqkDTO">
+        SELECT zhbhqk.* FROM BDC_BDCDJB_ZHJBXX_ZHBHQK zhbhqk
+        LEFT JOIN bdc_bdcdjb_zhjbxx zhjbxx ON zhjbxx.ZHDM = zhbhqk.ZHDM
+        LEFT JOIN bdc_xm xm ON xm.bdcdyh = zhjbxx.bdcdyh
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND xm.GZLSLID = #{gzlslid}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryZhHysyqByGzlslid" parameterType="String"
+            resultType="cn.gtmap.realestate.common.core.dto.exchange.naturalresources.sea.ZhHysyqxxDTO">
+        SELECT xm.XMID AS YWH,NVL(zhjbxx.ZHDM, zhjbxx.HDDM) AS
+        ZHHDDM,xm.BDCDYH,hysyq.QLLX,xm.DJLX,xm.DJYY,hysyq.SYQMJ,hysyq.SYQQSSJ,hysyq.SYQJSSJ,hysyq.SYZJE,hysyq.SYJBZYJ,hysyq.SYJJNQK,zs.BDCQZH,xm.QXDM,hysyq.DJJG,xm.DBR,xm.DJSJ,hysyq.FJ,hysyq.QSZT,hysyq.HYGLH
+        FROM BDC_HYSYQ hysyq
+        LEFT JOIN BDC_XM xm ON xm.XMID = hysyq.XMID
+        LEFT JOIN BDC_XM_ZS_GX gx ON gx.XMID = xm.XMID
+        LEFT JOIN BDC_ZS zs ON zs.ZSID = gx.ZSID
+        LEFT JOIN bdc_bdcdjb_zhjbxx zhjbxx ON xm.bdcdyh = zhjbxx.bdcdyh
+        <where>
+            (hysyq.QSZT = 1 OR hysyq.QSZT = 0)
+            <if test="gzlslid != null and gzlslid != ''">
+                AND xm.GZLSLID = #{gzlslid}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryZhQlrByGzlslid" parameterType="String"
+            resultType="cn.gtmap.realestate.common.core.dto.exchange.naturalresources.sea.ZhQlrDTO">
+        SELECT xm.XMID AS
+        YWH,xm.BDCDYH,qlr.SXH,qlr.QLRMC,zs.BDCQZH,zs.QZYSXLH,xm.QLLX,qlr.SFCZR,qlr.ZJZL,qlr.ZJH,qlr.SSHY,qlr.XB,qlr.DH,qlr.YB,qlr.QLRLX,qlr.QLBL,qlr.GYFS,qlr.GYQK,qlr.BZ,xm.QSZT,qlr.FRMC
+        AS FDDBR,qlr.FRZJH AS DBRSFZ
+        ,xm.qxdm AS HJSZSS,'中国' AS GJ
+        FROM BDC_QLR qlr
+        LEFT JOIN BDC_XM xm ON xm.XMID = qlr.XMID
+        LEFT JOIN BDC_XM_ZS_GX gx ON gx.XMID = xm.XMID
+        LEFT JOIN BDC_ZS zs ON zs.ZSID = gx.ZSID
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND xm.GZLSLID = #{gzlslid}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryZhDydjxxByGzlslid" parameterType="String"
+            resultType="cn.gtmap.realestate.common.core.dto.exchange.naturalresources.sea.ZhDydjxxDTO">
+        SELECT xm.BDCDYH,xm.XMID AS YWH,dyq.DYBDCLX,qlr.QLRMC AS DYR,dyq.DYFS,xm.DJLX
+        ,xm.DJYY
+        ,dyq.ZJJZWZL
+        ,dyq.ZJJZWDYFW
+        ,dyq.BDBZZQSE
+        ,dyq.ZWLXQSSJ
+        ,dyq.ZWLXJSSJ
+        ,dyq.ZGZQQDSS
+        ,CASE WHEN dyq.dyfs='2' then ROUND(nvl(dyq.bdbzzqse,dyq.zgzqe),4) else dyq.zgzqqdse end as zgzqse
+        ,dyq.ZXDYYWH
+        ,dyq.ZXDYYY
+        ,zs.BDCQZH
+        ,xm.QXDM
+        ,xm.DBR
+        ,xm.DJSJ
+        ,dyq.FJ
+        ,dyq.QSZT
+        ,dyq.DJJG
+        FROM BDC_DYAQ dyq
+        LEFT JOIN BDC_XM xm ON xm.XMID = dyq.XMID
+        LEFT JOIN BDC_XM_ZS_GX gx ON gx.XMID = xm.XMID
+        LEFT JOIN BDC_ZS zs ON zs.ZSID = gx.ZSID
+        LEFT JOIN BDC_QLR qlr ON qlr.XMID = xm.XMID
+        <where>
+            dyq.QSZT IN (0,1)
+            <if test="gzlslid != null and gzlslid != ''">
+                AND xm.GZLSLID = #{gzlslid}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryZhCfdjxxByGzlslid" parameterType="String"
+            resultType="cn.gtmap.realestate.common.core.dto.exchange.naturalresources.sea.ZhCfdjxxDTO">
+        SELECT cf.*,xm.BDCDYH,xm.XMID AS YWH,xm.QXDM
+        FROM BDC_CF cf
+        LEFT JOIN BDC_XM xm ON xm.XMID = cf.XMID
+        LEFT JOIN BDC_XM_ZS_GX gx ON gx.XMID = xm.XMID
+        LEFT JOIN BDC_ZS zs ON zs.ZSID = gx.ZSID
+        LEFT JOIN BDC_QLR qlr ON qlr.XMID = xm.XMID
+        <where>
+            cf.QSZT IN (0,1)
+            <if test="gzlslid != null and gzlslid != ''">
+                AND xm.GZLSLID = #{gzlslid}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryZhYydjxxByGzlslid" parameterType="String"
+            resultType="cn.gtmap.realestate.common.core.dto.exchange.naturalresources.sea.ZhYydjxxDTO">
+        SELECT yy.*,xm.XMID AS YWH,xm.QXDM,zs.BDCQZH
+        FROM BDC_YY yy
+        LEFT JOIN BDC_XM xm ON xm.XMID = yy.XMID
+        LEFT JOIN BDC_XM_ZS_GX gx ON gx.XMID = xm.XMID
+        LEFT JOIN BDC_ZS zs ON zs.ZSID = gx.ZSID AND zs.zslx = '2'
+        LEFT JOIN BDC_QLR qlr ON qlr.XMID = xm.XMID
+        <where>
+            yy.QSZT IN (0,1)
+            <if test="gzlslid != null and gzlslid != ''">
+                AND xm.GZLSLID = #{gzlslid}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryZhZxdjxxByGzlslid" parameterType="String"
+            resultType="cn.gtmap.realestate.common.core.dto.exchange.naturalresources.sea.ZhZxdjxxDTO">
+        SELECT xm.BDCDYH,xm.XMID AS YWH,xm.SLR AS SQR,xm.SLSJ AS SQSJ,xm.DBR AS DJR,xm.DJSJ,xm.SLR AS SHR,xm.BZ,hysyq.hyglh
+        FROM BDC_XM xm
+        LEFT JOIN BDC_HYSYQ hysyq ON xm.XMID = hysyq.XMID
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND xm.GZLSLID = #{gzlslid}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryZhsmjByGzlslid" parameterType="String"
+            resultType="cn.gtmap.realestate.common.core.dto.exchange.naturalresources.sea.ZhSmjxxDTO">
+        SELECT
+        DISTINCT zhjbxx.ZHDM,xm.BDCDYH,xm.xmid AS ywh
+        FROM
+        bdc_bdcdjb_zhjbxx zhjbxx
+        LEFT JOIN bdc_xm xm ON xm.bdcdyh = zhjbxx.bdcdyh
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND xm.GZLSLID = #{gzlslid}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryYhdz" resultType="cn.gtmap.realestate.common.core.domain.exchange.BdcYhUrlCsDO">
+        SELECT
+        *
+        FROM
+        BDC_YH_URL_CS
+        <where>
+            <if test="yhmc != null and yhmc != ''">
+                AND yhmc = #{yhmc}
+            </if>
+            <if test="handlerType != null and handlerType != ''">
+                AND handler_type = #{handlerType}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="queryDyaqByBdcdyh" resultType="cn.gtmap.realestate.common.core.dto.init.BdcDyaqDTO">
+        SELECT
+        f.*,qlr.qlrmc
+        FROM
+        bdc_dyaq f
+        INNER JOIN bdc_xm xm ON f.xmid = xm.xmid
+        INNER JOIN bdc_qlr qlr ON xm.xmid = qlr.xmid
+        <where>
+            <if test="processInsId != null and processInsId != ''">
+                and xm.gzlslid = #{processInsId}
+            </if>
+
+            <if test="qlrlb != null and qlrlb != ''">
+                and qlr.qlrlb = #{qlrlb}
+            </if>
+            <if test="qlrmc != null and qlrmc.size > 0">
+                and qlr.qlrmc in
+                <foreach collection="qlrmc" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="bdcdyh != null and bdcdyh.size > 0">
+                and f.bdcdyh in
+                <foreach collection="bdcdyh" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="qszt != null">
+                and f.qszt = #{qszt}
+            </if>
+
+            <if test="ajzt != null">
+                and xm.ajzt = #{ajzt}
+            </if>
+        </where>
+
+    </select>
+
+    <select id="queryFdcqByBdcdys" resultType="cn.gtmap.realestate.common.core.domain.BdcFdcqDO">
+        SELECT
+        f.bdcdyh,
+        f.zl,
+        f.djsj,
+        f.jzmj,
+        fb.cqly,
+        x.xmid,
+        gyqk,
+        jgsj
+        FROM
+        bdc_fdcq f
+        LEFT JOIN bdc_xm x ON f.xmid = x.xmid AND f.bdcdyh = x.bdcdyh
+        LEFT JOIN bdc_xmfb fb ON x.xmid = fb.xmid
+        <where>
+            <if test="bdcdyh != null and bdcdyh.size > 0">
+                and f.bdcdyh in
+                <foreach collection="bdcdyh" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="qszt != null">
+                and f.qszt = #{qszt}
+            </if>
+        </where>
+
+    </select>
+
+    <select id="queryCfByBdcdyh" resultType="cn.gtmap.realestate.common.core.dto.init.BdcCfDTO">
+        SELECT
+        f.*,qlr.qlrmc
+        FROM
+        bdc_cf f
+        INNER JOIN bdc_xm xm ON f.xmid = xm.xmid
+        INNER JOIN bdc_qlr qlr ON xm.xmid = qlr.xmid
+        <where>
+            <if test="processInsId != null and processInsId != ''">
+                and xm.gzlslid = #{processInsId}
+            </if>
+
+            <if test="qlrlb != null and qlrlb != ''">
+                and qlr.qlrlb = #{qlrlb}
+            </if>
+            <if test="qlrmc != null and qlrmc.size > 0">
+                and qlr.qlrmc in
+                <foreach collection="qlrmc" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="bdcdyh != null and bdcdyh.size > 0">
+                and f.bdcdyh in
+                <foreach collection="bdcdyh" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="qszt != null">
+                and f.qszt = #{qszt}
+            </if>
+
+            <if test="ajzt != null">
+                and xm.ajzt = #{ajzt}
+            </if>
+        </where>
+
+    </select>
+
+    <select id="queryYdyByBdcdyh" resultType="cn.gtmap.realestate.common.core.dto.init.BdcYdyDTO">
+        SELECT
+        f.*,qlr.qlrmc
+        FROM
+        bdc_yg f
+        INNER JOIN bdc_xm xm ON f.xmid = xm.xmid
+        INNER JOIN bdc_qlr qlr ON xm.xmid = qlr.xmid
+        <where>
+            <if test="qlrlb != null and qlrlb != ''">
+                and qlr.qlrlb = #{qlrlb}
+            </if>
+            <if test="qlrmc != null and qlrmc.size > 0">
+                and qlr.qlrmc in
+                <foreach collection="qlrmc" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="bdcdyh != null and bdcdyh.size > 0">
+                and f.bdcdyh in
+                <foreach collection="bdcdyh" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                and ygdjzl in(3,4)
+            </if>
+        </where>
+
+    </select>
+
+    <select id="getZsByQlr" resultType="cn.gtmap.realestate.common.core.domain.BdcZsDO"
+            parameterType="cn.gtmap.realestate.exchange.core.qo.BdcDjbQO">
+        select distinct zs.ZSID, zs.BDCQZH, zs.ZHLSH, zs.NF, zs.QZYSXLH, zs.QLQTZK, zs.QXDM, zs.SQSJC, zs.SZSXQC,
+        zs.FZR, zs.FZRID,zs.FZSJ, zs.LZR, zs.LZRZJZL, zs.LZRZJH,
+        zs.LZSJ, zs.SZSJ, zs.SZR, zs.SZRID, zs.EWMNR, zs.YXDYSJ, zs.GYBDCQZH, zs.BDCQZHJC, zs.ZSLX, zs.FJ, zs.BDCDYH,
+        zs.ZL, zs.ZMQLSX, zs.QLR, zs.YWR, zs.GYFS,
+        zs.QLLX, zs.QLXZ, zs.YT, zs.MJ, zs.SYQX, zs.LZRDH, zs.DJBMDM, zs.TDFCZH, zs.TDFCYWH, zs.LB, zs.ZHXLH,
+        zs.YXTCQZH, zs.DYZT, zs.ZZBS, zs.ZZID, zs.ZZDZ,
+        zs.ZZMLBM, zs.ZZQFSJ, zs.STORAGEID
+        from bdc_zs zs
+        LEFT JOIN bdc_qlr q on q.zsid=zs.zsid
+        LEFT JOIN bdc_xm_zs_gx gx on gx.zsid = zs.zsid
+        LEFT JOIN bdc_xm x on gx.xmid = x.xmid
+        <where>
+            <if test="qlrmc != null and qlrmc !=''">
+                AND q.qlrmc = #{qlrmc}
+            </if>
+            <if test="qlrzjh != null and qlrzjh !=''">
+                AND q.zjh = #{qlrzjh}
+            </if>
+            <if test="bdcqzh != null and bdcqzh !=''">
+                AND zs.bdcqzh = #{bdcqzh}
+            </if>
+            <if test="zl != null and zl !=''">
+                AND x.zl like '%' || #{zl} || '%'
+            </if>
+            <if test="qxdm != null and qxdm !=''">
+                AND zs.qxdm = #{qxdm}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="getFwxxByXmid" resultType="cn.gtmap.realestate.common.core.dto.register.BdcDjbFwxxDTO">
+        SELECT
+        to_number( regexp_replace(f.zh, '[^0-9]', '')) orderzh ,
+        nvl(f.zh, ' ')|| f1.zh AS zh,
+        nvl(f.fjh, ' ') fh,
+        nvl(to_char(f.szmyc), ' ') szc,
+        (CASE WHEN f.bdcdyfwlx != '1' THEN nvl(to_char(f.zcs), ' ') ELSE to_char(f1.zcs) END) zcs,
+        (CASE WHEN f.bdcdyfwlx != '1' THEN nvl(h.mc, ' ') ELSE h1.mc END) fwjg,
+        (CASE WHEN f.bdcdyfwlx != '1' THEN nvl(to_char(f.jzmj), ' ') ELSE to_char(f1.jzmj) END) jzmj,
+        (CASE WHEN f.bdcdyfwlx != '1' THEN nvl(to_char(f.zyjzmj), ' ') ELSE '' END) tnmj,
+        (CASE WHEN f.bdcdyfwlx != '1' THEN nvl(g.mc, ' ') ELSE g1.mc END) ghyt
+        FROM
+        bdc_fdcq f
+        LEFT JOIN bdc_fdcq_fdcqxm f1 ON f1.qlid = f.qlid
+        LEFT JOIN bdc_zd_fwyt g ON f.ghyt = g.dm
+        LEFT JOIN bdc_zd_fwyt g1 ON f1.ghyt = g1.dm
+        LEFT JOIN bdc_zd_fwjg h ON f.fwjg = h.dm
+        LEFT JOIN bdc_zd_fwjg h1 ON f1.fwjg = h1.dm
+        <where>
+            f.qszt = 1
+            <if test="xmidList != null and xmidList.size>0">
+                AND f.xmid IN
+                <foreach collection="xmidList" item="xmid" open="(" close=")" separator=",">
+                    #{xmid,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY orderzh
+    </select>
+
+    <select id="getQlrByZsid" resultType="cn.gtmap.realestate.common.core.dto.register.BdcDjbQlrxxDTO"
+            parameterType="java.lang.String">
+        SELECT
+        q.qlrmc qlrmc,
+        (CASE WHEN q.gyfs = '2' THEN q.qlbl ELSE bzg.mc END) gyqk,
+        zs.bdcqzh bdcqzh,
+        tdxm.bdcqzh tdz
+        FROM
+        BDC_ZS zs
+        LEFT JOIN BDC_QLR q ON zs.ZSID =q.ZSID
+        LEFT JOIN BDC_ZD_GYFS bzg ON zs.GYFS = bzg.DM
+        LEFT JOIN BDC_XM_ZS_GX gx ON gx.ZSID =zs.ZSID
+        LEFT JOIN BDC_XM x ON x.XMID = gx.XMID
+        LEFT JOIN BDC_FCTD_PPGX fctdgx ON fctdgx.FWCQXMID = x.XMID
+        LEFT JOIN BDC_XM tdxm ON tdxm.XMID = fctdgx.TDCQXMID
+        <where>
+            q.qlrlb='1'
+            <if test="zsid != null and zsid !=''">
+                AND zs.zsid = #{zsid}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryDyaqByDyh"
+            resultType="cn.gtmap.realestate.common.core.dto.register.BdcDjbDyxxDTO">
+        SELECT
+        DISTINCT zs.bdcqzh bdczmh,
+        q.qlrmc dyqr,
+        to_char(t.zwlxqssj, 'yyyy/mm/dd') || '至' || to_char(t.zwlxjssj, 'yyyy/mm/dd') dyqx,
+        t.dbfw,
+        to_char(t.bdbzzqse) jg,
+        to_char(CASE WHEN t.jzzr = 1 THEN '是' WHEN t.jzzr = 0 THEN '否' ELSE to_char(t.jzzr) END) sfjz
+        FROM
+        bdc_dyaq t
+        LEFT JOIN bdc_qlr q ON q.xmid = t.xmid
+        LEFT JOIN bdc_zs zs ON zs.zsid = q.ZSID
+        <where>
+            t.qszt = 1 AND q.qlrlb = 1
+            <if test="bdcdyhList != null and bdcdyhList.size>0">
+                AND t.bdcdyh IN
+                <foreach collection="bdcdyhList" item="bdcdyh" open="(" close=")" separator=",">
+                    #{bdcdyh,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="queryBdcCf" resultType="cn.gtmap.realestate.common.core.dto.register.BdcDjbXzxxDTO">
+        SELECT
+        c.bdcdyh,
+        CASE
+        WHEN d.dysdid IS NOT NULL THEN c.cfjg || '/' || c.cfwh || ' 已裁决'
+        ELSE c.cfjg || '/' || c.cfwh
+        END cfjg,
+        to_char(c.cfsj, 'yyyy/mm/dd') cfsj,
+        to_char(c.cfqssj, 'yyyy/mm/dd') || '至' || to_char(c.cfjssj, 'yyyy/mm/dd') cfqx
+        FROM
+        bdc_cf c
+        LEFT JOIN bdc_xm_lsgx l ON l.yxmid = c.xmid
+        LEFT JOIN bdc_dysd d ON d.xmid = l.xmid AND d.sdlx = '9'
+        <where>
+            1 = 1
+            <if test="bdcdyhList != null and bdcdyhList.size>0">
+                AND c.bdcdyh IN
+                <foreach collection="bdcdyhList" item="bdcdyh" open="(" close=")" separator=",">
+                    #{bdcdyh,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY
+        c.cfsx ASC
+    </select>
+
+    <select id="queryBdcZsdj" resultType="cn.gtmap.realestate.common.core.dto.register.BdcDjbZsdjxxDTO">
+        SELECT
+        CASE WHEN x.qxdm IN ('320481','320413') THEN '/' ELSE '常州市住房和城乡建设局' END csdjdw ,
+        to_char( z.sdsj, 'yyyy-MM-dd' ) csdjsj
+        FROM
+        bdc_zssd z
+        LEFT JOIN bdc_xm_zs_gx gx on gx.zsid = z.zsid
+        left join bdc_xm x on gx.xmid = x.xmid
+        <where>
+            z.sdzt = 1
+            <if test="zsid != null and zsid != ''">
+                and z.zsid = #{zsid}
+            </if>
+        </where>
+        UNION
+        SELECT
+        CASE WHEN x.qxdm IN ('320481','320413') THEN '/' ELSE '常州市住房和城乡建设局' END csdjdw ,
+        ( CASE WHEN cqjsdate IS NOT NULL THEN to_char( cqqsdate, 'yyyy-mm-dd' ) || '至' || to_char( cqjsdate,
+        'yyyy-mm-dd' ) ELSE '/' END ) csdjsj
+        FROM
+        bdc_dysd z
+        LEFT JOIN bdc_xm x ON x.bdcdyh = z.bdcdyh
+        <where>
+            z.sdzt = 1
+            AND z.sdyy LIKE '%冻结%'
+            <if test="bdcdyhList != null and bdcdyhList.size>0">
+                AND z.bdcdyh IN
+                <foreach collection="bdcdyhList" item="bdcdyh" open="(" close=")" separator=",">
+                    #{bdcdyh}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="queryFjByXmid" parameterType="String" resultType="String">
+        SELECT  DISTINCT
+                x.bz || chr( 10 ) || to_char( d.sdsj, 'yyyy-MM-dd' ) || '  ' || d.sdsqwh || chr( 10 ) || q.fj || chr( 10 ) || syq.fj AS fj
+        FROM
+            bdc_xm x
+                LEFT JOIN bdc_fdcq q ON q.xmid = x.xmid AND q.qszt = '1'
+                LEFT JOIN bdc_dysd d ON d.bdcdyh = x.bdcdyh AND d.sdlx = '9' AND d.sdzt = '1' AND d.sdyy = '裁决锁定'
+                LEFT JOIN bdc_jsydsyq syq ON syq.xmid = x.xmid AND syq.qszt = '1'
+        WHERE
+            x.xmid = #{xmid}
+    </select>
+
+    <select id="getFwTdxxByXmid" resultType="cn.gtmap.realestate.common.core.dto.register.BdcDjbTdxxDTO">
+        SELECT
+        CASE
+        WHEN (q.fttdmj IS NOT NULL AND to_char(q.fttdmj)!= 0) THEN to_char(q.fttdmj)
+        WHEN (q.dytdmj IS NOT NULL AND to_char(q.dytdmj)!= 0) THEN to_char(q.dytdmj)
+        WHEN (q.fttdmj IS NULL OR to_char(q.fttdmj)= 0) AND x.zdzhmj IS NOT NULL THEN to_char(x.zdzhmj)
+        ELSE '无'
+        END AS zdmj,
+        td.mc tdyt,
+        to_char(q.djsj, 'yyyy/mm/dd') djsj,
+        b.mc fwxz,
+        CASE
+        WHEN q.tdsyjssj IS NOT NULL THEN to_char(q.tdsyjssj, 'yyyy/mm/dd')
+        ELSE fb.syqx
+        END syqx,
+        a.mc tdqlxz
+        FROM
+        bdc_fdcq q
+        LEFT JOIN bdc_xm x ON q.xmid = x.xmid
+        LEFT JOIN bdc_xmfb fb ON fb.xmid = x.xmid
+        LEFT JOIN bdc_zd_qlxz a ON a.dm = x.qlxz
+        LEFT JOIN bdc_zd_fwxz b ON q.fwxz = b.dm
+        LEFT JOIN bdc_zd_tdyt td ON td.dm = x.zdzhyt
+        WHERE
+        q.qszt = 1
+        <if test="xmidList != null and xmidList.size>0">
+            AND q.xmid IN
+            <foreach collection="xmidList" item="xmid" open="(" close=")" separator=",">
+                #{xmid}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="getTdxxByXmid" resultType="cn.gtmap.realestate.common.core.dto.register.BdcDjbTdxxDTO">
+        SELECT
+        (CASE WHEN q.syqmj IS NOT NULL THEN q.syqmj ELSE x.zdzhmj END) zdmj,
+        t.mc tdyt,
+        to_char(q.djsj, 'yyyy/mm/dd') djsj,
+        CASE WHEN q.syqjssj IS NOT NULL THEN to_char(q.syqjssj, 'yyyy/mm/dd') ELSE fb.syqx END syqx,
+        a.mc tdqlxz
+        FROM
+        bdc_jsydsyq q
+        LEFT JOIN bdc_xm x ON q.xmid = x.xmid
+        LEFT JOIN bdc_xmfb fb ON fb.xmid = q.xmid
+        LEFT JOIN bdc_zd_qlxz a ON a.dm = x.qlxz
+        LEFT JOIN bdc_zd_tdyt t ON t.dm = x.zdzhyt
+        WHERE
+        x.bdclx = 1
+        <if test="xmidList != null and xmidList.size>0">
+            AND q.xmid IN
+            <foreach collection="xmidList" item="xmid" open="(" close=")" separator=",">
+                #{xmid}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="queryBdcJzqByDyh" resultType="cn.gtmap.realestate.common.core.dto.register.BdcDjbJzxxDTO">
+        SELECT
+        s.bdcqzh bdczmh,
+        q.qlrmc jzr,
+        to_char(j.jzqkssj, 'yyyy/mm/dd')|| '至' || to_char(j.jzqjssj, 'yyyy/mm/dd') jzqx
+        FROM
+        bdc_jzq j
+        LEFT JOIN bdc_qlr q ON q.xmid = j.xmid
+        LEFT JOIN bdc_zs s ON q.zsid = s.zsid
+        <where>
+            q.qlrlb = 1 AND j.qszt = '1'
+            <if test="bdcdyhList != null and bdcdyhList.size>0">
+                AND j.bdcdyh IN
+                <foreach collection="bdcdyhList" item="bdcdyh" open="(" close=")" separator=",">
+                    #{bdcdyh,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="countDjlxtj"
+            resultType="cn.gtmap.realestate.exchange.core.dto.nantong.hlwtj.response.DjlxtjResponseData">
+        SELECT gzldyid as sqlxdm,gzldymc as sqlxmc,count(*) as sl
+        FROM
+        bdc_xm
+        <where>
+            <if test="slksrq != null">
+                <![CDATA[ AND (bdc_xm.slsj >= to_date(#{slksrq},'YYYY-MM-DD HH24:MI:SS')) ]]>
+            </if>
+            <if test="sljsrq != null">
+                <![CDATA[ AND (bdc_xm.slsj <= to_date(#{sljsrq},'YYYY-MM-DD HH24:MI:SS')) ]]>
+            </if>
+            <if test="slly != null and slly != '' ">
+                AND bdc_xm.sply = #{slly}
+            </if>
+            <if test="xzqdm != null and xzqdm != ''">
+                AND bdc_xm.qxdm = #{xzqdm}
+            </if>
+            and gzldyid is not null
+        </where>
+        group by gzldyid,gzldymc
+    </select>
+
+    <select id="countBlhjtj"
+            resultType="cn.gtmap.realestate.exchange.core.dto.nantong.hlwtj.response.BlhjtjResponseData">
+        SELECT ajzt as bjztdm,count(*) as sl
+        FROM
+        bdc_xm
+        <where>
+            <if test="slksrq != null">
+                <![CDATA[ AND (bdc_xm.slsj >= to_date(#{slksrq},'YYYY-MM-DD HH24:MI:SS')) ]]>
+            </if>
+            <if test="sljsrq != null">
+                <![CDATA[ AND (bdc_xm.slsj <= to_date(#{sljsrq},'YYYY-MM-DD HH24:MI:SS')) ]]>
+            </if>
+            <if test="slly != null and slly != ''">
+                AND bdc_xm.sply = #{slly}
+            </if>
+            <if test="xzqdm != null and xzqdm != ''">
+                AND bdc_xm.qxdm = #{xzqdm}
+            </if>
+            AND ajzt in(1,2)
+        </where>
+        group by ajzt
+    </select>
+
+    <select id="listJsydsyqDOByXmid" parameterType="java.lang.String"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcJsydsyqDO">
+        SELECT *
+        FROM
+        bdc_jsydsyq j
+        left join BDC_FCTD_PPGX gx
+        on j.xmid=gx.TDCQXMID
+        left join bdc_fdcq f on gx.FWCQXMID=f.xmid
+        <where>
+            f.xmid = #{xmid} and j.qszt = 1
+            ORDER BY j.djsj ASC,j.slbh ASC
+        </where>
+    </select>
+
+    <select id="querySbdjfkList" parameterType="java.lang.String"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcDjxlSbdjfkCsgxDO">
+        select * from BDC_DJXL_SBDJFK_CS_GX where djxl = #{djxl}
+        <if test="qjgldm != null and qjgldm != ''">
+            and qjgldm = #{qjgldm}
+        </if>
+    </select>
+
+
+    <select id="listBdcXmByslsj" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            parameterType="cn.gtmap.realestate.common.core.qo.init.BdcXmQO">
+        SELECT A.* FROM BDC_XM A
+        <where>
+            <if test="slsjDate != null">
+                AND trunc(A.SLSJ) = trunc(#{slsjDate})
+            </if>
+            <if test="qxdmList != null and qxdmList.size() > 0">
+                AND A.qxdm IN
+                <foreach collection="qxdmList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            ORDER BY A.slsj ASC
+        </where>
+
+    </select>
+
+    <select id="listXsdJyDz" resultType="cn.gtmap.realestate.common.core.domain.exchange.BdcJrXsdjyDO">
+        select t.id,t.xsdzd,t.sjkzd from bdc_jr_xsdjy t
+    </select>
+
+
+    <select id="queryAllZttGyQlrList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.ZttGyQlrDO">
+        SELECT
+        c.bdcdyh,
+        t.sxh,
+        t.qlrmc,
+        NVL(t.bdcqzh,t1.bdcqzh) bdcqzh,
+        z.qzysxlh,
+        t.sfczr,
+        t.zjzl,
+        t.zjh,
+        c.djjg fzjg,
+        t.sshy,
+        '156' gj,
+        '' hjszss,
+        t.xb,
+        t.dh,
+        t.txdz dz,
+        t.yb,
+        '' gzdw,
+        '' dzyj,
+        t.qlrlx,
+        t.qlbl,
+        t.gyfs,
+        t.gyqk,
+        nvl(t.bz,'/') bz,
+        c.xmid ywh,
+        c.qllx,
+        c.qszt,
+        c.djsj,
+        t.qlrtz,
+        nvl(j.cbfbm, '/') cbfdm,
+        nvl(b.fbfdm, '/') fbfbm,
+        substr(c.bdcdyh,0,6) as qxdm
+        FROM bdc_qlr t
+        LEFT JOIN bdc_xm c ON c.xmid = t.xmid
+        LEFT JOIN bdc_zs z ON z.zsid = t.zsid
+        LEFT JOIN BDC_TDCBNYDSYQ b on b.xmid = t.xmid
+        left JOIN bdc_qlr_hkb_gx h ON h.qlrid = t.qlrid
+        left JOIN BDC_JTCY j ON h.hkbbm = j.hkbbm AND h.hkbbbh=j.hkbbbh
+        LEFT JOIN BDC_XM_LSGX L ON C.XMID = L.XMID and nvl(l.WLXM,0) = 0
+        LEFT JOIN BDC_XM C1 ON L.YXMID = C1.XMID
+        LEFT JOIN BDC_qlr t1 on c1.xmid = t1.xmid and (t.qlrmc = t1.qlrmc or t.zjh = t1.zjh)
+        <where>
+            <if test="qlrlb != null and qlrlb !=''">
+                AND  t.qlrlb = #{qlrlb}
+            </if>
+            <if test="ywh != null and ywh !=''">
+                AND t.xmid = #{ywh}
+            </if>
+        </where>
+    </select>
+
+    <select id="listFwfyxx" resultType="cn.gtmap.realestate.exchange.core.dto.bengbu.djxx.qsdjxx.response.BdcXscqxxDTO">
+        SELECT
+        DISTINCT X.XMID AS XMID,
+        X.BDCDYH AS BDCDYH,
+        Z.BDCQZH AS BDCQZH,
+        X.DJLX AS DJLX,
+        X.QLLX AS QLLX,
+        X.AJZT AS AJZT,
+        X.BDCDYWYBH AS FWBH,
+        X.QXDM AS QXDM,
+        F.ZH AS ZH,
+        F.SZC AS SZC,
+        F.FJH AS FJH,
+        F.JZMJ AS JZMJ,
+        F.ZYJZMJ AS ZYJZMJ,
+        F.FTJZMJ AS FTJZMJ,
+        F.GHYT AS GHYT,
+        F.FWXZ AS FWXZ,
+        F.FWJG AS FWJG,
+        X.ZL AS ZL,
+        to_char(X.DJSJ,'yyyy-MM-dd HH:mm:ss') AS DJSJ
+        FROM
+        BDC_XM X
+        LEFT JOIN BDC_XM_ZS_GX GX ON  X.XMID = GX.XMID
+        LEFT JOIN BDC_ZS Z ON  GX.ZSID = Z.ZSID
+        LEFT JOIN BDC_QLR QLR ON QLR.XMID = X.XMID
+        INNER JOIN BDC_FDCQ F ON F.XMID = X.XMID
+        <where>
+            AND X.QSZT = 1
+            <if test="null != bdcqzh and bdcqzh != ''">
+                AND Z.BDCQZH = #{bdcqzh}
+            </if>
+            <if test="null != bdcdyh and bdcdyh != ''">
+                AND X.BDCDYH = #{bdcdyh}
+            </if>
+            <if test="null != name and name != ''">
+                AND QLR.QLRMC = #{name}
+            </if>
+            <if test="null != idcard and idcard != ''">
+                AND QLR.ZJH = #{idcard}
+            </if>
+        </where>
+    </select>
+</mapper>

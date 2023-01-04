@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <ex:bean id="ny_bdcfyxx_setSfzb">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="bdcFyxxService"/>
+            <ex:property name="methodName" value="setSfzbForFdcq"/>
+        </ex:service-info>
+    </ex:bean>
+    <ex:bean id="nt_bdcfyxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="standardGrdacx"/>
+            <ex:property name="methodName" value="grdacxWithNullData"/>
+            <ex:property name="params" value="param"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/nantong/bdcfyxx/request/param.xml" name="param" notEmpty="true"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/nantong/bdcfyxx/response/data.xml" sourceService="ny_bdcfyxx_setSfzb"/>
+        </ex:response>
+        <ex:log dsfFlag="FCJY" logEventName="为房产提供房源信息" requester="FCJY" responser="BDC"/>
+    </ex:bean>
+    <ex:bean id="nt_bdcfyxx_qscx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="standardGrdacx"/>
+            <ex:property name="methodName" value="grdacxWithNullData"/>
+            <ex:property name="params" value="param"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/nantong/bdcfyxx/qscx/request/param.xml" name="param" notEmpty="true"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/nantong/bdcfyxx/response/data.xml" sourceService="ny_bdcfyxx_setSfzb"/>
+        </ex:response>
+        <ex:log dsfFlag="BST" logEventName="百事通查询房源信息" requester="BST" responser="BDC"/>
+    </ex:bean>
+</beans>

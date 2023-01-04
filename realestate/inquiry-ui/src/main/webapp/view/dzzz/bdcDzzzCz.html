@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>电子证照查看</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css">
+    <link rel="stylesheet" href="../../static/css/common.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <style type="text/css">
+        #popupTwoRows .bdc-filter .layui-form-select {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 80px;
+        }
+        #popupTwoRows .bdc-filter .layui-input-inline > .layui-input {
+            padding-left: 90px;
+        }
+        #popupTwoRows .bdc-filter .layui-input-inline > .normal-padding {
+            padding-left: 10px;
+        }
+        .bdc-screen-search-box .layui-form-item .layui-input-inline .layui-input {
+            padding-left: 10px;
+        }
+        .bdc-percentage-container {
+            padding-top: 145px;
+        }
+    </style>
+</head>
+<body>
+<div class="bdc-percentage-container">
+    <!--查询条件-->
+    <div class="bdc-search-content">
+        <div id="popupTwoRows" class="bdc-search-box">
+            <!--默认两行的-->
+            <form class="layui-form" action="">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline bdc-filter">
+                        <label id="slbhLabel"  class="layui-form-label">受理编号</label>
+                        <div id="slbhDiv"  class="layui-input-inline">
+                            <input type="text" id="slbh" name="slbh" autocomplete="off" placeholder="请输入" class="layui-input cxtj required">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            <select id="slbhmhlx" name="slbhmhlx" class="bdc-filter-select cxtj">
+                                <option value="0">精确</option>
+                                <option value="1">左匹配</option>
+                                <option value="2">右匹配</option>
+                                <option value="3">全模糊</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-filter">
+                        <label id="cqzhLabel"  class="layui-form-label">产权证号</label>
+                        <div id="cqzhDiv"  class="layui-input-inline">
+                            <input type="text" id="cqzh" name="cqzh" autocomplete="off" placeholder="请输入" class="layui-input cxtj required">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            <select id="cqzhmhlx" name="cqzhmhlx" class="bdc-filter-select cxtj">
+                                <option value="0">精确</option>
+                                <option value="1">左匹配</option>
+                                <option value="2">右匹配</option>
+                                <option value="3">全模糊</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline bdc-filter">
+                        <label id="zlLabel"  class="layui-form-label">坐落</label>
+                        <div id="zlDiv"  class="layui-input-inline">
+                            <input type="text" id="zl" name="zl" autocomplete="off" placeholder="请输入" class="layui-input cxtj required">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            <select id="zlmhlx" name="zlmhlx" class="bdc-filter-select cxtj">
+                                <option value="3">全模糊</option>
+                                <option value="0">精确</option>
+                                <option value="1">左匹配</option>
+                                <option value="2">右匹配</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label id="fzrqqLabel"  class="layui-form-label">发证日期(起)</label>
+                        <div id="fzrqqDiv"  class="layui-input-inline">
+                            <input id="fzqsrq" autocomplete="off" class="layui-input cxtj required" type="text"
+                                   name="fzqsrq" placeholder="请选择"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label id="fzrqzLabel"  class="layui-form-label">发证日期(止)</label>
+                        <div id="fzrqzDiv"  class="layui-input-inline">
+                            <input id="fzjsrq" autocomplete="off" class="layui-input cxtj required" type="text"
+                                   name="fzjsrq" placeholder="请选择"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label id="sfczpdfLabel"  class="layui-form-label">是否存在PDF</label>
+                        <div id="sfczpdfDiv"  class="layui-input-inline">
+                            <select name="sfscpdf" lay-search="" lay-filter="sfczpdf" id="sfscpdf" class="cxtj">
+                                <option value="">请选择</option>
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label id="qsztLabel"  class="layui-form-label">权属状态</label>
+                        <div id="qsztDiv"  class="layui-input-inline">
+                            <select name="qszt" lay-search="" lay-filter="qszt" id="qszt" class="cxtj">
+                                <option value="">请选择</option>
+                                <option value="1">现势</option>
+                                <option value="2">历史</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label id="zzztLabel"  class="layui-form-label">证照状态</label>
+                        <div id="zzztDiv"  class="layui-input-inline">
+                            <select name="zzzt" lay-search="" lay-filter="zzzt" id="zzzt" class="cxtj">
+                                <option value="">请选择</option>
+                                <option value="1">现势</option>
+                                <option value="2">历史</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="layui-inline bdc-button-box-four">
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                        <button type="reset" id="reset" class="layui-btn bdc-secondary-btn reset-btn">重置</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <!--表格-->
+    <div class="bdc-table-box">
+        <table id="dzzzTable" lay-filter="dzzzTable"></table>
+    </div>
+    <!--表格上面功能按钮-->
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="createDzzz" id="createDzzz">生成电子证照</button>
+            <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="cancelDzzz" id="cancelDzzz">注销电子证照</button>
+            <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="zfDzzz" id="zfDzzz">作废电子证照</button>
+        </div>
+        <div class="layui-btn-container">
+
+        </div>
+    </script>
+
+
+    <!--表格内部操作按钮-->
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="ckdzzz">查看</a>
+    </script>
+
+
+    <!--隐藏form，为了Excel导出缓存数据使用-->
+    <form style="display: none" action="/realestate-inquiry-ui/excel/export" method="POST" id="form">
+        <input type="hidden" id="fileName" name="fileName"/>
+        <input type="hidden" id="sheetName" name="sheetName"/>
+        <input type="hidden" id="cellTitle" name="cellTitle"/>
+        <input type="hidden" id="cellWidth" name="cellWidth"/>
+        <input type="hidden" id="cellKey" name="cellKey"/>
+        <input type="hidden" id="data" name="data"/>
+    </form>
+
+    <script src="../../static/lib/jquery/jquery.min.js"></script>
+    <script src="../../static/lib/layui/layui.js"></script>
+    <!--添加水印-->
+    <script src="../../static/lib/bdcui/js/common.js"></script>
+    <script src="../../static/js/common.js"></script>
+    <script src="../../static/js/zszm/format.js"></script>
+    <script src="../../static/js/formCenter.js"></script>
+    <script src="../../static/js/dzzzCz/dzzzCz.js"></script>
+    <script src="../../static/lib/bdcui/js/readIdCard.js"></script>
+    <script src="../../static/js/readCard.js"></script>
+
+</div>
+</body>
+</html>

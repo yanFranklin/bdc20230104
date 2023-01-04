@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.building.core.mapper.ZdxxByJqxxMapper">
+    <select id="findZdDjdcb" parameterType="cn.gtmap.realestate.common.core.qo.building.ZdxxByJqxxQO" resultType="cn.gtmap.realestate.common.core.dto.building.ZdxxByJqxxDTO">
+        select A.DJH as zddm,A.TDZL as zl,A.BDCDYH as bdcdyh,A.SCMJ as zdmj,qlr.qlrmc as qlrmc,A.QSXZ as qllxdm,ZD.MC as
+        qllxmc,A.DJH as djh,A.TDYT as zdyt,dl.MC as zdytmc
+        from ZD_DJDCB A
+        left join zd_qlr qlr on qlr.djdcb_index = a.zd_djdcb_index
+        left join S_ZD_QSXZ ZD on A.QSXZ = ZD.DM
+        left join S_ZD_DLDM dl on A.TDYT = dl.DM
+        where 1=1
+        <if test="zl != null and zl != ''">
+            AND A.TDZL LIKE '%'|| #{zl}
+        </if>
+        <if test="bdcdyh != null and bdcdyh != ''">
+            AND A.BDCDYH = #{bdcdyh}
+        </if>
+        <if test="djh != null and djh != ''">
+            AND A.DJH = #{djh}
+        </if>
+        <if test="qlrmc != null and qlrmc != ''">
+            AND qlr.qlrmc = #{qlrmc}
+        </if>
+        union all
+        select Q.DJH as zddm,Q.TDZL as zl,Q.BDCDYH as bdcdyh,Q.SCMJ as zdmj,qlr.qlrmc as qlrmc,Q.QSXZ as qllxdm,ZD.MC as
+        qllxmc,Q.DJH as djh,Q.TDYT as zdyt,dl.MC as zdytmc
+        from QSZD_DJDCB Q
+        left join zd_qlr qlr on qlr.djdcb_index = Q.qszd_djdcb_index
+        left join S_ZD_QSXZ ZD on Q.QSXZ = ZD.DM
+        left join S_ZD_DLDM dl on Q.TDYT = dl.DM
+        where 1=1
+        <if test="zl != null and zl != ''">
+            AND Q.TDZL LIKE '%'|| #{zl}
+        </if>
+        <if test="bdcdyh != null and bdcdyh != ''">
+            AND Q.BDCDYH = #{bdcdyh}
+        </if>
+        <if test="djh != null and djh != ''">
+            AND Q.DJH = #{djh}
+        </if>
+        <if test="qlrmc != null and qlrmc != ''">
+            AND qlr.qlrmc = #{qlrmc}
+        </if>
+    </select>
+
+    <select id="findZdDjdcbByBdcdyh" parameterType="String"
+            resultType="cn.gtmap.realestate.common.core.dto.building.ZdxxByJqxxDTO">
+        select A.DJH as zddm,A.TDZL as zl,A.BDCDYH as bdcdyh,A.SCMJ as zdmj,A.TDSYZMC as qlrmc,A.QSXZ as qllxdm,ZD.MC as
+        qllxmc,A.DJH as djh,A.TDYT as zdyt,dl.MC as zdytmc
+        from ZD_DJDCB A
+        left join S_ZD_QSXZ ZD on A.QSXZ = ZD.DM
+        left join S_ZD_DLDM dl on A.TDYT = dl.DM
+        where 1=1
+        <if test="bdcdyh != null and bdcdyh != ''">
+            AND substr(A.BDCDYH,0,19) = #{bdcdyh}
+        </if>
+        UNION ALL
+        select q.DJH as zddm,q.TDZL as zl,q.BDCDYH as bdcdyh,q.SCMJ as zdmj,q.TDSYZMC as qlrmc,q.QSXZ as qllxdm,ZD.MC as
+        qllxmc,q.DJH as djh,q.TDYT as zdyt,dl.MC as zdytmc
+        from QSZD_DJDCB q
+        left join S_ZD_QSXZ ZD on q.QSXZ = ZD.DM
+        left join S_ZD_DLDM dl on q.TDYT = dl.DM
+        where 1=1
+        <if test="bdcdyh != null and bdcdyh != ''">
+            AND substr(q.BDCDYH,0,19) = #{bdcdyh}
+        </if>
+    </select>
+</mapper>

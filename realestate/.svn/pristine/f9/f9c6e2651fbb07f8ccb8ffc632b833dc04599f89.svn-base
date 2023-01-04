@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.etl.core.mapper.hlw.HlwYwxxMapper">
+    <select id="listHlwYwxxByPageOrder" parameterType="cn.gtmap.realestate.etl.core.qo.WwsqQO" resultType="map">
+        SELECT * FROM (
+        SELECT t.xmid,
+        t.sqslbh AS wwslbh,
+        t.bdcdjslbh AS djslbh,
+        t.sqsj,
+        t.sqrmc AS sqr,
+        t.sqlx,
+        t.yybmbm,
+        s.sqxxid,
+        s.zl,
+        s.bdcdyh,
+        s.bdcqzh,
+        s.zsxmid,
+        t.djzt as sfcj,
+        to_char(t.cjsj,'yyyy-MM-dd hh24:mi:ss') AS DJCJSJ,
+        t.gxsj,qlr.qlr AS qlr,ywr.qlr AS ywr,t.byslyy,t.shzt,
+        row_number() over ( partition BY s.xmid ORDER BY s.sqxxid DESC ) rn
+        FROM gx_ww_sqxm t
+        LEFT JOIN gx_ww_sqxx s ON t.xmid = s.xmid
+        LEFT JOIN (SELECT wm_concat(to_char(q.qlrmc)) qlr,sqxxid FROM gx_ww_sqxx_qlr q WHERE q.qlrlx='qlr'
+        <if test="qlr != null and qlr != ''">
+            AND q.qlrmc LIKE '%'|| #{qlr} || '%'
+        </if>
+        GROUP BY q.sqxxid) qlr ON qlr.sqxxid =s.sqxxid
+        LEFT JOIN (SELECT wm_concat(to_char(q.qlrmc)) qlr,sqxxid FROM gx_ww_sqxx_qlr q WHERE q.qlrlx='ywr' GROUP BY
+        q.sqxxid) ywr ON ywr.sqxxid =s.sqxxid
+        <where>
+            <if test="wwslbh != null and wwslbh != ''">
+                AND t.sqslbh LIKE '%'|| #{wwslbh} || '%'
+            </if>
+            <if test="zl != null and zl != ''">
+                AND s.zl LIKE '%'|| #{zl} || '%'
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND s.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="djcjkssj!=null and djcjkssj!=''">
+                AND to_char(cjsj,'yyyy-MM-dd') <![CDATA[>=]]> #{djcjkssj}
+            </if>
+            <if test="djcjjssj!=null and djcjjssj!=''">
+                AND to_char(cjsj,'yyyy-MM-dd') <![CDATA[<=]]> #{djcjjssj}
+            </if>
+            <if test="sqlxList != null and sqlxList.size>0">
+                AND t.sqlx IN
+                <foreach collection="sqlxList" item="sqlx" open="(" close=")" separator=",">
+                    #{sqlx}
+                </foreach>
+            </if>
+            <if test="sqly != null and sqly != ''">
+                AND t.sqly IN
+                <foreach collection="sqly.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="djyy != null and djyy != ''">
+                AND s.djyy = #{djyy}
+            </if>
+            <if test="qxdmList != null and qxdmList.size() == 1 ">
+                AND t.yybmbm=#{qxdmList[0]}
+            </if>
+            <if test="qxdmList != null and qxdmList.size() > 1 ">
+                AND t.yybmbm IN
+                <foreach collection="qxdmList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="qlr != null and qlr != ''">
+                AND qlr.qlr IS NOT NULL
+            </if>
+
+            <if test="sfcj != null ">
+                AND t.djzt = #{sfcj}
+            </if>
+            <if test="shzt != null and shzt != ''">
+                AND t.shzt = #{shzt}
+            </if>
+            <if test="shztgl != null and shztgl != ''">
+                AND (t.shzt != #{shztgl} OR t.shzt is Null)
+            </if>
+        </where>
+        ) WHERE rn = 1
+        <choose>
+            <when test="sortParameter != null and sortParameter != ''">
+                order by ${sortParameter}
+            </when>
+            <otherwise>
+                ORDER BY sfcj,gxsj
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="listWcjYhWwsqXmidList" resultType="cn.gtmap.realestate.etl.core.domian.wwsq.GxWwSqxmDo">
+        SELECT t.XMID, t.SQSLBH
+        FROM GX_WW_SQXM t
+                 LEFT JOIN BDC_WWSQ_CJJL c ON c.wwxmid = t.xmid
+        WHERE t.sqly = '6'
+          AND c.cjjlid IS NULL
+        ORDER BY t.gxsj
+    </select>
+
+    <select id="listGxWwBlztDTOByBdcdyh" resultType="cn.gtmap.realestate.etl.core.dto.GxWwBlztDTO">
+        SELECT DISTINCT t.xmid, t.shzt, CASE WHEN c.gzlslid IS NOT NULL THEN 1 ELSE 0 END sfcj
+        FROM GX_WW_SQXM t
+                 LEFT JOIN BDC_WWSQ_CJJL c ON c.wwxmid = t.xmid
+                 LEFT JOIN GX_WW_SQXX s ON s.xmid = t.xmid
+        WHERE s.bdcdyh = #{bdcdyh}
+    </select>
+
+    <select id="listFailedWwsqXmidList" resultType="java.lang.String">
+        SELECT distinct BDC_WWSQ_CJJL.wwxmid
+        from BDC_WWSQ_CJJL
+        INNER JOIN GX_WW_SQXM ON BDC_WWSQ_CJJL.wwxmid =GX_WW_SQXM.xmid
+        WHERE BDC_WWSQ_CJJL.gzlslid is null AND GX_WW_SQXM.sqly ='6'
+        <if test="startTime!=null ">
+            AND BDC_WWSQ_CJJL.cjsj <![CDATA[>=]]> #{startTime}
+        </if>
+        <if test="endTime!=null">
+            AND BDC_WWSQ_CJJL.cjsj <![CDATA[<=]]> #{endTime}
+        </if>
+    </select>
+
+
+    <select id="listSuccessWwsqXmidList" resultType="java.lang.String">
+        SELECT distinct BDC_WWSQ_CJJL.gzlslid
+        from BDC_WWSQ_CJJL
+        INNER JOIN GX_WW_SQXM ON BDC_WWSQ_CJJL.wwxmid =GX_WW_SQXM.xmid
+        WHERE BDC_WWSQ_CJJL.gzlslid is not null AND GX_WW_SQXM.sqly ='6'
+        <if test="startTime!=null ">
+            AND BDC_WWSQ_CJJL.cjsj <![CDATA[>=]]> #{startTime}
+        </if>
+        <if test="endTime!=null">
+            AND BDC_WWSQ_CJJL.cjsj <![CDATA[<=]]> #{endTime}
+        </if>
+    </select>
+
+
+    <select id="listWwsqListByXmids" resultType="cn.gtmap.realestate.etl.core.domian.wwsq.GxWwSqxmDo">
+        SELECT * FROM GX_WW_SQXM
+        where 1=1
+        <if test="null != xmids and xmids.size > 0">
+            and XMID in
+            <foreach collection="xmids" item="item" open="(" close=")" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,1017 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.certificate.core.mapper.BdcZsMapper">
+
+    <!-- 获取证书信息列表（可配置分页）注：只可获取证书信息,不要查询项目信息，否则会影响数据结果！ -->
+    <select id="listBdcZsByPage" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.vo.register.ui.BdcZsVO">
+        SELECT *
+        FROM (
+        SELECT ROW_NUMBER() OVER (PARTITION BY z.zsid ORDER BY q.qszt ASC) AS rn
+        , z.zsid, z.bdcdyh, z.bdcqzh, z.zhlsh, z.nf
+        , z.qzysxlh, z.qlqtzk, z.qxdm, z.szsxqc, z.fzr
+        , z.fzsj, z.lzr, z.lzsj, z.lzrzjh,z.lzrzjzl, z.szr
+        , z.szsj, z.zslx, z.fj, z.zl, z.qlr
+        , z.ywr, z.gyfs, z.qllx, z.yt, z.mj
+        , z.qlxz, z.syqx,z.zmqlsx,q.djyy,q.qszt,z.dyzt,q.xmid
+        FROM bdc_zs z
+        LEFT JOIN bdc_xm_zs_gx x ON z.zsid = x.zsid
+        LEFT JOIN bdc_xm q ON q.xmid = x.xmid
+        <where>
+            <if test="xmid != null and xmid != ''">
+                AND q.xmid = #{xmid}
+            </if>
+
+            <if test="gzlslid != null and gzlslid != ''">
+                AND q.gzlslid = #{gzlslid}
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND z.bdcdyh LIKE '%' || #{bdcdyh} || '%'
+            </if>
+            <if test="bdcqzh != null and bdcqzh != ''">
+                AND z.bdcqzh LIKE '%' || #{bdcqzh} || '%'
+            </if>
+            <if test="zl != null and zl != ''">
+                AND z.zl LIKE '%' || #{zl} || '%'
+            </if>
+            <if test="qlr != null and qlr != ''">
+                AND instr(z.qlr,#{qlr})>0
+            </if>
+            <if test="qsztList != null and qsztList.size>0">
+                AND q.qszt IN
+                <foreach collection="qsztList" item="qszt" open="(" close=")" separator=",">
+                    #{qszt}
+                </foreach>
+            </if>
+        </where>
+        <choose>
+            <when test="sortParameter != null and sortParameter != ''">
+                ORDER BY ${sortParameter}
+            </when>
+            <otherwise>
+                ORDER BY z.bdcdyh ASC,z.bdcqzh ASC
+            </otherwise>
+        </choose>
+        )
+        WHERE rn = 1
+    </select>
+
+    <select id="listBdcZs" parameterType="map" resultType="cn.gtmap.realestate.common.core.domain.BdcZsDO">
+        SELECT DISTINCT z.zsid, z.bdcdyh, z.bdcqzh, z.zhlsh, z.nf
+        , z.qzysxlh, z.qlqtzk, z.qxdm, z.szsxqc, z.fzr
+        , z.fzsj, z.lzr, z.lzsj, z.lzrzjh,z.lzrdh,z.lzrzjzl, z.szr
+        , z.szsj, z.zslx, z.fj, z.zl, z.qlr
+        , z.ywr, z.gyfs, z.qllx, z.yt, z.mj
+        , z.qlxz, z.syqx,z.zmqlsx,z.ewmnr,z.zhxlh,z.sqsjc,z.dyzt,z.zzbs
+        , z.zzid, z.zzdz, z.zzmlbm, z.zzqfsj, z.bdcqzhjc,z.storageid
+        FROM bdc_zs z
+        LEFT JOIN bdc_xm_zs_gx x ON z.zsid = x.zsid
+        LEFT JOIN bdc_xm q ON q.xmid = x.xmid
+        LEFT JOIN BDC_QLR qlr ON z.ZSID = qlr.ZSID
+        <where>
+            <if test="xmid != null and xmid != ''">
+                AND q.xmid = #{xmid}
+            </if>
+            <if test="zsid != null and zsid != ''">
+                AND z.zsid = #{zsid}
+            </if>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND q.gzlslid = #{gzlslid}
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND z.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="bdcqzh != null and bdcqzh != ''">
+                AND z.bdcqzh = #{bdcqzh}
+            </if>
+            <if test="bdcqzhmh != null and bdcqzhmh != ''">
+                AND z.bdcqzh LIKE '%' || #{bdcqzhmh} || '%'
+            </if>
+            <if test="zl != null and zl != ''">
+                AND z.zl LIKE '%' || #{zl} || '%'
+            </if>
+            <if test="zljq != null and zljq != ''">
+                AND z.zl  = #{zljq}
+            </if>
+            <if test="zzbs != null and zzbs != ''">
+                AND z.zzbs = #{zzbs}
+            </if>
+            <if test="zslx != null">
+                AND z.zslx = #{zslx}
+            </if>
+            <if test="bdcqzhjc != null and bdcqzhjc != ''">
+                AND z.bdcqzhjc = #{bdcqzhjc}
+            </if>
+            <if test="qlr != null and qlr != ''">
+                AND instr(z.qlr,#{qlr})>0
+            </if>
+            <if test="qsztList != null and qsztList.size>0">
+                AND q.qszt IN
+                <foreach collection="qsztList" item="qszt" open="(" close=")" separator=",">
+                    #{qszt}
+                </foreach>
+            </if>
+            <if test="xmidList != null and xmidList.size()>0">
+                AND q.xmid IN
+                <foreach collection="xmidList" item="xmid" open="(" close=")" separator=",">
+                    #{xmid}
+                </foreach>
+            </if>
+            <if test="qlrzjh != null and qlrzjh != ''">
+                AND qlr.ZJH = #{qlrzjh}
+            </if>
+        </where>
+        <choose>
+            <when test="sortParameter != null and sortParameter != ''">
+                ORDER BY ${sortParameter}
+            </when>
+            <otherwise>
+                ORDER BY z.bdcdyh ASC,z.zsid ASC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!--查询原项目的证书信息-->
+    <select id="listYxmZs" parameterType="map" resultType="cn.gtmap.realestate.common.core.domain.BdcZsDO">
+        SELECT DISTINCT z.zsid, z.bdcdyh, z.bdcqzh, z.zhlsh, z.nf
+        , z.qzysxlh, z.qlqtzk, z.qxdm, z.szsxqc, z.fzr
+        , z.fzsj, z.lzr, z.lzsj, z.lzrzjh,z.lzrdh,z.lzrzjzl, z.szr
+        , z.szsj, z.zslx, z.fj, z.zl, z.qlr
+        , z.ywr, z.gyfs, z.qllx, z.yt, z.mj
+        , z.qlxz, z.syqx,z.zmqlsx,z.ewmnr,z.zhxlh,z.sqsjc,z.dyzt,z.zzbs, z.bdcqzhjc
+        FROM bdc_zs z
+        LEFT JOIN bdc_xm_zs_gx x ON z.zsid = x.zsid
+        LEFT JOIN bdc_xm_lsgx l on x.xmid = l.yxmid
+        LEFT JOIN bdc_xm q ON q.xmid = l.xmid
+        <where>
+            <if test="xmid != null and xmid != ''">
+                AND q.xmid = #{xmid}
+            </if>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND q.gzlslid = #{gzlslid}
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND z.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="bdcqzh != null and bdcqzh != ''">
+                AND z.bdcqzh = #{bdcqzh}
+            </if>
+            <if test="zl != null and zl != ''">
+                AND z.zl LIKE '%' || #{zl} || '%'
+            </if>
+            <if test="qlr != null and qlr != ''">
+                AND instr(z.qlr,#{qlr})>0
+            </if>
+            <if test="zxyql != null">
+                AND l.zxyql = #{zxyql}
+            </if>
+            <if test="wlxm != null">
+                AND l.wlxm = #{wlxm}
+            </if>
+            <if test="qllx != null">
+                AND q.qllx = #{qllx}
+            </if>
+        </where>
+        <choose>
+            <when test="sortParameter != null and sortParameter != ''">
+                ORDER BY ${sortParameter}
+            </when>
+            <otherwise>
+                ORDER BY z.bdcdyh ASC,z.zsid ASC
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <!--获取和证书相关的项目信息,因为需要项目的权属状态，避免一证多房部分注销，所以按照qszt升序排序-->
+    <select id="queryZsXmByZsid" parameterType="string" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        <if test="_parameter !=null and _parameter !=''">
+            SELECT distinct x.xmid, x.slbh, x.gzlslid,x.djjg,x.qszt,x.bdcdyh,x.djsj,x.dbr,x.sqfbcz,x.dzwyt,x.qllx,x.qlr,x.qlrzjh,x.gzldyid, x.djxl,x.bdcdywybh
+            FROM bdc_xm x
+            LEFT JOIN bdc_xm_zs_gx g ON x.xmid = g.xmid
+            WHERE g.zsid = #{_parameter}
+            ORDER BY x.qszt ASC
+        </if>
+    </select>
+
+    <!--依据条件查询zslx-->
+    <select id="queryZslx" parameterType="cn.gtmap.realestate.common.core.qo.certificate.BdcZsQO" resultType="String">
+        SELECT DISTINCT a.zslx AS zsid
+        FROM bdc_zs a
+        LEFT JOIN bdc_xm_zs_gx b ON a.zsid = b.zsid
+        LEFT JOIN bdc_xm c ON c.xmid = b.xmid
+        <where>
+            <if test="xmid != null and xmid != ''">
+                AND c.xmid = #{xmid}
+            </if>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND c.gzlslid = #{gzlslid}
+            </if>
+        </where>
+    </select>
+
+    <!--依据条件查询zsid,为保持和其它结果集一致，选择bdcdyh,zsid正序排序-->
+    <select id="queryZsid" parameterType="cn.gtmap.realestate.common.core.qo.certificate.BdcZsQO" resultType="String">
+        SELECT d.zsid AS zsid
+        FROM (
+        SELECT DISTINCT a.zsid AS zsid, a.bdcdyh
+        FROM bdc_zs a
+        INNER JOIN bdc_xm_zs_gx b ON a.zsid = b.zsid
+        INNER JOIN bdc_xm c ON c.xmid = b.xmid
+        <where>
+            <if test="xmid != null and xmid != ''">
+                AND c.xmid = #{xmid}
+            </if>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND c.gzlslid = #{gzlslid}
+            </if>
+            <if test="gzlslidList != null and gzlslidList.size>0">
+                AND c.gzlslid IN
+                <foreach collection="gzlslidList" item="gzlsl" open="(" close=")" separator=",">
+                    #{gzlsl}
+                </foreach>
+            </if>
+            <if test="zslx != null">
+                AND a.zslx = #{zslx}
+            </if>
+            <if test="sqlStr != null and sqlStr != ''">
+                AND ${sqlStr}
+            </if>
+            <if test="qsztList != null and qsztList.size>0">
+                AND c.qszt IN
+                <foreach collection="qsztList" item="qszt" open="(" close=")" separator=",">
+                    #{qszt}
+                </foreach>
+
+            </if>
+            <if test="zsidList != null and zsidList.size>0">
+                AND a.zsid IN
+                <foreach collection="zsidList" item="zsid" open="(" close=")" separator=",">
+                    #{zsid}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY a.bdcdyh ASC,a.zsid ASC
+        ) d
+    </select>
+
+    <!--获取当前项目中所有的zsid-->
+    <select id="getXmZsid" parameterType="string" resultType="String">
+        <if test="_parameter !=null and _parameter !=''">
+            SELECT DISTINCT a.zsid AS zsid
+            FROM bdc_xm_zs_gx a
+            WHERE a.xmid = #{_parameter}
+        </if>
+    </select>
+
+    <!--获取证书总数-->
+    <select id="countBdcZs" parameterType="cn.gtmap.realestate.common.core.qo.certificate.BdcZsQO" resultType="int">
+        SELECT count(DISTINCT q.zsid) num
+        FROM bdc_xm_zs_gx q
+        <if test="gzlslid != null and gzlslid != ''">
+            INNER JOIN bdc_xm x on q.xmid = x.xmid
+        </if>
+        <where>
+            <if test="xmid != null and xmid != ''">
+                AND q.xmid = #{xmid}
+            </if>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND x.gzlslid = #{gzlslid}
+            </if>
+        </where>
+    </select>
+
+    <!--
+        获取数据库中证号当前最大顺序号
+        1、预留证号和废号有些地区可能不开启，所以动态拼接
+    -->
+    <select id="queryMaxSxh" parameterType="cn.gtmap.realestate.certificate.core.bo.BdcBdcqzhBO" resultType="Integer">
+        SELECT
+            NVL(MAX(ZHXLH), 0) AS MAXSXH
+        FROM
+        (
+            SELECT NVL(ZHXLH, 0) AS ZHXLH, QXDM, NF, ZSLX, DJBMDM FROM BDC_ZS
+
+            <if test="ylzhkg == 1">
+                UNION SELECT ZHXLH, QXDM, NF, ZSLX, DJBMDM FROM BDC_XT_YLZH
+            </if>
+
+            <if test="zsfhkg == 1">
+                UNION SELECT ZHXLH, QXDM, NF, ZSLX, DJBMDM FROM BDC_XT_ZSFH
+            </if>
+        )
+        WHERE
+                NF = #{nf}
+            AND
+                ZSLX = #{zslx}
+
+        <!--证号是否区分区县代码-->
+        <if test="zhqfqxdm == 1">
+            AND
+            <choose>
+                <!--优先用分组区划查询-->
+                <when test="qxdms != null and qxdms != ''">
+                    QXDM IN
+                    <foreach collection="qxdms.split(',')" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </when>
+                <!--没有和其它区划共用流水号则只根据当前区划查询-->
+                <otherwise>
+                    QXDM = #{qxdm}
+                </otherwise>
+            </choose>
+        </if>
+        <!--证号是否区分登记部门-->
+        <if test="zhqfbm == 1">
+            AND DJBMDM =  #{djbmdm}
+        </if>
+    </select>
+
+    <!--
+        查询指定初始顺序号到最大顺序号之间所有顺序号
+        1、查询结果一定要保证递增有序性
+        2、返回的集合需要保证互异性、有序性、确定性，用LinkedHashSet
+    -->
+    <select id="querySxh" parameterType="cn.gtmap.realestate.certificate.core.bo.BdcBdcqzhBO" resultType="Integer">
+        SELECT
+            DISTINCT ZHXLH
+        FROM
+        (
+            SELECT NVL(ZHXLH, 0) AS ZHXLH, QXDM, NF, ZSLX, DJBMDM FROM BDC_ZS
+
+            <if test="ylzhkg == 1">
+                UNION SELECT ZHXLH, QXDM, NF, ZSLX, DJBMDM FROM BDC_XT_YLZH
+            </if>
+
+            <if test="zsfhkg == 1">
+                UNION SELECT ZHXLH, QXDM, NF, ZSLX, DJBMDM FROM BDC_XT_ZSFH
+            </if>
+        )
+        WHERE
+            NF = #{nf}
+
+        <!--证号是否区分区县代码-->
+        <if test="zhqfqxdm == 1">
+            AND
+            <choose>
+                <!--优先用分组区划查询-->
+                <when test="qxdms != null and qxdms != ''">
+                    QXDM IN
+                    <foreach collection="qxdms.split(',')" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </when>
+                <!--没有和其它区划共用流水号则只根据当前区划查询-->
+                <otherwise>
+                    QXDM = #{qxdm}
+                </otherwise>
+            </choose>
+        </if>
+
+        <!--证号是否区分登记部门-->
+        <if test="zhqfbm == 1">
+            AND  DJBMDM =  #{djbmdm}
+        </if>
+
+            AND
+                ZSLX = #{zslx}
+            AND
+                ZHXLH &gt;= #{cssxh}
+            AND
+                ZHXLH &lt;= #{sxh}
+        ORDER BY
+            ZHXLH ASC
+    </select>
+
+    <select id="listBdcZhth" parameterType="cn.gtmap.realestate.certificate.core.bo.BdcBdcqzhBO" resultType="String">
+        with lshxx as (
+            select rownum as num from bdc_zs where
+             rownum  &lt;  (select max(zhxlh) from ( <include refid="listBdcqzhZhxlh"/> ) )
+             and rownum &gt;= #{cssxh}
+             order by rownum asc
+        )
+        select num from  lshxx where not exists (
+            <include refid="listBdcqzhZhxlh"/> and zhxlh = lshxx.num
+        )
+    </select>
+
+    <sql id="listBdcqzhZhxlh">
+        SELECT DISTINCT NVL(ZHXLH, 0) AS ZHXLH FROM BDC_ZS Z WHERE NF = #{nf} AND ZSLX = #{zslx}
+
+        <!--证号是否区分区县代码-->
+        <if test="zhqfqxdm == 1">
+            AND
+            <choose>
+                <!--优先用分组区划查询-->
+                <when test="qxdms != null and qxdms != ''">
+                    QXDM IN
+                    <foreach collection="qxdms.split(',')" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </when>
+                <!--没有和其它区划共用流水号则只根据当前区划查询-->
+                <otherwise>
+                    QXDM = #{qxdm}
+                </otherwise>
+            </choose>
+        </if>
+
+        <!--证号是否区分登记部门-->
+        <if test="zhqfbm == 1">
+            AND  DJBMDM =  #{djbmdm}
+        </if>
+    </sql>
+
+    <update id="updateBdcZsByZsid" parameterType="cn.gtmap.realestate.common.core.domain.BdcZsDO">
+        <if test="zsid != null and zsid != ''">
+            UPDATE bdc_zs t
+            <set>
+                t.qzysxlh = #{qzysxlh,jdbcType=VARCHAR}
+            </set>
+            WHERE t.zsid=#{zsid}
+        </if>
+    </update>
+
+    <update id="updateZsCommonLzrxx" parameterType="cn.gtmap.realestate.common.core.dto.certificate.BdcFzjlZsDTO">
+        <if test="zsidList != null and zsidList.size() > 0">
+            UPDATE bdc_zs t
+            <set>
+                t.lzr = #{lzr,jdbcType=VARCHAR},
+                t.lzsj = #{lzsj,jdbcType=TIMESTAMP},
+                t.lzrzjzl = #{lzrzjzl,jdbcType=INTEGER},
+                t.lzrzjh = #{lzrzjh,jdbcType=VARCHAR},
+                t.lzrdh = #{lzrdh,jdbcType=VARCHAR}
+            </set>
+            <where>
+                <if test="zsidList != null and zsidList.size() > 0">
+                    AND t.zsid in
+                    <foreach collection="zsidList" item="item" open="(" separator=" , " close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+        </if>
+    </update>
+
+    <update id="plUpdateZsLzrxxByZsid" parameterType="cn.gtmap.realestate.common.core.dto.certificate.BdcFzjlZsDTO">
+        <if test="zsidList != null and zsidList.size() > 0">
+            UPDATE bdc_zs t
+            <set>
+                <if test="lzr != null and lzr != ''">
+                    t.lzr = #{lzr,jdbcType=VARCHAR},
+                </if>
+                <if test="lzsj != null">
+                    t.lzsj = #{lzsj,jdbcType=TIMESTAMP},
+                </if>
+                <if test="lzrzjzl != null and lzrzjzl!=''">
+                    t.lzrzjzl = #{lzrzjzl,jdbcType=INTEGER},
+                </if>
+                <if test="lzrzjh != null and lzrzjh!=''">
+                    t.lzrzjh = #{lzrzjh,jdbcType=VARCHAR},
+                </if>
+                <if test="lzrdh != null and lzrdh!=''">
+                    t.lzrdh = #{lzrdh,jdbcType=VARCHAR},
+                </if>
+            </set>
+            <where>
+                <if test="zsidList != null and zsidList.size() > 0">
+                    AND t.zsid in
+                    <foreach collection="zsidList" item="item" open="(" separator=" , " close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+        </if>
+    </update>
+
+    <select id="queryBdcZsQszt" parameterType="cn.gtmap.realestate.common.core.qo.certificate.BdcZsQO"
+            resultType="cn.gtmap.realestate.common.core.dto.certificate.BdcZsQsztDTO">
+        SELECT DISTINCT t1.zsid ,t.gzlslid, t.qszt, t.bdcqzh
+        FROM bdc_xm t
+        LEFT JOIN bdc_xm_zs_gx t1 ON t.xmid = t1.xmid
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND t.gzlslid = #{gzlslid}
+            </if>
+            <if test="xmid != null and xmid != ''">
+                AND t.xmid = #{xmid}
+            </if>
+            <if test="zsid != null and zsid != ''">
+                AND t1.zsid = #{zsid}
+            </if>
+            <if test="qsztList != null and qsztList.size>0">
+                AND t.qszt IN
+                <foreach collection="qsztList" item="qszt" open="(" close=")" separator=",">
+                    #{qszt}
+                </foreach>
+
+            </if>
+            <if test="zsidList != null and zsidList.size>0">
+                AND t1.zsid IN
+                <foreach collection="zsidList" item="zsid" open="(" close=")" separator=",">
+                    #{zsid}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!--获取当前流程关联的所有证书项目信息-->
+    <select id="listBdcZhxx" parameterType="String" resultType="cn.gtmap.realestate.common.core.dto.certificate.BdcBdcqzhDTO">
+        SELECT
+            X.XMID,
+            Z.ZSID,
+            Z.BDCQZH,
+            Z.ZHLSH,
+            Z.ZSLX,
+            Z.NF,
+            Z.SQSJC,
+            Z.SZSXQC,
+            Z.ZHXLH
+        FROM
+            BDC_XM X
+        JOIN
+            BDC_XM_ZS_GX G
+        ON
+            X.XMID = G.XMID
+        JOIN
+            BDC_ZS Z
+        ON
+            G.ZSID = Z.ZSID
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                X.GZLSLID = #{gzlslid}
+            </if>
+        </where>
+        order by z.bdcdyh
+    </select>
+
+    <!--查询需要补制证的证书信息-->
+    <select id="listSyncZzZsids" resultType="string">
+        select distinct zs.zsid
+        from  bdc_zs zs
+        inner join bdc_xm_zs_gx gx
+        on zs.zsid = gx.zsid
+        inner join bdc_xm xm
+        on xm.xmid = gx.xmid
+        inner join bdc_xmfb fb
+        on fb.xmid =xm.xmid
+        where xm.qszt = 1 -- 项目表权属状态
+        and xm.ajzt = 2 --  项目表案件状态
+        and zs.zzbs is null -- 证书表证照标识
+        and zs.zzdz is null -- 证书表证照地址
+        and fb.lzfs is not null -- 项目附表表领证方式
+        and zs.szsj >= sysdate - 1
+        and zs.szsj <![CDATA[<=]]> sysdate
+    </select>
+
+    <!--查询需要补制证的存量证书信息-->
+    <select id="listSyncZzClZsids" parameterType="java.util.Map" resultType="string">
+        select distinct zs.zsid
+        from  bdc_zs zs
+        inner join bdc_xm_zs_gx gx
+        on zs.zsid = gx.zsid
+        inner join bdc_xm xm
+        on xm.xmid = gx.xmid
+        where xm.qszt = 1 -- 项目表权属状态
+          and xm.ajzt = 2 --  项目表案件状态
+          and zs.zzbs is null -- 证书表证照标识
+          and zs.zzdz is null -- 证书表证照地址
+        <if test="endTime != null and endTime != ''">
+            and to_char(zs.szsj,'yyyy-MM-dd') <![CDATA[<=]]> #{endTime}
+        </if>
+        <if test="num != null and num != ''">
+            and rownum <![CDATA[<=]]> #{num}
+        </if>
+    </select>
+
+    <!--查询原项目证书-->
+    <select id="queryYxmZs" parameterType="string" resultType="cn.gtmap.realestate.common.core.dto.certificate.BdcZsXmidDTO">
+        select
+            distinct
+            z.zsid,
+            z.bdcqzh,
+            z.bdcdyh,
+            z.zl,
+            q.xmid
+        from
+            bdc_zs z
+        left join bdc_xm_zs_gx  x  on z.zsid = x.zsid
+        left join bdc_xm_lsgx   l  on x.xmid = l.yxmid
+        left join bdc_xm        q  on q.xmid = l.xmid
+
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+               AND q.gzlslid = #{gzlslid}
+            </if>
+            <if test="qllx != null">
+                AND q.qllx = #{qllx}
+            </if>
+        </where>
+
+        order by
+        q.xmid asc
+    </select>
+
+    <!--查询原项目证书-->
+    <select id="listWbjywxx" parameterType="string"
+            resultType="cn.gtmap.realestate.common.core.dto.certificate.BdcZsXmDTO">
+        select
+        q.gzlslid,
+        z.szsj
+        from
+        bdc_zs z
+        left join bdc_xm_zs_gx  x  on z.zsid = x.zsid
+        left join bdc_xm        q  on q.xmid = x.xmid
+        where q.ajzt != 2 and z.szrid = #{szrid}
+    </select>
+
+    <update id="updateWbjxm" parameterType="java.util.List">
+        UPDATE bdc_zs z
+        SET z.fzsj = ( SELECT b.szsj FROM bdc_zs b WHERE b.zsid = z.zsid )
+        <where>
+            z.zsid IN (
+            SELECT
+            s.zsid
+            FROM
+            bdc_zs s
+            LEFT JOIN bdc_xm_zs_gx x ON s.zsid = x.zsid
+            LEFT JOIN bdc_xm q ON q.xmid = x.xmid
+            WHERE
+            q.gzlslid IN
+            <foreach collection="list" item="item" open="(" close=")" separator=",">
+                #{item.gzlslid}
+            </foreach>
+            )
+        </where>
+    </update>
+
+    <!-- 获取不动产单元号关联的锁定证书信息  -->
+    <select id="listBdcZssdxx" parameterType="cn.gtmap.realestate.common.core.qo.certificate.BdcZssdQO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcZssdDO">
+        SELECT
+            S.ZSSDID, S.CQZH, S.ZSID, S.BDCLX, S.SDZT, S.SDYY, S.SDR, S.SDRID,
+            S.SDSJ, S.JSR, S.JSRID, S.JSSJ, S.JSYY, S.BZ, S.SDSQJG, S.SDSQWH, S.GZLSLID, S.XMID
+        FROM
+            BDC_ZSSD S
+        JOIN
+            BDC_ZS   Z
+        ON
+        S.ZSID = Z.ZSID
+        <where>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND z.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="sdzt != null and sdzt != ''">
+                AND s.sdzt = #{sdzt,jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取证书信息  -->
+    <select id="listBdcZsForZzdzj" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+        xm.slbh,xm.DJSJ,zs.BDCQZH,zs.FZSJ,zs.qlr,qlr.QLRMC,qlr.ZJH,zs.ZHLSH,zs.NF,zs.SQSJC,zs.SZSXQC,zs.ZSLX,zs.DYZT,zs.gyfs as GYQK,zs.ZL,zs.BDCDYH,zs.QLLX,zs.QLXZ,zs.YT,zs.MJ,zs.SYQX,zs.QLQTZK,zs.FJ,zs.ZMQLSX,zs.YWR,zs.ZSID,xm.DJLX,xm.XMID,sf.SFZT,zs.QZYSXLH
+        FROM
+        BDC_ZS zs
+        LEFT JOIN BDC_QLR qlr ON zs.ZSID = qlr.ZSID
+        LEFT JOIN BDC_XM_ZS_GX gx ON zs.ZSID = gx.ZSID
+        LEFT JOIN BDC_XM xm ON xm.XMID = gx.XMID
+        LEFT JOIN BDC_SFXX sf ON xm.XMID = sf.XMID
+        <if test="lzrzjh != null and lzrzjh != ''">
+            LEFT JOIN BDC_LZR lzr ON xm.xmid = lzr.xmid
+            left join bdc_lzr lzr1 on lzr1.qlrid=qlr.qlrid
+        </if>
+        <where>
+            <if test="zslxFlag != null and zslxFlag == true">
+                AND zs.ZSLX = 1
+            </if>
+            <if test="qlr != null and qlr != ''">
+                AND qlr.QLRMC = #{qlr}
+            </if>
+            <if test="qlrzjh != null and qlrzjh != ''">
+                AND qlr.ZJH = #{qlrzjh}
+            </if>
+            <if test="lzrzjh != null and lzrzjh != ''">
+                AND (case xm.sqfbcz
+                when 0 then
+                ( lzr.lzrzjh)
+                else
+                (lzr1.lzrzjh)
+                end ) = #{lzrzjh}
+            </if>
+            <if test="slbh != null and slbh != ''">
+                AND xm.SLBH = #{slbh}
+            </if>
+            <if test="wbsplyFlag != null and wbsplyFlag == true">
+                AND xm.SPLY IN ('1','3','4','5','6','7','9','2','17','18','19','15','22')
+            </if>
+            <if test="dyzt != null and isdyFlag == true">
+                AND zs.DYZT IN
+                <foreach collection="dyzt" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="dyzt != null and isdyFlag == false ">
+                AND (zs.DYZT IN
+                <foreach collection="dyzt" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                OR zs.DYZT IS NULL)
+            </if>
+            <if test="ajzt != null">
+                AND xm.AJZT IN
+                <foreach collection="ajzt" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="sply != null and sply.size() > 0">
+                AND xm.SPLY IN
+                <foreach collection="sply" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+
+    <update id="updateZsFj" parameterType="java.util.List">
+        UPDATE bdc_zs zs
+        <set>
+            zs.fj = '已拆除，待权利人申请注销'
+        </set>
+        <where>
+            AND zs.zsid IN
+            <foreach collection="list" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </where>
+    </update>
+
+    <!-- 获取证书信息  -->
+    <select id="listDzzzxxByPageOrder" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcDzzzQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcDzzzCxDTO">
+        SELECT z.zsid, z.bdcdyh, z.bdcqzh, z.zhlsh, z.nf
+        , z.qzysxlh, z.qlqtzk, z.qxdm, z.szsxqc, z.fzr
+        , z.fzsj, z.lzr, z.lzsj, z.lzrzjh,z.lzrdh,z.lzrzjzl, z.szr
+        , z.szsj, z.zslx, z.fj, q.zl, z.qlr
+        , z.ywr, z.gyfs, z.qllx, z.yt, z.mj
+        , z.qlxz, z.syqx,z.zmqlsx,z.ewmnr,z.zhxlh,z.sqsjc,z.dyzt,z.zzbs,z.storageid,q.slbh,q.xmid,q.GZLSLID,q.QSZT
+        FROM bdc_zs z
+        LEFT JOIN (SELECT x.zsid, max(x.xmid) AS xmid FROM bdc_xm_zs_gx x GROUP BY zsid) x
+        ON z.zsid = x.zsid
+        LEFT JOIN bdc_xm q ON q.xmid = x.xmid
+        WHERE q.ajzt in (1,2,3,4,5)
+        <if test="qszt != null and qszt != ''">
+            AND q.qszt = #{qszt,jdbcType=INTEGER}
+        </if>
+        <if test="lwgzldyid != null and lwgzldyid != ''">
+            AND q.gzldyid not in
+            <foreach collection="lwgzldyid.split(',')" item="item" open="(" close=")" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="zslx != null and zslx != ''">
+            AND
+            <if test="zscxlx == null || zscxlx == 0">
+                z.zslx = #{zslx}
+            </if>
+            <if test="zscxlx == null || zscxlx == 1">
+                z.zslx in
+                <foreach collection="zslx.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </if>
+        <if test="fzjsrq != null and fzjsrq != ''">
+            AND to_char(q.djsj,'yyyy-MM-dd') <![CDATA[<=]]> #{fzjsrq}
+        </if>
+        <if test="sfscpdf != null and sfscpdf == '1'.toString() ">
+            AND z.storageid is not null
+        </if>
+        <if test="sfscpdf != null and sfscpdf == '0'.toString() ">
+            AND z.storageid is null
+        </if>
+        <if test="sfsczzbs != null and sfsczzbs == '1'.toString() ">
+            AND z.zzbs is not null
+        </if>
+        <if test="sfsczzbs != null and sfsczzbs == '0'.toString() ">
+            AND z.zzbs is null
+        </if>
+        ORDER BY
+        <choose>
+            <when test="fzsjOrder!=null and ''!= fzsjOrder">
+                q.djsj ${fzsjOrder}
+            </when>
+            <otherwise>
+                q.djsj DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!--获取领证人签字图片信息-->
+    <select id="queryFzjlLzrQzxxs" parameterType="cn.gtmap.realestate.common.core.qo.register.BdcQzxxQO"
+            resultType="cn.gtmap.realestate.common.core.domain.register.BdcQzxxDO">
+        SELECT
+            id, xmid, gzlslid, slbh, bdlx, qznr, qzrlb, fid, sxh
+        FROM
+            bdc_qzxx
+        <where>
+            <!--发证记录领证人签字保存表单类型固定为3-->
+            bdlx = 3
+
+            <if test="xmid != null and xmid != '' ">
+                AND xmid = #{xmid,jdbcType=VARCHAR}
+            </if>
+            <if test="slbh != null and slbh != '' ">
+                AND slbh = #{slbh,jdbcType=VARCHAR}
+            </if>
+            <if test="gzlslid != null and gzlslid != '' ">
+                AND gzlslid = #{gzlslid,jdbcType=VARCHAR}
+            </if>
+            <if test="sxhs != null and sxhs.size > 0">
+                AND sxh IN
+                <foreach collection="sxhs" item="sxh" open="(" close=")" separator=",">
+                    #{sxh,jdbcType=INTEGER}
+                </foreach>
+            </if>
+        </where>
+
+        ORDER BY
+            sxh nulls first
+    </select>
+
+    <select id="listBdcXmZs" parameterType="java.util.List" resultType="cn.gtmap.realestate.common.core.dto.certificate.BdcZsXmDTO">
+        SELECT
+            x.gzlslid, x.bdcdyh,
+            z.bdcqzh
+        FROM
+            BDC_XM X
+        JOIN
+            BDC_XM_ZS_GX G ON X.XMID = G.XMID
+        JOIN
+            BDC_ZS Z ON G.ZSID = Z.ZSID
+        <where>
+            x.qszt = 1
+            AND
+            x.bdcdyh IN
+            <foreach collection="list" item="item" open="(" close=")" separator=",">
+                #{item.bdcdyh}
+            </foreach>
+        </where>
+
+        ORDER BY
+            x.xmid
+    </select>
+    <select id="listDjxx" resultType="cn.gtmap.realestate.common.core.dto.certificate.BdcZsXmAndQlrDTO">
+        select xm.BDCDYH  as bdcdyh,
+               qlr.BDCQZH as bdcqzh,
+               xm.DJJG    as djjg,
+               zs.FZSJ    as fzrq,
+               qlr.GYQK   as gyqk,
+               xm.QLLX    as qllx,
+               zs.QLQTZK  as qlqtzk,
+               qlr.QLRMC  as qlrmc,
+               zs.QLR     as qlr,
+               qlr.ZJH   as qlrzjh,
+               zs.QLXZ    as qlxz,
+               zs.SYQX    as syqx,
+               zs.YT      as yt,
+               zs.LZRZJZL as zjzl,
+               zs.ZL      as zl,
+               zs.FJ      as fj,
+               zs.STORAGEID as storageId,
+               zs.MJ      as mj,
+               zs.QZYSXLH as bh,
+               1          AS r,
+               zs.ZSID as zsid
+        from BDC_ZS zs
+        left join BDC_QLR qlr on qlr.ZSID = zs.ZSID and qlr.qlrlb = '1'
+        left join BDC_XM xm on qlr.XMID = xm.XMID
+        where xm.QSZT = 1 and xm.QLLX not in (37,96,96,98)
+        <if test="bdcdyh != null and bdcdyh != ''">
+            and xm.BDCDYH = #{bdcdyh}
+        </if>
+        <if test="sfzh != null and sfzh != ''">
+            and qlr.ZJH = #{sfzh}
+        </if>
+        <if test="qlrmc != null and qlrmc != ''">
+            and qlr.QLRMC = #{qlrmc}
+        </if>
+    </select>
+
+    <update id="updateBdcZsZzqzNull" parameterType="String">
+        <if test="zsid != null and zsid != '' ">
+            update bdc_zs set zzid = null, zzdz = null where zsid = #{zsid}
+        </if>
+    </update>
+
+    <select id="queryUpdateZsid" parameterType="map" resultType="String">
+        SELECT  z.zsid FROM bdc_zs z
+        <where>
+            z.szr is null
+            <if test="zsidList != null and zsidList.size>0">
+                AND z.zsid IN
+                <foreach collection="zsidList" item="zsid" open="(" close=")" separator=",">
+                    #{zsid}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <update id="batchUpdateSzr">
+        <if test="zsidList != null and zsidList.size>0">
+            update bdc_zs z set z.szr=#{szr},z.szrid=#{szrid},z.szsj=#{szsj}
+            <where>
+                <if test="zsidList != null and zsidList.size>0">
+                    AND z.zsid IN
+                    <foreach collection="zsidList" item="zsid" open="(" close=")" separator=",">
+                        #{zsid}
+                    </foreach>
+                </if>
+            </where>
+        </if>
+    </update>
+
+    <!--根据抵押证明查询对应产权信息-->
+    <select id="queryDyaqCqxx" parameterType="String" resultType="cn.gtmap.realestate.common.core.dto.certificate.eCertificate.EZzfsxxDTO">
+        <if test="zsid != null and zsid != ''">
+            SELECT * FROM
+            (
+                SELECT distinct
+                    nvl(yxm.bdcdyh, '/') as bdcdyh,
+                    nvl(yxm.dzwmj, yxm.zdzhmj) as mj,
+                    nvl(yxm.zl, '/') as zl,
+                    nvl(to_char(yxm.dzwyt),nvl(to_char(yxm.zdzhyt), '/')) as ytdm,
+                    nvl(t.mc,nvl(y.mc, '/')) as yt,
+                    yxm.qlxz as qlxzdm,
+                    q.mc as qlxz,
+                    f.jgsj as jgsj2,
+                    f.fwjg as fwjgdm,
+                    j.mc as fwjg,
+                    f.zh,
+                    f.fjh,
+                    case when d.dyfs = 2 then d.zgzqe else d.bdbzzqse end as je,
+                    row_number() over ( partition BY yxm.bdcdyh ORDER BY yxm.xmid ASC ) rn
+                FROM bdc_zs z
+                JOIN bdc_xm_zs_gx  zg   on z.zsid = zg.zsid
+                JOIN bdc_xm        x    on zg.xmid = x.xmid
+                JOIN bdc_dyaq      d    on x.xmid = d.xmid
+                JOIN bdc_xm_lsgx   l    on d.xmid = l.xmid and nvl(l.wlxm,0) = 0
+                JOIN bdc_xm        yxm  on yxm.xmid = l.yxmid
+                LEFT JOIN bdc_fdcq f    on yxm.xmid = f.xmid
+                LEFT JOIN bdc_zd_qlxz q on yxm.qlxz = q.dm
+                LEFT JOIN bdc_zd_fwjg j on f.fwjg = j.dm
+                LEFT JOIN bdc_zd_fwyt t on yxm.dzwyt = t.dm
+                LEFT JOIN bdc_zd_tdyt y on yxm.zdzhyt = y.dm
+                where
+                    z.zsid = #{zsid}
+            ) WHERE rn = 1
+        </if>
+    </select>
+
+    <!--查询证明关联的产权证书信息-->
+    <select id="listBdcZsByZmid" parameterType="String" resultType="cn.gtmap.realestate.common.core.domain.BdcZsDO">
+        <if test="zsid != null and zsid != ''">
+            SELECT
+                zs.zsid, zs.bdcdyh, zs.bdcqzh, zs.zhlsh, zs.nf
+                , zs.qzysxlh, zs.qlqtzk, zs.qxdm, zs.szsxqc, zs.fzr
+                , zs.fzsj, zs.lzr, zs.lzsj, zs.lzrzjh,zs.lzrzjzl, zs.szr
+                , zs.szsj, zs.zslx, zs.fj, zs.zl, zs.qlr
+                , zs.ywr, zs.gyfs, zs.qllx, zs.yt, zs.mj
+                , zs.qlxz, zs.syqx,zs.zmqlsx,zs.dyzt
+            FROM
+                bdc_xm_zs_gx zm
+            JOIN
+                bdc_xm_lsgx  l  ON zm.xmid = l.xmid
+            JOIN
+                bdc_xm_zs_gx yg on l.yxmid = yg.xmid
+            JOIN
+                bdc_zs       zs on yg.zsid = zs.zsid
+            where
+                zm.zsid = #{zsid}
+        </if>
+    </select>
+
+    <!--根据证书id查询证书清单-->
+    <select id="queryZsQdByZsid" parameterType="java.util.List" resultType="cn.gtmap.realestate.common.core.vo.register.ui.BdcZsqdVO">
+        SELECT distinct xm.xmid, zs.qlr,xm.zl,zs.bdcqzh,xm.bdcdyh,zs.yt,zs.qlxz,xm.dzwmj,gf.mc as gyqk
+        FROM
+        bdc_xm xm
+        JOIN
+        bdc_xm_zs_gx zm ON zm.xmid = xm.xmid
+        JOIN
+        bdc_zs zs ON zs.zsid = zm.zsid
+        LEFT JOIN
+        BDC_ZD_GYFS gf ON zs.gyfs = gf.dm
+        <where>
+            <if test="zsidList != null and zsidList.size>0">
+                zs.zsid IN
+                <foreach collection="zsidList" item="zsid" open="(" close=")" separator=",">
+                    #{zsid}
+                </foreach>
+            </if>
+        </where>
+    </select>
+</mapper>

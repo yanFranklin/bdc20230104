@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>中编办-事业单位登记信息（含机关、群团信息）查询</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <!--    <link rel="stylesheet" href="../../static/lib/bdcui/css/form.css"/>-->
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css">
+    <link rel="stylesheet" href="../../static/css/common.css"/>
+    <style type="text/css">
+        #popupTwoRows .layui-form-item{
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="bdc-percentage-container one-percentage-container">
+    <!--查询条件-->
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <!--一行的-->
+            <form class="layui-form" action="">
+                <!--IP地址-->
+                <input type="hidden" id="ipaddress"  name="ipaddress"/>
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label change-label-width bdc-label-newline">统一社会信用代码</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input search required-warn" name="tyshxydm" id="tyshxydm" placeholder="请输入" type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">第一名称</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input search required-warn" name="name" id="name" placeholder="请输入" type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                        <button type="reset" id="reset" class="layui-btn bdc-secondary-btn reset-btn">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--表格-->
+    <div class="bdc-table-box">
+        <table id="sydwdjxxTable" lay-filter="sydwdjxxTable"></table>
+    </div>
+
+    <!--党群机关详细，弹框表单-->
+    <div id="popupTwoRows" class="bdc-hide popup-dqjg">
+        <form class="layui-form" action="" id="djxxForm" lay-filter="djxxForm">
+            <div class="layui-form-item pf-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">机构地址</label>
+                    <div class="layui-input-inline">
+                        <input name="jgdz" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">数据日期</label>
+                    <div class="layui-input-inline">
+                        <input name="sjrq" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">其他名称</label>
+                    <div class="layui-input-inline">
+                        <input name="qtmc" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">颁发日期</label>
+                    <div class="layui-input-inline">
+                        <input name="bfrq" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">统一社会信用代码</label>
+                    <div class="layui-input-inline">
+                        <input name="tyshxydm" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">机构性质</label>
+                    <div class="layui-input-inline">
+                        <input name="jgxz" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">第一名称</label>
+                    <div class="layui-input-inline">
+                        <input name="onemc" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">赋码机关</label>
+                    <div class="layui-input-inline">
+                        <input name="fmjg" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">第三名称</label>
+                    <div class="layui-input-inline">
+                        <input name="threemc" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">权力标识</label>
+                    <div class="layui-input-inline">
+                        <input name="qlbs" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">第二名称</label>
+                    <div class="layui-input-inline">
+                        <input name="registration_date" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-inline">
+                        <input name="registration_date" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--事业单位详细，弹框表单-->
+    <div id="popupTwoRows" class="bdc-hide popup-sydw">
+        <form class="layui-form" action="" id="djxxForm" lay-filter="djxxForm">
+            <div class="layui-form-item pf-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">第一名称</label>
+                    <div class="layui-input-inline">
+                        <input name="onemc" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">统一社会信用代码</label>
+                    <div class="layui-input-inline">
+                        <input name="tyshxydm" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">住所</label>
+                    <div class="layui-input-inline">
+                        <input name="zs" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">举办单位</label>
+                    <div class="layui-input-inline">
+                        <input name="jbdw" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">业务类型</label>
+                    <div class="layui-input-inline">
+                        <input name="ywlx" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-inline">
+                        <input name="zt" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">登记管理机关</label>
+                    <div class="layui-input-inline">
+                        <input name="djgljg" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">法定代表人</label>
+                    <div class="layui-input-inline">
+                        <input name="fzr" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">经费来源</label>
+                    <div class="layui-input-inline">
+                        <input name="jfly" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">开办资金</label>
+                    <div class="layui-input-inline">
+                        <input name="kbzj" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">权力标识</label>
+                    <div class="layui-input-inline">
+                        <input name="qlbs" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">其他名称</label>
+                    <div class="layui-input-inline">
+                        <input name="qtmc" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">第二名称</label>
+                    <div class="layui-input-inline">
+                        <input name="twomc" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">第三名称</label>
+                    <div class="layui-input-inline">
+                        <input name="threemc" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">有效期(始)</label>
+                    <div class="layui-input-inline">
+                        <input name="yxqx_s" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">有效期(至)</label>
+                    <div class="layui-input-inline">
+                        <input name="yxqx_z" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">数据日期</label>
+                    <div class="layui-input-inline">
+                        <input name="sjrq" type="text" class="layui-input" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline bdc-complete-line">
+                    <label class="layui-form-label bdc-label-newline">宗旨和<br>业务范围</label>
+                    <div class="layui-input-inline bdc-end-time-box">
+                        <textarea name="zzhywfw"class="layui-textarea" disabled="off"></textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--表格内部操作按钮-->
+<script type="text/html" id="czTpl">
+    <a href="javascript:;" class="layui-btn layui-btn-xs bdc-major-btn" lay-event="detail">详细</a>
+</script>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/bdcui/js/mask.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/commonSearch.js"></script>
+<script src="../../static/js/gxjkjs/bjSydwdjxx.js"></script>
+</body>
+</html>

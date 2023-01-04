@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.register.core.mapper.HtbaSpfMapper">
+    <select id="listHtbaSpf" resultType="cn.gtmap.realestate.common.core.domain.etl.HtbaSpfDO" parameterType="cn.gtmap.realestate.common.core.qo.etl.HtbaxxQO">
+        select t.* from HTBA_SPF t left join Htba_fwxx f on f.baid=t.baid
+        <where>
+        <if test="bdcdyh != null and bdcdyh != ''">
+            and f.bdcdyh = #{bdcdyh}
+        </if>
+        <if test="bazt != null and bazt != ''">
+            and t.bazt=#{bazt}
+        </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>关联信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/slzkxxbsxjgmsb.css"/>
+    <style>
+        .img-box {
+            box-sizing: border-box;
+            width: 100%;
+            height: 760px;
+            border: 1px rgb(208, 213, 218) solid;
+            margin-bottom: 20px;
+        }
+
+        .img-box-title {
+            text-align: center;
+            line-height: 40px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .img-box-content {
+            box-sizing: border-box;
+            width: calc(100% - 40px);
+            height: 640px;
+            margin-left: 20px;
+            border: 1px rgb(208, 213, 218) solid;
+        }
+
+        .img-box-bottom {
+            width: calc(100% - 40px);
+            height: 60px;
+            box-sizing: border-box;
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .img-box-inline {
+            width: 49%;
+            height: 50%;
+            box-sizing: border-box;
+            display: inline-block;
+            line-height: 30px;
+            text-align: center;
+        }
+
+        .img-box-inline-label {
+            width: 60px;
+            display: inline-block;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .img-box-inline-text {
+            width: 100px;
+            display: inline-block;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .layui-table tbody tr td input{
+            text-align: center;
+        }
+
+        .layui-table table tbody tr td input{
+            text-align: center !important;
+        }
+
+        input{
+            text-align: center !important;
+        }
+
+        table  {
+            border:2px solid black !important;
+        }
+
+        tr td{
+            font-size: 8px !important;
+            /*border:1px solid black !important;*/
+        }
+    </style>
+</head>
+<body>
+<div class="content-div">
+    <div class="bdc-content-box">
+        <form class="layui-form setOverflow" action="" id="qszkxx">
+            <div class="bdc-content-fix">
+                <div class="content-title">
+                    <p>关联信息</p>
+<!--                    <div class="title-btn-area .layui-layout-right">-->
+<!--                        <a class="layui-btn bdc-secondary-btn" id="prev">上一页</a>-->
+<!--                        <a class="layui-btn bdc-secondary-btn" id="next">下一页</a>-->
+<!--                    </div>-->
+                </div>
+            </div>
+
+            <div class="content-main">
+                <div class="bdc-table-box">
+                    <table class="layui-table" border="1" style="margin-top: 10px">
+                        <thead>
+                        <td colspan="12" class="set-center bdc-set-width" style="font-size: 12px !important;border-bottom: 2px solid black !important;"><h2>关联信息</h2></td>
+                        </thead>
+                        <tbody>
+                        <tr >
+                            <td colspan="10" class=" set-center bdc-set-width" style="border: 2px solid black !important;text-align: left !important;">
+                                <h2>国土空间规划明确的用途、生态保护红线、特殊保护规定等关联信息</h2>
+                            </td>
+                        </tr>
+                        <tr id="gzContentView">
+                            <td colspan="2" class=" set-center bdc-set-width">区块编号</td>
+                            <td colspan="2" class=" set-center bdc-set-width">面积（公顷）</td>
+                            <td colspan="2" class=" set-center bdc-set-width">用途管制、特殊保护要求等<br/>内容</td>
+                            <td colspan="2" class=" set-center bdc-set-width">划定/设定时间</td>
+                            <td colspan="2" class=" set-center bdc-set-width">设置单位</td>
+                        </tr>
+
+                        <tr >
+                            <td colspan="10" class=" set-center bdc-set-width" style="border: 2px solid black !important;font-size: 10px !important;text-align: left !important;">
+                                不动产权利关联信息
+                            </td>
+                        </tr>
+                        <tr id="bdcContentView">
+                            <td colspan="2" class=" set-center bdc-set-width">不动产单元号</td>
+                            <td colspan="2" class=" set-center bdc-set-width">不动产权利类型</td>
+                            <td colspan="1" class=" set-center bdc-set-width">权利人</td>
+                            <td colspan="1" class=" set-center bdc-set-width">面积</td>
+                            <td colspan="2" class=" set-center bdc-set-width">登记时间</td>
+                            <td colspan="2" class=" set-center bdc-set-width">登记机构</td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="10" class=" set-center bdc-set-width" style="border: 2px solid black !important;font-size: 10px !important;text-align: left !important;">
+                                矿业权关联信息
+                            </td>
+                        </tr>
+                        <tr  id="ckContentView">
+                            <td colspan="2" class=" set-center bdc-set-width">勘查/采矿许可证号</td>
+                            <td colspan="1" class=" set-center bdc-set-width">探矿/采矿<br/>权人</td>
+                            <td colspan="1" class=" set-center bdc-set-width">地址</td>
+                            <td colspan="1" class=" set-center bdc-set-width">矿种</td>
+                            <td colspan="1" class=" set-center bdc-set-width">勘查/矿区<br/>面积</td>
+                            <td colspan="2" class=" set-center bdc-set-width">有效期限</td>
+                            <td colspan="2" class=" set-center bdc-set-width">发证机关</td>
+                        </tr>
+                        <tr>
+                            <td colspan="10" class=" set-center bdc-set-width" style="border: 2px solid black !important;font-size: 10px !important;text-align: left !important;">
+                                取水、排污权关联信息
+                            </td>
+                        </tr>
+                        <tr  id="qsContentView">
+                            <td colspan="2" class=" set-center bdc-set-width">取水许可证号</td>
+                            <td colspan="1" class=" set-center bdc-set-width">取水权人</td>
+                            <td colspan="1" class=" set-center bdc-set-width">取水地点</td>
+                            <td colspan="2" class=" set-center bdc-set-width">取水量</td>
+                            <td colspan="2" class=" set-center bdc-set-width">有效期限</td>
+                            <td colspan="2" class=" set-center bdc-set-width">审批机关</td>
+                        </tr>
+
+                        <tr id="pwContentView">
+                            <td colspan="2" class=" set-center bdc-set-width">排污许可证号</td>
+                            <td colspan="1" class=" set-center bdc-set-width">单位名称</td>
+                            <td colspan="1" class=" set-center bdc-set-width">污染物种类</td>
+                            <td colspan="2" class=" set-center bdc-set-width">排放浓度限值</td>
+                            <td colspan="2" class=" set-center bdc-set-width">有效期限</td>
+                            <td colspan="2" class=" set-center bdc-set-width">发证机关</td>
+                        </tr>
+                        <tr>
+                            <td colspan="10" class=" set-center bdc-set-width">附记</td>
+                        </tr>
+                        <tr>
+                            <td colspan="10">
+                                <input type="text" id="hd" class="layui-table-edit zrzk">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script type="text/html" id="gzDataTpl">
+        {{# if (d.zrzyGggzglxxList && d.zrzyGggzglxxList.length > 0) { }}
+        {{# layui.each(d.zrzyGggzglxxList, function(index, item){ }}
+        <tr>
+            <td colspan="2">
+                <input type="text" class="layui-table-edit qs" value="{{item.qkbh || '-'}}">
+            </td>
+            <td colspan="2">
+                <input type="text" class="layui-table-edit qs" value="{{item.mj || '-'}}">
+            </td>
+            <td colspan="2">
+                <input type="text" class="layui-table-edit qs" value="{{item.gggznr || '-'}}">
+            </td>
+            <td colspan="2">
+                <input type="text" class="layui-table-edit qs" value="{{item.gdsdsj || '-'}}">
+            </td>
+            <td colspan="2">
+                <input type="text" class="layui-table-edit qs" value="{{item.szdw || '-'}}">
+            </td>
+        </tr>
+        {{# }); }}
+        {{# } else { }}
+        <tr>
+            <td colspan="2" style="text-align: center;">-</td>
+            <td colspan="2" style="text-align: center;">-</td>
+            <td colspan="2" style="text-align: center;">-</td>
+            <td colspan="2" style="text-align: center;">-</td>
+            <td colspan="2" style="text-align: center;">-</td>
+        </tr>
+        {{# } }}
+    </script>
+    <script type="text/html" id="bdcDataTpl">
+        {{# if (d.zrzyBdcqlglxxList && d.zrzyBdcqlglxxList.length > 0) { }}
+        {{# layui.each(d.zrzyBdcqlglxxList, function(index, item){ }}
+        <tr>
+            <td colspan="2">
+                <input type="text" class="layui-table-edit qs" value="{{item.bdcdyh || '-'}}">
+            </td>
+            <td colspan="2">
+                <input type="text" class="layui-table-edit qs" value="{{item.qllx || '-'}}">
+            </td>
+            <td colspan="1">
+                <input type="text" class="layui-table-edit qs" value="{{item.qlr || '-'}}">
+            </td>
+            <td colspan="1">
+                <input type="text" class="layui-table-edit qs" value="{{item.mj || '-'}}">
+            </td>
+            <td colspan="2">
+                <input type="text" class="layui-table-edit qs" value="{{item.djsj || '-'}}">
+            </td>
+            <td colspan="2">
+                <input type="text" class="layui-table-edit qs" value="{{item.djjg || '-'}}">
+            </td>
+        </tr>
+        {{# }); }}
+        {{# } else { }}
+        <tr>
+            <td colspan="2" style="text-align: center;">-</td>
+            <td colspan="2" style="text-align: center;">-</td>
+            <td colspan="1" style="text-align: center;">-</td>
+            <td colspan="1" style="text-align: center;">-</td>
+            <td colspan="2" style="text-align: center;">-</td>
+            <td colspan="2" style="text-align: center;">-</td>
+        </tr>
+        {{# } }}
+    </script>
+    <script type="text/html" id="ckDataTpl">
+        {{# if (d.zrzyKyqglxxList && d.zrzyKyqglxxList.length > 0) { }}
+        {{# layui.each(d.zrzyKyqglxxList, function(index, item){ }}
+        <tr>
+            <td colspan="2">
+                <input type="text" id="kcckxkzh" class="layui-table-edit qs" value="{{item.kcckxkzh || '-'}}">
+            </td>
+            <td colspan="1">
+                <input type="text" id="tkckqr" class="layui-table-edit qs" value="{{item.tkckqr || '-'}}">
+            </td>
+            <td colspan="1">
+                <input type="text" id="dz" class="layui-table-edit qs" value="{{item.dz || '-'}}">
+            </td>
+            <td colspan="1">
+                <input type="text" id="kz" class="layui-table-edit qs" value="{{item.kz || '-'}}">
+            </td>
+            <td colspan="1">
+                <input type="text" id="kckqmj" class="layui-table-edit qs" value="{{item.kckqmj || '-'}}">
+            </td>
+            <td colspan="2">
+                <input type="text" id="yxqx" class="layui-table-edit qs" value="{{item.yxqx || '-'}}">
+            </td>
+            <td colspan="2">
+                <input type="text" id="fzjg" class="layui-table-edit qs" value="{{item.fzjg || '-'}}">
+            </td>
+        </tr>
+        {{# }); }}
+        {{# } else { }}
+        <tr>
+            <td colspan="2" style="text-align: center;">-</td>
+            <td colspan="1" style="text-align: center;">-</td>
+            <td colspan="1" style="text-align: center;">-</td>
+            <td colspan="1" style="text-align: center;">-</td>
+            <td colspan="1" style="text-align: center;">-</td>
+            <td colspan="2" style="text-align: center;">-</td>
+            <td colspan="2" style="text-align: center;">-</td>
+        </tr>
+        {{# } }}
+    </script>
+    <script type="text/html" id="qsDataTpl">
+        {{# if (d.zrzyQsqglxxList && d.zrzyQsqglxxList.length > 0) { }}
+        {{# layui.each(d.zrzyQsqglxxList, function(index, item){ }}
+        <tr>
+            <td colspan="2">
+                <input type="text" class="layui-table-edit qs" value="{{item.qsxkzh || '-'}}">
+            </td>
+            <td colspan="1">
+                <input type="text" class="layui-table-edit qs" value="{{item.qsqr || '-'}}">
+            </td>
+            <td colspan="1">
+                <input type="text" class="layui-table-edit qs" value="{{item.qsdd || '-'}}">
+            </td>
+            <td colspan="2">
+                <input type="text" class="layui-table-edit qs" value="{{item.qsl || '-'}}">
+            </td>
+            <td colspan="2">
+                <input type="text" class="layui-table-edit qs" value="{{item.qsqyxqx || '-'}}">
+            </td>
+            <td colspan="2">
+                <input type="text" class="layui-table-edit qs" value="{{item.spjg || '-'}}">
+            </td>
+        </tr>
+        {{# }); }}
+        {{# } else { }}
+        <tr>
+            <td colspan="2" style="text-align: center;">-</td>
+            <td colspan="1" style="text-align: center;">-</td>
+            <td colspan="1" style="text-align: center;">-</td>
+            <td colspan="2" style="text-align: center;">-</td>
+            <td colspan="2" style="text-align: center;">-</td>
+            <td colspan="2" style="text-align: center;">-</td>
+        </tr>
+        {{# } }}
+    </script>
+    <script type="text/html" id="pwDataTpl">
+        {{# if (d.zrzyPwqglxxList && d.zrzyPwqglxxList.length > 0) { }}
+        {{# layui.each(d.zrzyPwqglxxList, function(index, item){ }}
+        <tr>
+            <td colspan="2">
+                <input type="text" class="layui-table-edit qs" value="{{item.pwxkzh || '-'}}">
+            </td>
+            <td colspan="1">
+                <input type="text" class="layui-table-edit qs" value="{{item.dwmc || '-'}}">
+            </td>
+            <td colspan="1">
+                <input type="text" class="layui-table-edit qs" value="{{item.wrwzl || '-'}}">
+            </td>
+            <td colspan="2">
+                <input type="text" class="layui-table-edit qs" value="{{item.pfndxz || '-'}}">
+            </td>
+            <td colspan="2">
+                <input type="text" class="layui-table-edit qs" value="{{item.pwqyxqx || '-'}}">
+            </td>
+            <td colspan="2">
+                <input type="text" class="layui-table-edit qs" value="{{item.fzjg || '-'}}">
+            </td>
+        </tr>
+        {{# }); }}
+        {{# } else { }}
+        <tr>
+            <td colspan="2" style="text-align: center;">-</td>
+            <td colspan="1" style="text-align: center;">-</td>
+            <td colspan="1" style="text-align: center;">-</td>
+            <td colspan="2" style="text-align: center;">-</td>
+            <td colspan="2" style="text-align: center;">-</td>
+            <td colspan="2" style="text-align: center;">-</td>
+        </tr>
+        {{# } }}
+    </script>
+</div>
+</body>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--需要复选框时引用-->
+<script src="../../static/lib/easyui/jquery.min.js"></script>
+<script src="../../static/lib/easyui/jquery.easyui.min.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/ywxx/djbGlxx.js"></script>
+<!--<script src="../../static/js/ywxx/djbQszkxx.js"></script>-->
+</html>

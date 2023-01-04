@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.init.core.mapper.BdcDjxlSbdjfkCsGxMapper">
+    <select id="querySbdjfkCsByDjxl" resultType="cn.gtmap.realestate.common.core.domain.BdcDjxlSbdjfkCsgxDO">
+        select
+            servicecode as serviceCode,
+            serviceversion as serviceVersion,
+            servicename as serviceName,
+            infotype as infoType,
+            infotypecode as infoTypeCode,
+            ismulti as isMulti,
+            deptid as deptId,
+            deptname as deptName,
+            applyfrom as applyFrom,
+            handlestate as handleState,
+            areacode as areaCode,
+            belongsystem as belongSystem,
+            "SOURCE" as "source",
+            addtype as addType,
+            feedbacktype as feedbackType
+        from bdc_djxl_sbdjfk_cs_gx where djxl = #{djxl,jdbcType=VARCHAR}
+        <if test="null != qjgldm and qjgldm != ''">
+            and qjgldm = #{qjgldm,jdbcType=VARCHAR}
+        </if>
+    </select>
+</mapper>

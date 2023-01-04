@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <ex:bean id="nt_clfhtxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="存量房合同信息查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="url" value="${nt.clfhtxx.url}"/>
+        </ex:service-info>
+    </ex:bean>
+    <ex:bean id="ts_tofcjy_djzt">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="向资金监管推送登记状态"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="url" value="${nt.tsdjzt.url}"/>
+        </ex:service-info>
+        <ex:request replaceRequestBody="true">
+            <ex:element sourceService="listBdcXmByGzlslid_djzt"/>
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="listBdcXmByGzlslid_djzt">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="commonServiceImpl"/>
+            <ex:property name="methodName" value="listBdcXmByGzlslidForNtTofcjy"/>
+            <ex:property name="params" value="gzlslid"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/nantong/clfhtxx/ts_tofcjy_djzt/request/param.xml" notEmpty="true"/>
+        </ex:request>
+        <ex:response dozerXml="conf/dozer/nantong/clfhtxx/ts_tofcjy_djzt/response/merge.xml">
+            <ex:element dozerXml="conf/dozer/nantong/clfhtxx/ts_tofcjy_djzt/response/data.xml" listToObject="true"/>
+            <ex:element dozerXml="conf/dozer/nantong/clfhtxx/ts_tofcjy_djzt/response/qlxx.xml" name="qlxx"/>
+        </ex:response>
+    </ex:bean>
+    <ex:bean id="ntyth_clfwqxx_zh">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="存量房网签信息查询_转换"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="url" value="${nt.clfwqxx.url}"/>
+        </ex:service-info>
+        <ex:response resultKey="htxx">
+            <ex:element dozerXml="conf/dozer/nantong/clfhtxx/ntyth_clfwqxx/response/data.xml"/>
+        </ex:response>
+    </ex:bean>
+    <ex:bean id="htbazt">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="cn.gtmap.realestate.common.core.service.feign.accept.BdcSlJyxxFeignService"/>
+            <ex:property name="methodName" value="updateJyxxByHtbh"/>
+            <ex:property name="params" value="jsonObject,htbh"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/nantong/clfhtxx/htbazt/request/json.xml" name="jsonObject"/>
+            <ex:element dozerXml="conf/dozer/nantong/clfhtxx/htbazt/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element saveNull="cn.gtmap.realestate.exchange.core.dto.wwsq.yhxt.YhxtResponseDTO"/>
+        </ex:response>
+        <ex:log dsfFlag="FCJY" logEventName="房产交易更新合同备案状态" requester="FCJY" responser="BDC"/>
+    </ex:bean>
+    <ex:bean id="ntyth_clfwqxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="存量房网签信息查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="url" value="${nt.clfwqxx.url}"/>
+        </ex:service-info>
+    </ex:bean>
+    <ex:bean id="ntyth_clfwqsc">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="存量房网签信息审查推送"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="url" value="${nt.clfwqsc.url}"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/nantong/ntyth_clfwqsc/htbazt/request/param.xml"/>
+        </ex:request>
+    </ex:bean>
+</beans>

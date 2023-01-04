@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.engine.core.mapper.BdcGzZgzMapper">
+
+    <!--分页查询-->
+    <select id="listBdcGzZgzByPage" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.engine.BdcGzZgzDO">
+        SELECT
+        t.gzid,
+        t.gzmc,
+        t.ytsm,
+        t.pzr,
+        t.pzrq,
+        t.yxj,
+        t.jydm
+        FROM BDC_GZ_ZGZ t
+        where 1 = 1
+        <if test="gzmc != null and gzmc != ''">
+            AND instr(t.gzmc,#{gzmc})>0
+        </if>
+        <if test="pzr != null and pzr != ''">
+            AND instr(t.pzr,#{pzr})>0
+        </if>
+        <if test="ytsm != null and ytsm != ''">
+            AND instr(t.ytsm,#{ytsm})>0
+        </if>
+        <if test="glzgz != null and glzgz != '' and glzgz == '1'.toString() and zhid != null and zhid != ''">
+            AND t.gzid in (select gzid from bdc_gz_gx where zhid = #{zhid})
+        </if>
+
+        order by t.pzrq desc
+    </select>
+
+    <select id="listBdcGzZgzMcAndId" resultType="java.util.HashMap">
+        select t.gzmc, t.gzid from bdc_gz_zgz t
+    </select>
+
+</mapper>

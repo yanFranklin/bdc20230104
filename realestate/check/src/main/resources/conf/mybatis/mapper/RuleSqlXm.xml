@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.check.core.mapper.RuleSqlMapper">
+    <!-- 检查BDC_XM记录没有对应BDC_ZS记录（办结） -->
+    <select id="selectBdcXmNotHasZs" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        SELECT x.xmid ,x.slbh,x.djxl,x.bdcdyh,'' xzwh,'' xzwhxmid,x.gzldyid FROM bdc_xm x
+        LEFT JOIN bdc_xm_zs_gx t ON x.xmid = t.xmid
+        LEFT JOIN bdc_zs a ON a.zsid=t.zsid
+        WHERE a.zsid IS NULL AND x.ajzt=2
+        <if test="xmid != null and xmid !=''">
+            AND x.xmid = #{xmid}
+        </if>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 检查BDC_XM记录没有对应BDC_QLR记录 -->
+    <select id="selectBdcXmNotHasQlr" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        SELECT x.xmid ,x.slbh,x.djxl,x.bdcdyh,'' xzwh,'' xzwhxmid,x.gzldyid FROM bdc_xm x
+        LEFT JOIN bdc_qlr t ON x.xmid = t.xmid
+        WHERE t.qlrid IS NULL AND (x.djsj is NOT NULL OR x.dbr is NOT NULL)
+        <if test="xmid != null and xmid !=''">
+            AND x.xmid = #{xmid}
+        </if>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 检查BDC_XM记录没有对应BDC_XM_LSGX记录 -->
+    <select id="selectBdcXmNotHasXmLsgx" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        SELECT x.xmid ,x.slbh,x.djxl,x.bdcdyh,'' xzwh,'' xzwhxmid,x.gzldyid FROM bdc_xm x
+        LEFT JOIN bdc_xm_lsgx t ON x.xmid = t.xmid
+        WHERE t.gxid IS NULL
+        <if test="xmid != null and xmid !=''">
+            AND x.xmid = #{xmid}
+        </if>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 检查BDC_XM_LSGX的YXMID字段为空 -->
+    <select id="selectBdcXmLsgxYxmidNull" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        SELECT x.xmid ,x.slbh,x.djxl,x.bdcdyh,'' xzwh,'' xzwhxmid,x.gzldyid FROM bdc_xm x
+        LEFT JOIN bdc_xm_lsgx t ON x.xmid = t.xmid
+        WHERE t.gxid IS NOT NULL AND t.yxmid IS NULL and rownum=1
+        <if test="xmid != null and xmid !=''">
+            AND x.xmid = #{xmid}
+        </if>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+</mapper>        

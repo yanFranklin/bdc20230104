@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.accept.core.mapper.BdcLshMapper">
+
+    <!--获取到项目的最大受理流水号-->
+    <select id="getMaxLsh" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+        SELECT MAX(to_number(nvl(t.lsh,0))) FROM bdc_lsh t
+        <where>
+            <if test="beginDate != null and beginDate !=''">
+                <![CDATA[
+                  AND t.cjsj >= to_date(#{beginDate},'yyyy-mm-dd')
+                   ]]>
+            </if>
+            <if test="endDate != null and endDate !=''">
+                <![CDATA[
+                  AND t.cjsj < to_date(#{endDate},'yyyy-mm-dd')
+                  ]]>
+            </if>
+            <if test="ywlx != null and ywlx !=''">
+                AND t.ywlx=#{ywlx}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertLsh" parameterType="java.util.HashMap">
+        INSERT into bdc_lsh(lshid,lsh,cjsj,ywlx) VALUES(#{lshid},#{lsh},#{cjsj},#{ywlx})
+    </insert>
+
+
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.register.core.mapper.BdcZdDsfzdgxMapper">
+
+    <!--分页查询-->
+    <select id="listDsfZdxByPage" parameterType="cn.gtmap.realestate.common.core.domain.BdcZdDsfzdgxDO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcZdDsfzdgxDO">
+        SELECT zdbs,dsfxtbs FROM BDC_ZD_DSFZDGXDZB
+        where 1 = 1
+        <if test="zdbs != null and zdbs != ''">
+            AND instr(zdbs,#{zdbs})>0
+        </if>
+        <if test="dsfxtbs != null and dsfxtbs != ''">
+            AND instr(dsfxtbs,#{dsfxtbs})>0
+        </if>
+        GROUP BY zdbs,dsfxtbs
+    </select>
+
+
+</mapper>

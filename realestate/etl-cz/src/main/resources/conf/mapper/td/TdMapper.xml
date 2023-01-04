@@ -1,0 +1,647 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.etl.core.mapper.td.TdMapper">
+
+    <!-- 土地信息分页查询 -->
+    <select id="listTdxxByTdPageOrder" parameterType="cn.gtmap.realestate.etl.core.qo.TdsqQO" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT gy.zl, gy.qlr, gy.tdzh as bdcqzh, gy.projectid as xmid, 3 as qllx
+        FROM TBL_GYTDSYZ gy left join TBL_GYQDJK jk on gy.projectid= jk.projectid
+        <where>
+        <if test="zl!=null and zl!=''">
+            AND gy.zl = #{zl}
+        </if>
+        <if test="bdcqzh!=null and bdcqzh!=''">
+            AND gy.tdzh = #{bdcqzh}
+        </if>
+        <if test="bdcdyh!=null and bdcdyh!=''">
+           AND gy.djh = #{bdcdyh}
+        </if>
+        <if test="qlr!=null and qlr!=''">
+            AND gy.qlr = #{qlr}
+        </if>
+        </where>
+
+        UNION ALL
+        SELECT tx.zl, tx.qlr, tx.tdzh as bdcqzh, tx.projectid as xmid, 95 as qllx
+        FROM TBL_TXQLZMS tx left join TBL_GYQDJK jk on tx.projectid= jk.projectid
+        <where>
+        <if test="zl!=null and zl!=''">
+            AND tx.zl = #{zl}
+        </if>
+        <if test="bdcqzh!=null and bdcqzh!=''">
+            AND tx.tdzh = #{bdcqzh}
+        </if>
+        <if test="bdcdyh!=null and bdcdyh!=''">
+            AND tx.djh = #{bdcdyh}
+        </if>
+        <if test="qlr!=null and qlr!=''">
+            AND tx.qlr = #{qlr}
+        </if>
+        </where>
+
+        <if test="bdcqzh==null or bdcqzh ==''">
+            UNION ALL
+            SELECT cf.zl, cf.cddw as qlr, '' as bdcqzh, cf.projectid as xmid, 98 as qllx
+            FROM TBL_CF cf left join TBL_GYQDJK jk on cf.projectid= jk.projectid
+            <where>
+            <if test="zl!=null and zl!=''">
+                AND cf.zl = #{zl}
+            </if>
+            <if test="bdcdyh!=null and bdcdyh!=''">
+                AND cf.djh = #{bdcdyh}
+            </if>
+            <if test="qlr!=null and qlr!=''">
+                AND cf.cddw = #{qlr}
+            </if>
+            </where>
+        </if>
+
+        UNION ALL
+        SELECT jtt.zl, jtt.qlr as qlr, jtt.tdzh as bdcqzh, jtt.projectid as xmid, 7 as qllx
+        FROM TBL_JTTDSYZ jtt left join TBL_GYQDJK jk on jtt.projectid= jk.projectid
+        <where>
+        <if test="zl!=null and zl!=''">
+            AND jtt.zl = #{zl}
+        </if>
+        <if test="bdcqzh!=null and bdcqzh!=''">
+            AND jtt.tdzh = #{bdcqzh}
+        </if>
+        <if test="bdcdyh!=null and bdcdyh!=''">
+            AND jtt.djh = #{bdcdyh}
+        </if>
+        <if test="qlr!=null and qlr!=''">
+            AND jtt.qlr = #{qlr}
+        </if>
+        </where>
+    </select>
+
+    <!-- 导入数据后更新土地状态 -->
+    <update id="updateTblGyqdjkZt" parameterType="String">
+        <if test="projectid != null and projectid != '' ">
+            update TBL_GYQDJK set islogout = 5 where projectid = #{projectid}
+        </if>
+    </update>
+
+    <!-- 生成不动产单元号 -->
+    <select id="queryDjh" parameterType="String" resultType="String">
+        SELECT  t.newdh  from TBL_DHDZB t  where t.OLDDH = #{djh}
+    </select>
+
+    <!-- 查询国有土地使用证项目信息-->
+    <select id="queryGytdsyzXmxx" parameterType="cn.gtmap.realestate.etl.core.qo.TdsqQO" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT 'GTDXM' || T.PROJECTID AS XMID, 'TDSLBH' || T.PROJECTID AS SLBH, '3' AS QLLX, '100' as DJLX, C.SQLX AS DJYY,
+                2 AS AJZT, T.DWDM AS QXDM,  A.BEGINTIME AS SLSJ, A.CREATER AS SLR, A.ENDTIME AS JSSJ, '99999999' as djxl,
+                1 AS BDCLX, 'GTDXM' || T.PROJECTID AS GZLSLID,
+                T.DJH as BDCDYH,
+                T.PROJECTID AS BDCDYWYBH, C.PZRQ AS DJSJ, C.PZR AS DBR,
+                CASE WHEN JK.ISLOGOUT = 1 THEN 2 ELSE 1 END AS QSZT,
+                T.ZL AS ZL, 1 AS MJDW, T.SYQMJ AS ZDZHMJ,
+                T.QLR AS QLR,
+                C.RF1_SFZMNUM AS QLRZJH,
+                C.RF2_DWMC AS YWR,
+                C.RF2_SFZMNUM AS YWRZJH,
+                T.TDZH AS BDCQZH,
+                T.SYQLX AS QLXZ,
+                C.RF1_DWXZ AS QLRLX,
+                C.RF2_SFZMTYPE AS YWRZJZL,
+                C.RF1_SFZMTYPE AS QLRZJZL,
+                '320400' AS DJBMDM,
+                T.YT as ZDZHYT
+        FROM TBL_GYTDSYZ T LEFT JOIN ZD_QSSP C ON C.PROJECTID = T.PROJECTID
+                LEFT JOIN TBL_PROJECT A ON C.PROJECTID = A.PROJECTID
+                LEFT JOIN TBL_GYQDJK JK on T.PROJECTID= JK.PROJECTID
+        <where>
+            <if test="bdcqzh!=null and bdcqzh!=''">
+                AND T.TDZH = #{bdcqzh}
+            </if>
+            <if test="xmid!=null and xmid!=''">
+                AND T.PROJECTID = #{xmid}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询他项权利证明书项目信息-->
+    <select id="queryTxqlzmsXmxx" parameterType="cn.gtmap.realestate.etl.core.qo.TdsqQO" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT 'DYTDXM' || T.PROJECTID AS XMID, 'TDSLBH' || T.PROJECTID AS SLBH, '95' AS QLLX, C.SQLX AS DJLX, C.SQLX AS DJYY,
+                2 AS AJZT, E.DWDM AS QXDM, A.BEGINTIME AS SLSJ, A.CREATER AS SLR, A.ENDTIME AS JSSJ, C.SQLX AS DJXL,
+                1 AS BDCLX, E.TDZH AS YCQZH, 'GTDXM' || T.PROJECTID AS GZLSLID,
+                E.DJH AS BDCDYH,
+                E.PROJECTID AS BDCDYWYBH,
+                C.PZRQ AS DJSJ,
+                C.PZR AS DBR,
+                CASE WHEN JK.ISLOGOUT = 1 THEN 2 ELSE 1 END AS QSZT,
+                T.ZL AS ZL,
+                1 AS MJDW,
+                NVL(E.SYQMJ, to_number(C.ZDMJ)) AS ZDZHMJ,
+                T.QLR AS QLR,
+                C.RF1_SFZMNUM AS QLRZJH,
+                T.YWR AS YWR,
+                C.RF2_SFZMNUM AS YWRZJH,
+                C.TDZH AS BDCQZH,
+                T.SYQLX as QLXZ,
+                C.RF1_DWXZ AS QLRLX,
+                C.RF2_SFZMTYPE AS YWRZJZL,
+                C.RF1_SFZMTYPE AS QLRZJZL,
+                '320400' AS DJBMDM,
+                T.YT AS ZDZHYT
+        FROM TBL_TXQLZMS T LEFT JOIN ZD_QSSP C ON C.PROJECTID = T.PROJECTID
+                LEFT JOIN TBL_PROJECT A ON C.PROJECTID = A.PROJECTID
+                LEFT JOIN TBL_PRORELATION D ON T.PROJECTID = D.PROJECTID AND T.TDZH = D.TDZH
+                LEFT JOIN TBL_GYTDSYZ E ON D.YPROJECTID = E.PROJECTID
+                LEFT JOIN TBL_GYQDJK JK on T.PROJECTID= JK.PROJECTID
+        <where>
+            <if test="bdcqzh!=null and bdcqzh!=''">
+                AND T.TDZH = #{bdcqzh}
+            </if>
+            <if test="xmid!=null and xmid!=''">
+                AND T.PROJECTID = #{xmid}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询查封项目信息-->
+    <select id="queryCfXmxx" parameterType="cn.gtmap.realestate.etl.core.qo.TdsqQO" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT 'CFTDXM' || T.PROJECTID AS XMID, 'TDSLBH' || T.PROJECTID AS SLBH, '98' AS QLLX, C.SQLX AS DJLX,
+                C.SQLX AS DJYY, 2 AS AJZT, B.DWDM AS QXDM, A.BEGINTIME AS SLSJ, A.CREATER AS SLR, A.ENDTIME AS JSSJ,
+                C.SQLX AS DJXL, 1 AS BDCLX, B.TDZH AS YCQZH, 'GTDXM' || T.PROJECTID AS GZLSLID,
+                B.DJH AS BDCDYH,
+                B.PROJECTID AS BDCDYWYBH,
+                C.PZRQ AS DJSJ,
+                C.PZR AS DBR,
+                CASE WHEN JK.ISLOGOUT = 1 THEN 2 ELSE 1 END AS QSZT,
+                T.ZL AS ZL,
+                1 AS MJDW,
+                NVL(B.SYQMJ,C.ZDMJ) AS ZDZHMJ,
+                T.CDDW AS QLR,
+                C.RF1_SFZMNUM AS QLRZJH,
+                T.BZXR AS YWR,
+                C.RF2_SFZMNUM AS YWRZJH,
+                C.SYQLX AS QLXZ,
+                C.RF1_DWXZ AS QLRLX,
+                C.RF2_SFZMTYPE AS YWRZJZL,
+                C.RF1_SFZMTYPE AS QLRZJZL,
+                '320400' AS DJBMDM,
+                C.YT AS ZDZHYT
+        FROM TBL_CF T LEFT JOIN ZD_QSSP C ON C.PROJECTID = T.PROJECTID
+                LEFT JOIN TBL_PROJECT A ON C.PROJECTID = A.PROJECTID
+                LEFT JOIN TBL_GYTDSYZ B ON T.TDZH = B.TDZH
+                LEFT JOIN TBL_GYQDJK JK on T.PROJECTID= JK.PROJECTID
+        <where>
+            <if test="bdcqzh!=null and bdcqzh!=''">
+                AND T.TDZH = #{bdcqzh}
+            </if>
+            <if test="xmid!=null and xmid!=''">
+                AND T.PROJECTID = #{xmid}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询集体土地使用证项目信息-->
+    <select id="queryJttdsyzXmxx" parameterType="cn.gtmap.realestate.etl.core.qo.TdsqQO" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT 'GTDXM' || T.PROJECTID AS XMID, 'TDSLBH' || T.PROJECTID AS SLBH, '7' AS QLLX, '100' as DJLX, C.SQLX AS DJYY,
+                2 AS AJZT,  T.DWDM AS QXDM, A.BEGINTIME AS SLSJ, A.CREATER AS SLR, A.ENDTIME AS JSSJ, '99999999' as DJXL,
+                1 AS BDCLX, 'GTDXM' || T.PROJECTID AS GZLSLID,
+                T.DJH AS BDCDYH,
+                T.PROJECTID AS BDCDYWYBH,
+                C.PZRQ AS DJSJ,
+                C.PZR AS DBR,
+                CASE WHEN JK.ISLOGOUT = 1 THEN 2 ELSE 1 END AS QSZT,
+                T.ZL AS ZL,
+                1 AS MJDW,
+                TO_CHAR(T.SYQMJ) AS ZDZHMJ,
+                T.QLR AS QLR,
+                C.RF1_SFZMNUM AS QLRZJH,
+                C.RF2_DWMC AS YWR,
+                C.RF2_SFZMNUM AS YWRZJH,
+                T.TDZH AS BDCQZH,
+                T.SYQLX AS QLXZ,
+                C.RF1_DWXZ AS QLRLX,
+                C.RF2_SFZMTYPE AS YWRZJZL,
+                C.RF1_SFZMTYPE AS QLRZJZL,
+                '320400' AS DJBMDM,
+                T.YT AS ZDZHYT
+        FROM TBL_JTTDSYZ T LEFT JOIN ZD_QSSP C ON C.PROJECTID = T.PROJECTID
+            LEFT JOIN TBL_PROJECT A ON C.PROJECTID = A.PROJECTID
+            LEFT JOIN TBL_GYQDJK JK on T.PROJECTID= JK.PROJECTID
+        <where>
+            <if test="bdcqzh!=null and bdcqzh!=''">
+                AND T.TDZH = #{bdcqzh}
+            </if>
+            <if test="xmid!=null and xmid!=''">
+                AND T.PROJECTID = #{xmid}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询国有土地使用证-建设用地使用权信息-->
+    <select id="queryGytdsyzJsydsyqxx" parameterType="cn.gtmap.realestate.etl.core.qo.TdsqQO" resultType="cn.gtmap.realestate.common.core.domain.BdcJsydsyqDO">
+        SELECT 'GYQL' || A.PROJECTID AS QLID, A.SYQMJ AS SYQMJ, 'TDSLBH' || A.PROJECTID AS SLBH, '100' AS DJLX,
+                B.SQLX AS DJYY, 3 AS QLLX, 'GTDXM' || A.PROJECTID AS XMID, B.PZRQ AS DJSJ, B.PZR AS DBR,
+                CASE WHEN JK.ISLOGOUT = 1 THEN 2 ELSE 1 END AS QSZT,
+                A.BZ AS BZ,
+                A.DYMJ AS DYTDMJ,
+                A.FTMJ AS FTTDMJ,
+                A.DJH AS BDCDYH,
+                A.PROJECTID AS BDCDYWYBH,
+                A.ZL AS ZL,
+                A.QLR AS TDSYQR,
+                2 AS QLSDFS
+        FROM TBL_GYTDSYZ A LEFT JOIN ZD_QSSP B ON A.PROJECTID = B.PROJECTID
+        LEFT JOIN TBL_GYQDJK JK on A.PROJECTID= JK.PROJECTID
+        <where>
+            <if test="xmid!=null and xmid!=''">
+                AND A.PROJECTID = #{xmid}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询集体土地使用证-建设用地使用权信息-->
+    <select id="queryJttdsyzJsydsyqxx" parameterType="cn.gtmap.realestate.etl.core.qo.TdsqQO" resultType="cn.gtmap.realestate.common.core.domain.BdcJsydsyqDO">
+        SELECT 'JTQL' || A.PROJECTID AS QLID, A.SYQMJ AS SYQMJ, 'TDSLBH' || A.PROJECTID AS SLBH, '100' AS DJLX,
+                B.SQLX AS DJYY, 3 AS QLLX, 'GTDXM' || A.PROJECTID AS XMID, B.PZRQ AS DJSJ, B.PZR AS DBR,
+                CASE WHEN JK.ISLOGOUT = 1 THEN 2 ELSE 1 END AS QSZT,
+                A.BZ AS BZ,
+                A.DYMJ AS DYTDMJ,
+                A.FTMJ AS FTTDMJ,
+                A.DJH AS BDCDYH,
+                A.PROJECTID AS BDCDYWYBH,
+                A.ZL AS ZL,
+                A.QLR AS TDSYQR,
+                2 AS QLSDFS
+        FROM TBL_JTTDSYZ A LEFT JOIN ZD_QSSP B ON A.PROJECTID = B.PROJECTID
+        LEFT JOIN TBL_GYQDJK JK on A.PROJECTID= JK.PROJECTID
+        <where>
+            <if test="xmid!=null and xmid!=''">
+                AND A.PROJECTID = #{xmid}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询国有土地使用证-查封信息 -->
+    <select id="queryGytdsyzCfxx" parameterType="cn.gtmap.realestate.etl.core.qo.TdsqQO" resultType="cn.gtmap.realestate.common.core.domain.BdcCfDO">
+        SELECT 'CFTDQL' || A.PROJECTID AS QLID,
+                A.CDDW AS CFJG,
+                A.CFLX AS CFLX,
+                A.ZXWH AS CFWH,
+                B.JFWH AS JFWH,
+                TO_DATE(B.JFRQ,'YYYY/MM/DD') AS JFSJ,
+                TO_DATE(B.JFRQ,'YYYY/MM/DD') AS JFDJSJ,
+                B.JFR AS JFDBR,
+                A.CFKSRQ AS CFQSSJ,
+                A.CFJSRQ AS CFJSSJ,
+                A.BZXR AS BZXR,
+                A.CFYY AS CFYY,
+                'TDSLBH' || A.PROJECTID AS SLBH,
+                'CFTDXM' || A.PROJECTID AS XMID,
+                '单独所有' AS GYQK,
+                CASE WHEN A.ISJF = 1 THEN  '2'  ELSE '1' END AS QSZT,
+                C.DJH AS BDCDYH,
+                C.PROJECTID AS BDCDYWYBH,
+                A.ZL AS ZL,
+                B.XBNR AS JFYY
+        FROM TBL_CF A LEFT JOIN TBL_JF B ON A.PROJECTID = B.CFPROJECTID
+             LEFT JOIN TBL_GYTDSYZ C ON C.TDZH = A.TDZH
+        <where>
+            <if test="xmid!=null and xmid!=''">
+                AND A.PROJECTID = #{xmid}
+            </if>
+            <if test="bdcqzh!=null and bdcqzh!=''">
+                AND A.TDZH = #{bdcqzh}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询集体土地使用证-查封信息 -->
+    <select id="queryJttdsyzCfxx" parameterType="cn.gtmap.realestate.etl.core.qo.TdsqQO" resultType="cn.gtmap.realestate.common.core.domain.BdcCfDO">
+        SELECT 'CFTDQL' || A.PROJECTID AS QLID,
+                A.CDDW AS CFJG,
+                A.CFLX AS CFLX,
+                A.ZXWH AS CFWH,
+                B.JFWH AS JFWH,
+                TO_DATE(B.JFRQ,'YYYY/MM/DD') AS JFSJ,
+                TO_DATE(B.JFRQ,'YYYY/MM/DD') AS JFDJSJ,
+                B.JFR AS JFDBR,
+                A.CFKSRQ AS CFQSSJ,
+                A.CFJSRQ AS CFJSSJ,
+                A.BZXR AS BZXR,
+                A.CFYY AS CFYY,
+                'TDSLBH' || A.PROJECTID AS SLBH,
+                'CFTDXM' || A.PROJECTID AS XMID,
+                '单独所有' AS GYQK,
+                CASE WHEN A.ISJF = 1 THEN  '2'  ELSE '1' END AS QSZT,
+                C.DJH AS BDCDYH,
+                C.PROJECTID AS BDCDYWYBH,
+                A.ZL AS ZL,
+                B.XBNR AS JFYY
+        FROM TBL_CF A LEFT JOIN TBL_JF B ON A.PROJECTID=B.CFPROJECTID
+            LEFT JOIN TBL_JTTDSYZ C ON C.TDZH=A.TDZH
+        <where>
+            <if test="xmid!=null and xmid!=''">
+                AND A.PROJECTID = #{xmid}
+            </if>
+            <if test="bdcqzh!=null and bdcqzh!=''">
+                AND A.TDZH = #{bdcqzh}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询国有土地使用证-抵押权信息 -->
+    <select id="queryGytdsyzDyaqxx" parameterType="cn.gtmap.realestate.etl.core.qo.TdsqQO" resultType="cn.gtmap.realestate.common.core.domain.BdcDyaqDO">
+        SELECT 'DYTDQL' || A.PROJECTID AS QLID,
+                B.SQLX AS DJLX,
+                B.SQLX AS DJYY,
+                A.YWR AS ZWR,
+                A.SDRQ AS ZWLXJSSJ,
+               'TDSLBH' || A.PROJECTID AS SLBH, 'DYTDXM' || A.PROJECTID AS XMID,
+                B.PZRQ AS DJSJ,
+                B.PZR AS DBR,
+                A.TXQL AS FJ,
+                CASE WHEN JK.ISLOGOUT = 1 THEN 2 ELSE 1 END AS QSZT,
+                '1' AS JEZL,
+                A.SYQMJ AS TDDYMJ,
+                E.DJH AS BDCDYH,
+                E.PROJECTID AS BDCDYWYBH,
+                A.ZL AS ZL,
+                '1' AS DYBDCLX
+        FROM TBL_TXQLZMS A LEFT JOIN ZD_QSSP B ON A.PROJECTID = B.PROJECTID
+                LEFT JOIN TBL_PRORELATION D ON A.PROJECTID = D.PROJECTID AND A.TDZH=D.TDZH
+                LEFT JOIN TBL_GYTDSYZ E ON D.YPROJECTID=E.PROJECTID
+                LEFT JOIN TBL_GYQDJK JK on A.PROJECTID= JK.PROJECTID
+        <where>
+            <if test="xmid!=null and xmid!=''">
+                AND A.PROJECTID = #{xmid}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询集体土地使用证-抵押权信息 -->
+    <select id="queryJttdsyzDyaqxx" parameterType="cn.gtmap.realestate.etl.core.qo.TdsqQO" resultType="cn.gtmap.realestate.common.core.domain.BdcDyaqDO">
+        SELECT 'DYTDQL' || A.PROJECTID AS QLID,
+                B.SQLX AS DJLX,
+                B.SQLX AS DJYY,
+                A.YWR AS ZWR,
+                A.SDRQ AS ZWLXJSSJ,
+                'TDSLBH' || A.PROJECTID AS SLBH, 'DYTDXM' || A.PROJECTID AS XMID,
+                B.PZRQ AS DJSJ,
+                B.PZR AS DBR,
+                A.TXQL AS FJ,
+                CASE WHEN JK.ISLOGOUT = 1 THEN 2 ELSE 1 END AS QSZT,
+                '1' AS JEZL,
+                A.SYQMJ AS TDDYMJ,
+                E.DJH AS BDCDYH,
+                E.PROJECTID AS BDCDYWYBH,
+                A.ZL AS ZL,
+                '1' AS DYBDCLX
+        FROM TBL_TXQLZMS A LEFT JOIN ZD_QSSP B ON A.PROJECTID = B.PROJECTID
+                LEFT JOIN TBL_PRORELATION D ON A.PROJECTID = D.PROJECTID AND A.TDZH=D.TDZH
+                LEFT JOIN TBL_JTTDSYZ E ON D.YPROJECTID=E.PROJECTID
+                LEFT JOIN TBL_GYQDJK JK on A.PROJECTID= JK.PROJECTID
+        <where>
+            <if test="xmid!=null and xmid!=''">
+                AND A.PROJECTID = #{xmid}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询国有土地使用证权利人信息 -->
+    <select id="queryGytdsyzQlrxx" parameterType="cn.gtmap.realestate.etl.core.qo.TdsqQO" resultType="cn.gtmap.realestate.common.core.domain.BdcQlrDO">
+        SELECT 'GYQLR' || T.PROJECTID AS QLRID, 'GTDXM' || T.PROJECTID AS XMID,
+               T.QLR AS QLRMC,
+               T.TDZH AS BDCQZH,
+               'GTDZS' || T.PROJECTID AS ZSID,
+               A.RF1_SFZMNUM AS ZJH,
+               A.RF1_TXDZ AS TXDZ,
+               A.RF1_YB AS YB,
+               A.RF1_FDDBR AS FRMC,
+               1 AS QLRLB,
+               0 AS GYFS,
+               A.RF1_LXDH AS DH,
+               1 AS SXH
+        FROM TBL_GYTDSYZ T LEFT JOIN ZD_QSSP A ON A.PROJECTID = T.PROJECTID
+        <where>
+            <if test="xmid!=null and xmid!=''">
+                AND T.PROJECTID = #{xmid}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询集体土地使用证权利人信息 -->
+    <select id="queryJttdsyzQlrxx" parameterType="cn.gtmap.realestate.etl.core.qo.TdsqQO" resultType="cn.gtmap.realestate.common.core.domain.BdcQlrDO">
+        SELECT 'GYQLR' || T.PROJECTID AS QLRID, 'GTDXM' || T.PROJECTID AS XMID,
+                T.QLR AS QLRMC,
+                T.TDZH AS BDCQZH,
+                'GTDZS' || T.PROJECTID AS ZSID,
+                A.RF1_SFZMNUM AS ZJH,
+                A.RF1_TXDZ AS TXDZ,
+                A.RF1_YB AS YB,
+                A.RF1_FDDBR AS FRMC,
+                1 AS QLRLB,
+                0 AS GYFS,
+                A.RF1_LXDH AS DH,
+                1 AS SXH
+        FROM TBL_JTTDSYZ T LEFT JOIN ZD_QSSP A ON A.PROJECTID = T.PROJECTID
+        <where>
+            <if test="xmid!=null and xmid!=''">
+                AND T.PROJECTID = #{xmid}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询他项权利证明书权利人信息 -->
+    <select id="queryTxqlzmsQlrxx" parameterType="cn.gtmap.realestate.etl.core.qo.TdsqQO" resultType="cn.gtmap.realestate.common.core.domain.BdcQlrDO">
+        SELECT 'TDDYQLR' || T.PROJECTID AS QLRID, 'DYTDXM' || T.PROJECTID AS XMID,
+                T.QLR AS QLRMC,
+                A.RF1_SFZMTYPE AS ZJZL,
+                A.RF1_SFZMNUM AS ZJH,
+                A.RF1_TXDZ AS TXDZ,
+                A.RF1_YB AS YB,
+                A.RF1_FDDBR AS FRMC,
+                1 AS QLRLB,
+                0 AS GYFS,
+                A.RF1_LXDH AS DH,
+                1 AS SXH,
+                T.TDZH AS BDCQZH,
+                'TDZS' || T.PROJECTID AS ZSID
+        FROM TBL_TXQLZMS T LEFT JOIN ZD_QSSP A ON A.PROJECTID = T.PROJECTID
+        <where>
+            <if test="xmid!=null and xmid!=''">
+                AND T.PROJECTID = #{xmid}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询他项权利证明书义务人信息 -->
+    <select id="queryTxqlzmsYwrxx" parameterType="cn.gtmap.realestate.etl.core.qo.TdsqQO" resultType="cn.gtmap.realestate.common.core.domain.BdcQlrDO">
+        SELECT 'TDDYYWR' || T.PROJECTID AS QLRID, 'DYTDXM' || T.PROJECTID AS XMID,
+                T.YWR AS QLRMC,
+                A.RF2_SFZMTYPE AS ZJZL,
+                A.RF2_SFZMNUM AS ZJH,
+                A.RF2_TXDZ AS TXDZ,
+                A.RF2_YB AS YB,
+                A.RF2_FDDBR AS FRMC,
+                2 AS QLRLB,
+                0 AS GYFS,
+                A.RF1_LXDH AS DH,
+                1 AS SXH,
+                T.TDZH AS BDCQZH,
+                'DYTDZS' || T.PROJECTID AS ZSID
+        FROM TBL_TXQLZMS T LEFT JOIN ZD_QSSP A ON A.PROJECTID=T.PROJECTID
+        <where>
+            <if test="xmid!=null and xmid!=''">
+                AND T.PROJECTID = #{xmid}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询查封权利人信息 -->
+    <select id="queryCfQlrxx" parameterType="cn.gtmap.realestate.etl.core.qo.TdsqQO" resultType="cn.gtmap.realestate.common.core.domain.BdcQlrDO">
+        SELECT 'TDCFQLR' || A.PROJECTID AS QLRID, 'CFTDXM' || A.PROJECTID AS XMID,
+                A.CDDW AS QLRMC,
+                4 AS QLRLX,
+                1 AS QLRLB,
+                0 AS GYFS,
+                1 AS SXH
+        FROM TBL_CF A
+        <where>
+            <if test="xmid!=null and xmid!=''">
+                AND A.PROJECTID = #{xmid}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询查封义务人信息 -->
+    <select id="queryCfYwrxx" parameterType="cn.gtmap.realestate.etl.core.qo.TdsqQO" resultType="cn.gtmap.realestate.common.core.domain.BdcQlrDO">
+        SELECT 'TDCFYWR' || A.PROJECTID AS QLRID, 'CFTDXM' || A.PROJECTID AS XMID,
+            A.BZXR AS QLRMC,
+            2 AS QLRLB,
+            0 AS GYFS,
+            1 AS SXH
+        FROM TBL_CF A
+        <where>
+            <if test="xmid!=null and xmid!=''">
+                AND A.PROJECTID = #{xmid}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询国有土地使用证-项目证书关系信息 -->
+    <select id="queryGytdsyzXmZsGxxx" parameterType="cn.gtmap.realestate.etl.core.qo.TdsqQO" resultType="cn.gtmap.realestate.common.core.domain.BdcXmZsGxDO">
+        SELECT 'GTDZS' || A.PROJECTID AS ZSID,'GTDXM' || A.PROJECTID AS XMID
+        FROM TBL_GYTDSYZ A
+        <where>
+            A.TDZH IS NOT NULL
+            <if test="bdcqzh!=null and bdcqzh!=''">
+                AND A.TDZH = #{bdcqzh}
+            </if>
+            <if test="xmid!=null and xmid!=''">
+                AND A.PROJECTID = #{xmid}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询集体土地使用证-项目证书关系信息 -->
+    <select id="queryJttdsyzXmZsGxxx" parameterType="cn.gtmap.realestate.etl.core.qo.TdsqQO" resultType="cn.gtmap.realestate.common.core.domain.BdcXmZsGxDO">
+        SELECT 'GTDZS' || A.PROJECTID AS ZSID,'GTDXM' || A.PROJECTID AS XMID
+        FROM TBL_JTTDSYZ A
+        <where>
+            A.TDZH IS NOT NULL
+            <if test="bdcqzh!=null and bdcqzh!=''">
+                AND A.TDZH = #{bdcqzh}
+            </if>
+            <if test="xmid!=null and xmid!=''">
+                AND A.PROJECTID = #{xmid}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询他项权利证明书-项目证书关系信息 -->
+    <select id="queryTxqlzmsXmZsGxxx" parameterType="cn.gtmap.realestate.etl.core.qo.TdsqQO" resultType="cn.gtmap.realestate.common.core.domain.BdcXmZsGxDO">
+        SELECT  'DYTDZS' || A.PROJECTID AS ZSID,'DYTDXM' || A.PROJECTID AS XMID
+        FROM TBL_TXQLZMS A
+        <where>
+            A.TDZH IS NOT NULL
+            <if test="bdcqzh!=null and bdcqzh!=''">
+                AND A.TDZH = #{bdcqzh}
+            </if>
+            <if test="xmid!=null and xmid!=''">
+                AND A.PROJECTID = #{xmid}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询国有土地使用证-证书信息 -->
+    <select id="queryGytdsyzZsxx" parameterType="cn.gtmap.realestate.etl.core.qo.TdsqQO" resultType="cn.gtmap.realestate.common.core.domain.BdcZsDO">
+        SELECT 'GTDZS' || A.PROJECTID AS ZSID, A.TDZH AS BDCQZH,
+                A.DWDM AS QXDM,
+                '苏' AS SQSJC,
+                '常州市' AS SZSXQC,
+                1 AS ZSLX,
+                A.DJH AS BDCDYH,
+                A.ZL AS ZL,
+                A.QLR AS QLR,
+                0 AS GYFS
+        FROM TBL_GYTDSYZ A
+        <where>
+            A.TDZH IS NOT NULL
+            <if test="bdcqzh!=null and bdcqzh!=''">
+                AND A.TDZH = #{bdcqzh}
+            </if>
+            <if test="xmid!=null and xmid!=''">
+                AND A.PROJECTID = #{xmid}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询他项权利证明书-证书信息 -->
+    <select id="queryTxqlzmsZsxx" parameterType="cn.gtmap.realestate.etl.core.qo.TdsqQO" resultType="cn.gtmap.realestate.common.core.domain.BdcZsDO">
+        SELECT 'DYTDZS' || A.PROJECTID AS ZSID,
+                A.TDZH AS BDCQZH,
+                A.DWDM AS QXDM,
+                '苏' AS SQSJC,
+                '常州市' AS SZSXCJ,
+                2 AS ZSLX,
+                E.DJH AS BDCDYH,
+                A.ZL AS ZL,
+                A.QLR AS QLR,
+                A.YWR AS YWR,
+                0 AS GYFS,
+                95 AS QLLX
+        FROM TBL_TXQLZMS A LEFT JOIN TBL_PRORELATION D ON A.PROJECTID = D.PROJECTID AND A.TDZH = D.TDZH
+                LEFT JOIN TBL_GYTDSYZ E ON D.YPROJECTID = E.PROJECTID
+        <where>
+            A.TDZH IS NOT NULL
+            <if test="bdcqzh!=null and bdcqzh!=''">
+                AND A.TDZH = #{bdcqzh}
+            </if>
+            <if test="xmid!=null and xmid!=''">
+                AND A.PROJECTID = #{xmid}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询集体土地使用证-证书信息 -->
+    <select id="queryJttdsyzZsxx" parameterType="cn.gtmap.realestate.etl.core.qo.TdsqQO" resultType="cn.gtmap.realestate.common.core.domain.BdcZsDO">
+        SELECT 'GTDZS' || A.PROJECTID AS ZSID,
+                A.TDZH AS BDCQZH,
+                A.DWDM AS QXDM,
+                '苏' AS SQSJC,
+                '常州市' AS SZSXQC,
+                1 AS ZSLX,
+                A.DJH AS BDCDYH,
+                A.ZL AS ZL,
+                A.QLR AS QLR,
+                0 AS GYFS
+        FROM TBL_JTTDSYZ A
+        <where>
+            A.TDZH IS NOT NULL
+            <if test="bdcqzh!=null and bdcqzh!=''">
+                AND A.TDZH = #{bdcqzh}
+            </if>
+            <if test="xmid!=null and xmid!=''">
+                AND A.PROJECTID = #{xmid}
+            </if>
+        </where>
+    </select>
+
+</mapper>

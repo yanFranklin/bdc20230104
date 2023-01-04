@@ -1,0 +1,229 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no"
+    />
+    <title>驾驶仓</title>
+    <link rel="stylesheet" href="../../public/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/css/jsc/comon0.css"/>
+    <link rel="stylesheet" href="../../static/css/jsc/fhNav.css"/>
+    <link rel="stylesheet" href="../../static/js/jsc/multsel/fSelect.css"/>
+</head>
+
+<body>
+<div class="loading">
+    <div class="loadbox"><img src="../../static/image/jsc/loading.gif"/> 页面加载中...</div>
+</div>
+<div class="head">
+    <i class="layui-icon layui-icon-next goBar" onclick="goBar()"></i>
+    <h1>宣城市林权分析系统</h1>
+</div>
+<div class="mainbox">
+    <ul class="clearfix">
+        <li>
+            <div class="boxall" style="height: 3.8rem">
+                <div class="alltitle">
+                    <img src="../../static/image/jsc/itemTitle.png"/>
+                    林权登记数量
+<!--                    <span class="more">设置条件</span>-->
+                    <select class="demo" multiple="multiple" style="display: none">
+                        <optgroup label="区县">
+                            <option value="cp">广德市</option>
+                            <option value="cs">宁国市</option>
+                            <option value="oc">宣州区</option>
+                            <option value="c">绩溪县</option>
+                        </optgroup>
+                    </select>
+                    <span class="more tab-menu eightrow">
+                         <span id="thirdbg"></span>
+                        <ul class="nav clearfix" id="hourlist">
+                            <li class="active"  value="5">按年</li>
+                            <li value="1">按月</li>
+                            <li value="3">按日</li>
+                        </ul>
+                    </span>
+                </div>
+                <div class="allnav" id="echart1"></div>
+                <div class="boxfoot"></div>
+            </div>
+            <div class="boxall" style="height: 2.2rem">
+                <div class="alltitle">
+                    <img src="../../static/image/jsc/itemTitle.png"/> 概况
+                    <span class="more tab-menu eightrow">
+                         <span id="gkbg"></span>
+                        <ul class="nav clearfix" id="gklist">
+                             <li class="active" value="1">历史</li>
+                            <li value="4">今日</li>
+                        </ul>
+                    </span>
+                </div>
+                <div class="allnav">
+                    <div class="today-survey">
+                        <div class="survey-items">
+                            <img src="../../static/image/jsc/rijieru.png"/>
+                            <div class="survey-item">
+                                <div>已办理</div>
+                                <div id="ybl">0</div>
+                            </div>
+                        </div>
+                        <div class="survey-items">
+                            <img src="../../static/image/jsc/rishangbao.png"/>
+                            <div class="survey-item">
+                                <div>办理中</div>
+                                <div id="blz">0</div>
+                            </div>
+                        </div>
+                        <div class="survey-items">
+                            <img src="../../static/image/jsc/yixiangying.png"/>
+                            <div class="survey-item">
+                                <div>问题件</div>
+                                <div id="wtj">0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="boxfoot"></div>
+            </div>
+            <div class="boxall" style="height: 3.6rem">
+                <div class="alltitle">
+                    <img src="../../static/image/jsc/itemTitle.png"/> 林权权利情况
+                    <select class="demoSelect" multiple="multiple" style="display: none">
+                        <optgroup label="区县">
+                            <option value="cp">广德市</option>
+                            <option value="cs">宁国市</option>
+                            <option value="oc">宣州区</option>
+                            <option value="c">绩溪县</option>
+                        </optgroup>
+                    </select>
+                    <span class="more tab-menu eightrow">
+                         <span id="timebg"></span>
+                        <ul class="nav clearfix" id="timelist">
+                            <li  class="active" value="1">近一年</li>
+                            <li value="2">近一月</li>
+                            <li value="3">近一周</li>
+                        </ul>
+                    </span>
+                </div>
+                <div class="allnav" id="echart3">
+
+                </div>
+                <div class="boxfoot"></div>
+            </div>
+        </li>
+        <li>
+            <div class="bar">
+                <div class="bar-items">
+                    <div>
+                        <span style="font-size: 0.25rem; color: #43f9fb" id="totalnum"> 0 </span>
+                        万件
+                    </div>
+                    <div>登记总数</div>
+                </div>
+                <div class="bar-items">
+                    <div>
+                        <span style="font-size: 0.25rem; color: #43f9fb" id="ldarea">0</span>
+                        万亩
+                    </div>
+                    <div>林地总面积</div>
+                </div>
+                <div class="bar-items">
+                    <div>
+                        <span style="font-size: 0.25rem; color: #43f9fb" id="totalmj">0</span>
+                        万亩
+                    </div>
+                    <div>林权登记面积</div>
+                </div>
+                <div class="bar-items">
+                    <div>
+                        <span style="font-size: 0.25rem; color: #43f9fb" id="zdnum">0</span>
+                        万宗
+                    </div>
+                    <div>宗地数量</div>
+                </div>
+            </div>
+            <div class="map" id="map"></div>
+            <div class="boxall" style="height: 2.6rem; margin: 0 0.5rem">
+                <div class="alltitle">
+                    <img src="../../static/image/jsc/itemTitle.png"/> 共享
+                    <span style="color: #43f9fb; font-size: 0.25rem" id="allgxcs">0</span> 次
+                </div>
+                <div style=" width: 100%;  height: calc(100% - 0.4rem);padding: 0.1rem 0.2rem;" class="allnav">
+                    <div class="m3-item">
+                        <img src="../../static/image/jsc/gongan.png"/>
+                        <div>
+                            <div><span style="color: #43f9fb; font-size: 0.25rem" id="swgxcs">0</span>次</div>
+                            <div>税务总次数</div>
+                        </div>
+                    </div>
+                    <div class="m3-item">
+                        <img src="../../static/image/jsc/minzheng.png"/>
+                        <div>
+                            <div><span style="color: #43f9fb; font-size: 0.25rem" id="sjptcs">0</span>次</div>
+                            <div>省级平台总次数</div>
+                        </div>
+                    </div>
+                    <div class="m3-item">
+                        <img src="../../static/image/jsc/fayuan.png"/>
+                        <div>
+                            <div><span style="color: #43f9fb; font-size: 0.25rem" id="wwsqcs">0</span>次</div>
+                            <div>互联网+总次数</div>
+                        </div>
+                    </div>
+                    <div class="m3-item">
+                        <img src="../../static/image/jsc/zuigaoyuan.png"/>
+                        <div>
+                            <div><span style="color: #43f9fb; font-size: 0.25rem" id="sdqcs">0</span>次</div>
+                            <div>水电气总次数</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="boxfoot"></div>
+            </div>
+        </li>
+        <li>
+            <div class="boxall" style="height: 4.6rem">
+                <div class="alltitle">
+                    <img src="../../static/image/jsc/itemTitle.png"/> 登记趋势
+                </div>
+                <div class="allnav" id="echart2"></div>
+                <div class="boxfoot"></div>
+            </div>
+            <div class="boxall" style="height: 5.15rem">
+                <div class="alltitle">
+                    <img src="../../static/image/jsc/itemTitle.png"/> 林权交易情况
+                </div>
+                <div class="allnav" id="echart4"></div>
+                <div class="boxfoot"></div>
+            </div>
+        </li>
+    </ul>
+</div>
+<div class="back"></div>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script>
+    $(window).load(function () {
+        $('.loading').fadeOut()
+    })
+    $(document).ready(function () {
+        var whei = $(window).width()
+        $('html').css({
+            fontSize: whei / 20,
+        })
+        $(window).resize(function () {
+            var whei = $(window).width()
+            $('html').css({
+                fontSize: whei / 20,
+            })
+        })
+    })
+</script>
+<!--<script type="text/javascript" src="js/echarts.min.js"></script>-->
+<script  src="../../static/js/jsc/echarts.min.js"></script>
+<script  src="../../static/js/jsc/slide.js"></script>
+<script  src="../../static/js/jsc/multsel/fSelect.js"></script>
+<script  src="../../static/js/jsc/jsc_common.js"></script>
+</body>
+</html>

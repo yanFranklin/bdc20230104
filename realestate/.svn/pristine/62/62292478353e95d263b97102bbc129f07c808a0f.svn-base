@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcCfxxMapper">
+    <sql id="table_cols">
+        cf.cfjg,
+        cf.cflx,
+        cf.cfwh,
+        cf.slbh,
+        cf.xmid,
+        cf.gyqk,
+        cf.djjg,
+        cf.qszt,
+        cf.bdcdyh,
+        cf.zl,
+        cf.bzxr,
+    </sql>
+    <select id="listBdcInquiryCfxxByPageOrder" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcCfxxQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcCfxxDTO">
+        select
+        xm.qlr,
+        xm.ycqzh bdcqzh,
+        to_char(cf.cfjssj, 'yyyy-MM-dd') ycfjssj,
+        <include refid="table_cols"></include>
+        to_char(cf.cfqssj, 'yyyy-MM-dd') cfqssj,
+        to_char(cf.djsj, 'yyyy-MM-dd hh24:mi:ss') djsj,
+        to_char(cf.cfsj, 'yyyy-MM-dd hh24:mi:ss') cfsj,
+        to_char(cf.maxdate, 'yyyy-MM-dd') cfjssj
+        from (select
+        <include refid="table_cols"></include>
+        cf.cfqssj,
+        cf.djsj,
+        cf.cfjssj,
+        cf.cfsj, DECODE(h.cfjssj, null, cf.cfjssj, h.cfjssj) maxdate
+        from bdc_cf cf
+        left join (select c.xmid,
+        case
+        when d.cfjssj = null then
+        c.cfjssj
+        else
+        　　d.cfjssj
+        end cfjssj
+        from bdc_cf c
+        inner join bdc_xm_lsgx f
+        on c.xmid = f.yxmid
+        inner join (select cfjssj,xmid
+        from bdc_cf
+        where xmid in
+        (select b.xmid
+        from bdc_cf a
+        inner join bdc_xm_lsgx b
+        on a.xmid = b.yxmid)
+        and cflx = 5) d
+        on d.xmid = f.xmid) h
+        on cf.xmid = h.xmid) cf
+        inner join bdc_xm xm
+        on xm.xmid = cf.xmid
+        WHERE CF.BDCDYH IS NOT NULL
+        AND CF.MAXDATE IS NOT NULL
+        <if test='isBeyondDeadLine == "1"'>
+            and cf.maxdate > sysdate
+        </if>
+        <if test='isBeyondDeadLine == "0"'>
+            and cf.maxdate <![CDATA[<=]]> sysdate
+        </if>
+        <if test="cflx == null or cflx == ''">
+            AND cf.cflx in(1,2,3,4)
+        </if>
+        <if test="cflx != null and cflx != ''">
+            AND cf.cflx = #{cflx,jdbcType=INTEGER}
+        </if>
+        <if test="cfwh != null and cfwh != ''">
+            AND cf.cfwh like '%' || #{cfwh,jdbcType=VARCHAR} || '%'
+        </if>
+        <if test="cfqssj != null and cfqssj != ''">
+            AND to_char(cf.djsj,'yyyy-MM-dd hh24:mi:ss') >= #{cfqssj}
+        </if>
+        <if test="cfjssj != null and cfjssj != ''">
+            AND to_char(cf.djsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{cfjssj}
+        </if>
+        <if test="qszt != null and qszt != ''">
+            AND cf.qszt = #{qszt,jdbcType=INTEGER}
+        </if>
+        <if test="bdcdyh != null and bdcdyh != ''">
+            AND cf.bdcdyh like '%' || #{bdcdyh,jdbcType=VARCHAR} || '%'
+        </if>
+        <if test="qlr != null and qlr != ''">
+            AND xm.qlr like '%' || #{qlr,jdbcType=VARCHAR} || '%'
+        </if>
+        <if test="bzxr != null and bzxr != ''">
+            AND cf.bzxr like '%' || #{bzxr,jdbcType=VARCHAR} || '%'
+        </if>
+        <if test="bdcqzh != null and bdcqzh != ''">
+            AND xm.ycqzh like '%' || #{bdcqzh,jdbcType=VARCHAR} || '%'
+        </if>
+        <if test="zl != null and zl != ''">
+            AND cf.zl like '%' || #{zl,jdbcType=VARCHAR} || '%'
+        </if>
+        order by cf.bdcdyh,cf.cfsj asc
+    </select>
+
+    <select id="listBdcInquiryXfxx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="java.util.HashMap">
+        SELECT
+        xm.qlr,
+        xm.ycqzh bdcqzh,
+        <include refid="table_cols"></include>
+        to_char(cf.cfqssj, 'yyyy-MM-dd') cfqssj,
+        to_char(cf.cfjssj, 'yyyy-MM-dd') cfjssj,
+        to_char(cf.djsj, 'yyyy-MM-dd hh24:mi:ss') djsj,
+        to_char(cf.cfsj, 'yyyy-MM-dd hh24:mi:ss') cfsj
+        from bdc_cf cf inner join bdc_xm xm
+        on cf.xmid = xm.xmid
+        <if test="xmid != null and xmid != ''">
+            where cf.xmid in (select a.xmid from bdc_xm_lsgx a where a.yxmid = #{xmid,jdbcType=VARCHAR})
+        </if>
+        <if test="xmid == null or xmid == ''">
+            where 1 = 2
+        </if>
+        and cflx =5
+    </select>
+
+    <select id="listBdcXfDqxxByPage" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcCfxxQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcCfxxDTO">
+        select
+        xm.qlr,
+        xm.ycqzh bdcqzh,
+        cf.cfjg,
+        cf.cflx,
+        cf.cfwh,
+        cf.cffw,
+        cf.jfywh,
+        cf.jfjg,
+        cf.jfwj,
+        cf.jfwh,
+        to_char(cf.jfsj, 'yyyy-MM-dd hh24:mi:ss') jfsj,
+        to_char(cf.jfdjsj, 'yyyy-MM-dd hh24:mi:ss') jfdjsj,
+        cf.jfdbr,
+        to_char(cf.cfqssj, 'yyyy-MM-dd') cfqssj,
+        to_char(cf.maxdate, 'yyyy-MM-dd') cfjssj,
+        cf.zxsqr,
+        cf.bzxr,
+        cf.cfyy,
+        cf.cfsx,
+        cf.slbh,
+        cf.xmid,
+        cf.gyqk,
+        to_char(cf.djsj, 'yyyy-MM-dd hh24:mi:ss') djsj,
+        cf.djjg,
+        cf.dbr,
+        cf.fj,
+        cf.qszt,
+        to_char(cf.cfsj, 'yyyy-MM-dd hh24:mi:ss') cfsj,
+        cf.cfwj,
+        cf.lhcfqx,
+        cf.fysdr,
+        cf.fysdrlxfs,
+        cf.bz,
+        cf.bdcdyh,
+        cf.bdcdywybh,
+        cf.zl,
+        cf.lhsx
+        from (select e.*,
+        DECODE(h.cfjssj, null, e.cfjssj, h.cfjssj) maxdate
+        from bdc_cf e
+        left join (select c.xmid,
+        case
+        when d.cfjssj = null then
+        c.cfjssj
+        else
+        　　d.cfjssj
+        end cfjssj
+        from bdc_cf c
+        inner join bdc_xm_lsgx f
+        on c.xmid = f.yxmid
+        inner join (select cfjssj,xmid
+        from bdc_cf
+        where xmid in
+        (select b.xmid
+        from bdc_cf a
+        inner join bdc_xm_lsgx b
+        on a.xmid = b.yxmid)
+        and cflx = 5) d
+        on d.xmid = f.xmid) h
+        on e.xmid = h.xmid) cf inner join bdc_xm xm
+        on cf.xmid = xm.xmid
+        WHERE CF.BDCDYH IS NOT NULL
+        and cf.cfjssj is not null
+        and cf.maxdate <![CDATA[<=]]> sysdate
+        AND cf.cflx in(1,2,3,4)
+    </select>
+
+
+    <select id="listBdcXfDqxx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcCfxxQO"
+            resultType="java.util.Map">
+        <!-- 查封到期逻辑参照《最高人民法院关于人民法院民事执行中查封、扣押、冻结财产的规定》第二十九条-->
+        <!-- 查封类型为 查封及预查封 当查封结束时间小于当前时间或者登簿时间超过3年的   视为查封到期-->
+        <!-- 查封类型为 续封  当查封结束时间小于当前时间或者登簿时间超过查封时间（3年，总计6年）的  视为查封到期-->
+        <!-- 查封类型为 轮候查封及轮候预查封  当查封结束时间小于当前时间的（考虑查封类型数据存在问题的情况）  视为查封到期-->
+        select cfjssj, cfwh
+        from (select cfjssj, cfwh
+        from bdc_cf a
+        where a.cfjssj <![CDATA[<=]]> sysdate
+         and cfjssj is not null
+         and a.djsj is not null
+         and qszt = 1
+        group by cfjssj, cfwh
+        order by cfjssj desc)
+        where rownum <![CDATA[<=]]> #{rowNum}
+
+    </select>
+
+    <select id="queryXfMaxDate" parameterType="java.util.List"
+            resultType="java.util.Map">
+        select l.yxmid,
+        c.xmid,
+        to_char(max(c.cfjssj), 'yyyy-MM-dd') maxdate
+        from bdc_cf c
+        inner join bdc_xm_lsgx l
+        on l.xmid = c.xmid
+        where c.cflx = 5
+        and c.xmid in
+        (select xmid
+        from bdc_xm_lsgx
+        where
+        <foreach collection="list" item="item" index="index" open="(" separator=" or " close=")">
+            yxmid = #{item,jdbcType=VARCHAR}
+        </foreach>
+        )
+        group by c.xmid, l.yxmid
+    </select>
+
+    <select id="jfcfxxSingle" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcJfxxQO">
+        update bdc_cf cf
+        <set>
+            <!--cf.qszt = 2,-->
+            cf.jfdbr = #{jfdbr,jdbcType=VARCHAR},
+            cf.jfdjsj = to_date(#{jfdjsj,jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss'),
+            cf.jfsj = to_date(#{jfsj,jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss'),
+            cf.jfjg = #{jfjg,jdbcType=VARCHAR},
+            cf.jfwh = #{jfwh,jdbcType=VARCHAR},
+            cf.jfwj = #{jfwj,jdbcType=VARCHAR},
+            cf.jfyy = #{jfyy,jdbcType=VARCHAR},
+            cf.jfywh = #{jfywh,jdbcType=VARCHAR}
+        </set>
+        where
+        xmid = #{xmid,jdbcType=VARCHAR}
+    </select>
+
+    <select id="jfcfxxBatch" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcJfxxQO">
+        update bdc_cf cf
+        <set>
+            <!--cf.qszt = 2,-->
+            cf.jfdbr = #{jfdbr,jdbcType=VARCHAR},
+            cf.jfdjsj = to_date(#{jfdjsj,jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss'),
+            cf.jfsj = to_date(#{jfsj,jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss'),
+            cf.jfjg = #{jfjg,jdbcType=VARCHAR},
+            cf.jfwh = #{jfwh,jdbcType=VARCHAR},
+            cf.jfwj = #{jfwj,jdbcType=VARCHAR},
+            cf.jfyy = #{jfyy,jdbcType=VARCHAR},
+            cf.jfywh = #{jfywh,jdbcType=VARCHAR}
+        </set>
+        where
+        xmid IN
+        <foreach collection="xmidlist" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="jfcfxxxmBatch" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcJfxxQO">
+        update bdc_xm xm
+        <set>
+            xm.qszt = 2
+        </set>
+        where
+        xmid IN
+        <foreach collection="xmidlist" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="jfcfxxxmSingle" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcJfxxQO">
+        update bdc_xm xm
+        <set>
+            xm.qszt = 2
+        </set>
+        where
+        xmid = #{xmid,jdbcType=VARCHAR}
+    </select>
+
+    <select id="updateCfxx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcJfxxQO">
+        update bdc_cf cf
+        <set>
+            cf.cfqssj = to_date(#{cfqssj,jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss'),
+            cf.cfjssj = to_date(#{cfjssj,jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss'),
+            cf.fj = #{fj,jdbcType=VARCHAR}
+        </set>
+        where
+        cf.xmid = #{xmid,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryWdqXfByBdcyhs" parameterType="map"
+            resultType="Integer">
+        select count(*) from bdc_cf
+        where 1=1 and
+        xmid IN
+        <foreach collection="xmid" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and  cfjssj >= sysdate
+    </select>
+
+    <select id="queryLastXmids" parameterType="map"
+            resultType="map">
+        select ls.yxmid as xmid from bdc_cf cf inner join bdc_xm_lsgx ls
+        on ls.xmid = cf.xmid  where exists(select 1 from bdc_cf a where a.xmid = ls.yxmid and a.cflx in(1,3,5))
+        and cf.xmid in
+        <foreach collection="xmid" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="queryNextXmids" parameterType="map"
+            resultType="map">
+        select cf.xmid from bdc_cf cf left join bdc_xm_lsgx ls
+        on ls.xmid = cf.xmid where cf.cflx in(1,3,5) and ls.yxmid in
+        <foreach collection="xmid" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="listBdcCfByXmid" resultType="map">
+        select * from bdc_cf where 1 = 1
+        <if test="xmid != null and xmid != ''">
+            and xmid = #{xmid,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="listBdcCfByBdcdyh" resultType="map">
+        select * from bdc_cf where qszt = 1
+        <if test="bdcdyh != null and bdcdyh != ''">
+            and bdcdyh = #{bdcdyh,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="listBdcCfByBdcdyhs" resultType="cn.gtmap.realestate.common.core.domain.BdcCfDO">
+        select * from bdc_cf where 1 = 1
+        <if test="list != null and list.size() > 0 ">
+            and bdcdyh in
+            <foreach collection="list" item="item" separator="," open="(" close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="listBdcCfxx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcCfxxQO"
+            resultType="cn.gtmap.realestate.common.core.dto.accept.BdcCfDTO">
+        select t.qlid,t.xmid,t.zl,t.bdcdyh,t.cflx,t.slbh,t.cfjg,t.cfwh,t.cffw,to_char(t.cfqssj,'yyyy-MM-dd') cfqssj ,
+        to_char(t.cfjssj,'yyyy-MM-dd') cfjssj,to_char(t.jfdjsj,'yyyy-MM-dd')
+        jfdjsj,t.qszt,t.cfbh,to_char(x.slsj,'yyyy-MM-dd') slsj ,x.gzlslid,fb.qjgldm,x.bdclx
+        ,to_char(t.cfqssj,'yyyy-MM-dd') ycfsj from bdc_cf t
+        left join bdc_xm x on x.xmid=t.xmid
+        left join bdc_xmfb fb on x.xmid=fb.xmid
+        where t.qszt <![CDATA[ <> ]]> 3
+        <if test="cflx != null and cflx !='' ">
+            and t.cflx = #{cflx}
+        </if>
+        <if test="bdcdyh != null and bdcdyh != ''">
+            and t.bdcdyh = #{bdcdyh,jdbcType=VARCHAR}
+        </if>
+
+        <if test="djyy != null and djyy != ''">
+            and x.djyy = #{djyy}
+        </if>
+        <if test="slbh != null and slbh != ''">
+            and x.slbh = #{slbh}
+        </if>
+        <if test="bdcqzh != null and bdcqzh != ''">
+            and x.bdcqzh = #{bdcqzh}
+        </if>
+        <if test="djxl != null and djxl != ''">
+            and x.djxl = #{djxl}
+        </if>
+        <if test="qllx != null and qllx != ''">
+            and x.qllx = #{qllx,jdbcType=INTEGER}
+        </if>
+
+        order by t.cfqssj
+    </select>
+
+    <select id="listBdcXfxx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcCfxxQO"
+            resultType="cn.gtmap.realestate.common.core.dto.accept.BdcCfDTO">
+        select t.qlid,t.xmid,t.zl,t.bdcdyh,t.cflx,t.slbh,t.cfjg,t.cfwh,t.cffw,to_char(t.cfqssj,'yyyy-MM-dd') cfqssj ,
+        to_char(t.cfjssj,'yyyy-MM-dd') cfjssj,to_char(t.jfsj,'yyyy-MM-dd') jfsj,t.qszt,t.cfbh,c.cfbh
+        ycfbh,to_char(x.slsj,'yyyy-MM-dd') slsj ,x.gzlslid,fb.qjgldm,x.bdclx, to_char(c.cfqssj,'yyyy-MM-dd') ycfsj from
+        bdc_cf t
+        left join bdc_xm x on x.xmid=t.xmid
+        left join bdc_xmfb fb on x.xmid=fb.xmid
+        left join bdc_xm_lsgx l on l.xmid=t.xmid
+        left join bdc_cf c on c.xmid = l.yxmid
+        where t.qszt <![CDATA[ <> ]]> 3
+        <if test="bdcdyh != null and bdcdyh != ''">
+            and t.bdcdyh = #{bdcdyh}
+        </if>
+        <if test="cflx != null and cflx != ''">
+            and t.cflx = #{cflx}
+        </if>
+
+        <if test="djyy != null and djyy != ''">
+            and x.djyy = #{djyy}
+        </if>
+        <if test="slbh != null and slbh != ''">
+            and x.slbh = #{slbh}
+        </if>
+        <if test="bdcqzh != null and bdcqzh != ''">
+            and x.bdcqzh = #{bdcqzh}
+        </if>
+        <if test="djxl != null and djxl != ''">
+            and x.djxl = #{djxl}
+        </if>
+        <if test="qllx != null and qllx != ''">
+            and x.qllx = #{qllx,jdbcType=INTEGER}
+        </if>
+        <if test="ycflx != null and ycflx != ''">
+            and c.cflx = #{ycflx}
+        </if>
+        <if test="yxmid != null and yxmid != ''">
+            and c.xmid = #{yxmid}
+        </if>
+        order by c.cfqssj
+    </select>
+
+    <select id="listYcfxxByGzlslid" resultType="cn.gtmap.realestate.common.core.domain.BdcCfDO">
+        <if test="gzlslid != null and gzlslid != ''">
+            SELECT * FROM bdc_cf c
+            LEFT JOIN BDC_XM_LSGX r ON r.yxmid =c.xmid
+            LEFT JOIN BDC_XM x ON x.xmid =r.xmid
+            WHERE x.gzlslid =#{gzlslid}
+
+        </if>
+    </select>
+
+    <select id="listBdcCfxxByCfsx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcCfxxQO"
+            resultType="cn.gtmap.realestate.common.core.dto.accept.BdcCfDTO">
+        select t.qlid,t.xmid,t.zl,t.bdcdyh,t.cflx,t.slbh,t.cfjg,t.cfwh,t.cffw,to_char(t.cfqssj,'yyyy-MM-dd') cfqssj ,
+        to_char(t.cfjssj,'yyyy-MM-dd') cfjssj,to_char(t.jfdjsj,'yyyy-MM-dd') jfdjsj,t.qszt,t.cfbh,c.cfbh
+        ycfbh,to_char(x.slsj,'yyyy-MM-dd') slsj ,x.gzlslid,fb.qjgldm,x.bdclx, to_char(c.cfqssj,'yyyy-MM-dd') ycfsj,
+        x.xmly,y.gzlslid ycfgzlslid,y.xmly ycfxmly,y.xmid yxmid from
+        bdc_cf t
+        left join bdc_xm x on x.xmid=t.xmid
+        left join bdc_xmfb fb on x.xmid=fb.xmid
+        left join bdc_xm_lsgx l on l.xmid=t.xmid AND nvl(l.WLXM,0) = 0
+        left join bdc_cf c on c.xmid = l.yxmid
+        left join bdc_xm y on y.xmid = c.xmid
+        where t.qszt <![CDATA[ <> ]]> 3
+        <if test="bdcdyh != null and bdcdyh != ''">
+            and t.bdcdyh = #{bdcdyh}
+        </if>
+        <if test="cflx != null and cflx != ''">
+            and t.cflx = #{cflx}
+        </if>
+
+        <if test="djyy != null and djyy != ''">
+            and x.djyy = #{djyy}
+        </if>
+        <if test="slbh != null and slbh != ''">
+            and x.slbh = #{slbh}
+        </if>
+        <if test="bdcqzh != null and bdcqzh != ''">
+            and x.bdcqzh = #{bdcqzh}
+        </if>
+        <if test="djxl != null and djxl != ''">
+            and x.djxl = #{djxl}
+        </if>
+        <if test="qllx != null and qllx != ''">
+            and x.qllx = #{qllx,jdbcType=INTEGER}
+        </if>
+        <if test="ycflx != null and ycflx != ''">
+            and c.cflx = #{ycflx}
+        </if>
+        <if test="yxmid != null and yxmid != ''">
+            and c.xmid = #{yxmid}
+        </if>
+        <if test="gzlslid != null and gzlslid != ''">
+            and x.gzlslid= #{gzlslid}
+        </if>
+        <if test="bdcdyhList != null and bdcdyhList.size() > 0 ">
+            and t.bdcdyh in
+            <foreach collection="bdcdyhList" item="item" separator="," open="(" close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        order by x.ycqzh , t.cfsx, t.cfbh ,t.bdcdyh
+    </select>
+
+</mapper>

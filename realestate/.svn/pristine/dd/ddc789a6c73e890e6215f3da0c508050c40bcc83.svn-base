@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--构(建)筑物所有权信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.exchange.ShareDataMapper">
+    <select id="queryQltQlGjzwsyqList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.QltQlGjzwsyqDO">
+        SELECT t.ysdm,
+        t.ywh,
+        t.bdcdyh,
+        t.bdcqzh,
+        t.qxdm,
+        t.djjg,
+        t.dbr,
+        t.djsj,
+        t.fj,
+        t.qszt,
+        t.qllx,
+        t.djlx,
+        t.djyy,
+        t.zl,
+        t.tdhysyqr,
+        t.tdhysymj,
+        t.tdhysyqssj,
+        t.tdhysyjssj,
+        t.gjzwlx,
+        t.gjzwghyt,
+        t.gjzwmj,
+        t.jgsj,
+        t.gjzwpmt
+        FROM qlt_ql_gjzwsyq t
+        <where>
+            <if test="YWH != null and YWH !=''">
+                AND t.ywh = #{YWH}
+            </if>
+            <if test="BDCDYH != null and BDCDYH !=''">
+                AND t.bdcdyh = #{BDCDYH}
+            </if>
+        </where>
+    </select>
+
+</mapper>

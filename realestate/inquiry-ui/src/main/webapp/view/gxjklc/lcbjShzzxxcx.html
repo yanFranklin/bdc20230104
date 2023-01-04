@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>社会组织信息查询(省民政厅)</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/css/common.css"/>
+</head>
+<body>
+
+<div class="content-div gxjklc-div">
+    <!--查询条件-->
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <!--一行的-->
+            <form class="layui-form" action="">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">名称</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input search" name="mc" id="mc" placeholder="请输入" type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                        <button type="reset" id="reset" class="layui-btn bdc-secondary-btn reset-btn">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="bdc-content-box">
+        <form class="layui-form setOverflow" action="">
+            <div class="bdc-content-fix">
+                <div class="content-title">
+                    <p>社会组织信息查询(省民政厅)</p>
+                    <div class="title-btn-area .layui-layout-right">
+                        <button type="reset" class="layui-btn bdc-secondary-btn upload-pdf">上传PDF</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-main">
+                <div class="table-name"></div>
+
+                <div class="bdc-table-box">
+                    <table class="layui-table" border="1">
+                        <colgroup>
+                            <col width="50">
+                            <col width="100">
+                            <col width="150">
+                            <col width="100">
+                            <col width="150">
+                        </colgroup>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/html" id="cxywcsTpl">
+    {{# if(d.cxywcs){ }}
+    {{# layui.each(d.cxywcs,function(index,item){  }}
+    <tr>
+        <td class="set-back-color set-center">查询条件</td>
+        <td class="set-back-color">名称</td>
+        <td colspan="3"><input type="text" class="layui-table-edit" value="{{ item.mc || ''}}" disabled="off"></td>
+    </tr>
+    <!--查询结果-->
+    <tr>
+        <td class="set-back-color set-center" rowspan="5">查<br>询<br>结<br>果</td>
+        <td class="set-back-color">组织类型</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">社会组织类型</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">社会组织名称</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">联系电话</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">地址</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">注册资金</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">法人代表</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">登记类型</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">法人代表身份证</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">统一社会信用代码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td colspan="5" class="quarantine"></td>
+    </tr>
+    {{# }); }}
+    {{# }else{ }}
+    <tr>
+        <td class="set-back-color set-center">查询条件</td>
+        <td class="set-back-color">名称</td>
+        <td colspan="3"><input type="text" class="layui-table-edit" value="" disabled="off"></td>
+    </tr>
+    <!--查询结果-->
+    <tr>
+        <td class="set-back-color set-center" rowspan="5">查<br>询<br>结<br>果</td>
+        <td class="set-back-color">组织类型</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">社会组织类型</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">社会组织名称</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">联系电话</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">地址</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">注册资金</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">法人代表</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">登记类型</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">法人代表身份证</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">统一社会信用代码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td colspan="5" class="quarantine"></td>
+    </tr>
+    {{# } }}
+</script>
+<script type="text/html" id="tableTpl">
+    {{# if(d){ }}
+    {{# layui.each(d,function(index,item){  }}
+    <tr>
+        <td class="set-back-color set-center">查询条件</td>
+        <td class="set-back-color">名称</td>
+        <td colspan="3"><input type="text" class="layui-table-edit" value="{{ item.cn_name || ''}}" disabled="off"></td>
+    </tr>
+    <!--查询结果-->
+    <tr>
+        <td class="set-back-color set-center" rowspan="5">查<br>询<br>结<br>果</td>
+        <td class="set-back-color">组织类型</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.name || ''}}"></td>
+        <td class="set-back-color">社会组织类型</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.SORG_KIND || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">社会组织名称</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.CN_NAME || ''}}"></td>
+        <td class="set-back-color">联系电话</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.SORG_PHONE || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">地址</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.RESIDENCE || ''}}"></td>
+        <td class="set-back-color">注册资金</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.REG_MON || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">法人代表</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.LEGAL_PEOPLE || ''}}"></td>
+        <td class="set-back-color">登记类型</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.REGIST_TYPE || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">法人代表身份证</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.LEGAL_ID_CARD || ''}}"></td>
+        <td class="set-back-color">统一社会信用代码</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.UNIFIED_CODE || ''}}"></td>
+    </tr>
+    <tr>
+        <td colspan="5" class="quarantine"></td>
+    </tr>
+    {{# }); }}
+    {{# }else{ }}
+    <tr>
+        <td class="set-back-color set-center">查询条件</td>
+        <td class="set-back-color">权利人名称</td>
+        <td><input type="text" class="layui-table-edit mc" value="" disabled="off"></td>
+        <td class="set-back-color">证件号</td>
+        <td><input type="text" class="layui-table-edit zjh" value="" disabled="off"></td>
+    </tr>
+    <!--查询结果-->
+    <tr>
+        <td class="set-back-color set-center" rowspan="5">查<br>询<br>结<br>果</td>
+        <td class="set-back-color">组织类型</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">社会组织类型</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">社会组织名称</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">联系电话</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">地址</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">注册资金</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">法人代表</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">登记类型</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">法人代表身份证</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">统一社会信用代码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td colspan="5" class="quarantine"></td>
+    </tr>
+    {{# } }}
+</script>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/bdcui/js/mask.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/gxjklc/gxjkCommon.js"></script>
+<script src="../../static/js/gxjklc/lcbjShzzxxcx.js"></script>
+</body>
+</html>

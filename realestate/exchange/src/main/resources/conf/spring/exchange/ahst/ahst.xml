@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <!--从安徽省厅中转，最终调用部级接口-->
+    <!-- 安徽省厅 公安部 身份核查服务 -->
+    <ex:bean id="ahst_sfhc" >
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="安徽省厅公安部身份核查接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="AHST"/>
+            <ex:property name="dsfFlag" value="AHST"/>
+            <ex:property name="url" value="${ahst.url}" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="param" sourceService="getRequestParam" dozerXml="conf/dozer/ahst/sfhc/request/param.xml" objectToJsonString="true"
+                        encodeMethod="cn.gtmap.realestate.exchange.service.impl.inf.ahst.AhstServiceImpl.encode"/>
+            <ex:element dozerXml="conf/dozer/ahst/sfhc/request/data.xml" />
+        </ex:request>
+        <ex:response excludeKey="response">
+            <ex:element name="response" sourceService="decode" />
+            <ex:element sourceService="dealSfhcResponse" />
+        </ex:response>
+    </ex:bean>
+
+    <!-- 安徽省厅 民政部 地名信息查询服务 -->
+    <ex:bean id="ahst_dmxxcx" >
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="安徽省厅民政部地名信息查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="AHST"/>
+            <ex:property name="dsfFlag" value="AHST"/>
+            <ex:property name="url" value="${ahst.url}" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="param" dozerXml="conf/dozer/ahst/dmxxcx/request/param.xml" objectToJsonString="true"
+                        encodeMethod="cn.gtmap.realestate.exchange.service.impl.inf.ahst.AhstServiceImpl.encode"/>
+            <ex:element dozerXml="conf/dozer/ahst/dmxxcx/request/data.xml" />
+        </ex:request>
+        <ex:response>
+            <ex:element sourceService="decode" />
+        </ex:response>
+    </ex:bean>
+
+    <!-- 安徽省厅 民政部 婚姻登记信息查询服务 -->
+    <ex:bean id="ahst_hydjxxcx" >
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="安徽省厅民政部婚姻登记信息查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="AHST"/>
+            <ex:property name="dsfFlag" value="AHST"/>
+            <ex:property name="url" value="${ahst.url}" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="param" dozerXml="conf/dozer/ahst/hydjxxcx/request/param.xml" objectToJsonString="true"
+                        encodeMethod="cn.gtmap.realestate.exchange.service.impl.inf.ahst.AhstServiceImpl.encode"/>
+            <ex:element dozerXml="conf/dozer/ahst/hydjxxcx/request/data.xml" />
+        </ex:request>
+        <ex:response excludeKey="response">
+            <ex:element name="response" sourceService="decode" />
+            <ex:element dozerXml="conf/dozer/ahst/hydjxxcx/response/response.xml" />
+        </ex:response>
+    </ex:bean>
+
+    <!-- 安徽省厅 民政部 社会组织统一社会信用代码查询服务 -->
+    <ex:bean id="ahst_shzzxxcx" >
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="安徽省厅民政部社会组织查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="AHST"/>
+            <ex:property name="dsfFlag" value="AHST"/>
+            <ex:property name="url" value="${ahst.url}" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="param" dozerXml="conf/dozer/ahst/shzzxxcx/request/param.xml" objectToJsonString="true"
+                        encodeMethod="cn.gtmap.realestate.exchange.service.impl.inf.ahst.AhstServiceImpl.encode"/>
+            <ex:element dozerXml="conf/dozer/ahst/shzzxxcx/request/data.xml" />
+        </ex:request>
+        <ex:response>
+            <ex:element sourceService="decode" />
+        </ex:response>
+    </ex:bean>
+
+    <!-- 安徽省厅 银保监会 金融许可证信息查询服务 -->
+    <ex:bean id="ahst_jrxkzcx" >
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="安徽省厅银保监会金融许可证查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="AHST"/>
+            <ex:property name="dsfFlag" value="AHST"/>
+            <ex:property name="url" value="${ahst.url}" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="param" dozerXml="conf/dozer/ahst/jrxkzcx/request/param.xml" objectToJsonString="true"
+                        encodeMethod="cn.gtmap.realestate.exchange.service.impl.inf.ahst.AhstServiceImpl.encode"/>
+            <ex:element dozerXml="conf/dozer/ahst/jrxkzcx/request/data.xml" />
+        </ex:request>
+        <ex:response>
+            <ex:element sourceService="decode" />
+            <ex:element dozerXml="conf/dozer/ahst/jrxkzcx/response/response.xml" />
+        </ex:response>
+    </ex:bean>
+
+    <!-- 安徽省厅 中编办 机关群团事业单位统一社会信用代码查询服务 -->
+    <ex:bean id="ahst_sydwxxcx" >
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="安徽省厅中编办机关群团事业单位查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="AHST"/>
+            <ex:property name="dsfFlag" value="AHST"/>
+            <ex:property name="url" value="${ahst.url}" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="param" dozerXml="conf/dozer/ahst/sydwxxcx/request/param.xml" objectToJsonString="true"
+                        encodeMethod="cn.gtmap.realestate.exchange.service.impl.inf.ahst.AhstServiceImpl.encode"/>
+            <ex:element dozerXml="conf/dozer/ahst/sydwxxcx/request/data.xml" />
+        </ex:request>
+        <ex:response>
+            <ex:element name="rows" sourceService="decode" />
+            <ex:element dozerXml="conf/dozer/ahst/sydwxxcx/response/response.xml" />
+        </ex:response>
+    </ex:bean>
+
+
+    <ex:bean id="decode">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="ahstServiceImpl" />
+            <ex:property name="methodName" value="decode" />
+        </ex:service-info>
+    </ex:bean>
+
+    <ex:bean id="ahst_cxqqdh">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="ahstServiceImpl" />
+            <ex:property name="methodName" value="getCxqqdh" />
+            <ex:property name="noArgs" value="true" />
+        </ex:service-info>
+    </ex:bean>
+
+    <ex:bean id="ahst_sfhc_messageseq">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="ahstServiceImpl"/>
+            <ex:property name="methodName" value="getSfhcMessageSeq"/>
+            <ex:property name="noArgs" value="true" />
+        </ex:service-info>
+    </ex:bean>
+
+    <ex:bean id="getRequestParam">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="ahstServiceImpl"/>
+            <ex:property name="methodName" value="getRequestParam"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <ex:bean id="convertHyxxZdDmToMc">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="ahstServiceImpl"/>
+            <ex:property name="methodName" value="convertHyxxZdDmToMc"/>
+            <ex:property name="params" value="data"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <ex:bean id="dealSfhcResponse">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="ahstServiceImpl" />
+            <ex:property name="methodName" value="dealSfhcResponse" />
+            <ex:property name="params" value="response"/>
+        </ex:service-info>
+    </ex:bean>
+
+
+</beans>

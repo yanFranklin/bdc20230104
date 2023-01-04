@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>登记页面</title>
+    <link rel="stylesheet" href="../../../static/lib/layui/css/layui.css">
+    <!--formSelects-v4.css 和 search.css 顺序不能错-->
+    <link rel="stylesheet" href="../../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../../static/lib/registerui/css/process.css">
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/popup.css"/>
+</head>
+<style>
+    .bdc-textarea-div textarea {
+        height: 120px;
+    }
+
+    .verify_icon {
+        border: 1px solid;
+        border-radius: 50%;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 5px;
+    }
+
+    .layui-icon-ok {
+        color: #1d87d1;
+        position: absolute;
+        top: 18px;
+    }
+
+    .layui-icon-close {
+        color: #f54743;
+        position: absolute;
+        top: 18px;
+    }
+
+    #bdc-popup-large .layui-form-item .layui-inline.bdc-frame-button-box {
+        margin-bottom: 5%;
+    }
+</style>
+<body>
+<div class="bdc-container-box">
+    <div class="bdc-container">
+        <div class="bdc-header clear">
+            <p class="bdc-header-this">业务受理配置<img src="../../../static/lib/registerui/image/arrow.png" alt=""></p>
+            <p class="bdc-header-this">业务逻辑配置<img src="../../../static/lib/registerui/image/arrow.png" alt=""></p>
+            <p class="bdc-header-this">其他相关配置</p>
+        </div>
+        <p class="bdc-title">11/13：配置默认意见</p>
+        <!--内容区-->
+        <div class="bdc-percentage-container">
+            <div class="bdc-search-content">
+                <div class="bdc-search-box">
+                    <form id="form" class="layui-form" action="">
+                        <div class="layui-form-item pf-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">工作流名称</label>
+                                <div class="layui-input-inline bdc-radio">
+                                    <select lay-filter="gzldymcs" id="gzldymcs" xm-select="selectGzldymc"
+                                            xm-select-search="" xm-select-height="34px" xm-select-search-type="dl"
+                                            xm-select-radio name="gzldymcs" lay-search="" class="search">
+                                        <option value="">请选择或输入工作流名称</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">节点名称</label>
+                                <div class="layui-input-inline bdc-radio">
+                                    <select lay-filter="jdmcs" id="jdmcs" xm-select="selectJdmc" xm-select-search=""
+                                            xm-select-height="34px" xm-select-search-type="dl" xm-select-radio
+                                            name="jdmc" lay-search="" class="search">
+                                        <option value="">请选择或输入节点名称</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">创建人</label>
+                                <div class="layui-input-inline pf-start-time-box">
+                                    <input type="text" id="cjrmc" name="cjrmc" placeholder="请输入创建人" autocomplete="off"
+                                           class="layui-input search">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">是否可用</label>
+                                <div class="layui-input-inline bdc-radio">
+                                    <select lay-filter="sfky" id="sfky" xm-select="selectSfky" xm-select-search=""
+                                            xm-select-height="34px" xm-select-search-type="dl" xm-select-radio
+                                            name="sfky" lay-search="" class="search">
+                                        <option value="">请选择</option>
+                                        <option value="1">是</option>
+                                        <option value="0">否</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">意见类型</label>
+                                <div class="layui-input-inline bdc-radio">
+                                    <select lay-filter="yjlx" id="yjlx" xm-select="selectYjlx" xm-select-search=""
+                                            xm-select-height="34px" xm-select-search-type="dl" xm-select-radio
+                                            name="yjlx" lay-search="" class="search">
+                                        <option value="">请选择或输入意见类型</option>
+                                        <option value="0">默认意见</option>
+                                        <option value="1">可选意见</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <input id="gzldymc" name="gzldymc" type="hidden" class="search">
+                            </div>
+
+                            <div class="layui-inline bdc-button-box">
+                                <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn"
+                                   id="search">查询</a>
+                                <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">
+                                    重置
+                                </button>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="bdc-table-box">
+                <table id="mryjTable" lay-filter="mryjTable"></table>
+            </div>
+            <div class="bdc-btn-box">
+                <a href="javascript:;" class="layui-btn bdc-secondary-btn beforestep">上一步</a>
+                <a href="javascript:;" class="layui-btn bdc-major-btn nextstep">下一步</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!--表格上面功能按钮-->
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn"  lay-event="add">新增</button>
+        <button class="layui-btn layui-btn-sm bdc-delete-btn" lay-event="delete">删除</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="edit">编辑</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="sl">示例</button>
+        <link rel="stylesheet" href="../../../static/lib/bdcui/css/table.css"/>
+    </div>
+</script>
+<script src="../../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../../static/lib/bdcui/js/common.js"></script>
+<script src="../../../static/lib/form-select/formSelects-v4.js" />
+
+<script src="../../../static/lib/bdcui/js/mask.js"></script>
+<script src="../../../static/js/config/common.js"></script>
+<script src="../../../static/js/config/mryj/bdcXtMryj.js"></script>
+<script src="../../../static/js/config/lcpz/lcpzStep11.js"></script>
+</html>

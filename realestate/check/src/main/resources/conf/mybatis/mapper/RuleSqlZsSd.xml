@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.check.core.mapper.RuleSqlMapper">
+    <!-- 检查是否存在在证书锁定（不动产数据）状态下的办理变更、转移、换证、遗失补证、更正、期转现等登记流程（房地产权）-->
+    <select id="selectBdcZsSdDoFdcq" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        select x.xmid,x.slbh,x.djxl,x.bdcdyh,s.cqzh xzwh,f.xmid xzwhxmid,x.gzldyid from bdc_xm x
+        inner join bdc_fdcq t on x.xmid = t.xmid
+        <if test="xmid != null and xmid !=''">
+            and x.xmid = #{xmid}
+        </if>
+        left join bdc_xm_lsgx r on x.xmid = r.xmid
+        left join bdc_xm_zs_gx f on f.xmid=r.yxmid
+        inner join bdc_zssd s on s.zsid=f.zsid
+        <![CDATA[    where (t.djsj is null and s.sdzt = 1) or (t.djsj >= s.sdsj and (t.djsj < s.jssj or s.sdzt = 1))  ]]>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 检查是否存在在证书锁定（不动产数据）状态下的办理变更、转移、换证、遗失补证、更正、期转现等登记流程（建设用地、宅基地使用权）-->
+    <select id="selectBdcZsSdDoJsydzjdsyq" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        select x.xmid,x.slbh,x.djxl,x.bdcdyh,s.cqzh xzwh,f.xmid xzwhxmid,x.gzldyid from bdc_xm x
+        inner join bdc_jsydsyq t on x.xmid = t.xmid
+        <if test="xmid != null and xmid !=''">
+            and x.xmid = #{xmid}
+        </if>
+        left join bdc_xm_lsgx r on x.xmid = r.xmid
+        left join bdc_xm_zs_gx f on f.xmid=r.yxmid
+        inner join bdc_zssd s on s.zsid=f.zsid
+        <![CDATA[    where (t.djsj is null and s.sdzt = 1) or (t.djsj >= s.sdsj and (t.djsj < s.jssj or s.sdzt = 1))  ]]>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 检查是否存在在证书锁定（不动产数据）状态下的办理变更、转移、换证、遗失补证、更正、期转现等登记流程（土地所有权）-->
+    <select id="selectBdcZsSdDoTdsyq" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        select x.xmid,x.slbh,x.djxl,x.bdcdyh,s.cqzh xzwh,f.xmid xzwhxmid,x.gzldyid from bdc_xm x
+        inner join bdc_tdsyq t on x.xmid = t.xmid
+        <if test="xmid != null and xmid !=''">
+            and x.xmid = #{xmid}
+        </if>
+        left join bdc_xm_lsgx r on x.xmid = r.xmid
+        left join bdc_xm_zs_gx f on f.xmid=r.yxmid
+        inner join bdc_zssd s on s.zsid=f.zsid
+        <![CDATA[    where (t.djsj is null and s.sdzt = 1) or (t.djsj >= s.sdsj and (t.djsj < s.jssj or s.sdzt = 1))  ]]>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 检查是否存在在证书锁定（不动产数据）状态下的办理变更、转移、换证、遗失补证、更正、期转现等登记流程（农用地使用权）-->
+    <select id="selectBdcZsSdDoNydsyq" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        select x.xmid,x.slbh,x.djxl,x.bdcdyh,s.cqzh xzwh,f.xmid xzwhxmid,x.gzldyid from bdc_xm x
+        inner join bdc_tdcbnydsyq t on x.xmid = t.xmid
+        <if test="xmid != null and xmid !=''">
+            and x.xmid = #{xmid}
+        </if>
+        left join bdc_xm_lsgx r on x.xmid = r.xmid
+        left join bdc_xm_zs_gx f on f.xmid=r.yxmid
+        inner join bdc_zssd s on s.zsid=f.zsid
+        <![CDATA[    where (t.djsj is null and s.sdzt = 1) or (t.djsj >= s.sdsj and (t.djsj < s.jssj or s.sdzt = 1))  ]]>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 检查是否存在在证书锁定（不动产数据）状态下的办理预告登记流程（预告）-->
+    <select id="selectBdcZsSdDoYg" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        select x.xmid,x.slbh,x.djxl,x.bdcdyh,s.cqzh xzwh,f.xmid xzwhxmid,x.gzldyid from bdc_xm x
+        inner join bdc_yg t on x.xmid = t.xmid
+        <if test="xmid != null and xmid !=''">
+            and x.xmid = #{xmid}
+        </if>
+        left join bdc_xm_lsgx r on x.xmid = r.xmid
+        left join bdc_xm_zs_gx f on f.xmid=r.yxmid
+        inner join bdc_zssd s on s.zsid=f.zsid
+        <![CDATA[    where (t.djsj is null and s.sdzt = 1) or (t.djsj >= s.sdsj and (t.djsj < s.jssj or s.sdzt = 1))  ]]>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 检查是否存在在证书锁定（不动产数据）状态下的办理变更、转移、换证、遗失补证、更正、期转现等登记流程（海域所有权）-->
+    <select id="selectBdcZsSdDoHysyq" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        select x.xmid,x.slbh,x.djxl,x.bdcdyh,s.cqzh xzwh,f.xmid xzwhxmid,x.gzldyid from bdc_xm x
+        inner join bdc_hysyq t on x.xmid = t.xmid
+        <if test="xmid != null and xmid !=''">
+            and x.xmid = #{xmid}
+        </if>
+        left join bdc_xm_lsgx r on x.xmid = r.xmid
+        left join bdc_xm_zs_gx f on f.xmid=r.yxmid
+        inner join bdc_zssd s on s.zsid=f.zsid
+        <![CDATA[    where (t.djsj is null and s.sdzt = 1) or (t.djsj >= s.sdsj and (t.djsj < s.jssj or s.sdzt = 1))  ]]>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 检查是否存在在证书锁定（不动产数据）状态下的办理变更、转移、换证、遗失补证、更正、期转现等登记流程（林权）-->
+    <select id="selectBdcZsSdDoLq" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        select x.xmid,x.slbh,x.djxl,x.bdcdyh,s.cqzh xzwh,f.xmid xzwhxmid,x.gzldyid from bdc_xm x
+        inner join bdc_lq t on x.xmid = t.xmid
+        <if test="xmid != null and xmid !=''">
+            and x.xmid = #{xmid}
+        </if>
+        left join bdc_xm_lsgx r on x.xmid = r.xmid
+        left join bdc_xm_zs_gx f on f.xmid=r.yxmid
+        inner join bdc_zssd s on s.zsid=f.zsid
+        <![CDATA[    where (t.djsj is null and s.sdzt = 1) or (t.djsj >= s.sdsj and (t.djsj < s.jssj or s.sdzt = 1))  ]]>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 检查是否存在在证书锁定（不动产数据）状态下的办理变更、转移、换证、遗失补证、更正、期转现等登记流程（构（建）筑物所有权）-->
+    <select id="selectBdcZsSdDoGjzwsyq" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        select x.xmid,x.slbh,x.djxl,x.bdcdyh,s.cqzh xzwh,f.xmid xzwhxmid,x.gzldyid from bdc_xm x
+        inner join bdc_gjzwsyq t on x.xmid = t.xmid
+        <if test="xmid != null and xmid !=''">
+            and x.xmid = #{xmid}
+        </if>
+        left join bdc_xm_lsgx r on x.xmid = r.xmid
+        left join bdc_xm_zs_gx f on f.xmid=r.yxmid
+        inner join bdc_zssd s on s.zsid=f.zsid
+        <![CDATA[    where (t.djsj is null and s.sdzt = 1) or (t.djsj >= s.sdsj and (t.djsj < s.jssj or s.sdzt = 1))  ]]>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 检查是否存在在证书锁定（不动产数据）状态下的办理抵押、预抵押、在建工程抵押登记流程（抵押）-->
+    <select id="selectBdcZsSdDoDya" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        select x.xmid,x.slbh,x.djxl,x.bdcdyh,s.cqzh xzwh,f.xmid xzwhxmid,x.gzldyid from bdc_xm x
+        inner join bdc_dyaq t on x.xmid = t.xmid
+        <if test="xmid != null and xmid !=''">
+            and x.xmid = #{xmid}
+        </if>
+        left join bdc_xm_lsgx r on x.xmid = r.xmid
+        left join bdc_xm_zs_gx f on f.xmid=r.yxmid
+        inner join bdc_zssd s on s.zsid=f.zsid
+        <![CDATA[    where (t.djsj is null and s.sdzt = 1) or (t.djsj >= s.sdsj and (t.djsj < s.jssj or s.sdzt = 1))  ]]>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 检查是否存在在证书锁定（不动产数据）状态下的办理注销登记流程（注销产权）-->
+    <select id="selectBdcZsSdDoZxCq" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        select x.xmid,x.slbh,x.djxl,x.bdcdyh,s.cqzh xzwh,f.xmid xzwhxmid,x.gzldyid from bdc_xm x
+        left join bdc_xm_lsgx r on x.xmid = r.xmid
+        left join bdc_xm_zs_gx f on f.xmid=r.yxmid
+        inner join bdc_zssd s on s.zsid=f.zsid
+        <![CDATA[ where ((x.djsj is null and s.sdzt = 1) or (x.djsj >= s.sdsj and (x.djsj < s.jssj or s.sdzt = 1)))  ]]>
+        <if test="xmid != null and xmid !=''">
+            and x.xmid = #{xmid}
+        </if>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !=''">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+</mapper>        

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcQlrMapper">
+
+    <select id="queryQlrList" parameterType="map" resultType="cn.gtmap.realestate.common.core.domain.BdcQlrDO">
+        SELECT q.qlrid, q.xmid, q.qlrmc, q.zjzl, q.zjh, q.txdz, q.yb, q.xb, q.frmc, q.frdh, q.dlrmc, q.dlrdh, q.dljg, q.qlrlx, q.qlrlb, q.gyfs, q.gyqk, q.dh, q.sshy, q.bz, q.sfczr, q.sxh, q.bdcqzh, q.zsid, q.frzjzl, q.frzjh, q.dlrzjzl, q.dlrzjh, q.qlrftmj, q.qlbl
+        FROM bdc_xm t
+        RIGHT JOIN bdc_qlr q ON q.xmid = t.xmid
+        WHERE t.gzlslid =#{gzlslid}
+        <if test="xmid != null and xmid != ''">
+            AND t.xmid = #{xmid}
+        </if>
+        <if test="qlrmc != null and qlrmc != ''">
+            AND q.qlrmc = #{qlrmc}
+        </if>
+        <if test="qlrlb != null and qlrlb != ''">
+            AND q.qlrlb = #{qlrlb}
+        </if>
+        <if test="qllxs != null and qllxs.size() > 0">
+            AND t.qllx IN
+            <foreach collection="qllxs" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qlrmc != null and qlrmc != ''">
+            AND q.qlrmc = #{qlrmc}
+        </if>
+    </select>
+    <select id="queryQlrlbByQlrmc" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM bdc_qlr
+        WHERE qlrmc IN
+        <foreach collection="qlrmc.split(',')" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND qlrlx = 1 AND qlrlx is not null
+    </select>
+
+
+</mapper>

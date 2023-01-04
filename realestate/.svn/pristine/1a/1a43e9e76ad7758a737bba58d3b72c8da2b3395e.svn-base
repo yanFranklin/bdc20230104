@@ -1,0 +1,34 @@
+---主表
+select t.slbh,t.qlr as dyaqr,#{ewm} ewm from bdc_xm t where t.xmid = #{xmid};
+SELECT CASE
+		WHEN d.dzwmj IS NULL THEN to_char(c.zdzhmj)
+		ELSE to_char(d.dzwmj)
+	END AS dywzmj
+FROM (
+	SELECT b.gzlslid, SUM(b.zdzhmj) AS zdzhmj
+	FROM (
+		SELECT DISTINCT substr(a.bdcdyh, 0, 19) AS djh, a.gzlslid
+			, a.zdzhmj
+		FROM bdc_xm a
+		WHERE a.gzlslid = #{gzlslid}
+	) b
+	GROUP BY b.gzlslid
+) c
+	LEFT JOIN (
+		SELECT b.gzlslid, SUM(b.dzwmj) AS dzwmj
+		FROM (
+			SELECT DISTINCT a.bdcdyh AS bdcdyh, a.gzlslid, a.dzwmj
+			FROM bdc_xm a
+			WHERE a.gzlslid = #{gzlslid}
+		) b
+		GROUP BY b.gzlslid
+	) d ON c.gzlslid = d.gzlslid
+---子表
+SELECT ROWNUM AS XH,T2.XMID,T2.gzlslid, T2.bdcdyh, T2.dyar, T2.zl, T2.zdzhmj, T2.zdzhyt, T2.qlxz, T2.dzwyt, T2.dzwmj, T2.ybdcqzh FROM (
+SELECT t.gzlslid,T.XMID, t.bdcdyh, t.ywr dyar, t.zl, t.zdzhmj, TDYT.MC as zdzhyt, QLXZ.MC AS qlxz, FWYT.MC AS dzwyt, t.dzwmj,
+to_char(t.ycqzh || ' ' || t.yfczh || ' ' || t.ytdzh) AS ybdcqzh
+FROM bdc_xm t
+LEFT JOIN BDC_ZD_TDYT TDYT ON T.ZDZHYT = TDYT.DM
+LEFT JOIN BDC_ZD_FWYT FWYT ON T.DZWYT = FWYT.DM
+LEFT JOIN BDC_ZD_QLXZ QLXZ ON T.QLXZ = QLXZ.DM
+WHERE t.gzlslid = #{gzlslid} ORDER BY t.bdcdyh asc) T2

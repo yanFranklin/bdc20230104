@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>日志查询-规则模块</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css"/>
+    <link rel="stylesheet" href="../../static/css/bjjk/bjjk.css"/>
+</head>
+<body>
+<div class="bdc-percentage-container">
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <form class="layui-form" action="">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label id="rzlxLabel"  class="layui-form-label">日志类型</label>
+                        <div id="rzlxDiv" class="layui-input-inline">
+                            <select id ="eventName" name="eventName" lay-filter="eventName" lay-search placeholder="请选择日志类型">
+                                <option value="" class ='source'>请选择</option>
+                                <option value="GZYZ" class ='source'>规则验证</option>
+                                <option value="GZCZ" class ='source'>规则操作</option>
+                                <optgroup label="忽略">
+                                    <option value="YZHL" class ='source'>新建流程规则验证忽略</option>
+                                    <option value="YZHL_ZF" class ='source'>转发规则验证忽略</option>
+                                </optgroup>
+                                <optgroup label="例外">
+                                    <option value="YZLW" class ='source'>验证例外</option>
+                                    <option value="GZLW_SH" class ='source'>规则例外审核</option>
+                                </optgroup>
+
+                            </select>
+                            <i class="layui-icon layui-icon-close bdc-hide reseticon" style="right: 29px!important;"></i>
+                        </div>
+                    </div>
+                    <div id="gz-search-module" lay-filter="searchModule">
+                        <div class="layui-inline">
+                            <label id="czmcLabel"  class="layui-form-label">操作名称</label>
+                            <div id="czmcDiv" class="layui-input-inline">
+                                <select id ="viewTypeName" name="viewTypeName" lay-filter="viewTypeName" lay-search placeholder="请选择操作名称">
+
+                                </select>
+                                <i class="layui-icon layui-icon-close bdc-hide reseticon" style="right: 29px!important;"></i>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label id="kssjLabel" class="layui-form-label">开始时间</label>
+                            <div id="kssjDiv" class="layui-input-inline">
+                                <input type="text" id="begin" name="beginTime" class="layui-input test-item" placeholder="请选择">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label id="jssjLabel" class="layui-form-label">结束时间</label>
+                            <div id="jssjDiv" class="layui-input-inline">
+                                <input type="text" id="end" name="endTime" class="layui-input test-item" placeholder="请选择">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label id="aliasLabel" class="layui-form-label">用户名</label>
+                            <div id="aliasDiv" class="layui-input-inline">
+                                <input type="text" name="alias" class="layui-input" placeholder="请输入">
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="search-div" class="layui-inline bdc-button-box">
+                        <a href="javascript:" id="search" lay-filter="search" lay-submit="" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                        <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="bdc-table-box">
+        <div id="logTable-div">
+            <table id="logTable" lay-filter="logTable"></table>
+        </div>
+        <div id="logGzhlTable-div">
+            <table id="logGzhlTable" lay-filter="logGzhlTable"></table>
+        </div>
+        <div id="logGzlwTable-div">
+            <table id="logGzlwTable" lay-filter="logGzlwTable"></table>
+        </div>
+        <div id="logGzyzTable-div">
+            <table id="logGzyzTable" lay-filter="logGzyzTable"></table>
+        </div>
+    </div>
+
+
+
+    <!--表格上面功能按钮-->
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="exportExcel">导出Excel</button>
+            <button class="layui-btn layui-btn-sm bdc-secondary-btn" lay-event="exportAllExcel">导出全部</button>
+        </div>
+    </script>
+
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="xq">详情</a>
+    </script>
+
+    <script type="text/html" id="gzyzBarDemo">
+        <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="gzyzxq">验证详情</a>
+    </script>
+
+</div>
+
+<!--隐藏form，为了Excel导出缓存数据使用-->
+<form style="display: none" action="/realestate-inquiry-ui/excel/export" method="POST" id="form">
+    <input type="hidden" id="fileName"   name="fileName"/>
+    <input type="hidden" id="sheetName"  name="sheetName"/>
+    <input type="hidden" id="cellTitle"  name="cellTitle"/>
+    <input type="hidden" id="cellWidth"  name="cellWidth"/>
+    <input type="hidden" id="cellKey"    name="cellKey"/>
+    <input type="hidden" id="data"       name="data"/>
+</form>
+</body>
+
+<script type="text/html" id="gzyzSearchTpl">
+    <div class="layui-inline">
+        <label class="layui-form-label">流程名称</label>
+        <div class="layui-input-inline">
+            <select class="" lay-search="" id="gzldymc" lay-filter="gzldymc" name="gzldymc">
+                <option value="">请选择</option>
+                {{# if(d && isNotBlank(d.gzldymcMap)){ }}
+                    {{#  for(var key in d.gzldymcMap){  }}
+                        <option value="{{key}}">{{gzldymcMap[key] || ''}}</option>
+                    {{#  } }}
+                {{# }   }}
+            </select>
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">验证场景</label>
+        <div class="layui-input-inline">
+            <select class="" lay-search="" id="yzcj" lay-filter="yzcj" name="yzcj">
+            </select>
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">验证日期</label>
+        <div class="layui-input-inline">
+            <input type="text" id="yzrq" name="yzrq"  value="{{d.currentTime|| ''}}" class="layui-input" placeholder="请选择">
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="gzczSearchTpl">
+    <div class="layui-inline">
+        <label class="layui-form-label">操作名称</label>
+        <div class="layui-input-inline">
+            <select name="viewTypeName" lay-filter="viewTypeName" lay-search placeholder="请选择操作名称">
+                <option value="" class ='source'>请选择</option>
+                <optgroup label="删除">
+                    <option value="删除子规则信息" class ='source'>删除子规则</option>
+                    <option value="删除例外信息" class ='source'>删除例外</option>
+                    <option value="删除流程和组合规则对照关系信息" class ='source'>删除组合规则</option>
+                    <option value="批量删除已设置的验证例外规则" class ='source'>批量删除验证例外规则</option>
+                    <option value="根据关系id删除规则关系信息" class ='source'>删除组合规则关联的子规则</option>
+                    <option value="根据组合id删除规则关系信息" class ='source'>删除组合规则中的子规则</option>
+                </optgroup>
+
+                <optgroup label="修改">
+                    <option value="保存子规则信息" class ='source'>保存子规则</option>
+                    <option value="复制子规则信息" class ='source'>复制子规则</option>
+                    <option value="新增组合规则信息" class ='source'>新增组合规则</option>
+                    <option value="更新组合规则信息" class ='source'>更新组合规则</option>
+                    <option value="复制组合规则信息" class ='source'>复制组合规则</option>
+                    <option value="保存流程和组合规则对照关系" class ='source'>保存流程和组合规则关系</option>
+                    <option value="新增规则关系" class ='source'>新增规则对照关系</option>
+                    <option value="新增验证例外规则" class ='source'>新增验证例外规则</option>
+                </optgroup>
+
+                <optgroup label="白名单">
+                    <option value="删除白名单人员" class ='source'>删除白名单人员</option>
+                    <option value="新增白名单人员" class ='source'>新增白名单人员</option>
+                    <option value="修改白名单人员" class ='source'>修改白名单人员</option>
+                </optgroup>
+            </select>
+            <i class="layui-icon layui-icon-close bdc-hide reseticon" style="right: 29px!important;"></i>
+        </div>
+    </div>
+
+    <div class="layui-inline">
+        <label class="layui-form-label">开始时间</label>
+        <div class="layui-input-inline">
+            <input type="text" id="begin" name="beginTime" class="layui-input test-item" placeholder="请选择">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">结束时间</label>
+        <div class="layui-input-inline">
+            <input type="text" id="end" name="endTime" class="layui-input test-item" placeholder="请选择">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">用户名</label>
+        <div class="layui-input-inline">
+            <input type="text" name="alias" class="layui-input" placeholder="请输入">
+            <i class="layui-icon layui-icon-close bdc-hide"></i>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="gzhlSearchTpl">
+
+    <div class="layui-inline">
+        <label class="layui-form-label">开始时间</label>
+        <div class="layui-input-inline">
+            <input type="text" id="begin" name="beginTime" class="layui-input test-item" placeholder="请选择">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">结束时间</label>
+        <div class="layui-input-inline">
+            <input type="text" id="end" name="endTime" class="layui-input test-item" placeholder="请选择">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">用户名</label>
+        <div class="layui-input-inline">
+            <input type="text" name="alias" class="layui-input" placeholder="请输入">
+            <i class="layui-icon layui-icon-close bdc-hide"></i>
+        </div>
+    </div>
+</script>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<!--base64加密-->
+<script src="../../static/js/bjjk/base64.js"></script>
+<script src="../../static/js/commonSearch.js"></script>
+<script src="../../static/js/formCenter.js"></script>
+<script src="../../static/js/log/logList_common.js"></script>
+<script src="../../static/js/log/logList_gz.js"></script>
+</html>

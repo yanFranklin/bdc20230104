@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.register.core.mapper.BdcQlrMapper">
+    <update id="updateQlrGyqkPl" parameterType="map">
+        <if test="gzlslid != null and gzlslid != ''">
+            UPDATE bdc_qlr t
+            <set>
+                t.gyqk = #{gyqk,jdbcType=VARCHAR}
+            </set>
+            WHERE EXISTS (
+            SELECT x.xmid
+            FROM bdc_xm x
+            WHERE (t.xmid = x.xmid
+            AND x.gzlslid = #{gzlslid})
+            )
+            AND t.qlrlb = #{qlrlb}
+            AND t.qlrmc = #{qlrmc}
+        </if>
+    </update>
+
+    <update id="batchUpdateQlrGyqk" parameterType="map">
+        <if test=" xmidList!= null and xmidList.size >0">
+            UPDATE bdc_qlr t
+            <set>
+                t.gyqk = #{gyqk,jdbcType=VARCHAR}
+            </set>
+            <where>
+                AND t.qlrlb = #{qlrlb}
+                AND t.qlrmc = #{qlrmc}
+                AND t.xmid IN
+                <foreach collection="xmidList" item="xmid" open="(" close=")" separator=",">
+                    #{xmid}
+                </foreach>
+            </where>
+        </if>
+    </update>
+
+    <update id="updateQlrGyqk" parameterType="cn.gtmap.realestate.common.core.domain.BdcQlrDO">
+        <if test="qlrid != null and qlrid != ''">
+            UPDATE bdc_qlr t
+            <set>
+                t.gyqk = #{gyqk,jdbcType=VARCHAR}
+            </set>
+            WHERE t.qlrid = #{qlrid}
+        </if>
+    </update>
+
+</mapper>

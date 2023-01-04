@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://dozer.sourceforge.net"
+          xsi:schemaLocation="http://dozer.sourceforge.net
+          http://dozer.sourceforge.net/schema/beanmapping.xsd">
+    <!--    淮安淮阴区过户请求参数对照-->
+    <mapping map-null="false" map-empty-string="false" wildcard="false" type="one-way">
+        <class-a>cn.gtmap.realestate.common.core.dto.exchange.sdqgh.dian.sqgh.request.SdqGhRequestDTO</class-a>
+        <class-b>com.alibaba.fastjson.JSONObject</class-b>
+        <field>
+            <a>consno</a>
+            <b>USERNO</b>
+        </field>
+        <field>
+            <a>ywrmc</a>
+            <b>USERNAME</b>
+        </field>
+        <field>
+            <a>ywrzjh</a>
+            <b>USERCARD</b>
+        </field>
+        <field>
+            <a>ywrdh</a>
+            <b>MOBILE</b>
+        </field>
+        <field>
+            <a>qlrmc</a>
+            <b>NEWUSERNAME</b>
+        </field>
+        <field>
+            <a>qlrzjh</a>
+            <b>NEWUSERCARD</b>
+        </field>
+        <field>
+            <a>qlrdh</a>
+            <b>NEWMOBILE</b>
+        </field>
+        <!--        截取bdcdyh的前19位-->
+        <field custom-converter="cn.gtmap.realestate.common.core.dozer.converters.gtmap.SubStringCustomConverter"
+               custom-converter-param="0,19">
+            <a>bdcdyh</a>
+            <b>QXNO</b>
+        </field>
+        <field>
+            <a>bdcdyh</a>
+            <b>BDCNO</b>
+        </field>
+        <field>
+            <a>zl</a>
+            <b>ADDRESS</b>
+        </field>
+        <field>
+            <a>slbh</a>
+            <b>CONTRACTID</b>
+        </field>
+        <field>
+            <a>dwdm</a>
+            <b>ORG_NO</b>
+        </field>
+<!--        调用sdq.xml中<ex:bean id="hysgh_getkey">的方法，true为使用参数consno-->
+        <field custom-converter="cn.gtmap.realestate.exchange.core.dozer.converters.SourceServiceCustomConvert"
+               custom-converter-param="hysgh_getkey,true">
+            <a>consno</a>
+            <b>KEY</b>
+        </field>
+        <field map-id="fj_data">
+            <a>data</a>
+            <b>data</b>
+            <!--            必填，List转JsonArray-->
+            <b-deep-index-hint>com.alibaba.fastjson.JSONArray</b-deep-index-hint>
+        </field>
+    </mapping>
+
+    <mapping map-id="fj_data"  type="one-way" wildcard="false">
+        <class-a>cn.gtmap.realestate.common.core.dto.exchange.sdqgh.dian.sqgh.request.SdqGhFileDTO</class-a>
+        <class-b>com.alibaba.fastjson.JSONObject</class-b>
+        <field>
+            <a>fileName</a>
+            <b>FILENAME</b>
+        </field>
+        <field>
+            <a>fileData</a>
+            <b>FILEDATA</b>
+        </field>
+    </mapping>
+
+</mappings>

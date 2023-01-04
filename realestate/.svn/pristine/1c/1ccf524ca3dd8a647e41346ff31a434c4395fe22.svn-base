@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcYgMapper">
+
+    <select id="listBdcYgByBdcdyhs" resultType="cn.gtmap.realestate.common.core.domain.BdcYgDO">
+        select * from bdc_yg where 1 = 1
+        <if test="list != null and list.size() > 0 ">
+            and bdcdyh in
+            <foreach collection="list" item="item" separator="," open="(" close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="listBdcYgByDjh" resultType="cn.gtmap.realestate.common.core.domain.BdcYgDO" parameterType="String">
+        select * from bdc_yg where qszt in (0,1)
+        <if test="djh != null and djh !=''">
+            and substr(bdcdyh,0,19) = #{djh}
+        </if>
+    </select>
+</mapper>

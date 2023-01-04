@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.interchange.core.mapper.gx.GxTsqzkLogMapper">
+
+    <select id="getYzwxxByTszt" parameterType="java.util.Map"
+            resultType="cn.gtmap.interchange.core.dto.QlygParamModel">
+        select min(b.ywh) proid,null yzwbh
+        from gx_tsqzk_log a
+        inner join djf_dj_ywxx b on b.yzwbh = a.yzwbh
+        <where>
+            <if test="tszts != null and tszts.size() > 0 ">
+                and
+                <foreach collection="tszts" item="tszt" open="(" separator=" or " close=")">
+                    a.tszt = #{tszt}
+                </foreach>
+            </if>
+            <if test="yzzts != null and yzzts.size() > 0 ">
+                and
+                <foreach collection="yzzts" item="yzzt" open="(" separator=" or " close=")">
+                    a.yzzt = #{yzzt}
+                </foreach>
+            </if>
+            <if test="sblxs != null and sblxs.size() > 0 ">
+                and
+                <foreach collection="sblxs" item="sblx" open="(" separator=" or " close=")">
+                    a.sblx = #{sblx}
+                </foreach>
+            </if>
+        </where>
+        group by b.slh
+        union all
+        select null proid,a.yzwbh
+        from gx_tsqzk_log a
+        where not exists (select b.yzwbh from djf_dj_ywxx b where b.yzwbh = a.yzwbh)
+        <if test="tszts != null and tszts.size() > 0 ">
+            and
+            <foreach collection="tszts" item="tszt" open="(" separator=" or " close=")">
+                a.tszt = #{tszt}
+            </foreach>
+        </if>
+        <if test="yzzts != null and yzzts.size() > 0 ">
+            and
+            <foreach collection="yzzts" item="yzzt" open="(" separator=" or " close=")">
+                a.yzzt = #{yzzt}
+            </foreach>
+        </if>
+        <if test="sblxs != null and sblxs.size() > 0 ">
+            and
+            <foreach collection="sblxs" item="sblx" open="(" separator=" or " close=")">
+                a.sblx = #{sblx}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="queryYzwxx" parameterType="java.util.Map" resultType="cn.gtmap.interchange.core.dto.QlygParamModel">
+        select distinct d.ywh proid,a.yzwbh
+        from gx_tsqzk_log a
+        left join T_BM_CASEBASEINFO b on b.caseno = a.yzwbh
+        left join t_bm_caseresult c on c.caseno = a.yzwbh
+        left join djf_dj_ywxx d on d.yzwbh = a.yzwbh
+        left join zd_sblx lx on lx.dm = a.sblx
+        left join zd_tszt tszt on tszt.dm = a.tszt
+        left join zd_yzzt yzzt on yzzt.dm = a.yzzt
+        left join gx_tsqzk_yzsbxx yzxx on yzxx.logid=a.id
+        left join zd_yzlx yzlx on yzlx.dm = yzxx.yzlx
+        <if test="todayPush!=null and todayPush!='' and todayPush == 'true' ">
+            left join t_bm_caseaccept sl on sl.caseno = b.caseno
+        </if>
+        <where>
+            <if test="slbh!=null and slbh!='' ">
+                and a.slh = #{slbh}
+            </if>
+            <if test="onwebbh!=null and onwebbh!='' ">
+                and a.yzwbh = #{onwebbh}
+            </if>
+            <if test="tszt!=null and tszt!=''">
+                and a.tszt = #{tszt}
+            </if>
+            <if test="sblx!=null and sblx!=''">
+                and a.sblx = #{sblx}
+            </if>
+            <if test="yzlx!=null and yzlx!=''">
+                and yzlx.dm = #{yzlx}
+            </if>
+            <if test="tsBeginTime!=null and tsBeginTime!=''">
+                and a.tssj > to_date(#{tsBeginTime},'yyyy-mm-dd')
+            </if>
+            <if test="tsEndTime!=null and tsEndTime!=''">
+                and to_date(#{tsEndTime},'yyyy-mm-dd') +1 > a.tssj
+            </if>
+            <if test="isInitQuery!=null and isInitQuery == 'true'">
+                and (a.tszt = 0 or a.tszt = 2)
+            </if>
+            <if test="jgsj!=null and jgsj!='' and jgsj == 1 ">
+                and c.onlymark is not null
+            </if>
+            <if test="jgsj!=null and jgsj!='' and jgsj == 0 ">
+                and c.onlymark is  null
+            </if>
+            <if test="jjcq!=null and jjcq!='' ">
+                and (b.casepromisedate + TO_NUMBER(#{jjcq})/24) > #{nowTime}
+            </if>
+            <if test="todayPush!=null and todayPush!='' and  todayPush == 'true' ">
+                and ( to_date(to_char(b.casepromisedate,'yyyy-mm-dd'),'yyyy-mm-dd') = to_date(to_char(#{nowTime},'yyyy-mm-dd'),'yyyy-mm-dd')  and nvl(b.jgyts, 0) ! =1)
+                or
+                ( to_date( to_char(sl.acceptdate,'yyyy-mm-dd') ,'yyyy-mm-dd') = to_date(to_char(#{nowTime},'yyyy-mm-dd'),'yyyy-mm-dd') and nvl(b.slyts, 0) ! =1)
+            </if>
+        </where>
+
+    </select>
+
+</mapper>

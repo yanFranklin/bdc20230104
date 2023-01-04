@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.BdcDwJkCsMapper">
+
+    <insert id="batchInsertApiParamInfo">
+        BEGIN
+        <foreach collection="list" item="item" separator=";">
+            insert into bdc_dw_jk_cs
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.csid != null and item.csid != ''">
+                    csid,
+                </if>
+                <if test="item.csfid != null and item.csfid != ''">
+                    csfid,
+                </if>
+                <if test="item.csm != null and item.csm != ''">
+                    csm,
+                </if>
+                <if test="item.cszdlx != null and item.cszdlx != ''">
+                    cszdlx,
+                </if>
+                <if test="item.cssm != null and item.cssm != ''">
+                    cssm,
+                </if>
+                <if test="item.cslx != null">
+                    cslx,
+                </if>
+                <if test="item.csmrz != null and item.csmrz != ''">
+                    csmrz,
+                </if>
+                <if test="item.cscj != null and item.cscj != ''">
+                    cscj,
+                </if>
+                cjsj,
+                <if test="item.cjr != null and item.cjr != ''">
+                    cjr,
+                </if>
+                <if test="item.sfsc != null">
+                    sfsc,
+                </if>
+                <if test="item.sfbt != null">
+                    sfbt,
+                </if>
+                <if test="item.jkid != null">
+                    jkid,
+                </if>
+                <if test="item.jkcsext != null">
+                    jkcsext,
+                </if>
+                <if test="item.cspj != null">
+                    cspj,
+                </if>
+                <if test="item.cszdmc != null">
+                    cszdmc,
+                </if>
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.csid != null and item.csid != ''">
+                    #{item.csid,jdbcType=VARCHAR},
+                </if>
+                <if test="item.csfid != null and item.csfid != ''">
+                    #{item.csfid,jdbcType=VARCHAR},
+                </if>
+                <if test="item.csm != null and item.csm != ''">
+                    #{item.csm,jdbcType=VARCHAR},
+                </if>
+                <if test="item.cszdlx != null and item.cszdlx != ''">
+                    #{item.cszdlx,jdbcType=VARCHAR},
+                </if>
+                <if test="item.cssm != null and item.cssm != ''">
+                    #{item.cssm,jdbcType=VARCHAR},
+                </if>
+                <if test="item.cslx != null">
+                    #{item.cslx,jdbcType=INTEGER},
+                </if>
+                <if test="item.csmrz != null and item.csmrz != ''">
+                    #{item.csmrz,jdbcType=VARCHAR},
+                </if>
+                <if test="item.cscj != null and item.cscj != ''">
+                    #{item.cscj,jdbcType=VARCHAR},
+                </if>
+                SYSDATE,
+                <if test="item.cjr != null and item.cjr != ''">
+                    #{item.cjr,jdbcType=VARCHAR},
+                </if>
+                <if test="item.sfsc != null">
+                    #{item.sfsc,jdbcType=INTEGER},
+                </if>
+                <if test="item.sfbt != null">
+                    #{item.sfbt,jdbcType=INTEGER},
+                </if>
+                <if test="item.jkid != null">
+                    #{item.jkid,jdbcType=VARCHAR},
+                </if>
+                <if test="item.jkcsext != null">
+                    #{item.jkcsext,jdbcType=VARCHAR},
+                </if>
+                <if test="item.cspj != null">
+                    #{item.cspj,jdbcType=VARCHAR},
+                </if>
+                <if test="item.cszdmc != null">
+                    #{item.cszdmc,jdbcType=VARCHAR},
+                </if>
+            </trim>
+        </foreach>
+        ;COMMIT;
+        END;
+    </insert>
+
+    <select id="searchApiParamByApiId" resultType="cn.gtmap.realestate.common.core.domain.exchange.BdcDwJkCsDO">
+        select * from bdc_dw_jk_cs where
+        1=1
+        <if test="jkid != null and jkid != ''">
+            and jkid  = #{jkid,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <delete id="deleteApiParam">
+        delete from bdc_dw_jk_cs where jkid = #{jkid,jdbcType=VARCHAR}
+    </delete>
+
+    <delete id="batchDeleteApiParam">
+         delete from bdc_dw_jk_cs where
+         1 = 1
+         <if test=" list != null and list.size() > 0">
+             and jkid in
+             <foreach collection="list" item="item" open="(" separator="," close=")">
+                 #{item,jdbcType=VARCHAR}
+             </foreach>
+         </if>
+    </delete>
+</mapper>

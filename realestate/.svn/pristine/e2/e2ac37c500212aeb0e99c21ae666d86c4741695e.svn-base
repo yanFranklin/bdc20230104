@@ -1,0 +1,105 @@
+
+<!--
+ * @author  <a href="mailto:hongqin@gtmap.cn>hongqin</a>
+ * @version 1.0, 2022/6/29
+ * @description 证书模板sql验证
+-->
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>证书模板内容验证</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../../static/lib/font-awesome-4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="../../../static/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/mask.css" />
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../.././static/css/config/zs/checkZsmbsql.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/common.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css"/>
+    <style type="text/css">
+        body {
+            background-color: white;
+        }
+
+        .row {
+            padding: 10px;
+        }
+
+        .title {
+            text-align: left;
+        }
+
+        .right {
+            border-left: 1px solid #d0d5da;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<div id="bdc-popup-large" style="text-align: center">
+    <div class="layui-row row">
+        <div class="layui-col-xs6">
+            <div class="title-sign title">
+                <p><a href="javascript:;">测试参数</a></p>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline" style="width: 98%;">
+                    <table class="layui-table" border=1 style="width:100%" id="mbsqlcsTable">
+                        <colgroup>
+                            <col width="130">
+                            <col width="110">
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <td class="set-back-color set-center" style="padding: 6px">参数名称</td>
+                            <td class="set-back-color set-center" style="padding: 6px">参数值</td>
+                        </tr>
+                        </thead>
+                        <tbody class="sortable">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6 right">
+            <div class="title-sign title">
+                <p><a href="javascript:;">校验结果</a></p>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline" style="width: 98%;">
+                    <textarea id="jyjg" name="jyjg"  placeholder="" class="layui-textarea" style="min-height: 300px;" readonly></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-inline bdc-frame-button-box">
+        <button class="layui-btn layui-btn-normal bdc-major-btn" lay-submit="" lay-filter="submitBtn" id="check">验证</button>
+        <button class="layui-btn layui-btn-normal bdc-secondary-btn bdc-frame-close" lay-filter="closeBtn" onclick="closeWin();">取消</button>
+    </div>
+</div>
+<script id="mbsqlcsRowTemplet" type="text/html">
+    <tr id="{{d.csid}}">
+        <td>
+            <input type="text" value="{{d.csmc}}" lay-verify="required" style="background-color: transparent;border: 0;padding: 6px;width: 130px" name="csmc">
+        </td>
+        <td>
+            <input type="text" lay-verify="required" style="background-color: transparent;border: 0;padding: 6px;width:110px " name="csz">
+        </td>
+    </tr>
+</script>
+<script src="../../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../../static/lib/layui/layui.all.js"></script>
+<!--base64加密-->
+<script src="../../../static/js/bjjk/base64.js"></script>
+<!--添加水印-->
+<script src="../../../static/lib/bdcui/js/common.js"></script>
+<script src="../../../static/js/config/common.js"></script>
+<script src='../../../static/js/jquery.cookie.js'></script>
+<script src="../../../static/js/engine/common.js"></script>
+<script src="../../../static/js/config/zs/checkZsmbsql.js"></script>
+</body>
+</html>

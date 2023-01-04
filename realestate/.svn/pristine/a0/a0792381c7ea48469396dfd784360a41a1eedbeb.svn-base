@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--受理申请基本信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.DjtDjSlsqMapper">
+
+    <select id="queryDjtDjSlsqList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.DjtDjSlsqDO">
+        <!--zdd :  sqzsbs 文档描述为字典项  但是暂时没有看见字典表   暂时默认为集成版为1-->
+        SELECT
+        c.xmid ywh,
+        c.djlx djdl,
+        c.djxl,
+        substr(c.bdcdyh,0,6) qxdm,
+        c.sqzsbs,
+        c.sqfbcz,
+        c.slr slry,
+        c.slsj,
+        c.zl, '' tzrxm, '' tzfs, '' tzrdh, '' tzryddh, '' tzrdzyj,
+        c.sfwtaj, nvl(c.jssj,c.djsj) as jssj, '2' ajzt, c.bz
+        FROM bdc_xm c
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND c.xmid = #{ywh}
+            </if>
+        </where>
+    </select>
+    <select id="queryDjtDjSlsqListOld" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.yancheng.yth.old.DjtDjSlsqOldDO">
+        <!--zdd :  sqzsbs 文档描述为字典项  但是暂时没有看见字典表   暂时默认为集成版为1-->
+        SELECT
+        c.xmid ywh,
+        c.djlx djdl,
+        c.djxl,
+        substr(c.bdcdyh,0,6) qxdm,
+        c.sqzsbs,
+        c.sqfbcz,
+        c.slr slry,
+        c.slsj,
+        c.zl, '' tzrxm, '' tzfs, '' tzrdh, '' tzryddh, '' tzrdzyj,
+        c.sfwtaj, nvl(c.jssj,c.djsj) as jssj, '2' ajzt, c.bz
+        FROM bdc_xm c
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND c.xmid = #{ywh}
+            </if>
+        </where>
+    </select>
+
+</mapper>

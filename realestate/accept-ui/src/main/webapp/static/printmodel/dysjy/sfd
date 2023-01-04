@@ -1,0 +1,192 @@
+------参数  ,  -----打印类型 sfd
+xmid,ewm,qlr,djxlmc,ywr,dlrmc,dlrlxdh,qlrlb,sfxxid
+----sql
+---主表
+select #{djxlmc} djxl, #{qlr} qlrmc , t.bdcdyh,t.zl,j.slbh from bdc_sl_jbxx j
+ left join bdc_sl_xm t on t.jbxxid = j.jbxxid where t.xmid=#{xmid}
+ group by t.bdcdyh,t.zl,j.slbh;
+select s.hj,s.bz,s.sfrxm,to_char(s.sfsj,'yyyy"年"mm"月"dd"日"') sfsj from bdc_sl_sfxx s
+ where s.sfxxid=#{sfxxid} and s.qlrlb=#{qlrlb};
+ select #{ewm} ewm from dual;
+ select #{ywr} ywrmc, #{dlrmc} dlrmc, #{dlrlxdh} dlrlxdh from dual;
+ ---子表 xmid,qlrlb,sfxxid,qlr
+select s.sfxmid, s.sfxmmc,s.sfxmbz,(case s.jedw when '1' then '元' when '2' then '万元' end) jedw, s.sl,s.ysje from bdc_sl_sfxm s
+where s.sfxxid=#{sfxxid} and s.qlrlb=#{qlrlb}
+-----xml
+<?xml version="1.0" encoding="utf-8"?>
+<fetchdatas>
+    <page>
+        <datas>
+            <data name="qlrmc" type="String">$QLRMC</data>
+            <data name="slbh" type="String">$SLBH</data>
+            <data name="dlrmc" type="String">$DLRMC</data>
+            <data name="ywrmc" type="String">$YWRMC</data>
+            <data name="dlrlxdh" type="String">$DLRLXDH</data>
+            <data name="djxl" type="String">$DJXL</data>
+            <data name="zl" type="String">$ZL</data>
+            <data name="bdcdyh" type="String">$BDCDYH</data>
+            <data name="hj" type="String">$HJ</data>
+            <data name="bz" type="String">$BZ</data>
+            <data name="sfrxm" type="String">$SFRXM</data>
+            <data name="sfsj" type="String">$SFSJ</data>
+            <data name="ewm" type="image">$EWM</data>
+        </datas>
+        <detail ID="bdcsfxm">
+            <row ID="${SFXMID}">
+                <data name="jff" type="String">$JFF</data>
+                <data name="sfxmmc" type="String">$SFXMMC</data>
+                <data name="sfxmbz" type="String">$SFXMBZ</data>
+                <data name="sl" type="String">$SL</data>
+                <data name="jedw" type="String">$JEDW</data>
+                <data name="ysje" type="String">$YSJE</data>
+            </row>
+        </detail>
+    </page>
+</fetchdatas>
+
+------参数  ,  -----打印类型 dysfd
+xmid,ewm,qlr,djxlmc,ywr,dlrmc,dlrlxdh,qlrlb,sfxxid
+
+----sql
+---主表
+select #{djxlmc} djxl, #{qlr} qlrmc , t.bdcdyh,t.zl,j.slbh from bdc_sl_jbxx j
+ left join bdc_sl_xm t on t.jbxxid = j.jbxxid where t.xmid=#{xmid}
+ group by t.bdcdyh,t.zl,j.slbh;
+select s.hj,s.bz,s.sfrxm,to_char(s.sfsj,'yyyy"年"mm"月"dd"日"') sfsj from bdc_sl_sfxx s
+ where s.sfxxid=#{sfxxid} and s.qlrlb=#{qlrlb};
+ select #{ewm} ewm from dual;
+ select #{ywr} ywrmc, #{dlrmc} dlrmc ,#{dlrlxdh} dlrlxdh from dual;
+----子表 xmid,qlrlb,sfxxid,qlr
+select s.sfxmid, s.sfxmmc,s.sfxmbz,(case s.jedw when '1' then '元' when '2' then '万元' end) jedw, s.sl,s.ysje from bdc_sl_sfxm s
+where s.sfxxid=#{sfxxid} and s.qlrlb=#{qlrlb}
+----xml
+<?xml version="1.0" encoding="utf-8"?>
+<fetchdatas>
+    <page>
+        <datas>
+            <data name="jff" type="String">$JFF</data>
+            <data name="qlrmc" type="String">$QLRMC</data>
+            <data name="slbh" type="String">$SLBH</data>
+            <data name="dlrmc" type="String">$DLRMC</data>
+            <data name="ywrmc" type="String">$YWRMC</data>
+            <data name="dlrlxdh" type="String">$DLRLXDH</data>
+            <data name="djxl" type="String">$DJXL</data>
+            <data name="zl" type="String">$ZL</data>
+            <data name="bdcdyh" type="String">$BDCDYH</data>
+            <data name="hj" type="String">$HJ</data>
+            <data name="bz" type="String">$BZ</data>
+            <data name="sfrxm" type="String">$SFRXM</data>
+            <data name="sfsj" type="String">$SFSJ</data>
+            <data name="ewm" type="image">$EWM</data>
+        </datas>
+        <detail ID="bdcsfxm">
+            <row ID="${SFXMID}">
+                <data name="sfxmmc" type="String">$SFXMMC</data>
+                <data name="sfxmbz" type="String">$SFXMBZ</data>
+                <data name="sl" type="String">$SL</data>
+                <data name="jedw" type="String">$JEDW</data>
+                <data name="ysje" type="String">$YSJE</data>
+            </row>
+        </detail>
+    </page>
+</fetchdatas>
+
+
+------参数  ,  -----打印类型 sfdpl
+xmid,ewm,qlr,djxlmc,ywr,dlrmc,dlrlxdh,qlrlb,sfxxid
+
+----sql
+---主表
+select #{djxlmc} djxl, #{qlr} qlrmc , t.bdcdyh||'等' bdcdyh,t.zl||'等' zl,j.slbh from bdc_sl_jbxx j
+ left join bdc_sl_xm t on t.jbxxid = j.jbxxid where t.xmid=#{xmid}
+ group by t.bdcdyh,t.zl,j.slbh;
+select s.hj,s.bz,s.sfrxm,to_char(s.sfsj,'yyyy"年"mm"月"dd"日"') sfsj from bdc_sl_sfxx s
+ where s.sfxxid=#{sfxxid} and s.qlrlb=#{qlrlb};
+ select #{ewm} ewm from dual;
+ select #{ywr} ywrmc, #{dlrmc} dlrmc, #{dlrlxdh} dlrlxdh from dual;
+---子表参数 xmid,qlrlb,sfxxid,qlr
+select s.sfxmid, s.sfxmmc,s.sfxmbz,(case s.jedw when '1' then '元' when '2' then '万元' end) jedw, s.sl,s.ysje from bdc_sl_sfxm s
+where s.sfxxid=#{sfxxid} and s.qlrlb=#{qlrlb}
+
+ ----xml
+
+ <?xml version="1.0" encoding="utf-8"?>
+ <fetchdatas>
+     <page>
+         <datas>
+             <data name="qlrmc" type="String">$QLRMC</data>
+             <data name="slbh" type="String">$SLBH</data>
+             <data name="dlrmc" type="String">$DLRMC</data>
+             <data name="ywrmc" type="String">$YWRMC</data>
+             <data name="dlrlxdh" type="String">$DLRLXDH</data>
+             <data name="djxl" type="String">$DJXL</data>
+             <data name="zl" type="String">$ZL</data>
+             <data name="bdcdyh" type="String">$BDCDYH</data>
+             <data name="hj" type="String">$HJ</data>
+             <data name="bz" type="String">$BZ</data>
+             <data name="sfrxm" type="String">$SFRXM</data>
+             <data name="sfsj" type="String">$SFSJ</data>
+             <data name="ewm" type="image">$EWM</data>
+         </datas>
+         <detail ID="bdcsfxm">
+             <row ID="${SFXMID}">
+                 <data name="jff" type="String">$JFF</data>
+                 <data name="sfxmmc" type="String">$SFXMMC</data>
+                 <data name="sfxmbz" type="String">$SFXMBZ</data>
+                 <data name="sl" type="String">$SL</data>
+                 <data name="jedw" type="String">$JEDW</data>
+                 <data name="ysje" type="String">$YSJE</data>
+             </row>
+         </detail>
+     </page>
+ </fetchdatas>
+
+
+------参数  ,  -----打印类型 dysfdpl
+xmid,ewm,qlr,djxlmc,ywr,dlrmc,dlrlxdh,qlrlb,sfxxid
+
+----sql
+---主表
+select #{djxlmc} djxl, #{qlr} qlrmc , t.bdcdyh||'等' bdcdyh,t.zl||'等' zl,j.slbh from bdc_sl_jbxx j
+ left join bdc_sl_xm t on t.jbxxid = j.jbxxid where t.xmid=#{xmid}
+ group by t.bdcdyh,t.zl,j.slbh;
+select s.hj,s.bz,s.sfrxm,to_char(s.sfsj,'yyyy"年"mm"月"dd"日"') sfsj from bdc_sl_sfxx s
+ where s.sfxxid=#{sfxxid} and s.qlrlb=#{qlrlb};
+ select #{ewm} ewm from dual;
+ select #{ywr} ywrmc, #{dlrmc} dlrmc ,#{dlrlxdh} dlrlxdh from dual;
+
+---子表参数 xmid,qlrlb,sfxxid,qlr
+select s.sfxmid, s.sfxmmc,s.sfxmbz,(case s.jedw when '1' then '元' when '2' then '万元' end) jedw, s.sl,s.ysje from bdc_sl_sfxm s
+where s.sfxxid=#{sfxxid} and s.qlrlb=#{qlrlb}
+
+ ----xml
+ <?xml version="1.0" encoding="utf-8"?>
+ <fetchdatas>
+     <page>
+         <datas>
+             <data name="qlrmc" type="String">$QLRMC</data>
+             <data name="slbh" type="String">$SLBH</data>
+             <data name="dlrmc" type="String">$DLRMC</data>
+             <data name="ywrmc" type="String">$YWRMC</data>
+             <data name="dlrlxdh" type="String">$DLRLXDH</data>
+             <data name="djxl" type="String">$DJXL</data>
+             <data name="zl" type="String">$ZL</data>
+             <data name="bdcdyh" type="String">$BDCDYH</data>
+             <data name="hj" type="String">$HJ</data>
+             <data name="bz" type="String">$BZ</data>
+             <data name="sfrxm" type="String">$SFRXM</data>
+             <data name="sfsj" type="String">$SFSJ</data>
+             <data name="ewm" type="image">$EWM</data>
+         </datas>
+         <detail ID="bdcsfxm">
+             <row ID="${SFXMID}">
+                 <data name="jff" type="String">$JFF</data>
+                 <data name="sfxmmc" type="String">$SFXMMC</data>
+                 <data name="sfxmbz" type="String">$SFXMBZ</data>
+                 <data name="sl" type="String">$SL</data>
+                 <data name="jedw" type="String">$JEDW</data>
+                 <data name="ysje" type="String">$YSJE</data>
+             </row>
+         </detail>
+     </page>
+ </fetchdatas>

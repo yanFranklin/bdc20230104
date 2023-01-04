@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcYhcxMapper">
+
+    <!--获取和证书相关的项目信息,因为需要项目的权属状态，避免一证多房部分注销，所以按照qszt升序排序-->
+    <select id="listZsXmByZsid" parameterType="String" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        <if test="zsid !=null and zsid !=''">
+            SELECT x.xmid, x.slbh, x.djjg,x.qszt,x.bdcdyh,x.qlxz,x.djsj,x.qlr
+            FROM bdc_xm x
+            LEFT JOIN bdc_xm_zs_gx g ON x.xmid = g.xmid
+            WHERE g.zsid = #{zsid}
+            ORDER BY x.qszt ASC
+        </if>
+    </select>
+
+    <!--获取和证书相关的抵押信息-->
+    <select id="listYhcxDyaByBdcdyh" parameterType="String" resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcYhcxDyaDTO">
+        <if test="bdcdyh !=null and bdcdyh !=''">
+            SELECT x.qlr, z.bdcqzh, d.zl,d.dyfs,d.bdbzzqse dyje,d.zwlxjssj,d.djsj, d.zgzqe
+            FROM bdc_xm x
+            LEFT JOIN bdc_xm_zs_gx g ON x.xmid = g.xmid
+            LEFT JOIN bdc_zs z ON z.zsid = g.zsid
+            LEFT JOIN bdc_dyaq d ON d.xmid = x.xmid
+            WHERE d.bdcdyh = #{bdcdyh}
+              AND d.qszt = 1
+        </if>
+    </select>
+
+    <!--获取和证书相关的抵押信息-->
+    <select id="listYhcxSdxxByBdcdyh" parameterType="String" resultType="String">
+        <if test="bdcdyh !=null and bdcdyh !=''">
+            SELECT sdyy FROM
+            (SELECT d.sdsqjg||' '||d.sdsqwh||' '||d.sdyy sdyy
+            FROM bdc_xm x
+            LEFT JOIN bdc_xm_zs_gx g ON x.xmid = g.xmid
+            LEFT JOIN bdc_zs z ON z.zsid = g.zsid
+            LEFT JOIN bdc_zssd d ON d.zsid = z.zsid
+            WHERE x.bdcdyh = #{bdcdyh}
+            AND d.sdzt = 1
+            UNION ALL
+            SELECT d.sdyy
+            FROM bdc_dysd d
+            where d.bdcdyh = #{bdcdyh}
+            and d.sdzt = 1)
+        </if>
+    </select>
+
+    <select id="listBdcZs" parameterType="map" resultType="cn.gtmap.realestate.common.core.domain.BdcZsDO">
+        SELECT DISTINCT z.zsid, z.bdcdyh, z.bdcqzh, z.zhlsh, z.nf
+        , z.qzysxlh, z.qlqtzk, z.qxdm, z.szsxqc, z.fzr
+        , z.fzsj, z.lzr, z.lzsj, z.lzrzjh,z.lzrdh,z.lzrzjzl, z.szr
+        , z.szsj, z.zslx, z.fj, z.zl, z.qlr
+        , z.ywr, z.gyfs, z.qllx, z.yt, z.mj
+        , z.qlxz, z.syqx,z.zmqlsx,z.ewmnr,z.zhxlh,z.sqsjc,z.dyzt
+        FROM bdc_zs z
+        LEFT JOIN bdc_xm_zs_gx x ON z.zsid = x.zsid
+        LEFT JOIN bdc_xm q ON q.xmid = x.xmid
+        LEFT JOIN bdc_qlr l ON l.xmid = q.xmid
+        <where>
+            AND l.qlrlb = 1
+            <if test="xmid != null and xmid != ''">
+                AND q.xmid = #{xmid}
+            </if>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND q.gzlslid = #{gzlslid}
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND z.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="bdcqzh != null and bdcqzh != ''">
+                AND z.bdcqzh = #{bdcqzh}
+            </if>
+            <if test="zl != null and zl != ''">
+                AND z.zl LIKE '%' || #{zl} || '%'
+            </if>
+            <if test="qlr != null and qlr != ''">
+                AND l.qlrmc = #{qlr}
+            </if>
+            <if test="qsztList != null and qsztList.size>0">
+                AND q.qszt IN
+                <foreach collection="qsztList" item="qszt" open="(" close=")" separator=",">
+                    #{qszt}
+                </foreach>
+            </if>
+        </where>
+        <choose>
+            <when test="sortParameter != null and sortParameter != ''">
+                ORDER BY ${sortParameter}
+            </when>
+            <otherwise>
+                ORDER BY z.bdcdyh ASC,z.zsid ASC
+            </otherwise>
+        </choose>
+    </select>
+</mapper>

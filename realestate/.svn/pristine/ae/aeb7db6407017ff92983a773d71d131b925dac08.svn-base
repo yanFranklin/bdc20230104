@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.etl.core.mapper.hlw.HlwYwxxMapper">
+    <select id="listHlwYwxxByPageOrder" parameterType="map" resultType="map">
+        select t.xmid,t.sqslbh,t.sqsj,t.sqrmc as sqr,t.sqlx,t.yybmbm,s.sqxxid,s.zl,s.bdcdyh,s.bdcqzh,s.rn from
+        gx_ww_sqxm t
+        left join (select * from (select t.sqxxid,t.xmid,t.zl,t.bdcdyh,nvl(t.bdcqzh,t.fczh) bdcqzh, row_number()
+        over(partition by t.xmid order by t.sqxxid desc) rn from gx_ww_sqxx t) c where rn = 1) s
+        on t.xmid=s.xmid
+        <where>
+            nvl(t.sfcj,'0')='0'
+            <if test="ywh != null and ywh !=''">
+                AND t.sqslbh=#{ywh}
+            </if>
+            <if test="zl != null and zl !=''">
+                AND s.ZL LIKE '%'||#{zl}||'%'
+            </if>
+            <if test="sqr != null and sqr !=''">
+                AND t.sqrmc=#{sqr}
+            </if>
+            <if test="sqdjlx != null and sqdjlx !=''">
+                AND t.sqlx=#{sqdjlx}
+            </if>
+        </where>
+    </select>
+</mapper>

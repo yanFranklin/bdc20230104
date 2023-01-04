@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.building.core.mapper.DjxxMapper">
+    <select id="queryDjdcbList" parameterType="Map" resultType="Map">
+        SELECT * FROM ${tablename}
+        <where>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND bdcdyh = #{bdcdyh}
+            </if>
+            <if test="djh != null and djh != ''">
+                AND djh = #{djh}
+            </if>
+            <if test="zhdm != null and zhdm != ''">
+                AND zhdm = #{zhdm}
+            </if>
+        </where>
+        <if test="order != null and order != ''" >
+            ORDER BY ${order}
+        </if>
+    </select>
+
+    <select id="queryQsdcList" parameterType="Map" resultType="Map">
+        <if test="qsdcTable =='zd_qsdc'">
+            select DJH,DJDCB_INDEX,BZ,JLRQ,GXRQ,ZJWTS,SM,QSDCJS,DCY,DCRQ,ZDCT,DJKZJS,KZY,
+            KZRQ,DCSHYJ,DCSHR,DCSHRQ,ZYGDWZSM,ZYJXZXSM,ZD_QSDC_INDEX,YBDJH,DCSHRQM from zd_qsdc
+        </if>
+        <if test="qsdcTable =='nyd_qsdc'">
+            select DJH,DJDCB_INDEX,BZ,JLRQ,GXRQ,ZJWTS,SM,QSDCJS,DCY,DCRQ,ZDCT,DJKZJS,KZY,
+            KZRQ,DCSHYJ,DCSHR,DCSHRQ,ZYGDWZSM,ZYJXZXSM,NYD_QSDC_INDEX ZD_QSDC_INDEX,YBDJH from nyd_qsdc
+        </if>
+        <if test="qsdcTable =='zh_qsdc'">
+            select ZHDM DJH,DJDCB_INDEX,BZ,QSHCJS,QSHCR DCY, QSHCRQ DCRQ,HJCLJS DJKZJS,HJCLR KZY,
+            HJCLRQ KZRQ,HJDCJGSHJY DCSHYJ,HJDCJGSHR DCSHR,HJDCJGSHRQ DCSHRQ,ZH_QSDC_INDEX ZD_QSDC_INDEX from ZH_QSDC
+        </if>
+        <if test="qsdcTable =='qszd_qsdc'">
+            select DJH,DJDCB_INDEX,BZ,JLRQ,GXRQ,ZJWTS,SM,QSDCJS,DCY,DCRQ,ZDCT,DJKZJS,KZY,
+            KZRQ,DCSHYJ,DCSHR,DCSHRQ,ZYGDWZSM,ZYJXZXSM,QSZD_QSDC_INDEX ZD_QSDC_INDEX,YBDJH from  QSZD_QSDC
+        </if>
+        <where>
+            <if test="djh != null and djh != ''">
+                AND djh = #{djh}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="queryZhQsdcList" parameterType="Map" resultType="Map">
+        select ZH_QSDC_INDEX,DJDCB_INDEX,ZHDM,SYQX,ZHSZD,ZHSZDSYR,ZHSZN,ZHSZNSYR,
+        ZHSZX,ZHSZXSYR,ZHSZB,ZHSZBSYR,GYQK,QSHCJS,QSHCRQ,HJCLJS,QSHCR,
+        HJCLRQ,HJDCJGSHJY,HJDCJGSHR,HJDCJGSHRQ,BZ,BGBH,DCJG  from zh_qsdc
+        <where>
+            <if test="zhdm != null and zhdm != ''">
+                AND zhdm = #{zhdm}
+            </if>
+        </where>
+    </select>
+</mapper>

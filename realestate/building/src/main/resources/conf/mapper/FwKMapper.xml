@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.building.core.mapper.FwKMapper">
+
+    <!-- 查询自然幢列表 -->
+    <select id="queryFwKList" parameterType="map" resultType="cn.gtmap.realestate.common.core.domain.building.FwKDO">
+        SELECT * FROM ${fw_k} t
+        <where>
+            <if test="lszd != null and lszd != ''">
+                AND t.lszd = #{lszd}
+            </if>
+            <if test="zrzh != null and zrzh != ''">
+                AND t.zrzh = #{zrzh}
+            </if>
+        </where>
+        ORDER BY to_number(ZRZH)
+    </select>
+
+    <delete id="deleteFwK" parameterType="map">
+        DELETE FROM ${fwk} WHERE LSZD = #{lszd}
+        <if test="zrzhList != null and zrzhList.size() > 0">
+            AND zrzh in
+            <foreach collection="zrzhList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </delete>
+</mapper>

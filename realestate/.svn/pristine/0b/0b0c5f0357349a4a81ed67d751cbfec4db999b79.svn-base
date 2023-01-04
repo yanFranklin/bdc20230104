@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>质检</title>
+    <link href="../static/lib/layui/css/layui.css" media="all" rel="stylesheet">
+    <link href="../static/lib/bdcui/css/search.css" media="all" rel="stylesheet">
+    <link href="../static/lib/bdcui/css/table.css" media="all" rel="stylesheet">
+    <link href="../static/lib/bdcui/css/popup.css" media="all" rel="stylesheet">
+    <link href="../static/lib/bdcui/css/mask.css" media="all" rel="stylesheet">
+    <link href="../static/lib/registerui/css/percentage-layout.css" media="all" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/gzxx.css">
+</head>
+<body>
+    <div class="bdc-percentage-container">
+        <!--查询条件-->
+        <div class="bdc-search-content">
+            <div class="bdc-search-box">
+                <form class="layui-form" action=""  lay-filter="zjForm">
+                    <div class="layui-form-item pf-form-item">
+                        <div class="layui-inline">
+                            <label id="gzjcxxLabel"  class="layui-form-label">规则检查信息</label>
+                            <div id="gzjcxxDiv"  class="layui-input-inline">
+                                <select name="gzid" id="gzid" lay-search>
+                                </select>
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label id="gzfzLabel"  class="layui-form-label">规则分组</label>
+                            <div id="gzfzDiv"  class="layui-input-inline">
+                                <select name="gzfz" id="gzfz" lay-search>
+                                </select>
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label id="gzcodeLabel"  class="layui-form-label">规则code</label>
+                            <div id="gzcodeDiv"  class="layui-input-inline">
+                                <select name="gzcode" id="gzcode" lay-search>
+                                </select>
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label id="sfglLabel"  class="layui-form-label bdc-two-lines">是否过滤<br>错误数为0</label>
+                            <div id="sfglDiv"  class="layui-input-inline">
+                                <select name="glcws" id="glcws">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="0">否</option>
+                                </select>
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            </div>
+                        </div>
+                        <div class="layui-inline bdc-button-box-four">
+                            <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                            <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn">重置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!--表格-->
+        <div class="bdc-table-box">
+            <table id="pageTable" lay-filter="test"></table>
+        </div>
+    </div>
+
+    <!--查看解决方案及原因页面-->
+    <div id="bdcJjfaLayer" class="bdc-hide">
+        <div class="bdc-table-box">
+            <table id="jjfaTable" lay-filter="jjfaFilter"></table>
+        </div>
+    </div>
+
+    <!--查看错误项目-->
+    <div id="bdcCwxmLayer" class="bdc-hide">
+        <div class="bdc-table-box">
+            <table id="cwxmTable" lay-filter="cwxmFilter"></table>
+        </div>
+    </div>
+</body>
+<!--看解决方案及原因表格上面功能按钮-->
+<script type="text/html" id="toolbarJjfa">
+    <div class="layui-btn-container">
+        <a href="javascript:;" class="layui-btn layui-btn-sm bdc-major-btn" lay-event="view">查看</a>
+    </div>
+</script>
+
+<!--解决方案-->
+<div id="bdc-popup-jjfa" class="bdc-hide bdc-big-layer-css">
+    <form class="layui-form" action="#"  id="jjfaForm" lay-filter="jjfaFilter">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline bdc-complete-line">
+                <label class="layui-form-label">可能原因</label>
+                <div class="layui-input-inline">
+                    <textarea name="knyy" id="knyy"  class="layui-textarea" readonly></textarea>
+                </div>
+            </div>
+            <div class="layui-inline bdc-complete-line">
+                <label class="layui-form-label">解决方案</label>
+                <div class="layui-input-inline">
+                    <textarea name="jjfa" id="jjfa"  class="layui-textarea" readonly></textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<!--检查等级-->
+<script type="text/html" id="jcdjTpl">
+    {{# if(d.GZDJ == 1){  }}
+    <span class="bdc-red"> 致命 </span>
+    {{# }else if(d.GZDJ == 2){ }}
+    <span class="bdc-orange"> 严重 </span>
+    {{# }else if(d.GZDJ == 3){ }}
+    <span class="bdc-blue"> 一般 </span>
+    {{# }else if(d.GZDJ == 4){ }}
+    <span class="bdc-gray"> 建议 </span>
+    {{# } }}
+</script>
+<!--规则分组-->
+<script type="text/html" id="gzfzTpl">
+    {{#  if(d.GZFZ){ }}
+    {{  getGzfzXx(d.GZFZ) }}
+    {{#  } }}
+</script>
+<!--规则code-->
+<script type="text/html" id="gzCodeTpl">
+    <a href="javascript:;" class="bdc-blue bdc-gz-sql">{{d.GZCODE}}</a>
+</script>
+<!--操作-->
+<script type="text/html" id="czTpl">
+    <a href="javascript:;" class="layui-btn layui-btn-xs bdc-major-btn bdc-show-jjfa" param="{{d.GZID}}">方案</a>
+    <a href="javascript:;" class="layui-btn layui-btn-xs bdc-delete-btn bdc-show-xm" param="{{d.GZID}}">项目</a>
+</script>
+<script src="../static/lib/jquery/jquery.min.js"></script>
+<script src="../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../static/lib/bdcui/js/common.js"></script>
+<script src="../static/js/common.js"></script>
+<script src="../static/js/formCenter.js"></script>
+<script src="../static/js/zj.js"></script>
+</html>

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title class="bdc_processDefName"></title>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type"></meta>
+    <meta content="IE=Edge,no-cache" http-equiv="X-UA-Compatible"></meta>
+    <meta content="no-cache" http-equiv="Pragma"></meta>
+    <meta content="no-cache" http-equiv="Cache-Control"></meta>
+    <meta content="0" http-equiv="Expires"></meta>
+    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0"
+          name="viewport">
+    <link href="../static/lib/layui/css/layui.css" media="all" rel="stylesheet">
+    <link href="../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../static/lib/bdcui/css/search.css" media="all" rel="stylesheet">
+    <link href="../static/lib/bdcui/css/table.css" media="all" rel="stylesheet">
+    <link href="../static/lib/bdcui/css/mask.css" media="all" rel="stylesheet">
+    <link href="../static/lib/bdcui/css/popup.css" rel="stylesheet"/>
+    <link href="../static/css/admin.css" rel="stylesheet">
+    <link href="../static/css/viewer.css" rel="stylesheet">
+    <link href="../static/css/new-page.css" rel="stylesheet">
+    <link href="../static/css/picture.css" rel="stylesheet">
+    <link href="../static/lib/bdcui/css/mask.css" rel="stylesheet"/>
+    <style>
+        /*已查看显示灰色*/
+        .layui-nav-child dd a span{
+            color: #999;
+        }
+        /*正在查看显示红色*/
+        .layui-nav-tree .layui-nav-child dd.layui-this a span{
+            color: #f24b43;
+        }
+        /*未查看显示蓝色*/
+        .layui-nav-tree .layui-nav-child .default-span a span{
+            color:#1d87d1;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+
+<div id="LAY_app">
+    <div class="layui-layout layui-layout-admin">
+
+
+        <!-- 侧边菜单 -->
+        <div class="layui-side layui-side-menu">
+
+            <div class="bdc-aside-title">项目菜单
+                <img alt="" src="../static/image/new-page/info.png">
+                <div class="bdc-title-tips bdc-hide" id="bdcMenuTipsView">
+
+                </div>
+            </div>
+            <div class="layui-side-scroll">
+                <ul class="layui-nav layui-nav-tree" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu"
+                    lay-shrink="all"></ul>
+
+            </div>
+        </div>
+        <!--侧边收缩按钮-->
+        <div class="bdc-aside-zoom bdc-aside-close">
+            <i class="layui-icon layui-icon-left"></i>
+        </div>
+        <div class="bdc-aside-zoom bdc-aside-open bdc-hide">
+            <i class="layui-icon layui-icon-right"></i>
+        </div>
+
+        <!--侧边栏底部固定-->
+        <div class="bdc-fj-default-content">
+            <!--默认展示内容-->
+            <p class="bdc-fj-title">
+                    <span class="bdc-fj-word">附件
+                        <!--<i class="fa fa-minus-square-o bdc-show-type" aria-hidden="true"></i>-->
+                        <!--<i class="fa fa-window-restore bdc-show-popup" aria-hidden="true"></i>-->
+                    </span>
+                <span class="bdc-fj-show"><i aria-hidden="true"
+                                             class="fa fa-window-restore bdc-show-type bdc-show-popup"></i><img alt=""
+                                                                                                                src="../static/image/new-page/arrow-up.png"></span>
+            </p>
+        </div>
+        <div class="bdc-fj-list bdc-hide">
+            <!--默认展示内容-->
+            <div class="bdc-fj-title-content">
+                <p class="bdc-fj-title">
+                    <span class="bdc-fj-word">附件
+                        <!--<i class="fa fa-minus-square-o bdc-show-type" aria-hidden="true"></i>-->
+                        <!--<i class="fa fa-window-restore bdc-show-popup" aria-hidden="true"></i>-->
+                    </span>
+                    <span class="bdc-fj-show"><i aria-hidden="true"
+                                                 class="fa fa-window-restore bdc-show-type bdc-show-popup"></i><img
+                            alt="" src="../static/image/new-page/arrow-up.png"></span>
+                </p>
+            </div>
+            <!--拖拽线-->
+            <div class="bdc-drag-line"></div>
+
+            <!--点击显示内容-->
+            <div class="bdc-fj-content bdc-hide">
+                <!--左侧列表-->
+                <div class="seeList">
+                    <!--附件清单-->
+                    <div class="pf-fl-list">
+                        <!--<p class="fl-list-title">-->
+                        <!--<i class="layui-icon layui-icon-search"></i>-->
+                        <!--<input type="text" name="title" placeholder="请搜索" autocomplete="off" class="layui-input">-->
+                        <!--</p>-->
+                        <div class="fl-list-box">
+                            <ul class="layui-nav layui-nav-tree layui-form" id="fjLeftTree" lay-filter="fjTreeFilter">
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!--右侧图文-->
+                <div class="pf-img-details">
+                    <!--上面功能按钮-->
+                    <div class="pf-bottom-btn">
+                        <div class="bdc-operate-btn">
+                            <!--<div class="bdc-add-btn-box">-->
+                            <!--<button class="layui-btn layui-btn-sm bdc-major-btn bdc-add-btn">新增</button>-->
+                            <!--<div class="bdc-add-details bdc-hide">-->
+                            <!--<a href="javascript:;">新增文件</a>-->
+                            <!--<a href="javascript:;" class="bdc-add-wjj">新增文件夹</a>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--<button class="layui-btn layui-btn-sm bdc-delete-btn bdc-fj-delete">删除</button>-->
+                            <!--<button class="layui-btn layui-btn-sm bdc-secondary-btn bdc-select-all">全选</button>-->
+                            <!--<button class="layui-btn layui-btn-sm bdc-major-btn">文件上传</button>-->
+                        </div>
+                        <div class="bdc-img-btn">
+                            <span class="seeLeftBtn"><i class="bdc-left-icon"></i></span>
+                            <span class="seeRightBtn"><i class="bdc-right-icon"></i></span>
+                            <span><i class="bdc-plus-icon"></i></span>
+                            <span><i class="bdc-minus-icon"></i></span>
+                            <span><i class="bdc-refresh-icon"></i></span>
+                            <span><i class="bdc-left-rotate-icon"></i></span>
+                            <span><i class="bdc-right-rotate-icon"></i></span>
+                            <!--<span><i class="bdc-download-icon"></i></span>-->
+                        </div>
+                    </div>
+                    <!--下面图片-->
+                    <div class="pf-details-top" id="seeImgView">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页面标签 -->
+        <div class="layadmin-pagetabs" id="LAY_app_tabs">
+            <div class="layui-icon layadmin-tabs-control layui-icon-prev" layadmin-event="leftPage"></div>
+            <div class="layui-icon layadmin-tabs-control layui-icon-next" layadmin-event="rightPage"></div>
+            <!-- <div class="layui-icon layadmin-tabs-control layui-icon-next" layadmin-event="rightPage"></div> -->
+<!--            <div class="layui-icon layadmin-tabs-control layui-icon-set-sm">-->
+<!--                <img alt="" src="../static/image/tab/gj.png">-->
+<!--                <ul class="layui-nav layadmin-tabs-select" lay-filter="layadmin-pagetabs-nav">-->
+<!--                    <li class="layui-nav-item" lay-unselect>-->
+<!--                        <a href="javascript:"></a>-->
+<!--                        <dl class="layui-nav-child layui-anim-fadein">-->
+<!--                            <dd layadmin-event="closeThisTabs"><a href="javascript:">关闭当前标签页</a></dd>-->
+<!--                            <dd layadmin-event="closeOtherTabs"><a href="javascript:">关闭其它标签页</a></dd>-->
+<!--                            <dd layadmin-event="closeAllTabs"><a href="javascript:">关闭全部标签页</a></dd>-->
+<!--                        </dl>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </div>-->
+            <!--新增 操作按钮-->
+            <div class="layui-icon layadmin-tabs-control bdc-control-icon clear">
+                <a authority="claim" href="javascript:" id="bdc-cancel-claim-btn" invalid="hidden"
+                   style="display:none;width: 110px">
+                    <img alt="" class="bdc-control-img-icon" src="../static/image/tab/cancel.svg">取消认领</a>
+                <a authority="forward" class="bdc-send" href="javascript:" id="bdc-forward-btn" invalid="hidden"
+                   style="display:none;">
+                    <img alt="" class="bdc-control-img-icon" src="../static/image/tab/repost.svg">转发</a>
+                <a class="bdc-end" href="javascript:" id="bdc-end-btn" style="display:none;">
+                    <img alt="" class="bdc-control-img-icon" src="../static/image/tab/bj.svg">办结</a>
+                <a authority="fetch" href="javascript:" id="bdc-take-btn" invalid="hidden" style="display:none;">
+                    <img alt="" class="bdc-control-img-icon" src="../static/image/tab/quh.svg">取回</a>
+                <a authority="back" href="javascript:" id="bdc-back-btn" invalid="hidden" style="display:none;">
+                    <img alt="" class="bdc-control-img-icon" src="../static/image/tab/back.svg">退回</a>
+
+<!--                <a authority="delete" href="javascript:" id="bdc-delete-btn" invalid="hidden" style="display:none;">
+                    <img alt="" class="bdc-control-img-icon" src="../static/image/tab/sc.png">删除</a>-->
+                <!-- 常州的删除功能都要申请删除， 申请删除功能为转发，转发至申请删除审核环节，通过同意删除后，直接删除流程数据，保留业务数据更改ajzt为注销-->
+                <a authority="applyDelete" href="javascript:" class="four-text-btn" id="bdc-apply-delete-btn" invalid="hidden" style="display:none;;width: 110px">
+                    <img alt="" class="bdc-control-img-icon" src="../static/image/tab/delete.svg">申请删除</a>
+                <!-- 注意下面这个删除为特殊删除，用于审批删除流程同意后进行删除的功能-->
+                <a authority="allowDelete" href="javascript:" class="four-text-btn" id="bdc-allow-delete-btn" invalid="hidden" style="display:none;width: 110px">
+                    <img alt="" class="bdc-control-img-icon" src="../static/image/tab/delete.svg">同意删除</a>
+                <a authority="revoke" href="javascript:" class="four-text-btn" id="bdc-revoke-btn" invalid="hidden" style="display:none;width: 110px">
+                    <img alt="" class="bdc-control-img-icon" src="../static/image/tab/cx.svg">退回外网</a>
+            </div>
+            <div class="layui-tab bdc-aside-tab" lay-allowClose="true" lay-filter="layadmin-layout-tabs" lay-unauto>
+                <ul class="layui-tab-title" id="LAY_app_tabsheader">
+                    <li lay-id="console.html"><i class="layui-icon layui-icon-home"></i></li>
+                    <li class="layui-this" lay-attr="" lay-id="">
+                        <span></span>
+                        <i class="layui-icon layui-unselect layui-tab-close bdc-tab-close">ဆ</i>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 主体内容 -->
+        <div class="layui-body" id="LAY_app_body">
+            <div class="layadmin-tabsbody-item">
+
+            </div>
+            <div class="layadmin-tabsbody-item layui-show">
+                <iframe class="layadmin-iframe" frameborder="0" src=""></iframe>
+            </div>
+
+            <!--不为空 提示信息-->
+            <div class="bdc-null-tips-box bdc-hide">
+                <div class="bdc-null-tips">
+                    <p>错误提示：<span class="bdc-close">不再提示</span></p>
+                    <div id="nullTips"></div>
+                </div>
+            </div>
+            <!--异常 提示信息-->
+            <div class="bdc-other-tips-box bdc-hide">
+                <div class="bdc-other-tips">
+                    <p>错误提示：<span class="bdc-close">不再提示</span></p>
+                    <div id="otherTips">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 辅助元素，一般用于移动设备下遮罩 -->
+        <div class="layadmin-body-shade" layadmin-event="shade"></div>
+
+    </div>
+
+    <!--删除原因弹出框-->
+    <div class="bdc-layer-textarea bdc-hide" id="delete-reason">
+        <form action="" class="layui-form">
+            <div class="layui-form-item pf-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>删除原因</label>
+                    <div class="layui-input-inline bdc-end-time-box">
+                        <textarea class="layui-textarea" id="deletereason" name="desc" placeholder="请输入内容"></textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!--撤消原因弹出框-->
+    <div class="bdc-layer-textarea bdc-hide" id="abandon-reason">
+        <form action="" class="layui-form">
+            <div class="layui-form-item pf-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>退回原因</label>
+                    <div class="layui-input-inline bdc-end-time-box">
+                        <textarea class="layui-textarea" id="abandonreason" name="desc" placeholder="请输入内容"></textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!--解锁证书原因弹出框-->
+    <div class="bdc-layer-textarea bdc-hide" id="js-reason">
+        <form action="" class="layui-form">
+            <div class="layui-form-item pf-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>解锁原因</label>
+                    <div class="layui-input-inline bdc-end-time-box">
+                        <textarea class="layui-textarea" id="jsreason" name="desc" placeholder="请输入内容"></textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--侧边栏动态加载-->
+<script id="asideTpl" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    <!--<li data-name="{{item.mark}}" class="layui-nav-item">-->
+    <!--<a lay-href="{{item.thirdPath}}" lay-tips="{{item.formStateName}}" lay-direction="2">-->
+    <!--<img src="../static/image/file.png" alt="">-->
+    <!--<cite>{{item.formStateName}}</cite>-->
+    <!--</a>-->
+    <!--</li>-->
+    {{#  if(index == 0){ }}
+    <li data-name="{{item.mark}}" class="layui-nav-item layui-this">
+        <a lay-href="{{item.thirdPath}}" lay-tips="{{item.formStateName}}" lay-direction="2">
+            <img src="../static/image/file.png" alt="">
+            <cite>{{item.formStateName}}</cite>
+        </a>
+    </li>
+    {{# }else{ }}
+    <li data-name="{{item.mark}}" class="layui-nav-item">
+        <a lay-href="{{item.thirdPath}}" id="asideTpl{{index}}" lay-tips="{{item.formStateName}}" lay-direction="2">
+            <img src="../static/image/file.png" alt="">
+            <cite>{{item.formStateName}}</cite>
+        </a>
+    </li>
+    {{#  } }}
+    {{#  }); }}
+</script>
+
+<!--项目信息模板-->
+<script id="menuTipsTpl" type="text/html">
+    <div class="bdc-sjx"></div>
+    <h5>项目信息</h5>
+    <p>节点名称：<span>{{d.taskName}}</span></p>
+    <p>超期状态：<span>{{d.taskTimeoutStatusName}}</span></p>
+    <p>接收时间：<span>{{d.newStartTime}}</span></p>
+    <p>业务类别：<span>{{d.category}}</span></p>
+    <p>转发人：<span>{{d.taskAssigin}}</span></p>
+    <p><span>{{d.opinion}}</span></p>
+</script>
+
+<!--附件相关-->
+<!--附件侧边栏-->
+<script id="fjAsideTpl" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    <li class="layui-nav-item">
+        <a href="javascript:" data-url="{{item.url}}" class="bdc-fj-file" data-src="{{item.downUrl}}" data-type="{{item.picType}}" data-typedm="{{item.type}}">
+            {{# if(item.picType == 'jpg'){ }}
+            <img src="../static/image/new-page/jpg.png" alt="">
+            {{#} else if(item.picType == 'png'){ }}
+            <img src="../static/image/new-page/png.png" alt="">
+            {{#} else if(item.picType == 'doc'||item.picType == 'docx'){ }}
+            <img src="../static/image/new-page/word.png" alt="">
+            {{#} else if(item.picType == 'pdf'){ }}
+            <img src="../static/image/new-page/pdf.png" alt="">
+            {{#} else if(item.picType == 'lsx' || item.picType == 'xls'){ }}
+            <img src="../static/image/new-page/excel.png" alt="">
+            {{#} else if(item.picType == 'ofd'){ }}
+            <img src="../static/image/new-page/ofd.png" alt="">
+            {{#} else { }}
+            <img src="../static/image/file.png" alt="">
+            {{#  } }}
+            <span>{{item.name}}</span>
+        </a>
+        {{# if(item.children && item.children.length >0){ }}
+        <dl class="layui-nav-child">
+            {{# layui.each(item.children, function(i, value){ }}
+            <dd {{# if(value.sfyd =='0'){ }} class="default-span" {{# } }}>
+                <a href="javascript:" data-src="{{value.downUrl}}" data-type="{{value.picType}}" data-id="{{value.id}} class="bdc-fj-file" data-typedm="{{value.type}}">
+                    {{# if(value.picType == 'jpg'){ }}
+                    <img src="../static/image/new-page/jpg.png" alt="">
+                    {{#} else if(value.picType == 'png'){ }}
+                    <img src="../static/image/new-page/png.png" alt="">
+                    {{#} else if(value.picType == 'doc'||value.picType == 'docx'){ }}
+                    <img src="../static/image/new-page/word.png" alt="">
+                    {{#} else if(value.picType == 'pdf'){ }}
+                    <img src="../static/image/new-page/pdf.png" alt="">
+                    {{#} else if(value.picType == 'lsx' || value.picType == 'xls'){ }}
+                    <img src="../static/image/new-page/excel.png" alt="">
+                    {{#} else { }}
+                    <img src="../static/image/file.png" alt="">
+                    {{# } }}
+                    <span>{{value.name}}</span>
+                </a>
+                {{# if(value.children && value.children.length >0){ }}
+                <dl class="layui-nav-child">
+                    {{# layui.each(value.children, function(i, v){ }}
+                    <dd {{# if(value.sfyd =='0'){ }} class="default-span" {{# } }}>
+                        <a href="javascript:" data-src="{{v.downUrl}}" data-id="{{value.id}} data-type="{{v.picType}}">
+                            {{# if(v.picType == 'jpg'){ }}
+                            <img src="../static/image/new-page/jpg.png" alt="">
+                            {{#} else if(v.picType == 'png'){ }}
+                            <img src="../static/image/new-page/png.png" alt="">
+                            {{#} else if(v.picType == 'doc'||v.picType == 'docx'){ }}
+                            <img src="../static/image/new-page/word.png" alt="">
+                            {{#} else if(v.picType == 'pdf'){ }}
+                            <img src="../static/image/new-page/pdf.png" alt="">
+                            {{#} else if(v.picType == 'lsx' || v.picType == 'xls'){ }}
+                            <img src="../static/image/new-page/excel.png" alt="">
+                            {{#} else { }}
+                            <img src="../static/image/log.png" alt="">
+                            {{# } }}
+                            <span>{{v.name}}</span>
+                        </a>
+                    </dd>
+                    {{# }); }}
+                </dl>
+                {{# } }}
+            </dd>
+            {{# }); }}
+        </dl>
+        {{# } }}
+    </li>
+    {{#  }); }}
+</script>
+
+<!--退回意见模版-->
+<script type="text/html" id="thyjTpl">
+    <div class="bdc-tips-left">
+        <div class="bdc-tips-left-box">
+            <p class="bdc-sure-tip">办件状态：<span style="color: #f24b43">退回</span></p>
+            {{ d.opinion }}
+        </div>
+    </div>
+</script>
+
+<script src="../static/lib/jquery/jquery.min.js"></script>
+<script src="../static/lib/layui/layui.js"></script>
+<script src="../static/lib/viewerjs/dist/viewer.js"></script>
+<!--添加水印-->
+<script src="../static/lib/bdcui/js/common.js"></script>
+<script src="../static/js/common.js"></script>
+<script src="../changzhou/js/new-page.js"></script>
+<script src="../static/js/new-page-common.js"></script>
+<script>
+    layui.config({
+        base: '../static/' //静态资源所在路径
+    }).extend({
+        index: '/lib/index' //主入口模块
+    }).use('index').extend({
+        workflow: 'js/workflow-handle'
+    }).use('workflow').extend({response: 'lib/bdcui/js/response'}).use('response').extend({
+        moduleAuthority: 'js/moduleAuthority'
+    }).use('moduleAuthority');
+
+</script>
+
+</body>
+</html>
+
+

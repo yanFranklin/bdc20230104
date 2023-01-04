@@ -1,0 +1,2739 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+    <!--事务-->
+    <import resource="config-trans.xml"/>
+    <!--mybatis-->
+    <import resource="config-mybatis.xml"/>
+    <!--dozer-->
+    <import resource="config-dozer.xml"/>
+    <import resource="config-quartz.xml"/>
+    <!--接口优先级：地方版本>父版本>标准版本-->
+    <!--sly 2020-08-18 调整顺序，如果公共和地方beanid冲突，优先读取地方beanid-->
+    <import resource="exchange/standard/*.xml"/>
+    <!--父版本接口-->
+    <import resource="exchange/${data.parversion:zhichi}/*.xml"/>
+    <import resource="exchange/${data.version:zhichi}/*.xml"/>
+    <!--盐城法院相关接口-->
+    <!-- 省级平台接口 -->
+    <import resource="exchange/sjpt/*.xml"/>
+    <!--部级接口-->
+    <import resource="exchange/bjjk/*.xml"/>
+    <import resource="exchange/ahst/*.xml"/>
+    <!-- 接口降级兼容逻辑 -->
+    <import resource="exchange/bak/${data.version:hefei}/*.xml"/>
+
+
+    <!-- 国家接入xml生成服务策略模式管理器 -->
+    <bean id="nationalAccessXmlContext"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlContext"/>
+
+
+    <!--宗海基本信息-->
+    <bean id="nationalAccessDataZhjbxx"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataZhjbxxImpl"/>
+    <!--用海状况-->
+    <bean id="nationalAccessDataYhzk"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataYhzkImpl"/>
+    <!--用海、用岛坐标-->
+    <bean id="nationalAccessDataYhydzb"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataYhydzbImpl"/>
+    <!--宗海变化情况-->
+    <bean id="nationalAccessDataZhbhqk"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataZhbhqkImpl"/>
+    <!--宗海空间属性-->
+    <bean id="nationalAccessDataZh"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataZhImpl"/>
+    <!--宗地基本信息-->
+    <bean id="nationalAccessDataZdjbxx"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataZdjbxxImpl"/>
+    <!--宗地变化情况-->
+    <bean id="nationalAccessDataZdbhqk"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataZdbhqkImpl"/>
+    <!--权利人-->
+    <bean id="nationalAccessDataQlr"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataQlrImpl"/>
+    <!--家庭成员-->
+    <bean id="nationalAccessDataJtcy"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataJtcyImpl"/>
+    <!--自然幢信息-->
+    <bean id="nationalAccessDataZrz"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataZrzImpl"/>
+    <!--逻辑幢信息-->
+    <bean id="nationalAccessDataLjz"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataLjzImpl"/>
+    <!--层信息-->
+    <bean id="nationalAccessDataC"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataCImpl"/>
+    <!--户信息-->
+    <bean id="nationalAccessDataH"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataHImpl"/>
+    <!--构筑物-->
+    <bean id="nationalAccessDataGzw"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataGzwImpl"/>
+    <!--宗地空间属性-->
+    <bean id="nationalAccessDataZd"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataZdImpl"/>
+    <!--登记受理申请-->
+    <bean id="nationalAccessDataDjSlsq"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataDjSlsqImpl"/>
+    <!--登记收件-->
+    <bean id="nationalAccessDataDjSj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataDjSjImpl"/>
+    <!--登记收件withSjid-->
+    <bean id="nationalAccessDataDjSjWithSjId"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataDjSjWithSjIdImpl"/>
+    <!--登记审核-->
+    <bean id="nationalAccessDataDjSh"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataDjShImpl"/>
+    <!--登记登簿信息-->
+    <bean id="nationalAccessDataDbxx"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataDbxxImpl"/>
+    <!--登记缮证-->
+    <bean id="nationalAccessDataDjSz"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataDjSzImpl"/>
+    <!--登记发证-->
+    <bean id="nationalAccessDataDjFz"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataDjFzImpl"/>
+    <!--登记归档-->
+    <bean id="nationalAccessDataDjGd"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataDjGdImpl"/>
+    <!--申请人属性信息-->
+    <bean id="nationalAccessDataDjSqr"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataDjSqrImpl"/>
+    <!--建设用地、宅基地使用权-->
+    <bean id="nationalAccessDataJsydsyq"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataJsydsyqImpl"/>
+    <!--土地所有权-->
+    <bean id="nationalAccessDataTdsyq"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataTdsyqImpl"/>
+    <!--房地产权_项目内多幢房屋信息-->
+    <bean id="nationalAccessDataFdcqDz"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataFdcqDzImpl"/>
+    <!--房地产权(项目内多幢房屋信息)项目属性-->
+    <bean id="nationalAccessDataFdcqDzXm"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataFdcqDzXmImpl"/>
+    <!--房地产权(独幢、层、间、套、房屋信息)-->
+    <bean id="nationalAccessDataFdcqYz"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataFdcqYzImpl"/>
+    <!--建筑物区分所有权业主共有部分信息-->
+    <bean id="nationalAccessDataFdcqQfsyq"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataFdcqQfsyqImpl"/>
+    <!--海域（含无居民海岛）使用权-->
+    <bean id="nationalAccessDataHysyq"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataHysyqImpl"/>
+    <!--构（建）筑物所有权-->
+    <bean id="nationalAccessDataGjzwsyq"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataGjzwsyqImpl"/>
+    <!--农用地使用权（非林地）-->
+    <bean id="nationalAccessDataNydsyq"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataNydsyqImpl"/>
+    <!--林权-->
+    <bean id="nationalAccessDataLq"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataLqImpl"/>
+    <!--注销登记-->
+    <bean id="nationalAccessDataZxdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataZxdjImpl"/>
+    <!--更正登记-->
+    <bean id="nationalAccessDataGzdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataGzdjImpl"/>
+    <!--异议登记-->
+    <bean id="nationalAccessDataYydj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataYydjImpl"/>
+    <!--预告登记-->
+    <bean id="nationalAccessDataYgdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataYgdjImpl"/>
+    <!--抵押权-->
+    <bean id="nationalAccessDataDyaq"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataDyaqImpl"/>
+    <!--查封登记-->
+    <bean id="nationalAccessDataCfdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataCfdjImpl"/>
+    <!--地役权-->
+    <bean id="nationalAccessDataDyiq"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataDyiqImpl"/>
+    <!--其他权-->
+    <bean id="nationalAccessDataQtxgql"
+          class="cn.gtmap.realestate.exchange.service.impl.national.data.NationalAccessDataQtxgqlImpl"/>
+
+
+    <!--房地产权(独幢、层、间、套、房屋)首次登记-->
+    <bean id="nationalAccessXmlFdcqYzScdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlFdcqYzScdjImpl">
+        <property name="nationalAccessDataFdcqYzScdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+                <!--房地产权(独幢、层、间、套、房屋信息)-->
+                <ref bean="nationalAccessDataFdcqYz"/>
+                <!--登记受理申请-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核-->
+                <ref bean="nationalAccessDataDjSh"/>
+
+                <!--登记发证-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档-->
+                <ref bean="nationalAccessDataDjGd"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--自然幢信息-->
+                <ref bean="nationalAccessDataZrz"/>
+                <!--逻辑幢信息-->
+                <ref bean="nationalAccessDataLjz"/>
+                <!--层信息-->
+                <ref bean="nationalAccessDataC"/>
+                <!--户信息-->
+                <ref bean="nationalAccessDataH"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+            </set>
+        </property>
+
+        <property name="nationalAccessDataQjsjSet">
+            <set>
+                <!--自然幢信息-->
+                <ref bean="nationalAccessDataZrz"/>
+                <!--逻辑幢信息-->
+                <ref bean="nationalAccessDataLjz"/>
+                <!--层信息-->
+                <ref bean="nationalAccessDataC"/>
+                <!--户信息-->
+                <ref bean="nationalAccessDataH"/>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--建设用地使用权、宅基地使用权首次登记-->
+    <bean id="nationalAccessXmlJsydsyqScdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlJsydsyqScdjImpl">
+        <property name="nationalAccessDataJsydsyqScdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--宗地基本信息-->
+                <ref bean="nationalAccessDataZdjbxx"/>
+                <!--宗地变化情况-->
+                <ref bean="nationalAccessDataZdbhqk"/>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+                <!--建设用地、宅基地使用权-->
+                <ref bean="nationalAccessDataJsydsyq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+                <!--登记发证-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档-->
+                <ref bean="nationalAccessDataDjGd"/>
+            </set>
+        </property>
+
+        <property name="nationalAccessDataQjsjSet">
+            <set>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--土地所有权首次登记-->
+    <bean id="nationalAccessXmlTdsyqScdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlTdsyqScdjImpl">
+        <property name="nationalAccessDataTdsyqScdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--宗地基本信息-->
+                <ref bean="nationalAccessDataZdjbxx"/>
+                <!--宗地变化信息-->
+                <ref bean="nationalAccessDataZdbhqk"/>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+                <!--土地所有权-->
+                <ref bean="nationalAccessDataTdsyq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+
+        <property name="nationalAccessDataQjsjSet">
+            <set>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--房地产权（项目内多幢房屋）首次登记-->
+    <bean id="nationalAccessXmlFdcqDzScdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlFdcqDzScdjImpl">
+        <!--土地所有权首次登记-->
+        <property name="nationalAccessDataFdcqDzScdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--自然幢信息-->
+                <ref bean="nationalAccessDataZrz"/>
+                <!--逻辑幢信息-->
+                <ref bean="nationalAccessDataLjz"/>
+                <!--层信息-->
+                <ref bean="nationalAccessDataC"/>
+                <!--户信息-->
+                <ref bean="nationalAccessDataH"/>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+                <!--房地产权_项目内多幢房屋信息-->
+                <ref bean="nationalAccessDataFdcqDz"/>
+                <!--房地产权(项目内多幢房屋信息)项目属性-->
+                <ref bean="nationalAccessDataFdcqDzXm"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+            </set>
+        </property>
+
+        <property name="nationalAccessDataQjsjSet">
+            <set>
+                <!--自然幢信息-->
+                <ref bean="nationalAccessDataZrz"/>
+                <!--逻辑幢信息-->
+                <ref bean="nationalAccessDataLjz"/>
+                <!--层信息-->
+                <ref bean="nationalAccessDataC"/>
+                <!--户信息-->
+                <ref bean="nationalAccessDataH"/>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--建筑物区分所有权业主共有部分首次登记-->
+    <bean id="nationalAccessXmlJzwScdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlJzwScdjImpl">
+        <property name="nationalAccessDataJzwScdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--构筑物-->
+                <ref bean="nationalAccessDataGzw"/>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+                <!--建筑物区分所有权业主共有部分信息-->
+                <ref bean="nationalAccessDataFdcqQfsyq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+
+        <property name="nationalAccessDataQjsjSet">
+            <set>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--海域（含无居民海岛）使用权首次登记-->
+    <bean id="nationalAccessXmlHysyqScdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlHysyqScdjImpl">
+        <property name="nationalAccessDataHysyqScdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--宗海基本信息-->
+                <ref bean="nationalAccessDataZhjbxx"/>
+                <!--用海状况-->
+                <ref bean="nationalAccessDataYhzk"/>
+                <!--用海、用岛坐标-->
+                <ref bean="nationalAccessDataYhydzb"/>
+                <!--宗海变化情况-->
+                <ref bean="nationalAccessDataZhbhqk"/>
+                <!--宗海空间属性-->
+                <ref bean="nationalAccessDataZh"/>
+                <!--海域（含无居民海岛）使用权-->
+                <ref bean="nationalAccessDataHysyq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+
+        <property name="nationalAccessDataQjsjSet">
+            <set>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZh"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--构（建）筑物所有权首次登记-->
+    <bean id="nationalAccessXmlGzwsyqScdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlGzwsyqScdjImpl">
+        <property name="nationalAccessDataGzwsyqScdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--构筑物-->
+                <ref bean="nationalAccessDataGzw"/>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+                <!--构（建）筑物所有权-->
+                <ref bean="nationalAccessDataGjzwsyq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+
+        <property name="nationalAccessDataQjsjSet">
+            <set>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--农用地使用权（非林地）首次登记-->
+    <bean id="nationalAccessXmlNydsyqScdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlNydsyqScdjImpl">
+        <property name="nationalAccessDataNydsyqScdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+				<!--家庭成员-->
+				<ref bean="nationalAccessDataJtcy"/>
+                <!--宗地基本信息-->
+                <ref bean="nationalAccessDataZdjbxx"/>
+                <!--宗地变化情况-->
+                <ref bean="nationalAccessDataZdbhqk"/>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+                <!--农用地使用权（非林地）-->
+                <ref bean="nationalAccessDataNydsyq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+
+        <property name="nationalAccessDataQjsjSet">
+            <set>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--林权首次登记-->
+    <bean id="nationalAccessXmlLqScdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlLqScdjImpl">
+        <property name="nationalAccessDataLqScdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--宗地基本信息-->
+                <ref bean="nationalAccessDataZdjbxx"/>
+                <!--宗地变化情况-->
+                <ref bean="nationalAccessDataZdbhqk"/>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+                <!--林权-->
+                <ref bean="nationalAccessDataLq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+
+        <property name="nationalAccessDataQjsjSet">
+            <set>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+            </set>
+        </property>
+    </bean>
+    <!--其他相关权力首次登记-->
+    <bean id="nationalAccessXmlQtxgqlScdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlQtxgqldjScdjImpl">
+        <property name="nationalAccessDataQtxgqlScdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--地役权-->
+                <ref bean="nationalAccessDataQtxgql"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--抵押权力首次登记-->
+    <bean id="nationalAccessXmlDyqScdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlDyqScdjImpl">
+        <property name="nationalAccessDataDyqScdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--地役权-->
+                <ref bean="nationalAccessDataDyaq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--地役权力首次登记-->
+    <bean id="nationalAccessXmlDYiqScdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlDyiqScdjImpl">
+        <property name="nationalAccessDataDyiqScdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--地役权-->
+                <ref bean="nationalAccessDataDyiq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--变更登记-->
+    <!--土地所有权变更登记-->
+    <bean id="nationalAccessXmlTdsyqBgdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlTdsyqBgdjImpl">
+        <property name="nationalAccessDataTdsyqBgdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--宗地基本信息-->
+                <ref bean="nationalAccessDataZdjbxx"/>
+                <!--宗地变化信息-->
+                <ref bean="nationalAccessDataZdbhqk"/>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+                <!--土地所有权-->
+                <ref bean="nationalAccessDataTdsyq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+
+        <property name="nationalAccessDataQjsjSet">
+            <set>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--建设用地使用权、宅基地使用权变更登记-->
+    <bean id="nationalAccessXmlJsydsyqBgdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlJsydsyqBgdjImpl">
+        <property name="nationalAccessDataJsydsyqBgdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--宗地基本信息-->
+                <ref bean="nationalAccessDataZdjbxx"/>
+                <!--宗地变化情况-->
+                <ref bean="nationalAccessDataZdbhqk"/>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+                <!--建设用地、宅基地使用权-->
+                <ref bean="nationalAccessDataJsydsyq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+
+        <property name="nationalAccessDataQjsjSet">
+            <set>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--房地产权（项目内多幢房屋）变更登记-->
+    <bean id="nationalAccessXmlFdcqDzBgdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlFdcqDzBgdjImpl">
+        <property name="nationalAccessDataFdcqDzBgdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--自然幢-->
+                <ref bean="nationalAccessDataZrz"/>
+                <!--逻辑幢-->
+                <ref bean="nationalAccessDataLjz"/>
+                <!--层-->
+                <ref bean="nationalAccessDataC"/>
+                <!--户-->
+                <ref bean="nationalAccessDataH"/>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+                <!--房地产权_项目内多幢房屋信息-->
+                <ref bean="nationalAccessDataFdcqDz"/>
+                <!--房地产权(项目内多幢房屋信息)项目属性-->
+                <ref bean="nationalAccessDataFdcqDzXm"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+        <property name="nationalAccessDataQjsjSet">
+            <set>
+                <!--自然幢-->
+                <ref bean="nationalAccessDataZrz"/>
+                <!--逻辑幢-->
+                <ref bean="nationalAccessDataLjz"/>
+                <!--层-->
+                <ref bean="nationalAccessDataC"/>
+                <!--户-->
+                <ref bean="nationalAccessDataH"/>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--房地产权(独幢、层、间、套、房屋)变更登记-->
+    <bean id="nationalAccessXmlFdcqYzBgdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlFdcqYzBgdjImpl">
+        <property name="nationalAccessDataFdcqYzBgdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--自然幢信息-->
+                <ref bean="nationalAccessDataZrz"/>
+                <!--逻辑幢信息-->
+                <ref bean="nationalAccessDataLjz"/>
+                <!--层信息-->
+                <ref bean="nationalAccessDataC"/>
+                <!--户信息-->
+                <ref bean="nationalAccessDataH"/>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+                <!--房地产权(独幢、层、间、套、房屋信息)-->
+                <ref bean="nationalAccessDataFdcqYz"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+        <property name="nationalAccessDataQjsjSet">
+            <set>
+                <!--自然幢-->
+                <ref bean="nationalAccessDataZrz"/>
+                <!--逻辑幢-->
+                <ref bean="nationalAccessDataLjz"/>
+                <!--层-->
+                <ref bean="nationalAccessDataC"/>
+                <!--户-->
+                <ref bean="nationalAccessDataH"/>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+            </set>
+        </property>
+
+    </bean>
+
+    <!--建筑物区分所有权业主共有部分变更登记-->
+    <bean id="nationalAccessXmlJzwBgdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlJzwBgdjImpl">
+        <property name="nationalAccessDataJzwBgdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--构筑物-->
+                <ref bean="nationalAccessDataGzw"/>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+                <!--建筑物区分所有权业主共有部分信息-->
+                <ref bean="nationalAccessDataFdcqQfsyq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+        <property name="nationalAccessDataQjsjSet">
+            <set>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--海域（含无居民海岛）使用权变更登记-->
+    <bean id="nationalAccessXmlHysyqBgdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlHysyqBgdjImpl">
+        <property name="nationalAccessDataHysyqBgdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--宗海基本信息-->
+                <ref bean="nationalAccessDataZhjbxx"/>
+                <!--用海状况-->
+                <ref bean="nationalAccessDataYhzk"/>
+                <!--用海、用岛坐标-->
+                <ref bean="nationalAccessDataYhydzb"/>
+                <!--宗海变化情况-->
+                <ref bean="nationalAccessDataZhbhqk"/>
+                <!--宗海空间属性-->
+                <ref bean="nationalAccessDataZh"/>
+                <!--海域（含无居民海岛）使用权-->
+                <ref bean="nationalAccessDataHysyq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+
+        <property name="nationalAccessDataQjsjSet">
+            <set>
+                <!--宗海空间属性-->
+                <ref bean="nationalAccessDataZh"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--构（建）筑物所有权变更登记-->
+    <bean id="nationalAccessXmlGzwsyqBgdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlGzwsyqBgdjImpl">
+        <property name="nationalAccessDataGzwsyqBgdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--构筑物-->
+                <ref bean="nationalAccessDataGzw"/>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+                <!--构（建）筑物所有权-->
+                <ref bean="nationalAccessDataGjzwsyq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+
+        <property name="nationalAccessDataQjsjSet">
+            <set>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--农用地使用权（非林地）变更登记-->
+    <bean id="nationalAccessXmlNydsyqBgdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlNydsyqBgdjImpl">
+        <property name="nationalAccessDataNydsyqBgdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--宗地基本信息-->
+                <ref bean="nationalAccessDataZdjbxx"/>
+                <!--宗地变化情况-->
+                <ref bean="nationalAccessDataZdbhqk"/>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+                <!--农用地使用权（非林地）-->
+                <ref bean="nationalAccessDataNydsyq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+
+        <property name="nationalAccessDataQjsjSet">
+            <set>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--林权变更登记-->
+    <bean id="nationalAccessXmlLqBgdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlLqBgdjImpl">
+        <property name="nationalAccessDataLqBgdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--宗地基本信息-->
+                <ref bean="nationalAccessDataZdjbxx"/>
+                <!--宗地变化情况-->
+                <ref bean="nationalAccessDataZdbhqk"/>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+                <!--林权-->
+                <ref bean="nationalAccessDataLq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+
+        <property name="nationalAccessDataQjsjSet">
+            <set>
+                <!--宗地空间属性-->
+                <ref bean="nationalAccessDataZd"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--其他相关权力变更登记-->
+    <bean id="nationalAccessXmlQtxgqlBgdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlQtxgqldjBgdjImpl">
+        <property name="nationalAccessDataQtxgqlBgdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--地役权-->
+                <ref bean="nationalAccessDataQtxgql"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--抵押权力变更登记-->
+    <bean id="nationalAccessXmlDyqBgdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlDyqBgdjImpl">
+        <property name="nationalAccessDataDyqBgdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--地役权-->
+                <ref bean="nationalAccessDataDyaq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--地役权力变更登记-->
+    <bean id="nationalAccessXmlDYiqBgdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlDyiqBgdjImpl">
+        <property name="nationalAccessDataDyiqBgdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--地役权-->
+                <ref bean="nationalAccessDataDyiq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+
+    <!--转移登记-->
+    <!--土地所有权转移登记-->
+    <bean id="nationalAccessXmlTdsyqZydj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlTdsyqZydjImpl">
+        <property name="nationalAccessDataTdsyqZydjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--宗地基本信息-->
+                <ref bean="nationalAccessDataZdjbxx"/>
+                <!--宗地变化信息-->
+                <ref bean="nationalAccessDataZdbhqk"/>
+                <!--土地所有权-->
+                <ref bean="nationalAccessDataTdsyq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--建设用地使用权、宅基地使用权转移登记-->
+    <bean id="nationalAccessXmlJsydsyqZydj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlJsydsyqZydjImpl">
+        <property name="nationalAccessDataJsydsyqZydjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--宗地基本信息-->
+                <ref bean="nationalAccessDataZdjbxx"/>
+                <!--宗地变化信息-->
+                <ref bean="nationalAccessDataZdbhqk"/>
+                <!--建设用地、宅基地使用权-->
+                <ref bean="nationalAccessDataJsydsyq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--房地产权（项目内多幢房屋）转移登记-->
+    <bean id="nationalAccessXmlFdcqDzZydj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlFdcqDzZydjImpl">
+        <!--土地所有权首次登记-->
+        <property name="nationalAccessDataFdcqDzZydjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--自然幢-->
+                <ref bean="nationalAccessDataZrz"/>
+                <!--逻辑幢-->
+                <ref bean="nationalAccessDataLjz"/>
+                <!--层-->
+                <ref bean="nationalAccessDataC"/>
+                <!--户-->
+                <ref bean="nationalAccessDataH"/>
+                <!--房地产权_项目内多幢房屋信息-->
+                <ref bean="nationalAccessDataFdcqDz"/>
+                <!--房地产权(项目内多幢房屋信息)项目属性-->
+                <ref bean="nationalAccessDataFdcqDzXm"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+
+        <property name="nationalAccessDataQjsjSet">
+            <set>
+                <!--自然幢-->
+                <ref bean="nationalAccessDataZrz"/>
+                <!--逻辑幢-->
+                <ref bean="nationalAccessDataLjz"/>
+                <!--层-->
+                <ref bean="nationalAccessDataC"/>
+                <!--户-->
+                <ref bean="nationalAccessDataH"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--房地产权(独幢、层、间、套、房屋)转移登记-->
+    <bean id="nationalAccessXmlFdcqYzZydj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlFdcqYzZydjImpl">
+        <property name="nationalAccessDataFdcqYzZydjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--自然幢信息-->
+                <ref bean="nationalAccessDataZrz"/>
+                <!--逻辑幢信息-->
+                <ref bean="nationalAccessDataLjz"/>
+                <!--层信息-->
+                <ref bean="nationalAccessDataC"/>
+                <!--户信息-->
+                <ref bean="nationalAccessDataH"/>
+                <!--房地产权(独幢、层、间、套、房屋信息)-->
+                <ref bean="nationalAccessDataFdcqYz"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+
+        <property name="nationalAccessDataQjsjSet">
+            <set>
+                <!--自然幢-->
+                <ref bean="nationalAccessDataZrz"/>
+                <!--逻辑幢-->
+                <ref bean="nationalAccessDataLjz"/>
+                <!--层-->
+                <ref bean="nationalAccessDataC"/>
+                <!--户-->
+                <ref bean="nationalAccessDataH"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--建筑物区分所有权业主共有部分转移登记-->
+    <bean id="nationalAccessXmlJzwZydj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlJzwZydjImpl">
+        <property name="nationalAccessDataJzwZydjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--构筑物-->
+                <ref bean="nationalAccessDataGzw"/>
+                <!--建筑物区分所有权业主共有部分信息-->
+                <ref bean="nationalAccessDataFdcqQfsyq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--海域（含无居民海岛）使用权转移登记-->
+    <bean id="nationalAccessXmlHysyqZydj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlHysyqZydjImpl">
+        <property name="nationalAccessDataHysyqZydjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--宗海基本信息-->
+                <ref bean="nationalAccessDataZhjbxx"/>
+                <!--用海状况-->
+                <ref bean="nationalAccessDataYhzk"/>
+                <!--用海、用岛坐标-->
+                <ref bean="nationalAccessDataYhydzb"/>
+                <!--宗海变化情况-->
+                <ref bean="nationalAccessDataZhbhqk"/>
+                <!--海域（含无居民海岛）使用权-->
+                <ref bean="nationalAccessDataHysyq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--构（建）筑物所有权转移登记-->
+    <bean id="nationalAccessXmlGzwsyqZydj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlGzwsyqZydjImpl">
+        <property name="nationalAccessDataGzwsyqZydjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--构筑物-->
+                <ref bean="nationalAccessDataGzw"/>
+                <!--构（建）筑物所有权-->
+                <ref bean="nationalAccessDataGjzwsyq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--农用地使用权（非林地）转移登记-->
+    <bean id="nationalAccessXmlNydsyqZydj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlNydsyqZydjImpl">
+        <property name="nationalAccessDataNydsyqZydjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--宗地基本信息-->
+                <ref bean="nationalAccessDataZdjbxx"/>
+                <!--宗地变化情况-->
+                <ref bean="nationalAccessDataZdbhqk"/>
+                <!--农用地使用权（非林地）-->
+                <ref bean="nationalAccessDataNydsyq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--林权转移登记-->
+    <bean id="nationalAccessXmlLqZydj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlLqZydjImpl">
+        <property name="nationalAccessDataLqZydjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--宗地基本信息-->
+                <ref bean="nationalAccessDataZdjbxx"/>
+                <!--宗地变化情况-->
+                <ref bean="nationalAccessDataZdbhqk"/>
+                <!--林权-->
+                <ref bean="nationalAccessDataLq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--其他相关权力转移登记-->
+    <bean id="nationalAccessXmlQtxgqlZydj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlQtxgqldjZydjImpl">
+        <property name="nationalAccessDataQtxgqlZydjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--地役权-->
+                <ref bean="nationalAccessDataQtxgql"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--抵押权力转移登记-->
+    <bean id="nationalAccessXmlDyqZydj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlDyqZydjImpl">
+        <property name="nationalAccessDataDyqZydjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--地役权-->
+                <ref bean="nationalAccessDataDyaq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--地役权力变更登记-->
+    <bean id="nationalAccessXmlDYiqZydj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlDyiqZydjImpl">
+        <property name="nationalAccessDataDyiqZydjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--地役权-->
+                <ref bean="nationalAccessDataDyiq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--注销登记-->
+    <bean id="nationalAccessXmlZxdj" class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlZxdjImpl">
+        <property name="nationalAccessDataZxdjServiceSet">
+            <set>
+                <!--注销登记-->
+                <ref bean="nationalAccessDataZxdj"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+            </set>
+        </property>
+    </bean>
+    <!--外联项目注销登记-->
+    <bean id="nationalAccessXmlZxWlxmdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlZxWlxmdjImpl">
+        <property name="nationalAccessDataZxdjServiceSet">
+            <set>
+                <!--注销登记-->
+                <ref bean="nationalAccessDataZxdj"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--更正登记-->
+    <!--土地所有权更正登记-->
+    <bean id="nationalAccessXmlTdsyqGzdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlTdsyqGzdjImpl">
+        <property name="nationalAccessDataTdsyqGzdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--宗地基本信息-->
+                <ref bean="nationalAccessDataZdjbxx"/>
+                <!--宗地变化信息-->
+                <ref bean="nationalAccessDataZdbhqk"/>
+                <!--土地所有权-->
+                <ref bean="nationalAccessDataTdsyq"/>
+                <!--更正登记信息 -->
+                <ref bean="nationalAccessDataGzdj"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--建设用地使用权、宅基地使用权更正登记-->
+    <bean id="nationalAccessXmlJsydsyqGzdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlJsydsyqGzdjImpl">
+        <property name="nationalAccessDataJsydsyqGzdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--宗地基本信息-->
+                <ref bean="nationalAccessDataZdjbxx"/>
+                <!--宗地变化信息-->
+                <ref bean="nationalAccessDataZdbhqk"/>
+                <!--建设用地、宅基地使用权-->
+                <ref bean="nationalAccessDataJsydsyq"/>
+                <!--更正登记信息 -->
+                <ref bean="nationalAccessDataGzdj"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--房地产权（项目内多幢房屋）更正登记-->
+    <bean id="nationalAccessXmlFdcqDzGzdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlFdcqDzGzdjImpl">
+        <property name="nationalAccessDataFdcqDzGzdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--自然幢-->
+                <ref bean="nationalAccessDataZrz"/>
+                <!--逻辑幢-->
+                <ref bean="nationalAccessDataLjz"/>
+                <!--层-->
+                <ref bean="nationalAccessDataC"/>
+                <!--户-->
+                <ref bean="nationalAccessDataH"/>
+                <!--房地产权_项目内多幢房屋信息-->
+                <ref bean="nationalAccessDataFdcqDz"/>
+                <!--房地产权(项目内多幢房屋信息)项目属性-->
+                <ref bean="nationalAccessDataFdcqDzXm"/>
+                <!--更正登记信息 -->
+                <ref bean="nationalAccessDataGzdj"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+
+        <property name="nationalAccessDataQjsjSet">
+            <set>
+                <!--自然幢-->
+                <ref bean="nationalAccessDataZrz"/>
+                <!--逻辑幢-->
+                <ref bean="nationalAccessDataLjz"/>
+                <!--层-->
+                <ref bean="nationalAccessDataC"/>
+                <!--户-->
+                <ref bean="nationalAccessDataH"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--房地产权(独幢、层、间、套、房屋)更正登记-->
+    <bean id="nationalAccessXmlFdcqYzGzdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlFdcqYzGzdjImpl">
+        <property name="nationalAccessDataFdcqYzGzdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--自然幢信息-->
+                <ref bean="nationalAccessDataZrz"/>
+                <!--逻辑幢信息-->
+                <ref bean="nationalAccessDataLjz"/>
+                <!--层信息-->
+                <ref bean="nationalAccessDataC"/>
+                <!--户信息-->
+                <ref bean="nationalAccessDataH"/>
+                <!--房地产权(独幢、层、间、套、房屋信息)-->
+                <ref bean="nationalAccessDataFdcqYz"/>
+                <!--更正登记信息 -->
+                <ref bean="nationalAccessDataGzdj"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+
+        <property name="nationalAccessDataQjsjSet">
+            <set>
+                <!--自然幢-->
+                <ref bean="nationalAccessDataZrz"/>
+                <!--逻辑幢-->
+                <ref bean="nationalAccessDataLjz"/>
+                <!--层-->
+                <ref bean="nationalAccessDataC"/>
+                <!--户-->
+                <ref bean="nationalAccessDataH"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--建筑物区分所有权业主共有部分更正登记-->
+    <bean id="nationalAccessXmlJzwGzdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlJzwGzdjImpl">
+        <property name="nationalAccessDataJzwGzdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--构筑物-->
+                <ref bean="nationalAccessDataGzw"/>
+                <!--建筑物区分所有权业主共有部分信息-->
+                <ref bean="nationalAccessDataFdcqQfsyq"/>
+                <!--更正登记信息 -->
+                <ref bean="nationalAccessDataGzdj"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--海域（含无居民海岛）使用权更正登记-->
+    <bean id="nationalAccessXmlHysyqGzdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlHysyqGzdjImpl">
+        <property name="nationalAccessDataHysyqGzdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--宗海基本信息-->
+                <ref bean="nationalAccessDataZhjbxx"/>
+                <!--用海状况-->
+                <ref bean="nationalAccessDataYhzk"/>
+                <!--用海、用岛坐标-->
+                <ref bean="nationalAccessDataYhydzb"/>
+                <!--宗海变化情况-->
+                <ref bean="nationalAccessDataZhbhqk"/>
+                <!--海域（含无居民海岛）使用权-->
+                <ref bean="nationalAccessDataHysyq"/>
+                <!--更正登记信息 -->
+                <ref bean="nationalAccessDataGzdj"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--构（建）筑物所有权更正登记-->
+    <bean id="nationalAccessXmlGzwsyqGzdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlGzwsyqGzdjImpl">
+        <property name="nationalAccessDataGzwsyqGzdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--构筑物-->
+                <ref bean="nationalAccessDataGzw"/>
+                <!--构（建）筑物所有权-->
+                <ref bean="nationalAccessDataGjzwsyq"/>
+                <!--更正登记信息 -->
+                <ref bean="nationalAccessDataGzdj"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--农用地使用权（非林地）更正登记-->
+    <bean id="nationalAccessXmlNydsyqGzdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlNydsyqGzdjImpl">
+        <property name="nationalAccessDataNydsyqGzdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--宗地基本信息-->
+                <ref bean="nationalAccessDataZdjbxx"/>
+                <!--宗地变化情况-->
+                <ref bean="nationalAccessDataZdbhqk"/>
+                <!--农用地使用权（非林地）-->
+                <ref bean="nationalAccessDataNydsyq"/>
+                <!--更正登记信息 -->
+                <ref bean="nationalAccessDataGzdj"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--林权更正登记-->
+    <bean id="nationalAccessXmlLqGzdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlLqGzdjImpl">
+        <property name="nationalAccessDataLqGzdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--宗地基本信息-->
+                <ref bean="nationalAccessDataZdjbxx"/>
+                <!--宗地变化情况-->
+                <ref bean="nationalAccessDataZdbhqk"/>
+                <!--林权-->
+                <ref bean="nationalAccessDataLq"/>
+                <!--更正登记信息 -->
+                <ref bean="nationalAccessDataGzdj"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--其他相关权力更正登记-->
+    <bean id="nationalAccessXmlQtxgqlGzdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlQtxgqldjGzdjImpl">
+        <property name="nationalAccessDataQtxgqlGzdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--地役权-->
+                <ref bean="nationalAccessDataQtxgql"/>
+                <!--更正登记信息 -->
+                <ref bean="nationalAccessDataGzdj"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--抵押权力更正登记-->
+    <bean id="nationalAccessXmlDyqGzdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlDyqGzdjImpl">
+        <property name="nationalAccessDataDyqGzdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--地役权-->
+                <ref bean="nationalAccessDataDyaq"/>
+                <!--更正登记信息 -->
+                <ref bean="nationalAccessDataGzdj"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--地役权力更正登记-->
+    <bean id="nationalAccessXmlDYiqGzdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlDyiqGzdjImpl">
+        <property name="nationalAccessDataDyiqGzdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--地役权-->
+                <ref bean="nationalAccessDataDyiq"/>
+                <!--更正登记信息 -->
+                <ref bean="nationalAccessDataGzdj"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--异议登记-->
+    <bean id="nationalAccessXmlYydj" class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlYydjImpl">
+        <property name="nationalAccessDataYydjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--登记异议-->
+                <ref bean="nationalAccessDataYydj"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--预告登记-->
+    <bean id="nationalAccessXmlYgdj" class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlYgdjImpl">
+        <property name="nationalAccessDataYgdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--预告登记-->
+                <ref bean="nationalAccessDataYgdj"/>
+                <!--抵押权-->
+                <ref bean="nationalAccessDataDyaq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--查封登记-->
+    <bean id="nationalAccessXmlCfdj" class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlCfdjImpl">
+        <property name="nationalAccessDataCfdjServiceSet">
+            <set>
+                <!--查封登记-->
+                <ref bean="nationalAccessDataCfdj"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--其他登记-->
+    <!--抵押权登记-->
+    <bean id="nationalAccessXmlDyqdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlDyqdjImpl">
+        <property name="nationalAccessDataDyqdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--抵押权-->
+                <ref bean="nationalAccessDataDyaq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--地役权登记-->
+    <bean id="nationalAccessXmlDyiqdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlDyiqdjImpl">
+        <property name="nationalAccessDataDyiqdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--地役权-->
+                <ref bean="nationalAccessDataDyiq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--抵押权登记-->
+    <bean id="nationalAccessXmlDyqdjWithH"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlDyqdjWithHImpl">
+        <property name="nationalAccessDataDyqdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--抵押权-->
+                <ref bean="nationalAccessDataDyaq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息withSjId-->
+                <ref bean="nationalAccessDataDjSjWithSjId"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+                <!--户信息-->
+                <ref bean="nationalAccessDataH"/>
+
+            </set>
+        </property>
+        <property name="nationalAccessDataQjsjSet">
+            <set>
+                <!--户信息-->
+                <ref bean="nationalAccessDataH"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--查封登记-->
+    <bean id="nationalAccessXmlCfdjWithQlr"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlCfdjWithQlrImpl">
+        <property name="nationalAccessDataCfdjServiceSet">
+            <set>
+                <!--查封登记-->
+                <ref bean="nationalAccessDataCfdj"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+
+            </set>
+        </property>
+    </bean>
+
+    <!--换证登记-->
+    <!--土地所有权换证登记-->
+    <bean id="nationalAccessXmlTdsyqHzdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlTdsyqHzdjImpl">
+        <property name="nationalAccessDataTdsyqHzdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--宗地基本信息-->
+                <ref bean="nationalAccessDataZdjbxx"/>
+                <!--宗地变化信息-->
+                <ref bean="nationalAccessDataZdbhqk"/>
+                <!--土地所有权-->
+                <ref bean="nationalAccessDataTdsyq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--建设用地使用权、宅基地使用权换证登记-->
+    <bean id="nationalAccessXmlJsydsyqHzdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlJsydsyqHzdjImpl">
+        <property name="nationalAccessDataJsydsyqHzdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--宗地基本信息-->
+                <ref bean="nationalAccessDataZdjbxx"/>
+                <!--宗地变化信息-->
+                <ref bean="nationalAccessDataZdbhqk"/>
+                <!--建设用地、宅基地使用权-->
+                <ref bean="nationalAccessDataJsydsyq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--房地产权（项目内多幢房屋）换证登记-->
+    <bean id="nationalAccessXmlFdcqDzHzdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlFdcqDzHzdjImpl">
+        <property name="nationalAccessDataFdcqDzHzdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--自然幢-->
+                <ref bean="nationalAccessDataZrz"/>
+                <!--逻辑幢-->
+                <ref bean="nationalAccessDataLjz"/>
+                <!--层-->
+                <ref bean="nationalAccessDataC"/>
+                <!--户-->
+                <ref bean="nationalAccessDataH"/>
+                <!--房地产权_项目内多幢房屋信息-->
+                <ref bean="nationalAccessDataFdcqDz"/>
+                <!--房地产权(项目内多幢房屋信息)项目属性-->
+                <ref bean="nationalAccessDataFdcqDzXm"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+
+        <property name="nationalAccessDataQjsjSet">
+            <set>
+                <!--自然幢-->
+                <ref bean="nationalAccessDataZrz"/>
+                <!--逻辑幢-->
+                <ref bean="nationalAccessDataLjz"/>
+                <!--层-->
+                <ref bean="nationalAccessDataC"/>
+                <!--户-->
+                <ref bean="nationalAccessDataH"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--房地产权(独幢、层、间、套、房屋)换证登记-->
+    <bean id="nationalAccessXmlFdcqYzHzdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlFdcqYzHzdjImpl">
+        <property name="nationalAccessDataFdcqYzHzdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--自然幢信息-->
+                <ref bean="nationalAccessDataZrz"/>
+                <!--逻辑幢信息-->
+                <ref bean="nationalAccessDataLjz"/>
+                <!--层信息-->
+                <ref bean="nationalAccessDataC"/>
+                <!--户信息-->
+                <ref bean="nationalAccessDataH"/>
+                <!--房地产权(独幢、层、间、套、房屋信息)-->
+                <ref bean="nationalAccessDataFdcqYz"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+
+        <property name="nationalAccessDataQjsjSet">
+            <set>
+                <!--自然幢-->
+                <ref bean="nationalAccessDataZrz"/>
+                <!--逻辑幢-->
+                <ref bean="nationalAccessDataLjz"/>
+                <!--层-->
+                <ref bean="nationalAccessDataC"/>
+                <!--户-->
+                <ref bean="nationalAccessDataH"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--建筑物区分所有权业主共有部分换证登记-->
+    <bean id="nationalAccessXmlJzwHzdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlJzwHzdjImpl">
+        <property name="nationalAccessDataJzwHzdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--构筑物-->
+                <ref bean="nationalAccessDataGzw"/>
+                <!--建筑物区分所有权业主共有部分信息-->
+                <ref bean="nationalAccessDataFdcqQfsyq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--海域（含无居民海岛）使用权换证登记-->
+    <bean id="nationalAccessXmlHysyqHzdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlHysyqHzdjImpl">
+        <property name="nationalAccessDataHysyqHzdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--宗海基本信息-->
+                <ref bean="nationalAccessDataZhjbxx"/>
+                <!--用海状况-->
+                <ref bean="nationalAccessDataYhzk"/>
+                <!--用海、用岛坐标-->
+                <ref bean="nationalAccessDataYhydzb"/>
+                <!--宗海变化情况-->
+                <ref bean="nationalAccessDataZhbhqk"/>
+                <!--海域（含无居民海岛）使用权-->
+                <ref bean="nationalAccessDataHysyq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--构（建）筑物所有权换证登记-->
+    <bean id="nationalAccessXmlGzwsyqHzdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlGzwsyqHzdjImpl">
+        <property name="nationalAccessDataGzwsyqHzdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--构筑物-->
+                <ref bean="nationalAccessDataGzw"/>
+                <!--构（建）筑物所有权-->
+                <ref bean="nationalAccessDataGjzwsyq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--农用地使用权（非林地）换证登记-->
+    <bean id="nationalAccessXmlNydsyqHzdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlNydsyqHzdjImpl">
+        <property name="nationalAccessDataNydsyqHzdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--宗地基本信息-->
+                <ref bean="nationalAccessDataZdjbxx"/>
+                <!--宗地变化情况-->
+                <ref bean="nationalAccessDataZdbhqk"/>
+                <!--农用地使用权（非林地）-->
+                <ref bean="nationalAccessDataNydsyq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--林权换证登记-->
+    <bean id="nationalAccessXmlLqHzdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlLqHzdjImpl">
+        <property name="nationalAccessDataLqHzdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--宗地基本信息-->
+                <ref bean="nationalAccessDataZdjbxx"/>
+                <!--宗地变化情况-->
+                <ref bean="nationalAccessDataZdbhqk"/>
+                <!--林权-->
+                <ref bean="nationalAccessDataLq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--其他相关权力换证登记-->
+    <bean id="nationalAccessXmlQtxgqlHzdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlQtxgqldjHzdjImpl">
+        <property name="nationalAccessDataQtxgqlHzdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--地役权-->
+                <ref bean="nationalAccessDataQtxgql"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--抵押权力换证登记-->
+    <bean id="nationalAccessXmlDyqHzdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlDyqHzdjImpl">
+        <property name="nationalAccessDataDyqHzdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--地役权-->
+                <ref bean="nationalAccessDataDyaq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <!--地役权力换证登记-->
+    <bean id="nationalAccessXmlDYiqHzdj"
+          class="cn.gtmap.realestate.exchange.service.impl.national.NationalAccessXmlDyiqHzdjImpl">
+        <property name="nationalAccessDataDyiqHzdjServiceSet">
+            <set>
+                <!--权利人-->
+                <ref bean="nationalAccessDataQlr"/>
+                <!--地役权-->
+                <ref bean="nationalAccessDataDyiq"/>
+                <!--申请人属性信息-->
+                <ref bean="nationalAccessDataDjSqr"/>
+                <!--登记受理申请信息-->
+                <ref bean="nationalAccessDataDjSlsq"/>
+                <!--登记收件信息-->
+                <ref bean="nationalAccessDataDjSj"/>
+                <!--登记审核信息-->
+                <ref bean="nationalAccessDataDjSh"/>
+                <!-- 登簿信息-->
+                <ref bean="nationalAccessDataDbxx"/>
+
+                <!--登记发证信息-->
+                <ref bean="nationalAccessDataDjFz"/>
+                <!--登记归档信息-->
+                <ref bean="nationalAccessDataDjGd"/>
+
+
+            </set>
+        </property>
+    </bean>
+
+    <bean id="gxCxqqSeviceImpl" class="cn.gtmap.realestate.exchange.service.impl.inf.gx.GxCxqqSeviceImpl">
+        <property name="queryCxjgServiceSet">
+            <set>
+                <ref bean="queryCxjgCfServiceImpl"/>
+                <ref bean="queryCxjgDyaqServiceImpl"/>
+                <ref bean="queryCxjgFdcqServiceImpl"/>
+                <ref bean="queryCxjgGjzwsyqServiceImpl"/>
+                <ref bean="queryCxjgHysyqServiceImpl"/>
+                <ref bean="queryCxjgJsydsyqServiceImpl"/>
+                <ref bean="queryCxjgLqServiceImpl"/>
+                <ref bean="queryCxjgTdsyqServiceImpl"/>
+                <ref bean="queryCxjgYgServiceImpl"/>
+                <ref bean="queryCxjgYyServiceImpl"/>
+                <ref bean="queryCxjgNydsyqServiceImpl"/>
+            </set>
+        </property>
+    </bean>
+</beans>

@@ -1,0 +1,73 @@
+<!--/**-->
+<!--* author: 前端组-->
+<!--* date: 2019-1-8-->
+<!--* version 3.0.0-->
+<!--* describe: 多级表头，每一行不限高，向下拓展-->
+<!--*/-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>建筑物区分所有权业主共有部分登记信息</title>
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/multistep-header-table.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <script src="../../static/lib/jquery/jquery.min.js"></script>
+    <script src="../../static/lib/layui/layui.js"></script>
+    <!--添加水印-->
+    <script src="../../static/lib/bdcui/js/common.js"></script>
+    <script src="../../static/js/common.js"></script>
+</head>
+
+<body>
+<div class="bdc-container">
+    <p class="bdc-table-tips">第<span id="bs"></span>本 &nbsp;&nbsp; 第<span id="yzgyys"></span>页</p>
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th class="bdc-table-title" colspan="8">建筑物区分所有权业主共有部分登记信息</th>
+        </tr>
+        <tr>
+            <th colspan="2">建筑物区分所有权业主<br/>共有部分权利人</th>
+            <th colspan="6" id="qlr"></th>
+        </tr>
+        <tr>
+            <th>业务号</th>
+            <th>建(构)筑物编号</th>
+            <th>建(构)筑物名称</th>
+            <th>建(构)筑物数量或者面积(m²)</th>
+            <th>分摊土地面积</th>
+            <th>登记时间</th>
+            <th>登簿人</th>
+            <th>附记</th>
+        </tr>
+        </thead>
+        <tbody id="tableView">
+        </tbody>
+    </table>
+    <div id="tablePage"></div>
+</div>
+</body>
+<script type="text/html" id="tableTpl">
+    {{#  if(null==d || d.length === 0 || ( d.length===1&& !d[0])){ }}
+    无数据
+    {{#  } else { }}
+    {{#  layui.each(d, function(index, item){ }}
+    <tr>
+        <td>{{=item.slbh || ''}}</td>
+        <td>{{=item.jgzwbh || ''}}</td>
+        <td>{{=item.jgzwmc|| ''}}</td>
+        <td>{{=item.jgzwmj|| ''}}</td>
+        <td>{{=item.fttdmj|| ''}}</td>
+        <td>{{=item.djrq|| ''}}</td>
+        <td>{{=item.dbr|| ''}}</td>
+        <td>{{=item.fj|| ''}}</td>
+    </tr>
+    {{#  }); }}
+    {{#  } }}
+
+</script>
+<script src="../../static/js/djbxx/bdcDjbJzwqfsyqyzgybf.js"></script>
+<script src="../../static/js/djbxx/bdcDjbYm.js"></script>
+<script src="../../static/js/djbxx/djbCss.js"></script>
+</html>

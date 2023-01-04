@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>复制收件材料</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css"/>
+
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <!--popup.css放到form-tab.css，防止样式冲突-->
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/slymzh.css"/>
+</head>
+<body>
+
+<!--    搜索框-->
+<div class="bdc-search-box">
+    <form class="layui-form" action="">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">受理编号</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="slbh" name="slbh" placeholder="请输入"
+                           class="layui-input search">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+            <div class="layui-inline bdc-button-box">
+                <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">搜索</a>
+                <a href="javascript:;" class="layui-btn layui-btn-normal bdc-secondary-btn" id="confirm">确定</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--    查询受理编号得到的材料列表-->
+<div class="bdc-table-box">
+    <div id="sjclView" lay-filter="sjclView" class="common-form sl-from layui-form bdc-form-table"></div>
+</div>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/bdcui/js/mask.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<!--收件材料公共方法-->
+<script src='../../static/js/slym/sjclCommon.js'></script>
+<script src="../../static/js/changzhou/slym/copySjcl.js"></script>
+</body>
+<!--收件信息信息展示-->
+<script type="text/html" id="sjclTpl">
+    <form class="common-form sl-from layui-form bdc-form-table" name="sjclForm">
+            <div class="sjclForm" id="sjclForm">
+                <table class="slym layui-table bdc-jt-table" border="1" name="addsjcl" id="sjclTable">
+                    <thead>
+                    <tr class="gray-tr">
+                        <td width="30px">
+                            <input type="checkbox" lay-filter="qxCheckbox" name="qxTable" style="width: 50px;" title=""
+                                   lay-skin="primary" id="qxCheckbox">
+                        </td>
+                        <td width="50px">序号</td>
+                        <td style="min-width: 200px">材料名称</td>
+                        <td>份数</td>
+                        <td>页数</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{# if(d.length==0) { }}
+                    <tr class="bdc-table-none">
+                        <td colspan="8">
+                            <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据</div>
+                        </td>
+                    </tr>
+                    {{# } else { }}
+                    {{# layui.each(d, function(index, item){ }}
+                    <tr>
+                        <input type="hidden" name="sjclid" value="{{item.sjclid || ''}}" class="sjcl">
+                        <td>
+                            <input type="checkbox" lay-filter="yxCheckbox" class="yx" name="yxTable"
+                                   value="" title="" lay-skin="primary">
+                        </td>
+                        <td>{{index+1}}</td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <input type="text" id="clmc" name="clmc" value="{{item.clmc || ''}}"
+                                       class="layui-input sjcl{{index || ''}}" title="{{item.clmc || ''}}">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <input type="text" id="fs" name="fs" value="{{item.fs || ''}}"
+                                       class="layui-input sjcl{{index || ''}}" title="{{item.fs || ''}}">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <input type="text" id="ys" name="ys" value="{{item.ys || ''}}"
+                                       class="layui-input sjcl{{index || ''}}" title="{{item.ys || ''}}">
+                            </div>
+                        </td>
+                    </tr>
+                    {{# }); }}
+                    {{# } }}
+                    </tbody>
+
+                </table>
+            </div>
+    </form>
+</script>
+</html>

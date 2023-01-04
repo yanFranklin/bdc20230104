@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>realestate</artifactId>
+        <groupId>cn.gtmap.realestate</groupId>
+        <version>3.1.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>cn.gtmap.realestate</groupId>
+    <artifactId>realestate-certificate</artifactId>
+    <version>3.1.0</version>
+    <name>${project.artifactId}</name>
+    <description>GTMap Cloud App</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>cn.gtmap.realestate</groupId>
+            <artifactId>realestate-common</artifactId>
+            <version>1.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.liquibase</groupId>
+                    <artifactId>liquibase-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc6</artifactId>
+            <version>12.1.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.1.21</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>1.5.1.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>4.3.6.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+        </dependency>
+        <!-- mybatis -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.4.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>QRCode</groupId>
+            <artifactId>QRCode</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <!--dbunit 依赖-->
+        <dependency>
+            <groupId>org.dbunit</groupId>
+            <artifactId>dbunit</artifactId>
+            <version>2.5.3</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.springtestdbunit</groupId>
+            <artifactId>spring-test-dbunit</artifactId>
+            <version>1.3.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- junit 多线程测试 -->
+        <dependency>
+            <groupId>net.sourceforge.groboutils</groupId>
+            <artifactId>groboutils-core</artifactId>
+            <version>5</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <!-- 依赖包输出目录 -->
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <excludeTransitive>false</excludeTransitive>
+                            <stripVersion>false</stripVersion>
+                            <!-- 依赖包的作用域 -->
+                            <includeScope>runtime</includeScope>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>

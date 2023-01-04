@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.register.core.mapper.BdcFdcq3GyxxMapper">
+
+    <!--分页查询共有信息-->
+    <select id="listFdcq3GyxxByPage" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.dto.register.BdcFdcq3GyxxDTO">
+        SELECT
+        T2.GYXXID,T2.QLID,T2.SLBH,T2.JGZWBH,T2.JGZWMC,T2.JGZWMJ,T2.FTTDMJ,T1.DJJG,T1.DJSJ,T1.DJSJ
+        DJRQ,T1.DBR,T2.FJ,T2.JGZWSL,T2.TDSYFE,T2.XMID,T2.DJH
+        FROM BDC_FDCQ3 T1
+        INNER JOIN BDC_FDCQ3_GYXX T2 ON T1.XMID = T2.XMID
+        <where>
+            <if test="djh != null and djh != ''">
+                AND T1.DJH = #{djh}
+            </if>
+            <if test="qsztList != null and qsztList.size>0">
+                AND t1.qszt IN
+                <foreach collection="qsztList" item="qszt" open="(" close=")" separator=",">
+                    #{qszt}
+                </foreach>
+
+            </if>
+        </where>
+        <choose>
+            <when test="sortParameter != null and sortParameter != ''">
+                ORDER BY ${sortParameter}
+            </when>
+            <otherwise>
+                ORDER BY T2.GYXXID ASC,T2.SLBH ASC
+            </otherwise>
+        </choose>
+    </select>
+</mapper>

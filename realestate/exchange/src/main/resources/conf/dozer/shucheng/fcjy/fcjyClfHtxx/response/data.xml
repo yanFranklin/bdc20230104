@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://dozer.sourceforge.net"
+          xsi:schemaLocation="http://dozer.sourceforge.net
+          http://dozer.sourceforge.net/schema/beanmapping.xsd">
+    <mapping map-null="false" map-empty-string="false" type="one-way" wildcard="false">
+        <!-- 向BDC_QLR转换 -->
+        <class-a>cn.gtmap.realestate.exchange.core.dto.shucheng.fgj.response.HtxxReponseModel</class-a>
+        <class-b>cn.gtmap.realestate.common.core.dto.accept.FcjyClfHtxxDTO</class-b>
+        <field>
+            <a>code</a>
+            <b>code</b>
+        </field>
+        <field>
+            <a>msg</a>
+            <b>msg</b>
+        </field>
+        <field map-id="jyxx">
+            <a>data[0]</a>
+            <b>bdcSlJyxx</b>
+        </field>
+        <field map-id="buyersToQlr">
+            <a>data[0].buyers</a>
+            <b>bdcQlr</b>
+            <b-deep-index-hint>com.alibaba.fastjson.JSONArray</b-deep-index-hint>
+
+        </field>
+    </mapping>
+
+    <mapping map-id="buyersToQlr" type="one-way">
+        <class-a>cn.gtmap.realestate.exchange.core.dto.shucheng.fgj.response.ResponseBuyer</class-a>
+        <class-b>cn.gtmap.realestate.common.core.domain.BdcQlrDO</class-b>
+        <field>
+            <a>srfmc</a>
+            <b>qlrmc</b>
+        </field>
+        <field>
+            <a>srfzjhm</a>
+            <b>zjh</b>
+        </field>
+        <field>
+            <a>srfzjlx</a>
+            <b>zjzl</b>
+        </field>
+        <field>
+            <a>srfsjh</a>
+            <b>dh</b>
+        </field>
+        <field>
+            <a>srfgyfs</a>
+            <b>gyfs</b>
+        </field>
+        <field>
+            <a>szfe</a>
+            <b>qlbl</b>
+        </field>
+        <field custom-converter="cn.gtmap.realestate.exchange.core.dozer.converters.ConstantsCustomConvert"
+               custom-converter-param="1">
+            <a>srfmc</a>
+            <b>qlrlb</b>
+        </field>
+        <field custom-converter="cn.gtmap.realestate.exchange.core.dozer.converters.ConstantsCustomConvert"
+               custom-converter-param="1">
+            <a>srfmc</a>
+            <b>sfczr</b>
+        </field>
+        <field custom-converter="cn.gtmap.realestate.exchange.core.dozer.converters.ConstantsCustomConvert"
+               custom-converter-param="13">
+            <a>srfmc</a>
+            <b>qlrtz</b>
+        </field>
+    </mapping>
+
+    <mapping map-id="jyxx" map-null="false" map-empty-string="false" type="one-way" wildcard="false">
+        <!-- 向BDC_JYXX转换 -->
+        <class-a>cn.gtmap.realestate.exchange.core.dto.shucheng.fgj.response.HtxxResponseData</class-a>
+        <class-b>cn.gtmap.realestate.common.core.domain.accept.BdcSlJyxxDO</class-b>
+        <field>
+            <a>htbh</a>
+            <b>htbh</b>
+        </field>
+        <field custom-converter="cn.gtmap.realestate.common.core.dozer.converters.gtmap.StringToDateCustomConverter">
+            <a>htbasj</a>
+            <b>htbasj</b>
+        </field>
+        <field>
+            <a>htje</a>
+            <b>jyje</b>
+        </field>
+    </mapping>
+</mappings>

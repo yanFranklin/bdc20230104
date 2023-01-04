@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://dozer.sourceforge.net"
+          xsi:schemaLocation="http://dozer.sourceforge.net
+          http://dozer.sourceforge.net/schema/beanmapping.xsd">
+    <mapping map-null="false" map-empty-string="false" type="one-way" wildcard="false">
+        <class-a>com.alibaba.fastjson.JSONObject</class-a>
+        <class-b>cn.gtmap.realestate.common.core.dto.accept.BdcSfSsxxDTO</class-b>
+
+        <field map-id="sfxx">
+            <a>data.sfxxlist</a>
+            <b>bdcSfxxDTOS</b>
+        </field>
+
+        <field map-id="jsxx">
+            <a>data.jsxxlist</a>
+            <b>bdcSwxxDTOS</b>
+        </field>
+
+
+    </mapping>
+    <mapping map-id="sfxx" type="one-way" wildcard="true" map-empty-string="true" map-null="true">
+        <class-a>com.alibaba.fastjson.JSONObject</class-a>
+        <class-b>cn.gtmap.realestate.common.core.dto.accept.BdcSfxxDTO</class-b>
+        <field custom-converter="cn.gtmap.realestate.exchange.core.dozer.converters.DsfZdToBdcDmCustomConvert"
+               custom-converter-param="BDC_ZD_SFZT,wwsq">
+            <a>jfzt</a>
+            <b>bdcSlSfxxDO.sfzt</b>
+        </field>
+
+        <field>
+            <a>sfxxid</a>
+            <b>bdcSlSfxxDO.sfxxid</b>
+        </field>
+    </mapping>
+
+    <mapping map-id="jsxx" type="one-way" wildcard="true" map-empty-string="true" map-null="true">
+        <class-a>com.alibaba.fastjson.JSONObject</class-a>
+        <class-b>cn.gtmap.realestate.common.core.dto.accept.BdcSwxxDTO</class-b>
+        <field custom-converter="cn.gtmap.realestate.exchange.core.dozer.converters.DsfZdToBdcDmCustomConvert"
+               custom-converter-param="DSF_ZD_WSZT,wwsq">
+            <a>wszt</a>
+            <b>bdcSlHsxxDO.wszt</b>
+        </field>
+
+        <field>
+            <a>jsxxid</a>
+            <b>bdcSlHsxxDO.hsxxid</b>
+        </field>
+    </mapping>
+
+</mappings>

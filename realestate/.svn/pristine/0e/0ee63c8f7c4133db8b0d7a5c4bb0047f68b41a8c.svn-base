@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+<!-- 自助交互机接口 -->
+
+    <!-- 南通 根据合同编号查询ywid -->
+    <ex:bean id="nt_cxywid">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="ntywcxService"/>
+            <ex:property name="methodName" value="queryGzlslidByHtbh"/>
+            <ex:property name="params" value="htbh"/>
+        </ex:service-info>
+        <ex:log dsfFlag="ZZJHJ" logEventName="自助交互机查询ywid接口" requester="ZZJHJ" responser="BDC"/>
+    </ex:bean>
+
+    <!-- 姓名+证件号查询产权信息 （有用途过滤） -->
+    <ex:bean id="zzjhj_cxcqxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.inquiry.BdcZfxxCxFeignService"/>
+            <ex:property name="methodName" value="listBdcNtZfxxDTO"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/nantong/cxcqxx/request/param.xml" />
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/nantong/cxcqxx/response/data.xml" saveNull="java.util.ArrayList" />
+        </ex:response>
+        <ex:log dsfFlag="ZZJHJ" logEventName="自助交互机查询产权信息接口" requester="ZZJHJ" responser="BDC" />
+    </ex:bean>
+
+    <!-- 姓名+证件号查询产权信息 （无过滤） -->
+    <ex:bean id="zzjhj_cxcqxx_wgl">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.inquiry.BdcZfxxCxFeignService"/>
+            <ex:property name="methodName" value="listBdcNtZfxxDTO"/>
+            <ex:property name="logEventName" value="自助交互机无过滤查询产权信息接口"/>
+            <ex:property name="requester" value="NTBT"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="NTBT"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/nantong/cxcqxxwgl/request/param.xml" />
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/nantong/cxcqxx/response/data.xml" saveNull="java.util.ArrayList" />
+        </ex:response>
+        <ex:log dsfFlag="ZZJHJ" logEventName="自助交互机无过滤查询产权信息接口" requester="ZZJHJ" responser="BDC" />
+    </ex:bean>
+    <!-- 姓名+证件号查询产权信息 （姓名可为空） -->
+    <ex:bean id="zzjhj_cxcqxx_wxm">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.inquiry.BdcZfxxCxFeignService"/>
+            <ex:property name="methodName" value="listBdcNtZfxxDTO"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/nantong/cxcqxxwxm/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/nantong/cxcqxx/response/data.xml" saveNull="java.util.ArrayList"/>
+        </ex:response>
+        <ex:log dsfFlag="ZZJHJ" logEventName="自助交互机姓名可为空查询产权信息接口" requester="ZZJHJ" responser="BDC"/>
+    </ex:bean>
+
+    <!-- 产权证号查询 房屋与权利信息 -->
+    <ex:bean id="zzjhj_fwqlxx" >
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="standardGrdacx" />
+            <ex:property name="methodName" value="grdacxNt" />
+            <ex:property name="params" value="param" />
+            <ex:property name="responseJson" value="true" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="param" dozerXml="conf/dozer/nantong/fwqlxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/nantong/fwqlxx/response/data.xml" saveNull="java.util.ArrayList"/>
+        </ex:response>
+        <ex:log dsfFlag="ZZJHJ" logEventName="自助交互机根据产权证号查询权利信息接口" requester="ZZJHJ" responser="BDC" />
+    </ex:bean>
+
+    <!-- 自助交互机流程创建 -->
+    <ex:bean id="nt_lccj">
+        <ex:request>
+            <!-- 是否自动转发 -->
+            <ex:element dozerXml="conf/dozer/nantong/ntlccj/request/autoturn.xml" listToObject="true"/>
+            <ex:element name="cjparam" sourceService="jbxx_param"/>
+            <ex:element name="fjclList" dozerXml="conf/dozer/nantong/ntlccj/request/fjcl.xml"/>
+            <ex:element name="cjparam" sourceService="cjService_dealxmxx" />
+        </ex:request>
+        <ex:response resultKey="result" extendRequestBody="true">
+            <ex:element name="cjResponse" sourceService="cjService"/>
+            <ex:element name="result" sourceService="cjService_response"/>
+        </ex:response>
+        <ex:log dsfFlag="ZZJHJ" logEventName="南通自动创建接口" requester="ZZJHJ" responser="BDC" />
+    </ex:bean>
+    <!-- 创建接口 共用受理子系统接口 -->
+    <ex:bean id="cjService">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.accept.BdcSlFeignService"/>
+            <ex:property name="methodName" value="wwsqCjBdcXm"/>
+            <ex:property name="params" value="cjparam"/>
+        </ex:service-info>
+    </ex:bean>
+    <ex:bean id="cjService_response">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="gxWwSqxxServiceImpl"/>
+            <ex:property name="methodName" value="revertNtCjResponse"/>
+            <ex:property name="params" value="cjResponse,fjclList,zdzf"/>
+        </ex:service-info>
+    </ex:bean>
+    <ex:bean id="jbxx_param">
+        <ex:request dozerXml="conf/dozer/nantong/ntlccj/request/bdcSlxxDTO.xml">
+            <!-- 判断是否需要规则验证  gzyz -->
+            <ex:element dozerXml="conf/dozer/nantong/ntlccj/request/cjyz.xml"
+                        listToObject="true"/>
+            <ex:element name="bdcSlJbxx" dozerXml="conf/dozer/nantong/ntlccj/request/bdcSlJbxx.xml"
+                        listToObject="true"/>
+        </ex:request>
+    </ex:bean>
+    <!-- 组合流程 处理抵押信息 -->
+    <ex:bean id="cjService_dealxmxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="ntLccjService"/>
+            <ex:property name="methodName" value="dealXmxx"/>
+            <ex:property name="params" value="sqxx,cjparam,sply"/>
+        </ex:service-info>
+        <ex:request dozerXml="conf/dozer/nantong/ntlccj/request/dealXmxx.xml">
+            <ex:element name="sply" dozerXml="conf/dozer/nantong/ntlccj/request/hlwsply.xml"/>
+        </ex:request>
+    </ex:bean>
+    <!-- 创建组合流程时  需要 获取抵押项目 -->
+    <ex:bean id="cjServiceGetDyxm">
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/nantong/ntlccj/request/dyXmDTO.xml" />
+        </ex:request>
+    </ex:bean>
+    <!-- 创建组合流程时  需要 获取产权项目 -->
+    <ex:bean id="cjServiceGetCqxm">
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/nantong/ntlccj/request/bdcSlXm.xml" />
+        </ex:request>
+    </ex:bean>
+
+    <!-- 单独更新附件信息 -->
+    <ex:bean id="nt_hlwfjxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="gxWwSqxxServiceImpl"/>
+            <ex:property name="methodName" value="cshfjxx"/>
+            <ex:property name="params" value="slbh,fjclList"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerRelXml="param.xml"/>
+            <ex:element name="fjclList" dozerXml="conf/dozer/nantong/ntlccj/request/fjcl.xml"/>
+        </ex:request>
+        <ex:log dsfFlag="APP" logEventName="单独更新附件信息" requester="APP" responser="BDC"/>
+    </ex:bean>
+
+
+</beans>

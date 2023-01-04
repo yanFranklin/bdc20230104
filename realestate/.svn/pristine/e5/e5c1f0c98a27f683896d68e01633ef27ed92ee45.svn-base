@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.config.core.mapper.BdcXtZsyzhMapper">
+
+    <!--分页查询证书印制号模板配置-->
+    <select id="listBdcXtZsyzhByPageOrder" parameterType="cn.gtmap.realestate.common.core.qo.config.BdcYzhQO"
+            resultType="cn.gtmap.realestate.common.core.domain.certificate.BdcYzhDO">
+        SELECT DISTINCT
+            T.YZHID,
+            T.NF,
+            T.QXDM,
+            T.ZSLX,
+            T.QZYSXLH,
+            T.SYQK,
+            T.CJR,
+            T.CJRID,
+            T.CJSJ,
+            T.ZSID,
+            T.BZ,
+            T.SCCS,
+            T.LQR,
+            T.LQRID,
+            T.LQBM,
+            T.LQBMID,
+            T.TQSJ,
+            T.LQSJ,
+            T.SYSJ
+
+        FROM
+            BDC_YZH T left join BDC_YZHSYMX B on T.YZHID=B.YZHID
+        <where>
+            <if test="nf != null and nf != ''">
+                AND
+                <if test="nfmhlx == null || nfmhlx == 0">
+                    T.NF = #{nf,jdbcType=VARCHAR}
+                </if>
+                <if test="nfmhlx == 1">
+                    T.NF like #{nf,jdbcType=VARCHAR} || '%'
+                </if>
+                <if test="nfmhlx == 2">
+                    T.NF like '%' || #{nf,jdbcType=VARCHAR}
+                </if>
+                <if test="nfmhlx == 3">
+                    T.NF like '%' || #{nf,jdbcType=VARCHAR} || '%'
+                </if>
+            </if>
+            <if test="qxdm != null and qxdm != ''">
+                AND T.QXDM = #{qxdm}
+            </if>
+            <if test="zslx != null and zslx != ''">
+                AND T.ZSLX = #{zslx}
+            </if>
+            <if test="qzysxlh != null and qzysxlh != ''">
+                AND T.QZYSXLH like '%'|| #{qzysxlh} || '%'
+            </if>
+            <if test="0 == syqk || syqk != null and syqk != ''">
+                AND T.SYQK = #{syqk}
+            </if>
+            <if test="lqbm != null and lqbm != ''">
+                AND T.LQBM like '%'|| #{lqbm} || '%'
+            </if>
+            <if test="lqbm2 != null and lqbm2 != ''">
+                AND T.LQBM = #{lqbm2}
+            </if>
+            <if test="lqr != null and lqr != ''">
+                AND T.LQR like '%'|| #{lqr} || '%'
+            </if>
+            <if test="lqr2 != null and lqr2 != ''">
+                AND T.LQR = #{lqr2}
+            </if>
+            <if test="lqrlist != null and lqrlist != ''">
+                AND T.LQR in
+                <foreach collection="lqrlist.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="lqbmid != null and lqbmid != ''">
+                AND T.LQBMID = #{lqbmid}
+            </if>
+            <if test="lqrid != null and lqrid != ''">
+                AND T.LQRID like '%'|| #{lqrid} || '%'
+            </if>
+            <if test="yzhq2 != null and yzhq2 != ''">
+                AND T.QZYSXLH  <![CDATA[ >= ]]>  #{yzhq2,jdbcType=VARCHAR}
+            </if>
+            <if test="yzhz2 != null and yzhz2 != ''">
+                AND T.QZYSXLH  <![CDATA[ <= ]]>  #{yzhz2,jdbcType=VARCHAR}
+            </if>
+            <if test="yzhq != null and yzhq != ''">
+                AND to_number(case when T.QZYSXLH like 'AV国%' then substr(T.QZYSXLH, 4, 11) else substr(T.QZYSXLH, 3, 11) end) <![CDATA[ >= ]]>  to_number(#{yzhq,jdbcType=VARCHAR})
+            </if>
+            <if test="yzhz != null and yzhz != ''">
+                AND to_number(case when T.QZYSXLH like 'AV国%' then substr(T.QZYSXLH, 4, 11) else substr(T.QZYSXLH, 3, 11) end) <![CDATA[ <= ]]>  to_number(#{yzhz,jdbcType=VARCHAR})
+            </if>
+            <if test="null != startTime and ''!=startTime">
+                and to_char(B.SYSJ,'yyyy-mm-dd hh24:mi:ss') <![CDATA[>=]]> #{startTime}
+            </if>
+            <if test="null != endTime and ''!=endTime">
+                and to_char(B.SYSJ,'yyyy-mm-dd hh24:mi:ss') <![CDATA[<=]]> #{endTime}
+            </if>
+        </where>
+
+        ORDER BY
+            <!--避免$注入，直接判断值-->
+            <if test="field != null and field != '' and order != null and order != ''">
+                <if test="field == 'nf'.toString()">
+                   T.NF
+                </if>
+                <if test="field == 'qxdm'.toString()">
+                   T.QXDM
+                </if>
+                <if test="field == 'zslx'.toString()">
+                   T.ZSLX
+                </if>
+                <if test="field == 'qzysxlh'.toString()">
+                   T.QZYSXLH
+                </if>
+                <if test="field == 'lqr'.toString()">
+                   T.LQR
+                </if>
+                <if test="field == 'lqbm'.toString()">
+                   T.LQBM
+                </if>
+
+                <if test="order == 'desc'.toString()">
+                    DESC ,
+                </if>
+                <if test="order == 'asc'.toString()">
+                    ASC  ,
+                </if>
+            </if>
+
+          T.QZYSXLH DESC
+    </select>
+
+
+    <!--查询指定区间印制号数量-->
+    <select id="countYzh" parameterType="cn.gtmap.realestate.common.core.vo.config.ui.BdcYzhVO" resultType="int">
+        SELECT
+            COUNT(*) AS NUM
+        FROM
+            BDC_YZH T
+        WHERE
+        (to_number(case when T.QZYSXLH like 'AV国%' then substr(T.QZYSXLH, 4) else substr(T.QZYSXLH, 3) end) BETWEEN
+        #{qsbh} AND #{jsbh})
+        <if test="zslx != null and zslx != ''">
+            AND T.ZSLX = #{zslx}
+        </if>
+    </select>
+
+    <!--查询印制号对应证书关联的项目受理编号-->
+    <select id="listBdcXmSlbhByZsyzh" parameterType="String" resultType="String">
+        SELECT
+		    DISTINCT X.SLBH
+        FROM
+            BDC_XM X
+        JOIN
+            BDC_XM_ZS_GX G
+        ON
+            X.XMID = G.XMID
+        JOIN
+            BDC_ZS Z
+        ON
+            G.ZSID = Z.ZSID
+        JOIN
+            BDC_YZH Y
+        ON
+            Z.QZYSXLH = Y.QZYSXLH
+        WHERE
+            Y.YZHID = #{yzhid, jdbcType=VARCHAR}
+    </select>
+
+    <update id="clearZsyzh" parameterType="String">
+        <if test="zsid != null and zsid != ''">
+           UPDATE BDC_ZS SET QZYSXLH = NULL WHERE ZSID = #{zsid, jdbcType=VARCHAR}
+        </if>
+    </update>
+</mapper>

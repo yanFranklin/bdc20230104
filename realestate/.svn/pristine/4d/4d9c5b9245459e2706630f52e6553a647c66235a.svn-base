@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <!-- 请求外 包一层 日志处理  -->
+    <ex:bean id="sjpt_commitCxjgWithLog">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="exchangeInterfaceRestController" />
+            <ex:property name="methodName" value="sjptRequestInterface" />
+            <ex:property name="params" value="beanName,requestObject" />
+            <ex:property name="paramRequired" value="false" />
+        </ex:service-info>
+    </ex:bean>
+    <ex:bean id="sjpt_cxjg">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="省级平台查询结果上报"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SJPT"/>
+            <ex:property name="dsfFlag" value="SJPT"/>
+            <ex:property name="url" value="${sjpt.cxjg.url}" />
+            <ex:property name="soTimeout" value="${sjpt.cxjg.soTimeout}"/>
+            <ex:property name="contentType" value="application/x-www-form-urlencoded" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" sourceService="sjpt_queryCxjg" />
+        </ex:request>
+        <ex:response extendRequestBody="true" tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+        </ex:response>
+    </ex:bean>
+    <ex:bean id="sjpt_queryCxjg">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="cxjgServiceImpl" />
+            <ex:property name="methodName" value="getCxjgListByCxsqdh" />
+            <ex:property name="params" value="cxsqdh" />
+        </ex:service-info>
+    </ex:bean>
+</beans>

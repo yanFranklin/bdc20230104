@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.certificate.core.mapper.BdcDzzzTokenMapper">
+
+    <insert id="insertBdcDzzzToken" parameterType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzTokenDo">
+        INSERT INTO bdc_dzzz_token (YYID,YYMC,YYBM,YYQX)
+        VALUES (#{yyid,jdbcType=VARCHAR},#{yymc,jdbcType=VARCHAR},#{yybm,jdbcType=VARCHAR},#{yyqx,jdbcType=VARCHAR})
+     </insert>
+
+    <select id="getBdcDzzzTokenByPage" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzTokenDo">
+        SELECT T.YYID, T.YYMC, D.BMMC AS YYBM, t.YYQX
+        FROM BDC_DZZZ_TOKEN T
+        LEFT JOIN BDC_DZZZ_ZD_BM D ON T.YYBM = D.BMDM
+        <where>
+            1=1
+            <if test="yymc != null and yymc !=''">
+                AND t.YYMC LIKE '%' || #{yymc} || '%'
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteTokenByTokenId" parameterType="String">
+        DELETE bdc_dzzz_token WHERE YYID = #{yyid}
+    </delete>
+
+    <select id="queryBdcDzzzToken" parameterType="string"
+            resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzTokenDo">
+        SELECT t.YYID, t.YYMC, t.YYBM, t.YYQX
+        FROM bdc_dzzz_token t WHERE t.YYID = #{yyid}
+    </select>
+
+    <select id="queryTokenByTokenName" parameterType="string"
+            resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzTokenDo">
+        SELECT t.YYID, t.YYMC, t.YYBM, t.YYQX
+        FROM bdc_dzzz_token t WHERE t.YYMC=#{yymc}
+    </select>
+
+    <update id="updateBdcDzzzTokenById" parameterType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzTokenDo">
+        UPDATE bdc_dzzz_token t
+        <set>
+            <if test="yymc != null and yymc !=''">
+                t.YYMC = #{yymc}
+            </if>
+            <if test="yybm != null and yybm !=''">
+                ,t.YYBM = #{yybm}
+            </if>
+            <if test="yyqx != null and yyqx !=''">
+                ,t.YYQX = #{yyqx}
+            </if>
+        </set>
+        WHERE t.YYID = #{yyid}
+    </update>
+
+    <select id="listBdcDzzzToken" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzTokenDo">
+        SELECT T.YYID, T.YYMC, T.YYBM, t.YYQX
+        FROM BDC_DZZZ_TOKEN T
+    </select>
+</mapper>

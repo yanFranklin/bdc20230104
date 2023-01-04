@@ -1,0 +1,137 @@
+info:
+  name: ${spring.application.name}
+  component: building application
+
+app:
+  storage: http://192.168.2.99:8030/storage
+  center: http://192.168.2.99:8000/eureka/
+  oauth: http://192.168.2.99:8002/account
+  portal: http://192.168.2.99:8030/realestate-portal-ui
+  security:
+    moduleAuthPath: http://account/account
+    ignores: /image/**,/css/**,/js/**,/webjars/**,/lib/**,/static/printmodel/**,/print/**
+    authorities:
+      permitAll: /test/**
+      hasUrlAuthority('read'): /auth/users,/auth/orgs
+      hasModuleAuthority('yhgl:add'): /auth/user/create
+      hasAnyAuthority('ROLE_USER'): /resource1/**,/catalog1/**,/index
+      hasAnyAuthority('ROLE_ADMIN_2'): /call
+      authenticated: true
+    resources:
+      authenticated: /resource/**,/catalog/**,/building-ui/rest/v1.0/**
+  services:
+#    accept-app: accept-app
+#    building-app: building-app
+#    etl-app: etl-app
+
+spring:
+  rabbitmq:
+    host: 192.168.0.60
+    port: 5672
+    username: guest
+    password: guest
+  redis:
+    port: 6379
+    host: 192.168.0.60
+  messages:
+    basename: conf/message/messages, conf/message/errors
+  freemarker:
+    settings:
+      datetime_format: yyyy-MM-dd
+      auto_import: common/common.ftl as com, common/globalVars.ftl as glo
+      url_escaping_charset: UTF-8
+      number_format: 0
+    cache: false
+  http:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 1000MB
+
+management:
+  security:
+    enabled: true
+  context-path:
+
+endpoints:
+  enabled: true
+  shutdown:
+    enabled: true
+
+server:
+  port: ${port:8999}
+  context-path: /building-ui
+
+# 功能前规则验证 优先级3及以上为alert级别
+gnqyz: 3
+
+#页面状态配置
+lpbzt:
+  pzMap:
+    #交易状态: 颜色
+    可售,限售: 00ff00
+    配套用房: 00ff01
+#楼盘表页面展示版本
+lpb:
+  view:
+#    version: yancheng
+    #      楼盘表页面table列宽
+    width:
+    #    查询权利人
+    #    cxqlr: 1
+    #    查询买受人
+    #    cxmsr: 1
+    #    展示悬浮
+    #    showtitle: 1
+    #    展示逻辑装信息
+    #    showljzxx: 1
+    #   逻辑幢信息默认是否展现
+    #    ljzxxdefaultshow: 0
+    # 是否展示交易状态
+    #    showjyzt: 0
+    sortmap: {wlcs: desc,dyh: asc, fjh: asc, sxh: asc}
+    #自定义每一层的有几个户室
+    chscount: 8
+    #楼盘表跳转页面地址--盐城楼盘表页面换行
+    ftlPath: newlpb/lpbLineFeed
+    #    颜色配置页面地址
+    colorConfigPath: newlpb/lpbColorConfig
+    #    style: 1
+    # 导出楼盘表自定义字段和取值
+  default0Column: scjzmj,ycjzmj,sctnjzmj,yctnjzmj,scftjzmj,ycftjzmj
+  exportColum: 层次:dycs,房号:fjh, 房间用途:ghyt, 房间结构:fwjg,
+    建筑面积:scjzmj/ycjzmj, 套内面积:sctnjzmj, 共摊面积:scftjzmj,
+    层高:cg,批准预售价格:, 阳台:,不动产单元号:bdcdyh
+  # 颜色配置页面的状态配置
+
+lpb.color:
+  colorConfigStatus:
+    - title: 登记状态
+      background: true
+      status: {已登记: bdc-dj, 未登记: bdc-wdj, 已注销: bdc-zx, 已预告: bdc-yg}
+      order: 已注销,已预告,已登记,未登记
+    - title: 权利状态
+      status: {在建工程抵押: bdc-zjgcdy,预抵押: bdc-ydya, 抵押: bdc-dya,预查封: bdc-ycf, 查封: bdc-cf, 锁定: bdc-sd, 异议: bdc-yy, 地役: bdc-dyi,居住权: bdc-jzq}
+    - title: 备案状态
+      background: true
+      status: {备案: bdc-ba}
+    - title: 发证状态
+      status:  {生成证书: bdc-zs ,生成证明书: bdc-zm, 只登簿不发证: bdc-bfz}
+    - title: 交易状态
+      status: {可售: bdc-ks, 已售: bdc-ys, 草签: bdc-cq, 物管用房: bdc-wg, 安置房: bdc-az, 保留房: bdc-bl, 非普通住宅: bdc-fpt}
+  htmlState:
+    bdcres: 登记状态,权利状态,交易状态
+    htba: 登记状态,权利状态,备案状态
+    analysis: 登记状态,权利状态,交易状态
+    accept: 登记状态,权利状态,发证状态
+    getbdcdyh: 登记状态,权利状态,发证状态
+    hslist: 登记状态,权利状态,发证状态
+#      展示添加按钮的流程
+showAddButton:
+  gzldyid:
+#打印路径
+print.path:
+#三维户室图url地址
+swhst.url: http://10.9.211.101:6060/bdcdyh/index.html#/home?bdcdyh=
+#需要展现三位户室图图标的页面
+swhst.html.code: bdcres,analysis,accept,getbdcdyh
+

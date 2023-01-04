@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <!-- 解锁不动产证书 -->
+    <ex:bean id="bdczssdjs_standard">
+    <ex:service-info request-type="beanReq">
+        <ex:property name="logEventName" value="解锁不动产证书"/>
+        <ex:property name="requester" value="COURT"/>
+        <ex:property name="responser" value="BDC"/>
+        <ex:property name="dsfFlag" value="COURT"/>
+        <ex:property name="beanName" value="bdcSdServiceImpl"/>
+        <ex:property name="methodName" value="standardjsBdczs"/>
+        <ex:property name="params" value="param"/>
+    </ex:service-info>
+    <ex:request>
+        <ex:element dozerXml="conf/dozer/standard/sdXml/bdczs/request/data.xml" name="param" notEmpty="true"/>
+    </ex:request>
+    </ex:bean>
+    <!-- 锁定不动产证书 -->
+    <ex:bean id="bdczssd_standard">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="logEventName" value="锁定不动产证书"/>
+            <ex:property name="requester" value="COURT"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="COURT"/>
+            <ex:property name="beanName" value="bdcSdServiceImpl"/>
+            <ex:property name="methodName" value="standardSdZs"/>
+            <ex:property name="params" value="param"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/standard/sdXml/bdczs/request/sdParam.xml" name="param" notEmpty="true"/>
+        </ex:request>
+    </ex:bean>
+</beans>

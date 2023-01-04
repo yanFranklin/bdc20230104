@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <!-- 缴费平台 -->
+    <!-- 蚌埠 根据sfxxid生成银行收费二维码的组装url -->
+    <ex:bean id="jfpt_tsdjfxx">
+        <ex:request>
+            <ex:element sourceService="jfpt_tsdjfxx_request"/>
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="jfpt_tsdjfxx_request"><!-- 构造推送信息的 请求参数 -->
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="jfptServiceImpl" />
+            <ex:property name="methodName" value="createQRCodeUrl" />
+            <ex:property name="params" value="sfxxid" />
+        </ex:service-info>
+    </ex:bean>
+</beans>

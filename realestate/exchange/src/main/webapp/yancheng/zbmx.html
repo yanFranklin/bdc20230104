@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>指标明细</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../static/lib/bdcui/css/popup.css">
+    <link rel="stylesheet" href="../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../static/lib/registerui/css/percentage-layout.css"/>
+    <link rel="stylesheet" href="../static/css/yzwts.css"/>
+</head>
+<body>
+<div id="bdc-popup-large" class="bdc-tips-right">
+
+</div>
+
+<script type="text/html" id="zbmxTpl">
+    <form class="layui-form" action="">
+        <div class="layui-form-item bdc-right-tips-box" id="sjcsxx">
+            {{# if(d.sjcsxx){ }}
+            <p class="p-error">
+                <img src="../static/lib/bdcui/images/error.png" alt="">指标1:超时24小时收件
+                <a href="javascrit:;" class="layui-btn layui-btn-xs bdc-secondary-btn xgmx">修改受理时间</a>
+            </p>
+            <div class="hide-mx bdc-hide">
+                <div class="layui-inline">
+                    <label class="layui-form-label">受理时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input test-item" name="slsj" value="{{ d.sjcsxx.slsj || '' }}">
+                    </div>
+                </div>
+            </div>
+            {{# }else{ }}
+            <p class="p-success">
+                <img src="../static/lib/bdcui/images/success.png" alt="">指标1:超时24小时收件
+            </p>
+            {{# }}}
+        </div>
+        <div class="layui-form-item bdc-right-tips-box" id="xmcqbj">
+            {{# if(d.xmcqbj){ }}
+            <p class="p-error">
+                <img src="../static/lib/bdcui/images/error.png" alt="">指标2:项目办结超期
+                <a href="javascrit:;" class="layui-btn layui-btn-xs bdc-secondary-btn xgmx">修改办结时间</a>
+            </p>
+            <div class="hide-mx bdc-hide">
+                <div class="layui-inline">
+                    <label class="layui-form-label">受理时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input test-item" name="slsj" value="{{ d.xmcqbj.slsj || '' }}" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">承诺时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input test-item" name="clsj" value="{{ d.xmcqbj.clsj || '' }}" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">办结时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input test-item" name="bjsj" value="{{ d.xmcqbj.bjsj || '' }}">
+                    </div>
+                </div>
+            </div>
+            {{# }else{ }}
+            <p class="p-success">
+                <img src="../static/lib/bdcui/images/success.png" alt="">指标2:项目办结超期
+            </p>
+            {{# }}}
+        </div>
+
+        <div class="layui-form-item bdc-right-tips-box" id="xmcqwbj">
+            {{# if(d.xmcqwbj){ }}
+            <p class="p-error">
+                <img src="../static/lib/bdcui/images/error.png" alt="">指标3:项目超期未办结
+                <a href="javascrit:;" class="layui-btn layui-btn-xs bdc-secondary-btn xgmx">生成结果数据</a>
+            </p>
+            <div class="hide-mx bdc-hide">
+                <div class="layui-inline bdc-complete-line">
+                    <div class="title-sign">
+                        <p>过程数据</p>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width bdc-label-newline">上个节点<br>结束时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input test-item" name="gckssj" value="{{ d.xmcqwbj.gckssj || '' }}" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">办结时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input test-item" name="gcjssj" value="{{ d.xmcqwbj.gcjssj || '' }}">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">办结人</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" name="gcbjr" value="{{ d.xmcqwbj.gcbjr || '' }}">
+                    </div>
+                </div>
+                <div class="layui-inline bdc-complete-line">
+                    <div class="title-sign">
+                        <p>结果数据</p>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">承诺时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input test-item" name="jgclsj" value="{{ d.xmcqwbj.jgclsj || '' }}" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">办结时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input test-item" name="jgjssj" value="{{ d.xmcqwbj.jgjssj || '' }}">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">办结人</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" class="layui-input" name="jgbjr" value="{{ d.xmcqwbj.jgbjr || ''}}">
+                    </div>
+                </div>
+            </div>
+            {{# }else{ }}
+            <p class="p-success">
+                <img src="../static/lib/bdcui/images/success.png" alt="">指标3:项目超期未办结
+            </p>
+            {{# }}}
+        </div>
+        <div class="layui-form-item bdc-right-tips-box" id="tjwtsjg">
+            {{# if(d.tjwtsjg){ }}
+            <p class="p-error">
+                <img src="../static/lib/bdcui/images/error.png" alt="">指标4:退件未推送退件结果
+                <a href="javascrit:;" class="layui-btn layui-btn-xs bdc-secondary-btn xgmx">生成删除数据</a>
+            </p>
+            <div class="hide-mx bdc-hide">
+                <div class="layui-inline">
+                    <label class="layui-form-label">办结时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input test-item" name="bjsj" value="{{ d.tjwtsjg.bjsj || ''}}">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">办结人</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" name="bjr" value="{{ d.tjwtsjg.bjr || ''}}">
+                    </div>
+                </div>
+            </div>
+            {{# }else{ }}
+            <p class="p-success">
+                <img src="../static/lib/bdcui/images/success.png" alt="">指标4:退件未推送退件结果
+            </p>
+            {{# }}}
+        </div>
+        <div class="layui-form-item bdc-right-tips-box" id="qsgcxx">
+            {{# if(d.qsgcxx){ }}
+            <p class="p-error">
+                <img src="../static/lib/bdcui/images/error.png" alt="">指标5:缺少过程信息收件
+                <a href="javascrit:;" class="layui-btn layui-btn-xs bdc-secondary-btn xgmx">生成过程数据</a>
+            </p>
+            <div class="hide-mx bdc-hide">
+                <div class="layui-inline bdc-complete-line">
+                    <div class="title-sign">
+                        <p>生成受理信息</p>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">受理部门</label>
+                    <div class="layui-input-inline">
+                        <input type="text"  class="layui-input" name="slbm" value="{{ d.qsgcxx.slbm || ''}}" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">受理人</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" name="slr" value="{{ d.qsgcxx.slr || ''}}" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">受理时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input test-item" name="slsj" value="{{ d.qsgcxx.slsj || ''}}">
+                    </div>
+                </div>
+                <div class="layui-inline bdc-complete-line">
+                    <div class="title-sign">
+                        <p>生成过程数据</p>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">办理人</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" name="gcblr" value="{{ d.qsgcxx.gcblr || ''}}" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">环节开始时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input test-item" name="gckssj" value="{{ d.qsgcxx.gckssj || ''}}">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">环节结束时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input test-item" name="gcjssj" value="{{ d.qsgcxx.gcjssj || ''}}">
+                    </div>
+                </div>
+            </div>
+            {{# }else{ }}
+            <p class="p-success">
+                <img src="../static/lib/bdcui/images/success.png" alt="">指标5:缺少过程信息收件
+            </p>
+            {{# }}}
+        </div>
+        <div class="layui-form-item bdc-right-tips-box" id="zjhmbgh">
+            {{# if(d.zjhmbgh){ }}
+            <p class="p-error">
+                <img src="../static/lib/bdcui/images/error.png" alt="">指标6:证件号码不规范办件
+                <a href="javascrit:;" class="layui-btn layui-btn-xs bdc-secondary-btn xgmx">修改证件信息</a>
+            </p>
+            <div class="hide-mx bdc-hide">
+                <div class="layui-inline">
+                    <label class="layui-form-label">申请人名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" class="layui-input" name="sqrmc" value="{{ d.zjhmbgh.sqrmc || ''}}" disabled="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width bdc-label-newline">申请人<br>证件类型</label>
+
+                    <div class="layui-input-inline">
+                        <select name="zjzl" lay-search="" lay-filter="zjzl" class="qlr" id="pllc-zjzl" >
+                            <option value="">请选择</option>
+                            {{# layui.each(d.zjhmbgh.yzwzjzlList, function(index, item){ }}
+                            <option value="{{item.DM || ''}}" {{# if(item.DM==d.zjhmbgh.zjzl ){ }} selected="selected"
+                                    {{#
+                                    } }}>{{item.MC || ''}}
+                            </option>
+                            {{# }); }}
+                        </select>
+<!--                        <input type="text" class="layui-input" name="zjzl" value="{{ d.zjhmbgh.zjzl || ''}}">-->
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width bdc-label-newline">申请人<br>证件号码</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" name="zjh" value="{{ d.zjhmbgh.zjh || ''}}">
+                    </div>
+                </div>
+            </div>
+            {{# }else{ }}
+            <p class="p-success">
+                <img src="../static/lib/bdcui/images/success.png" alt="">指标6:证件号码不规范办件
+            </p>
+            {{# }}}
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline bdc-frame-button-box">
+                <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn bdc-hide" lay-submit="" lay-filter="saveData">保存</a>
+<!--                <a href="javascript:;" class="layui-btn layui-btn-normal bdc-secondary-btn bdc-frame-close">取消</a>-->
+            </div>
+        </div>
+    </form>
+</script>
+<script src="../static/lib/jquery/jquery.min.js"></script>
+<script src="../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<!--<script src="../static/lib/bdcui/js/common.js"></script>-->
+<script src="../static/js/common.js"></script>
+<script src="../static/js/mask.js"></script>
+<script src="../static/js/yancheng/zbmx.js"></script>
+</body>
+</html>

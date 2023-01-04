@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.init.core.mapper.BdcLzrMapper">
+    <select id="getAllZsXmLzrByZsid" resultType="cn.gtmap.realestate.common.core.domain.BdcLzrDO"
+            parameterType="String">
+        <if test="_parameter !=null and _parameter !=''">
+            select distinct t.lzrzjh lzrzjh,t.lzrmc,t.lzrzjzl,t.lzrdh
+            from bdc_lzr t
+            left join bdc_xm_zs_gx t1 on t.xmid = t1.xmid
+            where t1.zsid = #{_parameter}
+        </if>
+    </select>
+    <!-- 批量更新不动产权利人 -->
+    <update id="updateBatchBdcLzr" parameterType="map">
+        <if test="statement != null and ((gzlslid != null and gzlslid !=''))">
+            ${statement}
+            <where>
+                <if test="gzlslid != null and gzlslid !=''">
+                    AND xmid IN (
+                    SELECT x.xmid
+                    FROM bdc_xm x
+                    WHERE x.gzlslid = #{gzlslid}
+                    <if test="djxl != null and djxl !=''">
+                        AND x.djxl = #{djxl}
+                    </if>
+                    )
+                </if>
+                <if test="lzrmc != null and lzrmc !=''">
+                    AND lzrmc=#{lzrmc}
+                </if>
+                <if test="zjh != null and zjh !=''">
+                    AND lzrzjh=#{lzrzjh}
+                </if>
+            </where>
+        </if>
+    </update>
+
+    <!-- 删除领证人 -->
+    <delete id="deleteLzr" parameterType="map">
+        DELETE FROM bdc_lzr a WHERE a.xmid IN
+        (SELECT b.xmid FROM bdc_xm b
+        WHERE b.gzlslid = #{gzlslid}
+        <if test="djxl != null and djxl !=''">
+            AND b.djxl=#{djxl}
+        </if>
+        )
+        <if test="lzrmc != null and lzrmc !=''">
+            AND a.lzrmc=#{lzrmc}
+        </if>
+        <if test="lzrzjh != null and lzrzjh !=''">
+            AND a.lzrzjh=#{lzrzjh}
+        </if>
+        <if test="qlridList != null">
+            AND a.qlrid IN
+            <foreach collection="qlridList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </delete>
+
+    <!-- 删除权利人ID非空的领证人 -->
+    <delete id="deleteQlrLzr" parameterType="map">
+        <if test="xmid != null and xmid !=''">
+            DELETE FROM bdc_lzr a WHERE a.qlrid IS NOT NULL
+            <if test="xmid != null and xmid !=''">
+                AND a.xmid=#{xmid}
+            </if>
+        </if>
+    </delete>
+
+
+
+
+    <select id="getLzfsByGzlslid" resultType="integer"
+            parameterType="String">
+        SELECT LZFS FROM BDC_XMFB
+        WHERE GZLSLID=#{gzlslid}  AND ROWNUM = 1
+    </select>
+
+
+    <select id="getAllLzfsByGzlslid" resultType="cn.gtmap.realestate.common.core.dto.register.BdcLzxxDTO"
+            parameterType="String">
+        SELECT F.LZFS,Z.BDCQZH FROM BDC_XMFB F
+        LEFT JOIN BDC_XM_ZS_GX GX ON F.XMID = GX.XMID
+        LEFT JOIN BDC_ZS Z ON Z.ZSID = GX.ZSID
+        WHERE F.GZLSLID=#{gzlslid}
+    </select>
+
+    <select id="getLzfsByZsid" resultType="cn.gtmap.realestate.common.core.dto.register.BdcLzxxDTO"
+            parameterType="String">
+        SELECT F.LZFS,Z.BDCQZH FROM BDC_XMFB F
+        LEFT JOIN BDC_XM_ZS_GX GX ON F.XMID = GX.XMID
+        LEFT JOIN BDC_ZS Z ON Z.ZSID = GX.ZSID
+        WHERE Z.ZSID=#{zsid}  AND ROWNUM = 1
+    </select>
+
+    <select id="getBdcLzrDOByXm" parameterType="java.util.List" resultType="cn.gtmap.realestate.common.core.domain.BdcLzrDO">
+        SELECT * FROM BDC_LZR WHERE XMID IN
+        <foreach collection="bdcXmDOList" item="item" open="(" close=")" separator=",">
+            #{item.xmid}
+        </foreach>
+    </select>
+
+    <select id="getBdcLzrDOByGzlslid" resultType="cn.gtmap.realestate.common.core.domain.BdcLzrDO">
+        SELECT BDC_LZR.* FROM BDC_LZR
+        INNER JOIN BDC_XM on BDC_LZR.xmid = BDC_XM.xmid
+        WHERE BDC_XM.gzlslid =  #{gzlslid}
+    </select>
+</mapper>

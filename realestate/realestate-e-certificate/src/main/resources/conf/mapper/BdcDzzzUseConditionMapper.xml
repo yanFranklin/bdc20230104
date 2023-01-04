@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.certificate.core.mapper.BdcDzzzUseConditionMapper">
+    <insert id="insertDzzzUseCondition" parameterType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzUseConditionDo">
+        INSERT INTO BDC_DZZZ_USE_CONDITION (id,zzbs,bdcqzh,yymc,yybm,cjsj,bdcdyh)
+        VALUES (#{id,jdbcType=VARCHAR},#{zzbs,jdbcType=VARCHAR},#{bdcqzh,jdbcType=VARCHAR},#{yymc,jdbcType=VARCHAR},#{yybm,jdbcType=VARCHAR}
+        ,#{cjsj,jdbcType=TIMESTAMP},#{bdcdyh,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="getUseConditionByZzbs" parameterType="String"
+            resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzUseConditionDo">
+        SELECT c.id,c.zzbs,c.bdcqzh,c.yymc,c.yybm,c.cjsj,c.bdcdyh FROM bdc_dzzz_use_condition c WHERE c.zzbs = #{zzbs}
+         ORDER BY c.cjsj DESC
+    </select>
+
+    <select id="getUseConditionByBdcqzh" parameterType="String"
+            resultType="java.util.Map">
+        SELECT c.zzbs,c.bdcqzh,b.bmmc mc,c.cjsj FROM bdc_dzzz_use_condition c
+        LEFT JOIN bdc_dzzz_zd_bm b ON c.yybm=b.bmdm WHERE c.bdcqzh = #{bdcqzh}
+    </select>
+
+    <select id="countUseConditionYybm" parameterType="java.util.Map"
+                     resultType="java.util.Map">
+        SELECT c.bdcqzh,b.bmmc mc,COUNT(*) use_count FROM bdc_dzzz_use_condition c
+        LEFT JOIN bdc_dzzz_zd_bm b ON c.yybm=b.bmdm
+        <where>
+            <if test="bdcqzh != null and bdcqzh !=''">
+                AND c.bdcqzh = #{bdcqzh}
+            </if>
+        </where>
+        GROUP BY c.bdcqzh,b.bmmc
+    </select>
+
+    <select id="getUseConditionById" parameterType="String"
+            resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzUseConditionDo">
+        SELECT c.id,c.zzbs,c.bdcqzh,c.yymc,c.yybm,c.cjsj,c.bdcdyh FROM bdc_dzzz_use_condition c WHERE c.id = #{id}
+    </select>
+</mapper>

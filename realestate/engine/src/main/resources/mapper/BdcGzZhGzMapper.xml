@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.engine.core.mapper.BdcGzZhGzMapper">
+    <select id="listBdcGzZhGzByPage" parameterType="java.util.Map" resultType="cn.gtmap.realestate.common.core.domain.engine.BdcGzZhgzDO">
+        SELECT t.zhid,t.zhmc,t.zhsm,t.pzrq,t.zhbs FROM bdc_gz_zhgz t
+        WHERE 1=1
+        <if test="zhmc != null and zhmc !=''">
+            AND instr(t.zhmc,#{zhmc})>0
+        </if>
+        <if test="zhbs != null and zhbs !=''">
+            AND instr(t.zhbs,#{zhbs})>0
+        </if>
+        <if test="zhsm != null and zhsm !=''">
+            AND instr(t.zhsm,#{zhsm})>0
+        </if>
+        <if test="lcmc != null and lcmc !=''">
+            AND t.zhbs like #{lcmc} || '%'
+        </if>
+        <if test="glgx != null and glgx != '' and glgx == '1'.toString() and gzid != null and gzid != ''">
+            AND t.zhid in (select zhid from bdc_gz_gx where gzid = #{gzid})
+        </if>
+        <if test="glgx != null and glgx != '' and glgx == '2'.toString() and gzid != null and gzid != ''">
+            AND t.zhid  not in (select zhid from bdc_gz_gx where gzid = #{gzid})
+        </if>
+        order by t.pzrq desc
+    </select>
+
+    <select id="countZhbs" parameterType="cn.gtmap.realestate.common.core.domain.engine.BdcGzZhgzDO" resultType="int">
+        SELECT
+            COUNT(*) AS NUM
+        FROM
+            BDC_GZ_ZHGZ T
+        WHERE
+        t.zhbs = #{zhbs}
+        <if test="null != zhid and zhid !=''">
+            AND t.zhid != #{zhid}
+        </if>
+    </select>
+
+    <!--查询组合规则标识信息-->
+    <select id="listBdcGzZhgzBs" parameterType="cn.gtmap.realestate.common.core.qo.engine.BdcGzZhGzQO" resultType="String">
+        SELECT
+            ZHBS
+        FROM
+            BDC_GZ_ZHGZ
+        <where>
+            <if test="zhmc != null and zhmc != ''">
+                ZHMC LIKE '%' ||  #{zhmc} || '%'
+            </if>
+            <if test="zhbs != null and zhbs != ''">
+                AND ZHBS LIKE  '%' || #{zhbs} || '%'
+            </if>
+        </where>
+    </select>
+
+    <!--查询流程和组合规则对照关系信息-->
+    <select id="listBdcLcZhgzGxByPageOrder" parameterType="cn.gtmap.realestate.common.core.qo.engine.BdcGzLcZhgzGxQO"
+            resultType="cn.gtmap.realestate.common.core.domain.engine.BdcGzLcZhgzGxDO">
+        SELECT
+            ID,
+            LCMC,
+            LCBS,
+            ZHGZMC,
+            ZHGZBS
+        FROM
+            BDC_GZ_LC_ZHGZ_GX  T
+        <where>
+            <if test="lcbs != null and lcbs != ''">
+                T.LCBS like '%' || #{lcbs} || '%'
+            </if>
+            <if test="lcmc != null and lcmc != ''">
+                AND T.LCMC like '%' ||  #{lcmc} || '%'
+            </if>
+            <if test="zhgzbs != null and zhgzbs != ''">
+                AND T.ZHGZBS like '%' ||  #{zhgzbs} || '%'
+            </if>
+            <if test="zhgzmc != null and zhgzmc != ''">
+                AND T.ZHGZMC like '%' ||  #{zhgzmc} || '%'
+            </if>
+        </where>
+
+        ORDER BY
+            T.LCMC ASC
+    </select>
+
+    <!--查询强制验证对应的组合标识与子规则关系信息-->
+    <select id="listBdcGzQzyzGx" resultType="cn.gtmap.realestate.common.core.domain.engine.BdcGzGxDO">
+        select * from bdc_gz_gx where zhid in (select zhid from bdc_gz_zhgz where zhbs like '%_QZYZ')
+    </select>
+
+    <!-- 查询组合规则关联的子规则信息   -->
+    <select id="listZhgzZgzByPageOrder" parameterType="cn.gtmap.realestate.common.core.qo.engine.BdcGzZhGzQO" resultType="cn.gtmap.realestate.common.core.domain.engine.BdcGzZgzDO">
+        SELECT
+            Z.GZID, Z.GZMC, Z.YTSM, Z.PZR, Z.PZRQ, Z.YXJ, Z.JYDM
+        FROM
+            BDC_GZ_ZGZ Z
+        JOIN
+            BDC_GZ_GX G
+        ON
+            Z.GZID = G.GZID
+        JOIN
+            BDC_GZ_ZHGZ H
+        ON
+            G.ZHID = H.ZHID
+        <where>
+            <if test="zhid != null and zhid !=''">
+                AND H.ZHID = #{zhid,jdbcType=VARCHAR}
+            </if>
+            <if test="zhbs != null and zhbs !=''">
+                AND H.ZHBS = #{zhbs,jdbcType=VARCHAR}
+            </if>
+        </where>
+
+        order by z.pzrq desc
+    </select>
+
+    <select id="listZhGzByZhBsList" resultType="cn.gtmap.realestate.common.core.domain.engine.BdcGzZhgzDO">
+        select zhid,zhmc,zhsm,zhbs,pzrq from bdc_gz_zhgz where 1 = 1
+        <if test="zhBsList != null and zhBsList.size() > 0">
+             and zhbs in
+            <foreach collection="zhBsList" separator="," open="(" close="）" item="item">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="listZhGzNotReleatedZgz" resultType="cn.gtmap.realestate.common.core.domain.engine.BdcGzZhgzDO">
+        select zhid,zhmc,zhsm,zhbs,pzrq from bdc_gz_zhgz where zhid not in (select zhid from bdc_gz_gx)
+    </select>
+</mapper>

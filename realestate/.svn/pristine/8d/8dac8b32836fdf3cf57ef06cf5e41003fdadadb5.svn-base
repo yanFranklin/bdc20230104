@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>户籍信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+    <style type="text/css">
+        .bdc-percentage-container{
+            height: 100%;
+        }
+
+        .form-margin-area{
+            height: 100%;
+            padding: 0 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="bdc-percentage-container bdc-line-search-container">
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <form id="form" class="layui-form" action="">
+                <div class="layui-form-item pf-form-item">
+<!--                    <div class="layui-inline">-->
+<!--                        <label class="layui-form-label">权利人</label>-->
+<!--                        <div class="layui-input-inline">-->
+<!--                            <input type="text" autocomplete="off" id="cxqlr" name="cxqlr" placeholder="（模糊）请输入" class="layui-input search">-->
+<!--                            <i class="layui-icon layui-icon-close bdc-hide"></i>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                    <div class="layui-inline">
+                        <label class="layui-form-label">身份证号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" autocomplete="off" id="cxzjh" name="cxzjh" placeholder="（精确）请输入" class="layui-input search">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <input id="gzldymc" name="gzldymc" type="hidden" class="search">
+                    </div>
+
+                    <div class="layui-inline bdc-button-box">
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                        <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="form-margin-area bdc-table-box">
+        <form class="layui-form setOverflow bdc-form-table" id="hjxxForm" lay-filter="hjxxForm">
+            <div class="layui-form-item">
+                <table class="layui-table bdc-jt-table" border="1" >
+                    <colgroup>
+                        <col width="200">
+                        <col width="300">
+                        <col width="200">
+                        <col width="200">
+                        <col width="200">
+                        <col width="150">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>姓名</th>
+                        <th>身份证号</th>
+                        <th>性别</th>
+                        <th>婚姻状况</th>
+                        <th>户主或与户主关系</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="hjxxTable">
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/bengbu/bjjk/hjxx.js"></script>
+</html>
+
+<!--查询户籍信息模版-->
+<script type="text/html" id="hjxxTpl">
+    {{# if(!d || d.length == 0){ }}
+    <tr class="bdc-table-none">
+        <td colspan="6">
+            <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据</div>
+        </td>
+    </tr>
+    {{# } else { }}
+    {{# layui.each(d, function(i, qlr){ }}
+    <tr>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-input" value="{{qlr.jtcymc || ''}}" title="" disabled="off">
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-input" value="{{qlr.zjh || ''}}" title="" disabled="off">
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-input" value="{{qlr.xb || ''}}" title="" disabled="off">
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-input" value="{{qlr.hyzt || ''}}" title="" disabled="off">
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-input" value="{{qlr.ysqrgx || ''}}" title="" disabled="off">
+            </div>
+        </td>
+        <td>
+            <button type="button" value="readOnly" class="layui-btn layui-btn-xs bdc-major-btn" id="hjxx" name="hjxx" onclick="queryHyxx('{{qlr.zjh || \'\'}}');">详细</button>
+        </td>
+    </tr>
+    {{# });}}
+    {{# }}}
+    </script>

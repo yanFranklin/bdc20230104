@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!-- 南通 自助缴费机 相关接口-->
+
+    <!-- 保存收费信息接口 将相应对照给SFXX实体 给service使用的 -->
+    <ex:bean id="nt_zzjf_bcsfxx_sfxx">
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/nantong/zzjfbcsfxx/response/sfxx.xml" />
+        </ex:request>
+    </ex:bean>
+    <!-- 查询收费信息接口  对照SFXX维度的响应结果  给service使用的-->
+    <ex:bean id="nt_zzjf_cxsfxx_sfxx">
+        <ex:request dozerXml="conf/dozer/nantong/zzjfcxsfxx/response/sfxxCollect.xml">
+            <ex:element name="xm" dozerXml="conf/dozer/nantong/zzjfcxsfxx/response/bdcXmToSfxx.xml"/>
+            <ex:element name="fdcq" dozerXml="conf/dozer/nantong/zzjfcxsfxx/response/bdcFdcqToSfxx.xml"/>
+            <ex:element name="sfxx" dozerXml="conf/dozer/nantong/zzjfcxsfxx/response/bdcSlSfxxToSfxx.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!-- 查询收费信息接口  对照SFXM维度的响应结果  给service使用的-->
+    <ex:bean id="nt_zzjf_cxsfxx_sfxm">
+        <ex:request dozerXml="conf/dozer/nantong/zzjfcxsfxx/response/sfxmCollect.xml">
+            <ex:element name="sfxx" dozerXml="conf/dozer/nantong/zzjfcxsfxx/response/bdcSlSfxxToSfxm.xml"/>
+            <ex:element name="sfxm" dozerXml="conf/dozer/nantong/zzjfcxsfxx/response/bdcSlSfxmToSfxm.xml"/>
+        </ex:request>
+    </ex:bean>
+</beans>

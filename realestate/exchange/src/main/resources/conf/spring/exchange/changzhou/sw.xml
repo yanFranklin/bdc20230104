@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!-- 税务查询接口 -->
+    <ex:bean id="swCxxx_cz">
+        <!-- 请求结构体 -->
+        <ex:service-info request-type="restPost">
+            <ex:property name="logEventName" value="税务查询接口" />
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SW"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="url" value="${sw.cxxx.url}" />
+            <ex:property name="soTimeout" value="${sw.soTimeout}"/>
+
+        </ex:service-info>
+        <!-- 输入结构体 -->
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/changzhou/sw/cx/req/swcx_req_mode.xml"/>
+        </ex:request>
+        <!-- 输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/changzhou/sw/cx/resp/swcx_resp.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <ex:bean id="ts_hszt">
+        <!-- 请求结构体 -->
+        <ex:service-info request-type="beanReq">
+            <ex:property name="logEventName" value="税务推送核税状态接口"/>
+            <ex:property name="requester" value="SW"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="beanName" value="changzhouSwServiceImpl"/>
+            <ex:property name="methodName" value="updateHszt"/>
+
+            <ex:property name="params" value="htbh,hszt,thyy"/>
+
+        </ex:service-info>
+        <!-- <ex:request>
+             <ex:element dozerXml="conf/dozer/changzhou/sw/cx/req/sw_ts_hszt.xml" />
+         </ex:request>-->
+        <ex:log dsfFlag="SW" requester="SW"
+                responser="BDC" logEventName="税务推送核税状态接口"/>
+    </ex:bean>
+
+
+    <!-- 推送税务 存量房信息 -->
+    <ex:bean id="tsSwxxClf">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="推送税务存量房信息" />
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SW"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="url" value="${sw.clfxx.url}" />
+            <ex:property name="soTimeout" value="${sw.soTimeout}"/>
+        </ex:service-info>
+        <ex:request dozerXml="conf/dozer/changzhou/sw/tssw/clf/req/zhxx.xml">
+            <ex:element name="jbxx" dozerXml="conf/dozer/changzhou/sw/tssw/clf/req/jbxx.xml"/>
+            <ex:element name="csfxx" dozerXml="conf/dozer/changzhou/sw/tssw/clf/req/csfxx.xml"/><!--承受方：权利人-->
+            <ex:element name="zrfxx" dozerXml="conf/dozer/changzhou/sw/tssw/clf/req/zrfxx.xml"/><!--转让方：义务人-->
+        </ex:request>
+        <!-- 输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/changzhou/sw/tssw/clf/resp/data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 推送税务 商品房信息 -->
+    <ex:bean id="tsSwxxSpf">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="推送税务商品房信息" />
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SW"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="url" value="${sw.spfxx.url}" />
+            <ex:property name="soTimeout" value="${sw.soTimeout}"/>
+        </ex:service-info>
+        <ex:request dozerXml="conf/dozer/changzhou/sw/tssw/spf/req/zhxx.xml">
+            <ex:element name="jbxx" dozerXml="conf/dozer/changzhou/sw/tssw/spf/req/jbxx.xml"/>
+            <ex:element name="csfxx" dozerXml="conf/dozer/changzhou/sw/tssw/spf/req/csfxx.xml"/><!--承受方：权利人-->
+            <ex:element name="zrfxx" dozerXml="conf/dozer/changzhou/sw/tssw/spf/req/zrfxx.xml"/><!--转让方：义务人-->
+        </ex:request>
+        <!-- 输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/changzhou/sw/tssw/spf/resp/data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <ex:bean id="sw_sfhsbyhtbh">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="查询税务合同是否已进入核税" />
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SW"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="url" value="${sw.sfhs.url}" />
+            <ex:property name="soTimeout" value="${sw.soTimeout}"/>
+        </ex:service-info>
+
+    </ex:bean>
+
+</beans>

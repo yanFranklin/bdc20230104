@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.supervise.core.mapper.LfZzqnjgMapper">
+    <select id="listSqxxByPageOrder" parameterType="cn.gtmap.realestate.supervise.core.qo.BdcLfSqxxQO"
+            resultType="cn.gtmap.realestate.supervise.core.dto.BdcLfSqxxDTO">
+        SELECT
+            MAX(T.ID) AS ID,
+            MAX(T.SQSM) AS SQSM,
+            MAX(T.SPWJMC) AS SPWJMC,
+            MAX(T.SPWJID) AS SPWJID,
+            MAX(T.SPWJLJ) AS SPWJLJ,
+            MAX(T.SPWJSCSJ) AS SPWJSCSJ,
+            MAX(T.CZR) AS CZR,
+            MAX(T.CZRID) AS CZRID,
+            MAX(T.CZSJ) AS CZSJ,
+            MAX(T.SQLX) AS SQLX,
+            MAX(Q.KS) AS KS,
+            listagg(Q.SQRY,',')within group(order by Q.SQSJ) SQRYXX,
+            listagg(Q.BMMC,',')within group(order by Q.SQSJ) BMMC
+        FROM
+            BDC_LF_SQXX T
+        LEFT JOIN
+            BDC_LF_SQXX_SQRY Q
+        ON
+            T.ID = Q.SQXXID
+        <where>
+            <if test="sqry != null and sqry != ''">
+                AND Q.sqry like '%' || #{sqry} || '%'
+            </if>
+            <if test="spwjmc != null and spwjmc != ''">
+                AND T.spwjmc like '%' || #{spwjmc} || '%'
+            </if>
+            <if test="sqsm != null and sqsm != ''">
+                AND T.sqsm like '%' || #{sqsm} || '%'
+            </if>
+            <if test="czr != null and czr != ''">
+                AND T.czr like '%' || #{czr} || '%'
+            </if>
+            <if test="bmmc != null and bmmc != ''">
+                AND Q.bmmc like '%' || #{bmmc} || '%'
+            </if>
+            <if test="ks != null and ks != ''">
+                AND Q.ks like '%' || #{ks} || '%'
+            </if>
+            <if test="sqsjq != null and sqsjq != ''">
+                AND to_char(T.czsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{sqsjq}
+            </if>
+            <if test="sqsjz != null and sqsjz != ''">
+                AND to_char(T.czsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{sqsjz}
+            </if>
+            <if test="sqlx != null and sqlx != ''">
+                AND T.sqlx = #{sqlx}
+            </if>
+        </where>
+
+        GROUP BY
+            T.ID
+        ORDER BY
+            MAX(T.CZSJ) DESC
+    </select>
+</mapper>

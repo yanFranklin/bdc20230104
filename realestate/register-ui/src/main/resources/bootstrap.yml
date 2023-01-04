@@ -1,0 +1,109 @@
+spring:
+  profiles:
+    active: v1
+  application:
+    name: register-ui-app
+    admin:
+      enabled: true
+  cloud:
+    config:
+      name: register-ui-app
+      enabled: false
+      failFast: false
+      discovery:
+        enabled: false
+        service-id: config-app
+  sleuth:
+    sampler:
+      percentage: 1
+  http:
+    encoding:
+      charset: UTF-8
+      force: true
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+  freemarker:
+    enabled: true
+    charset: UTF-8
+  #    prefix: classpath:/templates
+    suffix: .ftl
+    cache: false
+    config:
+      autoImports:
+        c: /common/common.ftl
+
+eureka:
+  instance:
+    hostname: ${spring.application.name}
+    preferIpAddress: true
+  client:
+    serviceUrl:
+      defaultZone: ${app.center}
+    healthcheck:
+      enabled: true
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 10000
+        loggerLevel: basic
+  httpclient:
+    enabled:  false
+  hystrix:
+    enabled: true
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+#          strategy: THREAD
+          strategy: SEMAPHORE
+          semaphore:
+            maxConcurrentRequests: 1000
+          thread:
+            timeoutInMilliseconds: 300000
+
+ribbon:
+  okhttp:
+    enabled: true
+  eureka:
+    enabled: true
+  ConnectTimeout: 300000
+  ReadTimeout: 300000
+
+security:
+  oauth2:
+    sso:
+      login-path: /login
+    client:
+      access-token-uri: ${app.oauth}/oauth/token
+      user-authorization-uri: ${app.oauth}/oauth/authorize
+      # 客户端 id和客户端秘钥需要在系统中备案，说明自己的身份，防止令牌被滥用
+      client-id: registerUiClient
+      client-secret: registerUiClientIdSecret
+    resource:
+      prefer-token-info: true
+      user-info-uri: ${app.oauth}/oauth/user
+      token-info-uri: ${app.oauth}/oauth/check_token
+      loadBalanced: true
+
+# 日志系统配置
+log:
+  #请求入参拦截开关
+  spring-switch: false
+  #log日志开关
+  logback-switch: false
+  appender:
+    # 是否开启记录日志至es中，开启日志功能时，该配置必须配置为 true
+    enabled: false
+    ignores: Apollo
+    level: error
+    appname: register-ui
+    redis-host: ${spring.redis.host}
+    redis-port: ${spring.redis.port}

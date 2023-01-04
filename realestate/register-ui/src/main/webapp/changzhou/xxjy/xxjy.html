@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>信息校验</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/common.css"/>
+    <style>
+        .table-name pre span {
+            color: #333 !important;
+            font-size: 14px !important;
+            font-family: "Microsoft YaHei", Helvetica, Arial, sans-serif !important;
+            margin-right: 130px;
+        }
+
+        .table-name pre span:last-child {
+            margin-right: 0px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="content-div gxjklc-div">
+    <div class="bdc-content-box">
+        <form class="layui-form setOverflow" action="">
+            <div class="bdc-content-fix">
+                <div class="content-title">
+                    <p>信息校验</p>
+                </div>
+            </div>
+            <div class="content-main" id="tableView">
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/html" id="nodataTpl">
+    <tr>
+        <td rowspan="" class="set-back-color">权利人(卖方)</td>
+        <td><input type="text" class="layui-table-edit" value="" disabled="off"></td>
+        <td><input type="text" class="layui-table-edit" value="" disabled="off"></td>
+        <td><input type="text" class="layui-table-edit" value="" disabled="off"></td>
+    </tr>
+    <tr>
+        <td rowspan="" class="set-back-color">权利人(买方)</td>
+        <td><input type="text" class="layui-table-edit" value="" disabled="off"></td>
+        <td><input type="text" class="layui-table-edit" value="" disabled="off"></td>
+        <td><input type="text" class="layui-table-edit" value="" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">共有情况</td>
+        <td><input type="text" class="layui-table-edit" value="" disabled="off">
+        </td>
+        <td><input type="text" class="layui-table-edit" value="" disabled="off">
+        </td>
+        <td><input type="text" class="layui-table-edit" value="" disabled="off">
+        </td>
+    </tr>
+    <tr>
+        <td class="set-back-color">坐落</td>
+        <td colspan="3"><input type="text" class="layui-table-edit" value=""
+                               disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">不动产单元号</td>
+        <td colspan="3"><input type="text" class="layui-table-edit" value=""
+                               disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">权利类型</td>
+        <td colspan="3"><input type="text" class="layui-table-edit" value=""
+                               disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">权利性质</td>
+        <td colspan="3"><input type="text" class="layui-table-edit" value=""
+                               disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">用途</td>
+        <td colspan="3"><input type="text" class="layui-table-edit" value=""
+                               disabled="off"></td>
+    </tr>
+    <tr class="set-tr-height">
+        <td class="set-back-color">面积</td>
+        <td colspan="3"><input type="text" class="layui-table-edit" value=""
+                               disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">使用期限</td>
+        <td colspan="3"><input type="text" class="layui-table-edit" value=""
+                               disabled="off"></td>
+    </tr>
+    <tr class="set-tr-height100">
+        <td class="set-back-color">权利其他状况</td>
+        <td colspan="3"><input type="text" class="layui-table-edit" value=""
+                               disabled="off"></td>
+    </tr>
+</script>
+<script type="text/html" id="tableTpl">
+
+    <div class="table-name">
+        <pre><span>苏</span><span>{{d.nf || ''}}</span><span>常州市</span><span>不动产权第</span><span>{{ d.zhlsh || '' }}</span><span>号</span></pre>
+    </div>
+    <div class="bdc-table-box">
+        <table class="layui-table" border="1">
+            <colgroup>
+                <col width="100">
+                <col width="150">
+                <col width="150">
+                <col width="150">
+            </colgroup>
+            <tbody>
+            {{# if(d.bdcYwrDTOList && d.bdcYwrDTOList.length==1) { }}
+            <tr>
+                <td class="set-back-color">权利人(卖方)</td>
+                <td><input type="text" class="layui-table-edit" value="{{ d.bdcYwrDTOList[0].bdcQlrDO.qlrmc || '' }}"
+                           title="{{ d.bdcYwrDTOList[0].bdcQlrDO.qlrmc || '' }}"
+                           disabled="off"></td>
+                <td><input type="text" class="layui-table-edit" value="{{ d.bdcYwrDTOList[0].nfZhlsh || '' }}"
+                           title="{{ d.bdcYwrDTOList[0].nfzhlsh || '' }}" disabled="off">
+                </td>
+                <td><input type="text" class="layui-table-edit" value="{{ d.bdcYwrDTOList[0].bdcQlrDO.zjh || '' }}"
+                           title="{{ d.bdcYwrDTOList[0].bdcQlrDO.zjh || '' }}"
+                           disabled="off"></td>
+            </tr>
+            {{# if(d.bdcYwrDTOList[0].bdcQlrDO.dlrmc) { }}
+            <tr>
+                <td class="set-back-color">代理人(卖方)</td>
+                <td><input type="text" class="layui-table-edit" value="{{ d.bdcYwrDTOList[0].bdcQlrDO.dlrmc || '' }}"
+                           title="{{ d.bdcYwrDTOList[0].bdcQlrDO.dlrmc || '' }}"
+                           disabled="off"></td>
+                <td><input type="text" class="layui-table-edit" value=""
+                           title="" disabled="off">
+                </td>
+                <td><input type="text" class="layui-table-edit" value="{{ d.bdcYwrDTOList[0].bdcQlrDO.dlrzjh || '' }}"
+                           title="{{ d.bdcYwrDTOList[0].bdcQlrDO.dlrzjh || '' }}"
+                           disabled="off"></td>
+            </tr>
+            {{# } }}
+            {{# } else { }}
+            <tr>
+                <td class="set-back-color">权利人(卖方)</td>
+                <td><input type="text" class="layui-table-edit" value="{{ d.bdcYwrDTOList[0].bdcQlrDO.qlrmc || '' }}"
+                           title="{{ d.bdcYwrDTOList[0].bdcQlrDO.qlrmc || '' }}"
+                           disabled="off"></td>
+                <td><input type="text" class="layui-table-edit" value="{{ d.bdcYwrDTOList[0].nfZhlsh || '' }}"
+                           disabled="off" title="{{ d.bdcYwrDTOList[0].nfzhlsh || '' }}">
+                </td>
+                <td><input type="text" class="layui-table-edit" value="{{ d.bdcYwrDTOList[0].bdcQlrDO.zjh || '' }}"
+                           title="{{ d.bdcYwrDTOList[0].bdcQlrDO.zjh || '' }}"
+                           disabled="off"></td>
+            </tr>
+            {{# if(d.bdcYwrDTOList[0].bdcQlrDO.dlrmc) { }}
+            <tr>
+                <td class="set-back-color">代理人(卖方)</td>
+                <td><input type="text" class="layui-table-edit" value="{{ d.bdcYwrDTOList[0].bdcQlrDO.dlrmc || '' }}"
+                           title="{{ d.bdcYwrDTOList[0].bdcQlrDO.dlrmc || '' }}"
+                           disabled="off"></td>
+                <td><input type="text" class="layui-table-edit" value=""
+                           title="" disabled="off">
+                </td>
+                <td><input type="text" class="layui-table-edit" value="{{ d.bdcYwrDTOList[0].bdcQlrDO.dlrzjh || '' }}"
+                           title="{{ d.bdcYwrDTOList[0].bdcQlrDO.dlrzjh || '' }}"
+                           disabled="off"></td>
+            </tr>
+            {{# } }}
+            {{# layui.each(d.bdcYwrDTOList, function(index, item) { }}
+            {{# if(index != 0) { }}
+            <tr>
+                <td class="set-back-color">权利人(卖方)</td>
+                <td><input type="text" class="layui-table-edit" value="{{ item.bdcQlrDO.qlrmc || '' }}"
+                           title="{{ item.bdcQlrDO.qlrmc || '' }}" disabled="off"></td>
+                <td><input type="text" class="layui-table-edit" value="{{ item.nfzhlsh || '' }}"
+                           title="{{ item.nfZhlsh || '' }}" disabled="off"></td>
+                <td><input type="text" class="layui-table-edit" value="{{ item.bdcQlrDO.zjh || '' }}"
+                           title="{{ item.bdcQlrDO.zjh || '' }}" disabled="off"></td>
+            </tr>
+            {{# if(item.bdcQlrDO.dlrmc) { }}
+            <tr>
+                <td class="set-back-color">代理人(卖方)</td>
+                <td><input type="text" class="layui-table-edit" value="{{ item.bdcQlrDO.dlrmc || '' }}"
+                           title="{{ item.bdcQlrDO.dlrmc || '' }}"
+                           disabled="off"></td>
+                <td><input type="text" class="layui-table-edit" value=""
+                           title="" disabled="off">
+                </td>
+                <td><input type="text" class="layui-table-edit" value="{{ item.bdcQlrDO.dlrzjh || '' }}"
+                           title="{{ item.bdcQlrDO.dlrzjh || '' }}"
+                           disabled="off"></td>
+            </tr>
+            {{# } }}
+            {{# } }}
+            {{# }); }}
+            {{# } }}
+
+            {{# if(d.bdcQlrDTOList && d.bdcQlrDTOList.length==1) { }}
+            <tr>
+                <td class="set-back-color">权利人(买方)</td>
+                <td><input type="text" class="layui-table-edit" value="{{ d.bdcQlrDTOList[0].bdcQlrDO.qlrmc || '' }}"
+                           title="{{ d.bdcQlrDTOList[0].bdcQlrDO.qlrmc || '' }}"
+                           disabled="off"></td>
+                <td><input type="text" class="layui-table-edit" value="{{ d.bdcQlrDTOList[0].nfZhlsh || '' }}"
+                           title="{{ d.bdcQlrDTOList[0].nfzhlsh || '' }}" disabled="off">
+                </td>
+                <td><input type="text" class="layui-table-edit" value="{{ d.bdcQlrDTOList[0].bdcQlrDO.zjh || '' }}"
+                           title="{{ d.bdcQlrDTOList[0].bdcQlrDO.zjh || '' }}"
+                           disabled="off"></td>
+            </tr>
+            {{# if(d.bdcQlrDTOList[0].bdcQlrDO.dlrmc) { }}
+            <tr>
+                <td class="set-back-color">代理人(买方)</td>
+                <td><input type="text" class="layui-table-edit" value="{{ d.bdcQlrDTOList[0].bdcQlrDO.dlrmc || '' }}"
+                           title="{{ d.bdcQlrDTOList[0].bdcQlrDO.dlrmc || '' }}"
+                           disabled="off"></td>
+                <td><input type="text" class="layui-table-edit" value=""
+                           title="" disabled="off">
+                </td>
+                <td><input type="text" class="layui-table-edit" value="{{ d.bdcQlrDTOList[0].bdcQlrDO.dlrzjh || '' }}"
+                           title="{{ d.bdcQlrDTOList[0].bdcQlrDO.dlrzjh || '' }}"
+                           disabled="off"></td>
+            </tr>
+            {{# } }}
+            {{# } else { }}
+            <tr>
+                <td class="set-back-color">权利人(买方)</td>
+                <td><input type="text" class="layui-table-edit" value="{{ d.bdcQlrDTOList[0].bdcQlrDO.qlrmc || '' }}"
+                           title="{{ d.bdcQlrDTOList[0].bdcQlrDO.qlrmc || '' }}"
+                           disabled="off"></td>
+                <td><input type="text" class="layui-table-edit" value="{{ d.bdcQlrDTOList[0].nfZhlsh || '' }}"
+                           title="{{ d.bdcQlrDTOList[0].mfzhlsh || '' }}" disabled="off">
+                </td>
+                <td><input type="text" class="layui-table-edit" value="{{ d.bdcQlrDTOList[0].bdcQlrDO.zjh || '' }}"
+                           title="{{ d.bdcQlrDTOList[0].bdcQlrDO.zjh || '' }}"
+                           disabled="off"></td>
+            </tr>
+            {{# if(d.bdcQlrDTOList[0].bdcQlrDO.dlrmc) { }}
+            <tr>
+                <td class="set-back-color">代理人(买方)</td>
+                <td><input type="text" class="layui-table-edit" value="{{ d.bdcQlrDTOList[0].bdcQlrDO.dlrmc || '' }}"
+                           title="{{ d.bdcQlrDTOList[0].bdcQlrDO.dlrmc || '' }}"
+                           disabled="off"></td>
+                <td><input type="text" class="layui-table-edit" value=""
+                           title="" disabled="off">
+                </td>
+                <td><input type="text" class="layui-table-edit" value="{{ d.bdcQlrDTOList[0].bdcQlrDO.dlrzjh || '' }}"
+                           title="{{ d.bdcQlrDTOList[0].bdcQlrDO.dlrzjh || '' }}"
+                           disabled="off"></td>
+            </tr>
+            {{# } }}
+            {{# layui.each(d.bdcQlrDTOList, function(index, item) { }}
+            {{# if(index != 0) { }}
+            <tr>
+                <td class="set-back-color">权利人(买方)</td>
+
+                <td><input type="text" class="layui-table-edit" value="{{ item.bdcQlrDO.qlrmc || '' }}"
+                           title="{{ item.bdcQlrDO.qlrmc || '' }}" disabled="off"></td>
+                <td><input type="text" class="layui-table-edit" value="{{ item.nfzhlsh || '' }}"
+                           title="{{ item.nfZhlsh || '' }}" disabled="off"></td>
+                <td><input type="text" class="layui-table-edit" value="{{ item.bdcQlrDO.zjh || '' }}"
+                           title="{{ item.bdcQlrDO.zjh || '' }}" disabled="off"></td>
+            </tr>
+            {{# if(item.bdcQlrDO.dlrmc) { }}
+            <tr>
+                <td class="set-back-color">代理人(买方)</td>
+                <td><input type="text" class="layui-table-edit" value="{{ item.bdcQlrDO.dlrmc || '' }}"
+                           title="{{ item.bdcQlrDO.dlrmc || '' }}"
+                           disabled="off"></td>
+                <td><input type="text" class="layui-table-edit" value=""
+                           title="" disabled="off">
+                </td>
+                <td><input type="text" class="layui-table-edit" value="{{ item.bdcQlrDO.dlrzjh || '' }}"
+                           title="{{ item.bdcQlrDO.dlrzjh || '' }}"
+                           disabled="off"></td>
+            </tr>
+            {{# } }}
+            {{# } }}
+            {{# }); }}
+            {{# } }}
+
+            <tr>
+                <td class="set-back-color">共有情况</td>
+                <td><input type="text" class="layui-table-edit" value="{{ d.gyfsmc || '' }}"
+                           title="{{ d.gyfsmc || '' }}" disabled="off">
+                </td>
+                <td><input type="text" class="layui-table-edit" value="{{ d.cqly || '' }}" title="{{ d.cqly || '' }}"
+                           disabled="off">
+                </td>
+                <td><input type="text" class="layui-table-edit" value="{{ d.lxdh || '' }}" title="{{ d.lxdh || '' }}"
+                           disabled="off">
+                </td>
+            </tr>
+            <tr>
+                <td class="set-back-color">坐落</td>
+                <td colspan="3"><input type="text" class="layui-table-edit" value="{{ d.zl || '' }}"
+                                       title="{{ d.zl || '' }}"
+                                       disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">不动产单元号</td>
+                <td colspan="3"><input type="text" class="layui-table-edit" value="{{ d.bdcdyh || '' }}"
+                                       title="{{ d.bdcdyh || '' }}"
+                                       disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">权利类型</td>
+                <td colspan="3"><input type="text" class="layui-table-edit" value="{{ d.qllxmc || '' }}"
+                                       title="{{ d.qllxmc || '' }}"
+                                       disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">权利性质</td>
+                <td colspan="3"><input type="text" class="layui-table-edit" value="{{ d.qlxz || '' }}"
+                                       title="{{ d.qlxz || '' }}"
+                                       disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">用途</td>
+                <td colspan="3"><input type="text" class="layui-table-edit" value="{{ d.yt || '' }}"
+                                       title="{{ d.yt || '' }}"
+                                       disabled="off"></td>
+            </tr>
+            <tr class="set-tr-height">
+                <td class="set-back-color">面积</td>
+                <td colspan="3"><input type="text" class="layui-table-edit" value="{{ d.mj || '' }}"
+                                       title="{{ d.mj || '' }}"
+                                       disabled="off"></td>
+            </tr>
+            <tr>
+                <td class="set-back-color">使用期限</td>
+                <td colspan="3"><input type="text" class="layui-table-edit" value="{{ d.syqx || '' }}"
+                                       title="{{ d.syqx || '' }}"
+                                       disabled="off"></td>
+            </tr>
+            <tr class="set-tr-height100">
+                <td class="set-back-color">权利其他状况</td>
+                <td colspan="3"><input type="text" class="layui-table-edit" value="{{ d.qlqtzk || '' }}"
+                                       title="{{ d.qlqtzk || '' }}"
+                                       disabled="off"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/bdcui/js/mask.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/changzhou/xxjy/xxjy.js"></script>
+</body>
+</html>

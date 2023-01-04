@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--抵押权信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.QlfQlDyaqMapper">
+
+    <select id="queryQlfQlDyaqList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.QlfQlDyaqDO">
+        SELECT DISTINCT
+        a.bdcdyh,
+        s.yxmid as ssywh,
+        a.FWDYMJ + a.TDDYMJ AS DYMJ,
+        a.dysw as dyqsw,
+        x.mjdw,
+        a.jezl as bz,
+        a.jedw,
+        a.dbfw,
+        fb.syqx as dyqx,
+        a.jzzr as sfczjzhxz,
+        a.zxdydbr as zxdbr,
+        nvl(r.yxmid, s.yxmid) AS scywh,
+        '1' dyjelx,
+        x.xmid AS ywh,
+        a.dybdclx,
+        x.ywr dyr,
+        a.dyfs,
+        a.djlx,
+        nvl(a.djyy, '/') djyy,
+        a.zjjzwzl,
+        a.zjjzwdyfw,
+        -- ROUND(a.bdbzzqse,4) bdbzzqse,
+        ROUND(nvl(a.bdbzzqse,a.zgzqe),4) bdbzzqse,
+        a.zwlxqssj,
+        a.zwlxjssj,
+        a.zgzqqdss,
+        a.zgzqqdse AS zgzqse,
+        CASE WHEN a.zxdyywh IS NOT NULL THEN r.xmid ELSE '' END AS zxdyywh,
+        a.zxdyyy,
+        a.zxdydjsj zxsj,
+        x.bdcqzh bdcdjzmh,
+        substr(x.bdcdyh,0,6) qxdm,
+        a.djjg,
+        a.dbr,
+        a.djsj,
+        a.fj,
+        a.qszt
+        FROM bdc_dyaq a
+        LEFT JOIN bdc_xm x on a.xmid = x.xmid
+        LEFT JOIN bdc_xmfb fb ON x.xmid = fb.xmid
+        LEFT JOIN bdc_xm_lsgx r ON r.yxmid = x.xmid and nvl(r.WLXM,0) = 0
+        LEFT JOIN bdc_xm_lsgx s ON s.xmid = x.xmid and nvl(s.WLXM,0) = 0
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND a.xmid = #{ywh}
+            </if>
+            <if test="yywh != null and yywh !=''">
+                AND r.xmid=#{yywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND a.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+        and ROWNUM = 1
+    </select>
+
+    <select id="queryQlfQlDyaqListOld" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.yancheng.yth.old.QlfQlDyaqOldDO">
+        SELECT DISTINCT
+        a.bdcdyh,
+        nvl(r.yxmid, s.yxmid) AS scywh,
+        '1' dyjelx,
+        x.xmid AS ywh,
+        a.dybdclx,
+        x.ywr dyr,
+        a.dyfs,
+        a.djlx,
+        nvl(a.djyy, '/') djyy,
+        a.zjjzwzl,
+        a.zjjzwdyfw,
+        -- ROUND(a.bdbzzqse,4) bdbzzqse,
+        ROUND(nvl(a.bdbzzqse,a.zgzqe),4) bdbzzqse,
+        a.zwlxqssj,
+        a.zwlxjssj,
+        a.zgzqqdss,
+        a.zgzqqdse AS zgzqse,
+        CASE WHEN a.zxdyywh IS NOT NULL THEN r.xmid ELSE '' END AS zxdyywh,
+        a.zxdyyy,
+        a.zxdydjsj zxsj,
+        x.bdcqzh bdcdjzmh,
+        x.qxdm,
+        a.djjg,
+        a.dbr,
+        a.djsj,
+        a.fj,
+        a.qszt
+        FROM bdc_dyaq a
+        LEFT JOIN bdc_xm x on a.xmid = x.xmid
+        LEFT JOIN bdc_xm_lsgx r ON r.yxmid = x.xmid and nvl(r.WLXM,0) = 0
+        LEFT JOIN bdc_xm_lsgx s ON s.xmid = x.xmid and nvl(s.WLXM,0) = 0
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND a.xmid = #{ywh}
+            </if>
+            <if test="yywh != null and yywh !=''">
+                AND r.xmid=#{yywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND a.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+</mapper>

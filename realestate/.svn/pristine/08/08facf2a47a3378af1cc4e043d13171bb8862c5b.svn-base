@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.building.core.mapper.FwLjzMapper">
+    <!--分页查询逻辑幢信息 -->
+    <select id="listLjzByPageOrder" parameterType="map" resultType="map">
+        SELECT
+        T.FW_DCB_INDEX,T.FW_XMXX_INDEX,T.XMMC,T.LJZH,T.ZRZH,T.YSDM,T.LSZD,
+        T.BDCDYFWLX,T.BDCDYH,T.MPH,T.DH,T.FWMC,T.ZLDZ,T.FWJG,T.FWJG2,T.FWJG3,T.FWCS,
+        T.YCJZMJ,T.YCDXMJ,T.YCQTMJ,T.SCJZMJ,T.SCDXMJ,T.SCQTMJ,T.FWYT,T.FWYT2,
+        T.FWYT3,T.JGRQ,T.JZWZT,T.ZTRQ,T.ZTS,T.BZ,T.GXRQ,T.BDCZT,T.FWZT,T.DSCS,T.DXCS,T.ZZDMJ,T.ZYDMJ
+        FROM fw_ljz t
+        <if test="zdqlr != null and zdqlr != ''">
+            inner join zd_qlr t1 on t.lszd = t1.DJH
+        </if>
+        <where>
+            <if test="zdqlr != null and zdqlr != ''">
+                AND t1.qlrmc = #{zdqlr}
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                <if test='bdcdyhmh == null'>
+                    AND t.bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+                </if>
+                <if test='bdcdyhmh == "1"'>
+                    AND t.bdcdyh = #{bdcdyh}
+                </if>
+                <if test='bdcdyhmh == "2"'>
+                    AND t.bdcdyh LIKE '%'|| #{bdcdyh}
+                </if>
+                <if test='bdcdyhmh == "3"'>
+                    AND t.bdcdyh LIKE #{bdcdyh} || '%'
+                </if>
+                <if test='bdcdyhmh == "4"'>
+                    AND t.bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+                </if>
+
+            </if>
+            <if test="zrzh != null and zrzh != ''">
+                AND t.zrzh = #{zrzh}
+            </if>
+            <if test="dh != null and dh != ''">
+                <if test='dhmh == null'>
+                    AND t.DH LIKE '%' || #{dh} || '%'
+                </if>
+                <if test='dhmh == "1"'>
+                    AND t.DH = #{dh}
+                </if>
+                <if test='dhmh == "2"'>
+                    AND t.DH LIKE '%'|| #{dh}
+                </if>
+                <if test='dhmh == "3"'>
+                    AND t.DH LIKE #{dh} || '%'
+                </if>
+                <if test='dhmh == "4"'>
+                    AND t.DH LIKE '%' || #{dh} || '%'
+                </if>
+            </if>
+            <if test="lszd != null and lszd != ''">
+                <if test='lszdmh == null'>
+                    AND t.lszd LIKE '%'|| #{lszd} || '%'
+                </if>
+                <if test='lszdmh == "1"'>
+                    AND t.lszd = #{lszd}
+                </if>
+                <if test='lszdmh == "2"'>
+                    AND t.lszd LIKE '%'|| #{lszd}
+                </if>
+                <if test='lszdmh == "3"'>
+                    AND t.lszd LIKE #{lszd} || '%'
+                </if>
+                <if test='lszdmh == "4"'>
+                    AND t.lszd LIKE '%'|| #{lszd} || '%'
+                </if>
+            </if>
+            <if test="lszdList != null and lszdList.size > 0">
+                AND t.lszd in
+                <foreach collection="lszdList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="fwmc != null and fwmc != ''">
+                <if test='fwmcmh == null'>
+                    AND t.fwmc LIKE '%'|| #{fwmc} || '%'
+                </if>
+                <if test='fwmcmh == "1"'>
+                    AND t.fwmc = #{fwmc}
+                </if>
+                <if test='fwmcmh == "2"'>
+                    AND t.fwmc LIKE '%'|| #{fwmc}
+                </if>
+                <if test='fwmcmh == "3"'>
+                    AND t.fwmc LIKE #{fwmc} || '%'
+                </if>
+                <if test='fwmcmh == "4"'>
+                    AND t.fwmc LIKE '%'|| #{fwmc} || '%'
+                </if>
+            </if>
+            <if test="ljzh != null and ljzh != ''">
+                AND t.ljzh LIKE '%'|| #{ljzh} || '%'
+            </if>
+            <if test="zldz != null and zldz != ''">
+                <if test='zldzmh == null'>
+                    AND t.zldz LIKE '%'|| #{zldz} || '%'
+                </if>
+                <if test='zldzmh == "1"'>
+                    AND t.zldz = #{zldz}
+                </if>
+                <if test='zldzmh == "2"'>
+                    AND t.zldz LIKE '%'|| #{zldz}
+                </if>
+                <if test='zldzmh == "3"'>
+                    AND t.zldz LIKE #{zldz} || '%'
+                </if>
+                <if test='zldzmh == "4"'>
+                    AND t.zldz LIKE '%'|| #{zldz} || '%'
+                </if>
+
+            </if>
+            <if test="fwXmxxIndex != null and fwXmxxIndex != ''">
+                AND t.FW_XMXX_INDEX = #{fwXmxxIndex}
+            </if>
+            <if test="notfwXmxxIndex != null and notfwXmxxIndex != ''">
+                AND t.FW_XMXX_INDEX is null
+            </if>
+        </where>
+    </select>
+
+    <select id="listYcLjzByPageOrder" parameterType="map" resultType="map">
+        select * from (SELECT
+        T.FW_DCB_INDEX,T.FW_XMXX_INDEX,T.XMMC,T.LJZH,T.ZRZH,T.YSDM,T.LSZD,
+        T.BDCDYFWLX,T.BDCDYH,T.MPH,T.DH,T.FWMC,T.ZLDZ,T.FWJG,T.FWJG2,T.FWJG3,T.FWCS,
+        T.YCJZMJ,T.YCDXMJ,T.YCQTMJ,T.SCJZMJ,T.SCDXMJ,T.SCQTMJ,T.FWYT,T.FWYT2,
+        T.FWYT3,T.JGRQ,T.JZWZT,T.ZTRQ,T.ZTS,T.BZ,T.GXRQ,T.BDCZT,T.FWZT,T.DSCS,T.DXCS,T.ZZDMJ,T.ZYDMJ
+        FROM fw_ljz t
+        where exists (select f.fw_hs_index
+        from fw_ychs f
+        where f.fw_dcb_index = t.fw_dcb_index))t
+        <if test="zdqlr != null and zdqlr != ''">
+            inner join zd_qlr t1 on t.lszd = t1.DJH
+        </if>
+        <where>
+            <if test="zdqlr != null and zdqlr != ''">
+                AND t1.qlrmc = #{zdqlr}
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND t.bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+            </if>
+            <if test="zrzh != null and zrzh != ''">
+                AND t.zrzh = #{zrzh}
+            </if>
+            <if test="dh != null and dh != ''">
+                AND t.DH LIKE '%' || #{dh} || '%'
+            </if>
+            <if test="lszd != null and lszd != ''">
+                AND t.lszd LIKE '%'|| #{lszd} || '%'
+            </if>
+            <if test="lszdList != null and lszdList.size > 0">
+                AND t.lszd in
+                <foreach collection="lszdList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="fwmc != null and fwmc != ''">
+                AND t.fwmc LIKE '%'|| #{fwmc} || '%'
+            </if>
+            <if test="ljzh != null and ljzh != ''">
+                AND t.ljzh LIKE '%'|| #{ljzh} || '%'
+            </if>
+            <if test="zldz != null and zldz != ''">
+                AND t.zldz LIKE '%'|| #{zldz} || '%'
+            </if>
+            <if test="fwXmxxIndex != null and fwXmxxIndex != ''">
+                AND t.FW_XMXX_INDEX = #{fwXmxxIndex}
+            </if>
+            <if test="notfwXmxxIndex != null and notfwXmxxIndex != ''">
+                AND t.FW_XMXX_INDEX is null
+            </if>
+        </where>
+    </select>
+
+    <select id="listFwLjz" parameterType="map" resultType="cn.gtmap.realestate.common.core.domain.building.FwLjzDO">
+        SELECT FW_XMXX_INDEX,BDCDYFWLX,BDCDYH,
+        FW_DCB_INDEX,LSZD,DH,FWMC,ZLDZ,FWJG,FWCS,
+        BZ,FWYT,JGRQ,MPH,LJZH,ZRZH,YCJZMJ,YCDXMJ,
+        YCQTMJ,SCJZMJ,SCDXMJ,SCQTMJ,JZWZT,ZTRQ,
+        XMMC,ZTS,BDCZT,GXRQ,FWZT,FWJG2,FWJG3,FWYT2,
+        FWYT3,YSDM,ZYDMJ,ZZDMJ,DSCS,DXCS,N,CQLY,FJSM,
+        X,B,GYQK,DCSJ,D,DCZ,CB,DCYJ FROM FW_LJZ
+        <where>
+            <if test="ybdcdyh != null and ybdcdyh != ''">
+                AND ybdcdyh = #{ybdcdyh}
+            </if>
+            <if test="bdczt != null and bdczt != ''">
+                AND NVL(BDCZT,'1') = #{bdczt}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectFwLjzLeftJoin" parameterType="java.lang.String" resultType="java.lang.String" >
+        select t1.SLBH from fw_ljz t left join s_sj_bgsh t1  on t.slbh=t1.chslbh  where t.slbh = #{slbh}
+    </select>
+
+    <select id="queryLjzLcztByBdcdyh" parameterType="java.util.List"  resultType="java.lang.String">
+        select hs.bdcdyh
+        from fw_hs hs left join fw_ljz ljz
+        on hs.fw_dcb_index = ljz.fw_dcb_index
+        <where>
+            ljz.lczt = '0'
+            <if test = "bdcdyhList != null and bdcdyhList.size > 0">
+                AND hs.bdcdyh in
+                <foreach collection = "bdcdyhList" item = "bdcdyh" index = "index" open = "(" close = ")" separator = ",">
+                    #{bdcdyh}
+                </foreach>
+            </if>
+        </where>
+    </select>
+</mapper>

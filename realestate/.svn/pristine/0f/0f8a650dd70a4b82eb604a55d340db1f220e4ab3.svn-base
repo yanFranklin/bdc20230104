@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.building.core.mapper.NydMapper">
+
+    <!-- 分页查询农用地 -->
+    <select id="listNydByPageOrder" parameterType="map" resultType="map">
+        <choose>
+            <when test="qlr != null and qlr !=''">
+                SELECT N.BDCDYH,N.TDZL AS ZL,N.DJH,N.SCMJ,N.FZMJ,N.NYD_DJDCB_INDEX AS QJID FROM NYD_DJDCB N
+                INNER JOIN (SELECT DJH FROM NYD_QLR WHERE QLRMC LIKE '%'||#{qlr} || '%' GROUP BY DJH ) Q ON N.DJH= Q.DJH
+            </when>
+            <otherwise>
+                SELECT N.BDCDYH,N.TDZL AS ZL,N.DJH,N.SCMJ,N.FZMJ,N.NYD_DJDCB_INDEX AS QJID FROM NYD_DJDCB N
+            </otherwise>
+        </choose>
+        <where>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND n.bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+            </if>
+            <if test="zl != null and zl != ''">
+                AND n.tdzl LIKE '%'|| #{zl} || '%'
+            </if>
+            <if test="djh != null and djh != ''">
+                AND n.djh LIKE '%'|| #{djh} || '%'
+            </if>
+        </where>
+    </select>
+</mapper>

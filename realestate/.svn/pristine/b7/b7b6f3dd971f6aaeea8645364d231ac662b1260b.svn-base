@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--自然撞信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.KttFwZrzMapper">
+    <select id="queryKttFwZrzFdcqList" parameterType="java.util.Map"
+            resultType="java.util.Map">
+        select
+        0 as bsm,
+        a.bdcdyh,
+        f.jgsj jgrq,
+        f.zcs,
+        to_char(f.ghyt) ghyt,
+        to_char(f.fwjg) fwjg,
+        '' as dah,
+        '1' as zt,
+        subStr(a.bdcdyh, 0, 6) as qxdm,
+        to_char(a.bdcdyfwlx) bdcdyfwlx
+        from bdc_xm a
+        inner join bdc_fdcq f on f.xmid = a.xmid
+        <where>
+            <if test="ywh != null and ywh !=''">
+                and a.xmid = #{ywh}
+            </if>
+        </where>
+    </select>
+    <select id="queryKttFwZrzList" parameterType="java.util.Map"
+            resultType="java.util.Map">
+        SELECT * FROM (select a.xmid,
+        0 as bsm,
+        a.bdcdyh,
+        nvl(c.lszd, d.lszd) as zddm,
+        nvl(d.zrzh, d.lszd) zrzh,
+        e.xmmc,
+        e.fwmc as jzwmc,
+        f.jgsj jgrq,
+        e.jzwgd,
+        trunc(e.zdmj,3) as zzdmj,
+        d.zydmj,
+        e.ycjzmj,
+        e.scjzmj,
+        f.zcs,
+        e.dscs,
+        e.dxcs,
+        e.dxsd,
+        to_char(f.ghyt) ghyt,
+        to_char(f.fwjg) fwjg,
+        e.zts,
+        '' as dah,
+        e.bz,
+        '1' as zt,
+        subStr(a.bdcdyh, 0, 6) as qxdm,
+        to_char( c.ytmc ) ytmc,
+        to_char( c.pzyt ) pzyt,
+        to_char( c.sjyt ) sjyt,
+        nvl(d.dh,d.ljzh) lddm,
+        d.zldz ldzl
+        from bdc_xm a
+        inner join bdc_fdcq f on f.xmid = a.xmid
+        inner join djsj_fwhs c on a.bdcdyh = c.bdcdyh
+        inner join djsj_fw_ljz d on c.fw_dcb_index = d.fw_dcb_index
+        left join DJSJ_FW_ZRZ e on d.lszd || d.zrzh = e.lszd || e.zrzh
+        <where>
+            <if test="ywh != null and ywh !=''">
+                and a.xmid = #{ywh}
+            </if>
+        </where>
+        union all
+        select a.xmid,
+        0 as bsm,
+        a.bdcdyh,
+        nvl(c.lszd, d.lszd) as zddm,
+        nvl(d.zrzh, d.lszd) zrzh,
+        e.xmmc,
+        e.fwmc as jzwmc,
+        f.jgsj jgrq,
+        e.jzwgd,
+        trunc(e.zdmj,3) as zzdmj,
+        d.zydmj,
+        e.ycjzmj,
+        e.scjzmj,
+        f.zcs,
+        e.dscs,
+        e.dxcs,
+        e.dxsd,
+        to_char(f.ghyt) ghyt,
+        to_char(f.fwjg) fwjg,
+        e.zts,
+        '' as dah,
+        e.bz,
+        '1' as zt,
+        subStr(a.bdcdyh, 0, 6) as qxdm,
+        to_char( c.ytmc ) ytmc,
+        to_char( c.pzyt ) pzyt,
+        to_char( c.sjyt ) sjyt,
+        nvl(d.dh,d.ljzh) lddm,
+        d.zldz ldzl
+        from bdc_xm a
+        inner join bdc_fdcq f on f.xmid = a.xmid
+        inner join djsj_fwychs c on a.bdcdyh = c.bdcdyh
+        inner join djsj_fw_ljz d on c.fw_dcb_index = d.fw_dcb_index
+        left join djsj_fw_zrz e on d.lszd || d.zrzh = e.lszd || e.zrzh
+        <where>
+            <if test="ywh != null and ywh !=''">
+                and a.xmid = #{ywh}
+            </if>
+        </where>
+        union all
+        SELECT xmid, bsm, bdcdyh, zddm, zrzh, xmmc, jzwmc, jgrq, jzwgd,
+        zzdmj, zydmj, ycjzmj, scjzmj, zcs, dscs, dxcs, dxsd, to_char(ghyt) ghyt,
+        to_char(fwjg) fwjg, zts, dah, bz, zt, qxdm,
+        to_char( ytmc ) ytmc,
+        to_char( pzyt ) pzyt,
+        to_char( sjyt ) sjyt,
+        lddm,
+        ldzl FROM (
+        select a.xmid, 0 as bsm, a.bdcdyh,
+        d.lszd zddm,
+        e.zrzh, d.xmmc,
+        d.fwmc as jzwmc,
+        f.jgsj jgrq, e.jzwgd, trunc(f.zzdmj,3) zzdmj, d.zydmj,
+        d.ycjzmj, d.scjzmj, e.fwcs zcs, e.dscs, e.dxcs, e.dxsd, f.ghyt,
+        f.fwjg, e.zts, '' as dah, e.bz, '1' as zt, subStr(a.bdcdyh, 0, 6) as qxdm,
+        f.ytmc,
+        f.pzyt,
+        f.sjyt,
+        nvl(d.dh,d.ljzh) lddm,
+        d.zldz ldzl
+        from bdc_xm a
+        inner join bdc_fdcq f on f.xmid = a.xmid
+        --inner join djsj_fw_xmxx c on a.bdcdyh = c.bdcdyh
+        inner join djsj_fw_ljz d on a.bdcdyh = d.bdcdyh
+        left join djsj_fw_zrz e on d.lszd || d.zrzh = e.lszd || e.zrzh
+        <where>
+            <if test="ywh != null and ywh !=''">
+                and a.xmid = #{ywh}
+            </if>
+        </where>
+        )) WHERE ROWNUM = 1
+        union all
+        SELECT xmid, bsm, bdcdyh, zddm, zrzh, xmmc, jzwmc, jgrq, jzwgd,
+        zzdmj, zydmj, ycjzmj, scjzmj, zcs, dscs, dxcs, dxsd, to_char(ghyt) ghyt,
+        to_char(fwjg) fwjg, zts, dah, bz, zt, qxdm,
+        to_char( ytmc ) ytmc,
+        to_char( pzyt ) pzyt,
+        to_char( sjyt ) sjyt,
+        lddm,
+        ldzl FROM (select
+        DISTINCT
+        row_number() over(partition by e.zrzh order by rownum) as cn, a.xmid, 0 as bsm, a.bdcdyh,
+        c.lszd zddm,
+        e.zrzh, c.xmmc,
+        d.fwmc as jzwmc,
+        f.jgsj jgrq, e.jzwgd, trunc(e.zdmj,3) zzdmj, d.zydmj,
+        d.ycjzmj, d.scjzmj, e.fwcs zcs, e.dscs, e.dxcs, e.dxsd, d.fwyt ghyt,
+        d.fwjg, e.zts, '' as dah, e.bz, '1' as zt, subStr(a.bdcdyh, 0, 6) as qxdm,
+        f.ytmc,
+        f.pzyt,
+        f.sjyt,
+        nvl(d.dh,d.ljzh) lddm,
+        d.zldz ldzl
+        from bdc_xm a
+        inner join bdc_fdcq f on f.xmid = a.xmid
+        inner join djsj_fw_xmxx c on a.bdcdyh = c.bdcdyh
+        inner join djsj_fw_ljz d on c.fw_xmxx_index = d.fw_xmxx_index
+        left join djsj_fw_zrz e on d.lszd = e.lszd and e.zrzh = d.zrzh
+        <where>
+            <if test="ywh != null and ywh !=''">
+                and a.xmid = #{ywh}
+            </if>
+        </where>
+        )
+        where cn = 1
+    </select>
+
+
+    <select id="queryKttFwZrzDzList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.KttFwZrzDO">
+        select distinct '' as bsm,b.bdcdyh,c.lszd as zddm,d.zrzh,e.xmmc,e.fwmc as jzwmc,(case when f.jgsj is
+        null then to_char(e.jgrq) else f.jgsj end) jgrq,
+        e.jzwgd,trunc(d.zzdmj) zzdmj,d.zydmj,e.ycjzmj,e.scjzmj,e.fwcs zcs,
+        d.dscs,d.dxcs,e.dxsd,d.fwyt ghyt,
+        to_char(e.fwjg) fwjg,d.zts,'' as dah,e.bz,'1' as zt,substr(b.bdcdyh,0,6) as qxdm
+        from bdc_fdcq b
+        left join bdc_xm a on a.xmid=b.xmid
+        inner join bdc_fdcq_fdcqxm f on f.qlid=b.qlid
+        left join djsj_fw_xmxx c on b.bdcdyh=c.bdcdyh
+        left join djsj_fw_ljz d on c.fw_xmxx_index=d.fw_xmxx_index
+        left join djsj_fw_zrz e on d.lszd||d.zrzh=e.lszd||e.zrzh
+        <where>
+            <if test="ywh != null and ywh !=''">
+                and a.xmid = #{ywh}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="queryFwLjz" parameterType="java.util.Map" resultType="java.util.Map">
+        select l.lszd zddm,l.zrzh,trunc(l.zzdmj,3)zzdmj,l.zydmj,l.dscs,l.dxcs,to_char(l.fwyt) ghyt,l.zts from
+        djsj_fw_ljz l
+        <if test="isYc != null and isYc !=''">
+            INNER JOIN (SELECT t.bdcdyh,t.fw_dcb_index
+            from djsj_fwhs t WHERE t.bdcdyh IS NOT NULL
+            UNION All
+            select t1.bdcdyh,t1.fw_dcb_index
+            from djsj_fwychs t1
+            WHERE t1.bdcdyh IS NOT NULL AND t1.bdcdyh not in (select bdcdyh FROM djsj_fwhs WHERE bdcdyh IS NOT NULL)
+            ) c ON l.fw_dcb_index = c.fw_dcb_index
+        </if>
+        <if test="isYc == null or isYc ==''">
+            INNER JOIN djsj_fwhs c ON l.fw_dcb_index = c.fw_dcb_index
+        </if>
+        <where>
+            <if test="bdcdyh != null and isYc !=''">
+                c.bdcdyh=#{bdcdyh}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="queryFwZrz" parameterType="java.util.Map" resultType="java.util.Map">
+        select t.xmmc,t.fwmc jzwmc,t.jgrq,t.jzwgd,t.ycjzmj,t.scjzmj,t.fwcs zcs,t.dxsd,to_char(t.fwjg)
+        fwjg,t.bz from djsj_fw_zrz t
+        <where>
+            <if test="lszd != null and lszd !=''">
+                and t.lszd = #{lszd}
+            </if>
+            <if test="zrzh != null and zrzh !=''">
+                and t.zrzh = #{zrzh}
+            </if>
+        </where>
+    </select>
+</mapper>

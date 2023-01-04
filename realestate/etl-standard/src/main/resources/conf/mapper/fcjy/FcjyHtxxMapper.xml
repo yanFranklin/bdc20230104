@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.etl.core.mapper.fcjy.FcjyHtxxMapper">
+    <select id="listFcjySpfHtbaxx" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.etl.HtbaSpfDO">
+        SELECT to_char(t.beiandata_id) AS baid,
+               t.house_number AS fwbm,
+               t.house_address AS zl,
+               t.build_area AS jzmj,
+               t.price AS cjj,
+               t.yqr AS kfsmc,
+               t.qm AS qxdm,
+               t.use_fact AS tdyt,
+               t.compact_code AS htbh,
+               t.home_name AS xqmc,
+               t.build_number AS zh,
+               t.unit AS dyh,
+               t.room AS fjh,
+               t.house_struct AS fwjg,
+               t.recoreds_date AS basj,
+               t.inside_area AS tnmj,
+               1 AS bazt
+        FROM REALTYPRESALE_STORAGE.T_BEIANDATA t
+        WHERE 1 = 1
+        <if test="startId >= 0 and tbsl >= 0">
+            AND t.beiandata_id >= #{startId} AND rownum &lt;= #{tbsl}
+        </if>
+    </select>
+
+    <select id="listFcjySpfHtbaQlrxx" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.etl.HtbaQlrDO">
+        SELECT to_char(t.compactjoin_pre_id) AS qlrid,
+               to_char(d.beiandata_id) AS baid,
+               trim(t.compactjoin_name) AS qlrmc,
+               trim(t.compactjoin_code) AS zjh,
+               trim(t.compactjoin_tel) AS lxdh
+        FROM REALTYPRESALE_STORAGE.T_COMPACTJOIN_PRE t
+        LEFT JOIN REALTYPRESALE_STORAGE.T_COMPACTRECORDS c ON t.presalecompact_id = c.presalecompact_id
+        LEFT JOIN REALTYPRESALE_STORAGE.T_BEIANDATA d ON c.compactrecords_id = d.compactrecords_id
+        WHERE 1 = 1
+        <if test="baidList != null and baidList.size() > 0">
+            AND d.beiandata_id IN
+            <foreach collection="baidList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+</mapper>

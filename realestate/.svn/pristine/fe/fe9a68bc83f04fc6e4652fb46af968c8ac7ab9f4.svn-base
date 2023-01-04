@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.natural.core.mapper.ZrzyXtJgMapper">
+    <!-- 查询出全部银行信息 -->
+    <select id="listBdcXtJg" resultType="cn.gtmap.realestate.common.core.domain.BdcXtJgDO" parameterType="java.lang.Integer">
+        SELECT jgid, jgmc, jgzjzl, jgzjbh, jglb, bz FROM bdc_xt_jg t
+        <where>
+            <if test="jglb != null and jglb !=''">
+                AND t.jglb = #{jglb}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询出全部银行信息 -->
+    <select id="queryJgLzrByPage" resultType="cn.gtmap.realestate.common.core.dto.init.BdcJgLzrGxDTO" parameterType="cn.gtmap.realestate.common.core.qo.init.BdcXtjgLzrQO">
+        SELECT a.gxid,a.jgid, a.lzrmc, a.lzrzjzl, zd.mc as lzrzjzlmc,a.lzrdh, a.lzrzjh, b.jgmc FROM bdc_jg_lzr_gx a inner join bdc_xt_jg b
+        on a.jgid = b.jgid
+        inner join bdc_zd_zjzl zd
+        on a.lzrzjzl = zd.dm
+        where 1=1
+
+        <if test="jgidList != null and jgidList.size() > 0">
+            AND a.jgid IN
+            <foreach collection="jgidList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="lzrmc != null and lzrmc !=''">
+            AND a.lzrmc like '%'|| #{lzrmc} || '%'
+        </if>
+
+        <if test="lzrzjh != null and lzrzjh !=''">
+            AND a.lzrzjh like '%'|| #{lzrzjh} || '%'
+        </if>
+
+
+    </select>
+
+    <update id="batchModifyXtJgSfky" parameterType="map">
+        <if test="yhmcList != null and yhmcList.size>0">
+            UPDATE BDC_XT_JG t
+            <set>
+                t.SFKY = #{sfky}
+            </set>
+            <where>
+                <if test="yhmcList != null">
+                    AND t.JGMC IN
+                    <foreach collection="yhmcList" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+        </if>
+    </update>
+
+    <select id="queryBatchBdcXtJg" resultType="cn.gtmap.realestate.common.core.domain.BdcXtJgDO" parameterType="map">
+        SELECT  jgid, jgmc,sfxyjg FROM bdc_xt_jg t
+        where (t.sfxyjg  != '1' or t.sfxyjg is  null)
+        <if test="jgmcList != null  and jgmcList.size() > 0">
+            AND t.JGMC IN
+            <foreach collection="jgmcList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+</mapper>

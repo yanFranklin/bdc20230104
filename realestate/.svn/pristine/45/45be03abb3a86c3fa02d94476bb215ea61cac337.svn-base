@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+    <bean id="checkJob" class="cn.gtmap.realestate.check.core.thread.CheckJob"/>
+    <bean id="checkPlanJob" class="cn.gtmap.realestate.check.core.thread.CheckPlanJob"/>
+    <bean id="checkZlsjJob" class="cn.gtmap.realestate.check.core.thread.CheckZlsjJob"/>
+
+    <bean id="springCheckJobMethod" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="checkJob"/>
+        </property>
+        <property name="targetMethod">  <!-- 要执行的方法名称 -->
+            <value>execute</value>
+        </property>
+    </bean>
+    <bean id="springCheckPlanJobMethod" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="checkPlanJob"/>
+        </property>
+        <property name="targetMethod">  <!-- 要执行的方法名称 -->
+            <value>execute</value>
+        </property>
+    </bean>
+    <bean id="springCheckZlsjJobMethod" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="checkZlsjJob"/>
+        </property>
+        <property name="targetMethod">  <!-- 要执行的方法名称 -->
+            <value>execute</value>
+        </property>
+    </bean>
+    <bean id="CronTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="springCheckJobMethod"></property>
+        <property name="cronExpression" value="${quartz.time}"></property>
+    </bean>
+    <bean id="CronTriggerPlanBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="springCheckPlanJobMethod"></property>
+        <property name="cronExpression" value="${check.plan.time}"></property>
+    </bean>
+    <bean id="CronTriggerZlsjBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="springCheckZlsjJobMethod"></property>
+        <property name="cronExpression" value="${check.zlsj.time}"></property>
+    </bean>
+    <bean name="quartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="CronTriggerBean"/>
+                <ref bean="CronTriggerPlanBean"/>
+                <ref bean="CronTriggerZlsjBean"/>
+            </list>
+        </property>
+
+    </bean>
+</beans>

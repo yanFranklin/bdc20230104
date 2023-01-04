@@ -1,0 +1,172 @@
+------参数  ,  -----打印类型 sqs
+xmid,sjclmc,ewm,yxmid
+----sql
+select t.slbh,to_char(t.slsj,'yyyy"年"mm"月"dd"日"') slsj,t.slr,t.djlx,t.qllx,t.bz,nvl(t.djyy,'') djyy,z.mc sqzsbs,f.mc sqfbcz,#{sjclmc} sjclmc,#{ewm} ewm,t.zl,t.bdcdyh,b.mc bdclx,t.ycqzh,s.mc zdzhyt,'土地面积：'||t.zdzhmj||CHR(10)||'房屋面积：'||t.dzwmj mj,y.mc yhlx,m.mc mjdw,g.mc gzwlx,l.mc lz from bdc_xm t
+left join bdc_zd_tdyt s on s.dm=t.zdzhyt
+left join bdc_zd_zsbs z on z.dm=t.sqzsbs
+left join bdc_zd_sf f on f.dm = t.sqfbcz
+left join bdc_zd_bdclx b on b.dm = t.bdclx
+left join bdc_zd_hysylxa y on y.dm = t.yhlxa
+left join bdc_zd_gjzwlx g on g.dm=t.gzwlx
+left join bdc_zd_lz l on l.dm = t.lz
+left join bdc_zd_mjdw m on m.dm = t.mjdw where t.xmid=#{xmid};
+select replace(to_char(wm_concat(a.qlrmc)),',','/')qlrmc,replace(to_char(wm_concat(b.mc)),',','/') qlrzjzl,replace(to_char(wm_concat(a.zjh)),',','/')qlrzjh,replace(to_char(wm_concat(a.txdz)),',','/')qlrtxdz,replace(to_char(wm_concat(a.frmc)),',','/') qlrfrmc,replace(to_char(wm_concat(a.frdh)),',','/') qlrfrdh
+,replace(to_char(wm_concat(a.dlrmc)),',','/')qlrdlrmc,replace(to_char(wm_concat(a.dlrdh)),',','/')qlrdldh,replace(to_char(wm_concat(a.dljg)),',','')qlrdljg,replace(to_char(wm_concat(a.yb)),',','/')qlryb from bdc_qlr a left join bdc_zd_zjzl b on a.zjzl= b.dm
+where a.xmid = #{xmid} and a.qlrlb =1;
+select replace(to_char(wm_concat(a.qlrmc)),',','/')ywrmc,replace(to_char(wm_concat(b.mc)),',','/') ywrzjzl,replace(to_char(wm_concat(a.zjh)),',','/') ywrzjh,replace(to_char(wm_concat(a.txdz)),',','/')ywrtxdz,replace(to_char(wm_concat(a.frmc)),',','/') ywrfrmc,replace(to_char(wm_concat(a.frdh)),',','/') ywrfrdh,replace(to_char(wm_concat(a.dlrmc)),',','/')ywrdlrmc,
+replace(to_char(wm_concat(a.dlrdh)),',','/')ywrdldh,replace(to_char(wm_concat(a.dljg)),',','')ywrdljg,replace(to_char(wm_concat(a.yb)),',','/')ywryb from bdc_qlr a left join bdc_zd_zjzl b on a.zjzl= b.dm
+where a.xmid = #{xmid} and a.qlrlb =2;
+select zjjzwdyfw,bdbzzqse,to_char(zwlxqssj,'yyyy"年"mm"月"dd"日"') zwlxqssj,to_char(zwlxjssj,'yyyy"年"mm"月"dd"日"') zwlxjssj from bdc_dyaq  where xmid =(case when #{yxmid} is not null then #{yxmid} else #{xmid} end);
+select xydzl,xydbdcdyh from bdc_dyiq where xmid=#{xmid};
+select qdjg bdbzzqse,to_char(zwlxqssj,'yyyy"年"mm"月"dd"日"') zwlxqssj,to_char(zwlxjssj,'yyyy"年"mm"月"dd"日"') zwlxjssj from bdc_yg  where xmid=(case when #{yxmid} is not null then #{yxmid} else #{xmid} end);
+select (case when t.zdzhmj is not null and t.dzwmj is null then  '土地面积：'||t.zdzhmj when t.dzwmj is not null and t.zdzhmj is null then '房屋面积：'||t.dzwmj
+when t.zdzhmj is not null and t.dzwmj is not null then '土地面积：'||t.zdzhmj||'/'||'房屋面积：'||t.dzwmj end) mj from bdc_xm t  where xmid=#{xmid}
+-----xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<fetchdatas>
+<page>
+        <datas>
+            <data name="slbh" type="String">$SLBH</data>
+            <data name="slsj" type="String">$SLSJ</data>
+            <data name="slr" type="String">$SLR</data>
+            <data name="mjdw" type="String">$MJDW</data>
+            <data name="qllx" type="String">$QLLX</data>
+            <data name="djlx" type="String">$DJLX</data>
+            <data name="qlrmc" type="String">$QLRMC</data>
+            <data name="qlrzjzl" type="String">$QLRZJZL</data>
+            <data name="qlrzjh" type="String">$QLRZJH</data>
+            <data name="qlrtxdz" type="String">$QLRTXDZ</data>
+            <data name="qlrfrmc" type="String">$QLRFRMC</data>
+            <data name="qlrfrdh" type="String">$QLRFRDH</data>
+            <data name="qlrdlrmc" type="String">$QLRDLRMC</data>
+            <data name="qlrdldh" type="String">$QLRDLDH</data>
+            <data name="qlrdljg" type="String">$QLRDLJG</data>
+            <data name="qlryb" type="String">$QLRYB</data>
+            <data name="ywrmc" type="String">$YWRMC</data>
+            <data name="ywrzjzl" type="String">$YWRZJZL</data>
+            <data name="ywrzjh" type="String">$YWRZJH</data>
+            <data name="ywrtxdz" type="String">$YWRTXDZ</data>
+            <data name="ywrfrmc" type="String">$YWRFRMC</data>
+            <data name="ywrfrdh" type="String">$YWRFRDH</data>
+            <data name="ywrdlrmc" type="String">$YWRDLRMC</data>
+            <data name="ywrdldh" type="String">$YWRDLDH</data>
+            <data name="ywrdljg" type="String">$YWRDLJG</data>
+            <data name="ywryb" type="String">$YWRYB</data>
+            <data name="zl" type="String">$ZL</data>
+            <data name="bdcdyh" type="String">$BDCDYH</data>
+            <data name="bdclx" type="String">$BDCLX</data>
+            <data name="mj" type="String">$MJ</data>
+            <data name="zdzhyt" type="String">$ZDZHYT</data>
+            <data name="ycqzh" type="String">$YCQZH</data>
+            <data name="yhlx" type="String">$YHLX</data>
+            <data name="gzwlx" type="String">$GZWLX</data>
+            <data name="bdcdyh" type="String">$BDCDYH</data>
+            <data name="lz" type="String">$LZ</data>
+            <data name="bdbzzqse" type="String">$BDBZZQSE</data>
+            <data name="zwlxqssj" type="String">$ZWLXQSSJ</data>
+            <data name="zwlxjssj" type="String">$ZWLXJSSJ</data>
+            <data name="zjjzwdyfw" type="String">$ZJJZWDYFW</data>
+            <data name="xydzl" type="String">$XYDZL</data>
+            <data name="xydbdcdyh" type="String">$XYDBDCDYH</data>
+            <data name="djyy" type="String">$DJYY</data>
+            <data name="sjclmc" type="String">$SJCLMC</data>
+            <data name="sqzsbs" type="String">$SQZSBS</data>
+            <data name="sqfbcz" type="String">$SQFBCZ</data>
+            <data name="bz" type="String">$BZ</data>
+            <data name="ewm" type="image">$EWM</data>
+        </datas>
+</page>
+</fetchdatas>
+
+------参数  ,  -----打印类型 sqspl
+xmid,sjclmc,ewm,zdzhmj,dzwmj,yxmid
+----sql
+select t.slbh,to_char(t.slsj,'yyyy"年"mm"月"dd"日"') slsj,t.slr,t.djlx,t.qllx,t.bz,nvl(t.djyy,'') djyy,z.mc sqzsbs,f.mc sqfbcz,#{sjclmc} sjclmc,#{ewm} ewm,t.zl||'等' zl,t.bdcdyh||'等' bdcdyh,b.mc bdclx,t.ycqzh,s.mc zdzhyt,'土地面积：'||#{zdzhmj}||CHR(10)||'房屋面积：'||#{dzwmj} mj ,y.mc yhlx,m.mc mjdw,g.mc gzwlx,l.mc lz from bdc_xm t
+left join bdc_zd_tdyt s on s.dm=t.zdzhyt
+left join bdc_zd_zsbs z on z.dm=t.sqzsbs
+left join bdc_zd_sf f on f.dm = t.sqfbcz
+left join bdc_zd_bdclx b on b.dm = t.bdclx
+left join bdc_zd_hysylxa y on y.dm = t.yhlxa
+left join bdc_zd_gjzwlx g on g.dm=t.gzwlx
+left join bdc_zd_lz l on l.dm = t.lz
+left join bdc_zd_mjdw m on m.dm = t.mjdw where t.xmid=#{xmid};
+select replace(to_char(wm_concat(a.qlrmc)),',','/')qlrmc,replace(to_char(wm_concat(b.mc)),',','/') qlrzjzl,replace(to_char(wm_concat(a.zjh)),',','/')qlrzjh,replace(to_char(wm_concat(a.txdz)),',','/')qlrtxdz,replace(to_char(wm_concat(a.frmc)),',','/') qlrfrmc,replace(to_char(wm_concat(a.frdh)),',','/') qlrfrdh
+,replace(to_char(wm_concat(a.dlrmc)),',','/')qlrdlrmc,replace(to_char(wm_concat(a.dlrdh)),',','/')qlrdldh,replace(to_char(wm_concat(a.dljg)),',','')qlrdljg,replace(to_char(wm_concat(a.yb)),',','/')qlryb from bdc_qlr a left join bdc_zd_zjzl b on a.zjzl= b.dm
+where a.xmid = #{xmid} and a.qlrlb =1;
+select replace(to_char(wm_concat(a.qlrmc)),',','/')ywrmc,replace(to_char(wm_concat(b.mc)),',','/') ywrzjzl,replace(to_char(wm_concat(a.zjh)),',','/') ywrzjh,replace(to_char(wm_concat(a.txdz)),',','/')ywrtxdz,replace(to_char(wm_concat(a.frmc)),',','/') ywrfrmc,replace(to_char(wm_concat(a.frdh)),',','/') ywrfrdh,replace(to_char(wm_concat(a.dlrmc)),',','/')ywrdlrmc,
+replace(to_char(wm_concat(a.dlrdh)),',','/')ywrdldh,replace(to_char(wm_concat(a.dljg)),',','')ywrdljg,replace(to_char(wm_concat(a.yb)),',','/')ywryb from bdc_qlr a left join bdc_zd_zjzl b on a.zjzl= b.dm
+where a.xmid = #{xmid} and a.qlrlb =2;
+select a.xmid,a.bdbzzqse,to_char(a.zwlxqssj,'yyyy"年"mm"月"dd"日"')zwlxqssj,
+to_char(a.zwlxjssj,'yyyy"年"mm"月"dd"日"')zwlxjssj,a.zjjzwdyfw from(
+select d.zjjzwdyfw,d.bdbzzqse,d.zwlxqssj,d.zwlxjssj,d.xmid from bdc_dyaq d  where d.xmid=(case when #{yxmid} is not null then #{yxmid} else #{xmid} end) union all
+select '',g.qdjg bdbzzqse ,g.zwlxqssj,g.zwlxjssj,g.xmid from bdc_yg g where g.xmid=(case when #{yxmid} is not null then #{yxmid} else #{xmid} end))a;
+select y.zl xydzl,y.bdcdyh xydbdcdyh from bdc_yy y where y.xmid=#{xmid};
+SELECT CASE a.bdclx
+		WHEN 2 THEN b.mc
+		WHEN 6 THEN b.mc
+		WHEN 8 THEN b.mc
+		WHEN 10 THEN b.mc
+		ELSE c.mc
+	END AS yt
+FROM bdc_xm a
+	LEFT JOIN bdc_zd_fwyt b ON a.dzwyt = b.dm
+	LEFT JOIN bdc_zd_tdyt c ON a.zdzhyt = c.dm
+WHERE a.xmid = #{xmid}
+----xml
+<?xml version="1.0" encoding="utf-8"?>
+<fetchdatas>
+<page>
+        <datas>
+            <data name="slbh" type="String">$SLBH</data>
+            <data name="slsj" type="String">$SLSJ</data>
+            <data name="slr" type="String">$SLR</data>
+            <data name="mjdw" type="String">$MJDW</data>
+            <data name="qllx" type="String">$QLLX</data>
+            <data name="djlx" type="String">$DJLX</data>
+            <data name="qlrmc" type="String">$QLRMC</data>
+            <data name="qlrzjzl" type="String">$QLRZJZL</data>
+            <data name="qlrzjh" type="String">$QLRZJH</data>
+            <data name="qlrtxdz" type="String">$QLRTXDZ</data>
+            <data name="qlrfrmc" type="String">$QLRFRMC</data>
+            <data name="qlrfrdh" type="String">$QLRFRDH</data>
+            <data name="qlrdlrmc" type="String">$QLRDLRMC</data>
+            <data name="qlrdldh" type="String">$QLRDLDH</data>
+            <data name="qlrdljg" type="String">$QLRDLJG</data>
+            <data name="qlryb" type="String">$QLRYB</data>
+            <data name="ywrmc" type="String">$YWRMC</data>
+            <data name="ywrzjzl" type="String">$YWRZJZL</data>
+            <data name="ywrzjh" type="String">$YWRZJH</data>
+            <data name="ywrtxdz" type="String">$YWRTXDZ</data>
+            <data name="ywrfrmc" type="String">$YWRFRMC</data>
+            <data name="ywrfrdh" type="String">$YWRFRDH</data>
+            <data name="ywrdlrmc" type="String">$YWRDLRMC</data>
+            <data name="ywrdldh" type="String">$YWRDLDH</data>
+            <data name="ywrdljg" type="String">$YWRDLJG</data>
+            <data name="ywryb" type="String">$YWRYB</data>
+            <data name="zl" type="String">$ZL</data>
+            <data name="bdcdyh" type="String">$BDCDYH</data>
+            <data name="bdclx" type="String">$BDCLX</data>
+            <data name="mj" type="String">$MJ</data>
+            <data name="yt" type="String">$YT</data>
+            <data name="ycqzh" type="String">$YCQZH</data>
+            <data name="yhlx" type="String">$YHLX</data>
+            <data name="gzwlx" type="String">$GZWLX</data>
+            <data name="bdcdyh" type="String">$BDCDYH</data>
+            <data name="lz" type="String">$LZ</data>
+            <data name="bdbzzqse" type="String">$BDBZZQSE</data>
+            <data name="zwlxqssj" type="String">$ZWLXQSSJ</data>
+            <data name="zwlxjssj" type="String">$ZWLXJSSJ</data>
+            <data name="zjjzwdyfw" type="String">$ZJJZWDYFW</data>
+            <data name="xydzl" type="String">$XYDZL</data>
+            <data name="xydbdcdyh" type="String">$XYDBDCDYH</data>
+            <data name="djyy" type="String">$DJYY</data>
+            <data name="sjclmc" type="String">$SJCLMC</data>
+            <data name="sqzsbs" type="String">$SQZSBS</data>
+            <data name="sqfbcz" type="String">$SQFBCZ</data>
+            <data name="bz" type="String">$BZ</data>
+            <data name="ewm" type="image">$EWM</data>
+        </datas>
+</page>
+</fetchdatas>
+

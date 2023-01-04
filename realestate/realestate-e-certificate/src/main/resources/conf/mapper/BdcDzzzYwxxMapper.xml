@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.certificate.core.mapper.BdcDzzzYwxxMapper">
+
+    <select id="queryYwxxByYwid" parameterType="string"
+            resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzYwxxDo">
+        SELECT ywid, zzid, ywh, bdcqzh, bdcdyh, zl, dwdm, sqsjc, szsxqc, fzrq, gyqk, qllx, qlxz, yt, mj, syqx, zhlsh, qlr, ywr, nf, zmqlsx, fj
+        , qlqtzk, qt, cjsj, ewmnr, zstype, zsbh,smct FROM bdc_dzzz_ywxx WHERE ywid=#{ywid}
+    </select>
+
+    <select id="queryYwxxByZzid" parameterType="string"
+            resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzYwxxDo">
+        SELECT ywid, zzid, ywh, bdcqzh, bdcdyh, zl, dwdm, sqsjc, szsxqc, fzrq, gyqk, qllx, qlxz, yt, mj, syqx, zhlsh, qlr, ywr, nf, zmqlsx, fj
+        , qlqtzk, qt, cjsj, ewmnr, zstype, zsbh,smct FROM bdc_dzzz_ywxx WHERE zzid=#{zzid} ORDER BY cjsj DESC
+    </select>
+
+    <insert id="insertYwxx" parameterType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzYwxxDo">
+        INSERT INTO bdc_dzzz_ywxx t (ywid, zzid, ywh, bdcqzh, bdcdyh, zl, dwdm, sqsjc, szsxqc, fzrq, gyqk, qllx, qlxz, yt, mj, syqx, zhlsh, qlr, ywr
+        , nf, zmqlsx, fj, qlqtzk, qt, cjsj, ewmnr, zstype, zsbh, tbzt, smct)
+        VALUES (#{ywid,jdbcType=VARCHAR},#{zzid,jdbcType=VARCHAR},#{ywh,jdbcType=VARCHAR},#{bdcqzh,jdbcType=VARCHAR}
+        ,#{bdcdyh,jdbcType=VARCHAR},#{zl,jdbcType=VARCHAR},#{dwdm,jdbcType=VARCHAR},#{sqsjc,jdbcType=VARCHAR}
+        ,#{szsxqc,jdbcType=VARCHAR},#{fzrq,jdbcType=TIMESTAMP},#{gyqk,jdbcType=VARCHAR},#{qllx,jdbcType=VARCHAR},#{qlxz,jdbcType=VARCHAR}
+        ,#{yt,jdbcType=VARCHAR},#{mj,jdbcType=VARCHAR},#{syqx,jdbcType=VARCHAR},#{zhlsh,jdbcType=VARCHAR}
+        ,#{qlr,jdbcType=VARCHAR},#{ywr,jdbcType=VARCHAR},#{nf,jdbcType=VARCHAR},#{zmqlsx,jdbcType=VARCHAR}
+        ,#{fj,jdbcType=VARCHAR},#{qlqtzk,jdbcType=VARCHAR},#{qt,jdbcType=VARCHAR},#{cjsj,jdbcType=TIMESTAMP},#{ewmnr,jdbcType=VARCHAR}
+        ,#{zstype,jdbcType=VARCHAR},#{zsbh,jdbcType=VARCHAR},#{tbzt,jdbcType=INTEGER},#{smct,jdbcType=VARCHAR})
+    </insert>
+
+    <delete id="deleteYwxxByYwid" parameterType="String">
+        DELETE bdc_dzzz_ywxx WHERE ywid = #{ywid}
+    </delete>
+
+    <delete id="deleteYwxxByZzid" parameterType="String">
+        DELETE bdc_dzzz_ywxx WHERE zzid = #{zzid}
+    </delete>
+
+    <update id="updateYwxxByZzid" parameterType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzYwxxDo">
+        UPDATE bdc_dzzz_ywxx t
+        <set>
+            <if test="tbzt != null">
+                t.tbzt = #{tbzt}
+            </if>
+        </set>
+        WHERE t.zzid = #{zzid}
+    </update>
+
+</mapper>

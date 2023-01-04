@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.building.core.mapper.TdlpbMapper">
+    <!--查询土地楼盘表信息 -->
+    <select id="getTdlpbxxList" parameterType="map" resultType="map">
+        SELECT
+            ljz.dh,
+            ljz.zrzh,
+            jsyd.bzghmjbl,
+            jsyd.lhdycs as lhdyzt,
+            nvl(jsyd.lhsdqlzt,1) as lhsdzt,
+            jsyd.lhcfcs as lhcfzt,
+            ljz.fw_dcb_index,
+            nvl2(a.count,1,0) as ygzt
+        FROM
+            fw_ljz    ljz
+        LEFT JOIN fw_jsydzrzxx   jsyd ON ljz.fw_dcb_index = jsyd.fw_dcb_index  AND ljz.lszd = jsyd.lszd
+        left join
+        (
+            SELECT
+            count(1) as count,
+            fw_ychs.fw_dcb_index
+            FROM
+            fw_ljz ljz
+            LEFT JOIN fw_ychs ON ljz.fw_dcb_index = fw_ychs.fw_dcb_index
+            LEFT JOIN s_sj_bdcdyhxszt ON fw_ychs.bdcdyh = s_sj_bdcdyhxszt.bdcdyh
+            WHERE
+            S_SJ_BDCDYHXSZT.XSYGCS  is not null
+            and S_SJ_BDCDYHXSZT.XSYGCS !=0
+            GROUP BY
+            fw_ychs.fw_dcb_index
+        ) a on a.fw_dcb_index = ljz.fw_dcb_index
+       <where>
+            <if test="djh != null and djh != ''">
+                ljz.lszd = #{djh}
+            </if>
+        </where>
+        order by to_number(nvl(regexp_replace(ljz.dh,'[^0-9]'),'9999'))
+    </select>
+
+</mapper>

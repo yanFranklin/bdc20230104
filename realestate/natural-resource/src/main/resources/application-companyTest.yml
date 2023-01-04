@@ -1,0 +1,64 @@
+info:
+  name: ${spring.application.name}
+  component: natural-resource application
+
+app:
+  center: http://192.168.2.98:8000/eureka/
+  oauth: http://192.168.2.98:8002/account
+  security:
+    moduleAuthPath: http://account/account
+    ignores: /image/**,/css/**,/js/**,/webjars/**,/realestate-accept/rest/v1.0/print/**,/realestate-accept/rest/v1.0/sjcl/sjclmc,/realestate-accept/rest/v1.0/sl/**/protal,/realestate-accept/rest/v1.0/xmlsgx/**,/realestate-accept/rest/v1.0/jyxx/**
+    authorities:
+      permitAll: /index2
+      hasUrlAuthority('read'): /auth/users,/auth/orgs
+      hasModuleAuthority('yhgl:add'): /auth/user/create
+      hasAnyAuthority('ROLE_USER'): /resource1/**,/catalog1/**,/index
+      hasAnyAuthority('ROLE_ADMIN_2'): /call
+      authenticated: true
+    resources:
+      authenticated: /resource/**,/catalog/**,/realestate-accept/rest/v1.0/**
+spring:
+  rabbitmq:
+    host: 192.168.0.60
+    port: 5672
+    username: guest
+    password: guest
+  redis:
+    port: 6379
+    host: 192.168.0.60
+  datasource:
+    #    url: jdbc:oracle:thin:@192.168.65.9:1521/orcl
+    url: jdbc:oracle:thin:@192.168.2.88:1521/orcl
+    username: bdcsl_hefei
+    password: e/lWYHJj7d9rXmgsItIxLw2oWP4XasfqoDXA0AKNYHgeSJQK8IKgU8/+ia1ax4mr9ki4QZbrQrCW9WMkHDOPAA==
+    publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK8ev+xi3qANIZpQGhndeKtc2EOlsPd48VIhphnl3OoOKqynJuQo7qZrJekk8iqXHgvze3bnFrFyTtf3vxGIamsCAwEAAQ==
+
+  messages:
+    basename: conf/message/messages, conf/message/errors
+  profiles:
+    include: config  #引入配置文件 application-config.yml
+
+liquibase:
+  #变更日志配置路径(默认值 classpath:/db/changelog/db.changelog-master.yaml)
+  change-log: classpath:changelog/master.xml
+   #开启liquibase支持(默认值 true)
+  enabled: true
+  #先删除数据库schema(默认值 false)
+  drop-first: false
+
+server:
+  port: ${port:8703}
+
+logging:
+  classify:
+    # 表示除path之外的路径下默认的日志分类为platform
+    defaulted: platform
+#    /rest/**, /test/** 路径下的日志分类为 test， 如果不需要可以不配做
+#    path:
+#      test: /rest/**, /test/**
+
+#url地址
+url:
+  acceptUrl: http://192.168.50.10:8686/realestate-natural-resource
+
+

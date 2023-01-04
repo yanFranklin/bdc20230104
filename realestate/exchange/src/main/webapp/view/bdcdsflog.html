@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title class="bdc_subsystem">第三方日志查询台账</title>
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <link href="../static/layui/css/layui.css" media="all" rel="stylesheet" />
+    <link href="../static/css/mask.css" media="all" rel="stylesheet" />
+    <link href="../static/lib/bdcui/css/table.css" rel="stylesheet"/>
+    <link href="../static/lib/bdcui/css/search.css" rel="stylesheet"/>
+    <link href="../static/css/percentage-layout.css" rel="stylesheet" />
+    <script src="../static/lib/jquery/jquery.min.js"></script>
+    <script src="../static/lib/layui/layuigxh.js"></script>
+    <script src="../static/js/mask.js"></script>
+    <script src="../static/js/common.js"></script>
+    <script src="../static/js/table.js"></script>
+    <script src="../static/js/gxhpz.js"></script>
+    <!-- ztree -->
+    <link rel="stylesheet" href="../static/ztree/metroStyle.css" />
+    <link rel="stylesheet" href="../static/ztree/custom_tree.css" />
+    <script src="../static/ztree/jquery.ztree.core.js"></script>
+    <script src="../static/ztree/jquery.ztree.excheck.js"></script>
+    <script src="../static/ztree/jquery.ztree.exedit.js"></script>
+    <script src="../static/ztree/jquery.ztree.exhide.js"></script>
+    <script src="../static/js/bdcdsflog/bdcdsf_selectTree.js"></script>
+
+    <link rel="stylesheet" href="../static/lib/form-select/formSelects-v4.css">
+    <style>
+        .layui-table td.layui-table-col-special .layui-table-cell{
+            overflow: hidden;
+        }
+        .bdc-radio .xm-form-checkbox > i,
+        div[xm-select-skin=default] dl dd:not(.xm-dis-disabled) i {
+            border-color: #1d87d1;
+        }
+        .bdc-radio .xm-select-parent dl dd.xm-select-this div i,
+        div[xm-select-skin=default] dl dd.xm-select-this:not(.xm-dis-disabled) i {
+            color: #1d87d1;
+        }
+        .bdc-radio .xm-form-checkbox:hover > i {
+            border-color: #1d87d1;
+        }
+        dl.xm-select-dl {
+            width: 400px;
+        }
+    </style>
+</head>
+<body>
+<div class="bdc-percentage-container">
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <form class="layui-form" lay-filter="searchForm">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline " id="gxbmbzDiv">
+                        <label id="qjgldmLabel" class="layui-form-label">共享部门标志</label>
+                        <div class="layui-input-inline xzq-sele" style="max-height: 34px;">
+                            <select xm-select="selectgxbmbz" xm-select-skin="default"
+                                    xm-select-show-count="2" xm-select-height="34px" xm-select-min-herght="34px" xm-select-search="" xm-select-search-type="dl"
+                                    id="gxbmbz" lay-search="" lay-filter="gxbmbz"
+                                    class="layui-select xxxx-tab-useful gxbmbz required"
+                                    lay-verify="" name="gxbmbz">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline" id="bmmcDiv" style="display: none">
+                        <label id="bmmcLabel"  class="layui-form-label">部门名称</label>
+                        <div id="jgbmDiv"  class="layui-input-inline xzq-sele" style="display: flex;">
+                            <input type="text" id="bmmc" name="bmmc"  autocomplete="off" placeholder="请选择" class="layui-input search" style="width: 100%;">
+                            <input type="text" name="bmid" style="display: none">
+                            <div class="layui-btn layui-btn-sm bdc-table-second-btn org_select_show">选择</div>
+                            <div class="org_select_tree">
+                                <dd lay-value="" class="xm-select-tips">
+                                    <div class="xm-cz-group" show="null" style="max-width: 220px;">
+                                        <div class="xm-cz"  id="all" method="全选" title="全选" style="margin-right: 30px">
+                                            <i class="xm-iconfont icon-quanxuan"></i>
+                                            <span>全选</span></div>
+                                        <div class="xm-cz"  id="empty"   method="清空" title="清空" style="margin-right: 30px">
+                                            <i class="xm-iconfont icon-qingkong"></i><span>清空</span></div>
+                                        <div class="xm-cz" method="反选" id="unall" title="反选">
+                                            <i class="xm-iconfont icon-fanxuan"></i>
+                                            <span>反选</span>
+                                        </div>
+                                    </div>
+                                <dd lay-value="" class="xm-select-tips divInput"> <i class="xm-iconfont icon-sousuo"></i><input type="text" name="selvalue" id="deptsel"  class="xm-input xm-select-input"  placeholder="请搜索" ></dd>
+                                <div class="menuContent">
+                                    <dd class="xm-select-tips xm-select-none  xm-select-empty">无匹配项</dd>
+                                    <ul id="select_tree" class="ztree"></ul>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">受理编号</label>
+                        <div class="layui-input-inline">
+                            <input class="layui-input cxtj required" name="slbh" placeholder="请输入" type="text"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">开始时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" placeholder="请选择" id="kssj" name="kssj" autocomplete="off" class="layui-input cxtj required">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">结束时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" placeholder="请选择" id="jssj" name="jssj" autocomplete="off" class="layui-input cxtj required">
+                        </div>
+                    </div>
+                    <div class="layui-inline "  id="jkmcDiv">
+                        <label id="jkmcLabel" class="layui-form-label">接口名称</label>
+                        <div class="layui-input-inline xzq-sele" style="max-height: 34px;">
+                            <select xm-select="selectjkmc" xm-select-skin="default"
+                                    xm-select-show-count="2" xm-select-height="34px" xm-select-min-herght="34px" xm-select-search="" xm-select-search-type="dl"
+                                    id="jkmc" lay-search="" lay-filter="jkmc" xm-select-length="300px"
+                                    class="layui-select xxxx-tab-useful gxjkmc cxtj required" lay-verify=""
+                                    name="jkmc">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">操作人</label>
+                        <div class="layui-input-inline">
+                            <input class="layui-input cxtj required" id="czr" name="czr" placeholder="请输入"
+                                   type="text"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">用户姓名</label>
+                        <div class="layui-input-inline">
+                            <input class="layui-input cxtj required" id="alias" name="alias" placeholder="请输入"
+                                   type="text"/>
+                        </div>
+                    </div>
+                    <div class="pf-senior-show bdc-hide">
+                        <div class="layui-inline" id="jkdzDiv">
+                            <label class="layui-form-label bdc-two-lines">不动产接口地址</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input cxtj required" name="bdcdz" placeholder="请输入" type="text"/>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">第三方地址</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input cxtj required" name="dsfdz" placeholder="请输入" type="text"/>
+                            </div>
+                        </div>
+                        <div class="layui-inline ">
+                            <label id="jkmcLabel" class="layui-form-label">接口名称模糊</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input cxtj required" name="jkmcmh" placeholder="请输入" type="text"/>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">区县代码</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input cxtj required" id="qxdm" name="qxdm" placeholder="请输入"
+                                       type="text"/>
+                            </div>
+                        </div>
+                        <!--<div class="layui-inline">
+                            <label class="layui-form-label">XMID</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input cxtj" name="xmid" placeholder="请输入" type="text"/>
+                            </div>
+                        </div>-->
+                    </div>
+
+                    <div class="layui-inline bdc-button-box">
+                        <button class="layui-btn bdc-major-btn" id="query" lay-filter="query" lay-submit="query">查询
+                        </button>
+                        <button class="layui-btn bdc-secondary-btn reset-btn" type="reset">重置</button>
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-secondary-btn" id="seniorSearch">高级查询</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="bdc-table-box">
+        <table id="bdcdsfLogTable" lay-filter="dataTable"></table>
+    </div>
+</div>
+<!--字典下拉框 模板 -->
+<script type="text/html" id="DmMcTpl">
+    {{# layui.each(d, function(index, zdItem){ }}
+    <option value="{{zdItem.DM}}">{{zdItem.MC}}</option>
+    {{# }); }}
+</script>
+<script type="text/html" id="xyjgTpl">
+    <p>{{=d.XYJG}}</p>
+</script>
+<script src="../static/js/bdcdsflog/bdcdsfLog.js"></script>
+</body>
+</html>
+
+

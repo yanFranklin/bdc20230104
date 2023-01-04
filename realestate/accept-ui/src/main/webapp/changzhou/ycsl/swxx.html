@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>税务信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/slymForm.css"/>
+    <link rel="stylesheet" href="../../static/css/hefei/swxx.css">
+</head>
+<body>
+<div class="bdc-form-div bdc-not-full-bg">
+    <!--全局 标题和操作按钮 开始-->
+    <form class="layui-form sl-from bdc-form-table">
+        <div class="bdc-content-fix">
+            <div class="content-title layui-clear">
+                <p>税务信息</p>
+                <div id="buttonArea"></div>
+                <input type="hidden" id="sjbh">
+            </div>
+        </div>
+        <!--全局 标题和操作按钮 结束-->
+        <div class="form-margin-area" id="ycssxx"></div>
+    </form>
+</div>
+</body>
+
+<!--按钮显示-->
+<script type="text/html" id="buttonAreaTpl">
+    <div class="title-btn-area">
+        <button class="layui-btn bdc-major-btn" lay-submit="" lay-filter="saveData" id="saveData">保存</button>
+        {{# var czzt = d.czzt; }}
+        <button class="layui-btn bdc-secondary-btn print-btn" type="button" id="tsSwxx">1.推送税务信息
+            {{# if(isNotBlank(czzt) && isNotBlank(czzt.tsSwxx) && czzt.tsSwxx == "true"){ }}
+            <img src="../../static/lib/bdcui/images/success-small.png" alt="">
+            {{# } }}
+        </button>
+        <button class="layui-btn bdc-secondary-btn print-btn" type="button" id="tsShzt">2.状态获取
+            {{# if(isNotBlank(czzt) && isNotBlank(czzt.tsShzt) && czzt.tsShzt == "true" ){ }}
+            <img src="../../static/lib/bdcui/images/success-small.png" alt="">
+            {{# } }}
+        </button>
+        <button class="layui-btn bdc-secondary-btn print-btn" type="button" id="hqSbxx">3.申报
+            {{# if(isNotBlank(czzt) && isNotBlank(czzt.hqSbxx) && czzt.hqSbxx == "true"){ }}
+            <img src="../../static/lib/bdcui/images/success-small.png" alt="">
+            {{# } }}
+        </button>
+        <button class="layui-btn bdc-secondary-btn print-btn" type="button" id="qrsb">4.确认申报
+            {{# if(isNotBlank(czzt) && isNotBlank(czzt.qrsb) && czzt.qrsb == "true"){ }}
+            <img src="../../static/lib/bdcui/images/success-small.png" alt="">
+            {{# } }}
+        </button>
+<!--        <button class="layui-btn bdc-secondary-btn print-btn" type="button" id="hqJsxx">5.获取计税信息-->
+<!--            {{# if(isNotBlank(czzt) && isNotBlank(czzt.hqJsxx) && czzt.hqJsxx == "true"){ }}-->
+<!--            <img src="../../static/lib/bdcui/images/success-small.png" alt="">-->
+<!--            {{# } }}-->
+<!--        </button>-->
+        <button class="layui-btn bdc-secondary-btn print-btn" type="button" id="hqJkewm">5.获取缴款码
+            {{# if(isNotBlank(czzt) && isNotBlank(czzt.hqJkewm) && czzt.hqJkewm == "true"){ }}
+            <img src="../../static/lib/bdcui/images/success-small.png" alt="">
+            {{# } }}
+        </button>
+        <button class="layui-btn bdc-secondary-btn print-btn" type="button" id="hqJkzt">6.获取缴款状态
+            {{# if(isNotBlank(czzt) && isNotBlank(czzt.hqJkzt) && czzt.hqJkzt == "true"){ }}
+            <img src="../../static/lib/bdcui/images/success-small.png" alt="">
+            {{# } }}
+        </button>
+
+        <button class="layui-btn bdc-secondary-btn more-btn" type="button" id="hqWspz">7.获取完税信息
+            {{# if(isNotBlank(czzt) && isNotBlank(czzt.hqwspz) && czzt.hqwspz == "true" && isNotBlank(czzt.hqqsxxlxd) && czzt.hqqsxxlxd == "true" ){  }}
+            <img src="../../static/lib/bdcui/images/success-small.png" alt="">
+            {{# } }}
+        </button>
+
+        <ul class="title-ui" id="moreBtn">
+            <li class="print" onclick="hqqsxxlxd()" id="hqqsxxlxd">获取契税信息联系单
+                {{# if(isNotBlank(czzt) && isNotBlank(czzt.hqqsxxlxd) && czzt.hqqsxxlxd == "true"){ }}
+                <img src="../../static/lib/bdcui/images/success-small.png" alt="">
+                {{# } }}
+            </li>
+            <li class="print" onclick="hqWspz()" id="hqwspz">获取完税凭证
+                {{# if(isNotBlank(czzt) && isNotBlank(czzt.hqwspz) && czzt.hqwspz == "true"){ }}
+                <img src="../../static/lib/bdcui/images/success-small.png" alt="">
+                {{# } }}
+            </li>
+        </ul>
+    </div>
+</script>
+
+<!--一窗受理税务信息-->
+<script type="text/html" id="ssxxTpl">
+    {{# var hsxx = d.hsxx }}
+    <!-- 卖方信息 -->
+    <div class="basic-info" id="cmfxx"></div>
+    <!-- 买方信息 -->
+    <div class="basic-info" id="msfxx"></div>
+    <div class="basic-info">
+            <div class="title-sign bdc-title-sign-btn">
+                <p>房屋信息</p>
+            </div>
+            <div class="layui-form-item">
+                <input type="hidden" class="layui-input fwxx-fwxxid" value="{{d.fwxx.fwxxid  || ''}}">
+                <input type="hidden" class="layui-input jyxx-jyxxid" value="{{d.jyxx.jyxxid  || ''}}">
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">小区代码</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input fwxx" autocomplete="off" name="xqdm" id="xqdm" disabled="off"
+                               value="{{d.fwxx.xqdm || '' }}" title="{{d.fwxx.xqdm || '' }}">
+                        <input type="hidden" class="layui-input fwxx" name="jddm" id="jddm" value="{{d.fwxx.jddm || '' }}">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">小区名称</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input fwxx" autocomplete="off" name="xqmc" id="xqmc" onblur="changeXqdm(this);"
+                               value="{{d.fwxx.xqmc || '' }}" title="{{d.fwxx.xqmc || '' }}">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">合同签订时间</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input test-item jyxx" autocomplete="off" name="htdjsj" id="htdjsj"
+                               value="{{d.jyxx.htdjsj || d.jyxx.htbasj}}" title="{{d.jyxx.htdjsj || d.jyxx.htbasj }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div class="basic-info">
+            <div class="title-sign bdc-title-sign-btn">
+                <p>核税信息</p>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">核税状态</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input slxm" autocomplete="off" name="hszt" id="hszt" disabled="off"
+                               value="{{fmtHsSbzt(hsxx.wszt) || '' }}" title="">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item change-textarea-margin">
+                <label class="layui-form-label change-label-width">退回原因</label>
+                <div class="layui-input-inline">
+                    <textarea class="layui-textarea change-textarea-width qlxx" name="thyy"  id="thyy" disabled="off">{{hsxx.thyy || '' }}</textarea>
+                </div>
+            </div>
+        </div>
+    <div class="basic-info">
+            <div class="title-sign bdc-title-sign-btn">
+                <p>完税信息</p>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">完税状态</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input slxm" autocomplete="off" name="wszt" id="wszt" disabled="off"
+                               value="{{fmtWszt(hsxx.ytsswzt, hsxx.wszt) || '' }}" title="">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">买方缴税码</label>
+                    {{# if(d.qlrjsewm){ }}
+                        <img class="bdc-inline-code qlrjsewm" src="{{ d.qlrjsewm|| '' }}" alt="未生成二维码">
+                    {{# }else{ }}
+                        <img class="bdc-inline-code qlrjsewm" src="" alt="未生成二维码">
+                    {{# } }}
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">卖方缴税码</label>
+                    {{# if(d.ywrjsewm){ }}
+                        <img class="bdc-inline-code ywrjsewm" src="{{ d.ywrjsewm|| '' }}" alt="未生成二维码">
+                    {{# }else{ }}
+                        <img class="bdc-inline-code ywrjsewm" src="" alt="未生成二维码">
+                    {{# } }}
+                </div>
+
+                <div id="outerdiv" style="position:fixed;top:0;left:0;background:rgba(0,0,0,0.7);z-index:2;width:100%;height:100%;display:none;">
+                    <div id="innerdiv" style="position:absolute;">
+                        <img id="bigimg" style="border:5px solid #fff;" src="" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- 转入方纳税信息 -->
+    <div class="basic-info" id="ycslzrfswxx"></div>
+    <!-- 转出方纳税信息 -->
+    <div class="basic-info" id="ycslzcfswxx"></div>
+</script>
+
+<!--卖方信息（开发商信息）展示-->
+<script type="text/html" id="kfsxxTpl">
+    <div class="title-sign bdc-title-sign-btn">
+        <p>卖方信息</p>
+    </div>
+    <form class="common-form layui-form bdc-form-table" name="zcfForm">
+        <div class="layui-form-item">
+            <div class="zcfForm" id="zcfForm">
+                <table class="layui-table" border="1" id="addZcfTable">
+                    <thead>
+                    <tr class="gray-tr">
+                        <th width="50%">开发商社会统一信用代码</th>
+                        <th width="25%">开发商名称</th>
+                        <th width="25%">备注</th>
+                    </tr>
+                    </thead>
+                    {{# layui.each(d.sqrList, function(i,cmfxx){ }}
+                    {{# var cmf=cmfxx.bdcSlSqrDO }}
+                    <tr>
+                        <input type="hidden" name="sqrid" lay-verify="" class="layui-input zcf"
+                               value="{{cmf.sqrid  || ''}}">
+                        <td>
+                            <div class="bdc-td-box">
+                                <input type="text" lay-verify="" class="layui-input zcf"
+                                       value="{{cmf.zjh  || ''}}" id="zcf-zjh">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <input type="text" lay-verify="" class="layui-input zcf"
+                                       value="{{cmf.sqrmc  || ''}}" id="zcf-sqrmc">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <input type="text" name="bz" lay-verify="" class="layui-input zcf"
+                                       value="{{cmf.bz  || ''}}" id="zcf-bz">
+                            </div>
+                        </td>
+                    </tr>
+                    {{# }); }}
+                </table>
+            </div>
+        </div>
+    </form>
+</script>
+
+<!--买方卖方信息展示-->
+<script type="text/html" id="zrfzcfxxTpl">
+    <div class="title-sign bdc-title-sign-btn">
+        {{# if(d.sqrlb==1 ){ }}
+        <p>买方信息</p>
+        {{# } else { }}
+        <p>卖方信息</p>
+        {{# } }}
+    </div>
+    <form class="common-form layui-form bdc-form-table" name="zrfForm">
+        <div class="layui-form-item">
+            <div class="zrfForm" id="zrfForm">
+                <table class="layui-table" border="1" id="addZrfTable">
+                    <thead>
+                    <tr class="gray-tr">
+                        <th width="10%">姓名</th>
+                        <th width="15%">证件号码</th>
+                        <th width="10%">证件种类</th>
+                        <th width="10%">套次</th>
+                        <th width="10%">所占份额</th>
+                        <th width="13%">联系电话</th>
+                        <th width="10%">婚姻状况</th>
+                        <th width="10%">婚姻验证</th>
+                        <th width="12%" style="min-width: 60px">家庭成员信息</th>
+                    </tr>
+                    </thead>
+                    {{# layui.each(d.sqrList, function(i,msfxx){ }}
+                    {{# var msf=msfxx.bdcSlSqrDO }}
+                    <tr>
+                        <input type="hidden" lay-verify="" name="sqrid" class="layui-input zrzcf"
+                               value="{{msf.sqrid  || ''}}"  >
+                        <input type="hidden" lay-verify="" name="sqrlb" class="layui-input zrzcf"
+                               value="{{msf.sqrlb  || ''}}"  >
+                        <!--隐藏婚姻信息比对结果用于验证-->
+                        <input type="hidden" lay-verify="" name="hyxxbdjg" class="layui-input zrzcf"
+                               value="{{msf.hyxxbdjg  || ''}}"  >
+                        <input type="hidden" name="gyfs" class="layui-input" value="{{msf.gyfs  || ''}}"  >
+                        <td>
+                            <div class="bdc-td-box">
+                                <input type="text" lay-verify="" class="layui-input zrzcf"
+                                       value="{{msf.sqrmc  || ''}}" name="sqrmc" id="zrzcf-sqrmc">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <input type="text" lay-verify=""  class="layui-input zrzcf"
+                                       value="{{msf.zjh  || ''}}" name="zjh" id="zrzcf-zjh">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <select name="zjzl" lay-search="" lay-filter="zjzl" id="zrzcf-zjzl"class="zrzcf">
+                                    <option value=""> </option>
+                                    {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                                    <option value="{{item.DM || ''}}" {{# if(msf.zjzl==item.DM ){ }} selected="selected" {{# }
+                                            }}>
+                                        {{item.MC || ''}}
+                                    </option>
+                                    {{# }); }}
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <select name="sbfwtc" lay-search="" lay-filter="sbfwtc" id="zrzcf-sbfwtc" class="zrzcf">
+                                    <option value="">请选择</option>
+                                    {{# if(d.sqrlb == 2){}}
+                                    {{# layui.each(d.zd.mffwtc, function(index, item){ }}
+                                    <option value="{{item.DM || '0'}}"{{# if(msf.sbfwtc==item.DM ){ }} selected="selected" {{# }
+                                            }}>
+                                        {{item.MC || ''}}
+                                    </option>
+                                    {{# }); }}
+
+                                    {{# }else{ }}
+
+                                    {{# layui.each(d.zd.fwtc, function(index, item){ }}
+                                    <option value="{{item.DM || '0'}}"{{# if(msf.sbfwtc==item.DM ){ }} selected="selected" {{# }
+                                            }}>
+                                        {{item.MC || ''}}
+                                    </option>
+                                    {{# }); }}
+                                    {{# } }}
+
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <input type="text" lay-verify="qlbl" name="qlbl" class="layui-input zrzcf"
+                                       value="{{msf.qlbl  || ''}}" id="zrzcf-qlbl">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <input type="text" lay-verify="" name="dh" class="layui-input zrzcf"
+                                       value="{{msf.dh  || ''}}" id="zrzcf-dh">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <select name="hyzk" lay-search="" lay-filter="hyzk" id="zrzcf-hyzk" class="zrzcf">
+                                    <option value="">请选择</option>
+                                    {{# layui.each(d.zd.hyzk, function(index, item){ }}
+                                    <option value="{{item.MC}}"{{# if(msf.hyzk==item.MC ){ }} selected="selected" {{# }
+                                            }}>
+                                        {{item.MC || ''}}
+                                    </option>
+                                    {{# }); }}
+                                </select>
+                            </div>
+                        </td>
+                        <td align="center">
+                            <!--比对通过按钮显示蓝色-->
+                            {{#if(msf.hyxxbdjg == 1){ }}
+                            <button type="button" class="layui-btn layui-btn-xs bdc-major-btn" id="hyxxbd" name="hyxxbd" onclick="compareHyxx(this)">比对</button>
+                            {{# } else { }}
+                            <button type="button" class="layui-btn layui-btn-xs bdc-secondary-btn" id="hyxxbd" name="hyxxbd" onclick="compareHyxx(this)">比对</button>
+                            {{# } }}
+                        </td>
+                        <td align="center">
+                            <button type="button" class="layui-btn layui-btn-xs bdc-major-btn" id="jtcyxx" name="jtcyxx" data-xmid= "{{d.xmid || ''}}" onclick="">详细</button>
+                        </td>
+                    </tr>
+                    {{# if(d.sqrlb!=1 &&d.sqrList.length ==(i+1)){ }}
+
+                    <tr>
+                        <td colspan="7" class="set-back-color">是否直属亲属间交易</td>
+                        <td colspan="2">
+                            <input type="radio" name="sfzxqs" id="sfzxqs" class="change-radio-top zrzcf" value="1" title="是"
+                                   {{# if(msf.sfzxqs=='1'){ }} checked {{# } }}
+                                   lay-filter="sfzxqs">
+                            <input type="radio" name="sfzxqs" class="change-radio-top zrzcf" value="0" title="否"
+                                   {{# if(msf.sfzxqs!='1'){ }} checked {{# } }}
+                                   lay-filter="sfzxqs">
+                        </td>
+                    </tr>
+                    {{# } }}
+                    {{# }); }}
+                </table>
+            </div>
+        </div>
+    </form>
+</script>
+
+<!--税务信息展示-->
+<script type="text/html" id="swxxTpl">
+    <div class="title-sign bdc-title-sign-btn" style="height: 40px">
+        {{#if(d.sqrlb == "1"){}}
+        <p>转入方纳税信息</p>
+        {{# }else{ }}
+        <p>转出方纳税信息</p>
+        {{# } }}
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">核定计税价格</label>
+            <div class="layui-input-inline">
+                {{# if(isNullOrEmpty(d.bdcSlSwxxList) || isNullOrEmpty(d.bdcSlSwxxList.bdcSlHsxxDO)){ console.info(isNullOrEmpty(d.bdcSlSwxxList)); }}
+                <input type="text" name="hdjsjg" class="layui-input" title="" disabled="off">
+                {{# }else{ }}
+                <input type="text" name="hdjsjg" class="layui-input" value="{{d.bdcSlSwxxList.bdcSlHsxxDO.hdjsjg || '0'}}" title="" disabled="off">
+                {{# } }}
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">完税状态</label>
+            <div class="layui-input-inline">
+                {{# if(isNullOrEmpty(d.bdcSlSwxxList) || isNullOrEmpty(d.bdcSlSwxxList.bdcSlHsxxDO)){ }}
+                <input type="text" name="wszt" class="layui-input" title="" disabled="off">
+                {{# }else{ }}
+                <select name="wszt" lay-search="" lay-filter="wszt" class="wszt" disabled>
+                    {{# layui.each(d.zd.swsbzt, function(index, item){ }}
+                    <option value="{{item.DM}}" {{# if(d.bdcSlSwxxList.bdcSlHsxxDO.wszt==item.DM ){ }}
+                            selected="selected" {{# }
+                            }}>
+                        {{item.MC || ''}}
+                    </option>
+                    {{# }); }}
+                </select>
+                {{# } }}
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item form-add-padding">
+        <div class="bdc-sw-table">
+            <table class="layui-table" border="1" name="swxxTable">
+                <thead>
+                <tr>
+                    <th>纳税人名称</th>
+                    <th>税目</th>
+                    <th>税种</th>
+                    <th>税率</th>
+                    <th>应税项</th>
+                    <th>减除项</th>
+                    <th>实纳税款</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{# if( isNullOrEmpty(d.bdcSlSwxxList) || isNullOrEmpty(d.bdcSlSwxxList.bdcSlHsxxMxDOList) || d.bdcSlSwxxList.bdcSlHsxxMxDOList.length === 0) { }}
+                <tr class="bdc-table-none">
+                    <td colspan="8">
+                        <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据
+                        </div>
+                    </td>
+                </tr>
+                {{# } else { }}
+                {{# layui.each(d.bdcSlSwxxList.bdcSlHsxxMxDOList, function(i, swmx){ }}
+                <tr>
+                    <td>
+                        <div class="bdc-td-box">
+                            <input type="text" lay-verify="" class="layui-input" value="{{swmx.nsrmc  || ''}}"
+                                   disabled="off">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="bdc-td-box">
+                            <input type="text" lay-verify="" class="layui-input" value="{{swmx.zsxm  || ''}}"
+                                   disabled="off">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="bdc-td-box">
+                            <input type="text" lay-verify="" class="layui-input" value="{{swmx.mxzl  || ''}}"
+                                   disabled="off">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="bdc-td-box">
+                            <input type="text" lay-verify="" class="layui-input" value="{{swmx.sl  || ''}}"
+                                   disabled="off">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="bdc-td-box">
+                            <input type="text" lay-verify="" class="layui-input" value="{{swmx.ysx  || '0'}}"
+                                   disabled="off">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="bdc-td-box">
+                            <input type="text" lay-verify="" class="layui-input" value="{{swmx.jcx  || '0'}}"
+                                   disabled="off">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="bdc-td-box">
+                            <input type="text" lay-verify="" class="layui-input" value="{{swmx.ynse  || '0'}}"
+                                   disabled="off">
+                        </div>
+                    </td>
+                </tr>
+                {{# }); }}
+                {{# } }}
+                <tr>
+                    <td>
+                        <div class="bdc-td-box layui-form-select">
+                            <input type="text" value="合计" class="layui-input" readonly>
+                        </div>
+                    </td>
+                    <td>/</td>
+                    <td>/</td>
+                    <td>/</td>
+                    <td>
+                        <div class="bdc-td-box">
+                            {{# if(isNullOrEmpty(d.bdcSlSwxxList) || isNullOrEmpty(d.bdcSlSwxxList.bdcSlHsxxDO)){ console.info(isNullOrEmpty(d.bdcSlSwxxList)); }}
+                            <input type="text" class="layui-input"  value="0" title=""readonly>
+                            {{# }else{ }}
+                            <input type="text" lay-verify="" class="layui-input" value="{{d.bdcSlSwxxList.bdcSlHsxxDO.ynsehj || '0'}}" readonly>
+                            {{# } }}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="bdc-td-box">
+                            {{# if(isNullOrEmpty(d.bdcSlSwxxList) || isNullOrEmpty(d.bdcSlSwxxList.bdcSlHsxxDO)){ console.info(isNullOrEmpty(d.bdcSlSwxxList)); }}
+                            <input type="text" class="layui-input"  value="0" title="" readonly>
+                            {{# }else{ }}
+                            <input type="text" lay-verify="" class="layui-input" value="{{d.bdcSlSwxxList.bdcSlHsxxDO.jmsehj || '0'}}" readonly>
+                            {{# } }}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="bdc-td-box">
+                            {{# if(isNullOrEmpty(d.bdcSlSwxxList) || isNullOrEmpty(d.bdcSlSwxxList.bdcSlHsxxDO)){ console.info(isNullOrEmpty(d.bdcSlSwxxList)); }}
+                            <input type="text" class="layui-input" value="0" title=""readonly>
+                            {{# }else{ }}
+                            <input type="text" lay-verify="" class="layui-input" value="{{d.bdcSlSwxxList.bdcSlHsxxDO.sjyzhj || '0'}}" readonly>
+                            {{# } }}
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</script>
+
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<!--表单验证公共方法-->
+<script src='../../static/js/slymyz.js'></script>
+<script src='../../static/js/changzhou/ycsl/swxx.js'></script>
+<script src='../../static/js/formCenter.js'></script>
+<!--规则验证公共方法-->
+<script src='../../static/js/gzyzCommon.js'></script>
+</html>

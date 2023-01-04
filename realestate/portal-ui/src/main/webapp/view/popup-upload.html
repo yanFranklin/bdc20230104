@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>弹出层图片查看</title>
+    <meta name="referrer" content="no-referrer">
+    <!--    <meta name="renderer" content="webkit">-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link href="../static/lib/layui/css/layui.css" media="all" rel="stylesheet">
+    <link rel="stylesheet" href="../static/lib/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link href="../static/lib/bdcui/css/search.css" media="all" rel="stylesheet">
+    <link rel="stylesheet" href="../static/lib/viewerjs/dist/viewer.css">
+    <link rel="stylesheet" href="../static/css/new-page.css">
+    <link rel="stylesheet" href="../static/css/picture.css">
+    <link href="../static/lib/bdcui/css/mask.css" media="all" rel="stylesheet"/>
+    <link href="../static/lib/hiprint/css/hiprint.css" rel="stylesheet"/>
+    <link href="../static/lib/hiprint/css/print-lock.css" rel="stylesheet"/>
+    <style type="text/css">
+        /*html, body{*/
+        /*    background-color: #fff;*/
+        /*}*/
+        .fl-list-box .layui-nav-tree .layui-this,
+        .fl-list-box .layui-nav-tree a:hover,
+        .layui-nav-tree .layui-nav-child dd.layui-this a {
+            background-color: #f3f4f6;
+        }
+
+        #seeImgView {
+            overflow-y: auto;
+        }
+
+        .viewer-button {
+            right: 0px;
+            top: 0px;
+            width: 40px;
+            height: 40px;
+        }
+
+        .viewer-button::before {
+            bottom: 10px;
+            left: 10px;
+        }
+
+        .viewer-footer {
+            top: 8px;
+            right: 14px;
+            position: fixed;
+        }
+    </style>
+</head>
+
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <fieldset class="table-search-fieldset">
+            <legend>文件上传</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn layui-btn-primary layui-border-blue" id="testList"><i
+                            class="layui-icon layui-icon-file"></i> 选择文件
+                    </button>
+                    <button type="button" class="layui-btn layui-btn-primary layui-border-green" id="testListAction"><i
+                            class="layui-icon layui-icon-upload"></i> 开始上传
+                    </button>
+                    <button type="button" class="layui-btn layui-btn-primary layui-border-black" id="clearList"><i
+                            class="layui-icon layui-icon-fonts-clear"></i> 清空显示
+                    </button>
+                    <div class="layui-upload-list" style="max-width: 1280px;height: auto;min-height: 600px;">
+                        <table class="layui-table">
+                            <colgroup>
+                                <col>
+                                <col width="150">
+                                <col width="260">
+                                <col width="260">
+                                <col width="200">
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th>文件名</th>
+                                <th>大小</th>
+                                <th>上传状态</th>
+                                <th>上传进度</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="demoList"></tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </fieldset>
+
+    </div>
+</div>
+
+<script src="../static/lib/layui/layui.js"></script>
+<script src="../static/lib/jquery/jquery.min.js"></script>
+<!--添加水印-->
+<script src="../static/lib/bdcui/js/common.js"></script>
+<script src="../static/lib/viewerjs/dist/viewer.js"></script>
+<script src="../static/lib/bdcui/js/print/print-common.js"></script>
+<script src="../static/js/common.js"></script>
+<script>
+    layui.use(['upload', 'element', 'layer'], function () {
+        var $ = layui.jquery
+            , upload = layui.upload
+            , element = layui.element
+            , layer = layui.layer;
+        var $paramArr = getIpHz();
+        var processInstanceId;
+        var currentml = "";
+        if ($paramArr['processinsid']) {
+            processInstanceId = $paramArr['processinsid'];
+        }
+        if ($paramArr['parentId']) {
+            currentml = $paramArr['parentId'];
+        }
+        //清空文件列表
+        $('#clearList').click(function () {
+            $('#demoList').html('');
+        });
+
+        //多文件上传
+        var uploadListIns = upload.render({
+            elem: '#testList'     // 选择文件按钮
+            , elemList: $('#demoList') //列表元素对象
+            , url: getContextPath() + "/rest/v1.0/files/upload"
+            , accept: 'file'  //指定允许上传时校验的文件类型，可选值有：images（图片）、file（所有文件）、video（视频）、audio（音频）
+            , multiple: true  //是否允许多文件上传。设置 true即可开启。不支持ie8/9
+            , number: 3   //设置同时可上传的文件数量，一般配合 multiple 参数出现; 0 不限制
+            , auto: false  //是否选完文件后自动上传。如果设定 false，那么需要设置 bindAction 参数来指向一个其它按钮提交上传
+            , bindAction: '#testListAction'  //指向一个按钮触发上传，一般配合 auto: false 来使用
+            , size: 102400
+            , data: {
+                "processInstanceId": processInstanceId,
+                "currentml": currentml
+            }
+            , choose: function (obj) {   //选择文件后的回调函数。返回一个object参数
+                var that = this;
+                var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+
+                //读取本地文件
+                obj.preview(function (index, file, result) {
+                    console.log(index);
+                    var tr = $(['<tr id="upload-' + index + '">'
+                        , '<td>' + file.name + '</td>'
+                        , '<td>' + (file.size / 1014).toFixed(1) + 'kb</td>'
+                        , '<td>等待上传</td>'
+                        , '<td><div class="layui-progress" lay-filter="progress-demo-' + index + '"><div class="layui-progress-bar" lay-percent=""></div></div></td>'
+                        , '<td>'
+                        , '<button type="button" class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+                        , '<button type="button" class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+                        , '</td>'
+                        , '</tr>'].join(''));
+
+                    //单个重传
+                    tr.find('.demo-reload').on('click', function () {
+                        obj.upload(index, file);
+                    });
+
+                    //删除
+                    tr.find('.demo-delete').on('click', function () {
+                        delete files[index]; //删除对应的文件
+                        tr.remove();
+                        uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                    });
+
+                    that.elemList.append(tr);
+                    element.render('progress'); //渲染新加的进度条组件
+                });
+            }
+            , done: function (res, index, upload) { //成功的回调
+                var that = this;
+                if (res.code == 0) { //上传成功
+
+                    var tr = that.elemList.find('tr#upload-' + index)
+                        , tds = tr.children();
+                    // tds.remove();
+                    tds.eq(2).html('<span style="color:green;">上传成功</span>') //显示上传成功
+                    tds.eq(3).html(''); //清空操作
+                    delete this.files[index]; //删除文件队列已经上传成功的文件
+                    return;
+                }
+                this.error(index, upload);
+            }
+            , allDone: function (obj) { //多文件上传完毕后的状态回调
+                console.log(obj)
+            }
+            , error: function (index, upload) { //错误回调
+                var that = this;
+                var tr = that.elemList.find('tr#upload-' + index)
+                    , tds = tr.children();
+                tds.eq(2).html('<span style="color:red;">上传失败</span>') //显示上传成功
+                tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
+            }
+            , progress: function (n, elem, e, index) { //注意：index 参数为 layui 2.6.6 新增
+                element.progress('progress-demo-' + index, n + '%'); //执行进度条。n 即为返回的进度百分比
+            }
+        });
+    })
+</script>
+</body>
+</html>
+
+
+</html>
+
+

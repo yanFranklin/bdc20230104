@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--宗海空间属性-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.ZhKMapper">
+
+    <select id="queryZhkList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.ZhKDO">
+        select ''bdcdyh, nvl(a.tzjb,0)+1 zdx,a.xh,round(a.xzbz,4) as zxb, round(a.yzbz,4) as yzb,'1' as mbs
+        from djsj_zh_jzbsb a
+        inner join bdc_xm d on a.zhdm = substr(d.bdcdyh, 0, 19)
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND d.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND c.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+    <select id="queryZhkListOld" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.yancheng.yth.old.ZhKOldDO">
+        select ''bdcdyh, nvl(a.tzjb,0)+1 zdx,a.xh,a.xzbz xzb,a.yzbz yzb
+        from djsj_zh_jzbsb a
+        inner join bdc_xm d on a.zhdm = substr(d.bdcdyh, 0, 19)
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND d.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND c.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+</mapper>

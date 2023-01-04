@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.check.core.mapper.BdcXmMapper">
+    <select id="selectAllBdcXm" parameterType="java.util.Map" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT *
+        FROM (SELECT row_.*, rownum rownum_
+        FROM (
+        SELECT x.*  FROM bdc_xm x
+        WHERE 1=1
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="xmid != null and xmid !=''">
+            AND x.xmid = #{xmid}
+        </if>
+        <if test="gzlslid != null and gzlslid !=''">
+            AND x.gzlslid = #{gzlslid}
+        </if>
+        <if test="xmids != null and xmids !=''">
+            AND x.xmid IN
+            <foreach collection="xmids" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qsrq != null and qsrq !=''">
+            <![CDATA[ AND (x.slsj >= to_date(#{qsrq},'YYYY-MM-DD HH24:MI:SS')) ]]>
+        </if>
+        <if test="jsrq != null and jsrq !=''">
+            <![CDATA[ AND (x.slsj <= to_date(#{jsrq},'YYYY-MM-DD HH24:MI:SS')+1) ]]>
+        </if>
+        <if test="qxdm != null and qxdm !=''">
+            AND x.qxdm = #{qxdm}
+        </if>
+        AND (x.qszt!=2 OR x.xmly=1)
+        ) row_)
+        <if test="begin != null and end != null">
+        <![CDATA[ WHERE rownum_ <= #{end} ]]> AND rownum_ > #{begin}
+        </if>
+    </select>
+    <select id="selectAllBdcXmOrderByXmid" parameterType="java.util.Map" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT *
+        FROM (SELECT row_.*, rownum rownum_
+        FROM (
+        SELECT  /*+ INDEX (x PK_BDC_XM_BAK)*/ x.*  FROM bdc_xm x
+        WHERE 1=1
+        <if test="qsrq != null ">
+            <![CDATA[ AND (x.slsj >= #{qsrq}) ]]>
+        </if>
+        <if test="jsrq != null ">
+            <![CDATA[ AND (x.slsj <= #{jsrq}+1) ]]>
+        </if>
+        AND (x.qszt!=2 OR x.xmly=1) ORDER BY x.xmid
+        ) row_)
+        <if test="begin != null and end != null">
+            <![CDATA[ WHERE rownum_ <= #{end} ]]> AND rownum_ > #{begin}
+        </if>
+    </select>
+
+
+    <select id="countBdcXms" parameterType="java.util.Map" resultType="int">
+        SELECT COUNT(x.xmid) num FROM  bdc_xm x WHERE (x.qszt!=2 OR x.xmly=1)
+        <if test="qsrq != null and qsrq !=''">
+            <![CDATA[ AND (nvl(x.slsj,#{qsrq})>= to_date(#{qsrq},'YYYY-MM-DD HH24:MI:SS')) ]]>
+        </if>
+        <if test="jsrq != null and jsrq !=''">
+            <![CDATA[ AND (x.slsj <= to_date(#{jsrq},'YYYY-MM-DD HH24:MI:SS')+1) ]]>
+        </if>
+    </select>
+    <select id="getCheckPlanVersion" resultType="int">
+         SELECT nvl(MAX(version),0) version FROM CHECK_PLAN
+    </select>
+    <select id="queryCheckPlan" parameterType="cn.gtmap.realestate.common.core.domain.check.CheckPlanDO" resultType="cn.gtmap.realestate.common.core.domain.check.CheckPlanDO">
+        SELECT p.* FROM CHECK_PLAN p
+        <where>
+            <if test="version != null and version !=''">
+                AND p.version =#{version}
+            </if>
+        </where>
+    </select>
+    <select id="queryCheckPlanByPage" resultType="map">
+        SELECT p.* FROM CHECK_PLAN p ORDER BY p.version
+    </select>
+    <select id="selectBjxmFromWbj" parameterType="java.util.Map" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        select a.*  from CHECK_WBJXM x
+        left join bdc_xm a on a.xmid=x.xmid
+        where a.ajzt = 2
+    </select>
+
+    <select id="selectAllBdcGzxx" parameterType="java.util.Map" resultType="cn.gtmap.realestate.common.core.domain.check.CheckGzxxDO">
+        select * from CHECK_GZXX x
+        where 1 = 1
+        <if test="gzid != null and gzid !=''">
+            and x.gzid =#{gzid}
+        </if>
+        <if test="sfhl != null">
+            and x.sfhl =#{sfhl}
+        </if>
+    </select>
+
+    <select id="selectAllBdcGzjcLog" parameterType="java.util.Map" resultType="cn.gtmap.realestate.common.core.domain.check.CheckGzjcLogDO">
+        select * from CHECK_GZJC_LOG x
+        where 1 = 1
+        <if test="xmid != null and xmid !=''">
+            and x.xmid = #{xmid}
+        </if>
+        <if test="gzid != null and gzid !=''">
+            and x.gzid = #{gzid}
+        </if>
+        <if test="xzwh != null and xzwh !=''">
+            and x.xzwh = #{xzwh}
+        </if>
+        <if test="type != null and type !=''">
+            and x.type = #{type}
+        </if>
+        <if test="xzwhxmid != null and xzwhxmid !=''">
+            and x.xzwhxmid = #{xzwhxmid}
+        </if>
+    </select>
+
+    <select id="quertCgsjListByPage" parameterType="cn.gtmap.realestate.check.core.vo.SelectCgsjVo" resultType="map">
+        select nvl(x.bdcdyh,'无') bdcdyh,x.logid logid,x.xmid xmid,x.slbh,g.gzms,m.gzldyid,
+        x.xzwh xzwh, x.gzid gzid, to_char(x.fxsj,'yyyy-MM-dd HH24:MI:SS') fxsj,to_char(x.gxsj,'yyyy-MM-dd HH24:MI:SS') gxsj,  x.jcdj jcdj, x.jcxx jcxx,
+        x.jjzt jjzt,x.jczt jczt,x.jjsj jjsj,x.jjfs jjfs,x.sfgq sfgq,gqyy,m.qxdm from CHECK_GZJC_LOG x
+        LEFT JOIN CHECK_GZXX G ON G.GZID=X.GZID
+        LEFT JOIN BDC_XM M ON M.XMID = X.XMID
+        where 1 = 1
+        <if test="slbh != null and slbh !=''">
+            and x.slbh like '%' || #{slbh} || '%'
+        </if>
+        <if test="bdcdyh != null and bdcdyh !=''">
+            and x.bdcdyh like '%' || #{bdcdyh} || '%'
+        </if>
+        <if test="xzwh != null and xzwh !=''">
+            and x.xzwh like '%' || #{xzwh} || '%'
+        </if>
+        <if test="jjzt != null">
+            and x.jjzt = #{jjzt}
+        </if>
+        <if test="jczt != null">
+            and nvl(x.jczt,'0') = #{jczt}
+        </if>
+        <if test="jcdj != null">
+            and x.jcdj = #{jcdj}
+        </if>
+        <if test="jcxx != null and jcxx !=''">
+            and x.gzid = #{jcxx}
+        </if>
+        <if test="gzldyid != null and gzldyid !=''">
+            and m.gzldyid = #{gzldyid}
+        </if>
+        <if test="gqyy != null and gqyy !=''">
+            and x.gqyy like '%' || #{gqyy} || '%'
+        </if>
+        <if test="fxkssj != null and fxkssj !=''">
+            <![CDATA[   AND to_char(x.fxsj,'YYYY-MM-DD HH24:MI:SS') >= #{fxkssj} ]]>
+        </if>
+        <if test="fxjssj != null and fxjssj !=''">
+            <![CDATA[   AND to_char(x.fxsj,'YYYY-MM-DD HH24:MI:SS')  <= #{fxjssj} ]]>
+        </if>
+        <if test="gxkssj != null and gxkssj !=''">
+            <![CDATA[   AND to_char(x.gxsj,'YYYY-MM-DD HH24:MI:SS') >= #{gxkssj} ]]>
+        </if>
+        <if test="gxjssj != null and gxjssj !=''">
+            <![CDATA[   AND to_char(x.gxsj,'YYYY-MM-DD HH24:MI:SS')  <= #{gxjssj} ]]>
+        </if>
+        <if test="logids != null and logids.size() > 0">
+            and
+            <foreach collection="logids" item="item" open="(" separator=" or " close=")">
+                x.logid = #{item}
+           </foreach>
+        </if>
+        <if test="approve != null and approve !=''">
+           and to_char(x.fxsj,'yyyy-MM-dd') = (select max(to_char(fxsj,'yyyy-MM-dd')) from CHECK_GZJC_LOG)
+        </if>
+        order by x.jcdj,x.xmid
+    </select>
+
+
+    <select id="getGzxxGroupByPage" resultType="map">
+        select c.gzcode,c.gzdj,c.tsxx,c.gzms,c.gzid,nvl(b.sl,0) as sl,nvl(b.xmsl,0) as xmsl,c.gzfz,d.mc as gzfzmc  from (
+        select  t.gzid,count(t.gzid) as sl,count(distinct t.xmid) as xmsl  from CHECK_GZJC_LOG t
+        group by t.gzid)b
+        right join CHECK_GZXX c on c.gzid=b.gzid
+        left join CHECK_ZD_GZFZ d on d.dm=c.gzfz
+        <where>
+            <if test="gzid != null and gzid !=''">
+                and c.gzid = #{gzid}
+            </if>
+            <if test="gzfz != null">
+                and c.gzfz = #{gzfz}
+            </if>
+            <if test="gzcode != null and gzcode !=''">
+                and c.gzcode = #{gzcode}
+            </if>
+            <if test="glcws != null and glcws !=''">
+                and b.sl != '0'
+            </if>
+        </where>
+        order by c.gzfz,c.gzdj
+    </select>
+
+    <select id="queryGzxxGroup" resultType="string">
+        SELECT  g.mc FROM CHECK_ZD_GZFZ g
+    </select>
+
+    <select id="queryPrevRunLog" resultType="cn.gtmap.realestate.common.core.domain.check.CheckLogDO">
+        SELECT * FROM (SELECT * FROM CHECK_LOG t WHERE nvl(t.type,'quart')='quart' ORDER  BY t.qssj DESC) WHERE rownum=1
+    </select>
+
+
+    <select id="getGzxxListByPage" resultType="map">
+        select  gzid, gzcode, gzlx, bhlc, qclc, tsxx, gzdj,gzms,gzfz,sfhl from CHECK_GZXX
+        where 1=1
+        <if test="gzid != null and gzid !=''">
+            and gzid = #{gzid}
+        </if>
+        <if test="gzcode != null and gzcode !=''">
+            and gzcode like '%' || #{gzcode} || '%'
+        </if>
+        <if test="tsxx != null and tsxx !=''">
+            and tsxx like '%' || #{tsxx} || '%'
+        </if>
+        <if test="sfhl != null">
+            and sfhl = #{sfhl}
+        </if>
+    </select>
+
+    <select id="queryCwXmDataByPage" resultType="map">
+        select g.xmid,g.slbh from CHECK_GZJC_LOG g  where g.gzid=#{gzid} group by g.xmid,g.slbh
+    </select>
+
+    <select id="queryYyAndJjfaByPage" resultType="map">
+        select  * from CHECK_GZ_YYJJFA
+        where gzid = #{gzid}
+    </select>
+
+    <update id="updateBatchCheckGzxxSfhl">
+        update CHECK_GZXX s set s.sfhl = #{sfhl}
+        <where>
+            <if test="gzidList != null">
+                AND s.gzid IN
+                <foreach collection="gzidList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </update>
+
+    <select id="queryXmsl" parameterType="map" resultType="int">
+        SELECT count(*) sl FROM bdc_xm x
+        <where>
+            <if test="lastExcuteTime != null">
+                AND x.slsj > #{lastExcuteTime}
+            </if>
+            and (x.qszt!=2 OR x.xmly=1)
+        </where>
+    </select>
+
+</mapper>        

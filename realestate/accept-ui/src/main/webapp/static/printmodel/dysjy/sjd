@@ -1,0 +1,151 @@
+------参数  ,  -----打印类型 sjdpl
+xmid,ewm,djxlmc,qlr,zl
+
+select #{qlr} qlr,to_char(j.slsj,'yyyy"年"mm"月"dd"日"') slsj,#{zl}||'等' zl,j.djjg,j.slr,j.slbh,j.cnqx,#{ewm} ewm ,#{djxlmc} djxlmc from
+bdc_sl_xm t left join bdc_sl_jbxx j on j.jbxxid = t.jbxxid
+where t.xmid=#{xmid};
+select sum(t.fs) zfs from BDC_SL_SJCL t where t.gzlslid=(select j.gzlslid from bdc_sl_jbxx j left join bdc_sl_xm  x on x.jbxxid = j.jbxxid where x.xmid =#{xmid})
+
+----- xml
+<?xml version="1.0" encoding="utf-8"?>
+<fetchdatas>
+<page>
+        <datas>
+            <data name="qlr" type="String(50)">$QLR</data>
+            <data name="slbh" type="String(50)">$SLBH</data>
+            <data name="slsj" type="String(50)">$SLSJ</data>
+            <data name="zl" type="String(50)">$ZL</data>
+            <data name="djxlmc" type="String(50)">$DJXLMC</data>
+            <data name="cnqx" type="String(50)">$CNQX</data>
+            <data name="djjg" type="String(50)">$DJJG</data>
+            <data name="slr" type="String(50)">$SLR</data>
+            <data name="zfs" type="String(50)">$ZFS</data>
+            <data name="ewm" type="image">$EWM</data>
+        </datas>
+        <detail ID="bdcsjcl">
+            <row ID="${SJCLID}">
+                <data name="xh" type="String(50)">$XH</data>
+                <data name="clmc" type="String(50)">$CLMC</data>
+                <data name="sjlx" type="String(50)">$SJLX</data>
+                <data name="fs" type="String(50)">$FS</data>
+            </row>
+        </detail>
+        </page>
+</fetchdatas>
+
+
+
+
+
+------参数  ,  -----打印类型 sjd
+xmid,ewm,djxlmc,qlr,zl
+select #{qlr} qlr,to_char(j.slsj,'yyyy"年"mm"月"dd"日"') slsj,#{zl} zl,j.djjg,j.slr,j.slbh,j.cnqx,#{ewm} ewm ,#{djxlmc} djxlmc from
+bdc_sl_xm t left join bdc_sl_jbxx j on j.jbxxid = t.jbxxid
+where t.xmid=#{xmid};
+select sum(t.fs) zfs from BDC_SL_SJCL t where t.gzlslid=(select j.gzlslid from bdc_sl_jbxx j left join bdc_sl_xm  x on x.jbxxid = j.jbxxid where x.xmid =#{xmid});
+
+-----xml
+<?xml version="1.0" encoding="utf-8"?>
+<fetchdatas>
+<page>
+        <datas>
+            <data name="qlr" type="String">$QLR</data>
+            <data name="slbh" type="String">$SLBH</data>
+            <data name="slsj" type="String">$SLSJ</data>
+            <data name="zl" type="String">$ZL</data>
+            <data name="djxlmc" type="String">$DJXLMC</data>
+            <data name="cnqx" type="String">$CNQX</data>
+            <data name="djjg" type="String">$DJJG</data>
+            <data name="slr" type="String">$SLR</data>
+            <data name="sjsj" type="String">$SJSJ</data>
+            <data name="zfs" type="String">$ZFS</data>
+            <data name="ewm" type="image">$EWM</data>
+        </datas>
+        <detail ID="bdcsjcl">
+            <row ID="${SJCLID}">
+                <data name="xh" type="String">$XH</data>
+                <data name="clmc" type="String">$CLMC</data>
+                <data name="sjlx" type="String">$SJLX</data>
+                <data name="fs" type="String">$FS</data>
+            </row>
+        </detail>
+</page>
+</fetchdatas>
+
+------参数  ,  -----打印类型 czsjd
+xmid,ewm,djxlmc,qlr,lxdh,zl
+-----
+select #{qlr} qlr,to_char(j.slsj,'yyyy"年"mm"月"dd"日"') slsj,#{zl} zl,j.djjg,j.slr,j.slbh,j.cnqx,#{ewm} ewm ,#{djxlmc} djxlmc,#{lxdh} lxdh from
+     bdc_sl_xm t left join bdc_sl_jbxx j on j.jbxxid = t.jbxxid
+     where t.xmid=#{xmid};
+     select sum(t.fs) zfs from BDC_SL_SJCL t where t.gzlslid=(select j.gzlslid from bdc_sl_jbxx j left join bdc_sl_xm  x on x.jbxxid = j.jbxxid where x.xmid =#{xmid});
+---xml
+<?xml version="1.0" encoding="utf-8"?>
+<fetchdatas>
+<page>
+        <datas>
+            <data name="qlr" type="String">$QLR</data>
+            <data name="slbh" type="String">$SLBH</data>
+            <data name="slsj" type="String">$SLSJ</data>
+            <data name="zl" type="String">$ZL</data>
+            <data name="djxlmc" type="String">$DJXLMC</data>
+            <data name="cnqx" type="String">$CNQX</data>
+            <data name="djjg" type="String">$DJJG</data>
+            <data name="slr" type="String">$SLR</data>
+            <data name="sjsj" type="String">$SJSJ</data>
+            <data name="zfs" type="String">$ZFS</data>
+            <data name="ewm" type="image">$EWM</data>
+            <data name="lxdh" type="String">$LXDH</data>
+        </datas>
+        <detail ID="bdcsjcl">
+            <row ID="${SJCLID}">
+                <data name="xh" type="String">$XH</data>
+                <data name="clmc" type="String">$CLMC</data>
+                <data name="sjlx" type="String">$SJLX</data>
+                <data name="fs" type="String">$FS</data>
+            </row>
+        </detail>
+</page>
+</fetchdatas>
+
+------参数  ,  -----打印类型 czsjdpl
+xmid,ewm,djxlmc,qlr,lxdh,zl
+----sql
+select #{qlr} qlr,to_char(j.slsj,'yyyy"年"mm"月"dd"日"') slsj,#{zl}||'等' zl,j.djjg,j.slr,j.slbh,j.cnqx,#{ewm} ewm ,#{djxlmc} djxlmc,#{lxdh} lxdh from
+bdc_sl_xm t left join bdc_sl_jbxx j on j.jbxxid = t.jbxxid
+where t.xmid=#{xmid};
+select sum(t.fs) zfs from BDC_SL_SJCL t where t.gzlslid=(select j.gzlslid from bdc_sl_jbxx j left join bdc_sl_xm  x on x.jbxxid = j.jbxxid where x.xmid =#{xmid})
+
+-----xml
+<?xml version="1.0" encoding="utf-8"?>
+<fetchdatas>
+<page>
+        <datas>
+            <data name="qlr" type="String(50)">$QLR</data>
+            <data name="slbh" type="String(50)">$SLBH</data>
+            <data name="slsj" type="String(50)">$SLSJ</data>
+            <data name="zl" type="String(50)">$ZL</data>
+            <data name="djxlmc" type="String(50)">$DJXLMC</data>
+            <data name="cnqx" type="String(50)">$CNQX</data>
+            <data name="djjg" type="String(50)">$DJJG</data>
+            <data name="slr" type="String(50)">$SLR</data>
+            <data name="zfs" type="String(50)">$ZFS</data>
+            <data name="ewm" type="image">$EWM</data>
+            <data name="lxdh" type="String">$LXDH</data>
+        </datas>
+        <detail ID="bdcsjcl">
+            <row ID="${SJCLID}">
+                <data name="xh" type="String(50)">$XH</data>
+                <data name="clmc" type="String(50)">$CLMC</data>
+                <data name="sjlx" type="String(50)">$SJLX</data>
+                <data name="fs" type="String(50)">$FS</data>
+            </row>
+        </detail>
+        </page>
+</fetchdatas>
+
+-----子表配置
+
+---sql
+select row_number() over(order by t.sjclid) xh, t.sjclid, t.clmc,t.fs,s.mc sjlx from BDC_SL_SJCL t left join BDC_SL_ZD_SJLX s on s.dm=t.sjlx where t.gzlslid = (select j.gzlslid from bdc_sl_jbxx j left join bdc_sl_xm  x on x.jbxxid = j.jbxxid
+where x.xmid =#{xmid}) order by t.xh;

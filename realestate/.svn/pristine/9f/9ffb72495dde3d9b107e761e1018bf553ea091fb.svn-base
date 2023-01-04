@@ -1,0 +1,89 @@
+<!--
+    综合查询：盐城版页面
+    1、改版本综合查询只提供给外部调用，没用查询条件、证明打印等功能
+    2、不采用原综合查询页面传参动态处理，避免外部条件少传查询条件隐藏失败
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>综合查询</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/css/common.css"/>
+    <link rel="stylesheet" href="../../static/css/zszm/zhcx.css"/>
+</head>
+<body>
+
+<!--表格内部操作按钮-->
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs bdc-major-btn djls" lay-event="djls" id="djls">登记历史</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs bdc-secondary-btn lpb" lay-event="lpb" id="lpb">楼盘表</a>
+    <a class="layui-btn layui-btn-xs bdc-secondary-btn bdc-more-btn" id="gd">
+        更多<i class="layui-icon layui-icon-down"></i>
+    </a>
+    <div class="bdc-table-btn-more">
+        <a lay-event="djb" id="djb" class="djb">登记簿</a>
+        <a lay-event="dady" id="dady" class="dady">档案调用</a>
+        <a lay-event="txdw" id="txdw" class="txdw">图形定位</a>
+        <a lay-event="djdcb" id="djdcb" class="djdcb">地籍调查表</a>
+        <a lay-event="hsswdw" id="hsswdw" class="hsswdw">户室三维不动产定位</a>
+        <a lay-event="zdswdw" id="zdswdw" class="zdswdw">宗地三维不动产定位</a>
+    </div>
+</script>
+
+<div class="bdc-percentage-container">
+    <!--表格-->
+    <div class="bdc-table-box">
+        <table id="pageTable" lay-filter="pageTable"></table>
+    </div>
+
+    <!-- 幢号模板 -->
+    <script id="zhTpl" type="text/html">
+        {{#  if(d.xmid != undefined){ }}
+            <span class="{{d.xmid + '_zh'}}"></span>
+        {{#  } else { }}
+            <span></span>
+        {{#  } }}
+    </script>
+
+    <!-- 房间号模板 -->
+    <script id="fjhTpl" type="text/html">
+        {{#  if(d.xmid != undefined){ }}
+            <span class="{{d.xmid + '_fjh'}}"></span>
+        {{#  } else { }}
+            <span></span>
+        {{#  } }}
+    </script>
+
+    <!-- 房屋面积模板 -->
+    <script id="fwmjTpl" type="text/html">
+        {{#  if(d.xmid != undefined){ }}
+            <span class="{{d.xmid + '_fwmj'}}"></span>
+        {{#  } else { }}
+            <span></span>
+        {{#  } }}
+    </script>
+
+    <!-- 土地权利面积模板 -->
+    <script id="tdqlmjTpl" type="text/html">
+        {{#  if(d.xmid != undefined){ }}
+            <span class="{{d.xmid + '_tdqlmj'}}"></span>
+        {{#  } else { }}
+            <span></span>
+        {{#  } }}
+    </script>
+
+    <script src="../../static/lib/jquery/jquery.min.js"></script>
+    <script src="../../static/lib/layui/layui.js"></script>
+    <script src="../../static/js/common.js"></script>
+    <script src="../../static/js/zszm/format_nt.js"></script>
+    <script src="../../static/lib/bdcui/js/common.js"></script>
+    <script src="../../static/js/zszm/yancheng/zhcx.js"></script>
+</div>
+</body>
+</html>

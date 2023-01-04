@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcJwcxMapper">
+    <select id="listBdcJwcxByPage" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcJwcxQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcJwcxDTO">
+
+        select t.bdcdyh, t.zsid,t.qlr,q.zjh qlrzjh,y.qlrmc ywr,
+        y.zjh ywrzjh,t.zl,f.jzmj,t.bdcqzh,t.yt fwlx,jg.jyjg,
+        case when f.qszt='2' then '无效' when f.qszt='1' then '有效' else '临时' end qszt,
+        to_char(max(f.djsj),'yyyy-mm-dd hh24:mi:ss') djsj,
+        case when count(c.qlid) ='0' then '否' else '是' end cfqk,
+        case when count(d.qlid) ='0' then '否' else '是' end dyqk
+        from BDC_ZS t
+        left join bdc_xm_zs_gx a on a.zsid=t.zsid
+        inner join bdc_fdcq f on f.xmid=a.xmid
+        inner join bdc_qlr q on q.zsid=t.zsid and q.qlrlb='1'
+        <if test="qlr != null and qlr != ''">
+            and q.qlrmc = #{qlr}
+        </if>
+        <if test="zjh != null and zjh != ''">
+            and q.zjh = #{zjh}
+        </if>
+
+        left join bdc_qlr y on y.zsid=t.zsid and y.qlrlb='2'
+        left join (select a.xmid,sum(a.jyjg) jyjg from bdc_fdcq a group by a.xmid) jg on jg.xmid=f.xmid
+        left join bdc_dyaq d on d.bdcdyh=f.bdcdyh  and d.qszt != '2'
+        left join bdc_cf c on c.bdcdyh=f.bdcdyh and c.qszt != '2'
+        where 1=1
+        <if test="zl != null and zl != ''">
+            and t.zl = #{zl}
+        </if>
+        <if test="cqzh != null and cqzh != ''">
+            and t.bdcqzh = #{cqzh}
+        </if>
+
+        group by t.zsid,t.qlr,t.bdcqzh,t.zl,t.yt,t.bdcdyh,q.zjh,y.qlrmc,y.zjh,f.jzmj,jg.jyjg,f.qszt
+        order by qszt desc,t.zl
+
+    </select>
+
+
+
+</mapper>

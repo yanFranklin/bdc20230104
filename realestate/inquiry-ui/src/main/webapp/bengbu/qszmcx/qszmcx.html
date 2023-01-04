@@ -1,0 +1,154 @@
+<!--
+    权属证明查询：蚌埠版页面
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>权属证明查询</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css" />
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css" />
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css" />
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css"/>
+    <link rel="stylesheet" href="../../static/css/common.css"/>
+    <link rel="stylesheet" href="../../static/css/zszm/bdcZszm.css"/>
+    <style type="text/css">
+        .layui-form-item {
+            margin-right: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="bdc-percentage-container bdc-line-search-container">
+    <!--查询条件-->
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <!--默认两行的-->
+            <form class="layui-form" action="" lay-filter="searchform">
+                <!--设置字段查询模糊类型-->
+                <!--值 3 默认全模糊； 值 0 默认精确；后面class中mhlx3、mhlx0对应-->
+                <input type="hidden" id="bdcqzhmhlx" name="bdcqzhmhlx" class="search mhlx"/>
+                <input type="hidden" id="qlrmcmhlx"  name="qlrmcmhlx"  class="search mhlx"/>
+                <!--IP地址-->
+                <input type="hidden" id="ipaddress"  name="ipaddress"/>
+                <!--版本标识-->
+                <input type="hidden" id="version"    name="version"    class="search" value="bengbu"/>
+
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label id="qlrmcLabel"  class="layui-form-label">产权人名称</label>
+                        <div id="qlrmcDiv"  class="layui-input-inline">
+                            <input id="qlrmc" name="qlrmc" type="text" autocomplete="off" placeholder="(精确)请输入名称"
+                                   class="layui-input search required" ondblclick="onReadIdCard(1)">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label id="bdcqzhLabel"  class="layui-form-label">产权证号</label>
+                        <div id="bdcqzhDiv"  class="layui-input-inline">
+                            <input name="bdcqzh" type="text" autocomplete="off" placeholder="(精确)请输入证号"
+                                   class="layui-input search required">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                        <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!--表格-->
+    <div class="bdc-table-box">
+        <table id="pageTable" lay-filter="pageTable"></table>
+    </div>
+
+    <!--表格上面功能按钮-->
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button id="qszm" class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="qszm">权属证明</button>
+        </div>
+    </script>
+
+    <!-- 幢号模板 -->
+    <script id="zhTpl" type="text/html">
+        {{#  if(d.xmid != undefined){ }}
+        <span class="{{d.xmid + '_zh'}}"></span>
+        {{#  } else { }}
+        <span></span>
+        {{#  } }}
+    </script>
+
+    <!-- 房间号模板 -->
+    <script id="fjhTpl" type="text/html">
+        {{#  if(d.xmid != undefined){ }}
+        <span class="{{d.xmid + '_fjh'}}"></span>
+        {{#  } else { }}
+        <span></span>
+        {{#  } }}
+    </script>
+
+    <!-- 房屋面积模板 -->
+    <script id="fwmjTpl" type="text/html">
+        {{#  if(d.xmid != undefined){ }}
+        <span class="{{d.xmid + '_fwmj'}}"></span>
+        {{#  } else { }}
+        <span></span>
+        {{#  } }}
+    </script>
+
+    <!-- 土地权利面积模板 -->
+    <script id="tdqlmjTpl" type="text/html">
+        {{#  if(d.xmid != undefined){ }}
+        <span class="{{d.xmid + '_tdqlmj'}}"></span>
+        {{#  } else { }}
+        <span></span>
+        {{#  } }}
+    </script>
+
+    <!--IE获取IP地址-->
+    <object classid="CLSID:76A64158-CB41-11D1-8B02-00600806D9B6" id="locator" style="display:none;visibility:hidden"></object>
+    <object classid="CLSID:75718C9A-F029-11d1-A1AC-00C04FB6C223" id="foo" style="display:none;visibility:hidden"></object>
+    <script language="javascript">
+        try{
+            var service = locator.ConnectServer();
+            service.Security_.ImpersonationLevel = 3;
+            service.InstancesOfAsync(foo, 'Win32_NetworkAdapterConfiguration');
+        } catch(err) {
+            // do nothing
+        }
+    </script>
+    <script FOR="foo" EVENT="OnObjectReady(objObject,objAsyncContext)" LANGUAGE="JScript">
+        try{
+            if (objObject.IPEnabled != null && objObject.IPEnabled != "undefined" && objObject.IPEnabled == true) {
+                if (objObject.IPEnabled && objObject.IPAddress(0) != null && objObject.IPAddress(0) != "undefined")
+                    $("#ipaddress").val( objObject.IPAddress(0));
+            }
+        } catch(err) {
+            // do nothing
+        }
+    </script>
+
+    <script src="../../static/lib/jquery/jquery.min.js"></script>
+    <script src="../../static/lib/layui/layui.js"></script>
+    <script src='../../static/lib/bdcui/js/readIdCard.js'></script>
+    <script src='../../static/js/jquery.cookie.js'></script>
+    <script src="../../static/js/client-ip.js"></script>
+    <script src="../../static/js/common.js"></script>
+    <script src="../../static/js/commonSearch.js"></script>
+    <script src="../../static/js/md5.js"></script>
+    <script src="../../static/lib/bdcui/js/print/print-common.js"></script>
+    <script src="../../static/js/zszm/format.js"></script>
+    <script src="../../static/js/bengbu/qszmcx/qszmcx.js"></script>
+    <script src="../../static/lib/bdcui/js/makeZmzsRecord.js"></script>
+    <script src="../../static/lib/bdcui/js/common.js"></script>
+    <script src="../../static/js/formCenter.js"></script>
+</div>
+</body>
+</html>

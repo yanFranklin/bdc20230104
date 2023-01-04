@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="http://www.gtmap.cn/schema/exchange-bean"
+            targetNamespace="http://www.gtmap.cn/schema/exchange-bean"
+            elementFormDefault="qualified">
+    <xsd:element name="bean">
+        <xsd:complexType>
+            <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                <xsd:element name="service-info" type="service-info" minOccurs="0" maxOccurs="1"/>
+                <xsd:element name="request" type="request" minOccurs="0" maxOccurs="1"/>
+                <xsd:element name="response" type="response" minOccurs="0" maxOccurs="1"/>
+                <xsd:element name="log" type="log" minOccurs="0" maxOccurs="1"/>
+            </xsd:choice>
+            <xsd:attribute name="id" type="xsd:string" />
+        </xsd:complexType>
+    </xsd:element>
+
+    <!-- 请求信息 -->
+    <xsd:complexType name="service-info">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="property" type="property"/>
+        </xsd:choice>
+        <xsd:attribute name="request-type" type="request-type" />
+    </xsd:complexType>
+
+    <!--  请求信息属性 -->
+    <xsd:complexType name="property">
+        <xsd:attribute name="name" type="xsd:string" />
+        <xsd:attribute name="value" type="xsd:string" />
+        <xsd:attribute name="sourceClass" type="xsd:string" />
+        <xsd:attribute name="sourceMethod" type="xsd:string" />
+        <xsd:attribute name="sourceArgs" type="xsd:string" />
+    </xsd:complexType>
+
+
+    <!-- 请求类型 Bean名称 枚举 -->
+    <xsd:simpleType name="request-type">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="httpGet"/>
+            <xsd:enumeration value="httpPost"/>
+            <xsd:enumeration value="httpPostJson"/>
+            <xsd:enumeration value="httpTokenPostJson"/>
+            <xsd:enumeration value="httpPostWithUrlParam"/>
+            <xsd:enumeration value="httpDeleteJson"/>
+            <xsd:enumeration value="hfyctbPostService"/>
+            <xsd:enumeration value="restGet"/>
+            <xsd:enumeration value="restPost"/>
+            <xsd:enumeration value="beanReq"/>
+            <xsd:enumeration value="openApiClient"/>
+            <xsd:enumeration value="axisWebService"/>
+            <xsd:enumeration value="xfireWebService"/>
+            <xsd:enumeration value="hfSdkApi"/>
+            <xsd:enumeration value="httpPostFile"/>
+            <xsd:enumeration value="bbGspApi"/>
+            <xsd:enumeration value="ntCssnjWebservice"/>
+            <xsd:enumeration value="ntSwWsxxWebservice"/>
+            <xsd:enumeration value="rdCssnjWebservice"/>
+            <xsd:enumeration value="czYjfwWebService"/>
+            <xsd:enumeration value="httpTokenGetForHuaian"/>
+            <xsd:enumeration value="httpTokenPostFile"/>
+            <xsd:enumeration value="httpTokenPost"/>
+            <xsd:enumeration value="httpPostForShij"/>
+            <xsd:enumeration value="httpGetForShij"/>
+            <xsd:enumeration value="httpPostForBengbuDian"/>
+            <xsd:enumeration value="httpPostForGuoJiaDianWangDian"/>
+            <!--舒城共享接口请求处理类 -->
+            <xsd:enumeration value="httpGetForShuChengGx"/>
+            <!--蚌埠供气公司接口请求处理类 -->
+            <xsd:enumeration value="httpPostForBengbuQi"/>
+            <!--蚌埠供水公司接口请求处理类 -->
+            <xsd:enumeration value="httpPostForBengbuShui"/>
+            <!--淮安供水公司接口请求处理类 -->
+            <xsd:enumeration value="httpPostForHuaianShui"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+
+    <!-- 请求结构 -->
+    <xsd:complexType name="request">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="element" type="element"/>
+        </xsd:choice>
+        <xsd:attribute name="dozerXml" type="xsd:string" />
+        <xsd:attribute name="sourceService" type="xsd:string" />
+        <xsd:attribute name="resultKey" type="xsd:string" />
+        <xsd:attribute name="name" type="xsd:string" />
+        <xsd:attribute name="paramRequired" type="xsd:boolean" />
+        <xsd:attribute name="extendRequestBody" type="xsd:string" />
+        <!-- 排除属性 -->
+        <xsd:attribute name="excludeKey" type="xsd:string" />
+        <!-- 是否替换整个requestBody -->
+        <xsd:attribute name="replaceRequestBody" type="xsd:boolean" />
+    </xsd:complexType>
+
+    <!-- 响应结构 -->
+    <xsd:complexType name="response">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="element" type="element"/>
+        </xsd:choice>
+        <xsd:attribute name="dozerXml" type="xsd:string" />
+        <xsd:attribute name="sourceService" type="xsd:string" />
+        <xsd:attribute name="resultKey" type="xsd:string" />
+        <xsd:attribute name="extendRequestBody" type="xsd:string" />
+        <xsd:attribute name="extendRequestBodyWithKey" type="xsd:string" />
+        <xsd:attribute name="tokenErrorService" type="xsd:string" />
+        <xsd:attribute name="tokenType" type="xsd:string" />
+        <!-- 排除属性 -->
+        <xsd:attribute name="excludeKey" type="xsd:string" />
+    </xsd:complexType>
+
+    <!-- 参数或响应元素结构 -->
+    <xsd:complexType name="element">
+        <xsd:attribute name="name" type="xsd:string" />
+        <xsd:attribute name="dozerXml" type="xsd:string" />
+        <xsd:attribute name="dozerRelXml" type="xsd:string" />
+        <xsd:attribute name="sourceService" type="xsd:string" />
+        <!-- 集合类型转成实体类型 -->
+        <xsd:attribute name="listToObject" type="xsd:boolean" />
+        <!-- 集合类型转成实体类型 -->
+        <xsd:attribute name="objectToList" type="xsd:boolean" />
+        <!-- 不为空 即返回不进行以下element循环-->
+        <xsd:attribute name="notNullReturn" type="xsd:boolean" />
+        <!-- 实体转成JSON -->
+        <xsd:attribute name="objectToJsonString" type="xsd:boolean" />
+        <!-- 是否转存进参数 当ELEMENT只有一个时 使用 -->
+        <xsd:attribute name="appendRequestBody" type="xsd:boolean" />
+        <!-- 是否不转存 默认会将element处理结果 set进requestBody,传递给下一个element作为解析参数 -->
+        <xsd:attribute name="noSetRequestBody" type="xsd:boolean" />
+        <!-- 是否需要不为空 -->
+        <xsd:attribute name="notEmpty" type="xsd:boolean" />
+        <!-- 为空时提示信息 -->
+        <xsd:attribute name="emptyExMsg" type="xsd:string" />
+        <!-- 是否捕获，不向外抛出异常 -->
+        <xsd:attribute name="ignoreException" type="xsd:boolean" />
+        <!-- null时处理返回 -->
+        <xsd:attribute name="saveNull" type="xsd:string" />
+        <!-- 加密方法-->
+        <xsd:attribute name="encodeMethod" type="xsd:string" />
+        <!-- 需要解密的key值-->
+        <xsd:attribute name="decodeKey" type="xsd:string" />
+        <!-- 解密方法 -->
+        <xsd:attribute name="decodeMethod" type="xsd:string" />
+        <!-- 实体转成XML 传递方法名 针对request -->
+        <xsd:attribute name="objectToXmlStringMethod" type="xsd:string" />
+        <!-- xml转实体 默认使用xstream方式 参数为 转换的实体类全名称 针对response-->
+        <xsd:attribute name="xmlToObject" type="xsd:string" />
+        <!-- base64解密 针对response-->
+        <xsd:attribute name="base64Decode" type="xsd:string" />
+        <!-- 返回值编码转换，默认转成当格式-->
+        <xsd:attribute name="charsetChange" type="xsd:string" />
+        <!-- 是否先执行dozer转换 -->
+        <xsd:attribute name="dozerFirst" type="xsd:boolean" />
+        <!-- 是否先执行source -->
+        <xsd:attribute name="sourceFirst" type="xsd:boolean" />
+
+    </xsd:complexType>
+
+    <!-- 日志信息 -->
+    <xsd:complexType name="log">
+        <xsd:attribute name="dsfFlag" type="xsd:string" />
+        <xsd:attribute name="requester" type="xsd:string" />
+        <xsd:attribute name="responser" type="xsd:string" />
+        <xsd:attribute name="logEventName" type="xsd:string" />
+        <!-- 不动产提供地址（仅用于记录日志） -->
+        <xsd:attribute name="bdcdz" type="xsd:string" />
+        <!-- 使用哪种记录方式 -->
+        <xsd:attribute name="logService" type="xsd:string" />
+        <!-- 自定义维度 json形式 key 为记录日志的维度名 value为参数中的 key值 -->
+        <xsd:attribute name="reqCustom" type="xsd:string" />
+        <xsd:attribute name="respCustom" type="xsd:string" />
+    </xsd:complexType>
+
+</xsd:schema>

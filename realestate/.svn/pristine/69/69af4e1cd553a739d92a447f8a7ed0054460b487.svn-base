@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>登记类型统计</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css">
+
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/common.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/css/count/gzltj.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css"/>
+</head>
+<body>
+<div class="bdc-percentage-container">
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <form class="layui-form">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label id="kssjLabel" class="layui-form-label">开始时间</label>
+                        <div id="kssjDiv" class="layui-input-inline">
+                            <input id="kssj" class="layui-input" readonly="readonly" type="text" name="kssj"
+                                   placeholder="请选择"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label id="jssjLabel" class="layui-form-label">结束时间</label>
+                        <div id="jssjDiv" class="layui-input-inline">
+                            <input id="jssj" class="layui-input" readonly="readonly" type="text" name="jssj"
+                                   placeholder="请选择"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label id="djlxLabel" class="layui-form-label">登记类型</label>
+                        <div id="djlxDiv" class="layui-input-inline xzq-sele">
+                            <select id="djlx_select" lay-search="" class="layui-select xxxx-tab-useful"
+                                    lay-filter="djlx_select" lay-verify="" name="djlx">
+                            </select>
+                            <i class="layui-icon layui-icon-close reseticon reset-bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label id="djlxLabel" class="layui-form-label">登记小类</label>
+                        <div id="djxlDiv" class="layui-input-inline xzq-sele">
+                            <select xm-select="selectDjxl" xm-select-skin="default"
+                                    xm-select-show-count="2" xm-select-height="34px" xm-select-search=""
+                                    xm-select-search-type="dl"
+                                    id="djxl-select" lay-search="" lay-filter="djlx-select"
+                                    class="layui-select xxxx-tab-useful" lay-verify=""
+                                    name="djxl">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box-four">
+                        <button id="search" type="button" class="layui-btn bdc-major-btn" lay-submit=""
+                                lay-filter="search">查询
+                        </button>
+                        <button id="reset" type="reset" class="layui-btn bdc-secondary-btn reset-btn">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--中间内容部分-->
+    <div class="all-content">
+        <div class="layui-tab" lay-filter="tabFilter">
+            <ul class="layui-tab-title">
+                <li class="layui-this" lay-id="sjzs">图表分析</li>
+                <li lay-id="xxxx">详细信息</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <div class="chart-box">
+                        <!--下拉选择条件-->
+                        <div class="title-sign clear">
+                            <form class="layui-form">
+                                <div class="layui-input-inline count-type-select-div">
+                                    <label class="layui-form-label">统计维度类型</label>
+                                    <div class="layui-input-inline wd-form-select">
+                                        <select id="count-type-select" class="wd-select" lay-filter="count-type-select">
+                                            <option id="gjdjlx" value='1' selected="selected">根据登记类型</option>
+                                            <option id="gjxmly" value='3'>根据项目来源</option>
+                                            <option id="gjdjxl" value='2'>根据登记小类</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!--左侧数据分析图-->
+                        <div class="chart-box-item" id="sjfx-area">
+                            <div class="chart-item" id="djlxChart" style="width: 600px;height: 500px"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-tab-item">
+                    <!--表格开始-->
+                    <div class="bdc-table-box">
+                        <div id="pageTableDjlx-div">
+                            <table id="pageTableDjlx" lay-data="{id: 'pageTableDjlx'}"
+                                   lay-filter="pageTableDjlx"></table>
+                        </div>
+                    </div>
+                    <!--表格结束-->
+                    <!--表格上面功能按钮-->
+                    <script type="text/html" id="toolbarDemo">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="exportExcel" id="exportExcel">导出Excel</button>
+                        </div>
+                    </script>
+                </div>
+
+                <!--隐藏form，为了Excel导出缓存数据使用-->
+                <form style="display: none" action="/realestate-inquiry-ui/excel/export" method="POST" id="form">
+                    <input type="hidden" id="fileName" name="fileName"/>
+                    <input type="hidden" id="sheetName" name="sheetName"/>
+                    <input type="hidden" id="cellTitle" name="cellTitle"/>
+                    <input type="hidden" id="cellWidth" name="cellWidth"/>
+                    <input type="hidden" id="cellKey" name="cellKey"/>
+                    <input type="hidden" id="data" name="data"/>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/easyui/jquery.easyui.min.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/bdcDp/echarts.min.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/formCenter.js"></script>
+<script src="../../static/js/bdcDp/djlx.js"></script>
+</body>
+</html>

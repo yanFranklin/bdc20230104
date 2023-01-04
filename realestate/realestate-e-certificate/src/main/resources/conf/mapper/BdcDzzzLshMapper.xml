@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.certificate.core.mapper.BdcDzzzLshMapper">
+    <select id="getBdcDzzzLsh" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzLshDo">
+        SELECT lshid, lsh,  cjsj, zzbfjgdm, zzlxdm  FROM BDC_DZZZ_LSH
+        <where>
+            <if test="zzbfjgdm != null and zzbfjgdm !=''">
+                AND zzbfjgdm=#{zzbfjgdm}
+            </if>
+            <if test="zzlxdm != null and zzlxdm !=''">
+                AND zzlxdm=#{zzlxdm}
+            </if>
+            ORDER BY to_number(LSH) DESC
+        </where>
+    </select>
+    <insert id="saveBdcDzzzLsh" parameterType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzLshDo">
+        INSERT INTO bdc_dzzz_lsh t ( t.lshid, t.lsh, t.cjsj, t.zzbfjgdm, t.zzlxdm)
+        VALUES (#{lshid,jdbcType=VARCHAR},#{lsh,jdbcType=VARCHAR},#{cjsj,jdbcType=TIMESTAMP},#{zzbfjgdm,jdbcType=VARCHAR},#{zzlxdm,jdbcType=VARCHAR})
+    </insert>
+    <delete id="deleteBdcDzzzLsh" parameterType="java.util.Map">
+        DELETE BDC_DZZZ_LSH
+        <where>
+            <if test="zzbfjgdm != null and zzbfjgdm !=''">
+                AND zzbfjgdm=#{zzbfjgdm}
+            </if>
+            <if test="zzlxdm != null and zzlxdm !=''">
+                AND zzlxdm=#{zzlxdm}
+            </if>
+            <if test="lsh != null and lsh !=''">
+                AND lsh=#{lsh}
+            </if>
+        </where>
+    </delete>
+</mapper>

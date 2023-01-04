@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.sjpt.GxCxqqMapper">
+    <update id="updateCxqqNotAllQueryed" parameterType="map">
+        UPDATE gx_pe_cxqq a
+        SET a.zt = 4,a.gxsj = to_date(#{gxsj},'yyyy-MM-dd HH24:mi:ss')
+        WHERE a.zt = 2
+        <if test="cxsqdhList != null and cxsqdhList.size()>0">
+            and
+            <foreach collection="cxsqdhList" item="cxsqdh" separator=" or " open="(" close=")">
+                a.cxsqdh = #{cxsqdh}
+            </foreach>
+        </if>
+        AND EXISTS (SELECT b.xmid
+        FROM gx_pe_cxqq_xm b
+        WHERE b.cxsqdh = a.cxsqdh
+        AND b.cxzt IS NOT NULL)
+        AND EXISTS (SELECT b.xmid
+        FROM gx_pe_cxqq_xm b
+        WHERE b.cxsqdh = a.cxsqdh
+        AND b.cxzt IS NULL)
+    </update>
+</mapper>

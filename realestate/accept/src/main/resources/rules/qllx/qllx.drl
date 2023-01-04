@@ -1,0 +1,334 @@
+package rules.qllx;
+import cn.gtmap.realestate.common.core.dto.accept.QllxDTO;
+global java.util.List<Integer> qllxs
+
+rule "集体土地所有权"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "J" || qlxzdm == "Z",
+                qslxdm == "A",
+                dzwtzm == "W"
+)
+then
+qllxs.add(1);
+end
+
+rule "国有土地所有权"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "G",
+                qslxdm == "A",
+                dzwtzm == "W"
+)
+then
+qllxs.add(2);
+end
+
+rule "国有建设用地使用权"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "G",
+                qslxdm == "B" || qslxdm == "S" || qslxdm == "X" || qslxdm == "W" || qslxdm == "Y",
+                dzwtzm == "W"
+)
+then
+qllxs.add(3);
+end
+
+rule "集体建设用地使用权"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "J" || qlxzdm == "Z",
+                qslxdm == "B" || qslxdm == "S" || qslxdm == "X" || qslxdm == "W" || qslxdm == "Y",
+                dzwtzm == "W"
+)
+then
+qllxs.add(7);
+end
+
+rule "国有建设用地使用权/房屋所有权"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "G",
+                qslxdm == "B" || qslxdm == "S" || qslxdm == "X" || qslxdm == "W" || qslxdm == "Y",
+                dzwtzm == "F",
+                dyhcxlx == "1"
+)
+then
+qllxs.add(4);
+end
+
+rule "集体建设用地使用权/房屋所有权"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "J",
+                qslxdm == "B" || qslxdm == "S" || qslxdm == "X" || qslxdm == "W" || qslxdm == "Y",
+                dzwtzm == "F",
+                dyhcxlx == "1"
+)
+then
+qllxs.add(8);
+end
+
+rule "宅基地使用权"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "J" || qlxzdm == "G" || qlxzdm == "Z",
+                qslxdm == "C",
+                dzwtzm == "W"
+)
+then
+qllxs.add(5);
+end
+
+rule "宅基地使用权/房屋所有权1"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "J",
+                qslxdm == "C",
+                dzwtzm == "F",
+                dyhcxlx == "1"
+)
+then
+qllxs.add(6);
+end
+
+rule "宅基地使用权/房屋所有权2"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "G" || qlxzdm == "Z",
+                qslxdm == "C",
+                dzwtzm == "F"
+)
+then
+qllxs.add(6);
+end
+
+rule "土地承包经营权/森林、林木所有权"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "J" || qlxzdm == "G" || qlxzdm == "Z",
+                qslxdm == "E",
+                dzwtzm == "L"
+)
+then
+qllxs.add(10);
+end
+
+rule "林地使用权"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "J" || qlxzdm == "G",
+                qslxdm == "L",
+                dzwtzm == "W"
+)
+then
+qllxs.add(11);
+end
+
+rule "土地承包经营权(林地)无定着物"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "J" || qlxzdm == "G",
+                qslxdm == "E",
+                dzwtzm == "W"
+)
+then
+qllxs.add(9);
+end
+
+rule "林地使用权/森林、林木所有权"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "J" || qlxzdm == "G" || qlxzdm == "Z",
+                qslxdm == "L",
+                dzwtzm == "L"
+)
+then
+qllxs.add(12);
+end
+
+rule "土地承包经营权(林地)内的其他定着物"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "J" || qlxzdm == "G" || qlxzdm == "Z",
+                qslxdm == "E",
+                dzwtzm == "Q"
+)
+then
+qllxs.add(9);
+end
+
+rule "土地承包经营权(草地)"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "J" || qlxzdm == "G" || qlxzdm == "Z",
+                qslxdm == "F",
+                dzwtzm == "W"
+)
+then
+qllxs.add(9);
+end
+
+rule "土地承包经营权(耕地)"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "J" || qlxzdm == "G" || qlxzdm == "Z",
+                qslxdm == "D",
+                dzwtzm == "W"
+)
+then
+qllxs.add(9);
+end
+
+rule "草原使用权"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "J" || qlxzdm == "G",
+                qslxdm == "N",
+                dzwtzm == "W"
+)
+then
+qllxs.add(13);
+end
+
+rule "海域使用权1"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "G",
+                qslxdm == "H",
+                dzwtzm == "W"
+)
+then
+qllxs.add(15);
+end
+
+rule "海域使用权2"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "G",
+                qslxdm == "W",
+                dzwtzm == "W",
+                dyhcxlx == "1"
+)
+then
+qllxs.add(15);
+end
+
+rule "海域使用权/构筑物所有权1"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "G",
+                qslxdm == "H",
+                dzwtzm == "F",
+                dyhcxlx == "3"
+)
+then
+qllxs.add(16);
+end
+
+rule "海域使用权/构筑物所有权2"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "G",
+                qslxdm == "W",
+                dzwtzm == "F",
+                dyhcxlx == "1"
+)
+then
+qllxs.add(16);
+end
+
+rule "无居民海岛使用权"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "G",
+                qslxdm == "G",
+                dzwtzm == "W"
+)
+then
+qllxs.add(17);
+end
+
+rule "无居民海岛使用权/构筑物所有权"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "G",
+                qslxdm == "G",
+                dzwtzm == "F",
+                dyhcxlx == "3"
+)
+then
+qllxs.add(18);
+end
+
+rule "国有农用地的使用权"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "G",
+                qslxdm == "N",
+                dzwtzm == "W"
+)
+then
+qllxs.add(23);
+end
+
+rule "国有建设用地使用权/构筑物所有权"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "G",
+                qslxdm == "B" || qslxdm == "S" || qslxdm == "X" || qslxdm == "W" || qslxdm == "Y",
+                dzwtzm == "F",
+                dyhcxlx == "3"
+)
+then
+qllxs.add(24);
+end
+
+rule "宅基地使用权/构筑物所有权"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "J" || qlxzdm == "G",
+                qslxdm == "C",
+                dzwtzm == "F",
+                dyhcxlx == "3"
+)
+then
+qllxs.add(25);
+end
+
+rule "集体建设用地使用权/构筑物所有权"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "J",
+                qslxdm == "B" || qslxdm == "S" || qslxdm == "X" || qslxdm == "W" || qslxdm == "Y",
+                dzwtzm == "F",
+                dyhcxlx == "3"
+)
+then
+qllxs.add(26);
+end
+
+rule "海域使用权/建筑物所有权"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "G",
+                qslxdm == "H",
+                dzwtzm == "F",
+                dyhcxlx == "3"
+)
+then
+qllxs.add(27);
+end
+
+rule "无居民海岛使用权/建筑物所有权"
+when
+ $qllxDTO:QllxDTO(
+                qlxzdm == "G",
+                qslxdm == "G",
+                dzwtzm == "F",
+                dyhcxlx == "3"
+)
+then
+qllxs.add(28);
+end

@@ -1,0 +1,148 @@
+info:
+  name: ${spring.application.name}
+  component: building application
+
+app:
+  center: http://192.168.2.151:8000/eureka/
+  oauth: http://192.168.2.151:8002/account
+  security:
+    moduleAuthPath: http://account/account
+    ignores: /image/**,/css/**,/js/**,/webjars/**,/building/test/**,/building/rest/v1.0/bdcdy/**,/building/rest/v1.0/djxx/**,/building/rest/v1.0/ychs/**,/building/rest/v1.0/gzw/**,/building/rest/v1.0/hs/fwdcbindex/**
+    authorities:
+      permitAll: /**,/index2
+      hasUrlAuthority('read'): /auth/users,/auth/orgs
+      hasModuleAuthority('yhgl:add'): /auth/user/create
+      hasAnyAuthority('ROLE_USER'): /resource1/**,/catalog1/**,/index
+      hasAnyAuthority('ROLE_ADMIN_2'): /call
+      authenticated : true
+    resources:
+      authenticated: /building2/**,/building/rest/v1.0/**
+#      hasScope('get_building_info'): /resource/**,/catalog/**,/building/**
+
+spring:
+  rabbitmq:
+    host: 192.168.0.60
+    port: 5672
+    username: guest
+    password: guest
+  redis:
+    port: 6379
+    host: 192.168.0.60
+  datasource:
+    ##默认数据库连接
+    url: jdbc:oracle:thin:@192.168.2.86:1521:orcl
+    username: bdcsjgl_hefei
+    password: e/lWYHJj7d9rXmgsItIxLw2oWP4XasfqoDXA0AKNYHgeSJQK8IKgU8/+ia1ax4mr9ki4QZbrQrCW9WMkHDOPAA==
+    publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK8ev+xi3qANIZpQGhndeKtc2EOlsPd48VIhphnl3OoOKqynJuQo7qZrJekk8iqXHgvze3bnFrFyTtf3vxGIamsCAwEAAQ==
+    lujiang:
+      url: jdbc:oracle:thin:@192.168.2.111:1521:orcl
+      username: bdcsjgl
+      password: LflEhvrGvOnJL35ypkM9FPCdp2QB6NX7BLPQaGyTyF9CGJpYoS9Q6mbja7qBTt6hc4IvhCUivH6mp8SJc8gXHg==
+      publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJmMhqxbjfCPpB6pPKwsw19KGwSyTtZ5c8ZYDZG1vz24XvgwhUZvcE0mrqGSxkb7uoJ8beccaFhjkwCCLAhST9ECAwEAAQ==
+  messages:
+    basename: conf/message/messages, conf/message/errors
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 1000MB
+  zipkin:
+    # base-url: http://localhost:8003
+    sender:
+      type: rabbit
+    service:
+      name: ${spring.application.name}
+  main:
+    allow-bean-definition-overriding: true
+  #数据库用户要求有select_catalog_role角色  需要查询v$parameter
+  liquibase:
+    #检查变更日志位置是否存在(默认值 true)
+#    check-change-log-location: false
+    #变更日志配置路径(默认值 classpath:/db/changelog/db.changelog-master.yaml)
+    change-log: classpath:changelog/master.xml
+    #开启liquibase支持(默认值 true)
+    enabled: true
+    #先删除数据库schema(默认值 false)
+    drop-first: false
+
+server:
+  port: ${port:8666}
+
+management:
+  endpoint:
+    health:
+      show-details: always
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+# 房屋图层表名
+fwkTableName: fw_k_2301
+# 变更号的序列名
+maxBgbhSeq: maxbh_bgbh2019
+# 户室合并操作是否弹窗选择需要继承的子户室
+hsfrzhsz: 1
+
+
+#
+building.url: http://127.0.0.1:80
+
+
+# 同步状态的定时任务
+synczt.task: true
+# 同步状态定时任务 是否使用ES作为扫描依据
+# false时为扫描业务库当天办结业务的BDCDYH
+synczt.task.withes: true
+# 同步状态定时任务的CRON表达式
+synczt.cron: 0 0 22 * * ?
+
+# 读取权籍宗地图功能 FTP配置
+zdtFtp:
+  ip: 192.168.10.84
+  port: 21
+  username: gt
+  password: gtis
+  path: /宗地图
+  zdtFtpMap: "{'320400':'127.0.0.1,ftptest,Hfg123456', '320411':'192.168.0.60,ftptest,Hfg123457'}"
+  jt:
+    ip: 192.168.10.84
+    port: 21
+    username: gt
+    password: gtis
+    path: /宗地图
+
+# 宗地图服务实现：南通：readZdtFromDbBase64ServiceImpl，合肥：readZdtHefeiFtpServiceImpl
+# 不配默认合肥配置
+zdtService: readZdtHefeiFtpServiceImpl
+# 地区版本
+sysversion: yancheng
+# 南通特殊需求处理
+# 从TUXKNR表中读取宗地图时需要提供下载，此处配置为下载URL
+tuxknr.downurl: http://#IP#:#PORT#/fileCenter/file/get.do?token=whosyourdaddy&fid=
+#地籍调查表需展示的TAB页依次为：宗地调查表、权属调查表、界址标志表、房屋信息（F类型BDCDYH才显示）、
+#宗地图、分层分户图（F类型BDCDYH才显示）、不动产单元定位
+#不配置默认有zddcb,qsdc,jzbsb,fwxx,zdt
+djdcb.view.tabs: zddcb,qsdc,jzbsb,fwxx,zdt,fcfht,omp
+zdqlr.relation.fk: false
+
+# 蚌埠特殊处理
+bengbu:
+  # 权籍库中bdcdyh既存在fw_hs表又存在fw_lzj表时候，如果是独幢类型，优先当作独幢处理
+  hs_ljz_dz: true
+
+# 是否启用动态数据源切换
+dynamic.enable: true
+
+# 动态数据源,多个用英文逗号隔开
+dynamic.datasources: lujiang
+
+###区县代码与数据源对照
+datasources.340124: lujiang
+
+# 常州宗地图存储在FTP,库中文件名称前缀和FTP可能不一致，这里设定可能情况（例如：宗地图,TDSYQ,ZDT）进行遍历
+zdtwjmcqz: 宗地图,TDSYQ,ZDT

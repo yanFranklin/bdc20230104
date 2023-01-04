@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>不动产质检报告</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css">
+
+    <!--下拉框需要-->
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css">
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css" />
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+
+    <style>
+        .content-title p {
+            line-height: 38px;
+        }
+        .content-title {
+            line-height: 38px;
+        }
+    </style>
+</head>
+<body>
+<div class="content-div">
+    <div class="bdc-content-box">
+        <form class="layui-form setOverflow" action="">
+            <div class="bdc-content-fix">
+                <div class="content-title">
+                    <p>不动产质检报告</p>
+                    <div class="title-btn-area .layui-layout-right">
+                        <button class="layui-btn bdc-major-btn" lay-submit="" lay-filter="saveData">保存</button>
+                        <a class="layui-btn bdc-secondary-btn" onclick="showDetails();">查看项目明细</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-main">
+                <div class="table-name">不动产质检报告</div>
+                <form class="layui-form setOverflow" id="zjbgForm">
+                    <div id="bdczjbgView"></div>
+                </form>
+            </div>
+        </form>
+    </div>
+
+</div>
+</body>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--需要复选框时引用-->
+<script src="../../static/lib/easyui/jquery.min.js"></script>
+<script src="../../static/lib/easyui/jquery.easyui.min.js"></script>
+<!--新增质检情况模板-->
+<script type="text/html" id="bdczjbgTpl">
+    <div class="bdc-table-box">
+        <table class="layui-table" border="1">
+            <colgroup>
+                <col width="100">
+                <col width="150">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+            </colgroup>
+
+            <tbody>
+                <tr>
+                    <input type="hidden" id="gzlslid" value="{{d.gzlslid || ''}}">
+                    <input type="hidden" id="slbh" value="{{d.slbh || ''}}">
+                    <td class="set-back-color set-center">质检编号</td>
+                    <td colspan="3">
+                        <div class="bdc-td-box">
+                            <input type="text" class="layui-input" disabled="off" name="zjbh" value="{{d.zjbh || ''}}">
+                        </div>
+                    </td>
+                    <td class="set-back-color set-center">质检日期</td>
+                    <td colspan="3">
+                        <div class="bdc-td-box">
+                            <input type="text" class="layui-input zjxx" disabled="off" id="zjsj" name="zjsj" value="{{d.zjsj || ''}}">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="set-back-color set-center">业务名称</td>
+
+                    <td colspan="3">
+                        <div class="bdc-td-box">
+                            <input type="text" class="layui-input" disabled="off" name="lcmc" value="{{d.lcmc || ''}}">
+                        </div>
+                    </td>
+                    <td class="set-back-color set-center">登记类型</td>
+                    <td colspan="3">
+                        <div class="bdc-td-box">
+                            <input type="text" class="layui-input" disabled="off" name="djlx" value="{{ getZdMc('djlx', d.djlx) }}">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="set-back-color set-center">受理人</td>
+
+                    <td>
+                        <div class="bdc-td-box">
+                            <input type="text" class="layui-input" disabled="off" name="slr" value="{{d.slr || ''}}">
+                        </div>
+                    </td>
+
+                    <td class="set-back-color set-center">核定人</td>
+                    <td>
+                        <div class="bdc-td-box">
+                            <input type="text" class="layui-input" disabled="off" name="hdr" value="{{d.hdr || '' }}">
+                        </div>
+                    </td>
+                    <td class="set-back-color set-center">业务编号</td>
+                    <td colspan="3">
+                        <div class="bdc-td-box">
+                            <input type="text" class="layui-input" disabled="off" name="slbh" value="{{d.slbh || ''}}">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td {{# if(!d.zjMxDOList || d.zjMxDOList.length === 0) { }} rowspan="6"  {{# }else{ }} rowspan="{{ d.zjMxDOList.length+1 }}" {{# } }}
+                        class="set-back-color set-center" id="changeRowspan">质检情况</td>
+                    <td colspan="2" class="set-back-color set-center">质检内容</td>
+                    <td colspan="2" class="set-back-color set-center">是否通过</td>
+                    <td colspan="2" class="set-back-color set-center">质检情况</td>
+                    <td colspan="2" class="set-back-color set-center">
+                        <button type="button" class="layui-btn layui-btn-xs bdc-major-btn" onclick="newZjqk()" id="xz" name="xz">新增</button>
+                    </td>
+                </tr>
+                {{# if(!d.zjMxDOList || d.zjMxDOList.length === 0) { }}
+                    <tr>
+                        <td colspan="2">
+                            <input type="text" lay-verify="required" class="layui-table-edit zjmx" name="zjnr" value="登记要件是否齐全"></td>
+                        <td colspan="2" class="zjmx_radio set-center">
+                            <input class="zjmx" type="radio" name="sftg1" value="1" title="是" checked>
+                            <input class="zjmx" type="radio" name="sftg1" value="0" title="否">
+                        </td>
+                        <td colspan="2">
+                            <input type="text" class="layui-table-edit zjmx" name="zjqk" value=""></td>
+                        <td colspan="4" class="set-center">
+                            <button type="button" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn" onclick="deleteZjqk(this)" name="sc"> 删除 </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input type="text" lay-verify="required" class="layui-table-edit zjmx" name="zjnr" value="材料查验是否规范"></td>
+                        <td colspan="2" class="zjmx_radio set-center">
+                            <input class="zjmx" type="radio" name="sftg2" value="1" title="是" checked>
+                            <input class="zjmx" type="radio" name="sftg2" value="0" title="否">
+                        </td>
+                        <td colspan="2">
+                            <input type="text" class="layui-table-edit zjmx" name="zjqk" value=""></td>
+                        <td colspan="4" class="set-center">
+                            <button type="button" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn" onclick="deleteZjqk(this)" name="sc"> 删除 </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input type="text" lay-verify="required" class="layui-table-edit zjmx" name="zjnr" value="表单输入是否符合要求"></td>
+                        <td colspan="2" class="zjmx_radio set-center">
+                            <input class="zjmx" type="radio" name="sftg3" value="1" title="是" checked>
+                            <input class="zjmx" type="radio" name="sftg3" value="0" title="否">
+                        </td>
+                        <td colspan="2">
+                            <input type="text" class="layui-table-edit zjmx" name="zjqk" value=""></td>
+                        <td colspan="4" class="set-center">
+                            <button type="button" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn" onclick="deleteZjqk(this)" name="sc"> 删除 </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input type="text" lay-verify="required" class="layui-table-edit zjmx" name="zjnr" value="审批程序是否符合要求"></td>
+                        <td colspan="2" class="zjmx_radio set-center">
+                            <input class="zjmx" type="radio" name="sftg4" value="1" title="是" checked>
+                            <input class="zjmx" type="radio" name="sftg4" value="0" title="否">
+                        </td>
+                        <td colspan="2">
+                            <input type="text" class="layui-table-edit zjmx" name="zjqk" value=""></td>
+                        <td colspan="4" class="set-center">
+                            <button type="button" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn" onclick="deleteZjqk(this)" name="sc"> 删除 </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input type="text" lay-verify="required" class="layui-table-edit zjmx" name="zjnr" value="办件时限是否规范"></td>
+                        <td colspan="2" class="zjmx_radio set-center">
+                            <input class="zjmx" type="radio" name="sftg5" value="1" title="是" checked>
+                            <input class="zjmx" type="radio" name="sftg5" value="0" title="否">
+                        </td>
+                        <td colspan="2">
+                            <input type="text" class="layui-table-edit zjmx" name="zjqk" value=""></td>
+                        <td colspan="4" class="set-center">
+                            <button type="button" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn" onclick="deleteZjqk(this)" name="sc"> 删除 </button></td>
+                    </tr>
+                {{# } else { }}
+                {{# layui.each(d.zjMxDOList, function(i, zjmx){ }}
+                    <tr>
+                        <td colspan="2" class="">
+                                <input type="text" lay-verify="required" class="layui-table-edit zjmx" name="zjnr" value="{{zjmx.zjnr||''}}">
+                        </td>
+                        <td colspan="2" class="zjmx_radio set-center">
+                            <input class="zjmx" type="radio" name="sftg{{i}}" value="1" title="是" {{# if(zjmx.sftg!='0'){ }} checked {{# } }}>
+                            <input class="zjmx" type="radio" name="sftg{{i}}" value="0" title="否" {{# if(zjmx.sftg=='0'){ }} checked {{# } }}>
+                        </td>
+                        <td colspan="2">
+                            <input type="text" class="layui-table-edit zjmx" value="{{zjmx.zjqk||''}}" name="zjqk" title="{{zjmx.zjqk||''}}"></td>
+                        <td colspan="4" class="set-center">
+                            <button type="button" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn" onclick="deleteZjqk(this)" name="sc"> 删除 </button>
+                        </td>
+                    </tr>
+                {{# }); }}
+                {{# } }}
+
+                <tr class="spyjTr set-tr-height158">
+                    <td class="set-back-color set-center">质检意见</td>
+                    <td colspan="7" class="bdc-not-null"><textarea class="zjxx" name="spyj" lay-verify="required" rows="" cols="">{{d.spyj || ''}}</textarea></td>
+                </tr>
+                <tr>
+                    <td class="set-back-color set-center">是否通过</td>
+                    <td colspan="3" class="bdc-not-null">
+                        <select class="zjxx" name="zjzt" xm-select="zjzt" lay-verify="required" xm-select-skin="default" xm-select-search="" xm-select-height="38px" xm-select-search-type="dl">
+                            <option value="" {{# if(d.zjzt){ }} selected="selected" {{# } }}>请选择</option>
+                            <option value="1" {{# if(d.zjzt =='1'){ }} selected="selected" {{# } }} >通过</option>
+                            <option value="-1" {{# if(d.zjzt =='-1'){ }} selected="selected" {{# } }}>未通过</option>
+                        </select>
+                    </td>
+                    <td class="set-back-color set-center">
+                        <input type="hidden" class="zjxx" id="qmxxid" name="qmxxid" value="{{d.qmxxid || ''}}">
+                        <p class="sign-p set-center">
+                            <a class="sign" href="javascript:void(0)" onclick="sign('{{d.qmxxid}}')">
+                                <i class="layui-icon layui-icon-edit"></i>签名
+                            </a>
+                        </p>
+                    </td>
+                    <td colspan="3">
+                        <img id="qmxx_img" src="{{d.qmtpdz==undefined?'':d.qmtpdz}}"/></td>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</script>
+
+<script type="text/html" id="newZjqkTpl">
+    <tr>
+        <td colspan="2" class="">
+            <input type="text" name="zjnr" lay-verify="required" class="layui-table-edit zjmx" value="">
+        </td>
+        <td colspan="2" class="zjmx_radio set-center">
+            <input class="zjmx" name="sftg{{d}}" type="radio" value="1" title="是" checked>
+            <input class="zjmx" name="sftg{{d}}" type="radio" value="0" title="否">
+        </td>
+        <td colspan="2">
+            <input type="text" name="zjqk" class="layui-table-edit zjmx" value="">
+        </td>
+        <td colspan="4" class="set-center">
+            <button type="button" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn" onclick="deleteZjqk(this)" name="sc"> 删除 </button>
+        </td>
+    </tr>
+</script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/zj/bdczjbg.js"></script>
+</html>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--预告登记信息（根据xml添加scywh）-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.QlfQlYgdjMapper">
+
+    <select id="queryQlfQlYgdjList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.QlfQlYgdjDO">
+        SELECT DISTINCT
+        re.yxmid as ssywh,
+        a.ytmc,
+        a.jedw,
+        a.dbfw,
+        a.jzzr as sfczjzhxz,
+        a.bdcdyh,
+        c.xmid AS ywh,
+        <if test="yywh != null and yywh !=''">
+            r.xmid as zxygywh,
+            a.zxygyy,
+            a.zxygdjsj as zxsj,
+        </if>
+        nvl(re.yxmid, '0') scywh,
+        a.zl AS bdczl,
+        a.ygdjzl,
+        a.djlx,
+        nvl(a.djyy, '/') djyy,
+        nvl(a.tdsyqr, '/') AS tdsyqr,
+        a.ghyt,
+        a.fwxz,
+        ''fwjg,
+        a.szc,
+        a.zcs,
+        a.jzmj,
+        a.qdjg,
+        c.ywr,
+        --c.ywrzjzl,
+        c.ywrzjh,
+        nvl(replace(c.bdcqzh, '/', '、'), '/') AS bdcdjzmh,
+        substr(c.bdcdyh,0,6) qxdm,
+        a.djjg,
+        a.dbr,
+        a.djsj,
+        a.fj,
+        a.qszt,
+        a.zwlxqssj zwlxksqx,
+        a.zwlxjssj zwlxjsqx
+        FROM bdc_yg a
+        LEFT JOIN bdc_xm c ON a.xmid = c.xmid
+        LEFT JOIN bdc_xm_lsgx re ON re.xmid = c.xmid and nvl(re.WLXM,0) = 0
+        LEFT JOIN bdc_xm xm ON xm.xmid = re.yxmid
+        <if test="yywh != null and yywh !=''">
+            LEFT JOIN bdc_xm_lsgx r ON r.yxmid=c.xmid and nvl(r.WLXM,0) = 0
+        </if>
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND c.xmid = #{ywh}
+            </if>
+            <if test="yywh != null and yywh !=''">
+                AND r.xmid=#{yywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND c.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+    <select id="queryQlfQlYgdjListOld" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.yancheng.yth.old.QlfQlYgdjOldDO">
+        SELECT DISTINCT
+        a.bdcdyh,
+        c.xmid AS ywh,
+        nvl(re.yxmid, '0') scywh,
+        a.zl AS bdczl,
+        a.ygdjzl,
+        a.djlx,
+        nvl(a.djyy, '/') djyy,
+        nvl(a.tdsyqr, '/') AS tdsyqr,
+        a.ghyt,
+        a.fwxz,
+        ''fwjg,
+        a.szc,
+        a.zcs,
+        a.jzmj,
+        a.qdjg,
+        c.ywr,
+        --c.ywrzjzl,
+        c.ywrzjh,
+        nvl(replace(c.bdcqzh, '/', '、'), '/') AS bdcdjzmh,
+        c.qxdm,
+        a.djjg,
+        a.dbr,
+        a.djsj,
+        a.fj,
+        a.qszt,
+        a.zwlxqssj zwlxksqx,
+        a.zwlxjssj zwlxjsqx
+        FROM bdc_yg a
+        LEFT JOIN bdc_xm c ON a.xmid = c.xmid
+        LEFT JOIN bdc_xm_lsgx re ON re.xmid = c.xmid and nvl(re.WLXM,0) = 0
+        LEFT JOIN bdc_xm xm ON xm.xmid = re.yxmid
+        <if test="yywh != null and yywh !=''">
+            LEFT JOIN bdc_xm_lsgx r ON r.yxmid=c.xmid and nvl(r.WLXM,0) = 0
+        </if>
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND c.xmid = #{ywh}
+            </if>
+            <if test="yywh != null and yywh !=''">
+                AND r.xmid=#{yywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND c.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--权利人-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.ZttGyQlrMapper">
+    <select id="queryZttGyQlrList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.ZttGyQlrDO">
+        SELECT
+        c.bdcdyh,
+        t.sxh,
+        t.qlrmc,
+        NVL(NVL(t.bdcqzh,t1.bdcqzh),'/////////') bdcqzh,
+        z.qzysxlh,
+        t.sfczr,
+        nvl(t.zjzl,'99') zjzl,
+        case when length(t.zjh)>=5 then t.zjh else '000000' end zjh ,
+        c.djjg fzjg,
+        t.sshy,
+        '156' gj,
+        '' hjszss,
+        t.xb,
+        t.dh,
+        t.txdz dz,
+        t.yb,
+        '' gzdw,
+        '' dzyj,
+        nvl(t.qlrlx,'99') qlrlx,
+        t.qlbl,
+        t.gyfs,
+        t.gyfs gyqk,
+        nvl(t.bz,'/') bz,
+        c.xmid ywh,
+        c.qllx,
+        c.qszt,
+        c.djsj,
+        t.qlrtz,
+        nvl(j.cbfbm, '/') cbfdm,
+        nvl(b.fbfdm, '/') fbfbm,
+        substr(c.bdcdyh,0,6) as qxdm
+        FROM bdc_qlr t
+        LEFT JOIN bdc_xm c ON c.xmid = t.xmid
+        LEFT JOIN bdc_zs z ON z.bdcqzh = t.zsid
+        LEFT JOIN BDC_TDCBNYDSYQ b on b.xmid = t.xmid
+        left JOIN bdc_qlr_hkb_gx h ON h.qlrid = t.qlrid
+        left JOIN BDC_JTCY j ON h.hkbbm = j.hkbbm AND h.hkbbbh=j.hkbbbh
+        LEFT JOIN BDC_XM_LSGX L ON C.XMID = L.XMID and nvl(l.WLXM,0) = 0
+        LEFT JOIN BDC_XM C1 ON L.YXMID = C1.XMID
+        LEFT JOIN BDC_qlr t1 on c1.xmid = t1.xmid and (t.qlrmc = t1.qlrmc or t.zjh = t1.zjh)
+        <where>
+            t.qlrlb = '1'
+            <if test="ywh != null and ywh !=''">
+                AND t.xmid = #{ywh}
+            </if>
+        </where>
+    </select>
+    <select id="queryZttGyQlrListOld" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.yancheng.yth.old.ZttGyQlrOldDO">
+        SELECT
+        c.bdcdyh,
+        t.sxh,
+        t.qlrmc,
+        NVL(NVL(t.bdcqzh,t1.bdcqzh),'/////////') bdcqzh,
+        z.qzysxlh,
+        t.sfczr,
+        nvl(t.zjzl,'99') zjzl,
+        case when length(t.zjh)>=5 then t.zjh else '000000' end zjh ,
+        c.djjg fzjg,
+        t.sshy,
+        '156' gj,
+        '' hjszss,
+        t.xb,
+        t.dh,
+        t.txdz dz,
+        t.yb,
+        '' gzdw,
+        '' dzyj,
+        nvl(t.qlrlx,'99') qlrlx,
+        t.qlbl,
+        t.gyfs,
+        t.gyfs gyqk,
+        t.bz,
+        c.xmid ywh,
+        substr(c.bdcdyh,0,6) as qxdm
+        FROM bdc_qlr t
+        LEFT JOIN bdc_xm c ON c.xmid = t.xmid
+        LEFT JOIN bdc_zs z ON z.bdcqzh = t.zsid
+        LEFT JOIN BDC_XM_LSGX L ON C.XMID = L.XMID and nvl(l.WLXM,0) = 0
+        LEFT JOIN BDC_XM C1 ON L.YXMID = C1.XMID
+        LEFT JOIN BDC_qlr t1 on c1.xmid = t1.xmid and (t.qlrmc = t1.qlrmc or t.zjh = t1.zjh)
+        <where>
+            t.qlrlb = '1'
+            <if test="ywh != null and ywh !=''">
+                AND t.xmid = #{ywh}
+            </if>
+        </where>
+    </select>
+</mapper>

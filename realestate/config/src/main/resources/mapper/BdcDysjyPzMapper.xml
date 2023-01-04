@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.config.core.mapper.BdcDysjPzMapper">
+
+    <resultMap id="bdcDysjPzMap" type="cn.gtmap.realestate.common.core.domain.BdcDysjPzDO">
+        <id property="id" column="id" jdbcType="VARCHAR" javaType="String"/>
+        <result property="dylx" column="dylx" jdbcType="VARCHAR" javaType="String"/>
+        <result property="dysjy" column="dysjy" jdbcType="VARCHAR" javaType="String"/>
+        <result property="cs" column="cs" jdbcType="VARCHAR" javaType="String"/>
+        <result property="dyzd" column="dyzd" jdbcType="CLOB" typeHandler="org.apache.ibatis.type.ClobTypeHandler"
+                javaType="String"/>
+    </resultMap>
+
+    <!--分页查询-->
+    <!--AND instr(t.dylx ,#{dylx} )>0-->
+    <!--查询主表data配置-->
+    <select id="listBdcDysjPzByPage"
+            parameterType="cn.gtmap.realestate.common.core.domain.BdcDysjPzDO"
+            resultMap="bdcDysjPzMap">
+        <![CDATA[
+        SELECT
+        t.id,
+        t.dylx,
+        t.dysjy,
+        t.cs,
+        t.ytmc,
+        t.pzrq,
+        replace(replace(t.dyzd, '<'  ,'&lt;'), '>','&gt;') dyzd
+        FROM BDC_DYSJ_PZ t
+        ]]>
+        <where>
+            <if test="id != null and id != ''">
+                AND t.id = #{id}
+            </if>
+            <if test="dylx != null and dylx != ''">
+                AND instr(t.dylx ,#{dylx} )>0
+            </if>
+            <if test="ytmc != null and ytmc != ''">
+                AND instr(t.ytmc ,#{ytmc} )>0
+            </if>
+            <if test="djqsrq != null and djqsrq != ''">
+                <![CDATA[and (t.pzrq >= to_date(#{djqsrq},'yyyy-MM-dd HH24:mi:ss'))]]>
+            </if>
+            <if test="djjsrq != null and djjsrq != ''">
+                <![CDATA[and (t.pzrq <= to_date(#{djjsrq},'yyyy-MM-dd HH24:mi:ss'))]]>
+            </if>
+        </where>
+        ORDER BY T.PZRQ DESC NULLS LAST
+
+    </select>
+
+    <!--分页查询-->
+    <!--查询字表detail配置-->
+    <select id="listBdcDysjZbPzByPage" parameterType="cn.gtmap.realestate.common.core.domain.BdcDysjZbPzDO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcDysjZbPzDO">
+        SELECT
+        t.id,
+        t.dyzbsjy,
+        t.cs,
+        t.dyzbid,
+        t.dylx
+        FROM BDC_DYSJ_ZB_PZ t
+        <where>
+            <if test="id != null and id != ''">
+                AND t.id = #{id}
+            </if>
+            <if test="dylx != null and dylx != ''">
+                AND t.dylx = #{dylx}
+            </if>
+            <if test="dyzbid != null and dyzbid != ''">
+                AND t.dyzbid = #{dyzbid}
+            </if>
+        </where>
+
+    </select>
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+    <!-- 事务管理器 -->
+    <bean id="serverTransactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource">
+            <ref bean="serverDataSource"/>
+        </property>
+        <qualifier value="server" />
+    </bean>
+    <tx:annotation-driven transaction-manager="serverTransactionManager" proxy-target-class="true"/>
+
+    <!-- 事务管理器 -->
+    <bean id="gxTransactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource">
+            <ref bean="gxDataSource"/>
+        </property>
+        <qualifier value="gx" />
+    </bean>
+    <tx:annotation-driven transaction-manager="gxTransactionManager" proxy-target-class="true"/>
+
+    <!-- 事务管理器 -->
+    <bean id="sjptTransactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource">
+            <ref bean="sjptDataSource"/>
+        </property>
+        <qualifier value="sjpt"/>
+    </bean>
+    <tx:annotation-driven transaction-manager="sjptTransactionManager" proxy-target-class="true"/>
+
+    <!-- 事务管理器 -->
+    <bean id="yzwTransactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource">
+            <ref bean="yzwDataSource"/>
+        </property>
+        <qualifier value="yzw"/>
+    </bean>
+    <tx:annotation-driven transaction-manager="yzwTransactionManager" proxy-target-class="true"/>
+</beans>

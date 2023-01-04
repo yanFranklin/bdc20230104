@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--逻辑撞信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.KttFwLjzMapper">
+
+    <select id="queryKttFwLjzList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.KttFwLjzDO">
+        SELECT A.lszd || '_' || A.zrzh || '_' || A.fw_dcb_index ljzbh,
+        A.LJZH,A.ZRZH,A.MPH,A.ycjzmj,A.ycdxmj,
+        A.ycqtmj,A.scjzmj,A.scdxmj,A.scqtmj,A.jgrq,to_char(A.BDCDYH) bdcdyh,
+        A.fwjg,A.jzwzt,A.fwyt,A.fwcs zcs,A.dxcs,A.dscs,A.bz,substr(b.bdcdyh,0,6) as qxdm,
+        a.ytmc,a.pzyt,a.sjyt,k.bsm zrzbsm
+        FROM DJSJ_FW_LJZ A
+        left join djsj_fw_k k on k.lszd = A.LSZD and k.zrzh = A.ZRZH
+        <if test="isyz != null and isyz != ''">
+            LEFT JOIN BDC_XM B ON A.BDCDYH = B.BDCDYH
+        </if>
+        <if test="ishs != null and ishs != ''">
+            LEFT JOIN DJSJ_FWHS C ON C.FW_DCB_INDEX = A.FW_DCB_INDEX
+            LEFT JOIN BDC_XM B ON B.BDCDYH = C.BDCDYH
+        </if>
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND b.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND B.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+        union all
+        select distinct a.lszd || '_' || a.zrzh || '_' || a.fw_dcb_index
+        ljzbh,a.ljzh,a.zrzh,a.mph,a.ycjzmj,a.ycdxmj,a.ycqtmj,a.scjzmj,a.scdxmj,a.scqtmj,
+        a.jgrq,e.bdcdyh,a.fwjg,a.jzwzt,a.fwyt,a.fwcs as zcs,
+        a.dxcs,a.dscs,a.bz,substr(c.bdcdyh,0,6) as qxdm,a.ytmc,a.pzyt,a.sjyt,k.bsm zrzbsm from bdc_fdcq c
+        left join bdc_xm d on d.xmid=c.xmid
+        inner join bdc_fdcq_fdcqxm f on f.qlid=c.qlid
+        left join djsj_fw_xmxx e on e.bdcdyh=c.bdcdyh
+        left join djsj_fw_ljz a on a.fw_xmxx_index=e.fw_xmxx_index
+        left join djsj_fw_k k on k.lszd = A.LSZD and k.zrzh = A.ZRZH
+        <where>
+            <if test="ywh != null and ywh !=''">
+                and d.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                and c.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="queryKttFwLjzDzList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.KttFwLjzDO">
+        select distinct e.bdcdyh,a.ljzh,a.zrzh,a.mph,a.ycjzmj,a.ycdxmj,a.ycqtmj,a.scjzmj,a.scdxmj,a.scqtmj,
+        (case when f.jgsj is null then to_char(a.jgrq) else f.jgsj end) jgrq,a.fwjg as fwjg1,'' fwjg2,''
+        fwjg3,a.jzwzt,a.fwyt,''
+        fwyt2,'' fwyt3,a.fwcs as zcs,
+        '' dxcs,'' dscs,a.bz,substr(c.bdcdyh,0,6) as qxdm,d.xmid from bdc_fdcq c
+        left join bdc_xm d on d.xmid=c.xmid
+        left join bdc_fdcq_fdcqxm f on f.qlid=c.qlid
+        left join djsj_fw_xmxx e on e.bdcdyh=c.bdcdyh
+        left join djsj_fw_ljz a on a.fw_xmxx_index=e.fw_xmxx_index
+        <where>
+            <if test="ywh != null and ywh !=''">
+                and d.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                and c.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+</mapper>

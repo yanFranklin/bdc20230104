@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.check.core.mapper.RuleSqlMapper">
+
+    <!--检查是否存在所在宗地（不动产数据）处于抵押状态下，房屋创建预告、预抵押、首次登记、在建工程抵押等登记（通过不动产单元号） -->
+    <select id="selectBdcTdDyDoXmByBdcdyh" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        select x.xmid,x.slbh,x.djxl,x.bdcdyh,m.bdcqzh xzwh,f.xmid xzwhxmid,x.gzldyid from bdc_xm x
+        inner join bdc_dyaq f on f.bdcdyh=concat(substr(x.bdcdyh,1,19),'W00000000') and x.bdcdyh != f.bdcdyh and
+        nvl(f.qszt,0) = 1
+        LEFT JOIN bdc_gzlw_sh c ON (c.gzlslid=x.gzlslid OR c.slbh=x.slbh) AND x.bdcdyh=c.bdcdyh AND f.xmid=c.xmid
+        left join bdc_xm m on m.xmid=f.xmid
+        <![CDATA[  where x.xmid = #{xmid} and ((x.djsj is null) or (x.djsj > f.djsj)) and  c.gzlwid is null ]]>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+</mapper>

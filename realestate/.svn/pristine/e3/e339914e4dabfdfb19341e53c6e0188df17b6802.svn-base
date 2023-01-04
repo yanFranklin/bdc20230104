@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--共享推送日志信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.accessLog.GxtsLogMapper">
+
+    <select id="listGxtsLogByPageOrder" parameterType="map"
+            resultType="map">
+        SELECT czrz.SLBH,xm.BDCDYH,xm.DJLX,xm.ZL,czrz.CZZT,xm.DJXL,xm.DJSJ,czrz.XMID,czrz.RZID
+        FROM BDC_CZRZ czrz
+        LEFT JOIN BDC_XM xm ON xm.XMID = czrz.XMID
+        <where>
+            1=1
+            AND czrz.CZLX = 3
+<!--            <if test="czlx != null">-->
+<!--                AND czrz.CZLX = #{czlx}-->
+<!--            </if>-->
+            <if test="slbh != null and slbh !=''">
+                AND czrz.SLBH = #{slbh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND xm.BDCDYH = #{bdcdyh}
+            </if>
+            <if test="djlx != null and djlx !=''">
+                AND xm.DJLX = #{djlx}
+            </if>
+            <if test="zl != null and zl !=''">
+                AND xm.ZL = #{zl}
+            </if>
+            <if test="djxl != null and djxl !=''">
+                AND xm.DJXL = #{djxl}
+            </if>
+            <if test="czzt != null">
+                AND czrz.CZZT = #{czzt}
+            </if>
+            <if test="slbhOrbdcdyh != null and slbhOrbdcdyh != ''">
+                AND (czrz.SLBH = #{slbhOrbdcdyh} or xm.BDCDYH = #{slbhOrbdcdyh})
+            </if>
+            <if test="kssj != null and kssj != ''">
+                AND to_char(xm.DJSJ,'yyyy-MM-dd hh24:mi:ss') >= #{kssj}
+            </if>
+            <if test="jssj != null and jssj != ''">
+                <![CDATA[
+                  AND to_char(xm.DJSJ,'yyyy-MM-dd hh24:mi:ss') <= #{jssj}
+                   ]]>
+            </if>
+        </where>
+        ORDER BY czrz.CZSJ DESC
+    </select>
+
+</mapper>

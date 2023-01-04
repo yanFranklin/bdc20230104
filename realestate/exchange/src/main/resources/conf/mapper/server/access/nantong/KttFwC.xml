@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--层信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.KttFwCMapper">
+
+    <select id="queryKttFwCList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.KttFwCDO">
+        SELECT DISTINCT nvl(c.ch,c.wlcs) ch, d.zrzh,c.wlcs as sjc,c.dycs as myc,'' cjzmj,
+        '' ctnjzmj,'' cytmj,'' cgyjzmj,'' cftjzmj,'' cbqmj,c.cg,'' sptymj,
+        substr(a.bdcdyh,0,6) qxdm ,C.BDCDYH, D.LJZH LJZBH FROM
+        bdc_xm a
+        <if test="isYc == null or isYc ==''">
+            LEFT JOIN (
+                SELECT to_char(t.bdcdyh) bdcdyh,to_char(t.fw_dcb_index) fw_dcb_index,to_char(t.ch) ch,to_char(t.wlcs) wlcs,to_char(t.dycs) dycs,t.cg
+                FROM djsj_fwhs t
+                <where>
+                    <if test="ywh != null and ywh !=''">
+                        AND t.bdcdyh in (SELECT bdcdyh from BDC_XM where xmid = #{ywh})
+                    </if>
+                    <if test="bdcdyh != null and bdcdyh !=''">
+                        AND t.bdcdyh = #{bdcdyh}
+                    </if>
+                </where>
+
+                UNION All
+                SELECT to_char(t1.bdcdyh) bdcdyh,to_char(t1.fw_dcb_index) fw_dcb_index,null ch,to_char(t1.wlcs) wlcs,to_char(t1.dycs) dycs,t1.cg
+                FROM djsj_fwychs t1
+                <where>
+                    <if test="ywh != null and ywh !=''">
+                        AND t1.bdcdyh in (SELECT bdcdyh from BDC_XM where xmid = #{ywh})
+                        AND t1.bdcdyh not in (SELECT bdcdyh FROM djsj_fwhs WHERE bdcdyh in (SELECT bdcdyh from BDC_XM where xmid = #{ywh}))
+                    </if>
+                    <if test="bdcdyh != null and bdcdyh !=''">
+                        AND t1.bdcdyh = #{bdcdyh}
+                        AND t1.bdcdyh not in (SELECT bdcdyh FROM djsj_fwhs WHERE bdcdyh != #{bdcdyh})
+                    </if>
+                </where>
+
+                UNION ALL
+                SELECT to_char(t2.bdcdyh) bdcdyh,to_char(t2.fw_dcb_index) fw_dcb_index,to_char(t2.dh) ch,to_char(fwcs) wlcs,to_char(fwcs) dycs,null cg
+                FROM djsj_fw_ljz t2
+                <where>
+                    <if test="ywh != null and ywh !=''">
+                        AND t2.bdcdyh in (SELECT bdcdyh from BDC_XM where xmid = #{ywh})
+                    </if>
+                    <if test="bdcdyh != null and bdcdyh !=''">
+                        AND t2.bdcdyh = #{bdcdyh}
+                    </if>
+                </where>
+
+                UNION ALL
+                SELECT to_char(t3.bdcdyh) bdcdyh,to_char(t4.fw_dcb_index) fw_dcb_index,to_char(t4.dh) ch,to_char(t4.fwcs) wlcs,to_char(t4.fwcs) dycs,null cg
+                FROM djsj_fw_xmxx t3
+                LEFT JOIN djsj_fw_ljz t4 on t3.fw_xmxx_index = t4.fw_xmxx_index
+                <where>
+                    <if test="ywh != null and ywh !=''">
+                        AND t3.bdcdyh in (SELECT bdcdyh from BDC_XM where xmid = #{ywh})
+                    </if>
+                    <if test="bdcdyh != null and bdcdyh !=''">
+                        AND t3.bdcdyh = #{bdcdyh}
+                    </if>
+                </where>
+            ) c ON c.bdcdyh = a.bdcdyh
+            LEFT JOIN djsj_fw_ljz d ON c.fw_dcb_index=d.fw_dcb_index
+        </if>
+        <if test="isYc != null and isYc !=''">
+            LEFT JOIN djsj_fwychs c ON c.bdcdyh = a.bdcdyh
+            LEFT JOIN djsj_fw_ljz d on c.fw_dcb_index=d.fw_dcb_index
+        </if>
+        <where>
+            d.lszd IS NOT NULL AND d.zrzh IS NOT NULL AND c.wlcs IS NOT NULL
+            <if test="ywh != null and ywh !=''">
+                AND a.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND a.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryKttFwCListOld" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.yancheng.yth.old.KttFwCOldDO">
+        SELECT DISTINCT nvl(c.ch,c.wlcs) ch, d.zrzh,c.wlcs as sjc,c.dycs as myc,'' cjzmj,
+        '' ctnjzmj,'' cytmj,'' cgyjzmj,'' cftjzmj,'' cbqmj,c.cg,'' sptymj,
+        substr(a.bdcdyh,0,6) qxdm ,C.BDCDYH, D.LJZH LJZBH FROM
+        bdc_xm a
+        <if test="isYc == null or isYc ==''">
+            LEFT JOIN (
+                SELECT t.bdcdyh,t.fw_dcb_index,t.ch,t.wlcs,t.dycs,t.cg
+                FROM djsj_fwhs t WHERE t.bdcdyh IS NOT NULL
+                <where>
+                    <if test="ywh != null and ywh !=''">
+                        AND t.bdcdyh in (SELECT bdcdyh from BDC_XM where xmid = #{ywh})
+                    </if>
+                    <if test="bdcdyh != null and bdcdyh !=''">
+                        AND t.bdcdyh = #{bdcdyh}
+                    </if>
+                </where>
+
+                UNION All
+                SELECT t1.bdcdyh,t1.fw_dcb_index,null ch,t1.wlcs,t1.dycs,t1.cg
+                FROM djsj_fwychs t1
+                <where>
+                    <if test="ywh != null and ywh !=''">
+                        AND t1.bdcdyh in (SELECT bdcdyh from BDC_XM where xmid = #{ywh})
+                        AND t1.bdcdyh not in (SELECT bdcdyh FROM djsj_fwhs WHERE bdcdyh in (SELECT bdcdyh from BDC_XM where xmid = #{ywh}))
+                    </if>
+                    <if test="bdcdyh != null and bdcdyh !=''">
+                        AND t1.bdcdyh = #{bdcdyh}
+                        AND t1.bdcdyh not in (SELECT bdcdyh FROM djsj_fwhs WHERE bdcdyh != #{bdcdyh})
+                    </if>
+                </where>
+
+            ) c ON c.bdcdyh = a.bdcdyh
+            LEFT JOIN djsj_fw_ljz d ON c.fw_dcb_index=d.fw_dcb_index
+        </if>
+        <if test="isYc != null and isYc !=''">
+            LEFT JOIN djsj_fwychs c ON c.bdcdyh = a.bdcdyh
+            LEFT JOIN djsj_fw_ljz d on c.fw_dcb_index=d.fw_dcb_index
+        </if>
+        <where>
+            d.lszd IS NOT NULL AND d.zrzh IS NOT NULL AND c.wlcs IS NOT NULL
+            <if test="ywh != null and ywh !=''">
+                AND a.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND a.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.accept.core.mapper.BdcZhcxLogMapper">
+
+    <select id="countZhcxRyPrintxx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count(t.rzid) as num, t.cxrid as ryid
+        FROM BDC_ZHCX_LOG t
+        WHERE t.rzlx = 1
+        <if test="dylx != null and dylx != ''">
+            AND t.dylx = #{dylx}
+        </if>
+        <if test="kssj != null and kssj != ''">
+             AND t.czsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+        </if>
+        <if test="jzsj != null and jzsj != ''">
+             AND t.czsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+        </if>
+        <if test="ryidList != null and ryidList.size() > 0">
+            AND t.cxrid IN
+            <foreach collection="ryidList" item="item" open="(" separator="," close=")">
+                 #{item}
+            </foreach>
+        </if>
+        GROUP BY t.cxrid
+    </select>
+
+    <select id="countZhcxRyCxxx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count(t.rzid) as num, t.cxrid as ryid
+        FROM BDC_ZHCX_LOG t
+        WHERE t.rzlx = 0
+        <if test="kssj != null and kssj != ''">
+             AND t.czsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+        </if>
+        <if test="jzsj != null and jzsj != ''">
+             AND t.czsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+        </if>
+        <if test="ryidList != null and ryidList.size() > 0">
+            AND t.cxrid IN
+            <foreach collection="ryidList" item="item" open="(" separator="," close=")">
+                 #{item}
+            </foreach>
+        </if>
+        GROUP BY t.cxrid
+    </select>
+
+    <select id="countZhcxBmPrintxx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count(t.rzid) as num, t.szbmdm as bmdm
+        FROM BDC_ZHCX_LOG t
+        WHERE t.rzlx = 1
+        <if test="dylx != null and dylx != ''">
+            AND t.dylx = #{dylx}
+        </if>
+        <if test="kssj != null and kssj != ''">
+            AND t.czsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+        </if>
+        <if test="jzsj != null and jzsj != ''">
+            AND t.czsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+        </if>
+        <if test="ryidList != null and ryidList.size() > 0">
+            AND t.cxrid IN
+            <foreach collection="ryidList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        GROUP BY t.szbmdm
+    </select>
+
+    <select id="countZhcxBmCxxx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count(t.rzid) as num, t.szbmdm as bmdm
+        FROM BDC_ZHCX_LOG t
+        WHERE t.rzlx = 0
+        <if test="kssj != null and kssj != ''">
+            AND t.czsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+        </if>
+        <if test="jzsj != null and jzsj != ''">
+            AND t.czsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+        </if>
+        <if test="ryidList != null and ryidList.size() > 0">
+            AND t.cxrid IN
+            <foreach collection="ryidList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        GROUP BY t.szbmdm
+    </select>
+
+    <select id="countYbtjZhcx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcYbtjQO"  resultType="Integer">
+        SELECT count(t.rzid)
+        FROM BDC_ZHCX_LOG t
+        WHERE t.rzlx = 0
+        <if test="kssj != null and kssj != ''">
+            AND t.czsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+        </if>
+        <if test="jzsj != null and jzsj != ''">
+            AND t.czsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+        </if>
+        <if test="djjg != null and djjg != ''">
+            AND t.szbm = #{djjg}
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--宗海基本信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.KttZhjbxxMapper">
+
+    <select id="queryKttZhjbxxList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.KttZhjbxxDO">
+        SELECT e.zhdm,
+        e.bdcdyh,
+        0 bsm,
+
+        e.zhtzm,
+        e.xmxz,
+        e.xmmc,
+        e.yhzmj,
+        e.zhmj,
+        e.db,
+        e.zhax,
+        e.yhlxa,
+        e.yhlxb,
+        e.yhwzsm,
+        e.hdmc,
+        e.hddm,
+        e.ydfw,
+        e.ydmj,
+        e.hdwz,
+        e.hdyt,
+        '' dah,
+        '1' zt,
+        substr(x.bdcdyh,0,6) as qxdm,
+        '无' as zht,
+        e.djsj,
+        nvl(e.dbr, '无') AS dbr,
+        nvl(a.djjg, '无') AS djjgbm,
+        nvl(a.djjg, '无') AS djjgmc,
+        nvl(a.jd, '无') AS jdh,
+        nvl(a.jf, '无') AS jfh,
+        nvl(a.zu, '无') AS zh
+        FROM bdc_bdcdjb_zhjbxx e
+        LEFT JOIN bdc_bdcdjb a ON e.zhdm = a.zdzhh
+        LEFT JOIN bdc_xm x ON x.bdcdyh = e.bdcdyh
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND x.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND x.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+</mapper>

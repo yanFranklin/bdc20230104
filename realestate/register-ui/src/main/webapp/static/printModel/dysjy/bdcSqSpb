@@ -1,0 +1,47 @@
+select #{clmc} clmc,#{ewm} ewm,#{jdmc1} jdmc1,#{jdmc2} jdmc2,#{jdmc3} jdmc3 from dual;
+select * from (select #{signImageUrl}||s1.qmid slrqm,s1.shyj slyj,to_char(s1.qmsj,'yyyy"年"mm"月"dd"日"') slrq from bdc_shxx s1 where s1.jdmc=#{jdmc1} and s1.gzlslid=#{gzlslid} order by s1.sxh desc) where rownum=1;
+select * from (select #{signImageUrl}||s1.qmid csrqm,s1.shyj csyj,to_char(s1.qmsj,'yyyy"年"mm"月"dd"日"') csrq from bdc_shxx s1 where s1.jdmc=#{jdmc2} and s1.gzlslid=#{gzlslid} order by s1.sxh desc) where rownum=1;
+select * from (select #{signImageUrl}||s1.qmid fhrqm,s1.shyj fhyj,to_char(s1.qmsj,'yyyy"年"mm"月"dd"日"') fhrq from bdc_shxx s1 where s1.jdmc=#{jdmc3} and s1.gzlslid=#{gzlslid} order by s1.sxh desc) where rownum=1;
+select replace(to_char(wm_concat(a.qlrmc)),',','/')qlrmc,replace(to_char(wm_concat(b.mc)),',','/') qlrzjzl,replace(to_char(wm_concat(a.zjh)),',','/')qlrzjh
+,replace(to_char(wm_concat(a.txdz)),',','/')qlrtxdz,replace(to_char(wm_concat(a.frmc)),',','/') qlrfrmc,replace(to_char(wm_concat(a.frdh)),',','/') qlrfrdh
+,replace(to_char(wm_concat(a.dlrmc)),',','/')qlrdlrmc,replace(to_char(wm_concat(a.dlrdh)),',','/')qlrdldh,replace(to_char(wm_concat(a.dljg)),',','/')qlrdljg
+,replace(to_char(wm_concat(a.yb)),',','/')qlryb from bdc_qlr a left join bdc_zd_zjzl b on a.zjzl= b.dm
+where a.xmid = #{xmid} and a.qlrlb =1;
+select replace(to_char(wm_concat(a.qlrmc)),',','/')ywrmc,replace(to_char(wm_concat(b.mc)),',','/') ywrzjzl,replace(to_char(wm_concat(a.zjh)),',','/') ywrzjh
+,replace(to_char(wm_concat(a.txdz)),',','/')ywrtxdz,replace(to_char(wm_concat(a.frmc)),',','/') ywrfrmc,replace(to_char(wm_concat(a.frdh)),',','/') ywrfrdh
+,replace(to_char(wm_concat(a.dlrmc)),',','/')ywrdlrmc,replace(to_char(wm_concat(a.dlrdh)),',','/')ywrdldh,replace(to_char(wm_concat(a.dljg)),',','/')ywrdljg
+,replace(to_char(wm_concat(a.yb)),',','/')ywryb from bdc_qlr a left join bdc_zd_zjzl b on a.zjzl= b.dm
+where a.xmid = #{xmid} and a.qlrlb =2;
+select a.xmid,a.bdbzzqse zgzqqdse,to_char(a.zwlxqssj,'yyyy"年"mm"月"dd"日"')zwlxqssj,
+to_char(a.zwlxjssj,'yyyy"年"mm"月"dd"日"')zwlxjssj,a.zjjzwdyfw from(
+select d.zjjzwdyfw,d.bdbzzqse,d.zwlxqssj,d.zwlxjssj,d.xmid from bdc_dyaq d  where d.xmid=(case when #{yxmid} is not null then #{yxmid} else #{xmid} end)
+union all
+select '',g.qdjg zgzqqdse ,g.zwlxqssj,g.zwlxjssj,g.xmid from bdc_yg g where g.xmid=(case when #{yxmid} is not null then #{yxmid} else #{xmid} end))a;
+select y.zl xydzl,y.bdcdyh xydbdcdyh from bdc_yy y where y.xmid=(case when #{yxmid} is not null then #{yxmid} else #{xmid} end);
+select x.xmid,x.slbh,to_char(x.slsj,'yyyy"年"mm"月"dd"日"') slsj,x.slr,mj.mc mjdw,x.qllx,x.djlx,x.zl,x.bdcdyh,lx.mc bdclx,x.ycqzh,x.yhlxa yhlx,gzw.mc gzwlx,x.lz,zsbs.mc sqzsbs,sf.mc sqfbcz,x.bz,djyy
+from  bdc_xm x
+left join bdc_zd_zsbs zsbs on x.sqzsbs = zsbs.dm
+left join bdc_zd_sf sf on x.sqfbcz = sf.dm
+left join bdc_zd_bdclx lx on lx.dm = x.bdclx
+left join bdc_zd_qllx ql on x.qllx = ql.dm
+left join bdc_zd_mjdw mj on mj.dm = x.mjdw
+left join bdc_zd_gjzwlx gzw on gzw.dm = x.gzwlx
+where x.xmid =#{xmid};
+SELECT CASE a.bdclx
+		WHEN 2 THEN b.mc
+		WHEN 6 THEN b.mc
+		WHEN 8 THEN b.mc
+		WHEN 10 THEN b.mc
+		ELSE c.mc
+	END AS yt
+FROM bdc_xm a
+	LEFT JOIN bdc_zd_fwyt b ON a.dzwyt = b.dm
+	LEFT JOIN bdc_zd_tdyt c ON a.zdzhyt = c.dm
+WHERE a.xmid = #{xmid};
+select case when d.dzwmj is null then to_char(c.zdzhmj) else c.zdzhmj||'/'||d.dzwmj end mj from (select b.gzlslid,sum(b.zdzhmj) zdzhmj
+from (select distinct substr(a.bdcdyh,0,19) djh ,a.gzlslid,a.zdzhmj from bdc_xm a
+where a.gzlslid =#{gzlslid})b group by b.gzlslid)c
+left join (
+select b.gzlslid,sum(b.dzwmj) dzwmj
+from (select distinct a.bdcdyh bdcdyh ,a.gzlslid,a.dzwmj from bdc_xm a
+where a.gzlslid =#{gzlslid})b group by b.gzlslid) d on c.gzlslid = d.gzlslid

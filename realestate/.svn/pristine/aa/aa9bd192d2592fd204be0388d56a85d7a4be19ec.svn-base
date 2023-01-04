@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcYbtjMapper">
+
+    <select id="listBdcywtj" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcYbtjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcYbtjDTO">
+        select t.djjg, count(t.xmid) dbzl from bdc_xm t where 1 = 1
+        <if test="djjg != null and djjg != ''">
+            and t.djjg in
+            <foreach collection="djjg.split(',')" item="item" open="(" close=")" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="kssj != null and kssj != ''">
+            AND t.djsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+        </if>
+        <if test="jzsj != null and jzsj != ''">
+            AND t.djsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+        </if>
+        group by t.djjg
+    </select>
+
+    <select id="countBdcZs" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcYbtjQO"
+            resultType="int">
+        select count(distinct z.zsid) from bdc_zs z
+        left join bdc_xm_zs_gx gx on z.zsid = gx.zsid
+        left join bdc_xm t on t.xmid = gx.xmid
+        where 1 = 1
+        <if test="djjg != null and djjg != ''">
+            and t.djjg in
+            <foreach collection="djjg.split(',')" item="item" open="(" close=")" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="kssj != null and kssj != ''">
+            AND t.djsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+        </if>
+        <if test="jzsj != null and jzsj != ''">
+            AND t.djsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+        </if>
+        <if test="zslx != null and zslx != ''">
+            AND z.zslx = #{zslx}
+        </if>
+        <if test="djlx != null and djlx != ''">
+            AND t.djlx = #{djlx}
+        </if>
+    </select>
+
+    <select id="countBdcDzzz" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcYbtjQO"
+            resultType="int">
+        select count(z.zzbs) from bdc_zs z
+        left join bdc_xm_zs_gx gx on z.zsid = gx.zsid
+        left join bdc_xm t on t.xmid = gx.xmid
+        where 1 = 1
+        <if test="djjg != null and djjg != ''">
+            and t.djjg in
+            <foreach collection="djjg.split(',')" item="item" open="(" close=")" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="kssj != null and kssj != ''">
+            AND t.djsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+        </if>
+        <if test="jzsj != null and jzsj != ''">
+            AND t.djsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+        </if>
+        <if test="zslx != null and zslx != ''">
+            AND z.zslx = #{zslx}
+        </if>
+    </select>
+
+    <select id="countYwzbScdj" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcYbtjQO"
+            resultType="int">
+        select count(*) from bdc_xm t
+        where  djlx='100' and substr(t.bdcdyh,13,1)='G'
+        <if test="djjg != null and djjg != ''">
+            and t.djjg in
+            <foreach collection="djjg.split(',')" item="item" open="(" close=")" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="gzldymc != null and gzldymc != ''">
+            and t.gzldymc in
+            <foreach collection="gzldymc.split(',')" item="item" open="(" close=")" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="kssj != null and kssj != ''">
+            AND t.djsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+        </if>
+        <if test="jzsj != null and jzsj != ''">
+            AND t.djsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+        </if>
+        <if test="sfxs != null and sfxs != ''">
+            <if test="sfxs == 1">
+                and t.slbh like 'W%'
+            </if>
+        </if>
+    </select>
+
+    <select id="countYwzb" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcYbtjQO"
+            resultType="int">
+        select count(distinct (t.gzlslid)) from bdc_xm t
+        where  substr(t.bdcdyh,13,1)='G'
+        <if test="djjg != null and djjg != ''">
+            and t.djjg in
+            <foreach collection="djjg.split(',')" item="item" open="(" close=")" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="gzldymc != null and gzldymc != ''">
+            and t.gzldymc in
+            <foreach collection="gzldymc.split(',')" item="item" open="(" close=")" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="kssj != null and kssj != ''">
+            AND t.djsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+        </if>
+        <if test="jzsj != null and jzsj != ''">
+            AND t.djsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+        </if>
+        <if test="sfxs != null and sfxs != ''">
+            <if test="sfxs == 1">
+                and t.slbh like 'W%'
+            </if>
+        </if>
+        <if test="djlx!=null and djlx !=''">
+            AND t.djlx=#{djlx}
+        </if>
+        <if test="qllx!=null and qllx !=''">
+            AND t.qllx=#{qllx}
+        </if>
+    </select>
+</mapper>

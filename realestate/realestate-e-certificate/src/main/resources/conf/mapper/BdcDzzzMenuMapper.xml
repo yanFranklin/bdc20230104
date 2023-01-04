@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.certificate.core.mapper.BdcDzzzMenuMapper">
+
+    <select id="getMenuListByRoles" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT tt1.*,
+        tt2.RESOURCE_ID,
+        tt2.RESOURCE_URL,
+        tt2.BUSINESS_ID,
+        tt2.RESOURCE_NAME,
+        tt2.RESOURCE_CODE,
+        tt2.RESOURCE_TYPE,
+        tt2.LOAD_MODE
+        FROM (
+        SELECT v_menu.* FROM (
+        SELECT m.*,rownum AS levorder FROM ${pfPlatformMenu} m
+        <if test="roles != null and roles != ''">
+            ,(
+            SELECT DISTINCT(menu.menu_id) FROM ${pfPlatformMenu} menu,${pfPlatformAuthorize} a
+            WHERE a.AUTHORIZE_OBJ_ID = menu.menu_id
+            AND a.MENU_VISIBLE>0
+            AND a.AUTHORIZE_OBJ_TYPE=1
+            AND a.UNDERTAKER_ID IN (${roles})
+            ) v_menuid
+            WHERE v_menuid.menu_id=m.Menu_Id
+        </if>
+        )v_menu
+        START WITH v_menu.menu_code='sys'
+        CONNECT BY v_menu.menu_parent_id = PRIOR v_menu.menu_id
+        ) tt1 LEFT JOIN ${pfPlatformResource} tt2 ON tt1.RESOURCE_ID=tt2.resource_id
+        ORDER BY tt1.MENU_ORDER,tt1.levorder
+    </select>
+
+</mapper>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.config.core.mapper.BdcXtZsbhmbMapper">
+
+    <!--分页查询证书编号模板配置-->
+    <select id="listBdcXtZsbhmbByPageOrder" parameterType="cn.gtmap.realestate.common.core.qo.config.BdcXtZsbhmbQO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcXtZsbhmbDO">
+        SELECT
+            ZSBHMBID,
+            NF,
+            QXDM,
+            QLLX,
+            BDCQZH,
+            BDCQZHWS,
+            DJJG,
+            SQSJC,
+            SZSXQC,
+            SQDM,
+            DJJGDH,
+            CSSXH,
+            YLZHKG,
+            ZSFHKG,
+            SQDMKG,
+            DJBMDM
+        FROM
+            BDC_XT_ZSBHMB T
+        <where>
+            <if test="nf != null and nf != ''">
+                AND T.NF like '%'|| #{nf} || '%'
+            </if>
+            <if test="qxdm != null and qxdm != ''">
+                AND T.QXDM like '%'|| #{qxdm} || '%'
+            </if>
+            <if test="bdcqzh != null and bdcqzh != ''">
+                AND T.BDCQZH like '%'|| #{bdcqzh} || '%'
+            </if>
+            <if test="sqsjc != null and sqsjc != ''">
+                AND T.SQSJC like '%'|| #{sqsjc} || '%'
+            </if>
+            <if test="szsxqc != null and szsxqc != ''">
+                AND T.SZSXQC like '%'|| #{szsxqc} || '%'
+            </if>
+            <if test="sqdm != null and sqdm != ''">
+                AND T.SQDM like '%'|| #{sqdm} || '%'
+            </if>
+        </where>
+
+        ORDER BY
+            <!--避免$注入，直接判断值-->
+            <if test="field != null and field != '' and order != null and order != ''">
+                <if test="field == 'nf'.toString()">
+                   T.NF
+                </if>
+                <if test="field == 'qxdm'.toString()">
+                   T.QXDM
+                </if>
+                <if test="field == 'szsxqc'.toString()">
+                   T.SZSXQC
+                </if>
+
+                <if test="order == 'desc'.toString()">
+                    DESC ,
+                </if>
+                <if test="order == 'asc'.toString()">
+                    ASC  ,
+                </if>
+            </if>
+
+            T.NF DESC,
+            T.SQDM DESC,
+            T.QXDM DESC
+    </select>
+</mapper>

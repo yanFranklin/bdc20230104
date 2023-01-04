@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.certificate.core.mapper.BdcDzzzMlxxHjlogMapper">
+
+    <select id="queryBdcDzzzMlxxHjlog" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzMlxxHjlogDO">
+        SELECT mlid,stmlid,xzqdm,scsj,khdzts,fwdzts,xzcz,sfgd FROM bdc_mlxx_hjlog WHERE mlid = #{mlid}
+    </select>
+
+    <select id="queryLastBdcDzzzMlxxHjlog" parameterType="String"
+            resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzMlxxHjlogDO">
+        SELECT mlid,stmlid,xzqdm,scsj,khdzts,fwdzts,xzcz,sfgd
+        FROM (SELECT mlid,stmlid,xzqdm,scsj,khdzts,fwdzts,xzcz,sfgd FROM bdc_mlxx_hjlog WHERE xzqdm = #{xzqdm} ORDER BY scsj DESC) a
+        WHERE rownum = 1
+    </select>
+
+    <select id="queryFirstYcBdcDzzzMlxxHjlog" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzMlxxHjlogDO">
+        SELECT mlid,stmlid,xzqdm,scsj,khdzts,fwdzts,xzcz,sfgd
+        FROM (SELECT mlid,stmlid,xzqdm,scsj,khdzts,fwdzts,xzcz,sfgd FROM bdc_mlxx_hjlog
+        <where>
+            <if test="xzqdm != null and xzqdm !=''">
+                AND xzqdm = #{xzqdm}
+            </if>
+            <if test="scsj != null and scsj !=''">
+                AND #{scsj} >= scsj
+            </if>
+        </where>
+        AND xzcz > 0 ORDER BY scsj) a
+        WHERE rownum = 1
+    </select>
+
+    <insert id="insertBdcDzzzMlxxHjlog" parameterType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzMlxxHjlogDO">
+        INSERT INTO bdc_mlxx_hjlog t (t.mlid, t.stmlid, t.xzqdm, t.scsj, t.khdzts, t.fwdzts, t.xzcz, t.sfgd)
+        VALUES
+        (#{mlid,jdbcType=VARCHAR},#{stmlid,jdbcType=VARCHAR},#{xzqdm,jdbcType=VARCHAR},to_timestamp(to_char(systimestamp,'YYYY-MM-DD
+        HH24:MI:SS.FF'),'YYYY-MM-DD HH24:MI:SS.FF')
+        ,#{khdzts,jdbcType=NUMERIC},#{fwdzts,jdbcType=NUMERIC},#{xzcz,jdbcType=NUMERIC},0)
+    </insert>
+
+    <update id="updateOldBdcDzzzMlxxHjlog"
+            parameterType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzMlxxHjlogDO">
+        UPDATE bdc_mlxx_hjlog
+        SET xzcz = #{xzcz,jdbcType=NUMERIC},scsj = to_timestamp(to_char(systimestamp,'YYYY-MM-DD
+        HH24:MI:SS.FF'),'YYYY-MM-DD HH24:MI:SS.FF'),khdzts = #{khdzts,jdbcType=NUMERIC},
+        fwdzts = #{fwdzts,jdbcType=NUMERIC}
+        WHERE mlid = #{mlid,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateBdcDzzzMlxxHjlogCz" parameterType="java.util.Map">
+        UPDATE bdc_mlxx_hjlog
+        SET xzcz = #{xzcz}
+        WHERE mlid = #{mlid}
+    </update>
+
+    <update id="updateBdcDzzzMlxxHjlogGd" parameterType="java.util.Map">
+        UPDATE bdc_mlxx_hjlog
+        SET sfgd = '1'
+        WHERE #{scsj} > scsj AND xzqdm = #{xzqdm}
+    </update>
+</mapper>

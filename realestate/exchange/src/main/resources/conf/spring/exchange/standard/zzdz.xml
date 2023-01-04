@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <ex:bean id="hf_zzdz_hxyzh">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="cn.gtmap.realestate.common.core.service.feign.inquiry.BdcZzdzFeignService"/>
+            <ex:property name="methodName" value="reWriteYzhToBdcZs"/>
+        </ex:service-info>
+        <ex:log dsfFlag="ZZDZJ" logEventName="自助打证机回写印制号" requester="ZZDZJ" responser="BDC"/>
+    </ex:bean>
+    <ex:bean id="hf_zzdz">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="cn.gtmap.realestate.common.core.service.feign.inquiry.BdcZzdzFeignService"/>
+            <ex:property name="methodName" value="getBdcZzdz"/>
+        </ex:service-info>
+        <ex:log dsfFlag="ZZDZJ" logEventName="自助打证机查询打证信息" requester="ZZDZJ" responser="BDC"/>
+    </ex:bean>
+    <ex:bean id="nt_zzdz">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="cn.gtmap.realestate.common.core.service.feign.inquiry.BdcZzdzFeignService"/>
+            <ex:property name="methodName" value="getBdcZzdzNt"/>
+        </ex:service-info>
+        <ex:log dsfFlag="ZZDZJ" logEventName="自助打证机查询打证信息" requester="ZZDZJ" responser="BDC"/>
+    </ex:bean>
+    <ex:bean id="nt_zzdz_hxyzh">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="cn.gtmap.realestate.common.core.service.feign.inquiry.BdcZzdzFeignService"/>
+            <ex:property name="methodName" value="reWriteYzhToBdcZsNt"/>
+        </ex:service-info>
+        <ex:log dsfFlag="ZZDZJ" logEventName="自助打证机回写印制号" requester="ZZDZJ" responser="BDC"/>
+    </ex:bean>
+
+    <!--回写印制号只做回写操作，不自动办结 -->
+    <ex:bean id="zzdz_hxyzh_standard">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="cn.gtmap.realestate.common.core.service.feign.inquiry.BdcZzdzFeignService"/>
+            <ex:property name="methodName" value="reWriteYzhToBdcZsForStandard"/>
+        </ex:service-info>
+        <ex:log dsfFlag="ZZDZJ" logEventName="自助打证机回写印制号_标准版" requester="ZZDZJ" responser="BDC"/>
+    </ex:bean>
+
+    <!--自助打证机自动办结接口 -->
+    <ex:bean id="zzdz_zdbj_standard">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="cn.gtmap.realestate.common.core.service.feign.inquiry.BdcZzdzFeignService"/>
+            <ex:property name="methodName" value="zdbjForStandard"/>
+        </ex:service-info>
+        <ex:log dsfFlag="ZZDZJ" logEventName="自助打证机回写印制号_标准版" requester="ZZDZJ" responser="BDC"/>
+    </ex:bean>
+
+    <ex:bean id="bdcFcdaInfo">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.inquiry.BdcZfxxCxFeignService"/>
+            <ex:property name="methodName" value="getBdcFcdaInfo"/>
+        </ex:service-info>
+        <ex:log dsfFlag="CZYDD" logEventName="根据不动产单元号查询房产档案信息" requester="CZYDD" responser="BDC"/>
+    </ex:bean>
+    <!-- 根据权利人名称、证件号查询房产信息(有房、无房查询)-->
+    <ex:bean id="listBdcZfxxDTO">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.inquiry.BdcZfxxCxFeignService"/>
+            <ex:property name="methodName" value="listBdcZfxxDTO"/>
+        </ex:service-info>
+        <ex:log dsfFlag="CZYDD" logEventName="根据权利人名称、证件号查询房产信息(有房、无房查询)" requester="CZYDD" responser="BDC"/>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/hefei/zhcx/response/zhcx.xml"/>
+        </ex:response>
+    </ex:bean>
+    <!-- 摩科回写印制号接口 -->
+    <ex:bean id="mk_zzdzj_hxyzh">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.inquiry.BdcZzdzFeignService"/>
+            <ex:property name="methodName" value="mokeRewriteYzhToBdcZs"/>
+        </ex:service-info>
+        <ex:log dsfFlag="ZZDZJ" logEventName="摩科回写印制号接口" requester="ZZDZJ" responser="BDC"/>
+    </ex:bean>
+
+    <!-- 摩科查询打证数据接口 -->
+    <ex:bean id="mk_zzdzj_dzxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.inquiry.BdcZzdzFeignService"/>
+            <ex:property name="methodName" value="mokeQueryDzxx"/>
+        </ex:service-info>
+        <ex:log dsfFlag="ZZDZJ" logEventName="摩科查询打证信息接口" requester="ZZDZJ" responser="BDC"/>
+    </ex:bean>
+
+    <!-- 摩科验证打证数据接口 -->
+    <ex:bean id="mk_zzdzj_verify">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.inquiry.BdcZzdzFeignService"/>
+            <ex:property name="methodName" value="mokeVerifyDzxx"/>
+        </ex:service-info>
+        <ex:log dsfFlag="ZZDZJ" logEventName="摩科验证打证信息接口" requester="ZZDZJ" responser="BDC"/>
+    </ex:bean>
+
+    <!-- 摩科登记证明查询接口(宣城) -->
+    <ex:bean id="mk_zzdzj_djzmxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="zzdzServiceImpl"/>
+            <ex:property name="methodName" value="djzmxx"/>
+        </ex:service-info>
+        <ex:log dsfFlag="ZZDZJ" logEventName="摩科登记证明查询接口" requester="ZZDZJ" responser="BDC"/>
+    </ex:bean>
+
+    <!-- 摩科批量打证推送接口 -->
+    <ex:bean id="moke_zzdzj_plts">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="推送摩科自助打证机批量"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="ZZDZJ"/>
+            <ex:property name="dsfFlag" value="ZZDZJ"/>
+            <ex:property name="url" value="${moke.pldz.url}"/>
+        </ex:service-info>
+        <ex:log dsfFlag="ZZDZJ" logEventName="推送摩科自助打证机批量" requester="ZZDZJ" responser="BDC"/>
+    </ex:bean>
+
+</beans>

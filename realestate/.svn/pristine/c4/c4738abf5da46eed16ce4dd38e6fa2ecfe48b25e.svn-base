@@ -1,0 +1,2468 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>受理页面批量组合</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <!--popup.css放到form-tab.css，防止样式冲突-->
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/slymForm.css"/>
+
+<body>
+<object id="CertCtl" TYPE="application/cert-reader" width=0 height=0" style="display: none"></object>
+<div class="bdc-form-div bdc-not-full-bg">
+    <!--全局 标题和操作按钮 开始-->
+    <form class="layui-form sl-from slympl">
+        <div class="bdc-content-fix">
+            <div class="content-title layui-clear">
+                <p>不动产登记受理信息</p>
+                <div id="buttonArea"></div>
+            </div>
+        </div>
+        <!--全局 标题和操作按钮 结束-->
+        <div class="bdc-tab-box">
+            <div class="layui-tab" lay-filter="tabFilter">
+                <ul class="layui-tab-title" id="tableUi">
+
+                </ul>
+                <div class="layui-tab-content" id="tabContent">
+
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--附记弹出层-->
+<div id="fjPopup" class="bdc-hide">
+    <form class="layui-form" action="">
+        <textarea name="desc" placeholder="请输入" class="layui-textarea"></textarea>
+    </form>
+</div>
+<div class="bdc-update-tips-box bdc-hide">
+    <div class="bdc-update-tips">
+        <p>以下字段已修改：<span class="bdc-close">关闭</span></p>
+        <div id="updateTips"><p></p></div>
+    </div>
+</div>
+<!--异常提示信息-->
+<div class="bdc-other-tips-box bdc-hide">
+    <div class="bdc-other-tips">
+        <p>错误提示：<span class="bdc-close">不再提示</span></p>
+        <div id="otherTips">
+        </div>
+    </div>
+</div>
+</body>
+
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<!--小数计算防精度缺失-->
+<script src="../../static/lib/mathjs/math.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<!--打印js-->
+<script src="../../static/lib/bdcui/js/print/print-common.js"></script>
+<script src="../../static/js/table.js"></script>
+<script src='../../static/js/nantong/md5.js'></script>
+<script type="text/javascript">
+    var processInsId = getQueryString("processInsId");
+    var lclx = "plzh";
+    var formStateId = getQueryString("formStateId");
+    var zsmodel = getQueryString("zsmodel");
+    var readOnly = getQueryString("readOnly");
+    var zxlc = getQueryString("zxlc");
+    var printValue = getQueryString("print");
+</script>
+<!--为了获取参数方便，将formCenter.js放在参数之后 -->
+<script src='../../static/js/formCenter.js'></script>
+<!--权利页面tab标题展示-->
+<script type="text/html" id="liTableTpl">
+    {{# if(d.sljd){ }}
+    <li class="layui-this" id="jbxx">基本信息</li>
+    {{# } }}
+
+    {{# if(d.qlxx){ }}
+    {{#  layui.each(d.qlxx, function(index, item){ }}
+    {{# if(index == 0 && d.qtjd){ }}
+    <li id="bdcdyh" class="layui-this" data-xmid="{{item.bdcXm.xmid}}" data-qllx="{{item.qllx}}" data-djxl="{{item.bdcXm.djxl}}"
+        class="qlxx">
+        <input type="hidden" name="xmid" value="{{item.bdcXm.xmid || ''}}">
+        <input type="hidden" name="qllx" value="{{item.qllx || ''}}">
+        <input type="hidden" name="dydj" value="{{item.dydj || ''}}">
+        <input type="hidden" name="djxl" value="{{item.bdcXm.djxl || ''}}">
+        {{item.qlmc || ''}}
+    </li>
+    {{# }else{ }}
+    <li id="bdcdyh" data-xmid="{{item.bdcXm.xmid}}" data-qllx="{{item.qllx}}" data-djxl="{{item.bdcXm.djxl}}"
+        class="qlxx bdc-first-click">
+        <input type="hidden" name="xmid" value="{{item.bdcXm.xmid || ''}}">
+        <input type="hidden" name="qllx" value="{{item.qllx || ''}}">
+        <input type="hidden" name="dydj" value="{{item.dydj || ''}}">
+        <input type="hidden" name="djxl" value="{{item.bdcXm.djxl || ''}}">
+        {{item.qlmc || ''}}
+    </li>
+    {{# } }}
+    {{#  }); }}
+    {{# } }}
+
+    {{# if(d.qtjd){ }}
+    <li id="jbxx">基本信息</li>
+    {{# } }}
+</script>
+
+<script type="text/html" id="buttonAreaTpl">
+    <div class="title-btn-area">
+        <button class="layui-btn bdc-major-btn" lay-submit="" lay-filter="saveData" id="saveData" type="button">保存
+        </button>
+        <button class="layui-btn bdc-secondary-btn" type="button" id="queryDyhtxx">获取抵押合同信息</button>
+        <button class="layui-btn bdc-secondary-btn" type="button" id="createZs" value="readOnly">证书预览</button>
+        <button class="layui-btn bdc-secondary-btn" type="button" id="updateZs">更新证书</button>
+        <button class="layui-btn bdc-secondary-btn sl-print-btn" type="button" onclick="printData('sjdpl')" id="printSjd">收件单
+        </button>
+        <button class="layui-btn bdc-secondary-btn sl-print-btn" type="button" onclick="printDifModelData('zhsqs')" id="querySqs">申请书</button>
+        <button class="layui-btn bdc-secondary-btn xwbl-btn sl-print-btn" type="button" id="queryXwbl">询问笔录</button>
+        <button class="layui-btn bdc-secondary-btn" type="button" id="ckgdxx">查看供地信息</button>
+        <button class="layui-btn bdc-secondary-btn" type="button" id="querySpfJyxx">获商品房交易信息</button>
+        <button class="layui-btn bdc-secondary-btn" type="button" id="queryClfbaJyxx">获取存量房备案信息</button>
+        <button class="layui-btn bdc-secondary-btn" type="button" id="queryNtClfbaJyxx">获取存量房备案信息(南通)</button>
+        <button class="layui-btn bdc-secondary-btn" type="button" id="queryNtSpfbaJyxx">获取商品房备案信息(南通)</button>
+        <button class="layui-btn bdc-secondary-btn" type="button" id="queryTzSpfbaJyxx" style="display: none;">获取商品房备案信息(通州)</button>
+        <button class="layui-btn bdc-secondary-btn" type="button" id="queryTzClfbaJyxx" style="display: none;">获取存量房备案信息(通州)</button>
+        <button class="layui-btn bdc-secondary-btn" type="button" id="glSpfHth" style="display: none;">关联合同号</button>
+        <button class="layui-btn bdc-secondary-btn" type="button" id="glClfHth" style="display: none;">关联合同号</button>
+        <button class="layui-btn bdc-secondary-btn sl-print-btn" type="button" onclick="printData('jds')" id="dysljds">受理决定书</button>
+        <button class="layui-btn bdc-secondary-btn sl-print-btn" type="button" onclick="printData('djgzspl')" id="dydjgzs">登记告知书
+        </button>
+        <button class="layui-btn bdc-secondary-btn sl-print-btn" type="button" onclick="printData('bdcdyList')" id="printFy">单元附页
+        </button>
+        <button class="layui-btn bdc-secondary-btn" type="button" id="evaluate">评价</button>
+        <button class="layui-btn bdc-secondary-btn" type="button" id="querySwspFj">获取税票</button>
+        <ul class="title-ui" id="print">
+        </ul>
+        <ul class="title-ui" id="sqs">
+            <li class="print" onclick="printDifModelData('grsqs')" id="grsqs">个人</li>
+            <li class="print" onclick="printDifModelData('dwsqs')" id="dwsqs">单位</li>
+            <li class="print" onclick="printDifModelData('dyasqs')" id="dyasqs">抵押</li>
+        </ul>
+        <ul class="title-ui" id="xwbl">
+            <li class="print" onclick="printDifModelData('grxwblpl')" id="grxwbl">产权</li>
+            <li class="print" onclick="printDifModelData('dyaxwblpl')" id="dyaxwbl">抵押</li>
+        </ul>
+        <button class="layui-btn bdc-secondary-btn" type="button" id="djdcb">地（海）籍调查表</button>
+        <button class="layui-btn bdc-secondary-btn" type="button" id="printDzfp">打印电子发票</button>
+        <button class="layui-btn bdc-secondary-btn" type="button" id="shbtg">审核不通过</button>
+        <button class="layui-btn bdc-secondary-btn" type="button" id="hqhtfj">获取合同附件</button>
+        <button class="layui-btn bdc-secondary-btn" type="button" id="getKkxx">获取扣款信息</button>
+
+    </div>
+</script>
+<!--tab内容展示-->
+<script type="text/html" id="tabContentTpL">
+    {{# if(d.sljd){ }}
+    <!--基本信息-->
+    <div class="layui-tab-item layui-show">
+        <!--基本信息-->
+        <div class="basic-info">
+            <div class="title-sign"><p><a href="javascript:;">基本信息</a></p></div>
+            <div class="layui-form-item">
+                <div class="form-margin-area">
+                    <div class="basic-info" id="sljbXx"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!--收件材料信息-->
+        <div class="basic-info">
+            <div class="title-sign bdc-title-sign-btn">
+                <p><a href="javascript:;">收件材料信息</a></p>
+                <div class="bdc-tab-a">
+                    <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn" id="addSjclCz"
+                       onclick="addSjcl(this)">新增</a>
+                    <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn" style="display:none" id="fjgj"
+                       onclick="fjgj()">附件挂接</a>
+                    <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn" id="fjsc"
+                       onclick="scfjqb()">材料上传</a>
+                    <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn" id="plsc"
+                       onclick="deleteSjclPl()">批量删除</a>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="form-margin-area">
+                    <div id="sjclxx"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{# } }}
+
+    {{#  layui.each(d.qlxx, function(index, item){ }}
+    <!--权利信息-->
+    <div {{# if(index == 0 && d.qtjd){ }} class="layui-tab-item layui-show" {{# }else{ }}  class="layui-tab-item" {{# } }} data-djxl="{{item.bdcXm.djxl}}" data-classname="{{item.className}}"
+         data-xmid="{{item.bdcXm.xmid}}" data-qllx="{{item.bdcXm.qllx}}" id="qlxxTab">
+        <!--申请人信息-->
+        <div class="basic-info">
+            <div class="title-sign bdc-title-sign-btn">
+                <p><a href="javascript:;">申请人信息</a></p>
+                <div class="bdc-tab-a">
+                    <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn"
+                       onclick="addQlr('{{item.qllx || \'\'}}','{{item.bdcXm.xmid || \'\'}}','{{item.bdcXm.djxl}}')">新增</a>
+                    <button type="button"
+                            class="layui-btn layui-btn-sm bdc-secondary-btn"
+                            name="readIdCard" id="readIdCard"
+                            onclick="readIdCardToQlr('{{item.bdcXm.xmid || \'\'}}','{{item.bdcXm.djxl}}')">读卡
+                    </button>
+
+                    <button class="layui-btn layui-btn-sm bdc-secondary-btn" type="button" id="smyyzz"
+                            onclick="scanYyzz()">扫描
+                    </button>
+                    <button class="layui-btn layui-btn-sm bdc-secondary-btn" name="smsfm" type="button" id="smsfm"
+                            onclick="scanSfm(4,'{{item.bdcXm.xmid || \'\'}}','{{item.bdcXm.djxl}}')">苏服码
+                    </button>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="form-margin-area">
+                    <div id="sqrxx"></div>
+                </div>
+            </div>
+        </div>
+
+        <!--领证信息展示-->
+        <div class="basic-info lzrxx" id="lzrxx"></div>
+        <!--权利信息-->
+        <div class="basic-info" id="qlxxdiv">
+            <div id="bdcdyqlxx"></div>
+        </div>
+        <!--水电气过户信息-->
+        <div class="basic-info sdqghxx" name="sdqghxx"></div>
+        <!--搜索+表格整体-->
+        <!--搜索框开始-->
+        <div class="basic-info">
+            <div class="title-sign"><p><a href="javascript:;">不动产单元信息</a></p></div>
+            <div class="bdc-percentage-container bdc-line-search-container">
+                <div class="bdc-search-content">
+                    <div class="bdc-search-box bdc-form-search">
+                        <form id="bdcdyForm" class="layui-form" action="">
+                            <div class="layui-form pf-form-item">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">坐落</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="zl" autocomplete="off"
+                                                   class="layui-input bdcdyForm" id="search-zl">
+                                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">不动产单元号</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="bdcdyh" autocomplete="off"
+                                                   class="layui-input bdcdyForm" id="search-bdcdyh">
+                                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline bdc-button-box">
+                                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn"
+                                           id="searchBdcdy" lay-filter="searchBdcdy" title="查询">
+                                            <i class="fa fa-search" aria-hidden="true"></i>
+                                        </a>
+                                        <a href="javascript:;"
+                                           class="layui-btn layui-btn-normal bdc-secondary-btn"
+                                           id="reset" title="重置">
+                                            <i class="fa fa-refresh" aria-hidden="true"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!--搜索框结束-->
+
+                <!--表格开始-->
+                <!--数据表格-->
+                <!--<hr class="layui-bg-gray">-->
+                <div class="bdc-table-zj bdc-hide">
+                    <span><img src="../../static/image/plzj.png" alt="">总计</span>
+                    <div><span>不动产单元总数： <i id="bdcdyCount"></i></span></div>
+                    <div><span>总建筑面积： <i id="sumjzmj"></i></span></div>
+                    <div><span>总土地权利面积： <i id="sumtdqlmj"></i></span></div>
+                </div>
+                <div class="bdc-table-box bdc-ts-fixed">
+                    <table class="layui-hide" id="bdcdyTable" lay-filter="bdcdyTable{{item.bdcXm.djxl}}"></table>
+                </div>
+                <!--表格结束-->
+            </div>
+        </div>
+    </div>
+    {{#  }); }}
+
+    {{# if(d.qtjd){ }}
+    <!--基本信息-->
+    <div class="layui-tab-item">
+        <!--基本信息-->
+        <div class="basic-info">
+            <div class="title-sign"><p><a href="javascript:;">基本信息</a></p></div>
+            <div class="layui-form-item">
+                <div class="form-margin-area">
+                    <div class="basic-info" id="sljbXx"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!--收件材料信息-->
+        <div class="basic-info">
+            <div class="title-sign bdc-title-sign-btn">
+                <p><a href="javascript:;">收件材料信息</a></p>
+                <div class="bdc-tab-a">
+                    <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn" id="addSjclCz"
+                       onclick="addSjcl(this)">新增</a>
+                    <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn" id="fjsc"
+                       onclick="scfjqb()">材料上传</a>
+                    <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn" id="plsc"
+                       onclick="deleteSjclPl()">批量删除</a>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="form-margin-area">
+                    <div id="sjclxx"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{# } }}
+</script>
+<!--不动产单元信息操作-->
+<script type="text/html" id="toolbarBdcdyh">
+    <div class="layui-btn-container">
+        <input id="plxg" name="plxg" type="button" value="批量修改" class="layui-btn layui-btn-sm bdc-major-btn"
+               lay-event="plxg"/>
+        <input id="export" name="export" type="button" value="导出Excel"
+               class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="export"/>
+        <input id="add" name="add" type="button" value="新增"
+               class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="add"/>
+        <input id="delete" name="delete" type="button" value="删除"
+               class="layui-btn layui-btn-sm bdc-delete-btn" lay-event="delete"/>
+    </div>
+</script>
+<!--隐藏form，为了Excel导出缓存数据使用-->
+<form style="display: none" action="/realestate-accept-ui/excel/export" method="POST" id="form">
+    <input type="hidden" id="fileName" name="fileName"/>
+    <input type="hidden" id="sheetName" name="sheetName"/>
+    <input type="hidden" id="cellTitle" name="cellTitle"/>
+    <input type="hidden" id="cellWidth" name="cellWidth"/>
+    <input type="hidden" id="cellKey" name="cellKey"/>
+    <input type="hidden" id="data" name="data"/>
+</form>
+<!--基本信息展示-->
+<script type="text/html" id="jbxxTpl">
+    {{#  if(d.bdcxmxx){ }}
+    {{# var bdcxmxx=d.bdcxmxx }}
+    <div class="layui-form" lay-filter="jbxx">
+        <input type="hidden" name="xmid" value="{{bdcxmxx.xmid || ''}}">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">收件编号</label>
+                <div class="layui-input-inline">
+                    <input type="text" disabled="off" id="sjbh" class="layui-input" placeholder="不可使用"
+                           value="{{bdcxmxx.slbh || ''}}" title="{{bdcxmxx.slbh || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">承诺期限(天)</label>
+                <div class="layui-input-inline">
+                    <input type="text" disabled="off" id="cnqx" class="layui-input" placeholder="不可使用"
+                           value="{{bdcxmxx.cnqx || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">收件人</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="slr" class="layui-input" value="{{bdcxmxx.slr || ''}}"
+                           disabled="off" title="{{bdcxmxx.slr || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">收件时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="slsj" class="layui-input test-item"
+                           value="{{bdcxmxx.slsj || ''}}"
+                           disabled="off">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">业务类型</label>
+                <div class="layui-input-inline bdc-one-icon">
+                    <input type="text" title="{{bdcxmxx.gzldymc || ''}}"
+                           autocomplete="off" id="ywlx" class="layui-input"
+                           value="{{bdcxmxx.gzldymc || ''}}"
+                           disabled="off">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">金额单位</label>
+                <div class="layui-input-inline">
+                    <input type="checkbox" checked="checked" id="jedw" lay-skin="primary" title="万元">
+                </div>
+            </div>
+
+
+            <div class="layui-inline bdc-two-column">
+                <label class="layui-form-label change-label-width">面积单位</label>
+                <div class="layui-input-inline">
+                    {{# layui.each(d.zd.mjdw, function(index, item){ }}
+                    <input type="checkbox" lay-filter="mjdw" id="mjdw" name="mjdw" value="{{item.DM || '0'}}" {{#
+                           if(bdcxmxx.mjdw==item.DM
+                           ){ }} checked="checked" {{# } }} lay-skin="primary" title="{{item.MC || ''}}">
+                    {{# }); }}
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">交地即发证</label>
+                <div class="layui-input-inline">
+                    <select lay-search=""  name="jdjfz" id="jdjfz" class="xmfb">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.sf, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(d.xmfb.jdjfz==item.DM ){ }} selected="selected"
+                                {{# } }}>{{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="layui-form-item change-textarea-margin">
+            <label class="layui-form-label change-label-width">备注</label>
+            <div class="layui-input-inline">
+                <textarea class="layui-textarea change-textarea-width" id="bz">{{bdcxmxx.bz || ''}}</textarea>
+            </div>
+        </div>
+
+    </div>
+    {{#  } }}
+</script>
+<!--权利人信息展示-->
+<script type="text/html" id="sqrTpl">
+    <div class="basic-info" id="sqrForm">
+        <form name="sqrForm" class="common-form sl-from layui-form">
+            <table id="qlrTable" class="layui-table" border="1">
+                <tr class="gray-tr">
+                    <td width="50px">序号</td>
+                    <td style="width: 8%">权利人类型</td>
+                    <td style="min-width: 12%">名称</td>
+                    <td style="width: 10%">证件类型</td>
+                    <td style="min-width: 12%">证件号</td>
+                    <td style="width: 8%">类别</td>
+                    <td style="width: 10%">共有方式</td>
+                    <td style="width: 8%">共有比例</td>
+                    <td style="width: 10%">联系电话</td>
+                    <td>操作</td>
+                </tr>
+
+                {{# if(!d.bdcQlrDOList ||d.bdcQlrDOList.length ===0) { }}
+                <tr class="bdc-table-none">
+                    <td colspan="10">
+                        <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据</div>
+                    </td>
+                </tr>
+                {{# } else { }}
+                {{# layui.each(d.bdcQlrDOList, function(i, value){ }}
+                <input type="hidden" name="xmid" value="{{value.xmid || ''}}" class="qlr">
+                <input type="hidden" name="qlrid" value="{{value.qlrid || ''}}" class="qlr">
+                <!--增加代理人隐藏域-->
+                <input type="hidden" name="dlrmc" value="{{value.dlrmc || ''}}" class="qlr">
+                <input type="hidden" name="dlrdh" value="{{value.dlrdh || ''}}" class="qlr">
+                <input type="hidden" name="dlrzjzl" value="{{value.dlrzjzl || ''}}" class="qlr">
+                <input type="hidden" name="dlrzjh" value="{{value.dlrzjh || ''}}" class="qlr">
+                <tr>
+                    <td>{{i+1}}</td>
+                    <td>
+                        <div class="bdc-td-box">
+                            <select name="qlrlx" lay-search="" lay-filter="qlrlx" class="qlr" id="pllc-qlrlx">
+                                <option value="">请选择</option>
+                                {{# layui.each(d.zd.qlrlx, function(index, item){ }}
+                                <option value="{{item.DM || '0'}}" {{# if(value.qlrlx==item.DM ){ }} selected="selected"
+                                        {{#
+                                        } }}>{{item.MC || ''}}
+                                </option>
+                                {{# }); }}
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="bdc-td-box">
+                            <input type="text" lay-verify="" title="{{value.qlrmc || ''}}" id="pllc-qlrmc" name="qlrmc"
+                                   value="{{value.qlrmc || ''}}"
+                                   class="layui-input qlr bracket mc">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="bdc-td-box">
+                            <select name="zjzl" lay-search="" lay-filter="zjzl" class="qlr" id="pllc-zjzl">
+                                <option value="">请选择</option>
+                                {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                                <option value="{{item.DM || '0'}}" {{# if(value.zjzl==item.DM ){ }} selected="selected"
+                                        {{#
+                                        } }}>{{item.MC || ''}}
+                                </option>
+                                {{# }); }}
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="bdc-td-box">
+                            <input type="text" lay-verify="" name="zjh" id="pllc-zjh" value="{{value.zjh || ''}}"
+                                   class="layui-input qlr zjh" title="{{value.zjh || ''}}">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="bdc-td-box">
+                            <select name="qlrlb" lay-search="" lay-filter="qlrlb" id="pllc-qlrlb" class="qlr qlrlb">
+                                <option value="">请选择</option>
+                                {{# layui.each(d.zd.qlrlb, function(index, item){ }}
+                                <option value="{{item.DM || '0'}}" {{# if(value.qlrlb==item.DM ){ }}
+                                        selected="selected"
+                                        {{# } }}>{{item.MC || ''}}
+                                </option>
+                                {{# }); }}
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="bdc-td-box">
+                            <select name="gyfs" lay-search="" lay-filter="gyfs" class="qlr gyfs" id="pllc-gyfs">
+                                <option value="">请选择</option>
+                                {{# layui.each(d.zd.gyfs, function(index, item){ }}
+                                <option value="{{item.DM || '0'}}" {{# if(value.gyfs==item.DM ){ }} selected="selected"
+                                        {{#
+                                        } }}>{{item.MC || ''}}
+                                </option>
+                                {{# }); }}
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="bdc-td-box">
+                            <input type="text" lay-verify="" id="pllc-qlbl" name="qlbl"
+                                   value="{{value.qlbl  || ''}}" class="layui-input qlr">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="bdc-td-box">
+                            <input type="text" lay-verify="" id="pllc-dh" name="dh"
+                                   value="{{value.dh  || ''}}" class="layui-input qlr" title="{{value.dh  || ''}}">
+                        </div>
+                    </td>
+                    <td align="left" class="bdc-special-btn">
+                        <button type="button" value="readOnly" class="layui-btn layui-btn-xs bdc-major-btn"
+                                id="pllc-qlrxx"
+                                name="qlrxx"
+                                onclick="showQlr('{{value.qlrid || \'\'}}','{{value.xmid || \'\'}}','{{value.qlrlb || \'\'}}','{{d.djxl || \'\'}}')">
+                            详细
+                        </button>
+                        <button type="button" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn"
+                                id="pllc-delete"
+                                name="qlrdelete"
+                                onclick="deleteQlr('{{value.qlrid || \'\'}}', '{{value.sxh || \'\'}}','{{value.qlrlb || \'\'}}','{{d.djxl || \'\'}}','{{value.xmid || \'\'}}')">
+                            删除
+                        </button>
+                        <button type="button" class="layui-btn layui-btn-xs bdc-secondary-btn"
+                                id="pllc-rlsb"
+                                name="qlrrlsb"
+                                onclick="rlsb(this)">
+                            人脸识别
+                        </button>
+                        <!--权利人类型为个人时身份证验证，否则为企业和谁会组织按钮-->
+                        {{# if(value.qlrlx == '1'){ }}
+                        <button type="button" class="layui-btn layui-btn-xs bdc-secondary-btn"
+                                id="pllc-gayz" name="gayz"
+                                onclick="qlryz('{{value.qlrmc || \'\'}}', '{{value.zjh || \'\'}}','gayz')">
+                            公安验证
+                        </button>
+                        {{# }else{  }}
+                        <button type="button" class="layui-btn layui-btn-xs bdc-secondary-btn"
+                                id="pllc-shzzyz" name="shzzyz"
+                                onclick="qlryz('{{value.qlrmc || \'\'}}', '{{value.zjh || \'\'}}','shzzyz')">
+                            社会组织验证
+                        </button>
+                        <button type="button" class="layui-btn layui-btn-xs bdc-secondary-btn"
+                                id="pllc-qyyz" name="qyyz"
+                                onclick="qlryz('{{value.qlrmc || \'\'}}', '{{value.zjh || \'\'}}','qyyz')">
+                            企业验证
+                        </button>
+                        {{# } }}
+                        <button type="button" class="layui-btn layui-btn-xs bdc-secondary-btn"
+                                id="pllc-qlrrzdb"
+                                name="qlrrzdb"
+                                onclick="mkrzdb('{{value.qlrmc || \'\'}}', '{{value.zjh || \'\'}}')">
+                            人证对比
+                        </button>
+                        <button type="button" class="layui-btn layui-btn-xs bdc-secondary-btn"
+                                id="pllc-hqzz"
+                                name="hqzz"
+                                onclick="queryZzxx('{{value.zjh || \'\'}}')">
+                            获取证照
+                        </button>
+                        <button type="button" class="layui-btn layui-btn-xs layui-btn-primary" id="pllx-up" name="qlrup"
+                                onclick="changeQlrSxh('{{value.qlrid || \'\'}}', 'up')">↑
+                        </button>
+                        <button type="button" class="layui-btn layui-btn-xs layui-btn-primary" id="pllc-down"
+                                name="qlrdown" onclick="changeQlrSxh('{{value.qlrid || \'\'}}', 'down')">↓
+                        </button>
+                    </td>
+                </tr>
+                {{# }); }}
+                {{# } }}
+            </table>
+        </form>
+    </div>
+</script>
+<!--义务人信息展示-->
+<script type="text/html" id="ywrTpl">
+    {{# layui.each(d.bdcQlrDOList, function(i, value){ }}
+    <tr class="bdc-ywr-tr">
+        <td>{{d.qlrLength+i+1}}</td>
+        <td class="bdc-select-td">
+            {{# layui.each(d.zd.qlrlx, function(index, item){ }}
+            {{# if(value.bdcQlrDO.qlrlx==item.DM ){ }}
+            {{item.MC || ''}}
+            {{#} }}
+            {{# }); }}
+        </td>
+        <td><input readonly class="bdc-hide mc" value="{{value.bdcQlrDO.qlrmc || ''}}">{{value.bdcQlrDO.qlrmc || ''}}</td>
+        <td class="bdc-select-td">
+            {{# layui.each(d.zd.zjzl, function(index, item){ }}
+            {{# if(value.bdcQlrDO.zjzl==item.DM ){ }}
+            {{item.MC || ''}}
+            {{#} }}
+            {{# }); }}
+        </td>
+        <td><input readonly class="bdc-hide zjh" value="{{value.bdcQlrDO.zjh || ''}}">{{value.bdcQlrDO.zjh || ''}}</td>
+        <td class="bdc-select-td">
+            {{# layui.each(d.zd.qlrlb, function(index, item){ }}
+            {{# if(value.bdcQlrDO.qlrlb==item.DM ){ }}
+            {{item.MC || ''}}
+            {{# } }}
+            {{# }); }}
+        </td>
+        <td class="bdc-select-td">
+            {{# layui.each(d.zd.gyfs, function(index, item){ }}
+            {{# if(value.bdcQlrDO.gyfs==item.DM ){ }}
+            {{item.MC || ''}}
+            {{# } }}
+            {{# }); }}
+        </td>
+        <td>{{value.bdcQlrDO.qlbl || ''}}</td>
+        <td>{{value.bdcQlrDO.dh || ''}}</td>
+        <td align="left" class="bdc-special-btn">
+            <button type="button" value="readOnly" class="layui-btn layui-btn-xs bdc-major-btn"
+                    id="pllc-qlrxx"
+                    name="qlrxx"
+                    onclick="showYwr('{{value.bdcQlrDO.qlrid || \'\'}}','{{value.bdcQlrDO.xmid || \'\'}}','{{value.bdcQlrDO.qlrlb || \'\'}}','{{value.otherBdcQlridList || \'\'}}','{{value.otherXmidList || \'\'}}','{{d.djxl || \'\'}}')">
+                详细
+            </button>
+            <button type="button" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn"
+                    id="pllc-delete"
+                    name="qlrdelete"
+                    onclick="deleteYwr('{{value.otherBdcQlridList || \'\'}}', '{{value.bdcQlrDO.sxh || \'\'}}','{{value.bdcQlrDO.xmid || \'\'}}', '{{value.bdcQlrDO.qlrid || \'\'}}','{{value.otherXmidList || \'\'}}','{{d.djxl || \'\'}}')">
+                删除
+            </button>
+            <button type="button" class="layui-btn layui-btn-xs bdc-secondary-btn"
+                    id="pllc-rlsb"
+                    name="ywrrlsb"
+                    onclick="rlsb(this)">
+                人脸识别
+            </button>
+            <!--义务人增加核验按钮-->
+            <button type="button" class="layui-btn layui-btn-xs bdc-secondary-btn"
+                    id="pllc-ywrcheck" name="ywrcheck"
+                    onclick="checkYwrByIdCard('{{value.bdcQlrDO.qlrmc || \'\'}}', '{{value.bdcQlrDO.zjzl || \'\'}}','{{value.bdcQlrDO.zjh || \'\'}}')">
+                核验
+            </button>
+            <!--权利人类型为个人时身份证验证，否则为企业和谁会组织按钮-->
+            {{# if(value.bdcQlrDO.qlrlx == '1'){ }}
+            <button type="button" class="layui-btn layui-btn-xs bdc-secondary-btn"
+                    id="pllc-gayz" name="gayz"
+                    onclick="qlryz('{{value.bdcQlrDO.qlrmc || \'\'}}', '{{value.bdcQlrDO.zjh || \'\'}}','gayz')">
+                公安验证
+            </button>
+            {{# }else{  }}
+            <button type="button" class="layui-btn layui-btn-xs bdc-secondary-btn"
+                    id="pllc-shzzyz" name="shzzyz"
+                    onclick="qlryz('{{value.bdcQlrDO.qlrmc || \'\'}}', '{{value.bdcQlrDO.zjh || \'\'}}','shzzyz')">
+                社会组织验证
+            </button>
+            <button type="button" class="layui-btn layui-btn-xs bdc-secondary-btn"
+                    id="pllc-qyyz" name="qyyz"
+                    onclick="qlryz('{{value.bdcQlrDO.qlrmc || \'\'}}', '{{value.bdcQlrDO.zjh || \'\'}}','qyyz')">
+                企业验证
+            </button>
+            {{# } }}
+            <button type="button" class="layui-btn layui-btn-xs bdc-secondary-btn"
+                    id="pllc-hqzz"
+                    name="hqzz"
+                    onclick="queryZzxx('{{value.bdcQlrDO.zjh || \'\'}}')">
+                获取证照
+            </button>
+        </td>
+    </tr>
+    {{# }); }}
+</script>
+
+<!--表格内所需模板-->
+<!--不动产单元号分层展示-->
+<script type="text/html" id="bdcdyhTpl">
+    {{#  if(d.bdcdyh != undefined){ }}
+    <span>{{  queryBdcdyh(d.bdcdyh) }}</span>
+    {{#  } else { }}
+    <span></span>
+    {{#  } }}
+</script>
+<!--权利信息展示名称-->
+<script type="text/html" id="qllxTpl">
+    {{#  if(d.qllx != undefined){ }}
+    <span>{{  queryQllx(d.qllx) }}</span>
+    {{#  } else { }}
+    <span></span>
+    {{#  } }}
+</script>
+<!--宗地宗海用途-->
+<script type="text/html" id="zdzhytTpl">
+    {{#  if(d.zdzhyt != undefined){ }}
+    <span>{{  queryZdzhyt(d.zdzhyt) }}</span>
+    {{#  } else { }}
+    <span></span>
+    {{#  } }}
+</script>
+<!--不动产单元列表操作-->
+<script type="text/html" id="bdcdyczTpl">
+    {{# if(zxlc ==="true" ){ }}
+    <span class="layui-btn layui-btn-xs bdc-major-btn bdc-click"
+          onclick="showDetails('{{d.yxmid || \'\'}}','{{d.qllx || \'\'}}','{{d.bdcdyfwlx || \'\'}}',false)" id="xxxx">
+        详细信息</span>
+    {{# } else { }}
+    <span class="layui-btn layui-btn-xs bdc-major-btn bdc-click"
+          onclick="showDetails('{{d.xmid || \'\'}}','{{d.qllx || \'\'}}','{{d.bdcdyfwlx || \'\'}}',false)" id="xxxx">
+        详细信息</span>
+    {{# } }}
+    <!--非注销流程按钮过多用更多显示，纯土地注销流程三个按钮直接显示-->
+    {{# if(zxlc !=="true" ||(d.bdcdyh != undefined && d.bdcdyh.length >20 &&d.bdcdyh.substring(19,20) === "F")){ }}
+    <a href="javascript:;" class="layui-btn layui-btn-xs bdc-secondary-btn bdc-click" onclick="showLsgx('{{d.bdcdyh || \'\'}}')" id="djls" name="djls" class="bdc-click">登记历史</a>
+    <a class="layui-btn layui-btn-xs bdc-secondary-btn bdc-more-btn bdc-click">
+        更多<i class="layui-icon layui-icon-down"></i>
+    </a>
+    <div class="bdc-table-btn-more">
+        {{# if(d.yxmid &&zxlc !=="true"){ }}
+        <a onclick="openYqlxx('{{d.xmid || \'\'}}')" id="yqlxx" name="yqlxx" class="bdc-click">原权利信息</a>
+        {{# } }}
+        {{# if(d.bdcdyh != undefined && d.bdcdyh.length >20 &&d.bdcdyh.substring(19,20) === "F"){ }}
+        <a onclick="fwfsss('{{d.xmid || \'\'}}')" id="fsss" name="fsss" class="bdc-click">附属设施</a>
+        {{# } }}
+        <a onclick="createZs('{{d.xmid || \'\'}}','{{d.bdcdyh || \'\'}}')" id="zsyl" name="zsyl" class="bdc-click">证书预览</a>
+    </div>
+    {{# } else { }}
+    <span class="layui-btn layui-btn-danger layui-btn-xs bdc-secondary-btn bdc-click"
+          onclick="showLsgx('{{d.bdcdyh || \'\'}}')" id="djls" name="djls">登记历史</span>
+    {{# } }}
+</script>
+
+<!--领证人信息展示-->
+<script type="text/html" id="lzrxxTpl">
+    <div class="title-sign bdc-title-sign-btn">
+        <p>领证信息</p>
+        <input type="hidden" id="lzrxxhide" name="lzrxxhide">
+        <div class="bdc-title-sign-btn-box">
+            <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn" id="addlzr" onclick="addLzxxTr(this)">新增</a>
+        </div>
+    </div>
+    <div class="basic-info" id="lzrForm">
+        <form name="lzrForm" class="common-form sl-from layui-form">
+    <table id="lzxxTable" class="layui-table bdc-table-box-lzr" border="1" name="lzxxTable">
+        <thead>
+        <tr class="gray-tr">
+            <td>领证人</td>
+            <td>领证人证件种类</td>
+            <td>领证人证件号</td>
+            <td>领证人电话</td>
+            <td width="150px">操作</td>
+        </tr>
+        </thead>
+        {{# if(d.bdclzrList &&d.bdclzrList.length >0){ }}
+        <tbody>
+        {{# layui.each(d.bdclzrList, function(i, bdclzr){ }}
+        <tr class="bdc-lzxx-tr">
+            <input type="hidden" name="xmid" value="{{bdclzr.xmid || ''}}" class = "lzxx">
+            <input type="hidden" name="lzrid" value="{{bdclzr.lzrid || ''}}" class = "lzxx">
+            <td>
+                <div class="bdc-td-box bdc-radio">
+                    <input type="text" lay-verify="" name="lzrmc" id="lzrmc" value="{{bdclzr.lzrmc || ''}}" class="layui-input lzxx" ondblclick="readxxByIdCard(this,'lzrzjzl','lzrzjh')">
+                </div>
+            </td>
+            <td>
+                <div class="bdc-td-box">
+                    <select name="lzrzjzl" class="lzxx" id="lzrzjzl" lay-filter="lzrzjhFilter">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(bdclzr.lzrzjzl==item.DM ){ }} selected="selected"
+                                {{#
+                                }
+                                }}>{{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </td>
+            <td>
+                <div class="bdc-td-box">
+                    {{# if(bdclzr.lzrzjzl == '1'){ }}
+                    <input type="text" lay-verify="identitynew" name="lzrzjh" id="lzrzjh" value="{{bdclzr.lzrzjh || ''}}" class="layui-input lzxx">
+                    {{# }else{ }}
+                    <input type="text" lay-verify="" name="lzrzjh" id="lzrzjh" value="{{bdclzr.lzrzjh || ''}}" class="layui-input lzxx">
+                    {{# } }}
+                </div>
+            </td>
+            <td>
+                <div class="bdc-td-box">
+                    <input type="tel" lay-verify="" name="lzrdh" id="lzrdh" value="{{bdclzr.lzrdh || ''}}" class="layui-input lzxx">
+                </div>
+            </td>
+            <td align="center">
+                <a href="javascript:;" id="deletelzr" type="button" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn" onclick="deleteLzxxTr('{{bdclzr.lzrid || \'\'}}',this,'{{d.djxl || \'\'}}')">删除</a>
+            </td>
+        </tr>
+        {{# }); }}
+        </tbody>
+        {{# } else { }}
+        <tbody>
+        <tr class="bdc-table-none">
+            <td colspan="5">
+                <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">暂无领证信息
+                </div>
+            </td>
+        </tr>
+        </tbody>
+        {{# }  }}
+
+    </table>
+        </form>
+    </div>
+
+
+</script>
+
+<!--新增领证信息 模板-->
+<script type="text/html" id="addLzxxTpl">
+    <tr class="bdc-lzxx-tr">
+        <td>
+            <input type="hidden" name="xmid" value="{{d.xmid || ''}}" class = "lzxx">
+            <input type="hidden" name="lzrid" value="" class = "lzxx">
+            <div class="bdc-td-box bdc-radio">
+                <input type="text" lay-verify="" name="lzrmc" value="" class="layui-input lzxx" ondblclick="readxxByIdCard(this,'lzrzjzl','lzrzjh')">
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <select name="lzrzjzl" class="lzxx" id="jdlc-lzrzjzl" lay-filter="lzrzjhFilter">
+                    <option value="">请选择</option>
+                    {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                    <option value="{{item.DM || '0'}}">{{item.MC || ''}}
+                    </option>
+                    {{# }); }}
+                </select>
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" lay-verify="" id="lzrzjh" name="lzrzjh" value="" class="layui-input lzxx">
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <input type="tel" lay-verify="" id="lzrdh" name="lzrdh" value="" class="layui-input lzxx">
+            </div>
+        </td>
+        <td align="center">
+            <a href="javascript:;" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn" onclick="deleteLzxxTr('',this)">删除</a>
+        </td>
+    </tr>
+</script>
+<!--收件材料信息展示-->
+<script type="text/html" id="sjclTpl">
+    <div class="basic-info" id="sjclForm">
+        <form name="sjclForm" class="common-form sl-from layui-form">
+            <div class="sjclForm">
+                <table class="layui-table sl-table bdc-jt-table" border="1" id="addSjclTable">
+                    <tr class="gray-tr">
+                        <td width="50px">
+                            <input type="checkbox" lay-filter="qxCheckbox" name="qxTable" style="width: 50px;" title=""
+                                   lay-skin="primary">
+                        </td>
+                        <td width="50px">序号</td>
+                        <td style="min-width: 250px">材料名称</td>
+                        <td>份数</td>
+                        <td>类型</td>
+                        <td width="200px">操作</td>
+                    </tr>
+                    {{# if(d.bdcSlSjclDOList.length==0) { }}
+                    <tr class="bdc-table-none">
+                        <td colspan="7">
+                            <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据
+                            </div>
+                        </td>
+                    </tr>
+                    {{# } else { }}
+                    {{# layui.each(d.bdcSlSjclDOList, function(i, bdcSlSjcl){ }}
+                    <tr>
+                        <input type="hidden" name="xmid" value="{{bdcSlSjcl.xmid || ''}}" class="sjcl">
+                        <input type="hidden" name="gzlslid" value="{{bdcSlSjcl.gzlslid || ''}}" class="sjcl">
+                        <input type="hidden" name="sjclid" value="{{bdcSlSjcl.sjclid || ''}}" class="sjcl">
+                        <input type="hidden" name="wjzxid" value="{{bdcSlSjcl.wjzxid || ''}}" class="sjcl">
+                        <input type="hidden" name="xh" value="{{bdcSlSjcl.xh || ''}}" class="sjcl">
+                        <div>
+
+
+                        </div>
+                        <td>
+                            <input type="checkbox" lay-filter="yxCheckbox" class="yx" name="yxTable"
+                                   value="{{bdcSlSjcl.sjclid || ''}}" title="" lay-skin="primary">
+                        </td>
+                        <td>{{i+1}}</td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <input type="text" lay-verify="" name="clmc" id="clmc" title="{{bdcSlSjcl.clmc || ''}}"
+                                       value="{{bdcSlSjcl.clmc || ''}}"
+                                       class="layui-input sjcl">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <input type="text" lay-verify="" name="fs" id="fs" value="{{bdcSlSjcl.fs || ''}}"
+                                       class="layui-input sjcl">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bdc-td-box">
+                                <select name="sjlx" lay-search="" lay-filter="sjlx" class="layui-input sjcl" id="sjlx">
+                                    <option value="">请选择</option>
+                                    {{# layui.each(d.zd.sjlx, function(index, item){ }}
+                                    <option value="{{item.DM || '0'}}" {{# if(bdcSlSjcl.sjlx==item.DM ){ }}
+                                            selected="selected"
+                                            {{# } }}>{{item.MC || ''}}
+                                    </option>
+                                    {{# }); }}
+                                </select>
+                            </div>
+                        </td>
+                        <td align="center">
+                            <button type="button" class="layui-btn layui-btn-xs bdc-major-btn"
+                                    onclick="scfj(this)"
+                                    id="sjclsc" name="sjclsc">上传
+                            </button>
+                            <button type="button" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn"
+                                    onclick="deleteSjcl('{{bdcSlSjcl.sjclid || \'\'}}',this)" id="sjcldelete"
+                                    name="sjcldelete">
+                                删除
+                            </button>
+                            <button type="button" class="layui-btn layui-btn-xs layui-btn-primary"
+                                    onclick="changeSjclSxh('{{bdcSlSjcl.sjclid || \'\'}}', 'up')" id="sjclup"
+                                    name="sjclup">
+                                ↑
+                            </button>
+                            <button type="button" class="layui-btn layui-btn-xs layui-btn-primary"
+                                    onclick="changeSjclSxh('{{bdcSlSjcl.sjclid || \'\'}}', 'down')" id="sjcldown"
+                                    name="sjcldown">↓
+                            </button>
+                        </td>
+                    </tr>
+                    {{# }); }}
+                    {{# } }}
+                </table>
+            </div>
+        </form>
+    </div>
+</script>
+
+<!--产权展现内容-->
+<script type="text/html" id="jyxxTpl">
+    {{# var xmfb=d.bdcSlQlxxym.bdcXmFbDO }}
+    <div class="title-sign">
+        <p>权利信息</p>
+    </div>
+    <form class="layui-form setOverflow" name="jyxxForm">
+        <!--lay-filter="jyxx" 为了给页面赋值 勿删！-->
+        <div class="layui-form bdc-qlxx-form" lay-filter="jyxx{{d.bdcSlQlxxym.bdcXm.djxl}}">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">登记原因</label>
+                    <div class="layui-input-inline bdc-radio">
+                        <select name="djyy" class="bdcxm" id="djyy">
+                            {{# layui.each(d.djxldjyy, function(index, item){ }}
+                            {{# if(d.bdcSlQlxxym.bdcXm.djyy ==item.djyy ){ }}
+                            <option value="{{item.djyy}}" selected="selected">{{item.djyy || ''}}</option>
+                            {{# }else{ }}
+                            <option value="{{item.djyy ||''}}">
+                                {{item.djyy || '请选择'}}
+                            </option>
+                            {{# } }}
+                            {{# }); }}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">是否分别持证</label>
+                    <div class="layui-input-inline">
+                        <input type="radio" id="sqfbcz" name="sqfbcz{{d.bdcSlQlxxym.bdcXm.djxl}}" value="1" title="是" {{#
+                               if(d.bdcSlQlxxym.bdcXm.sqfbcz=='1'){ }} checked {{# } }} class="change-radio-top bdcxm">
+                        <input type="radio" name="sqfbcz{{d.bdcSlQlxxym.bdcXm.djxl}}" value="0" title="否" {{#
+                               if(d.bdcSlQlxxym.bdcXm.sqfbcz=='0'){ }} checked {{# }
+                               }} class="change-radio-top bdcxm">
+                    </div>
+                </div>
+                <div class="layui-inline bdc-two-column">
+                    <label class="layui-form-label change-label-width">原产权证号</label>
+                    <div class="layui-input-inline">
+                        <input id="ycqzh" class="layui-input bdcxm" disabled="off" autocomplete="off"
+                               value="{{d.bdcSlQlxxym.bdcXm.ycqzh || ''}}" title="{{d.bdcSlQlxxym.bdcXm.ycqzh || ''}}"
+                               name="ycqzh">
+                    </div>
+                </div>
+
+                <div class="layui-inline xzq-sele">
+                    <label class="layui-form-label change-label-width">付款方式</label>
+                    <div class="layui-input-inline select-height">
+                        <select name="fkfs" lay-search="" id="fkfs" lay-filter="fkfs" class="jyxx">
+                            <option value="">请选择</option>
+                            {{# layui.each(d.zd.fkfs, function(index, item){ }}
+                            <option value="{{item.DM || '0'}}" title="{{item.MC || ''}}">{{item.MC || ''}}
+                            </option>
+                            {{# }); }}
+                        </select>
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">预售许可证号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" id="ysxkzh" class="layui-input xmfb"
+                               name="ysxkzh"
+                               value="{{xmfb.ysxkzh || ''}}" title="">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">规划许可证号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" id="ghxkzh" class="layui-input xmfb"
+                               name="ghxkzh"
+                               value="{{xmfb.ghxkzh || ''}}" title="">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width bdc-label-newline">规划验收证明编号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" id="ghyszmbh" class="layui-input xmfb"
+                               name="ghyszmbh"
+                               value="{{xmfb.ghyszmbh || ''}}" title="">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width bdc-label-newline">竣工验收<br>备案编号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" id="jgysbabh" class="layui-input xmfb"
+                               name="jgysbabh"
+                               value="{{xmfb.jgysbabh || ''}}" title="">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width bdc-label-newline">竣工验收<br>备案时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" id="jgysbasj" class="layui-input test-item xmfb"
+                               name="jgysbasj"
+                               value="{{xmfb.jgysbasj || ''}}" title="">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">规划验收日期</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" id="ghyssj" class="layui-input test-item xmfb"
+                               name="ghyssj"
+                               value="{{xmfb.ghyssj || ''}}" title="">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width bdc-label-newline">面积核定<br>文件号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" id="mjhdwjh"
+                               class="layui-input jyxx"
+                               name="mjhdwjh"
+                               value="" title="">
+                    </div>
+                </div>
+
+                <!--bdc_Csh_fwkg_sl 表的sfhz（是否换证）字段  sfhz  0: 否（不换证 继承） 1：是 （换证 不继承）-->
+                <div class="layui-inline" id="sfjcybdcqzhDiv" style="display: none">
+                    <label class="layui-form-label change-label-width bdc-label-newline">是否继承<br/>原产权证号</label>
+                    <div class="layui-input-inline">
+                        <input type="radio" id="sfjcycqzh{{d.qlIndex||''}}" name="sfjcybdcqzh{{d.bdcSlQlxxym.bdcXm.djxl}}" value="0"
+                               lay-filter="sfjcybdcqzh" class="change-radio-top"
+                               title="是">
+                        <input type="radio"
+                               name="sfjcybdcqzh{{d.bdcSlQlxxym.bdcXm.djxl}}" value="1" class="change-radio-top"
+                               lay-filter="sfjcybdcqzh" title="否" checked>
+                    </div>
+                </div>
+
+            </div>
+            <!--产权流程权利其他状况,附记展现-->
+            <div class="layui-form-item change-textarea-margin">
+                <label class="layui-form-label change-label-width">权利其他状况</label>
+                <div class="layui-input-inline bdc-fj-inline bdc-fj-reset">
+                    <textarea class="layui-textarea change-textarea-width bdcxm" name="bfqlqtzk" id="bfqlqtzk">{{d.bdcSlQlxxym.bdcXm.bfqlqtzk || ''}}</textarea>
+                    <a class="bdc-pj-popup resetqlqtzk" id="resetqlqtzk" data-xmid ="{{d.bdcSlQlxxym.bdcQl.xmid || ''}}">  重新生成  <img src="../../static/image/reset.png" alt=""></a>
+                </div>
+            </div>
+            <div class="layui-form-item change-textarea-margin">
+                <label class="layui-form-label change-label-width">附记</label>
+                <div class="layui-input-inline bdc-fj-inline bdc-fj-reset">
+                <textarea class="layui-textarea change-textarea-width qlxx qlfj" name="fj"
+                          id="fj">{{d.bdcSlQlxxym.bdcQl.fj || ''}}</textarea>
+                    <a class="bdc-pj-popup resetfj" id="resetfj" data-xmid ="{{d.bdcSlQlxxym.bdcQl.xmid || ''}}">  重新生成  <img src="../../static/image/reset.png" alt=""></a>
+                </div>
+            </div>
+            <input type="hidden" name="xmid" value="{{d.bdcSlQlxxym.bdcXm.xmid || ''}}" class="xmfb">
+        </div>
+    </form>
+</script>
+<!--抵押权展现内容-->
+<script type="text/html" id="bdc_dyaq">
+    {{# if(d.bdcSlQlxxym){ }}
+    {{# var bdcQl=d.bdcSlQlxxym.bdcQl }}
+    {{# if(d.bdcSlQlxxym.dyaBdcdyhZs){ }}
+    <div class="qlxx-tips">
+        提示信息：不动产单元号{{d.bdcSlQlxxym.dyaBdcdyhZs}}已被抵押过
+    </div>
+    {{# } }}
+    <div class="title-sign">
+        <p>权利信息</p>
+    </div>
+    <form class="layui-form setOverflow" name="bdcDyaqForm">
+        <input type="hidden" name="qlid" value="{{bdcQl.qlid || ''}}" class="qlxx">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">登记原因</label>
+                <div class="layui-input-inline bdc-radio">
+                    <select name="djyy" class="bdcxm" id="dyaq-djyy">
+                        {{# layui.each(d.djxldjyy, function(index, item){ }}
+                        {{# if(d.bdcSlQlxxym.bdcXm.djyy ==item.djyy ){ }}
+                        <option value="{{item.djyy}}" selected="selected">{{item.djyy || ''}}</option>
+                        {{# }else{ }}
+                        <option value="{{item.djyy ||''}}">
+                            {{item.djyy || '请选择'}}
+                        </option>
+                        {{# } }}
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">是否分别持证</label>
+                <div class="layui-input-inline">
+                    <input type="radio" id="dyaq-sqfbcz" name="sqfbcz{{d.bdcSlQlxxym.bdcXm.djxl}}" value="1" title="是" {{#
+                           if(d.bdcSlQlxxym.bdcXm.sqfbcz=='1'){ }} checked {{# } }} class="change-radio-top bdcxm">
+                    <input type="radio" name="sqfbcz{{d.bdcSlQlxxym.bdcXm.djxl}}" value="0" title="否" {{#
+                           if(d.bdcSlQlxxym.bdcXm.sqfbcz=='0'){ }} checked {{# }
+                           }} class="change-radio-top bdcxm">
+                </div>
+            </div>
+            <div class="layui-inline bdc-two-column">
+                <label class="layui-form-label change-label-width">原产权证号</label>
+                <div class="layui-input-inline">
+                    <input id="dyaq-ycqzh" class="layui-input bdcxm" disabled="off" autocomplete="off"
+                           value="{{d.bdcSlQlxxym.bdcXm.ycqzh || ''}}" title="{{d.bdcSlQlxxym.bdcXm.ycqzh || ''}}"
+                           name="ycqzh">
+                </div>
+            </div>
+
+            <div class="layui-inline">  <!-- 要么显示抵押合同号要么显示交易合同号 -->
+                {{#if(d.bdcSlQlxxym.bdcXm.qllx == 95 ||d.bdcSlQlxxym.bdcXm.qllx == 37){ }}
+                <label class="layui-form-label change-label-width">抵押合同号</label>
+                {{# }else{ }}
+                <label class="layui-form-label change-label-width">交易合同号</label>
+                {{# } }}
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="jyhth" class="layui-input bdcxm"
+                           name="jyhth" value="{{d.bdcSlQlxxym.bdcXm.jyhth || ''}}"
+                           title="{{d.bdcSlQlxxym.bdcXm.jyhth || ''}}">
+                </div>
+            </div>
+
+
+            <div class="layui-inline bdc-one-icon">
+                <label class="layui-form-label change-label-width">抵押人</label>
+                <div class="layui-input-inline">
+                    <input type="text" disabled="off" autocomplete="off" title="{{d.bdcSlQlxxym.bdcXm.ywr || ''}}"
+                           id="dyaq-dyr"
+                           class="layui-input qlxx" name="dyr"
+                           value="{{d.bdcSlQlxxym.bdcXm.ywr || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline xzq-sele">
+                <label class="layui-form-label change-label-width">抵押方式</label>
+                <div class="layui-input-inline">
+                    <select name="dyfs" lay-search="" lay-filter="dyfs" id="dyaq-dyfs"
+                            class="qlxx">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.dyfs, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(bdcQl.dyfs==item.DM ){ }} selected="selected" {{#
+                                } }}>{{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">被担保主债权数额(万元)</label>
+                <div class="layui-input-inline">
+                    <input type="number" autocomplete="off" id="dyaq-bdbzzqse"
+                           class="layui-input qlxx" name="bdbzzqse"
+                           value="{{bdcQl.bdbzzqse}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">最高债权额(万元)</label>
+                <div class="layui-input-inline">
+                    <input type="number" autocomplete="off" id="dyaq-zgzqe"
+                           class="layui-input qlxx"
+                           name="zgzqe" value="{{bdcQl.zgzqe}}">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">担保范围</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="dyaq-dbfw" class="layui-input qlxx"
+                           name="dbfw"
+                           value="{{bdcQl.dbfw || ''}}" title="{{bdcQl.dbfw || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">债务履行<br>起始时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="dyaq-zwlxqssj"
+                           class="layui-input test-item qlxx"
+                           name="zwlxqssj" value="{{bdcQl.zwlxqssj || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">债务履行<br>结束时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="dyaq-zwlxjssj"
+                           class="layui-input test-item qlxx"
+                           name="zwlxjssj" value="{{bdcQl.zwlxjssj || ''}}">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">债务履行期限<br>(月)</label>
+                <div class="layui-input-inline bdc-one-btn">
+                    <input type="number" autocomplete="off" id="dyaq-zwlxqx"
+                           class="layui-input qlxx zwlxqx"
+                           name="zwlxqx" value="">
+                    <a href="javascript:;" id="dyazwlxqx" class="bdc-compute-btn"
+                       onclick="countSyqxByMonth()">计算</a>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">抵押土地面积</label>
+                <div class="layui-input-inline">
+                    <input type="number" autocomplete="off" id="dyaq-tddymj" class="layui-input qlxx"
+                           name="tddymjzh" value="{{bdcQl.tddymj}}" disabled="off">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">抵押房产面积</label>
+                <div class="layui-input-inline">
+                    <input type="number" autocomplete="off" id="dyaq-fwdymj" class="layui-input qlxx"
+                           name="fwdymjzh" value="{{bdcQl.fwdymj}}" disabled="off">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">贷款方式</label>
+                <div class="layui-input-inline">
+                    <select lay-search="" name="dkfs" id="dkfs" class="qlxx">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.dkfs, function(index, item){ }}
+                        <option value="{{item.DM || ''}}" {{# if(bdcQl.dkfs==item.DM ){ }} selected="selected" {{#
+                                } }}>{{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">房屋评估价格</label>
+                <div class="layui-input-inline">
+                    <input type="number" autocomplete="off" id="dyaq-fwpgjg"
+                           class="layui-input qlxx"
+                           name="fwpgjg"
+                           value="{{bdcQl.fwpgjg}}" title="{{bdcQl.fwpgjg}}">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">不动产评估<br>价格(万元)</label>
+                <div class="layui-input-inline">
+                    <input type="number" autocomplete="off" id="dyaq-tdpgjg"
+                           class="layui-input qlxx"
+                           name="tdpgjg"
+                           value="{{bdcQl.tdpgjg}}" title="{{bdcQl.tdpgjg}}">
+                </div>
+            </div>
+
+            <div class="layui-inline bdc-two-column">
+                <label class="layui-form-label change-label-width bdc-label-newline">在建建筑物<br>抵押范围</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="dyaq-zjjzwdyfw" class="layui-input qlxx"
+                           name="zjjzwdyfw"
+                           value="{{bdcQl.zjjzwdyfw || ''}}" title="{{bdcQl.zjjzwdyfw || ''}}">
+                </div>
+            </div>
+
+            <div class="layui-inline bdc-two-column">
+                <label class="layui-form-label change-label-width bdc-label-newline">在建建筑物<br>坐落</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="dyaq-zjjzwzl" class="layui-input qlxx"
+                           name="zjjzwzl"
+                           value="{{bdcQl.zjjzwzl || ''}}" title="{{bdcQl.zjjzwzl || ''}}">
+                </div>
+            </div>
+
+            <!--bdc_Csh_fwkg_sl 表的sfhz（是否换证）字段  sfhz  0: 否（不换证 继承） 1：是 （换证 不继承）-->
+            <div class="layui-inline" id="sfjcybdcqzhDiv" style="display: none">
+                <label class="layui-form-label change-label-width bdc-label-newline">是否继承<br/>原产权证号</label>
+                <div class="layui-input-inline">
+                    <input type="radio" id="sfjcycqzh{{d.qlIndex||''}}" name="sfjcybdcqzh{{d.bdcSlQlxxym.bdcXm.djxl}}" value="0"
+                           lay-filter="sfjcybdcqzh" class="change-radio-top"
+                           title="是">
+                    <input type="radio"
+                           name="sfjcybdcqzh{{d.bdcSlQlxxym.bdcXm.djxl}}" value="1" class="change-radio-top"
+                           lay-filter="sfjcybdcqzh" title="否" checked>
+                </div>
+            </div>
+            <div class="layui-inline xzq-sele bdc-two-column">
+                <label class="layui-form-label change-label-width bdc-label-newline" style="width: 130px;">有无禁止或限制转让<br>抵押不动产的约定</label>
+                <div class="layui-input-inline select-height" style="width: calc(80% - 36px)">
+                    <select name="jzzr" lay-search="" id="jzzr" lay-filter="jzzr" class="qlxx" lay-verify="required">
+                        <option value="">请选择</option>
+                        <option value="1" title="" {{# if(bdcQl.jzzr=="1"){ }} selected="selected" {{# } }}>有</option>
+                        <option value="0" title="" {{# if(bdcQl.jzzr=="0"){ }} selected="selected" {{# } }}>无</option>
+                    </select>
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item change-textarea-margin">
+            <label class="layui-form-label change-label-width">权利其他状况</label>
+            <div class="layui-input-inline bdc-fj-inline bdc-fj-reset">
+                <textarea class="layui-textarea change-textarea-width bdcxm" name="bfqlqtzk" id="dyaq-bfqlqtzk">{{d.bdcSlQlxxym.bdcXm.bfqlqtzk || ''}}</textarea>
+                <a class="bdc-pj-popup resetqlqtzk" id="dyaq-resetqlqtzk" data-xmid ="{{d.bdcSlQlxxym.bdcQl.xmid || ''}}">  重新生成  <img src="../../static/image/reset.png" alt=""></a>
+            </div>
+        </div>
+        <div class="layui-form-item change-textarea-margin">
+            <label class="layui-form-label change-label-width">附记</label>
+            <div class="layui-input-inline bdc-fj-inline bdc-fj-reset">
+                <textarea class="layui-textarea change-textarea-width qlxx qlfj" name="fj"
+                          id="dyaq-fj">{{d.bdcSlQlxxym.bdcQl.fj || ''}}</textarea>
+                <a class="bdc-pj-popup resetfj" id="dyaq-resetfj" data-xmid ="{{d.bdcSlQlxxym.bdcQl.xmid || ''}}">  重新生成  <img src="../../static/image/reset.png" alt=""></a>
+            </div>
+        </div>
+        <input type="hidden" name="xmid" value="{{d.bdcSlQlxxym.bdcXm.xmid || ''}}" class="xmfb">
+    </form>
+    {{# } }}
+</script>
+
+<!--查封展现内容-->
+<script type="text/html" id="bdc_cf">
+    {{# if(d.bdcSlQlxxym){ }}
+    {{# var bdcQl=d.bdcSlQlxxym.bdcQl }}
+    <div class="title-sign">
+        <p>权利信息</p>
+    </div>
+    <form class="layui-form setOverflow" name="bdcCfForm">
+        <input type="hidden" name="qlid" value="{{bdcQl.qlid || ''}}" class="qlxx">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">登记原因</label>
+                <div class="layui-input-inline bdc-radio">
+                    <select name="djyy" class="bdcxm" id="cf-djyy">
+                        {{# layui.each(d.djxldjyy, function(index, item){ }}
+                        {{# if(d.bdcSlQlxxym.bdcXm.djyy ==item.djyy ){ }}
+                        <option value="{{item.djyy}}" selected="selected">{{item.djyy || ''}}</option>
+                        {{# }else{ }}
+                        <option value="{{item.djyy ||''}}">
+                            {{item.djyy || '请选择'}}
+                        </option>
+                        {{# } }}
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">是否分别持证</label>
+                <div class="layui-input-inline">
+                    <input type="radio" id="cf-sqfbcz" name="sqfbcz{{d.bdcSlQlxxym.bdcXm.djxl}}" value="1" title="是" {{#
+                           if(d.bdcSlQlxxym.bdcXm.sqfbcz=='1'){ }} checked {{# } }} class="change-radio-top bdcxm">
+                    <input type="radio" name="sqfbcz{{d.bdcSlQlxxym.bdcXm.djxl}}" value="0" title="否" {{#
+                           if(d.bdcSlQlxxym.bdcXm.sqfbcz=='0'){ }} checked {{# }
+                           }} class="change-radio-top bdcxm">
+                </div>
+            </div>
+            <div class="layui-inline bdc-two-column">
+                <label class="layui-form-label change-label-width">原产权证号</label>
+                <div class="layui-input-inline">
+                    <input class="layui-input bdcxm" id="cf-ycqzh" disabled="off" autocomplete="off"
+                           value="{{d.bdcSlQlxxym.bdcXm.ycqzh || ''}}" title="{{d.bdcSlQlxxym.bdcXm.ycqzh || ''}}"
+                           name="ycqzh">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">查封机关</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="cf-cfjg" class="layui-input qlxx"
+                           name="cfjg"
+                           value="{{bdcQl.cfjg || ''}}" title="{{bdcQl.cfjg || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline xzq-sele">
+                <label class="layui-form-label change-label-width">查封类型</label>
+                <div class="layui-input-inline">
+                    <select name="cflx" lay-search="" id="cf-cflx" lay-filter="cflx"
+                            class="qlxx">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.cflx, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(bdcQl.cflx==item.DM ){ }} selected="selected" {{#
+                                } }}>{{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">查封文件</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="cf-cfwj" class="layui-input bracket qlxx"
+                           name="cfwj"
+                           value="{{bdcQl.cfwj || ''}}" title="{{bdcQl.cfwj || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">查封文号</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="cf-cfwh" class="layui-input bracket qlxx"
+                           name="cfwh"
+                           value="{{bdcQl.cfwh || ''}}" title="{{bdcQl.cfwh || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">查封起始时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="cf-cfqssj"
+                           class="layui-input test-item qlxx" name="cfqssj"
+                           value="{{bdcQl.cfqssj || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">查封结束时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="cf-cfjssj"
+                           class="layui-input test-item qlxx" name="cfjssj"
+                           value="{{bdcQl.cfjssj || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">执行申请人</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="cf-zxsqr" class="layui-input qlxx"
+                           name="zxsqr"
+                           value="{{bdcQl.zxsqr || ''}}" title="{{bdcQl.zxsqr || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">解封机关</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="cf-jfjg" class="layui-input qlxx"
+                           name="jfjg"
+                           value="{{bdcQl.jfjg || ''}}" title="{{bdcQl.jfjg || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">解封文件</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="cf-jfwj" class="layui-input bracket qlxx"
+                           name="jfwj"
+                           value="{{bdcQl.jfwj || ''}}" title="{{bdcQl.jfwj || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">解封文号</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="cf-jfwh" class="layui-input bracket qlxx"
+                           name="jfwh"
+                           value="{{bdcQl.jfwh || ''}}" title="{{bdcQl.jfwh || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">法院送达人<br>姓名</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="cf-fysdr" class="layui-input qlxx"
+                           name="fysdr"
+                           value="{{bdcQl.fysdr || ''}}" title="{{bdcQl.fysdr || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">法院送达人<br>联系电话</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="cf-fysdrlxfs" class="layui-input qlxx"
+                           name="fysdrlxfs"
+                           value="{{bdcQl.fysdrlxfs || ''}}" title="{{bdcQl.fysdrlxfs || ''}}">
+                </div>
+            </div>
+
+            <!--bdc_Csh_fwkg_sl 表的sfhz（是否换证）字段  sfhz  0: 否（不换证 继承） 1：是 （换证 不继承）-->
+            <div class="layui-inline" id="sfjcybdcqzhDiv" style="display: none">
+                <label class="layui-form-label change-label-width bdc-label-newline">是否继承<br/>原产权证号</label>
+                <div class="layui-input-inline">
+                    <input type="radio" id="sfjcycqzh{{d.qlIndex||''}}" name="sfjcybdcqzh{{d.bdcSlQlxxym.bdcXm.djxl}}" value="0"
+                           lay-filter="sfjcybdcqzh" class="change-radio-top"
+                           title="是">
+                    <input type="radio"
+                           name="sfjcybdcqzh{{d.bdcSlQlxxym.bdcXm.djxl}}" value="1" class="change-radio-top"
+                           lay-filter="sfjcybdcqzh" title="否" checked>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item change-textarea-margin">
+            <label class="layui-form-label change-label-width">权利其他状况</label>
+            <div class="layui-input-inline bdc-fj-inline bdc-fj-reset">
+                <textarea class="layui-textarea change-textarea-width bdcxm" name="bfqlqtzk" id="cf-bfqlqtzk">{{d.bdcSlQlxxym.bdcXm.bfqlqtzk || ''}}</textarea>
+                <a class="bdc-pj-popup resetqlqtzk" id="cf-resetqlqtzk" data-xmid ="{{d.bdcSlQlxxym.bdcQl.xmid || ''}}">  重新生成  <img src="../../static/image/reset.png" alt=""></a>
+            </div>
+        </div>
+        <div class="layui-form-item change-textarea-margin">
+            <label class="layui-form-label change-label-width">附记</label>
+            <div class="layui-input-inline bdc-fj-inline bdc-fj-reset">
+                <textarea class="layui-textarea change-textarea-width qlxx qlfj" name="fj"
+                          id="fj">{{d.bdcSlQlxxym.bdcQl.fj || ''}}</textarea>
+                <a class="bdc-pj-popup resetfj" id="cf-resetfj" data-xmid ="{{d.bdcSlQlxxym.bdcQl.xmid || ''}}">  重新生成  <img src="../../static/image/reset.png" alt=""></a>
+            </div>
+        </div>
+        <input type="hidden" name="xmid" value="{{d.bdcSlQlxxym.bdcXm.xmid || ''}}" class="xmfb">
+    </form>
+    {{# } }}
+</script>
+
+<!--预抵押展现内容-->
+<script type="text/html" id="bdc_yg">
+    {{# if(d.bdcSlQlxxym){ }}
+    {{# var bdcQl=d.bdcSlQlxxym.bdcQl }}
+    <div class="title-sign">
+        <p>权利信息</p>
+    </div>
+    <form class="layui-form setOverflow" name="bdcYgForm">
+        <input type="hidden" name="qlid" value="{{bdcQl.qlid || ''}}" class="qlxx">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">登记原因</label>
+                <div class="layui-input-inline bdc-radio">
+                    <select name="djyy" class="bdcxm" id="yg-djyy">
+                        {{# layui.each(d.djxldjyy, function(index, item){ }}
+                        {{# if(d.bdcSlQlxxym.bdcXm.djyy ==item.djyy ){ }}
+                        <option value="{{item.djyy}}" selected="selected">{{item.djyy || ''}}</option>
+                        {{# }else{ }}
+                        <option value="{{item.djyy ||''}}">
+                            {{item.djyy || '请选择'}}
+                        </option>
+                        {{# } }}
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">是否分别持证</label>
+                <div class="layui-input-inline">
+                    <input type="radio" id="yg-sqfbcz" name="sqfbcz{{d.bdcSlQlxxym.bdcXm.djxl}}" value="1" title="是" {{#
+                           if(d.bdcSlQlxxym.bdcXm.sqfbcz=='1'){ }} checked {{# } }} class="change-radio-top bdcxm">
+                    <input type="radio" name="sqfbcz{{d.bdcSlQlxxym.bdcXm.djxl}}" value="0" title="否" {{#
+                           if(d.bdcSlQlxxym.bdcXm.sqfbcz=='0'){ }} checked {{# }
+                           }} class="change-radio-top bdcxm">
+                </div>
+            </div>
+            <div class="layui-inline bdc-two-column">
+                <label class="layui-form-label change-label-width">原产权证号</label>
+                <div class="layui-input-inline">
+                    <input class="layui-input bdcxm" id="yg-ycqzh" disabled="off" autocomplete="off"
+                           value="{{d.bdcSlQlxxym.bdcXm.ycqzh || ''}}" title="{{d.bdcSlQlxxym.bdcXm.ycqzh || ''}}"
+                           name="ycqzh">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">交易合同号</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="jyhth" class="layui-input bdcxm"
+                           name="jyhth" value="{{d.bdcSlQlxxym.bdcXm.jyhth || ''}}"
+                           title="{{d.bdcSlQlxxym.bdcXm.jyhth || ''}}">
+                </div>
+            </div>
+
+
+
+            <div class="layui-inline xzq-sele">
+                <label class="layui-form-label change-label-width">预告登记种类</label>
+                <div class="layui-input-inline">
+                    <select name="ygdjzl" lay-search="" id="yg-ygdjzl" lay-filter="ygdjzl"
+                            class="qlxx">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.ygdjzl, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(bdcQl.ygdjzl==item.DM ){ }} selected="selected"
+                                {{# } }}>{{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+            {{# if(d.bdcSlQlxxym.dydj){ }}
+            <div class="layui-inline xzq-sele">
+                <label class="layui-form-label change-label-width">抵押方式</label>
+                <div class="layui-input-inline">
+                    <select name="dyfs" lay-search="" id="yg-dyfs" lay-filter="dyfs" class="qlxx">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.dyfs, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(bdcQl.dyfs==item.DM ){ }} selected="selected" {{#
+                                } }}>{{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">被担保主债权数额(万元)</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="yg-qdjg"
+                           class="layui-input qlxx" name="qdjg"
+                           value="{{bdcQl.qdjg || ''}}">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">担保范围</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="yg-dbfw" class="layui-input qlxx"
+                           name="dbfw"
+                           value="{{bdcQl.dbfw || ''}}" title="{{bdcQl.dbfw || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">债务履行<br>起始时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="yg-zwlxqssj"
+                           class="layui-input test-item qlxx"
+                           name="zwlxqssj" value="{{bdcQl.zwlxqssj || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">债务履行<br>结束时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="yg-zwlxjssj"
+                           class="layui-input test-item qlxx"
+                           name="zwlxjssj" value="{{bdcQl.zwlxjssj || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline xzq-sele bdc-two-column">
+                <label class="layui-form-label change-label-width bdc-label-newline" style="width: 130px;">有无禁止或限制转让<br>抵押不动产的约定</label>
+                <div class="layui-input-inline select-height" style="width: calc(80% - 36px)">
+                    <select name="jzzr" lay-search="" id="jzzr" lay-filter="jzzr" class="qlxx" lay-verify="required">
+                        <option value="">请选择</option>
+                        <option value="1" title="" {{# if(bdcQl.jzzr=="1"){ }} selected="selected" {{# } }}>有</option>
+                        <option value="0" title="" {{# if(bdcQl.jzzr=="0"){ }} selected="selected" {{# } }}>无</option>
+                    </select>
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+
+            {{# }else{ }}
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">土地使用权人</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="yg-tdsyqr" class="layui-input qlxx"
+                           name="tdsyqr"
+                           value="{{bdcQl.tdsyqr || ''}}" title="{{bdcQl.tdsyqr || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">土地使用<br>起始时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="yg-tdsyqssj"
+                           class="layui-input qlxx test-item" name="tdsyqssj"
+                           value="{{bdcQl.tdsyqssj || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">土地使用<br>结束时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="yg-tdsyjssj"
+                           class="layui-input qlxx test-item jssj" name="tdsyjssj"
+                           value="{{bdcQl.tdsyjssj || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">交易金额<br>(万元)</label>
+                <div class="layui-input-inline">
+                    <input type="number" autocomplete="off" id="yg-jyje" class="layui-input qlxx"
+                           name="jyje"
+                           value="{{bdcQl.jyje}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">所在物理层</label>
+                <div class="layui-input-inline">
+                    <input type="number" autocomplete="off" id="yg-szc" class="layui-input qlxx"
+                           name="szc"
+                           value="{{bdcQl.szc || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">所在名义层</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="yg-szmyc" class="layui-input qlxx"
+                           name="szmyc" value="{{bdcQl.szmyc || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">总层数</label>
+                <div class="layui-input-inline">
+                    <input type="number" autocomplete="off" id="yg-zcs" class="layui-input qlxx"
+                           name="zcs"
+                           value="{{bdcQl.zcs || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">建筑面积</label>
+                <div class="layui-input-inline">
+                    <input type="number" autocomplete="off" id="yg-jzmj" class="layui-input qlxx"
+                           name="jzmj"
+                           value="{{bdcQl.jzmj || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline xzq-sele">
+                <label class="layui-form-label change-label-width">房屋性质</label>
+                <div class="layui-input-inline  select-height">
+                    <select name="fwxz" lay-search="" lay-filter="fwxz" id="yg-fwxz"
+                            class="qlxx">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.fwxz, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(bdcQl.fwxz==item.DM ){ }} selected="selected" {{#
+                                } }}>{{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+            {{# } }}
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">注销预告<br>登记证明号</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="yg-zxygdjzmh" class="layui-input qlxx"
+                           name="zxygywh"
+                           value="{{bdcQl.zxygywh || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">注销预告<br>登记时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="yg-zxygdjsj"
+                           class="layui-input test-item qlxx"
+                           name="zxygdjsj" value="{{bdcQl.zxygdjsj || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">注销预告<br>登记原因</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="yg-zxygdjyy" class="layui-input qlxx"
+                           name="zxygyy"
+                           value="{{bdcQl.zxygyy || ''}}">
+                </div>
+            </div>
+
+            <!--bdc_Csh_fwkg_sl 表的sfhz（是否换证）字段  sfhz  0: 否（不换证 继承） 1：是 （换证 不继承）-->
+            <div class="layui-inline" id="sfjcybdcqzhDiv" style="display: none">
+                <label class="layui-form-label change-label-width bdc-label-newline">是否继承<br/>原产权证号</label>
+                <div class="layui-input-inline">
+                    <input type="radio" id="sfjcycqzh{{d.qlIndex||''}}" name="sfjcybdcqzh{{d.bdcSlQlxxym.bdcXm.djxl}}" value="0"
+                           lay-filter="sfjcybdcqzh" class="change-radio-top"
+                           title="是">
+                    <input type="radio"
+                           name="sfjcybdcqzh{{d.bdcSlQlxxym.bdcXm.djxl}}" value="1" class="change-radio-top"
+                           lay-filter="sfjcybdcqzh" title="否" checked>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item change-textarea-margin">
+            <label class="layui-form-label change-label-width">权利其他状况</label>
+            <div class="layui-input-inline bdc-fj-inline bdc-fj-reset">
+                <textarea class="layui-textarea change-textarea-width bdcxm" name="bfqlqtzk" id="yg-bfqlqtzk">{{d.bdcSlQlxxym.bdcXm.bfqlqtzk || ''}}</textarea>
+                <a class="bdc-pj-popup resetqlqtzk" id="yg-resetqlqtzk" data-xmid ="{{d.bdcSlQlxxym.bdcQl.xmid || ''}}">  重新生成  <img src="../../static/image/reset.png" alt=""></a>
+            </div>
+        </div>
+        <div class="layui-form-item change-textarea-margin">
+            <label class="layui-form-label change-label-width">附记</label>
+            <div class="layui-input-inline bdc-fj-inline bdc-fj-reset">
+                <textarea class="layui-textarea change-textarea-width qlxx qlfj" name="fj"
+                          id="yg-fj">{{d.bdcSlQlxxym.bdcQl.fj || ''}}</textarea>
+                <a class="bdc-pj-popup resetfj" id="yg-resetfj" data-xmid ="{{d.bdcSlQlxxym.bdcQl.xmid || ''}}">  重新生成  <img src="../../static/image/reset.png" alt=""></a>
+            </div>
+        </div>
+        <input type="hidden" name="xmid" value="{{d.bdcSlQlxxym.bdcXm.xmid || ''}}" class="xmfb">
+    </form>
+    {{# } }}
+</script>
+
+<!--地役权展现内容-->
+<script type="text/html" id="bdc_dyiq">
+    {{# if(d.bdcSlQlxxym){ }}
+    {{# var bdcQl=d.bdcSlQlxxym.bdcQl }}
+    <div class="title-sign">
+        <p>权利信息</p>
+    </div>
+    <form class="layui-form setOverflow" name="bdcDyiqForm">
+        <input type="hidden" name="qlid" value="{{bdcQl.qlid || ''}}" class="qlxx">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">登记原因</label>
+                <div class="layui-input-inline bdc-radio">
+                    <select name="djyy" class="bdcxm" dyiq-djyy>
+                        {{# layui.each(d.djxldjyy, function(index, item){ }}
+                        {{# if(d.bdcSlQlxxym.bdcXm.djyy ==item.djyy ){ }}
+                        <option value="{{item.djyy}}" selected="selected">{{item.djyy || ''}}</option>
+                        {{# }else{ }}
+                        <option value="{{item.djyy ||''}}">
+                            {{item.djyy || '请选择'}}
+                        </option>
+                        {{# } }}
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">是否分别持证</label>
+                <div class="layui-input-inline">
+                    <input type="radio" id="dyiq-sqfbcz" name="sqfbcz{{d.bdcSlQlxxym.bdcXm.djxl}}" value="1" title="是" {{#
+                           if(d.bdcSlQlxxym.bdcXm.sqfbcz=='1'){ }} checked {{# } }} class="change-radio-top bdcxm">
+                    <input type="radio" name="sqfbcz{{d.bdcSlQlxxym.bdcXm.djxl}}" value="0" title="否" {{#
+                           if(d.bdcSlQlxxym.bdcXm.sqfbcz=='0'){ }} checked {{# }
+                           }} class="change-radio-top bdcxm">
+                </div>
+            </div>
+            <div class="layui-inline bdc-two-column">
+                <label class="layui-form-label change-label-width">原产权证号</label>
+                <div class="layui-input-inline">
+                    <input class="layui-input bdcxm" id="dyiq-ycqzh" disabled="off" autocomplete="off"
+                           value="{{d.bdcSlQlxxym.bdcXm.ycqzh || ''}}" title="{{d.bdcSlQlxxym.bdcXm.ycqzh || ''}}"
+                           name="ycqzh">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">供役地不动产单元号</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="dyiq-gydbdcdyh"
+                           class="layui-input qlxx" name="gydbdcdyh"
+                           value="{{bdcQl.gydbdcdyh || ''}}" title="{{bdcQl.gydbdcdyh || ''}}">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">需役地不动产单元号</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="dyiq-xydbdcdyh"
+                           class="layui-input qlxx" name="xydbdcdyh"
+                           value="{{bdcQl.xydbdcdyh || ''}}" title="{{bdcQl.xydbdcdyh || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">供役地权利人</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="dyiq-gydqlr" class="layui-input qlxx"
+                           name="gydqlr"
+                           value="{{d.bdcSlQlxxym.bdcXm.ywr || ''}}" title="{{d.bdcSlQlxxym.bdcXm.ywr || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">需役地权利人</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="dyiq-xydqlr" class="layui-input qlxx"
+                           name="xydqlr"
+                           value="{{d.bdcSlQlxxym.bdcXm.qlr || ''}}" title="{{d.bdcSlQlxxym.bdcXm.qlr || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">需役地坐落</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="dyiq-xydzl" class="layui-input qlxx"
+                           name="xydzl"
+                           value="{{bdcQl.xydzl || ''}}" title="{{bdcQl.xydzl || ''}}">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">地役权内容</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="dyiq-dyqnr" class="layui-input qlxx"
+                           name="dyqnr"
+                           value="{{bdcQl.dyqnr || ''}}" title="{{bdcQl.dyqnr || ''}}">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">地役权<br>起始时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="dyiq-qlqssj"
+                           class="layui-input test-item qlxx"
+                           name="qlqssj" value="{{bdcQl.qlqssj || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">地役权<br>结束时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="dyiq-qljssj"
+                           class="layui-input test-item qlxx"
+                           name="qljssj" value="{{bdcQl.qljssj || ''}}">
+                </div>
+            </div>
+
+            <!--bdc_Csh_fwkg_sl 表的sfhz（是否换证）字段  sfhz  0: 否（不换证 继承） 1：是 （换证 不继承）-->
+            <div class="layui-inline" id="sfjcybdcqzhDiv" style="display: none">
+                <label class="layui-form-label change-label-width bdc-label-newline">是否继承<br/>原产权证号</label>
+                <div class="layui-input-inline">
+                    <input type="radio" id="sfjcycqzh{{d.qlIndex||''}}" name="sfjcybdcqzh{{d.bdcSlQlxxym.bdcXm.djxl}}" value="0"
+                           lay-filter="sfjcybdcqzh" class="change-radio-top"
+                           title="是">
+                    <input type="radio"
+                           name="sfjcybdcqzh{{d.bdcSlQlxxym.bdcXm.djxl}}" value="1" class="change-radio-top"
+                           lay-filter="sfjcybdcqzh" title="否" checked>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item change-textarea-margin">
+            <label class="layui-form-label change-label-width">权利其他状况</label>
+            <div class="layui-input-inline bdc-fj-inline bdc-fj-reset">
+                <textarea class="layui-textarea change-textarea-width bdcxm" name="bfqlqtzk" id="dyiq-bfqlqtzk">{{d.bdcSlQlxxym.bdcXm.bfqlqtzk || ''}}</textarea>
+                <a class="bdc-pj-popup resetqlqtzk" id="dyiq-resetqlqtzk" data-xmid ="{{d.bdcSlQlxxym.bdcQl.xmid || ''}}">  重新生成  <img src="../../static/image/reset.png" alt=""></a>
+            </div>
+        </div>
+        <div class="layui-form-item change-textarea-margin">
+            <label class="layui-form-label change-label-width">附记</label>
+            <div class="layui-input-inline bdc-fj-inline bdc-fj-reset">
+                <textarea class="layui-textarea change-textarea-width qlxx qlfj" name="fj"
+                          id="dyiq-fj">{{d.bdcSlQlxxym.bdcQl.fj || ''}}</textarea>
+                <a class="bdc-pj-popup resetfj" id="dyiq-resetfj" data-xmid ="{{d.bdcSlQlxxym.bdcQl.xmid || ''}}">  重新生成  <img src="../../static/image/reset.png" alt=""></a>
+            </div>
+        </div>
+        <input type="hidden" name="xmid" value="{{d.bdcSlQlxxym.bdcXm.xmid || ''}}" class="xmfb">
+    </form>
+    {{# } }}
+</script>
+
+<!--异议展现内容-->
+<script type="text/html" id="bdc_yy">
+    {{# if(d.bdcSlQlxxym){ }}
+    {{# var bdcQl=d.bdcSlQlxxym.bdcQl }}
+    <div class="title-sign">
+        <p>权利信息</p>
+    </div>
+    <form class="layui-form setOverflow" name="bdcYyForm">
+        <input type="hidden" name="qlid" value="{{bdcQl.qlid || ''}}" class="qlxx">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">登记原因</label>
+                <div class="layui-input-inline bdc-radio">
+                    <select name="djyy" class="bdcxm" yy-djyy>
+                        {{# layui.each(d.djxldjyy, function(index, item){ }}
+                        {{# if(d.bdcSlQlxxym.bdcXm.djyy ==item.djyy ){ }}
+                        <option value="{{item.djyy}}" selected="selected">{{item.djyy || ''}}</option>
+                        {{# }else{ }}
+                        <option value="{{item.djyy ||''}}">
+                            {{item.djyy || '请选择'}}
+                        </option>
+                        {{# } }}
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">是否分别持证</label>
+                <div class="layui-input-inline">
+                    <input type="radio" id="yy-sqfbcz" name="sqfbcz{{d.bdcSlQlxxym.bdcXm.djxl}}" value="1" title="是" {{#
+                           if(d.bdcSlQlxxym.bdcXm.sqfbcz=='1'){ }} checked {{# } }} class="change-radio-top bdcxm">
+                    <input type="radio" name="sqfbcz{{d.bdcSlQlxxym.bdcXm.djxl}}" value="0" title="否" {{#
+                           if(d.bdcSlQlxxym.bdcXm.sqfbcz=='0'){ }} checked {{# }
+                           }} class="change-radio-top bdcxm">
+                </div>
+            </div>
+            <div class="layui-inline bdc-two-column">
+                <label class="layui-form-label change-label-width">原产权证号</label>
+                <div class="layui-input-inline">
+                    <input class="layui-input bdcxm" id="yy-ycqzh" disabled="off" autocomplete="off"
+                           value="{{d.bdcSlQlxxym.bdcXm.ycqzh || ''}}" title="{{d.bdcSlQlxxym.bdcXm.ycqzh || ''}}"
+                           name="ycqzh">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">异议事项</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="yy-yysx" class="layui-input qlxx"
+                           name="yysx"
+                           value="{{bdcQl.yysx || ''}}" title="{{bdcQl.yysx || ''}}">
+                </div>
+            </div>
+
+            <!--bdc_Csh_fwkg_sl 表的sfhz（是否换证）字段  sfhz  0: 否（不换证 继承） 1：是 （换证 不继承）-->
+            <div class="layui-inline" id="sfjcybdcqzhDiv" style="display: none">
+                <label class="layui-form-label change-label-width bdc-label-newline">是否继承<br/>原产权证号</label>
+                <div class="layui-input-inline">
+                    <input type="radio" id="sfjcycqzh{{d.qlIndex||''}}" name="sfjcybdcqzh{{d.bdcSlQlxxym.bdcXm.djxl}}" value="0"
+                           lay-filter="sfjcybdcqzh" class="change-radio-top"
+                           title="是">
+                    <input type="radio"
+                           name="sfjcybdcqzh{{d.bdcSlQlxxym.bdcXm.djxl}}" value="1" class="change-radio-top"
+                           lay-filter="sfjcybdcqzh" title="否" checked>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item change-textarea-margin">
+            <label class="layui-form-label change-label-width">权利其他状况</label>
+            <div class="layui-input-inline bdc-fj-inline bdc-fj-reset">
+                <textarea class="layui-textarea change-textarea-width bdcxm" name="bfqlqtzk" id="yy-bfqlqtzk">{{d.bdcSlQlxxym.bdcXm.bfqlqtzk || ''}}</textarea>
+                <a class="bdc-pj-popup resetqlqtzk" id="yy-resetqlqtzk" data-xmid ="{{d.bdcSlQlxxym.bdcQl.xmid || ''}}">  重新生成  <img src="../../static/image/reset.png" alt=""></a>
+            </div>
+        </div>
+        <div class="layui-form-item change-textarea-margin">
+            <label class="layui-form-label change-label-width">附记</label>
+            <div class="layui-input-inline bdc-fj-inline bdc-fj-reset">
+                <textarea class="layui-textarea change-textarea-width qlxx qlfj" name="fj"
+                          id="yy-fj">{{d.bdcSlQlxxym.bdcQl.fj || ''}}</textarea>
+                <a class="bdc-pj-popup resetfj" id="yy-resetfj" data-xmid ="{{d.bdcSlQlxxym.bdcQl.xmid || ''}}">  重新生成  <img src="../../static/image/reset.png" alt=""></a>
+            </div>
+        </div>
+        <input type="hidden" name="xmid" value="{{d.bdcSlQlxxym.bdcXm.xmid || ''}}" class="xmfb">
+    </form>
+    {{# } }}
+</script>
+
+<!--以下不知道用途-->
+<script type="text/html" id="dzwytTpl">
+    {{#  if(d.dzwyt != undefined){ }}
+    <span>{{  queryDzwyt(d.dzwyt) }}</span>
+    {{#  } else { }}
+    <span></span>
+    {{#  } }}
+</script>
+<script type="text/html" id="ghytTpl">
+    {{#  if(d.ghyt != undefined){ }}
+    <span>{{  queryGhyt(d.ghyt) }}</span>
+    {{#  } else { }}
+    <span></span>
+    {{#  } }}
+</script>
+
+<!--审核不通过原因弹出框-->
+<div class="bdc-layer-textarea bdc-hide" id="check-back-reason">
+    <form action="" class="layui-form">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>不通过原因</label>
+                <div class="layui-input-inline bdc-end-time-box">
+                        <textarea class="layui-textarea" id="reason" name="desc"
+                                  placeholder="请输入内容"></textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!--查询合同编号-->
+<div id="bdc-popup-large" class="bdc-hide">
+    <div class="layui-form bdc-htbh-popup" action="">
+        <input id="mfxm" type="hidden" value="">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">买方证件号</label>
+                <div class="layui-input-inline">
+                    <input id="mfzjh" type="text" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">合同编号：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="contractNo" autocomplete="off" placeholder="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline bdc-button-box">
+                <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" onclick="JyxxModule.queryJyxx();">查询</a>
+                <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn">重置</button>
+            </div>
+        </div>
+    </div>
+    <div class="bdc-table-box">
+        <table id="pageTable" lay-filter="bdcHtbhTable"></table>
+    </div>
+</div>
+<!--查询合同编号(如东)-->
+<div id="bdc-popup-rd-jyxx" class="bdc-popup-large bdc-hide">
+    <div class="layui-form bdc-htbh-popup" action="">
+        <div class="layui-form-item pf-form-item">
+            <input id="fwfclx" type="hidden" value="">
+            <div class="layui-inline">
+                <label class="layui-form-label">权利人证件号</label>
+                <div class="layui-input-inline">
+                    <input id="zjh" type="text" autocomplete="off" placeholder="请输入" class="layui-input required">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">权利人姓名：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="qlrmc" autocomplete="off" placeholder="" class="layui-input required">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">合同编号：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="htbh" autocomplete="off" placeholder="" class="layui-input required">
+                </div>
+            </div>
+            <div class="layui-inline bdc-button-box-four">
+                <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" onclick="cxHtxx(false)">查询</a>
+                <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn">重置</button>
+            </div>
+        </div>
+    </div>
+    <div class="bdc-table-box">
+        <table id="jypageTable" lay-filter="jypageTable"></table>
+    </div>
+</div>
+<!-- 存量房交易信息合同编号模板 -->
+<script id="htbhTpl" type="text/html">
+    {{#  if(d.htbh != undefined){ }}
+    <span style="color:#1d87d1;cursor:pointer">
+        {{d.htbh}}
+    </span>
+    {{#  } else { }}
+    <span></span>
+    {{#  } }}
+</script>
+
+<!-- 表单保存验证权籍数据是否一致模版-->
+<div id="qjsjyzdiv" class="bdc-hide"></div>
+<script type="text/html" id="qjsjyztsTpl" >
+    <form id="qjsjyzform" class="layui-form" lay-filter="qjsjyzts" action="">
+        <div class="bdc-default-list">
+            <p class="bdc-tips-title">温馨提示：登记库数据与权籍库不符。</p>
+            {{# layui.each(d, function(index, item){ }}
+            <div class="bdc-one-tips bdc-qjsjyz">
+                <input type="hidden" name="xmid" value="{{item.xmid}}">
+                <p class="bdc-bdcdyh">不动产单元号：{{item.bdcdyh}}</p>
+                {{#if(AcceptForm.verifyData(item.xmxx.ZL, item.qjxx.ZL)){}}
+                <input type="checkbox" name="zl" class="bdcxmVal fdcqVal" lay-skin="primary" value="{{item.qjxx.ZL}}"
+                       data-bdcxm-val = "zl" data-fdcq-val = "zl"
+                       title="坐落，登记库：【{{item.xmxx.ZL||''}}】 更新为权籍库：【{{item.qjxx.ZL||''}}】">
+                {{# } }}
+                {{#if(AcceptForm.verifyData(item.xmxx.FWJZMJ, item.qjxx.FWJZMJ)){}}
+                <input type="checkbox" name="jzmj" class="bdcxmVal fdcqVal" lay-skin="primary" value="{{item.qjxx.FWJZMJ}}"
+                       data-bdcxm-val = "dzwmj" data-fdcq-val = "jzmj"
+                       title="房屋建筑面积，登记库：【{{item.xmxx.FWJZMJ||''}}】更新为权籍库：【{{item.qjxx.FWJZMJ||''}}】">
+                {{# } }}
+                {{#if(AcceptForm.verifyData(item.xmxx.GHYT, item.qjxx.GHYT)){}}
+                <input type="checkbox" name="ghyt" class="bdcxmVal fdcqVal" lay-skin="primary" value="{{item.qjxx.GHYT}}"
+                       data-bdcxm-val = "dzwyt" data-fdcq-val = "ghyt"
+                       title="房屋用途，登记库：【{{AcceptForm.getZdMc('fwyt',item.xmxx.GHYT)||''}}】 更新为权籍库：【{{AcceptForm.getZdMc('fwyt',item.qjxx.GHYT)||''}}】">
+                {{# } }}
+                {{#if(AcceptForm.verifyData(item.xmxx.DYTDMJ, item.qjxx.DYTDMJ)){}}
+                <input type="checkbox" name="dytdmj" class="fdcqVal" lay-skin="primary" value="{{item.qjxx.DYTDMJ}}"
+                       data-fdcq-val = "dytdmj"
+                       title="独用土地面积，登记库：【{{item.xmxx.DYTDMJ||''}}】 更新为权籍库：【{{item.qjxx.DYTDMJ||''}}】">
+                {{# } }}
+                {{#if(AcceptForm.verifyData(item.xmxx.FTTDMJ, item.qjxx.FTTDMJ)){}}
+                <input type="checkbox" name="fttdmj" class="fdcqVal" lay-skin="primary" value="{{item.qjxx.FTTDMJ}}"
+                       data-fdcq-val = "fttdmj"
+                       title="分摊土地面积，登记库：【{{item.xmxx.FTTDMJ||''}}】 更新为权籍库：【{{item.qjxx.FTTDMJ||''}}】">
+                {{# } }}
+                {{#if(AcceptForm.verifyData(item.xmxx.TDQLXZ, item.qjxx.TDQLXZ)){}}
+                <input type="checkbox" name="qlxz" class="bdcxmVal" lay-skin="primary" value="{{item.qjxx.TDQLXZ}}"
+                       data-bdcxm-val = "qlxz"
+                       title="土地权利性质，登记库：【{{AcceptForm.getZdMc('qlxz',item.xmxx.TDQLXZ)||''}}】 更新为权籍库：【{{AcceptForm.getZdMc('qlxz',item.qjxx.TDQLXZ)||''}}】">
+                {{# } }}
+                {{#if(AcceptForm.verifyData(item.xmxx.TDYT, item.qjxx.TDYT)){}}
+                <input type="checkbox" name="zdzhyt" class="bdcxmVal" lay-skin="primary" value="{{item.qjxx.TDYT}}"
+                       data-bdcxm-val = "zdzhyt"
+                       title="土地用途，登记库：【{{AcceptForm.getZdMc('tdyt',item.xmxx.TDYT)||''}}】 更新为权籍库：【{{AcceptForm.getZdMc('tdyt',item.qjxx.TDYT)||''}}】">
+                {{# } }}
+                {{#if(AcceptForm.verifyData(item.xmxx.TDZZRQ, item.qjxx.TDZZRQ)){}}
+                <input type="checkbox" name="tdsyjssj" class="fdcqVal" lay-skin="primary" value="{{item.qjxx.TDZZRQ}}"
+                       data-fdcq-val = "tdsyjssj"
+                       title="土地终止日期，登记库：【{{item.xmxx.TDZZRQ||''}}】 更新为权籍库：【{{item.qjxx.TDZZRQ||''}}】">
+                {{# } }}
+            </div>
+            {{# }); }}
+        </div>
+    </form>
+</script>
+<!--新增收件材料模板-->
+<script type="text/html" id="addSjclTpl">
+    <tr>
+        <input type="hidden" name="xmid" value="" class="sjcl">
+        <input type="hidden" name="gzlslid" value="{{d.gzlslid || ''}}" class="sjcl">
+        <input type="hidden" name="sjclid" value="" class="sjcl">
+        <input type="hidden" name="wjzxid" value="" class="sjcl">
+        <input type="hidden" name="xh" value="{{d.sjclNumber || ''}}" class="sjcl">
+        <input type="hidden" name="djxl" value="{{d.djxl || ''}}" class="sjcl">
+        <td>
+            <input type="checkbox"  name="checkbox{{d.sjclNumber || ''}}"  class='sjcl' lay-skin="primary">
+        </td>
+        <td>
+            {{d.sjclNumber || ''}}
+        </td>
+        <td>
+            <input type="text" name="clmc" lay-verify="" class="sjcl">
+        <td>
+            <input type="text" name="fs" lay-verify="" class="sjcl">
+        </td>
+        <td>
+            <select  name="sjlx" class="sjcl">
+                <option value="">请选择</option>
+                {{# layui.each(d.zd.sjlx, function(index, item){ }}
+                <option value="{{item.DM || '0'}}" selected="selected">{{item.MC || ''}}
+                </option>
+                {{# }); }}
+            </select>
+        </td>
+        <td align="center">
+            <span class="layui-btn layui-btn-xs bdc-major-btn" onclick="scfj(this)">上传</span>
+            <span class="layui-btn layui-btn-xs layui-btn-danger bdc-delete-btn" onclick="deleteSjcl('',this)">删除</span>
+            <span class="layui-btn layui-btn-xs layui-btn-primary" onclick="changeSjclSxh('', 'up')">↑</span>
+            <span class="layui-btn layui-btn-xs layui-btn-primary" onclick="changeSjclSxh('', 'down')">↓</span>
+        </td>
+    </tr>
+</script>
+
+
+<!--过户信息展示-->
+<script type="text/html" id="sdqghxxTpl">
+    <div class="basic-info" id="sdqghDiv">
+        <div class="title-sign bdc-title-sign-btn">
+            <p>过户信息</p>
+
+        </div>
+        <form class="layui-form setOverflow" name="sdqghForm">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">用电户号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" class="layui-input sdqgh"
+                               name="consno-d" value="{{d.d_sdqxx.consno || ''}}" id="sdqgh-d">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">是否峰谷分时用电</label>
+                    <div class="layui-input-inline">
+                        <input type="radio" name="d-sffgyd" id="d-sffgyd" class="change-radio-top" value="1" title="是"
+                               lay-filter="d-sffgyd" {{# if(d.d_sdqxx.sffgyd =='1'){ }} checked {{# } }}>
+                        <input type="radio" name="d-sffgyd" class="change-radio-top" value="0" title="否"
+                               lay-filter="d-sffgyd" {{# if(d.d_sdqxx.sffgyd =='0' || d.d_sdqxx.sffgyd == null){ }} checked
+                               {{# } }}>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn" id="hyydhh" onclick="checkYdhh(this)">核验</a>
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <div class="layui-inline xzq-sele">
+                    <label class="layui-form-label change-label-width">单位名称</label>
+                    <div class="layui-input-inline">
+                        <select lay-search="" name="sdqgh-s-lx" id="sdqgh-s-lx" class="layui-input" lay-filter="gs-dw">
+                            <option value="">请选择</option>
+                            {{# layui.each(d.gsdw, function(key, dwInfo){ }}
+                            <option value="{{key}}" {{# if(d.s_sdqxx.rqfwbsm==key ){ }} selected="selected"
+                                    {{# } }} >{{dwInfo.dwmc}}
+                            </option>
+                            {{# }); }}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">用水户号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" class="layui-input sdqgh"
+                               name="consno-s" value="{{d.s_sdqxx.consno || ''}}" id="sdqgh-s">
+                    </div>
+                </div>
+                <div class="layui-inline" id="gsXhzmc">
+                    <label class="layui-form-label change-label-width">新户主名称</label>
+                    <div class="layui-input-inline">
+                        <select  id="shuihz" class="layui-input" lay-filter="loadQlr">
+                            <option value="">请选择</option>
+                            {{# layui.each(d.bdcQlrDOList, function(key, bdcQlr){ }}
+                            <option value="{{bdcQlr.qlrmc}}" {{# if(d.s_sdqxx.xhzmc== bdcQlr.qlrmc ){ }} selected="selected" {{# } }} >
+                                {{# if(bdcQlr.qlrlb == 1 ){ }}
+                                {{bdcQlr.qlrmc}}
+                                {{# } }}
+                            </option>
+                            {{# }); }}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline" id="gsHy">
+                    <div class="layui-col-md1">
+                        <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn" id="shuihy" onclick="checkYshh(this)">核验</a>
+                    </div>
+                    <div class="layui-input-inline lay-col-md1">
+                        <label class="layui-form-label change-label-width" id="shui-hyjg"
+                               {{# if(d.s_sdqxx.hyjg ==1 ){ }}
+                               style="color: green">核验成功
+                            {{# }else if(d.s_sdqxx.hyjg ==0){ }}
+                            style="color: red">核验失败
+                            {{# } }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline xzq-sele">
+                    <label class="layui-form-label change-label-width">单位名称</label>
+                    <div class="layui-input-inline">
+                        <select lay-search="" name="sdqgh-q-lx" id="sdqgh-q-lx" class="layui-input" lay-filter="gq-dw">
+                            <option value="">请选择</option>
+                            {{# layui.each(d.gqdw, function(key, dwInfo){ }}
+                            <option value="{{key}}" {{# if(d.q_sdqxx.rqfwbsm==key ){ }} selected="selected"
+                                    {{# } }} >{{dwInfo.dwmc}}
+                            </option>
+                            {{# }); }}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">用气户号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" class="layui-input sdqgh"
+                               name="consno-q" value="{{d.q_sdqxx.consno || ''}}" id="sdqgh-q">
+                    </div>
+                </div>
+                <div class="layui-inline" id="gqXhzmc">
+                    <label class="layui-form-label change-label-width">新户主名称</label>
+                    <div class="layui-input-inline">
+                        <select  id="qihz" class="layui-input" lay-filter="loadQlr">
+                            <option value="">请选择</option>
+                            {{# layui.each(d.bdcQlrDOList, function(key, bdcQlr){ }}
+                            <option value="{{bdcQlr.qlrmc}}" {{# if(d.q_sdqxx.xhzmc== bdcQlr.qlrmc ){ }} selected="selected" {{# } }} >
+                                {{# if(bdcQlr.qlrlb == 1 ){ }}
+                                {{bdcQlr.qlrmc}}
+                                {{# } }}
+                            </option>
+                            {{# }); }}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline" id="gqHy">
+                    <div class="layui-col-md1">
+                        <a href="javascript:;" class="layui-btn layui-btn-sm bdc-secondary-btn" id="qihy" onclick="checkYqhh(this)">核验</a>
+                    </div>
+                    <div class="layui-input-inline lay-col-md1">
+                        <label class="layui-form-label change-label-width" id="qi-hyjg">
+                            {{# if(d.q_sdqxx.hyjg ==1 ){ }}
+                            核验成功
+                            {{# }else if(d.q_sdqxx.hyjg ==0){ }}
+                            核验失败
+                            {{# } }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</script>
+
+<div id="chooseZzlx" class="bdc-hide">
+    <div class="layui-form bdc-htbh-popup" action="">
+        <div class="layui-form-item pf-form-item">
+            <div style="padding-top: 10px">
+                <label class="layui-form-label">证照类型</label>
+                <div class="layui-input-inline">
+                    <select xm-select="zzlx" name="zzlx" id="zzlx"
+                            xm-select-skin="default" xm-select-show-count="3" xm-select-search=""
+                            xm-select-height="34px" xm-select-search-type="dl">
+                    </select>
+                </div>
+            </div>
+            <div id="sfmdiv" class="layui-inline bdc-hide" style="width: 100%">
+                <label class="layui-form-label">扫码枪输入</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="sfmxx" name="sfmxx" class="layui-input" value="">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src='../../static/js/nantong/slym/slymplzh.js'></script>
+<script src="../../static/js/nantong/slymCommonNt.js"></script>
+<script src='../../static/js/slymCommon.js'></script>
+<script src='../../static/js/nantong/slym/slymplzh-common.js'></script>
+<script src='../../static/js/slymyz.js'></script>
+<script src='../../static/js/nantong/readIdCard.js'></script>
+<script src='../../static/js/nantong/slym/print.js'></script>
+<!--收件材料公共方法-->
+<script src='../../static/js/slym/sjclCommon.js'></script>
+<!--规则验证公共方法-->
+<script src='../../static/js/gzyzCommon.js'></script>
+</html>

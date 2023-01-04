@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>不动产登记簿列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/common.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+</head>
+<body>
+<div class="bdc-percentage-container bdc-line-search-container">
+    <!--查询条件 八个-->
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <form class="layui-form" action="">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">不动产单元号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="bdcdyh" name="bdcdyh" autocomplete="off" placeholder="请输入" class="layui-input">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <!--<div class="layui-inline">
+                        <label class="layui-form-label">不动产权证号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="bdcqzh" name="bdcqzh" autocomplete="off" placeholder="请输入" class="layui-input">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>-->
+                    <div class="layui-inline">
+                        <label class="layui-form-label">权利人</label>
+                        <div class="layui-input-inline">
+                            <input type="text" lay-verify="title" autocomplete="off" placeholder="请输入" class="layui-input" id="bdcQlr" name="qlr">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <button lay-submit="" lay-filter="search" class="layui-btn layui-btn-normal bdc-major-btn" id="search">
+                            查询
+                        </button>
+                        <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="bdc-table-box">
+        <table id="djbTable" lay-data="{id: 'djbTable'}" lay-filter="dataTable"></table>
+    </div>
+</div>
+</body>
+
+<!--表格内部操作按钮-->
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="djb">登记簿</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs bdc-secondary-btn" lay-event="djdcb">地籍调查表</a>
+    <!--<a class="layui-btn layui-btn-danger layui-btn-xs bdc-secondary-btn" lay-event="lpb">楼盘表</a>-->
+    <!--<a class="layui-btn layui-btn-danger layui-btn-xs bdc-secondary-btn" lay-event="lsgx">登记历史</a>-->
+    <a class="layui-btn layui-btn-xs bdc-secondary-btn bdc-more-btn">
+        更多<i class="layui-icon layui-icon-down"></i>
+    </a>
+    <div class="bdc-table-btn-more">
+        <a lay-event="lpb">楼盘表</a>
+        <a lay-event="ompRedirect">图形定位</a>
+        <a lay-event="lsgx">登记历史</a>
+        <a lay-event="dady">档案调用</a>
+    </div>
+</script>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/table.js"></script>
+<script src="../../static/js/formCenter.js"></script>
+<script src="../../static/js/lsgx/md5.js"></script>
+<script src="../../static/js/daxx/dady.js"></script>
+<script src="../../static/js/djbxx/bdcDjbList.js"></script>
+</html>

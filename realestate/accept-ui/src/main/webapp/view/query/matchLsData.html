@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>历史单元匹配侧边栏tab页面</title>
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/matchData.css"/>
+    <script src="../../static/lib/layui/layui.js"></script>
+    <script src="../../static/lib/jquery/jquery.min.js"></script>
+    <!--添加水印-->
+    <script src="../../static/lib/bdcui/js/common.js"></script>
+    <script src="../../static/js/common.js"></script>
+    <script src="../../static/js/query/matchData.js"></script>
+    <script type="text/javascript">
+        var xztzlx = getQueryString("xztzlx");
+        var jbxxid = getQueryString("jbxxid");
+        var lx = getQueryString("lx");
+        var type = getQueryString("type");
+        var ppzt = getQueryString("ppzt");
+    </script>
+
+</head>
+<body>
+<div class="bdc-container">
+    <!--收缩左侧列表-->
+    <div class="bdc-aside-zoom">
+        <a class="bdc-aside-close" href="javascript:"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
+        <a class="bdc-aside-open bdc-hide" href="javascript:"><i class="fa fa-chevron-right" aria-hidden="true"></i></a>
+    </div>
+    <!--左侧菜单栏开始-->
+    <div class="bdc-menu-aside" id="asideBox">
+        <div class="aside" id="asideCon">
+            <h4>目录</h4>
+            <div id="aside">
+                <ul id="accordion" class="accordion">
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="asideLine"></div>
+    <!--左侧菜单栏结束-->
+
+    <!--右侧主内容开始-->
+    <div class="bdc-right-content">
+        <a href="javascrpt:;" id="create" onclick="createXm(this)"
+           class="layui-btn layui-btn-normal bdc-secondary-btn bdc-special-btn">创建</a>
+        <div class="layui-tab layui-tab-brief" lay-filter="xmFilter">
+            <ul class="layui-tab-title bdc-tab-title">
+                <li class="layui-this">不动产单元</li>
+                <li class="bdc-hide">土地证</li>
+            </ul>
+            <div class="layui-tab-content bdc-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <iframe id="childFrame" src=""></iframe>
+                </div>
+                <div class="layui-tab-item bdc-hide">
+                    <iframe id="childFrame1" src=""></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--右侧主内容结束-->
+</div>
+<!--左侧目录-->
+<script type="text/html" id="dataTpl">
+    {{# layui.each(d.data, function(index, item){ }}
+    <li class="bdc-outer-li bdc-invented-li" data-num="{{  item.bdcdyh }}">
+        <a class="link" data-name="不动产单元号" data-name1="土地证"
+           data-src="../../view/query/matchLsDyh.html?xnbdcdyh={{  item.bdcdyh }}&xztzlx={{  d.xztzlx }}&xnxmid={{  item.xmid }}&bdcdywybh={{item.bdcdywybh||''}}&qjgldm={{item.qjgldm||''}}"
+           data-src1="../../view/query/matchTdz.html?xnxmid={{  item.xmid }}&jbxxid={{d.jbxxid || ''}}&qjgldm={{item.qjgldm||''}}&ppzt={{d.ppzt}}" title="{{item.ybdcqz||item.bdcqzh}}">
+            <img src="../../static/image/file.png" alt="图标" class="docu-icon">
+            {{item.ybdcqz||item.bdcqzh}}
+        </a>
+    </li>
+    {{# }); }}
+</script>
+</body>
+
+</html>

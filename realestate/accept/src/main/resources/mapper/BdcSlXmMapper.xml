@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.accept.core.mapper.BdcSlXmMapper">
+
+    <update id="updateSlxmZsxhPl" parameterType="map">
+        <if test="jbxxid != null and jbxxid != ''">
+            UPDATE bdc_sl_xm t
+            <set>
+                t.zsxh = #{zsxh,jdbcType=VARCHAR}
+            </set>
+            WHERE t.jbxxid=#{jbxxid}
+            <if test="xmids != null">
+                AND t.xmid IN
+                <foreach collection="xmids" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </if>
+    </update>
+
+    <update id="updateSlxmSfxxPl" parameterType="map">
+        <if test="jbxxid != null and jbxxid != ''">
+            UPDATE bdc_sl_xm t
+            <set>
+                t.sfxxid = #{sfxxid,jdbcType=VARCHAR}
+            </set>
+            WHERE t.jbxxid=#{jbxxid}
+        </if>
+    </update>
+
+    <select id="querySlxmByLsgx" parameterType="map" resultType="cn.gtmap.realestate.common.core.domain.accept.BdcSlXmDO">
+        select * from BDC_SL_XM t left join bdc_sl_xm_lsgx l on l.XMID=t.xmid
+        <where>
+            <if test="xmid != null and xmid != ''">
+                and l.YXMID=#{xmid}
+            </if>
+            <if test="jbxxid != null and jbxxid != ''">
+                and t.jbxxid=#{jbxxid}
+            </if>
+        </where>
+    </select>
+
+    <!-- 一窗信息分页-->
+    <select id="listYcslxxByPage" parameterType="map" resultType="cn.gtmap.realestate.common.core.vo.accept.ui.BdcYcslxxVO">
+
+        SELECT t.xmid,j.jyxxid,t.bdcdyh,t.zl,j.fczfzsj,j.scjydjsj,j.bhzzsje,j.zzsje,j.hzzsje FROM bdc_sl_xm t
+        LEFT JOIN bdc_sl_jyxx j ON j.xmid =t.xmid
+        LEFT JOIN bdc_sl_jbxx a ON a.jbxxid =t.jbxxid
+        WHERE (t.xmywlx =1 OR t.xmywlx =5)
+
+        <if test="gzlslid != null and gzlslid != ''">
+              and a.gzlslid =#{gzlslid}
+        </if>
+        <if test="qllxs != null and qllxs.size() > 0">
+            AND t.qllx IN
+            <foreach collection="qllxs" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by t.bdcdyh
+    </select>
+
+    <!--删除不动产受理项目信息-->
+    <delete id="batchDeleteBdcSlXm" parameterType="cn.gtmap.realestate.common.core.dto.accept.BdcSlDeleteCsDTO">
+        <if test="xmidList != null and xmidList.size>0">
+            DELETE FROM bdc_sl_xm a
+            <where>
+                <if test="xmidList != null">
+                    AND a.xmid IN
+                    <foreach collection="xmidList" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+        </if>
+
+    </delete>
+
+    <select id="querySlFzztByJbxxid" resultType="cn.gtmap.realestate.common.core.dto.accept.BdcSlCshFwkgDataDTO"
+            parameterType="String">
+		select a.djxl,a.sfsczs, a.zszl, a.bdcdyh from BDC_SL_XM  a
+		where
+			a.jbxxid = #{jbxxid}
+	</select>
+
+    <!-- 批量更新受理信息 -->
+    <update id="batchUpdateBdcSlXm" parameterType="map">
+        <if test="statement != null and xmids != null and xmids.size() > 0">
+            ${statement}
+            <where>
+                <if test="xmids != null and xmids.size() > 0">
+                    and xmid IN
+                    <foreach collection="xmids" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+        </if>
+    </update>
+
+    <!--获取不动产受理项目信息-->
+    <select id="listBdcSlXmByXmids" resultType="cn.gtmap.realestate.common.core.domain.accept.BdcSlXmDO"
+            parameterType="String">
+        <if test="xmidList != null and xmidList.size>0">
+            SELECT * FROM bdc_sl_xm a
+            WHERE a.xmid IN
+            <foreach collection="xmidList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+    </select>
+
+    <select id="listGwcGhyt" parameterType="String" resultType="String">
+        <if test="jbxxid != null and jbxxid !=''">
+            select distinct yt from bdc_sl_xm t where t.yt IS NOT NULL and t.JBXXID = #{jbxxid}
+        </if>
+    </select>
+
+    <select id="sumGwcDzwmj" resultType="String" parameterType="String">
+        <if test="jbxxid != null and jbxxid !=''">
+            select sum(t.dzwmj) as jzmj from bdc_sl_xm t where t.JBXXID =#{jbxxid} and t.dzwmj is not null
+            <if test="djxl != null and djxl != ''">
+                and t.djxl = #{djxl}
+            </if>
+        </if>
+    </select>
+
+    <select id="queryBdcSlXmDOList" resultType="cn.gtmap.realestate.common.core.domain.accept.BdcSlXmDO" parameterType="cn.gtmap.realestate.common.core.qo.accept.BdcSlXmQO">
+        SELECT t.* FROM bdc_sl_xm t
+        LEFT JOIN bdc_sl_jbxx a ON a.jbxxid =t.jbxxid
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                and a.gzlslid =#{gzlslid}
+            </if>
+            <if test="slbh != null and slbh != ''">
+                and a.slbh =#{slbh}
+            </if>
+            <if test="qllxs != null and qllxs.size() > 0">
+                AND t.qllx IN
+                <foreach collection="qllxs" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="xmidList != null and xmidList.size() > 0">
+                AND t.xmid IN
+                <foreach collection="xmidList" item="item" open="(" separator="," close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="djxl != null and djxl != ''">
+                AND t.djxl IN
+                <foreach collection="djxl.split(',')" item="item" open="(" separator="," close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        <if test="sort != null and sort != ''">
+            order by #{sort}
+        </if>
+    </select>
+
+    <!-- 获取归档信息列表 -->
+    <select id="listBdcGdxxHf" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.dto.certificate.BdcXmGdxxDTO">
+        SELECT j.gzlslid,
+        j.slbh,
+        x.bdcdyh,
+        '' as  bdcqzh,
+        x.zl,
+        x.xmid,
+        2 as qszt,
+        j.slsj
+        FROM bdc_sl_xm x
+        INNER JOIN bdc_sl_jbxx j on x.jbxxid = j.jbxxid
+        LEFT JOIN BDC_SL_SQR Q ON x.XMID = Q.XMID
+        where  j.ajzt != 0
+        <if test="xmid != null and xmid != ''">
+            AND x.xmid = #{xmid}
+        </if>
+        <if test="bdcdyh != null and bdcdyh != ''">
+            AND instr(x.bdcdyh,#{bdcdyh})>0
+        </if>
+        <if test="zl != null and zl != ''">
+            AND instr(x.zl,#{zl})>0
+        </if>
+        <if test="slbh != null and slbh != ''">
+            AND instr(j.slbh,#{slbh})>0
+        </if>
+        <if test="qxdm != null and qxdm != ''">
+            AND j.qxdm = #{qxdm}
+        </if>
+        <if test="smqsr != null and smqsr.size() > 0">
+            AND j.slbh in
+            <foreach collection="smqsr" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="kssj != null and kssj != ''">
+            AND to_char(j.slsj,'yyyy-MM-dd') >= #{kssj}
+        </if>
+        <if test="jzsj != null and jzsj != ''">
+            <![CDATA[
+                  AND to_char(j.slsj,'yyyy-MM-dd') <= #{jzsj}
+                   ]]>
+        </if>
+        <if test="qlr != null and qlr != ''">
+            AND Q.qlrmc = #{qlr}
+        </if>
+        <if test="xmidList != null and xmidList.size > 0">
+            AND x.xmid in <foreach collection="xmidList"
+                                    item="xmid"
+                                    open="("
+                                    close=")"
+                                    separator=",">
+            #{xmid}
+        </foreach>
+        </if>
+    </select>
+
+</mapper>
+

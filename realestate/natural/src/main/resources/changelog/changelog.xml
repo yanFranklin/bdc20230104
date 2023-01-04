@@ -1,0 +1,2218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="2021-10-23-01-natural" author="liaoxiang" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            CREATE TABLE ZRZY_ZD_DJLX
+            (
+                DM NUMBER(3) NOT NULL,
+                MC VARCHAR2(10),
+                constraint ZRZY_ZD_DJLX_PK primary key (DM)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255;
+            COMMENT ON TABLE ZRZY_ZD_DJLX is '登记类型字典表';
+            COMMENT ON COLUMN ZRZY_ZD_DJLX.DM IS '代码';
+            COMMENT ON COLUMN ZRZY_ZD_DJLX.MC IS '登记类型名称';
+            INSERT INTO ZRZY_ZD_DJLX
+            VALUES (100, '首次登记');
+            INSERT INTO ZRZY_ZD_DJLX
+            VALUES (200, '转移登记');
+            INSERT INTO ZRZY_ZD_DJLX
+            VALUES (300, '变更登记');
+            INSERT INTO ZRZY_ZD_DJLX
+            VALUES (400, '注销登记');
+            INSERT INTO ZRZY_ZD_DJLX
+            VALUES (500, '更正登记');
+            INSERT INTO ZRZY_ZD_DJLX
+            VALUES (600, '异议登记');
+            INSERT INTO ZRZY_ZD_DJLX
+            VALUES (700, '预告登记');
+            INSERT INTO ZRZY_ZD_DJLX
+            VALUES (800, '查封登记');
+            INSERT INTO ZRZY_ZD_DJLX
+            VALUES (900, '其它登记');
+
+            CREATE TABLE ZRZY_ZD_AJZT
+            (
+                DM NUMBER(1) NOT NULL,
+                MC VARCHAR2(10),
+                constraint ZRZY_ZD_AJZT_PK primary key (DM)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255;
+            COMMENT ON TABLE ZRZY_ZD_AJZT is '案件状态字典表';
+            COMMENT ON COLUMN ZRZY_ZD_AJZT.DM IS '代码';
+            COMMENT ON COLUMN ZRZY_ZD_AJZT.MC IS '案件状态名称';
+            INSERT INTO ZRZY_ZD_AJZT
+            VALUES (1, '在办');
+            INSERT INTO ZRZY_ZD_AJZT
+            VALUES (2, '已办');
+            INSERT INTO ZRZY_ZD_AJZT
+            VALUES (3, '暂停');
+            INSERT INTO ZRZY_ZD_AJZT
+            VALUES (4, '不予登记');
+            INSERT INTO ZRZY_ZD_AJZT
+            VALUES (5, '用户撤回');
+
+            CREATE TABLE ZRZY_ZD_QSZT
+            (
+                DM NUMBER(1) NOT NULL,
+                MC VARCHAR2(10),
+                constraint ZRZY_ZD_QSZT_PK primary key (DM)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255;
+            COMMENT ON TABLE ZRZY_ZD_QSZT is '权属状态字典表';
+            COMMENT ON COLUMN ZRZY_ZD_QSZT.DM IS '代码';
+            COMMENT ON COLUMN ZRZY_ZD_QSZT.MC IS '权属状态名称';
+            INSERT INTO ZRZY_ZD_QSZT
+            VALUES (0, '临时');
+            INSERT INTO ZRZY_ZD_QSZT
+            VALUES (1, '现势');
+            INSERT INTO ZRZY_ZD_QSZT
+            VALUES (2, '历史');
+            INSERT INTO ZRZY_ZD_QSZT
+            VALUES (3, '终止');
+
+            CREATE TABLE ZRZY_ZD_ZRZYDJDYLX
+            (
+                DM VARCHAR2(2) NOT NULL,
+                MC VARCHAR2(100),
+                constraint ZRZY_ZD_ZRZYDJDYLX_PK primary key (DM)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255;
+            COMMENT ON TABLE ZRZY_ZD_ZRZYDJDYLX is '自然资源登记单元类型字典表';
+            COMMENT ON COLUMN ZRZY_ZD_ZRZYDJDYLX.DM IS '代码';
+            COMMENT ON COLUMN ZRZY_ZD_ZRZYDJDYLX.MC IS '登记单元类型名称';
+            INSERT INTO ZRZY_ZD_ZRZYDJDYLX
+            VALUES ('00', '海域');
+            INSERT INTO ZRZY_ZD_ZRZYDJDYLX
+            VALUES ('10', '无居民海岛');
+            INSERT INTO ZRZY_ZD_ZRZYDJDYLX
+            VALUES ('11', '领海基点所在海岛');
+            INSERT INTO ZRZY_ZD_ZRZYDJDYLX
+            VALUES ('12', '其他海岛');
+            INSERT INTO ZRZY_ZD_ZRZYDJDYLX
+            VALUES ('20', '自然保护地');
+            INSERT INTO ZRZY_ZD_ZRZYDJDYLX
+            VALUES ('21', '国家公园');
+            INSERT INTO ZRZY_ZD_ZRZYDJDYLX
+            VALUES ('22', '自然保护区');
+            INSERT INTO ZRZY_ZD_ZRZYDJDYLX
+            VALUES ('23', '自然公园');
+            INSERT INTO ZRZY_ZD_ZRZYDJDYLX
+            VALUES ('24', '其他自然保护地');
+            INSERT INTO ZRZY_ZD_ZRZYDJDYLX
+            VALUES ('30', '水流');
+            INSERT INTO ZRZY_ZD_ZRZYDJDYLX
+            VALUES ('31', '河流');
+            INSERT INTO ZRZY_ZD_ZRZYDJDYLX
+            VALUES ('32', '湖泊');
+            INSERT INTO ZRZY_ZD_ZRZYDJDYLX
+            VALUES ('33', '水库水面');
+            INSERT INTO ZRZY_ZD_ZRZYDJDYLX
+            VALUES ('34', '冰川及永久积雪');
+            INSERT INTO ZRZY_ZD_ZRZYDJDYLX
+            VALUES ('40', '国务院确定的重点国有林区');
+            INSERT INTO ZRZY_ZD_ZRZYDJDYLX
+            VALUES ('50', '湿地');
+            INSERT INTO ZRZY_ZD_ZRZYDJDYLX
+            VALUES ('60', '森林');
+            INSERT INTO ZRZY_ZD_ZRZYDJDYLX
+            VALUES ('70', '草原');
+            INSERT INTO ZRZY_ZD_ZRZYDJDYLX
+            VALUES ('80', '荒地');
+            INSERT INTO ZRZY_ZD_ZRZYDJDYLX
+            VALUES ('90', '探明储量的矿产资源');
+            INSERT INTO ZRZY_ZD_ZRZYDJDYLX
+            VALUES ('99', '其他');
+
+            CREATE TABLE ZRZY_ZD_SYQZTLX
+            (
+                DM VARCHAR2(2) NOT NULL,
+                MC VARCHAR2(100),
+                constraint ZRZY_ZD_SYQZTLX_PK primary key (DM)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255;
+            COMMENT ON TABLE ZRZY_ZD_SYQZTLX is '所有权主体类型字典表';
+            COMMENT ON COLUMN ZRZY_ZD_SYQZTLX.DM IS '代码';
+            COMMENT ON COLUMN ZRZY_ZD_SYQZTLX.MC IS '所有权主体名称';
+            INSERT INTO ZRZY_ZD_SYQZTLX
+            VALUES ('1', '全民所有');
+            INSERT INTO ZRZY_ZD_SYQZTLX
+            VALUES ('2', '集体所有');
+
+            CREATE TABLE ZRZY_ZD_QLXSFS
+            (
+                DM VARCHAR2(2) NOT NULL,
+                MC VARCHAR2(100),
+                constraint ZRZY_ZD_QLXSFS_PK primary key (DM)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255;
+            COMMENT ON TABLE ZRZY_ZD_QLXSFS is '权利行使方式字典表';
+            COMMENT ON COLUMN ZRZY_ZD_QLXSFS.DM IS '代码';
+            COMMENT ON COLUMN ZRZY_ZD_QLXSFS.MC IS '权利行使方式名称';
+            INSERT INTO ZRZY_ZD_QLXSFS
+            VALUES ('1', '直接行使');
+            INSERT INTO ZRZY_ZD_QLXSFS
+            VALUES ('2', '委托代理行使');
+
+            CREATE TABLE ZRZY_ZD_SZYLX
+            (
+                DM VARCHAR2(2) NOT NULL,
+                MC VARCHAR2(100),
+                constraint ZZRZY_ZD_SZYLX_PK primary key (DM)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255;
+            COMMENT ON TABLE ZRZY_ZD_SZYLX is '水流类型字典表';
+            COMMENT ON COLUMN ZRZY_ZD_SZYLX.DM IS '代码';
+            COMMENT ON COLUMN ZRZY_ZD_SZYLX.MC IS '水流类型名称';
+            INSERT INTO ZRZY_ZD_SZYLX
+            VALUES ('1', '河流');
+            INSERT INTO ZRZY_ZD_SZYLX
+            VALUES ('2', '湖泊');
+            INSERT INTO ZRZY_ZD_SZYLX
+            VALUES ('3', '水库水面');
+            INSERT INTO ZRZY_ZD_SZYLX
+            VALUES ('4', '冰川及永久积雪');
+
+            CREATE TABLE ZRZY_ZD_SDLX
+            (
+                DM VARCHAR2(2) NOT NULL,
+                MC VARCHAR2(100),
+                constraint ZZRZY_ZD_SDLX_PK primary key (DM)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255;
+            COMMENT ON TABLE ZRZY_ZD_SDLX is '湿地类型字典表';
+            COMMENT ON COLUMN ZRZY_ZD_SDLX.DM IS '代码';
+            COMMENT ON COLUMN ZRZY_ZD_SDLX.MC IS '湿地类型名称';
+            INSERT INTO ZRZY_ZD_SDLX
+            VALUES ('1', '红树林地');
+            INSERT INTO ZRZY_ZD_SDLX
+            VALUES ('2', '森林沼泽');
+            INSERT INTO ZRZY_ZD_SDLX
+            VALUES ('3', '灌丛沼泽');
+            INSERT INTO ZRZY_ZD_SDLX
+            VALUES ('4', '沼泽草地');
+            INSERT INTO ZRZY_ZD_SDLX
+            VALUES ('5', '盐田');
+            INSERT INTO ZRZY_ZD_SDLX
+            VALUES ('6', '沿海滩涂');
+            INSERT INTO ZRZY_ZD_SDLX
+            VALUES ('7', '内陆滩涂');
+            INSERT INTO ZRZY_ZD_SDLX
+            VALUES ('8', '沼泽地');
+
+            CREATE TABLE ZRZY_ZD_SLLX
+            (
+                DM VARCHAR2(2) NOT NULL,
+                MC VARCHAR2(100),
+                constraint ZRZY_ZD_SLLX_PK primary key (DM)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255;
+            COMMENT ON TABLE ZRZY_ZD_SLLX is '森林类型字典表';
+            COMMENT ON COLUMN ZRZY_ZD_SLLX.DM IS '代码';
+            COMMENT ON COLUMN ZRZY_ZD_SLLX.MC IS '森林类型名称';
+            INSERT INTO ZRZY_ZD_SLLX
+            VALUES ('1', '乔木林地');
+            INSERT INTO ZRZY_ZD_SLLX
+            VALUES ('2', '竹林地');
+            INSERT INTO ZRZY_ZD_SLLX
+            VALUES ('3', '灌木林地');
+            INSERT INTO ZRZY_ZD_SLLX
+            VALUES ('4', '其他林地');
+
+            CREATE TABLE ZRZY_ZD_CDLX
+            (
+                DM VARCHAR2(2) NOT NULL,
+                MC VARCHAR2(100),
+                constraint ZRZY_ZD_CDLX_PK primary key (DM)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255;
+            COMMENT ON TABLE ZRZY_ZD_CDLX is '草地类型字典表';
+            COMMENT ON COLUMN ZRZY_ZD_CDLX.DM IS '代码';
+            COMMENT ON COLUMN ZRZY_ZD_CDLX.MC IS '草地类型名称';
+            INSERT INTO ZRZY_ZD_CDLX
+            VALUES ('1', '天然牧草地');
+            INSERT INTO ZRZY_ZD_CDLX
+            VALUES ('2', '人工牧草地');
+            INSERT INTO ZRZY_ZD_CDLX
+            VALUES ('3', '其他草地');
+
+            CREATE TABLE ZRZY_ZD_HDLX
+            (
+                DM VARCHAR2(2) NOT NULL,
+                MC VARCHAR2(100),
+                constraint ZRZY_ZD_HDLX_PK primary key (DM)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255;
+            COMMENT ON TABLE ZRZY_ZD_HDLX is '荒地类型字典表';
+            COMMENT ON COLUMN ZRZY_ZD_HDLX.DM IS '代码';
+            COMMENT ON COLUMN ZRZY_ZD_HDLX.MC IS '荒地类型名称';
+            INSERT INTO ZRZY_ZD_HDLX
+            VALUES ('1', '沙地');
+            INSERT INTO ZRZY_ZD_HDLX
+            VALUES ('2', '裸土地');
+            INSERT INTO ZRZY_ZD_HDLX
+            VALUES ('3', '裸岩石砾地');
+
+            CREATE TABLE ZRZY_ZD_HYWJMHDDB
+            (
+                DM VARCHAR2(2) NOT NULL,
+                MC VARCHAR2(100),
+                constraint ZZRZY_ZD_HYWJMHDDB_PK primary key (DM)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255;
+            COMMENT ON TABLE ZRZY_ZD_HYWJMHDDB is '海域无居民海岛等别字典表';
+            COMMENT ON COLUMN ZRZY_ZD_HYWJMHDDB.DM IS '代码';
+            COMMENT ON COLUMN ZRZY_ZD_HYWJMHDDB.MC IS '名称';
+            INSERT INTO ZRZY_ZD_HYWJMHDDB
+            VALUES ('1', '一等');
+            INSERT INTO ZRZY_ZD_HYWJMHDDB
+            VALUES ('2', '二等');
+            INSERT INTO ZRZY_ZD_HYWJMHDDB
+            VALUES ('3', '三等');
+            INSERT INTO ZRZY_ZD_HYWJMHDDB
+            VALUES ('4', '四等');
+            INSERT INTO ZRZY_ZD_HYWJMHDDB
+            VALUES ('5', '五等');
+            INSERT INTO ZRZY_ZD_HYWJMHDDB
+            VALUES ('6', '六等');
+
+            CREATE TABLE ZRZY_ZD_KCZHFS
+            (
+                DM VARCHAR2(2) NOT NULL,
+                MC VARCHAR2(100),
+                constraint ZZRZY_ZD_KCZHFS_PK primary key (DM)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255;
+            COMMENT ON TABLE ZRZY_ZD_KCZHFS is '矿产组合方式字典表';
+            COMMENT ON COLUMN ZRZY_ZD_KCZHFS.DM IS '代码';
+            COMMENT ON COLUMN ZRZY_ZD_KCZHFS.MC IS '矿产组合方式名称';
+            INSERT INTO ZRZY_ZD_KCZHFS
+            VALUES ('1', '单一矿产');
+            INSERT INTO ZRZY_ZD_KCZHFS
+            VALUES ('2', '主要矿产');
+            INSERT INTO ZRZY_ZD_KCZHFS
+            VALUES ('3', '共生矿产');
+            INSERT INTO ZRZY_ZD_KCZHFS
+            VALUES ('4', '伴生矿产');
+
+            CREATE TABLE ZRZY_ZD_CLJLDW
+            (
+                DM VARCHAR2(2) NOT NULL,
+                MC VARCHAR2(100),
+                constraint ZZRZY_ZD_CLJLDW_PK primary key (DM)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255;
+            COMMENT ON TABLE ZRZY_ZD_CLJLDW is '矿储量计量单位方式字典表';
+            COMMENT ON COLUMN ZRZY_ZD_CLJLDW.DM IS '代码';
+            COMMENT ON COLUMN ZRZY_ZD_CLJLDW.MC IS '储量计量单位名称';
+            INSERT INTO ZRZY_ZD_CLJLDW
+            VALUES ('1', '万吨');
+            INSERT INTO ZRZY_ZD_CLJLDW
+            VALUES ('2', '千克');
+            INSERT INTO ZRZY_ZD_CLJLDW
+            VALUES ('3', '万立方米');
+
+            CREATE TABLE ZRZY_ZD_GGGZYSLX
+            (
+                DM VARCHAR2(2) NOT NULL,
+                MC VARCHAR2(100),
+                constraint ZZRZY_ZD_GGGZYSLX_PK primary key (DM)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255;
+            COMMENT ON TABLE ZRZY_ZD_GGGZYSLX is '公共管制要素类型字典表';
+            COMMENT ON COLUMN ZRZY_ZD_GGGZYSLX.DM IS '代码';
+            COMMENT ON COLUMN ZRZY_ZD_GGGZYSLX.MC IS '公共管制要素类型名称';
+            INSERT INTO ZRZY_ZD_GGGZYSLX
+            VALUES ('1', '生态保护红线');
+            INSERT INTO ZRZY_ZD_GGGZYSLX
+            VALUES ('2', '国土空间规划分区');
+            INSERT INTO ZRZY_ZD_GGGZYSLX
+            VALUES ('3', '特殊保护');
+            INSERT INTO ZRZY_ZD_GGGZYSLX
+            VALUES ('4', '其它公共管制要素');
+
+            CREATE TABLE ZRZY_ZD_QLLX
+            (
+                DM NUMBER(2) NOT NULL,
+                MC VARCHAR2(100),
+                constraint ZZRZY_ZD_QLLX_PK primary key (DM)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255;
+            COMMENT ON TABLE ZRZY_ZD_QLLX is '权利类型字典表';
+            COMMENT ON COLUMN ZRZY_ZD_QLLX.DM IS '代码';
+            COMMENT ON COLUMN ZRZY_ZD_QLLX.MC IS '权利类型名称';
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (1, '国家土地所有权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (2, '集体土地所有权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (3, '国有建设用地使用权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (4, '国有建设用地使用权及房屋所有权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (5, '宅基地使用权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (6, '宅基地使用权及房屋所有权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (7, '集体建设用地使用权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (8, '集体建设用地使用权及房屋所有权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (9, '土地承包经营权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (10, '土地承包经营权/森林、林木所有权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (11, '林地使用权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (12, '林地使用权/森林、林木使用权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (13, '草原使用权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (14, '水域滩涂养殖权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (15, '海域使用权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (16, '海域使用权/构筑物所有权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (17, '无居民海岛使用权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (18, '无居民海岛使用权/构筑物所有权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (19, '地役权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (20, '取水权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (21, '探矿权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (22, '采矿权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (23, '国有农用地的使用权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (28, '国有建设用地使用权/构筑物所有权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (29, '宅基地使用权/构筑物所有权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (30, '集体建设用地使用权/构筑物所有权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (31, '海域使用权/建筑物所有权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (32, '无居民海岛使用权/建筑物所有权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (35, '土地承包经营权/森林、林木使用权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (36, '林地使用权/森林、林木所有权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (37, '国有未利用地的使用权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (38, '抵押权');
+            INSERT INTO ZRZY_ZD_QLLX
+            VALUES (99, '其它权利');
+
+            CREATE TABLE ZRZY_ZD_SHYJCZJG
+            (
+                DM NUMBER(1) NOT NULL,
+                MC VARCHAR2(100),
+                constraint ZRZY_ZD_SHYJCZJG_PK primary key (DM)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255;
+            COMMENT ON TABLE ZRZY_ZD_SHYJCZJG is '审核意见操作结果字典表';
+            COMMENT ON COLUMN ZRZY_ZD_SHYJCZJG.DM IS '代码';
+            COMMENT ON COLUMN ZRZY_ZD_SHYJCZJG.MC IS '审核意见操作结果名称';
+            INSERT INTO ZRZY_ZD_SHYJCZJG
+            VALUES (1, '同意');
+            INSERT INTO ZRZY_ZD_SHYJCZJG
+            VALUES (2, '回退');
+            INSERT INTO ZRZY_ZD_SHYJCZJG
+            VALUES (3, '退件');
+            INSERT INTO ZRZY_ZD_SHYJCZJG
+            VALUES (4, '转件');
+
+            CREATE TABLE ZRZY_ZD_QXDM
+            (
+                DM VARCHAR2(6) NOT NULL,
+                MC VARCHAR2(100),
+                constraint ZRZY_ZD_QXDM_PK primary key (DM)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255;
+            COMMENT ON TABLE ZRZY_ZD_QXDM is '区县字典表';
+            COMMENT ON COLUMN ZRZY_ZD_QXDM.DM IS '代码';
+            COMMENT ON COLUMN ZRZY_ZD_QXDM.MC IS '区县名称';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-10-26-01-natural" author="liaoxiang" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            create table ZRZY_XM
+            (
+                XMID      VARCHAR2(32) not null,
+                SLBH      VARCHAR2(50) not null,
+                GZLSLID   VARCHAR2(32),
+                ZRZYDJDYH VARCHAR2(15),
+                DJDYMC    VARCHAR2(1000),
+                ZL        VARCHAR2(1000),
+                DJLX      NUMBER(3),
+                DJYY      VARCHAR2(2000),
+                AJZT      NUMBER(1) default '1',
+                QSZT      NUMBER(1) default '0',
+                QXDM      VARCHAR2(6),
+                SLSJ      DATE,
+                SLRID     VARCHAR2(32),
+                SLR       VARCHAR2(50),
+                JSSJ      DATE,
+                DJJG      VARCHAR2(100),
+                DJSJ      DATE,
+                DBR       VARCHAR2(200),
+                YCQZH     VARCHAR2(4000),
+                GZLDYID   VARCHAR2(50),
+                GZLDYMC   VARCHAR2(200),
+                BZ        VARCHAR2(4000),
+                ZRZYCQZH  VARCHAR2(100)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255
+                storage
+            (
+                initial 4M
+                next 8K
+                minextents 1
+                maxextents unlimited
+            );
+            COMMENT ON TABLE ZRZY_XM is '自然资源项目';
+            comment on column ZRZY_XM.XMID
+                is '项目ID';
+            comment on column ZRZY_XM.SLBH
+                is '受理编号';
+            comment on column ZRZY_XM.GZLSLID
+                is '工作流实例ID';
+            comment on column ZRZY_XM.ZRZYDJDYH
+                is '自然资源登记单元号';
+            comment on column ZRZY_XM.DJDYMC
+                is '登记单元名称';
+            comment on column ZRZY_XM.ZL
+                is '坐落';
+            comment on column ZRZY_XM.DJLX
+                is '登记类型';
+            comment on column ZRZY_XM.DJYY
+                is '登记原因';
+            comment on column ZRZY_XM.AJZT
+                is '案件状态';
+            comment on column ZRZY_XM.QSZT
+                is '权属状态';
+            comment on column ZRZY_XM.QXDM
+                is '区县代码';
+            comment on column ZRZY_XM.SLSJ
+                is '受理时间';
+            comment on column ZRZY_XM.SLRID
+                is '受理人ID';
+            comment on column ZRZY_XM.SLR
+                is '受理人';
+            comment on column ZRZY_XM.JSSJ
+                is '结束时间';
+            comment on column ZRZY_XM.DJJG
+                is '登记机构';
+            comment on column ZRZY_XM.DJSJ
+                is '登记时间';
+            comment on column ZRZY_XM.DBR
+                is '登簿人';
+            comment on column ZRZY_XM.YCQZH
+                is '原产权证号';
+            comment on column ZRZY_XM.GZLDYID
+                is '工作流定义ID';
+            comment on column ZRZY_XM.GZLDYMC
+                is '工作流定义名称';
+            comment on column ZRZY_XM.BZ
+                is '备注';
+            comment on column ZRZY_XM.ZRZYCQZH
+                is '自然资源产权证号';
+            alter table ZRZY_XM
+                add constraint PK_ZRZY_XM primary key (XMID)
+                    using index
+                        pctfree 10
+                        initrans 2
+                        maxtrans 255
+                        storage
+                        (
+                        initial 256 K
+                        next 32 K
+                        minextents 1
+                        maxextents unlimited
+                        );
+
+            create table ZRZY_XM_LSGX
+            (
+                GXID  VARCHAR2(32) not null,
+                XMID  VARCHAR2(32) not null,
+                YXMID VARCHAR2(32)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255
+                storage
+            (
+                initial 4M
+                next 32K
+                minextents 1
+                maxextents unlimited
+            );
+            COMMENT ON TABLE ZRZY_XM_LSGX is '自然资源项目历史关系';
+            comment on column ZRZY_XM_LSGX.GXID
+                is '关系ID';
+            comment on column ZRZY_XM_LSGX.XMID
+                is '项目ID';
+            comment on column ZRZY_XM_LSGX.YXMID
+                is '原项目ID';
+            alter table ZRZY_XM_LSGX
+                add constraint PK_ZRZY_XM_LSGX primary key (GXID)
+                    using index
+                        pctfree 10
+                        initrans 2
+                        maxtrans 255
+                        storage
+                        (
+                        initial 256 K
+                        next 32 K
+                        minextents 1
+                        maxextents unlimited
+                        );
+
+            create table ZRZY_DJDY
+            (
+                XMID       VARCHAR2(32) not null,
+                ZRZYDJDYH  VARCHAR2(15),
+                DJDYMC     VARCHAR2(100),
+                DJDYLX     VARCHAR2(2),
+                ZL         VARCHAR2(200),
+                DJDYZMJ    NUMBER(15, 2),
+                GYMJ       NUMBER(15, 2),
+                JTMJ       NUMBER(15, 2),
+                ZYQMJ      NUMBER(15, 2),
+                DYSZD      VARCHAR2(4000),
+                DYSZN      VARCHAR2(4000),
+                DYSZX      VARCHAR2(4000),
+                DYSZB      VARCHAR2(4000),
+                SYQZT      VARCHAR2(2),
+                DBXSZT     VARCHAR2(100),
+                QLXSFS     VARCHAR2(2),
+                DLXSZT     VARCHAR2(200),
+                XSNR       VARCHAR2(200),
+                DYNZRZYZMJ NUMBER(15, 2),
+                SZYMJ      NUMBER(15, 2),
+                SDMJ       NUMBER(15, 2),
+                CYMJ       NUMBER(15, 2),
+                SLMJ       NUMBER(15, 2),
+                HDMJ       NUMBER(15, 2),
+                QTMJ       NUMBER(15, 2),
+                FZRZYZMJ   NUMBER(15, 2),
+                FJ         VARCHAR2(4000)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255
+                storage
+            (
+                initial 4M
+                next 32K
+                minextents 1
+                maxextents unlimited
+            );
+            COMMENT ON TABLE ZRZY_DJDY is '自然资源登记单元';
+            comment on column ZRZY_DJDY.XMID
+                is '项目ID';
+            comment on column ZRZY_DJDY.ZRZYDJDYH
+                is '自然资源登记单元号';
+            comment on column ZRZY_DJDY.DJDYMC
+                is '登记单元名称';
+            comment on column ZRZY_DJDY.DJDYLX
+                is '登记单元类型';
+            comment on column ZRZY_DJDY.ZL
+                is '坐落';
+            comment on column ZRZY_DJDY.DJDYZMJ
+                is '登记单元总面积';
+            comment on column ZRZY_DJDY.GYMJ
+                is '国有面积';
+            comment on column ZRZY_DJDY.JTMJ
+                is '集体面积';
+            comment on column ZRZY_DJDY.ZYQMJ
+                is '争议区面积';
+            comment on column ZRZY_DJDY.DYSZD
+                is '单元四至东';
+            comment on column ZRZY_DJDY.DYSZN
+                is '单元四至南';
+            comment on column ZRZY_DJDY.DYSZX
+                is '单元四至西';
+            comment on column ZRZY_DJDY.DYSZB
+                is '单元四至北';
+            comment on column ZRZY_DJDY.SYQZT
+                is '所有权主体';
+            comment on column ZRZY_DJDY.DBXSZT
+                is '代表行使主体';
+            comment on column ZRZY_DJDY.QLXSFS
+                is '权利行使方式';
+            comment on column ZRZY_DJDY.DLXSZT
+                is '代理行使主体';
+            comment on column ZRZY_DJDY.XSNR
+                is '行使内容';
+            comment on column ZRZY_DJDY.DYNZRZYZMJ
+                is '单元内自然资源总面积';
+            comment on column ZRZY_DJDY.SZYMJ
+                is '水流面积';
+            comment on column ZRZY_DJDY.SDMJ
+                is '湿地面积';
+            comment on column ZRZY_DJDY.CYMJ
+                is '草原面积';
+            comment on column ZRZY_DJDY.SLMJ
+                is '森林面积';
+            comment on column ZRZY_DJDY.HDMJ
+                is '荒地面积';
+            comment on column ZRZY_DJDY.QTMJ
+                is '其他面积';
+            comment on column ZRZY_DJDY.FZRZYZMJ
+                is '非自然资源总面积';
+            comment on column ZRZY_DJDY.FJ
+                is '附记';
+            alter table ZRZY_DJDY
+                add constraint PK_ZRZY_DJDY primary key (XMID)
+                    using index
+                        pctfree 10
+                        initrans 2
+                        maxtrans 255
+                        storage
+                        (
+                        initial 256 K
+                        next 32 K
+                        minextents 1
+                        maxextents unlimited
+                        );
+
+            create table ZRZY_SZY
+            (
+                ZKXXID    VARCHAR2(32) not null,
+                XMID      VARCHAR2(32) not null,
+                ZRZYDJDYH VARCHAR2(15),
+                SZYLX     VARCHAR2(2),
+                MC        VARCHAR2(200),
+                BHTBSL    VARCHAR2(15),
+                HLQQD     VARCHAR2(200),
+                HLCD      NUMBER(15, 2),
+                GYMJ      NUMBER(15, 2),
+                JTMJ      NUMBER(15, 2),
+                ZYQMJ     NUMBER(15, 2),
+                SMMJ      NUMBER(15, 2),
+                HDDJ      VARCHAR2(100),
+                DNPJJLL   VARCHAR2(10),
+                SZ        VARCHAR2(100),
+                NCXSL     VARCHAR2(10)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255
+                storage
+            (
+                initial 4M
+                next 32K
+                minextents 1
+                maxextents unlimited
+            );
+
+            COMMENT ON TABLE ZRZY_SZY is '自然资源水流';
+            comment on column ZRZY_SZY.ZKXXID
+                is '自然状况信息ID';
+            comment on column ZRZY_SZY.XMID
+                is '项目ID';
+            comment on column ZRZY_SZY.ZRZYDJDYH
+                is '自然资源登记单元号';
+            comment on column ZRZY_SZY.SZYLX
+                is '水流类型';
+            comment on column ZRZY_SZY.MC
+                is '名称';
+            comment on column ZRZY_SZY.BHTBSL
+                is '包含图斑数量';
+            comment on column ZRZY_SZY.HLQQD
+                is '河流起讫点';
+            comment on column ZRZY_SZY.HLCD
+                is '河流长度';
+            comment on column ZRZY_SZY.GYMJ
+                is '国有面积';
+            comment on column ZRZY_SZY.JTMJ
+                is '集体面积';
+            comment on column ZRZY_SZY.ZYQMJ
+                is '争议区面积';
+            comment on column ZRZY_SZY.SMMJ
+                is '水面面积';
+            comment on column ZRZY_SZY.HDDJ
+                is '河道等级';
+            comment on column ZRZY_SZY.DNPJJLL
+                is '多年平均径流量';
+            comment on column ZRZY_SZY.SZ
+                is '水质';
+            comment on column ZRZY_SZY.NCXSL
+                is '年初蓄水量';
+
+            alter table ZRZY_SZY
+                add constraint PK_ZRZY_SZY primary key (ZKXXID)
+                    using index
+                        pctfree 10
+                        initrans 2
+                        maxtrans 255
+                        storage
+                        (
+                        initial 256 K
+                        next 32 K
+                        minextents 1
+                        maxextents unlimited
+                        );
+
+            create table ZRZY_SD
+            (
+                ZKXXID        VARCHAR2(32) not null,
+                XMID          VARCHAR2(32) not null,
+                ZRZYDJDYH     VARCHAR2(15),
+                SDLX          VARCHAR2(2),
+                BHTBSL        VARCHAR2(15),
+                GYMJ          NUMBER(15, 2),
+                JTMJ          NUMBER(15, 2),
+                ZYQMJ         NUMBER(15, 2),
+                ZMJ           NUMBER(15, 2),
+                ZBLX          VARCHAR2(10),
+                ZBMJ          NUMBER(15, 2),
+                ZYYSZWZ       VARCHAR2(100),
+                GJZDBHDZYSDNL VARCHAR2(100),
+                SZLB          VARCHAR2(10),
+                SYBJZK        VARCHAR2(10)
+            )
+                tablespace ZRZY
+                pctfree 10
+                initrans 1
+                maxtrans 255
+                storage
+            (
+                initial 4M
+                next 32K
+                minextents 1
+                maxextents unlimited
+            );
+
+            COMMENT ON TABLE ZRZY_SD is '自然资源湿地';
+            comment on column ZRZY_SD.ZKXXID
+                is '自然状况信息ID';
+            comment on column ZRZY_SD.XMID
+                is '项目ID';
+            comment on column ZRZY_SD.ZRZYDJDYH
+                is '自然资源单元号';
+            comment on column ZRZY_SD.SDLX
+                is '湿地类型';
+            comment on column ZRZY_SD.BHTBSL
+                is '包含图斑数量';
+            comment on column ZRZY_SD.GYMJ
+                is '国有面积';
+            comment on column ZRZY_SD.JTMJ
+                is '集体面积';
+            comment on column ZRZY_SD.ZYQMJ
+                is '争议区面积';
+            comment on column ZRZY_SD.ZMJ
+                is '总面积';
+            comment on column ZRZY_SD.ZBLX
+                is '植被类型';
+            comment on column ZRZY_SD.ZBMJ
+                is '植被面积';
+            comment on column ZRZY_SD.ZYYSZWZ
+                is '主要优势植物种';
+            comment on column ZRZY_SD.GJZDBHDZYSDNL
+                is '国家重点保护的主要湿地鸟类';
+            comment on column ZRZY_SD.SZLB
+                is '水质类别';
+            comment on column ZRZY_SD.SYBJZK
+                is '水源补给状况';
+
+            alter table ZRZY_SD
+                add constraint PK_ZRZY_SD primary key (ZKXXID)
+                    using index
+                        pctfree 10
+                        initrans 2
+                        maxtrans 255
+                        storage
+                        (
+                        initial 256 K
+                        next 32 K
+                        minextents 1
+                        maxextents unlimited
+                        );
+
+            create table ZRZY_SL
+            (
+                ZKXXID    VARCHAR2(32) not null,
+                XMID      VARCHAR2(32) not null,
+                ZRZYDJDYH VARCHAR2(15),
+                SLLX      VARCHAR2(10),
+                BHTBSL    VARCHAR2(15),
+                GYMJ      NUMBER(15, 2),
+                JTMJ      NUMBER(15, 2),
+                ZYQMJ     NUMBER(15, 2),
+                MJ        NUMBER(15, 2),
+                ZDGN      VARCHAR2(100),
+                ZYSZ      VARCHAR2(100),
+                LZ        VARCHAR2(100),
+                ZXJL      VARCHAR2(100)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255
+                storage
+            (
+                initial 4M
+                next 32K
+                minextents 1
+                maxextents unlimited
+            );
+
+            COMMENT ON TABLE ZRZY_SL is '自然资源森林';
+            comment on column ZRZY_SL.ZKXXID
+                is '自然状况信息ID';
+            comment on column ZRZY_SL.XMID
+                is '项目ID';
+            comment on column ZRZY_SL.ZRZYDJDYH
+                is '自然资源单元号';
+            comment on column ZRZY_SL.SLLX
+                is '森林类型';
+            comment on column ZRZY_SL.BHTBSL
+                is '包含图斑数量';
+            comment on column ZRZY_SL.GYMJ
+                is '国有面积';
+            comment on column ZRZY_SL.JTMJ
+                is '集体面积';
+            comment on column ZRZY_SL.ZYQMJ
+                is '争议区面积';
+            comment on column ZRZY_SL.MJ
+                is '面积';
+            comment on column ZRZY_SL.ZDGN
+                is '主导功能';
+            comment on column ZRZY_SL.ZYSZ
+                is '主要树种';
+            comment on column ZRZY_SL.LZ
+                is '林种';
+            comment on column ZRZY_SL.ZXJL
+                is '总蓄积量';
+
+            alter table ZRZY_SL
+                add constraint PK_ZRZY_SL primary key (ZKXXID)
+                    using index
+                        pctfree 10
+                        initrans 2
+                        maxtrans 255
+                        storage
+                        (
+                        initial 256 K
+                        next 32 K
+                        minextents 1
+                        maxextents unlimited
+                        );
+
+            create table ZRZY_CY
+            (
+                ZKXXID    VARCHAR2(32) not null,
+                XMID      VARCHAR2(32) not null,
+                ZRZYDJDYH VARCHAR2(15),
+                CDLX      VARCHAR2(2),
+                BHTBSL    VARCHAR2(15),
+                GYMJ      NUMBER(15, 2),
+                JTMJ      NUMBER(15, 2),
+                ZYQMJ     NUMBER(15, 2),
+                MJ        NUMBER(15, 2),
+                CYLX      VARCHAR2(100),
+                CYZLDJ    VARCHAR2(100)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255
+                storage
+            (
+                initial 4M
+                next 8K
+                minextents 1
+                maxextents unlimited
+            );
+
+            COMMENT ON TABLE ZRZY_CY is '自然资源草原';
+            comment on column ZRZY_CY.ZKXXID
+                is '自然状况信息ID';
+            comment on column ZRZY_CY.XMID
+                is '项目ID';
+            comment on column ZRZY_CY.ZRZYDJDYH
+                is '自然资源单元号';
+            comment on column ZRZY_CY.CDLX
+                is '草地类型';
+            comment on column ZRZY_CY.BHTBSL
+                is '包含图斑数量';
+            comment on column ZRZY_CY.GYMJ
+                is '国有面积';
+            comment on column ZRZY_CY.JTMJ
+                is '集体面积';
+            comment on column ZRZY_CY.ZYQMJ
+                is '争议区面积';
+            comment on column ZRZY_CY.MJ
+                is '面积';
+            comment on column ZRZY_CY.CYLX
+                is '草原类型';
+            comment on column ZRZY_CY.CYZLDJ
+                is '草原质量等级';
+
+            alter table ZRZY_CY
+                add constraint PK_ZRZY_CY primary key (ZKXXID)
+                    using index
+                        pctfree 10
+                        initrans 2
+                        maxtrans 255
+                        storage
+                        (
+                        initial 256 K
+                        next 32 K
+                        minextents 1
+                        maxextents unlimited
+                        );
+
+            create table ZRZY_HD
+            (
+                ZKXXID    VARCHAR2(32) not null,
+                XMID      VARCHAR2(32) not null,
+                ZRZYDJDYH VARCHAR2(15),
+                HDLX      VARCHAR2(2),
+                BHTBSL    VARCHAR2(15),
+                GYMJ      NUMBER(15, 2),
+                JTMJ      NUMBER(15, 2),
+                ZYQMJ     NUMBER(15, 2),
+                MJ        NUMBER(15, 2)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255
+                storage
+            (
+                initial 4M
+                next 32K
+                minextents 1
+                maxextents unlimited
+            );
+
+            COMMENT ON TABLE ZRZY_HD is '自然资源荒地';
+            comment on column ZRZY_HD.ZKXXID
+                is '自然状况信息ID';
+            comment on column ZRZY_HD.XMID
+                is '项目ID';
+            comment on column ZRZY_HD.ZRZYDJDYH
+                is '自然资源单元号';
+            comment on column ZRZY_HD.HDLX
+                is '荒地类型';
+            comment on column ZRZY_HD.BHTBSL
+                is '包含图斑数量';
+            comment on column ZRZY_HD.GYMJ
+                is '国有面积';
+            comment on column ZRZY_HD.JTMJ
+                is '集体面积';
+            comment on column ZRZY_HD.ZYQMJ
+                is '争议区面积';
+            comment on column ZRZY_HD.MJ
+                is '面积';
+
+            alter table ZRZY_HD
+                add constraint PK_ZRZY_HD primary key (ZKXXID)
+                    using index
+                        pctfree 10
+                        initrans 2
+                        maxtrans 255
+                        storage
+                        (
+                        initial 256 K
+                        next 32 K
+                        minextents 1
+                        maxextents unlimited
+                        );
+
+
+            create table ZRZY_HY
+            (
+                ZKXXID     VARCHAR2(32) not null,
+                XMID       VARCHAR2(32) not null,
+                ZRZYDJDYH  VARCHAR2(15),
+                GYMJ       NUMBER(15, 2),
+                JTMJ       NUMBER(15, 2),
+                ZYQMJ      NUMBER(15, 2),
+                HYMJ       NUMBER(15, 2),
+                HYDB       VARCHAR2(2),
+                DLHAXCD    NUMBER(15, 2),
+                YJMHDHAXCD NUMBER(15, 2),
+                QXDM       VARCHAR2(6)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255
+                storage
+            (
+                initial 4M
+                next 8K
+                minextents 1
+                maxextents unlimited
+            );
+
+            COMMENT ON TABLE ZRZY_HY is '自然资源海域';
+            comment on column ZRZY_HY.ZKXXID
+                is '自然状况信息ID';
+            comment on column ZRZY_HY.XMID
+                is '项目ID';
+            comment on column ZRZY_HY.ZRZYDJDYH
+                is '自然资源单元号';
+            comment on column ZRZY_HY.GYMJ
+                is '国有面积';
+            comment on column ZRZY_HY.JTMJ
+                is '集体面积';
+            comment on column ZRZY_HY.ZYQMJ
+                is '争议区面积';
+            comment on column ZRZY_HY.HYMJ
+                is '海域面积';
+            comment on column ZRZY_HY.HYDB
+                is '海域等别';
+            comment on column ZRZY_HY.DLHAXCD
+                is '大陆海岸线长度';
+            comment on column ZRZY_HY.YJMHDHAXCD
+                is '有居民海岛海岸线长度';
+            comment on column ZRZY_HY.QXDM
+                is '区县代码';
+
+            alter table ZRZY_HY
+                add constraint PK_ZRZY_HY primary key (ZKXXID)
+                    using index
+                        pctfree 10
+                        initrans 2
+                        maxtrans 255
+                        storage
+                        (
+                        initial 256 K
+                        next 32 K
+                        minextents 1
+                        maxextents unlimited
+                        );
+
+            create table ZRZY_WJMHD
+            (
+                ZKXXID    VARCHAR2(32) not null,
+                XMID      VARCHAR2(32) not null,
+                ZRZYDJDYH VARCHAR2(15),
+                HDMC      VARCHAR2(100),
+                HDWZ      VARCHAR2(200),
+                GYMJ      NUMBER(15, 2),
+                JTMJ      NUMBER(15, 2),
+                ZYQMJ     NUMBER(15, 2),
+                HDMJ      NUMBER(15, 2),
+                HDLX      VARCHAR2(2),
+                HDGC      VARCHAR2(50),
+                ZBFGQK    VARCHAR2(50),
+                AXCD      NUMBER(15, 2),
+                QXDM      VARCHAR2(6)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255
+                storage
+            (
+                initial 4M
+                next 8K
+                minextents 1
+                maxextents unlimited
+            );
+
+            COMMENT ON TABLE ZRZY_WJMHD is '自然资源无居民海岛';
+            comment on column ZRZY_WJMHD.ZKXXID
+                is '自然状况信息ID';
+            comment on column ZRZY_WJMHD.XMID
+                is '项目ID';
+            comment on column ZRZY_WJMHD.ZRZYDJDYH
+                is '自然资源单元号';
+            comment on column ZRZY_WJMHD.HDMC
+                is '海岛名称';
+            comment on column ZRZY_WJMHD.HDWZ
+                is '海岛位置';
+            comment on column ZRZY_WJMHD.GYMJ
+                is '国有面积';
+            comment on column ZRZY_WJMHD.JTMJ
+                is '集体面积';
+            comment on column ZRZY_WJMHD.ZYQMJ
+                is '争议区面积';
+            comment on column ZRZY_WJMHD.HDMJ
+                is '海岛面积';
+            comment on column ZRZY_WJMHD.HDLX
+                is '海岛类型';
+            comment on column ZRZY_WJMHD.HDGC
+                is '海岛高程';
+            comment on column ZRZY_WJMHD.ZBFGQK
+                is '植被覆盖情况';
+            comment on column ZRZY_WJMHD.AXCD
+                is '岸线长度';
+            comment on column ZRZY_WJMHD.QXDM
+                is '区县代码';
+
+            alter table ZRZY_WJMHD
+                add constraint PK_ZRZY_WJMHD primary key (ZKXXID)
+                    using index
+                        pctfree 10
+                        initrans 2
+                        maxtrans 255
+                        storage
+                        (
+                        initial 256 K
+                        next 32 K
+                        minextents 1
+                        maxextents unlimited
+                        );
+
+            create table ZRZY_TMCLKCZY
+            (
+                ZKXXID    VARCHAR2(32) not null,
+                XMID      VARCHAR2(32) not null,
+                ZRZYDJDYH VARCHAR2(15),
+                ZRLX      VARCHAR2(30),
+                QKBH      VARCHAR2(9),
+                KQDZ      VARCHAR2(200),
+                CLGSJZR   DATE,
+                GYMJ      NUMBER(15, 2),
+                JTMJ      NUMBER(15, 2),
+                ZYQMJ     NUMBER(15, 2),
+                KQYQTZMJ  NUMBER(15, 2),
+                CLGSFWMJ  NUMBER(15, 2),
+                KCZH      VARCHAR2(2),
+                CLJLDW    VARCHAR2(2),
+                GTKCTDZYL NUMBER(15, 2),
+                GTKCKZZYL NUMBER(15, 2),
+                GTKCTMZYL NUMBER(15, 2),
+                YQTMDZCL  NUMBER(15, 2),
+                ZYZFPJPW  NUMBER(15, 2)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255
+                storage
+            (
+                initial 4M
+                next 32K
+                minextents 1
+                maxextents unlimited
+            );
+
+            COMMENT ON TABLE ZRZY_TMCLKCZY is '自然资源探明储量矿产资源';
+            comment on column ZRZY_TMCLKCZY.ZKXXID
+                is '自然状况信息ID';
+            comment on column ZRZY_TMCLKCZY.XMID
+                is '项目ID';
+            comment on column ZRZY_TMCLKCZY.ZRZYDJDYH
+                is '自然资源单元号';
+            comment on column ZRZY_TMCLKCZY.ZRLX
+                is '资源类型';
+            comment on column ZRZY_TMCLKCZY.QKBH
+                is '区块编号';
+            comment on column ZRZY_TMCLKCZY.KQDZ
+                is '矿区地址';
+            comment on column ZRZY_TMCLKCZY.CLGSJZR
+                is '储量估算基准日';
+            comment on column ZRZY_TMCLKCZY.GYMJ
+                is '国有面积';
+            comment on column ZRZY_TMCLKCZY.JTMJ
+                is '集体面积';
+            comment on column ZRZY_TMCLKCZY.ZYQMJ
+                is '争议区面积';
+            comment on column ZRZY_TMCLKCZY.KQYQTZMJ
+                is '矿区油气田总面积';
+            comment on column ZRZY_TMCLKCZY.CLGSFWMJ
+                is '储量估算范围面积';
+            comment on column ZRZY_TMCLKCZY.KCZH
+                is '矿产组合';
+            comment on column ZRZY_TMCLKCZY.CLJLDW
+                is '储量计量单位';
+            comment on column ZRZY_TMCLKCZY.GTKCTDZYL
+                is '固体矿产推断资源量';
+            comment on column ZRZY_TMCLKCZY.GTKCKZZYL
+                is '固体矿产控制资源量';
+            comment on column ZRZY_TMCLKCZY.GTKCTMZYL
+                is '固体矿产探明资源量';
+            comment on column ZRZY_TMCLKCZY.YQTMDZCL
+                is '油气探明地质储量';
+            comment on column ZRZY_TMCLKCZY.ZYZFPJPW
+                is '主要组分平均品位';
+
+            alter table ZRZY_TMCLKCZY
+                add constraint PK_ZRZY_TMCLKCZY primary key (ZKXXID)
+                    using index
+                        pctfree 10
+                        initrans 2
+                        maxtrans 255
+                        storage
+                        (
+                        initial 256 K
+                        next 32 K
+                        minextents 1
+                        maxextents unlimited
+                        );
+
+            create table ZRZY_GGGZGLXX
+            (
+                GLXXID    VARCHAR2(32) not null,
+                XMID      VARCHAR2(32) not null,
+                ZRZYDJDYH VARCHAR2(15),
+                GGGZYSLX  VARCHAR2(2),
+                GGGZFQBSM VARCHAR2(10),
+                QKBH      VARCHAR2(50),
+                MJ        NUMBER(15, 2),
+                GGGZNR    VARCHAR2(200),
+                GDSDSJ    DATE,
+                SZDW      VARCHAR2(200),
+                BZ        VARCHAR2(2000)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255
+                storage
+            (
+                initial 4M
+                next 32K
+                minextents 1
+                maxextents unlimited
+            );
+
+            COMMENT ON TABLE ZRZY_GGGZGLXX is '自然资源公共管制关联信息';
+            comment on column ZRZY_GGGZGLXX.GLXXID
+                is '关联信息ID';
+            comment on column ZRZY_GGGZGLXX.XMID
+                is '项目ID';
+            comment on column ZRZY_GGGZGLXX.ZRZYDJDYH
+                is '自然资源登记单元号';
+            comment on column ZRZY_GGGZGLXX.GGGZYSLX
+                is '公共管制要素类型';
+            comment on column ZRZY_GGGZGLXX.GGGZFQBSM
+                is '公共管制分区标识码';
+            comment on column ZRZY_GGGZGLXX.QKBH
+                is '区块编号';
+            comment on column ZRZY_GGGZGLXX.MJ
+                is '面积';
+            comment on column ZRZY_GGGZGLXX.GGGZNR
+                is '公共管制内容';
+            comment on column ZRZY_GGGZGLXX.GDSDSJ
+                is '划定设定时间';
+            comment on column ZRZY_GGGZGLXX.SZDW
+                is '设置单位';
+            comment on column ZRZY_GGGZGLXX.BZ
+                is '备注';
+
+            alter table ZRZY_GGGZGLXX
+                add constraint PK_ZRZY_GGGZGLXX primary key (GLXXID)
+                    using index
+                        pctfree 10
+                        initrans 2
+                        maxtrans 255
+                        storage
+                        (
+                        initial 256 K
+                        next 32 K
+                        minextents 1
+                        maxextents unlimited
+                        );
+
+            create table ZRZY_BDCQLGLXX
+            (
+                GLXXID    VARCHAR2(32) not null,
+                XMID      VARCHAR2(32) not null,
+                ZRZYDJDYH VARCHAR2(15),
+                BDCDYH    VARCHAR2(28),
+                QLLX      NUMBER(2),
+                QLR       VARCHAR2(500),
+                MJ        NUMBER(15, 2),
+                DJJG      VARCHAR2(200),
+                DJSJ      DATE,
+                QXDM      VARCHAR2(6)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255
+                storage
+            (
+                initial 4M
+                next 8K
+                minextents 1
+                maxextents unlimited
+            );
+
+            COMMENT ON TABLE ZRZY_BDCQLGLXX is '自然资源不动产权利关联信息';
+            comment on column ZRZY_BDCQLGLXX.GLXXID
+                is '关联信息ID';
+            comment on column ZRZY_BDCQLGLXX.XMID
+                is '项目ID';
+            comment on column ZRZY_BDCQLGLXX.ZRZYDJDYH
+                is '自然资源登记单元号';
+            comment on column ZRZY_BDCQLGLXX.BDCDYH
+                is '不动产单元号';
+            comment on column ZRZY_BDCQLGLXX.QLLX
+                is '权利类型';
+            comment on column ZRZY_BDCQLGLXX.QLR
+                is '权利人';
+            comment on column ZRZY_BDCQLGLXX.MJ
+                is '面积';
+            comment on column ZRZY_BDCQLGLXX.DJJG
+                is '登记机构';
+            comment on column ZRZY_BDCQLGLXX.DJSJ
+                is '登记时间';
+            comment on column ZRZY_BDCQLGLXX.QXDM
+                is '区县代码';
+
+            alter table ZRZY_BDCQLGLXX
+                add constraint PK_ZRZY_BDCQLGLXX primary key (GLXXID)
+                    using index
+                        pctfree 10
+                        initrans 2
+                        maxtrans 255
+                        storage
+                        (
+                        initial 256 K
+                        next 32 K
+                        minextents 1
+                        maxextents unlimited
+                        );
+
+            create table ZRZY_KYQGLXX
+            (
+                GLXXID    VARCHAR2(32) not null,
+                XMID      VARCHAR2(32) not null,
+                ZRZYDJDYH VARCHAR2(15),
+                XKZLX     VARCHAR2(15),
+                KCCKXKZH  VARCHAR2(100),
+                QLLX      NUMBER(2),
+                KCKQMJ    NUMBER(15, 2),
+                KZ        VARCHAR2(50),
+                YXQX      VARCHAR2(50),
+                TKCKQR    VARCHAR2(200),
+                DZ        VARCHAR2(500),
+                FZJG      VARCHAR2(50),
+                QXDM      VARCHAR2(6)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255
+                storage
+            (
+                initial 4M
+                next 8K
+                minextents 1
+                maxextents unlimited
+            );
+
+            COMMENT ON TABLE ZRZY_KYQGLXX is '自然资源矿业权关联信息';
+            comment on column ZRZY_KYQGLXX.GLXXID
+                is '关联信息ID';
+            comment on column ZRZY_KYQGLXX.XMID
+                is '项目ID';
+            comment on column ZRZY_KYQGLXX.ZRZYDJDYH
+                is '自然资源登记单元号';
+            comment on column ZRZY_KYQGLXX.XKZLX
+                is '许可证类型';
+            comment on column ZRZY_KYQGLXX.KCCKXKZH
+                is '勘查采矿许可证号';
+            comment on column ZRZY_KYQGLXX.QLLX
+                is '权利类型';
+            comment on column ZRZY_KYQGLXX.KCKQMJ
+                is '勘查矿区面积';
+            comment on column ZRZY_KYQGLXX.KZ
+                is '矿种';
+            comment on column ZRZY_KYQGLXX.YXQX
+                is '有效期限';
+            comment on column ZRZY_KYQGLXX.TKCKQR
+                is '探矿采矿权人';
+            comment on column ZRZY_KYQGLXX.DZ
+                is '地址';
+            comment on column ZRZY_KYQGLXX.FZJG
+                is '发证机关';
+            comment on column ZRZY_KYQGLXX.QXDM
+                is '区县代码';
+
+            alter table ZRZY_KYQGLXX
+                add constraint PK_ZRZY_KYQGLXX primary key (GLXXID)
+                    using index
+                        pctfree 10
+                        initrans 2
+                        maxtrans 255
+                        storage
+                        (
+                        initial 256 K
+                        next 32 K
+                        minextents 1
+                        maxextents unlimited
+                        );
+
+            create table ZRZY_QSQGLXX
+            (
+                GLXXID    VARCHAR2(32) not null,
+                XMID      VARCHAR2(32) not null,
+                ZRZYDJDYH VARCHAR2(15),
+                QSXKZH    VARCHAR2(100),
+                QSQR      VARCHAR2(50),
+                QSDD      VARCHAR2(200),
+                QSL       NUMBER(15, 3),
+                QSQYXQX   VARCHAR2(50),
+                SPJG      VARCHAR2(50),
+                QXDM      VARCHAR2(6)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255
+                storage
+            (
+                initial 4M
+                next 32K
+                minextents 1
+                maxextents unlimited
+            );
+
+            COMMENT ON TABLE ZRZY_QSQGLXX is '自然资源取水权关联信息';
+            comment on column ZRZY_QSQGLXX.GLXXID
+                is '关联信息ID';
+            comment on column ZRZY_QSQGLXX.XMID
+                is '项目ID';
+            comment on column ZRZY_QSQGLXX.ZRZYDJDYH
+                is '自然资源登记单元号';
+            comment on column ZRZY_QSQGLXX.QSXKZH
+                is '取水许可证号';
+            comment on column ZRZY_QSQGLXX.QSQR
+                is '取水权人';
+            comment on column ZRZY_QSQGLXX.QSDD
+                is '取水地点';
+            comment on column ZRZY_QSQGLXX.QSL
+                is '取水量';
+            comment on column ZRZY_QSQGLXX.QSQYXQX
+                is '取水权有效期限';
+            comment on column ZRZY_QSQGLXX.SPJG
+                is '审批机关';
+            comment on column ZRZY_QSQGLXX.QXDM
+                is '区县代码';
+
+            alter table ZRZY_QSQGLXX
+                add constraint PK_ZRZY_QSQGLXX primary key (GLXXID)
+                    using index
+                        pctfree 10
+                        initrans 2
+                        maxtrans 255
+                        storage
+                        (
+                        initial 256 K
+                        next 32 K
+                        minextents 1
+                        maxextents unlimited
+                        );
+
+            create table ZRZY_PWQGLXX
+            (
+                GLXXID    VARCHAR2(32) not null,
+                XMID      VARCHAR2(32) not null,
+                ZRZYDJDYH VARCHAR2(15),
+                PWXKZH    VARCHAR2(100),
+                DWMC      VARCHAR2(50),
+                WRWZL     VARCHAR2(100),
+                PFNDXZ    VARCHAR2(100),
+                PWQYXQX   VARCHAR2(50),
+                FZJG      VARCHAR2(50),
+                QXDM      VARCHAR2(6)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255
+                storage
+            (
+                initial 4M
+                next 32K
+                minextents 1
+                maxextents unlimited
+            );
+
+            COMMENT ON TABLE ZRZY_PWQGLXX is '自然资源排污权关联信息';
+            comment on column ZRZY_PWQGLXX.GLXXID
+                is '关联信息ID';
+            comment on column ZRZY_PWQGLXX.XMID
+                is '项目ID';
+            comment on column ZRZY_PWQGLXX.ZRZYDJDYH
+                is '自然资源登记单元号';
+            comment on column ZRZY_PWQGLXX.PWXKZH
+                is '排污许可证号';
+            comment on column ZRZY_PWQGLXX.DWMC
+                is '单位名称';
+            comment on column ZRZY_PWQGLXX.WRWZL
+                is '污染物种类';
+            comment on column ZRZY_PWQGLXX.PFNDXZ
+                is '排放浓度限值';
+            comment on column ZRZY_PWQGLXX.PWQYXQX
+                is '排污权有效期限';
+            comment on column ZRZY_PWQGLXX.FZJG
+                is '发证机关';
+            comment on column ZRZY_PWQGLXX.QXDM
+                is '区县代码';
+
+            alter table ZRZY_PWQGLXX
+                add constraint PK_ZRZY_PWQGLXX primary key (GLXXID)
+                    using index
+                        pctfree 10
+                        initrans 2
+                        maxtrans 255
+                        storage
+                        (
+                        initial 256 K
+                        next 32 K
+                        minextents 1
+                        maxextents unlimited
+                        );
+
+            create table ZRZY_SHXX
+            (
+                SHXXID VARCHAR2(32) not null,
+                XMID   VARCHAR2(32) not null,
+                JDMC   VARCHAR2(50),
+                SXH    NUMBER(4),
+                SHRYXM VARCHAR2(50),
+                SHRID  VARCHAR2(32),
+                SHKSSJ DATE,
+                SHJSSJ DATE,
+                SHYJ   VARCHAR2(2000),
+                QMSJ   DATE,
+                QMID   VARCHAR2(32),
+                CZJG   NUMBER(1),
+                BZ     VARCHAR2(4000)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255
+                storage
+            (
+                initial 4M
+                next 32K
+                minextents 1
+                maxextents unlimited
+            );
+            COMMENT ON TABLE ZRZY_SHXX is '自然资源审核信息';
+            comment on column ZRZY_SHXX.SHXXID
+                is '审核信息ID';
+            comment on column ZRZY_SHXX.XMID
+                is '项目ID';
+            comment on column ZRZY_SHXX.JDMC
+                is '节点名称';
+            comment on column ZRZY_SHXX.SXH
+                is '顺序号';
+            comment on column ZRZY_SHXX.SHRYXM
+                is '审核人员姓名';
+            comment on column ZRZY_SHXX.SHRID
+                is '审核人ID';
+            comment on column ZRZY_SHXX.SHKSSJ
+                is '审核开始时间';
+            comment on column ZRZY_SHXX.SHJSSJ
+                is '审核结束时间';
+            comment on column ZRZY_SHXX.SHYJ
+                is '审核意见';
+            comment on column ZRZY_SHXX.QMSJ
+                is '签名时间';
+            comment on column ZRZY_SHXX.QMID
+                is '签名ID';
+            comment on column ZRZY_SHXX.CZJG
+                is '操作结果';
+            comment on column ZRZY_SHXX.BZ
+                is '备注';
+
+            alter table ZRZY_SHXX
+                add constraint PK_ZRZY_SHXX primary key (SHXXID)
+                    using index
+                        pctfree 10
+                        initrans 2
+                        maxtrans 255
+                        storage
+                        (
+                        initial 256 K
+                        next 32 K
+                        minextents 1
+                        maxextents unlimited
+                        );
+
+            create table ZRZY_ZS
+            (
+                ZSID       VARCHAR2(32) not null,
+                XMID       VARCHAR2(32) not null,
+                ZRZYCQZH   VARCHAR2(300),
+                ZHLSH      VARCHAR2(10),
+                ZHXLH      INT,
+                NF         NUMBER(4),
+                QZYSXLH    VARCHAR2(100),
+                ZRZYZK     VARCHAR2(4000),
+                FJ         VARCHAR2(4000),
+                SQSJC      VARCHAR2(4),
+                SZQXQC     VARCHAR2(100),
+                FZR        VARCHAR2(100),
+                FZRID      VARCHAR2(32),
+                FZSJ       DATE,
+                SZR        VARCHAR2(100),
+                SZRID      VARCHAR2(32),
+                SZSJ       DATE,
+                EWMNR      VARCHAR2(200),
+                ZRZYCQZHJC VARCHAR2(100),
+                ZRZYDJDYH  VARCHAR2(15),
+                DJDYMC     VARCHAR2(100),
+                DJDYLX     VARCHAR2(100),
+                KJFW       VARCHAR2(1000),
+                SYQZT      VARCHAR2(200),
+                DBXSZT     VARCHAR2(100),
+                QLXSFS     VARCHAR2(10),
+                DLXSZT     VARCHAR2(200),
+                XSNR       VARCHAR2(200),
+                MJ         NUMBER(15, 2),
+                GYMJ       NUMBER(15, 2),
+                JTMJ       NUMBER(15, 2),
+                ZYQMJ      NUMBER(15, 2)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255
+                storage
+            (
+                initial 448K
+                next 32K
+                minextents 1
+                maxextents unlimited
+            );
+
+            COMMENT ON TABLE ZRZY_ZS is '自然资源证书';
+            comment on column ZRZY_ZS.ZSID
+                is '证书ID';
+            comment on column ZRZY_ZS.XMID
+                is '项目ID';
+            comment on column ZRZY_ZS.ZRZYCQZH
+                is '自然资源产权证号';
+            comment on column ZRZY_ZS.ZHLSH
+                is '证号流水号';
+            comment on column ZRZY_ZS.ZHXLH
+                is '证号序列号';
+            comment on column ZRZY_ZS.NF
+                is '年份';
+            comment on column ZRZY_ZS.QZYSXLH
+                is '权证印刷序列号';
+            comment on column ZRZY_ZS.ZRZYZK
+                is '自然资源状况';
+            comment on column ZRZY_ZS.FJ
+                is '附记';
+            comment on column ZRZY_ZS.SQSJC
+                is '省区市简称';
+            comment on column ZRZY_ZS.SZQXQC
+                is '所在市县全称';
+            comment on column ZRZY_ZS.FZR
+                is '发证人';
+            comment on column ZRZY_ZS.FZRID
+                is '发证人ID';
+            comment on column ZRZY_ZS.FZSJ
+                is '发证时间';
+            comment on column ZRZY_ZS.SZR
+                is '缮证人';
+            comment on column ZRZY_ZS.SZRID
+                is '缮证人ID';
+            comment on column ZRZY_ZS.SZSJ
+                is '缮证时间';
+            comment on column ZRZY_ZS.EWMNR
+                is '二维码内容';
+            comment on column ZRZY_ZS.ZRZYCQZHJC
+                is '自然资源产权证号简称';
+            comment on column ZRZY_ZS.ZRZYDJDYH
+                is '自然资源单元号';
+            comment on column ZRZY_ZS.DJDYMC
+                is '登记单元名称';
+            comment on column ZRZY_ZS.DJDYLX
+                is '登记单元类型';
+            comment on column ZRZY_ZS.KJFW
+                is '空间范围';
+            comment on column ZRZY_ZS.SYQZT
+                is '所有权主体';
+            comment on column ZRZY_ZS.DBXSZT
+                is '代表行使主体';
+            comment on column ZRZY_ZS.QLXSFS
+                is '权利行使方式';
+            comment on column ZRZY_ZS.DLXSZT
+                is '代理行使主体';
+            comment on column ZRZY_ZS.XSNR
+                is '行使内容';
+            comment on column ZRZY_ZS.MJ
+                is '登记单元总面积';
+            comment on column ZRZY_ZS.GYMJ
+                is '国有面积';
+            comment on column ZRZY_ZS.JTMJ
+                is '集体面积';
+            comment on column ZRZY_ZS.ZYQMJ
+                is '争议区面积';
+
+            alter table ZRZY_ZS
+                add constraint PK_ZRZY_ZS primary key (ZSID)
+                    using index
+                        pctfree 10
+                        initrans 2
+                        maxtrans 255
+                        storage
+                        (
+                        initial 64 K
+                        next 1 M
+                        minextents 1
+                        maxextents unlimited
+                        );
+
+            create table ZRZY_LSH
+            (
+                LSHID VARCHAR2(32) not null,
+                LSH   NUMBER(20)   not null,
+                CJSJ  DATE         not null,
+                YWLX  VARCHAR2(50)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255
+                storage
+            (
+                initial 4M
+                next 32K
+                minextents 1
+                maxextents unlimited
+            );
+
+            COMMENT ON TABLE ZRZY_LSH is '自然资源流水号';
+            comment on column ZRZY_LSH.LSHID
+                is '流水号ID';
+            comment on column ZRZY_LSH.LSH
+                is '流水号';
+            comment on column ZRZY_LSH.CJSJ
+                is '创建时间';
+            comment on column ZRZY_LSH.YWLX
+                is '业务类型';
+
+
+            alter table ZRZY_LSH
+                add constraint PK_ZRZY_LSH primary key (LSHID)
+                    using index
+                        pctfree 10
+                        initrans 2
+                        maxtrans 255
+                        storage
+                        (
+                        initial 256 K
+                        next 32 K
+                        minextents 1
+                        maxextents unlimited
+                        );
+
+
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-10-26-02-natural" author="liaoxiang" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            CREATE TABLE ZRZY_XT_LCPZ
+            (
+                GZLDYID  VARCHAR2(32) NOT NULL,
+                XZTZLX   VARCHAR2(10),
+                XZDJDYLX VARCHAR2(2),
+                DJLX     NUMBER(3),
+                ZXYQL    NUMBER(1),
+                SFSCQL   NUMBER(1),
+                SFSCZS   NUMBER(1),
+                SJLY     VARCHAR2(2),
+                constraint ZRZY_XT_LCPZ_PK primary key (GZLDYID)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255;
+            COMMENT ON TABLE ZRZY_XT_LCPZ is '自然资源流程基本配置表';
+            COMMENT ON COLUMN ZRZY_XT_LCPZ.GZLDYID IS '工作流定义ID';
+            COMMENT ON COLUMN ZRZY_XT_LCPZ.XZTZLX IS '选择台账类型';
+            COMMENT ON COLUMN ZRZY_XT_LCPZ.XZDJDYLX IS '选择登记单元类型';
+            COMMENT ON COLUMN ZRZY_XT_LCPZ.DJLX IS '登记类型';
+            COMMENT ON COLUMN ZRZY_XT_LCPZ.ZXYQL IS '注销原权利';
+            COMMENT ON COLUMN ZRZY_XT_LCPZ.SFSCQL IS '是否生成权利';
+            COMMENT ON COLUMN ZRZY_XT_LCPZ.SFSCZS IS '是否生成证书';
+            COMMENT ON COLUMN ZRZY_XT_LCPZ.SJLY IS '数据来源';
+
+            CREATE TABLE ZRZY_XT_MRYJ
+            (
+                MRYJID  VARCHAR2(32)  NOT NULL,
+                GZLDYID VARCHAR2(32)  NOT NULL,
+                GZLDYMC VARCHAR2(100) NOT NULL,
+                CJRID   VARCHAR2(32),
+                JDMC    VARCHAR2(50)  NOT NULL,
+                YJ      VARCHAR2(500) NOT NULL,
+                YJLX    NUMBER(1)     NOT NULL,
+                SJLX    NUMBER(1),
+                constraint ZRZY_XT_MRYJ_PK primary key (MRYJID)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255;
+            COMMENT ON TABLE ZRZY_XT_MRYJ is '默认意见配置表';
+            COMMENT ON COLUMN ZRZY_XT_MRYJ.MRYJID IS '默认意见ID';
+            COMMENT ON COLUMN ZRZY_XT_MRYJ.GZLDYID IS '工作流定义ID';
+            COMMENT ON COLUMN ZRZY_XT_MRYJ.GZLDYMC IS '工作流定义名称';
+            COMMENT ON COLUMN ZRZY_XT_MRYJ.CJRID IS '创建人ID';
+            COMMENT ON COLUMN ZRZY_XT_MRYJ.JDMC IS '节点名称';
+            COMMENT ON COLUMN ZRZY_XT_MRYJ.YJ IS '意见';
+            COMMENT ON COLUMN ZRZY_XT_MRYJ.YJLX IS '意见类型';
+            COMMENT ON COLUMN ZRZY_XT_MRYJ.SJLX IS '数据类型';
+
+            CREATE TABLE ZRZY_XT_ZRZYZK_FJ_PZ
+            (
+                PZID      VARCHAR2(32) NOT NULL,
+                GZLDYID   VARCHAR2(32) NOT NULL,
+                ZRZYZKMB  VARCHAR2(2000),
+                ZRZYZKSJY VARCHAR2(4000),
+                FJMB      VARCHAR2(2000),
+                FJSJY     VARCHAR2(4000),
+                constraint ZRZY_XT_ZRZYZK_FJ_PZ_PK primary key (PZID)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255;
+            COMMENT ON TABLE ZRZY_XT_ZRZYZK_FJ_PZ is '自然资源状况与附记配置表';
+            COMMENT ON COLUMN ZRZY_XT_ZRZYZK_FJ_PZ.PZID IS '配置ID';
+            COMMENT ON COLUMN ZRZY_XT_ZRZYZK_FJ_PZ.GZLDYID IS '工作流定义ID';
+            COMMENT ON COLUMN ZRZY_XT_ZRZYZK_FJ_PZ.ZRZYZKMB IS '自然资源状况模板';
+            COMMENT ON COLUMN ZRZY_XT_ZRZYZK_FJ_PZ.ZRZYZKSJY IS '自然资源状况数据源';
+            COMMENT ON COLUMN ZRZY_XT_ZRZYZK_FJ_PZ.FJMB IS '附记模板';
+            COMMENT ON COLUMN ZRZY_XT_ZRZYZK_FJ_PZ.FJSJY IS '附记数据源';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2021-11-02-01-natural" author="wangyinghao" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            CREATE TABLE "DTCX_CXTJ"
+            (
+                "TJID"     VARCHAR2(32) NOT NULL ENABLE,
+                "CXID"     VARCHAR2(32) NOT NULL ENABLE,
+                "CXDH"     VARCHAR2(40) NOT NULL ENABLE,
+                "TJZDID"   VARCHAR2(20),
+                "TJZDNAME" VARCHAR2(50),
+                "MRXS"     VARCHAR2(1),
+                "TJTYPE"   VARCHAR2(20),
+                "TJUSAGE"  VARCHAR2(20),
+                "ZDID"     VARCHAR2(30),
+                "ZDDYFS"   VARCHAR2(200),
+                "PRIORITY" NUMBER,
+                "SORTABLE" NUMBER(1, 0),
+                "CANMHCX"  NUMBER(1, 0),
+                "QXDM"     VARCHAR2(100),
+                "MRMHLX"   NUMBER(1, 0),
+                "ZDLY"     NUMBER(1, 0)
+            ) SEGMENT CREATION IMMEDIATE
+                PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+                STORAGE
+            (
+                INITIAL 131072 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+                PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE
+                DEFAULT
+            )
+            ;
+
+
+            CREATE TABLE "DTCX_CXJG"
+            (
+                "JGID"     VARCHAR2(32) NOT NULL ENABLE,
+                "CXID"     VARCHAR2(32) NOT NULL ENABLE,
+                "CXDH"     VARCHAR2(32) NOT NULL ENABLE,
+                "JGZDID"   VARCHAR2(20) NOT NULL ENABLE,
+                "JGZDNAME" VARCHAR2(50) NOT NULL ENABLE,
+                "MRXS"     VARCHAR2(1)  NOT NULL ENABLE,
+                "JGTYPE"   VARCHAR2(20) NOT NULL ENABLE,
+                "ZDID"     VARCHAR2(30),
+                "URL"      VARCHAR2(200),
+                "LK"       VARCHAR2(10),
+                "JS"       VARCHAR2(200),
+                "DQFS"     VARCHAR2(20),
+                "DW"       VARCHAR2(20),
+                "PRIORITY" NUMBER,
+                "QXDM"     VARCHAR2(100),
+                "SORTABLE" NUMBER,
+                "FXKPD"    VARCHAR2(1000),
+                "SLHWZ"    NUMBER(1, 0)
+            ) SEGMENT CREATION IMMEDIATE
+                PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+                STORAGE
+            (
+                INITIAL 131072 NEXT 8192 MINEXTENTS 1 MAXEXTENTS 2147483645
+                PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE
+                DEFAULT
+            )
+            ;
+
+
+            CREATE TABLE "DTCX_CX"
+            (
+                "CXID"    VARCHAR2(32) NOT NULL ENABLE,
+                "CXMC"    VARCHAR2(100),
+                "CXDH"    VARCHAR2(40),
+                "CXSQL"   VARCHAR2(4000),
+                "CJR"     VARCHAR2(20),
+                "CJSJ"    DATE,
+                "BGR"     VARCHAR2(20),
+                "BGSJ"    DATE,
+                "BZ"      VARCHAR2(200),
+                "DQZT"    VARCHAR2(2),
+                "SFYXSC"  VARCHAR2(1),
+                "CXFS"    VARCHAR2(1),
+                "URL"     VARCHAR2(200),
+                "YMGJ"    VARCHAR2(2000),
+                "HGJ"     VARCHAR2(2000),
+                "CANMHCX" NUMBER(1, 0),
+                "JS"      VARCHAR2(4000),
+                "ZDYYMGJ" VARCHAR2(4000),
+                "FXKYS"   VARCHAR2(1000),
+                "SFSC"    VARCHAR2(1),
+                "QXDM"    VARCHAR2(100),
+                "SFJKCX"  VARCHAR2(1),
+                "JKFF"    VARCHAR2(100),
+                "JK"      VARCHAR2(100),
+                "FHZKEY"  VARCHAR2(100),
+                "RZLX"    VARCHAR2(100),
+                "RZMC"    VARCHAR2(100),
+                PRIMARY KEY ("CXID")
+                    USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS
+                        STORAGE (INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+                        PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE
+                        DEFAULT)
+            ) SEGMENT CREATION IMMEDIATE
+                PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+                STORAGE
+            (
+                INITIAL 131072 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+                PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE
+                DEFAULT
+            )
+            ;
+
+
+            CREATE TABLE "BDC_XT_JG"
+            (
+                "JGID"    VARCHAR2(32)  NOT NULL ENABLE,
+                "JGMC"    VARCHAR2(100) NOT NULL ENABLE,
+                "JGZJZL"  NUMBER(2, 0)  NOT NULL ENABLE,
+                "JGZJBH"  VARCHAR2(50)  NOT NULL ENABLE,
+                "BZ"      VARCHAR2(200),
+                "JGLB"    NUMBER(1, 0),
+                "SFAYJS"  NUMBER(1, 0),
+                "FRMC"    VARCHAR2(100),
+                "FRZJZL"  VARCHAR2(20),
+                "FRZJH"   VARCHAR2(500),
+                "FRDH"    VARCHAR2(100),
+                "DLRMC"   VARCHAR2(100),
+                "DLRDH"   VARCHAR2(100),
+                "DLRZJZL" VARCHAR2(20),
+                "DLRZJH"  VARCHAR2(500),
+                "SFJRHLW" NUMBER(1, 0),
+                "SFKY"    NUMBER(1, 0) DEFAULT 1,
+                "WJZXID"  VARCHAR2(32),
+                "SFXYJG"  NUMBER(1, 0),
+                "SFBAJG"  NUMBER(1, 0),
+                CONSTRAINT "PK_BDC_XT_YH" PRIMARY KEY ("JGID")
+                    USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS
+                        STORAGE (INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+                        PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE
+                        DEFAULT)
+
+            ) SEGMENT CREATION IMMEDIATE
+                PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+                STORAGE
+            (
+                INITIAL 131072 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+                PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE
+                DEFAULT
+            )
+            ;
+
+
+            CREATE TABLE "BDC_XT_LSCS"
+            (
+                "CSMC" VARCHAR2(200) NOT NULL ENABLE,
+                "CSZ"  VARCHAR2(32),
+                "SFSC" NUMBER(1, 0)
+            ) SEGMENT CREATION IMMEDIATE
+                PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+                STORAGE
+            (
+                INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+                PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE
+                DEFAULT
+            )
+            ;
+
+            CREATE INDEX "IDX_BDC_XT_LSCS_CSMC" ON "BDC_XT_LSCS" ("CSMC")
+                PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS
+                STORAGE (INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+                PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE
+                DEFAULT)
+            ;
+
+
+            CREATE TABLE "BDC_DYSJ_PZ"
+            (
+                "ID"       VARCHAR2(32)  NOT NULL ENABLE,
+                "DYLX"     VARCHAR2(32)  NOT NULL ENABLE,
+                "CS"       VARCHAR2(200) NOT NULL ENABLE,
+                "DYZD"     CLOB,
+                "DYSJY"    CLOB,
+                "YTMC"     VARCHAR2(200),
+                "SJLY"     VARCHAR2(200),
+                "QQYY"     VARCHAR2(20),
+                "FFWS"     VARCHAR2(20),
+                "FWFS"     VARCHAR2(20),
+                "DBSOURCE" VARCHAR2(10),
+                "PDFPATH"  VARCHAR2(200),
+                "FR3PATH"  VARCHAR2(200),
+                "PZRQ"     DATE
+            ) SEGMENT CREATION IMMEDIATE
+                PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+                STORAGE
+            (
+                INITIAL 262144 NEXT 8192 MINEXTENTS 1 MAXEXTENTS 2147483645
+                PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE
+                DEFAULT
+            )
+                LOB ("DYZD") STORE AS BASICFILE
+            (
+                ENABLE STORAGE IN ROW CHUNK 8192 RETENTION
+                NOCACHE LOGGING
+                STORAGE
+            (
+                INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+                PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE
+                DEFAULT
+            ))
+                LOB ("DYSJY") STORE AS BASICFILE
+            (
+                ENABLE STORAGE IN ROW CHUNK 8192 RETENTION
+                NOCACHE LOGGING
+                STORAGE
+            (
+                INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+                PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE
+                DEFAULT
+            ));
+
+
+            CREATE TABLE "BDC_DYSJ_ZB_PZ"
+            (
+                "ID"       VARCHAR2(32)  NOT NULL ENABLE,
+                "DYZBID"   VARCHAR2(32)  NOT NULL ENABLE,
+                "CS"       VARCHAR2(100) NOT NULL ENABLE,
+                "DYLX"     VARCHAR2(32)  NOT NULL ENABLE,
+                "DYZBSJY"  CLOB,
+                "YTMC"     VARCHAR2(100),
+                "SJLY"     VARCHAR2(100),
+                "QQYY"     VARCHAR2(20),
+                "FWFS"     VARCHAR2(20),
+                "DBSOURCE" VARCHAR2(500)
+            ) SEGMENT CREATION IMMEDIATE
+                PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+                STORAGE
+            (
+                INITIAL 196608 NEXT 8192 MINEXTENTS 1 MAXEXTENTS 2147483645
+                PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE
+                DEFAULT
+            )
+                LOB ("DYZBSJY") STORE AS BASICFILE
+            (
+                ENABLE STORAGE IN ROW CHUNK 8192 RETENTION
+                NOCACHE LOGGING
+                STORAGE
+            (
+                INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+                PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE
+                DEFAULT
+            )) ENABLE ROW MOVEMENT;
+        </sql>
+    </changeSet>
+
+
+    <changeSet id="2022-10-11-01-natural" author="wangyinghao" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            CREATE TABLE "ZRZY_GGMB"
+            (
+                "MBXXID"     VARCHAR2(50) NOT NULL ENABLE,
+                "XMID"     VARCHAR2(32) NOT NULL ENABLE,
+                "MBNR"     VARCHAR2(2000) NOT NULL ENABLE
+            );
+        </sql>
+    </changeSet>
+
+    <changeSet id="2022-12-29-01-natural" author="wangyinghao" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            CREATE TABLE ZRZY_ZD_ZYLX
+            (
+                DM NUMBER(3) NOT NULL,
+                MC VARCHAR2(10),
+                constraint ZRZY_ZD_ZYLX_PK primary key (DM)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255;
+            COMMENT ON TABLE ZRZY_ZD_ZYLX is '矿产资源类型字典表';
+            COMMENT ON COLUMN ZRZY_ZD_ZYLX.DM IS '代码';
+            COMMENT ON COLUMN ZRZY_ZD_ZYLX.MC IS '名称';
+
+            CREATE TABLE ZRZY_ZD_WJMHDLX
+            (
+                DM NUMBER(3) NOT NULL,
+                MC VARCHAR2(10),
+                constraint ZRZY_ZD_WJMHDLX_PK primary key (DM)
+            )
+                pctfree 10
+                initrans 1
+                maxtrans 255;
+            COMMENT ON TABLE ZRZY_ZD_WJMHDLX is '海岛类型字典表';
+            COMMENT ON COLUMN ZRZY_ZD_WJMHDLX.DM IS '代码';
+            COMMENT ON COLUMN ZRZY_ZD_WJMHDLX.MC IS '名称';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

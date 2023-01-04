@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcYhyjtjMapper">
+
+    <select id="listBdcYhyjTjByPage" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.BdcYhyjTjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcYhyjTjDTO">
+        SELECT DISTINCT x.xmid, x.slbh, x.bdcqzh, x.zl, x.ywr as dyr, x.qlr as dyqr,
+                to_char(x.jssj , 'yyyy-MM-dd hh24:mi:ss') as bjsj , f.MC as dzwyt, d.mc as zdzhyt,
+                x.zdzhmj, x.dzwmj , x.gzldymc
+        FROM
+            BDC_XM x left join BDC_ZD_FWYT f on x.dzwyt = f.DM
+            LEFT JOIN BDC_ZD_TDYT d on x.zdzhyt = d.DM
+            <if test="dyrlx != null and dyrlx != ''">
+                left join bdc_qlr q  on x.xmid = q.xmid
+            </if>
+        <where>
+            (x.qllx = '95' OR x.qllx ='37') and x.ajzt = '2'
+            <if test="kssj != null and kssj != ''">
+                AND to_char(x.jssj,'yyyy-MM-dd') <![CDATA[>=]]> #{kssj}
+            </if>
+            <if test="jssj != null and jssj != ''">
+                AND to_char(x.jssj,'yyyy-MM-dd') <![CDATA[<=]]> #{jssj}
+            </if>
+            <if test="dyqr != null and dyqr != ''">
+                and x.qlr in
+                <foreach collection="dyqr.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="dyrlx != null and dyrlx != '' ">
+               <choose>
+                   <when test="dyrlx == 1">
+                       AND q.qlrlx = 1 AND qlrlb = '2'
+                   </when>
+                   <otherwise>
+                       AND q.qlrlx != 1 AND qlrlb = '2'
+                   </otherwise>
+               </choose>
+            </if>
+        </where>
+        order by bjsj desc, slbh desc
+    </select>
+
+</mapper>

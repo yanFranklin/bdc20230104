@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <!-- 盐城 区块链相关接口 -->
+
+    <!-- 数据上链接口 -->
+    <ex:bean id="gjjsjsl">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="数据上链接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GJJ"/>
+            <ex:property name="dsfFlag" value="GJJ"/>
+            <ex:property name="url" value="${gjj.sjsl.url}"/>
+        </ex:service-info>
+        <ex:request dozerXml="conf/dozer/yancheng/blockchain/param.xml">
+            <ex:element name="head" dozerXml="conf/dozer/yancheng/blockchain/gjjsjsl/request/head.xml"/>
+            <ex:element name="body" dozerXml="conf/dozer/yancheng/blockchain/gjjsjsl/request/body.xml"/>
+        </ex:request>
+
+    </ex:bean>
+
+    <!-- 上链回执查询接口 -->
+    <ex:bean id="gjjslhzcx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="上链回执查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GJJ"/>
+            <ex:property name="dsfFlag" value="GJJ"/>
+            <ex:property name="url" value="${gjj.slhzcx.url}"/>
+        </ex:service-info>
+        <ex:request dozerXml="conf/dozer/yancheng/blockchain/param.xml">
+            <ex:element name="head" dozerXml="conf/dozer/yancheng/blockchain/gjjslhzcx/request/head.xml"/>
+            <ex:element name="body" dozerXml="conf/dozer/yancheng/blockchain/gjjslhzcx/request/body.xml"/>
+        </ex:request>
+
+    </ex:bean>
+
+
+
+</beans>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>自定义查询新增配置</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/common.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css"/>
+    <link rel="stylesheet" href="../../static/css/dtcx/config.css"/>
+
+    <script src="../../static/lib/jquery/jquery.min.js"></script>
+    <script src="../../static/lib/layui/layui.js"></script>
+    <!--添加水印-->
+    <script src="../../static/lib/bdcui/js/common.js"></script>
+    <script src="../../static/js/common.js"></script>
+    <script src="../../static/js/table.js"></script>
+    <script src="../../static/js/jkdtcx/config.js"></script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+<div class="all-container">
+    <div class="layui-tab" lay-filter="tabFilter">
+        <ul class="layui-tab-title">
+            <li class="layui-this">基础设置</li>
+            <li>查询JSON</li>
+            <li>查询条件</li>
+            <li>查询结果</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <form class="layui-form" lay-filter="cxxx" id="cxxx">
+                    <div class="hidden" hidden="hidden">
+                        <input id="cxid" class="layui-input" type="text" name="cxid"/>
+                        <input id="cjr" class="layui-input" type="text" name="cjr"/>
+                        <input id="cjsj" class="layui-input" type="date" name="cjsj"/>
+                        <input id="bgr" class="layui-input" type="text" name="bgr"/>
+                        <input id="bgsj" class="layui-input" type="date" name="bgsj"/>
+                        <input id="dqzt" class="layui-input" type="text" name="dqzt"/>
+                        <input id="sfjkcx" class="layui-input" type="text" name="sfjkcx" value="1"/>
+                    </div>
+
+                    <div class="form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label left-label">查询名称</label>
+                            <div class="layui-input-inline">
+                                <input id="cxmc" class="layui-input cxmc-input" type="text" name="cxmc"
+                                       placeholder="请输入中文名称"/>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label left-label">查询代号</label>
+                            <div class="layui-input-inline">
+                                <input id="cxdh" class="layui-input cxmc-input" type="text" name="cxdh"
+                                       placeholder="请输入"/>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <input id="checkCxdh-btn" class="layui-btn bdc-secondary-btn" type="button" value="检查代号"
+                                       onclick="checkCxdh()"/>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label left-label">页面地址</label>
+                            <div class="layui-input-inline">
+                                <input id="url" class="layui-input url-input" type="text" name="url"
+                                       placeholder="点击生成"/>
+                            </div>
+                            <input id="get-url-btn" class="layui-btn bdc-secondary-btn" type="button" value="生成地址"
+                                   onclick="getUrlFromDh()"/>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label left-label">调用接口</label>
+                            <div class="layui-input-inline">
+                                <select id="jk" class="layui-input" name="jk">
+                                    <option value="interface">interface</option>
+                                    <option value="wwsqinterface">wwsqinterface</option>
+                                    <option value="sjptinterface">sjptinterface</option>
+                                </select>
+                            </div>
+                            <img src="../../static/lib/bdcui/images/help.png" alt="" style="width: 10px;"  title="调用的接口，对应exchange中beanname前的部分">
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label left-label">接口方法</label>
+                            <div class="layui-input-inline">
+                                <input id="jkff" class="layui-input" type="text" name="jkff" title="对应exchange中的beanname"
+                                       placeholder="请输入"/>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label left-label bdc-two-lines">返回值key</label>
+                            <div class="layui-input-inline">
+                                <input id="fhzkey" class="layui-input" type="text" name="fhzkey" title="对应查询结果中数据部分"
+                                       placeholder="请输入"/>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label left-label bdc-two-lines">自定义按钮</label>
+                            <div class="layui-input-inline">
+                                <input id="zdyymgj" class="layui-input url-input" type="text" name="zdyymgj" title='例：[{"title":"测试按钮","name":"testJs","class":"bdc-delete-btn"}]'
+                                       placeholder="请输入"/>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label left-label">自定义js</label>
+                            <div class="layui-input-inline">
+                                <input id="js" class="layui-input url-input" type="text" name="js" title='例：["../../static/js/dtcx/dtcxTestJs.js"]'
+                                       placeholder="请输入"/>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label left-label bdc-two-lines">checkbox颜色设置</label>
+                            <div class="layui-input-inline">
+                                <input id="fxkys" class="layui-input url-input" type="text" name="fxkys" title="例：[{name: 'bdc-change-red',color: '#ff0000'}]"
+                                       placeholder="请输入"/>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label left-label">日志名称</label>
+                            <div class="layui-input-inline">
+                                <input id="rzmc" class="layui-input url-input cxmc-input" type="text" name="rzmc" title="记录日志用的日志名称"
+                                       placeholder="请输入"/>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label left-label">日志类型</label>
+                            <div class="layui-input-inline">
+                                <input id="rzlx" class="layui-input url-input cxmc-input" type="text" name="rzlx" title="记录日志用的日志类型"
+                                       placeholder="请输入"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item change-textarea-margin">
+                    <textarea class="layui-textarea change-textarea-width"
+                              placeholder="备注" id="bz" name="bz"></textarea>
+                    </div>
+                </form>
+
+
+            </div>
+
+            <div class="layui-tab-item">
+                <form class="layui-form" lay-filter="sqlForm">
+                    <div class="layui-form-item change-textarea-margin">
+                        <div>填写说明：</div>
+                        <div class="btn-tips">1、禁用中文字符，参数用#{+参数名+}格式编写<br>
+                            2、参数须与查询条件配置一一对应<br>
+                            3、示例：{pageinfo: {pageSize:#{pagesize},pageNumber:#{pagenumber}},data:{gxrmc:#{gxrmc}, gxrzjh:#{gxrzjh}}}
+                        </div>
+                        <textarea class="layui-textarea change-textarea-width"
+                                  placeholder="请输入查询JSON" id="sql">
+                    </textarea>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="layui-tab-item">
+                <div class="content-main">
+                    <div class="bdc-table-box">
+                        <form class="layui-form" lay-filter="cxtjForm" id="cxtjForm">
+                            <table class="layui-table" border=1 style="width:100%" id="cxtjTable">
+                                <colgroup>
+                                    <col width="80">
+                                    <col width="100">
+                                    <col width="100">
+                                    <col width="100">
+                                    <col width="80">
+                                    <col width="100">
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <td class="set-back-color set-center">代码</td>
+                                    <td class="set-back-color set-center">名称</td>
+                                    <td class="set-back-color set-center">优先级</td>
+                                    <td class="set-back-color set-center">控件类型</td>
+                                    <td class="set-back-color set-center">对应字典名</td>
+                                    <td class="set-back-color set-center">操作</td>
+                                </tr>
+                                </thead>
+                                <tbody class="sortable">
+
+                                </tbody>
+                            </table>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="content-main">
+                    <div class="bdc-table-box">
+                        <form class="layui-form" lay-filter="cxjgForm" id="cxjgForm">
+                            <table class="layui-table" border=1 id="cxjgTable" style="width:100%">
+                                <colgroup>
+                                    <col width="100">
+                                    <col width="130">
+                                    <col width="100">
+                                    <col width="80">
+                                    <col width="80">
+                                    <col width="60">
+                                    <col width="80">
+                                    <col width="100">
+                                    <col width="200">
+                                    <col width="200">
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <td class="set-back-color set-center">字段代码</td>
+                                    <td class="set-back-color set-center">字段名称</td>
+                                    <td class="set-back-color set-center">对应字典名</td>
+                                    <td class="set-back-color set-center">默认显示</td>
+                                    <td class="set-back-color set-center">类型</td>
+                                    <td class="set-back-color set-center">列宽</td>
+                                    <td class="set-back-color set-center">固定列</td>
+                                    <td class="set-back-color set-center">优先级</td>
+                                    <td class="set-back-color set-center">URL</td>
+                                    <td class="set-back-color set-center">复选框判断</td>
+                                    <td class="set-back-color set-center">操作</td>
+                                </tr>
+                                </thead>
+                                <tbody class="sortable">
+
+                                </tbody>
+                            </table>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+<script id="cxjgRowTemplet" type="text/html">
+    <tr id="{{d.jgid}}">
+        <td>
+            <input type="text" lay-verify="required" class="layui-table-edit" name="jgzdid">
+        </td>
+        <td>
+            <input type="text" lay-verify="required" name="jgzdname" class="layui-table-edit">
+        </td>
+        <td>
+            <input type="text" lay-verify="required" name="zdid" class="layui-table-edit">
+        </td>
+        <td>
+            <select lay-verify="required" name="mrxs">
+                <option value="1">是</option>
+                <option value="0">否</option>
+            </select>
+        </td>
+        <td>
+            <select lay-verify="required" name="jgtype">
+                <option value="text">默认</option>
+                <option value="date">日期</option>
+                <option value="button">按钮</option>
+            </select>
+        </td>
+
+        <td>
+            <input type="text" lay-verify="required" name="lk" class="layui-table-edit">
+        </td>
+
+        <td>
+            <select lay-verify="required" name="dqfs">
+                <option value="">无</option>
+                <option value="left">左侧固定</option>
+                <option value="right">右侧固定</option>
+            </select>
+        </td>
+        <td>
+            <input type="text" lay-verify="required" class="layui-table-edit" name="priority">
+        </td>
+        <td>
+            <input type="text" lay-verify="required" class="layui-table-edit" name="url">
+        </td>
+        <td>
+            <input type="text" lay-verify="required" class="layui-table-edit" name="fxkpd">
+        </td>
+        <td>
+            <div class="layui-btn-container" style="margin-bottom: -10px;">
+                <button class="layui-btn layui-btn-sm bdc-major-btn" onclick="addCxjgRow(); return false;">
+                    <i class="layui-icon">&#xe654;</i>
+                </button>
+                <button class="layui-btn layui-btn-sm layui-btn-danger bdc-secondary-btn right-one"
+                        onclick="removeCxjgRow(this); return false;">
+                    <i class="layui-icon">&#xe640;</i>
+                </button>
+            </div>
+        </td>
+    </tr>
+</script>
+
+
+<script id="cxtjTemplet" type="text/html">
+    <tr id="{{d.tjid}}">
+        <td>
+            <input type="text" lay-verify="required" class="layui-table-edit" name="tjzdid">
+        </td>
+        <td>
+            <input type="text" lay-verify="required" class="layui-table-edit" name="tjzdname">
+        </td>
+
+        <td>
+            <input type="text" lay-verify="required" class="layui-table-edit" name="priority">
+        </td>
+
+        <td>
+            <select lay-verify="required" name="tjtype">
+                <option value="text">text</option>
+                <option value="date">date</option>
+                <option value="number">number</option>
+                <option value="dropdown">dropdown</option>
+                <option value="id">身份证号</option>
+                <option value="plcx">批量查询(","分隔)</option>
+            </select>
+        </td>
+        <td>
+            <input type="text" class="layui-table-edit" name="zdid">
+        </td>
+        <td>
+            <div class="layui-btn-container" style="margin-bottom: -10px;">
+                <button class="layui-btn layui-btn-sm bdc-major-btn" onclick="addCxtjRow(); return false;">
+                    <i class="layui-icon">&#xe654;</i>
+                </button>
+                <button class="layui-btn layui-btn-sm layui-btn-danger bdc-secondary-btn right-one"
+                        onclick="removeConditionRow(this); return false;">
+                    <i class="layui-icon">&#xe640;</i>
+                </button>
+            </div>
+        </td>
+    </tr>
+</script>
+</html>

@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>综合法人库-户籍人口信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/css/common.css"/>
+</head>
+<body>
+
+<div class="content-div gxjklc-div">
+    <!--查询条件-->
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <!--一行的-->
+            <form class="layui-form" action="">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">公民身份证号</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input search" name="zjh" id="zjh" placeholder="请输入" type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                        <button type="reset" id="reset" class="layui-btn bdc-secondary-btn reset-btn">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="bdc-content-box">
+        <form class="layui-form setOverflow" action="">
+            <div class="bdc-content-fix">
+                <div class="content-title">
+                    <p>户籍人口信息(综合法人库)</p>
+                    <div class="title-btn-area .layui-layout-right">
+                        <button type="reset" class="layui-btn bdc-secondary-btn upload-pdf">上传PDF</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-main">
+                <div class="table-name"></div>
+
+                <div class="bdc-table-box">
+                    <table class="layui-table" border="1">
+                        <colgroup>
+                            <col width="50">
+                            <col width="100">
+                            <col width="150">
+                            <col width="100">
+                            <col width="150">
+                        </colgroup>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--结果反馈表格-->
+<script type="text/html" id="tableTpl">
+    {{# if(d){ }}
+    {{# layui.each(d, function(index,item){  }}
+    <tr>
+        <td class="set-back-color set-center">查询条件</td>
+        <td class="set-back-color">公民身份证号</td>
+        <td colspan="3"><input type="text" class="layui-table-edit" value="{{item.zjh || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color set-center" rowspan="26">查<br>询<br>结<br>果</td>
+        <td class="set-back-color">姓名</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.xm || ''}}" disabled="off"></td>
+        <td class="set-back-color">证件类型</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.zjlx || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">证件号码</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.zjhm || ''}}" disabled="off"></td>
+        <td class="set-back-color">性别</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.xb || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">民族</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.mz || ''}}" disabled="off"></td>
+        <td class="set-back-color">出生日期</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.csrq || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">通讯地址</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.txdz || ''}}" disabled="off"></td>
+        <td class="set-back-color">户籍地址</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.hjdz || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">户号</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.hh || ''}}" disabled="off"></td>
+        <td class="set-back-color">与户主关系</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.yhzgx || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">签发机关</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.qfjg || ''}}" disabled="off"></td>
+        <td class="set-back-color">签发日期</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.qfrq || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">国籍</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.gj || ''}}" disabled="off"></td>
+        <td class="set-back-color">政治面貌</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.zzmm || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">婚姻状况</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.hyzk || ''}}" disabled="off"></td>
+        <td class="set-back-color">登记日期</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.djrq || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">户籍类别</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.hjlb || ''}}" disabled="off"></td>
+        <td class="set-back-color">户籍所在地<br/>行政区划代码</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.hjszdxzqhdm || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">现居住地地址</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.xjzddz || ''}}" disabled="off"></td>
+        <td class="set-back-color">现居住地<br/>行政区划代码</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.xjzdxzqhdm || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">现居住地<br/>开始居住时间</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.xjzdksjzsj || ''}}" disabled="off"></td>
+        <td class="set-back-color">文化程度</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.whcd || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">曾用名<br/>(最多5个逗号分隔)</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.cym || ''}}" disabled="off"></td>
+        <td class="set-back-color">健康状况</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.jkzk || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">劳动能力丧失情况</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.ldnlssqk || ''}}" disabled="off"></td>
+        <td class="set-back-color">残疾等级</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.cjdj || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">所患主要疾病名称</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.shzyjbmc || ''}}" disabled="off"></td>
+        <td class="set-back-color">残疾类别</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.cjlb || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">出境周期</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.cjzq || ''}}" disabled="off"></td>
+        <td class="set-back-color">出境原因</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.cjyy || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">出境目的地</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.cjmdd || ''}}" disabled="off"></td>
+        <td class="set-back-color">护照号码</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.hzhm || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">护照签发地</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.hzqfd || ''}}" disabled="off"></td>
+        <td class="set-back-color">配偶姓名</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.poxm || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">配偶曾用名</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.pocym || ''}}" disabled="off"></td>
+        <td class="set-back-color">配偶证件类型</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.pozjlx || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">配偶证件号码</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.pozjhm || ''}}" disabled="off"></td>
+        <td class="set-back-color">配偶国籍</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.pogj || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">配偶户籍所在地</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.pohjszd || ''}}" disabled="off"></td>
+        <td class="set-back-color">登记类型</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.djlx || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">死亡时间</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.swsj || ''}}" disabled="off"></td>
+        <td class="set-back-color">同一户籍下<br/>自然人姓名</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.tyhjxzrrxm || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">同一户籍下<br/>自然人性别</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.tyhjxzrrxb || ''}}" disabled="off"></td>
+        <td class="set-back-color">同一户籍下<br/>自然人身份证号码</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.tyhjxzrrgmsfhm || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">同一户籍下<br/>自然人亲属关系</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.tyhjxzrrqsgx || ''}}" disabled="off"></td>
+        <td class="set-back-color">是否存在户籍迁移</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.sfczhjqy || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">户籍迁移时间</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.hjqysj || ''}}" disabled="off"></td>
+        <td class="set-back-color">户籍迁移原因</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.hjqyyy || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">是否存在户籍注销</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.sfczhjzx || ''}}" disabled="off"></td>
+        <td class="set-back-color">户籍注销时间</td>
+        <td><input type="text" class="layui-table-edit" value="{{item.hjzcsj || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">户籍注销原因</td>
+        <td colspan="3"><input type="text" class="layui-table-edit" value="{{item.hjzxyy || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td colspan="5" class="quarantine"></td>
+    </tr>
+    {{# }); }}
+    {{# }else{ }}
+    <tr>
+        <td rowspan="" class="set-back-color set-center">查询条件</td>
+        <td class="set-back-color">公民身份证号</td>
+        <td colspan="3"><input type="text" class="layui-table-edit" value="{{item.zjh || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td colspan="2" class="set-back-color">查询结果</td>
+        <td colspan="3" class="set-center">
+            <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据</div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="5" class="quarantine"></td>
+    </tr>
+    {{# } }}
+</script>
+
+<script type="text/html" id="jgxxTpl">
+    {{# if(d.cxywcs){ }}
+    {{# layui.each(d.cxywcs,function(index,item){  }}
+    <tr>
+        <td rowspan="" class="set-back-color set-center">查询条件</td>
+        <td class="set-back-color">公民身份证号</td>
+        <td colspan="3"><input type="text" class="layui-table-edit"  value="{{ item.zjh || ''}}" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color set-center" rowspan="26">查<br>询<br>结<br>果</td>
+        <td class="set-back-color">姓名</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">证件类型</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">证件号码</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">性别</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">民族</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">出生日期</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">通讯地址</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">户籍地址</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">户号</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">与户主关系</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">签发机关</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">签发日期</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">国籍</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">政治面貌</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">婚姻状况</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">登记日期</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">户籍类别</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">户籍所在地<br/>行政区划代码</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">现居住地地址</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">现居住地<br/>行政区划代码</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">现居住地<br/>开始居住时间</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">文化程度</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">曾用名<br/>(最多5个逗号分隔)</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">健康状况</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">劳动能力丧失情况</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">残疾等级</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">所患主要疾病名称</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">残疾类别</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">出境周期</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">出境原因</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">出境目的地</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">护照号码</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">护照签发地</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">配偶姓名</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">配偶曾用名</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">配偶证件类型</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">配偶证件号码</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">配偶国籍</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">配偶户籍所在地</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">登记类型</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">死亡时间</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">同一户籍下<br/>自然人姓名</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">同一户籍下<br/>自然人性别</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">同一户籍下<br/>自然人身份证号码</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">同一户籍下<br/>自然人亲属关系</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">是否存在户籍迁移</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">户籍迁移时间</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">户籍迁移原因</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">是否存在户籍注销</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">户籍注销时间</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">户籍注销原因</td>
+        <td colspan="3"><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td colspan="5" class="quarantine"></td>
+    </tr>
+    {{# }); }}
+    {{# }else{ }}
+    <tr>
+        <td class="set-back-color set-center">查询条件</td>
+        <td class="set-back-color">公民身份证号</td>
+        <td colspan="3"><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color set-center" rowspan="26">查<br>询<br>结<br>果</td>
+        <td class="set-back-color">姓名</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">证件类型</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">证件号码</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">性别</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">民族</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">出生日期</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">通讯地址</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">户籍地址</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">户号</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">与户主关系</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">签发机关</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">签发日期</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">国籍</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">政治面貌</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">婚姻状况</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">登记日期</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">户籍类别</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">户籍所在地<br/>行政区划代码</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">现居住地地址</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">现居住地<br/>行政区划代码</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">现居住地<br/>开始居住时间</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">文化程度</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">曾用名<br/>(最多5个逗号分隔)</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">健康状况</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">劳动能力丧失情况</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">残疾等级</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">所患主要疾病名称</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">残疾类别</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">出境周期</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">出境原因</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">出境目的地</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">护照号码</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">护照签发地</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">配偶姓名</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">配偶曾用名</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">配偶证件类型</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">配偶证件号码</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">配偶国籍</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">配偶户籍所在地</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">登记类型</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">死亡时间</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">同一户籍下<br/>自然人姓名</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">同一户籍下<br/>自然人性别</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">同一户籍下<br/>自然人身份证号码</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">同一户籍下<br/>自然人亲属关系</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">是否存在户籍迁移</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">户籍迁移时间</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">户籍迁移原因</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">是否存在户籍注销</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+        <td class="set-back-color">户籍注销时间</td>
+        <td><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">户籍注销原因</td>
+        <td colspan="3"><input type="text" class="layui-table-edit" disabled="off"></td>
+    </tr>
+    <tr>
+        <td colspan="5" class="quarantine"></td>
+    </tr>
+    {{# } }}
+</script>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/bdcui/js/mask.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/gxjklc/gxjkCommon.js"></script>
+<script src="../../static/js/yancheng/sjgx/lcshijHjrkxx.js"></script>
+</body>
+</html>

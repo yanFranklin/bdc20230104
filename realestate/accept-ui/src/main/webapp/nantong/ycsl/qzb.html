@@ -1,0 +1,225 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>签字页面</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css">
+    <style type="text/css">
+        /*修改遮罩提示框宽度*/
+        #waitModalLayer .bdc-wait-content{
+            width: 220px;
+        }
+    </style>
+</head>
+<body>
+<div id="bdc-popup-large">
+    <form class="layui-form" action="">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline bdc-complete-line" style="text-align: center">
+                <img id="photo" src=" " alt="" width="480px" height="300px"/>
+            </div>
+
+            <div class="layui-inline bdc-frame-button-box">
+                <button type="button" id="saveSign" class="layui-btn bdc-major-btn" lay-submit="" lay-filter="saveSign">保存签名</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.all.js"></script>
+<script src="../../static/js/common.js"></script>
+<script language="javascript" type="text/javascript">
+
+    var xmid =getQueryString("xmid");
+
+    var qzrlb =getQueryString("qzrlb");
+
+    var bdlx =getQueryString("bdlx");
+
+    /**
+     * 获取用户签名图片Base64码信息
+     */
+    var stream;
+
+    var timer = null;
+
+    function BeginTimer() {
+        if (timer == null) {
+            timer = setInterval("GetSignImage()", 1000);
+        }
+    }
+
+    //打开签字窗口
+    function StartSign() {
+        addModel("打开签字窗口中");
+        document.getElementById("photo").src = "";
+        var params = "{\"pos\": {\"top\":\"300\",\"left\":\"420\",\"width\":\"640\",\"height\":\"400\"}}";//
+        var url = "http://127.0.0.1:38088/sign=start";
+
+        $.ajax({
+            type: "post",
+            url: url,
+            dataType: "json",
+            data: params,
+            success: function (data) {
+                removeModal();
+                if (data.code != 0) {
+                    ityzl_SHOW_WARN_LAYER("打开签字窗口失败,返回代码" + data.code + "返回信息" + data.message);
+                } else {
+                    ityzl_SHOW_SUCCESS_LAYER("打开签字窗口成功，请在签字窗口内签字");
+                    BeginTimer();
+                }
+            }, error: function (e) {
+                removeModal();
+                ityzl_SHOW_WARN_LAYER("请求打开签字窗口异常");
+            }
+        });
+
+    }
+
+    //关闭签字窗口
+    function StopSign() {
+        addModel("关闭签字窗口中");
+        var params = "";//
+        var url = "http://127.0.0.1:38088/sign=stop";
+        $.ajax({
+            type: "post",
+            url: url,
+            dataType: "json",
+            data: params,
+            success: function (data) {
+                removeModal();
+
+            }, error: function (e) {
+                removeModal();
+                ityzl_SHOW_WARN_LAYER("关闭签字窗口异常");
+            }
+        });
+
+        if (timer != null) {
+            clearInterval(timer);
+            timer = null;
+        }
+    }
+
+    function GetSignImage() {
+
+        addModel("获取签字笔迹图像");
+        var params = "";//
+        var url = "http://127.0.0.1:38088/sign=get";
+        //data.image="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";
+        $.ajax({
+            type: "post",
+            url: url,
+            dataType: "json",
+            data: params,
+            success: function (data) {
+                removeModal();
+                if (data.code == 0) {
+                    stream = data.image;
+                    document.getElementById("photo").src = "data:image/gif;base64," + data.image;
+                    if (timer != null) {
+                        clearInterval(timer);
+                        timer = null;
+                    }
+                }
+                else if (data.code == 1) {
+                    if (timer != null) {
+                        ityzl_SHOW_INFO_LAYER("等待用户签字确认中");
+                    }
+                    else {
+                        ityzl_SHOW_INFO_LAYER("无签字图像");
+                    }
+                }
+                else {
+                    ityzl_SHOW_WARN_LAYER("打开签字窗口失败,返回代码" + data.code + "返回信息" + data.message);
+                    if (timer != null) {
+                        clearInterval(timer);
+                        timer = null;
+                    }
+                }
+            }, error: function (e) {
+                    removeModal();
+                    ityzl_SHOW_WARN_LAYER("请求获取签字笔迹图像异常");
+            }
+        });
+    }
+
+    /**
+     * 保存签字信息
+     */
+    function saveQzxx() {
+        if(!isNotBlank(xmid) || !isNotBlank(stream)) {
+            return;
+        }
+        $.ajax({
+            url: getContextPath()+"/pjq/saveQzxx",
+            type: "POST",
+            data: JSON.stringify({"xmid": xmid, "qznr": stream,qzrlb:qzrlb,bdlx:bdlx}),
+            contentType: 'application/json',
+            dataType: "json",
+            success: function (data) {
+                //关闭签字窗口
+                StopSign();
+
+                closeWin();
+
+            },
+            error: function (xhr, status, error) {
+                removeModal();
+                ityzl_SHOW_WARN_LAYER("保存签字信息失败,请重试");
+            }
+        });
+    }
+
+
+    layui.use(['element', 'form', 'layer', 'jquery'], function () {
+        var $ = layui.jquery;
+
+        //打开签字窗口
+        StartSign();
+
+        /**
+         * 保存签名信息
+         */
+        $("#saveSign").click(function () {
+            if (!stream || stream == '') {
+                // 没有签名图片信息重新获取下
+                stream = GetSignImage();
+            }
+
+
+            if (!stream || stream == '') {
+                alert('未获取到签字信息,请用户重签');
+                return;
+            }
+
+            saveQzxx();
+
+        });
+
+    });
+
+    /**
+     * 关闭弹出页面
+     */
+    window.closeWin = function () {
+        var index = parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index);
+    };
+
+    window.closeParentWindow = function () {
+        var index = parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index);
+    };
+</script>
+
+</body>
+</html>
+
+

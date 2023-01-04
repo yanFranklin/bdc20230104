@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.engine.core.mapper.BdcGzZgzMapper">
+
+    <!--分页查询-->
+    <select id="listBdcGzYzLogGroupByPage" parameterType="cn.gtmap.realestate.common.core.qo.engine.BdcGzYzLogQO"
+            resultType="cn.gtmap.realestate.common.core.dto.engine.BdcGzYzLogDTO">
+        select t.yzbs, t.zhbs, t.zhmc, t.yzrzh, t.yzsj, count(1) as yzzgzsl, sum(case sftg when 2 then 0 else sftg end) as yzcgsl
+        from bdc_gzyz_log t
+        <where>
+            <if test = " zhbs != null  and zhbs != '' ">
+                and t.zhbs =  #{zhbs}
+            </if>
+            <if test = " gzldyid != null  and gzldyid != '' ">
+                and t.zhbs like #{gzldyid} || '%'
+            </if>
+            <if test = "zhbsList != null and zhbsList.size() > 0">
+                AND t.zhbs in
+                <foreach collection="zhbsList" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test = " yzkssj != null  and yzkssj != '' ">
+                and t.yzsj <![CDATA[>=]]> to_date(#{yzkssj}, 'yyyy-mm-dd hh24:mi:ss')
+            </if>
+            <if test = " yzjssj != null  and yzjssj != '' ">
+                and t.yzsj <![CDATA[<=]]> to_date(#{yzjssj}, 'yyyy-mm-dd hh24:mi:ss')
+            </if>
+        </where>
+        group by t.yzbs, t.zhbs, t.zhmc, t.yzrzh, t.yzsj
+        order by t.yzsj desc
+    </select>
+
+    <select id="listBdcGzYzLogByPage" parameterType="cn.gtmap.realestate.common.core.qo.engine.BdcGzYzLogQO"
+            resultType="cn.gtmap.realestate.common.core.dto.engine.BdcGzYzLogDTO">
+        select t.rzid, t.yzrid, t.yzrzh, t.yzsj, t.zhbs, t.zhmc, t.gzid, t.gzmc, t.yzcs, t.yzjg, t.sftg, t.yzbs
+        from bdc_gzyz_log t
+        <where>
+            <if test = " zhbs != null  and zhbs != '' ">
+                and t.zhbs = #{zhbs}
+            </if>
+            <if test = " yzbs != null  and yzbs != '' ">
+                and t.yzbs = #{yzbs}
+            </if>
+        </where>
+        order by t.yzsj desc
+    </select>
+
+</mapper>

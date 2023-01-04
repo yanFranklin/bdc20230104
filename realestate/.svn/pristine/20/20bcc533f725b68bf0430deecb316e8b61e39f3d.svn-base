@@ -1,0 +1,489 @@
+﻿<html>
+<head>
+    <title>HidHelper ActiveX Demo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script src="../static/lib/jquery/jquery.min.js"></script>
+    <script src="../static/lib/layui/layui.js"></script>
+    <script src="../static/lib/form-select/formSelects-v4.js"/>
+    <script src="../static/lib/bdcui/js/mask.js"></script>
+    <script src="../static/js/common.js"></script>
+
+    <script src="../static/js/pjqLogin.js"></script>
+    <style type="text/css">
+        body * {
+            font-size: 10pt;
+            font: 12px "SimSun","宋体","Arial";
+        }
+
+        li.purchase a {
+            padding-top: 5px;
+            background-position: 0px -4px;
+        }
+
+        li.remove_frame a {
+            padding-top: 5px;
+            background-position: 0px -3px;
+        }
+    </style>
+
+    <script language='javascript' for="myPad" event="OnEvaluateCompleted(status, evaluateValue, runningNumber)">
+        OnEvaluateCompleted(status, evaluateValue, runningNumber);
+    </script>
+    <script language='javascript' for="myPad" event="OnSignCompleted(result, confirmResult, signPicBase64, signData, runningnumber)">
+        OnSignCompleted(result, confirmResult, signPicBase64, signData, runningnumber);
+    </script>
+    <script language='javascript' for="myPad" event="OnFaceValidateWithIdCardCompleted(result, validate, score, photoBase64, jsonData, frontSideBase64, backSideBase64, sceneBase64, runningNumber) ">
+        OnFaceValidateWithIdCardCompleted(result, validate, score, photoBase64, jsonData, frontSideBase64, backSideBase64, sceneBase64, runningNumber);
+    </script>
+    <script language='javascript' for="myPad" event="OnInteractionCompleted(status, interactionResult, runningNumber)">
+        OnInteractionCompleted(status, interactionResult, runningNumber);
+    </script>
+    <script language='javascript' for="myPad" event="OnFingerprintCompleted(status, confirmResult, fingerImageBase64, fingerFeatureBase64, runningNumber)">
+        OnFingerprintCompleted(status, confirmResult, fingerImageBase64, fingerFeatureBase64, runningNumber);
+    </script>
+    <script language='javascript' for="myPad" event="OnGetIdcardCompleted(result, confrimResult, photoBase64, jsonData, frontSideBase64, backSideBase64, runningNumber)">
+        OnGetIdcardAsyncCompleted(result, confrimResult, photoBase64, jsonData, frontSideBase64, backSideBase64, runningNumber);
+    </script>
+    <script language='javascript' for="myPad" event="SignDeclarationCompleted(result, confirmResult, signPicBase64, signData, runningnumber)">
+        SignDeclarationCompleted(result, confirmResult, signPicBase64, signData, runningnumber);
+    </script>
+    <script language='javascript' for="myPad" event="OnCapactiveWriteCompleted(result,confirmResult, signPicBase64, runningnumber)">
+        OnCapactiveWriteCompleted(result, confirmResult, signPicBase64, runningnumber);
+    </script>
+    <script language='javascript' for="myPad" event="OnShowPdfSignExCompleted(result,confirmResult, iSignType, signPicBase64, signData, fingerImageBase64, fingerFeatureBase64, message ,runningnumber)">
+        OnShowPdfSignExCompleted(result, confirmResult, iSignType, signPicBase64, signData, fingerImageBase64, fingerFeatureBase64, message, runningnumber);
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#tabs").tabs();
+            $(".spinner").spinner({
+                max: 10,
+                min: 0,
+                step: 1
+            });
+            $(".timeout").spinner({
+                max: 120,
+                min: 10,
+                step: 1
+            });
+
+            $(".signtype").spinner({
+                max: 4,
+                min: 1,
+                step: 1
+            });
+        });
+
+        /**/</script>
+</head>
+<body>
+    <object id="myPad" style="left: 0px; width: 10px; top: 0px; height: 10px" classid="clsid:433E8BB0-CAB7-4490-B395-5D7A27BB6D6C"></object>
+    <div class="box box-solid">
+        <div class="box-header with-border">
+            <i class="fa fa-text-width"></i>
+            <h3 class="box-title">HidHelper 测试工具</h3><small class="text-muted">classid="clsid:433E8BB0-CAB7-4490-B395-5D7A27BB6D6C"</small>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body panel box box-success">
+            <small>日志输出</small>
+            <div>
+                <textarea id="log" style="width:100%;" rows="8"></textarea>
+            </div>
+        </div>
+        <!-- /.box-body -->
+    </div>
+    <button class="btn bg-olive btn-flat margin " type="button" onclick="Start()">开启服务</button>
+    <button class="btn bg-red btn-flat margin " type="button" onclick="CleanLog()">清除日志</button>
+    <div id="tabs">
+        <ul>
+            <li><a href="#tabs-1">基础功能</a></li>
+            <li><a href="#tabs-2">员工登录</a></li>
+            <li><a href="#tabs-3">评价</a></li>
+            <li><a href="#tabs-4">资源推送</a></li>
+            <li><a href="#tabs-5">签名</a></li>
+            <li><a href="#tabs-6">信息交互</a></li>
+            <li><a href="#tabs-7">人证比对</a></li>
+            <li><a href="#tabs-8">二代身份证读取</a></li>
+            <li><a href="#tabs-9">读取指纹</a></li>
+            <li><a href="#tabs-10">信息提示</a></li>
+            <li><a href="#tabs-11">软件升级</a></li>
+            <li><a href="#tabs-12">密码，手机，验证码</a></li>
+            <li><a href="#tabs-13">抓拍图片</a></li>
+        </ul>
+        <div id="tabs-1">
+            <div class="panel panel-info">
+                <div class="panel-heading">语音提示</div>
+                <div class="panel-body">
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="OneMeter()">一米线</button>
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="Welcome()">欢迎光临</button>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">暂停服务</div>
+                <div class="panel-body">
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="StopServicePjq()">暂停服务</button>
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="RestoreServicePjq()">恢复服务</button>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">设备</div>
+                <div class="panel-body">
+                    <button class="btn bg-purple btn-flat margin" type="button" onclick="Reboot()">重启设备</button>
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="IsDeviceOnLine()">设备状态</button>
+                </div>
+            </div>
+        </div>
+        <div id="tabs-2">
+            <div class="panel panel-info">
+                <div class="panel-heading">登录</div>
+                <div class="panel-body">
+                    姓名<input id="tbLoginName" type="text" maxlength="20" size="10" />
+                    工号<input id="tbLoginNo" type="text" maxlength="20" size="10" />
+                    机构名称<input id="tbLoginPlaceName" type="text" maxlength="20" size="10" />
+                    机构号<input id="tbLoginPlaceNo" type="text" maxlength="20" size="10" />
+                    星级
+                    <select id="lbLoginLevel">
+                        <option value="1">1星</option>
+                        <option value="2">2星</option>
+                        <option value="3">3星</option>
+                        <option value="4">4星</option>
+                        <option value="5" selected>5星</option>
+                    </select>
+                    宣传语<input id="tbLoginMotto" type="text" maxlength="20" size="10" />
+                    图片播放时间<input id="numLoginPicPlayTime" type="number" value="10" size="10" />
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="Login()">Login</button>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">带照片登录</div>
+                <div class="panel-body">
+                    员工照片 Base64<textarea id="tbUserLoginPhoto" type="text"></textarea>
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="LoginWithPhoto()">LoginWithPhoto</button>
+
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">带照片登录test</div>
+                <div class="panel-body">
+                    员工照片 Base64<textarea id="tbUserLoginPhoto1" type="text"></textarea>
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="pjqLogin()">pjqLogin</button>
+
+                    票号信息 <textarea id="ph" type="text"></textarea>
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="ShowInformationPjq()">叫号展示</button>
+
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">退出登录</div>
+                <div class="panel-body">
+                    <button class="btn bg-orange btn-flat margin" type="button" onclick="LogoutPjq()">退出登录</button>
+                </div>
+            </div>
+        </div>
+        <div id="tabs-3">
+            <div class="panel panel-info">
+                <div class="panel-heading">带照片登录</div>
+                <div class="panel-body">
+                    超时时间<input id="numEvaluateTimeout" class="timeout" value="60" />
+                    评价按钮数量
+                    <select id="lbEvaluateButton">
+                        <option value="3">3键</option>
+                        <option value="4" selected>4键</option>
+                        <option value="5">5键</option>
+                    </select>
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="Evaluate()">评价</button>
+                    <button class="btn bg-orange btn-flat margin" type="button" onclick="CancelEvaluate()">撤销评价</button>
+                    流水号
+                    <input id="tbRunningNumberEvaluateAsync" type="text" maxlength="128" />
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="EvaluateAsync()">异步评价</button>
+                </div>
+            </div>
+        </div>
+        <div id="tabs-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">广告推送</div>
+                <div class="panel-body">
+                    文件/文件夹路径<input id="tbPushMediaPath" type="text" />
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="PushMedia()">推送广告</button>
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="PushMediaRename()">推送广告并改名</button>
+                    <button class="btn bg-orange btn-flat margin" type="button" onclick="DeleteMedia()">删除广告Ex</button>
+                    <button class="btn bg-green btn-flat margin" type="button" onclick='GetFileInfos("/sdcard/JSHJ/EvMS/mediaData/")'>查询广告文件Ex</button>
+                    <div>
+                        要删除的文件名<input id="tbPushMediaPath_Delete" type="text" value="*.*" />
+                        <button class="btn bg-orange btn-flat margin" type="button" onclick="DeleteByTypeMedia()">删除广告</button>
+                        <button class="btn bg-green btn-flat margin" type="button" onclick='GetFileInfosByType(1)'>查询广告文件</button>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">员工照片推送</div>
+                <div class="panel-body">
+                    文件/文件夹路径<input id="tbPushUserImage" type="text" />
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="PushUserImage()">推送照片</button>
+                    <button class="btn bg-orange btn-flat margin" type="button" onclick="DeletePhoto()">删除照片Ex</button>
+                    <button class="btn bg-green btn-flat margin" type="button" onclick='GetFileInfos("/sdcard/JSHJ/EvMS/userImg/")'>查询照片文件Ex</button>
+                    <div>
+                        要删除的文件名<input id="tbPushUserImage_Delete" type="text" value="*.*" />
+                        <button class="btn bg-orange btn-flat margin" type="button" onclick="DeleteByTypeUserImage()">删除照片</button>
+                        <button class="btn bg-green btn-flat margin" type="button" onclick='GetFileInfosByType(2)'>查询照片文件</button>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">语音推送</div>
+                <div class="panel-body">
+                    文件/文件夹路径<input id="tbPushSound" type="text" />
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="PushSound()">推送语音</button>
+                    <button class="btn bg-orange btn-flat margin" type="button" onclick="DeleteSound()">删除语音Ex</button>
+                    <button class="btn bg-green btn-flat margin" type="button" onclick='GetFileInfos("/sdcard/JSHJ/EvMS/soundData/")'>查询语音文件Ex</button>
+                    <div>
+                        要删除的文件名<input id="tbPushSound_Delete" type="text" value="*.*" />
+                        <button class="btn bg-orange btn-flat margin" type="button" onclick="DeleteByTypeSound()">删除语音</button>
+                        <button class="btn bg-green btn-flat margin" type="button" onclick='GetFileInfosByType(3)'>查询语音文件</button>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">背景图片推送</div>
+                <div class="panel-body">
+                    文件/文件夹路径<input id="tbPushStyle" type="text" />
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="PushStyle()">推送背景图片</button>
+                    <button class="btn bg-orange btn-flat margin" type="button" onclick="DeleteStyle()">删除背景图片Ex</button>
+                    <button class="btn bg-green btn-flat margin" type="button" onclick='GetFileInfos("/sdcard/JSHJ/EvMS/style/")'>查询背景图片Ex</button>
+                    <div>
+                        要删除的文件名<input id="tbPushStyle_Delete" type="text" value="*.*" />
+                        <button class="btn bg-orange btn-flat margin" type="button" onclick="DeleteByTypeStyle()">删除背景图片</button>
+                        <button class="btn bg-green btn-flat margin" type="button" onclick='GetFileInfosByType(4)'>查询背景图片</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="tabs-5">
+            <div class="panel panel-info">
+                <div class="panel-heading">电磁签名异步1</div>
+                <div class="panel-body">
+                    <div>
+                        <span>超时时间</span><input id="numShowPdfSignTimeout" class="timeout" value="60" />
+                        <span>流水号</span><input id="tbRunningNumberShowPdfSign" type="text" maxlength="128" />
+                    </div>
+                    <div>
+                        PDF Base64<textarea id="tbShowPdfSign" type="text"></textarea>
+                    </div>
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="ShowPdfSign()">异步签名</button>
+                    <button class="btn bg-orange btn-flat margin" type="button" onclick="Cancel()">撤销签名</button>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">电磁签名异步2</div>
+                <div class="panel-body">
+                    <div>
+                        <span>超时时间</span><input id="numShowPdfSignExTimeout" class="timeout" value="60" />
+                        <span>签名类型</span><!--<input id="numShowPdfSignExTimeout1" class="signtype" value="1" />-->
+                        <select id="selShowPdfSignExSignType" class="js-example-basic-single">
+                            <option value="1">1.电磁签名</option>
+                            <option value="2">2.指纹</option>
+                            <option value="3">3.电磁+指纹</option>
+                            <option value="4">4.客户选择</option>
+                        </select>
+                        <span>语音</span><input id="tbTtsShowPdfSignExAsync" type="text" maxlength="128" />
+                        <span>流水号</span><input id="tbRunningNumberShowPdfSignEx" type="text" maxlength="128" />
+                    </div>
+                    <div>
+                        PDF Base64<textarea id="tbShowPdfSignEx" type="text"></textarea>
+                    </div>
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="ShowPdfSignEx()">异步签名</button>
+                    <button class="btn bg-orange btn-flat margin" type="button" onclick="Cancel()">撤销签名</button>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">电磁签名2</div>
+                <div class="panel-body">
+                    超时时间<input id="numTimeoutSignDeclarationAsync" class="timeout" value="60" />
+                    提示语音<input id="tbVoiceSignDeclarationAsyncn" type="text">
+                    提示文字<input id="tbTextSignDeclarationAsync" type="text"></input>流水号
+                    <input id="tbRunningNumberSignDeclarationAsync" type="text" maxlength="128" />
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="SignDeclarationAsync()">异步签名</button>
+                    <button class="btn bg-orange btn-flat margin" type="button" onclick="Cancel()">撤销</button>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">电容签名</div>
+                <div class="panel-body">
+                    <span>超时时间</span><input id="numCapactiveWriteTimeout" class="timeout" value="60" />
+                    <span>语音</span><input id="tbTtsCapactiveWrite" type="text" maxlength="128" />
+                    <span>流水号</span><input id="tbRunningNumberCapactiveWrite" type="text" maxlength="128" />
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="CapactiveWriteAsync()">异步签名</button>
+                    <button class="btn bg-orange btn-flat margin" type="button" onclick="Cancel()">撤销签名</button>
+                </div>
+            </div>
+        </div>
+        <div id="tabs-6">
+            <div class="panel panel-info">
+                <div class="panel-heading">PDF展示</div>
+                <div class="panel-body">
+                    PDF Base64<textarea id="tbPDFInteractiveBase64" type="text"></textarea>TTS语音
+                    <input id="tbPDFInteractiveBase64TTS" type="text" maxlength="128" />
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="PDFInteractiveBase64()">PDF展示</button>
+                    <button class="btn bg-orange btn-flat margin" type="button" onclick="ReturnToMain()">撤销展示</button>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">显示交互</div>
+                <div class="panel-body">
+                    超时时间<input id="numInteractiveTimeout" type="number" value="60" />
+                    HTML/URL<textarea id="tbInteractive" type="text"></textarea>
+                    是否网址<input id="cbIsUrl" type="checkbox" />
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="Interactive()">显示交互</button>
+                    <button class="btn bg-orange btn-flat margin" type="button" onclick="Cancel()">撤销</button>
+                    流水号
+                    <input id="tbRunningNumberInteractiveAsync" type="text" maxlength="128" />
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="InteractiveAsync()">异步交互</button>
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="GetInteractiveAsyncResult()">取得异步交互结果</button>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">显示信息</div>
+                <div class="panel-body">
+                    超时时间<input id="numShowInformationTimeout" class="timeout" value="60" />
+                    HTML/URL<textarea id="tbShowInformation" type="text"></textarea>
+                    是否网址<input id="cbIsUrlShowInformation" type="checkbox" />
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="ShowInformation()">显示信息</button>
+                    <button class="btn bg-orange btn-flat margin" type="button" onclick="ReturnToMain()">撤销展示</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tabs-7">
+            <div class="panel panel-info">
+                <div class="panel-heading">人证比对</div>
+                <div class="panel-body">
+                    超时时间<input id="numFaceValidateWithIdCardTimeout" type="number" value="60" />
+                    流水号<input id="tbRunningNumberFaceValidateWithIdCard" type="text" maxlength="128" />
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="FaceValidateWithIdCardAsync()">人证比对</button>
+                    <button class="btn bg-orange btn-flat margin" type="button" onclick="Cancel()">撤销</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tabs-8">
+            <div class="panel panel-info">
+                <div class="panel-heading">二代身份证读取</div>
+                <div class="panel-body">
+                    超时时间<input id="numIdCardTimeout" class="timeout" value="60" />
+                    流水号<input id="tbIdCardRunningNumber" type="text" maxlength="128" />
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="GetIdcardAsync()">二代证异步读取</button>
+                    <button class="btn bg-orange btn-flat margin" type="button" onclick="Cancel()">撤销</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tabs-9">
+            <div class="panel panel-info">
+                <div class="panel-heading">读取指纹异步</div>
+                <div class="panel-body">
+                    超时时间<input id="numGetFingerTimeout" class="timeout" value="60" />
+                    tts语音<input id="tbGetFingerTts" type="text" value="请按指纹" />
+                    流水号<input id="tbRunningNumberGetFinger" type="text" maxlength="128" />
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="GetFingerAsync()">读取指纹</button>
+                    <button class="btn bg-orange btn-flat margin" type="button" onclick="Cancel()">撤销</button>
+                    <img id="imgGetFinger" src="" />
+                </div>
+            </div>
+        </div>
+
+        <div id="tabs-10">
+            <div class="panel panel-info">
+                <div class="panel-heading">TTS语音</div>
+                <div class="panel-body">
+                    TTS语音内容<input id="tbTts" type="text" />
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="Tts()">播放Tts</button>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">Tooltip</div>
+                <div class="panel-body">
+                    Tooltip显示内容<input id="tbTooltipInfo" type="text" />
+                    Tooltip Tts语音内容<input id="tbTooltipTts" type="text" />
+                    Tooltip超时时间<input id="numTooltipTimeout" class="timeout" value="60" />
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="Tooltip()">Tooltip</button>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">滚动信息&nbsp;MargueeNotice</div>
+                <div class="panel-body">
+                    滚动显示内容
+                    <input id="tbMargueeNotice" type="text" style="width:600px;" />
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="MargueeNotice()">显示滚动信息</button>
+                </div>
+            </div>
+        </div>
+        <div id="tabs-11">
+            <div class="panel panel-info">
+                <div class="panel-heading">APK升级</div>
+                <div class="panel-body">
+                    APK version code<input id="tbVersionCode" type="text" />
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="NeedUpdateApk()">Check升级</button>
+                    APK URL<input id="tbUpdateApkOnlineUrl" type="text" />
+                    APK MD5<input id="tbUpdateApkOnlineMd5" type="text">
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="UpdateApkOnline()">升级</button>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">查询SN</div>
+                <div class="panel-body">
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="GetMainboardSN()">查询SN</button>
+                </div>
+            </div>
+        </div>
+        <div id="tabs-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">密码</div>
+                <div class="panel-body">
+                    超时
+                    <input id="numInputPasswordTimeout" class="spinner" value="30">
+                    最小长度
+                    <input id="numInputPasswordMin" class="spinner" value="6">
+                    最大长度
+                    <input id="numInputPasswordMax" class="spinner" value="6">
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="InputPassword()">请输入密码</button>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">手机</div>
+                <div class="panel-body">
+                    超时<input id="numInputMobilePhoneTimeout" class="spinner" value="30">
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="InputMobilePhone()">请输入手机</button>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">验证码</div>
+                <div class="panel-body">
+                    超时<input id="numInputVerifyCodeTimeout" class="spinner" value="30">
+                    最小长度<input id="numInputVerifyCodeMin" class="spinner" value="6">
+                    最大长度<input id="numInputVerifyCodeMax" class="spinner" value="6">
+                    <button class="btn bg-maroon btn-flat margin" type="button" onclick="InputVerifyCode()">请输入验证码</button>
+                </div>
+            </div>
+        </div>
+        <div id="tabs-13">
+            <div class="panel panel-info">
+                <div class="panel-heading">抓拍图片</div>
+                <div class="panel-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--<div id="tabs-6">
+    <div class="panel panel-info">
+        <div class="panel-heading">撤销签名</div>
+        <div class="panel-body">
+        </div>
+    </div>
+    </div>-->
+</body>
+</html>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.register.core.mapper.BdcQzxxMapper">
+    <resultMap id="bdcQzxxMap" type="cn.gtmap.realestate.common.core.domain.register.BdcQzxxDO">
+        <id property="id" column="id" jdbcType="VARCHAR" javaType="String"/>
+        <result property="xmid" column="xmid" jdbcType="VARCHAR" javaType="String"/>
+        <result property="gzlslid" column="gzlslid" jdbcType="VARCHAR" javaType="String"/>
+        <result property="slbh" column="slbh" jdbcType="VARCHAR" javaType="String"/>
+        <result property="bdlx" column="bdlx" jdbcType="INTEGER" javaType="int"/>
+        <result property="qzrlb" column="qzrlb" jdbcType="INTEGER" javaType="int"/>
+        <result property="qznr" column="qznr" jdbcType="CLOB" typeHandler="org.apache.ibatis.type.ClobTypeHandler"
+                javaType="String"/>
+        <result property="zsid" column="zsid" jdbcType="VARCHAR" javaType="String"/>
+    </resultMap>
+    <!--查询主表data配置-->
+    <select id="listBdcQzxx" parameterType="cn.gtmap.realestate.common.core.domain.register.BdcQzxxDO"
+            resultMap="bdcQzxxMap">
+        SELECT id,xmid,gzlslid,slbh,bdlx,qzrlb,qznr,fid,zsid FROM bdc_qzxx
+        <where>
+            <if test="id!=null and id!=''">
+                and id=#{id}
+            </if>
+            <if test="xmid!=null and xmid!=''">
+                and xmid = #{xmid}
+            </if>
+            <if test="gzlslid!=null and gzlslid!=''">
+                and gzlslid=#{gzlslid}
+            </if>
+            <if test="slbh!=null and slbh!=''">
+                and slbh=#{slbh}
+            </if>
+            <if test="bdlx!=null">
+                and bdlx=#{bdlx}
+            </if>
+            <if test="qzrlb!=null">
+                and qzrlb=#{qzrlb}
+            </if>
+            <if test="sxh != null || sxh == 0">
+                and sxh = #{sxh,jdbcType=INTEGER}
+            </if>
+            <if test="zsid!=null and zsid!=''">
+                and zsid=#{zsid}
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>证书证明统计</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/common.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/ztree/metroStyle.css" />
+    <link rel="stylesheet" href="../../static/ztree/custom_tree.css" />
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css"/>
+
+</head>
+<body>
+<div class="bdc-percentage-container">
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <form class="layui-form">
+                <div class="layui-form-item pf-form-item">
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">部门</label>
+                        <div class="layui-input-inline bdc-radio">
+                            <select class="bdc-jgry bdc-bmmc" name="bmmc" xm-select="selectBmmc" xm-select-radio xm-select-height="34px">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline xzq-sele">
+                        <label class="layui-form-label">缮证人</label>
+                        <div class="layui-input-inline">
+                            <select id="rymc" lay-filter="rymc" lay-search=""
+                                    name="rymc" xm-select="selectBjry" xm-select-height="34px"
+                                    xm-select-search="" xm-select-search-type="dl"
+                                    xm-select-skin="default">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label id="zslxLabel"  class="layui-form-label">证书类型</label>
+                        <div id="zslxDiv"  class="layui-input-inline xzq-sele">
+                            <select xm-select="selectZslx" xm-select-skin="default" xm-select-show-count="2"
+                                    xm-select-height="34px" xm-select-search="" xm-select-search-type="dl"
+                                    lay-filter="zslx" id="zslx" name="zslx" lay-search="">
+                                <!--<option value="">请选择</option>-->
+                                <option value="1">证书</option>
+                                <option value="2">证明</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label id="kssjLabel"  class="layui-form-label">开始时间</label>
+                        <div id="kssjDiv"  class="layui-input-inline">
+                            <input id="kssj" class="layui-input search" type="text" name="kssj" placeholder="请选择"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label id="jzsjLabel"  class="layui-form-label">结束时间</label>
+                        <div id="jzsjDiv"  class="layui-input-inline">
+                            <input id="jzsj" class="layui-input search" type="text" name="jzsj" placeholder="请选择"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline bdc-button-box">
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                        <button id="reset" type="reset" class="layui-btn bdc-secondary-btn reset-btn">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--表格-->
+    <div class="bdc-table-box">
+        <table id="zsdymxtjTable" lay-filter="zsdymxtjFilter"></table>
+    </div>
+</div>
+
+<!--表格上面功能按钮-->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="exportExcel" id="exportExcel">导出Excel</button>
+        <span style="font-size:14px;padding-left: 50px ;">总数： <i id="count" style="padding-left: 10px ;color:blue;font-style:normal"></i></span>
+    </div>
+</script>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/easyui/jquery.easyui.min.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/echart/echart.min.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/formCenter.js"></script>
+<!-- ztree -->
+<script src="../../static/ztree/jquery.ztree.core.js"></script>
+<script src="../../static/ztree/jquery.ztree.excheck.js"></script>
+<script src="../../static/ztree/jquery.ztree.exedit.js"></script>
+<script src="../../static/ztree/selectTree.js"></script>
+<script src="../../static/js/yancheng/count/zsdymxtj.js"></script>
+
+<!--隐藏form，为了Excel导出缓存数据使用-->
+<form style="display: none" action="/realestate-inquiry-ui/excel/export" method="POST" id="form">
+    <input type="hidden" id="fileName"   name="fileName"/>
+    <input type="hidden" id="sheetName"  name="sheetName"/>
+    <input type="hidden" id="cellTitle"  name="cellTitle"/>
+    <input type="hidden" id="cellWidth"  name="cellWidth"/>
+    <input type="hidden" id="cellKey"    name="cellKey"/>
+    <input type="hidden" id="data"       name="data"/>
+    <input type="hidden" id="totalInfo"  name="totalInfo"/>
+    <input type="hidden" id="expandServiceName"  name="expandServiceName"/>
+</form>
+</body>
+</html>

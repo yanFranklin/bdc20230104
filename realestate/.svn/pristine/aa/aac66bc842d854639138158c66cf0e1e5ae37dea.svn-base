@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--宗地基本信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.exchange.ShareDataMapper">
+
+    <select id="queryQltFwFdcqDzList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.QltFwFdcqDzDO">
+        SELECT t.ysdm,
+        t.bdcdyh,
+        t.ywh,
+        t.qllx,
+        t.djlx,
+        t.djyy,
+        t.fdzl,
+        t.tdsyqr,
+        t.dyjzmj dytdmj,
+        t.ftjzmj fttdmj,
+        t.tdsyqssj,
+        t.tdsyjssj,
+        t.fdcjyjg,
+        t.bdcqzh,
+        t.qxdm,
+        t.djjg,
+        t.dbr,
+        t.djsj,
+        t.fj,
+        t.qszt
+        FROM qlt_fw_fdcq_dz t
+        <where>
+            <if test="YWH != null and YWH !=''">
+                AND t.ywh = #{YWH}
+            </if>
+            <if test="BDCDYH != null and BDCDYH !=''">
+                AND t.bdcdyh = #{BDCDYH}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryQlfFwFdcqDzXmList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.QlfFwFdcqDzXmDO">
+        select t.ywh,
+        t.bdcdyh,
+        t.zh,
+        t.zcs,
+        t.ghyt,
+        t.fwjg,
+        t.jzmj,
+        t.jgsj,
+        t.zts,
+        t.qxdm
+        from QLF_FW_FDCQ_DZ_XM t
+        <where>
+            <if test="YWH != null and YWH !=''">
+                and t.ywh = #{YWH}
+            </if>
+            <if test="BDCDYH != null and BDCDYH !=''">
+                and t.bdcdyh = #{BDCDYH}
+            </if>
+        </where>
+    </select>
+
+</mapper>

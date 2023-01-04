@@ -1,0 +1,122 @@
+<!--/**-->
+<!--* author: 前端组-->
+<!--* date: 2019-1-8-->
+<!--* version 3.0.0-->
+<!--* describe: 竖向表格，最左侧标题列固定十个字以内的宽度，右侧数据小于两条时，只展示两条，两条数据等分占满页面-->
+<!--*/-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>竖向表格-只有一条数据展示两条</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../css/table-vertical.css">
+</head>
+<body>
+<div class="bdc-table">
+    <p class="bsc-table-tips">第<span>9</span>本 &nbsp;&nbsp; 第<span>3</span>页</p>
+    <div class="bdc-table-box clearBoth">
+        <div class="bdc-register-catalog bdc-td-20">
+            <div class="bdc-tr-box">
+                <div class="bdc-catalog-title">房地产权登记信息（独栋、层、套、间房屋）</div>
+            </div>
+            <div class="bdc-tr-box">
+                <div class="bdc-syq-msg">
+                    不动产单元号：325122 200222 222222 22222222
+                    <span>房屋坐落：云彩村之七彩云南401</span>
+                </div>
+            </div>
+            <div class="bdc-tr-box clearBoth">
+                <div class="bdc-dyh-msg">
+                    不动产单元号：325122 200222 222222 22222222
+                </div>
+                <div class="layui-form bdc-dyq-lx">
+                    抵押不动产类型：
+                    <span><input type="checkbox" name="unit" lay-skin="primary" title="土地"></span>
+                    <span><input type="checkbox" name="unit" lay-skin="primary" title="土地和房屋"></span>
+                    <span><input type="checkbox" name="unit" lay-skin="primary" title="林地和林木"></span>
+                    <span><input type="checkbox" name="unit" lay-skin="primary" title="土地和在建建筑物"></span>
+                    <span><input type="checkbox" name="unit" lay-skin="primary" title="海域"></span>
+                    <span><input type="checkbox" name="unit" lay-skin="primary" title="海域和构筑物"></span>
+                    <span><input type="checkbox" name="unit" lay-skin="primary" title="其他"></span>
+                </div>
+            </div>
+            <div class="bdc-change-tr-contain clearBoth">
+                <div class="bdc-change-tr bdc-change-tr-title">
+                    <div class="bdc-table-line bdc-tr-box">
+                        <i class="bdc-outer"></i>
+                        <!--<img src="../images/lineTilt.png" alt="">-->
+                        <span class="bdc-table-bottom">内容</span>
+                        <span class="bdc-table-top">业务号</span>
+                    </div>
+                    <div class="bdc-tr-box bdc-year">房屋所有权测试测试测试</div>
+                    <div class="bdc-tr-box">证件种类</div>
+                    <div class="bdc-tr-box">证件号</div>
+                    <div class="bdc-tr-box">房屋共有情况</div>
+                    <div class="bdc-tr-box">权利人类型</div>
+                    <div class="bdc-tr-box">登记类型</div>
+                    <div class="bdc-tr-box">登记原因</div>
+                    <div class="bdc-tr-box">土地使用权人</div>
+                    <div class="bdc-tr-box">独用土地面积(m²)</div>
+                    <div class="bdc-tr-box">分摊土地面积(m²)</div>
+                    <div class="bdc-tr-box">土地使用年限</div>
+                    <div class="bdc-tr-box">不动产权证书号</div>
+                    <div class="bdc-tr-box bdc-fj">附记</div>
+                </div>
+                <div id="trView">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="tablePage"></div>
+</div>
+</body>
+<script type="text/html" id="tableTpl">
+    {{#  layui.each(d, function(index, item){ }}
+        {{#  if(JSON.stringify(item) == "{}"){ }}
+        <div class="bdc-change-tr bdc-tr-width">
+            <div class="bdc-tr-box"><div class="bdc-tr-box-content"></div></div>
+            <div class="bdc-tr-box"><div class="bdc-tr-box-content"></div></div>
+            <div class="bdc-tr-box"><div class="bdc-tr-box-content"></div></div>
+            <div class="bdc-tr-box"><div class="bdc-tr-box-content"></div></div>
+            <div class="bdc-tr-box"><div class="bdc-tr-box-content"></div></div>
+            <div class="bdc-tr-box"><div class="bdc-tr-box-content"></div></div>
+            <div class="bdc-tr-box"><div class="bdc-tr-box-content"></div></div>
+            <div class="bdc-tr-box"><div class="bdc-tr-box-content"></div></div>
+            <div class="bdc-tr-box"><div class="bdc-tr-box-content"></div></div>
+            <div class="bdc-tr-box"><div class="bdc-tr-box-content"></div></div>
+            <div class="bdc-tr-box"><div class="bdc-tr-box-content"></div></div>
+            <div  class="bdc-year bdc-tr-box">
+                <p>起</p>
+                <p>止</p>
+            </div>
+            <div class="bdc-tr-box"><div class="bdc-tr-box-content"></div></div>
+            <div class="bdc-tr-box bdc-fj"><div class="bdc-tr-box-content"></div></div>
+        </div>
+        {{# } else { }}
+        <div class="bdc-change-tr bdc-tr-width">
+            <div class="bdc-tr-box" data-title="{{item.ywh}}"><div class="bdc-tr-box-content">{{item.ywh}}</div></div>
+            <div class="bdc-tr-box" data-title="{{item.syq}}"><div class="bdc-tr-box-content">{{item.syq}}</div></div>
+            <div class="bdc-tr-box" data-title="{{item.zjzl}}"><div class="bdc-tr-box-content">{{item.zjzl}}</div></div>
+            <div class="bdc-tr-box" data-title="{{item.zjh}}"><div class="bdc-tr-box-content">{{item.zjh}}</div></div>
+            <div class="bdc-tr-box" data-title="{{item.gyqk}}"><div class="bdc-tr-box-content">{{item.gyqk}}</div></div>
+            <div class="bdc-tr-box" data-title="{{item.qlrlx}}"><div class="bdc-tr-box-content">{{item.qlrlx}}</div></div>
+            <div class="bdc-tr-box" data-title="{{item.djlx}}"><div class="bdc-tr-box-content">{{item.djlx}}</div></div>
+            <div class="bdc-tr-box" data-title="{{item.djyy}}"><div class="bdc-tr-box-content">{{item.djyy}}</div></div>
+            <div class="bdc-tr-box" data-title="{{item.tdsyqr}}"><div class="bdc-tr-box-content">{{item.tdsyqr}}</div></div>
+            <div class="bdc-tr-box" data-title="{{item.dymj}}"><div class="bdc-tr-box-content">{{item.dymj}}</div></div>
+            <div class="bdc-tr-box" data-title="{{item.ftmj}}"><div class="bdc-tr-box-content">{{item.ftmj}}</div></div>
+            <div  class="bdc-year bdc-tr-box">
+                <p><div class="bdc-tr-box-content">{{item.syksnx}}起</div></p>
+                <p><div class="bdc-tr-box-content">{{item.syjsnx}}止</div></p>
+            </div>
+            <div class="bdc-tr-box" data-title="{{item.zsh}}"><div class="bdc-tr-box-content">{{item.zsh}}</div></div>
+            <div class="bdc-tr-box bdc-fj"><div class="bdc-tr-box-content">{{item.djsj}}</div></div>
+        </div>
+        {{#  } }}
+    {{#  }); }}
+</script>
+<script src="../../layui/layui.js"></script>
+<script src="../js/table-vertical-js.js"></script>
+</html>

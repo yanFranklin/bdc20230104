@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.building.core.mapper.ZdMapper">
+    <!--分页查询宗地信息 -->
+    <select id="listZdByPageOrder" parameterType="map" resultType="map">
+        <choose>
+            <when test="qlr != null and qlr !=''">
+                SELECT * FROM (SELECT Z.BDCDYH,Z.TDZL AS ZL,Z.DJH,Z.SCMJ,Z.FZMJ,Z.ZD_DJDCB_INDEX AS QJID,'ZD' AS LX FROM ZD_DJDCB Z
+                INNER JOIN(SELECT DJH FROM ZD_QLR WHERE QLRMC LIKE '%'||#{qlr} || '%' GROUP BY DJH) W ON Z.DJH=W.DJH
+                UNION ALL
+                SELECT Q.BDCDYH,Q.TDZL AS ZL,Q.DJH,Q.SCMJ,Q.FZMJ,Q.QSZD_DJDCB_INDEX AS QJID,'QSZD' AS LX FROM QSZD_DJDCB Q
+                INNER JOIN (SELECT DJH FROM QSZD_QLR WHERE QLRMC LIKE '%'||#{qlr} || '%' GROUP BY DJH) E ON Q.DJH=E.DJH)
+            </when>
+            <otherwise>
+                SELECT * FROM (SELECT Z.BDCDYH,Z.TDZL AS ZL,Z.DJH,Z.SCMJ,Z.FZMJ,Z.ZD_DJDCB_INDEX AS QJID,'ZD' AS LX FROM ZD_DJDCB Z
+                UNION ALL
+                SELECT Q.BDCDYH,Q.TDZL AS ZL,Q.DJH,Q.SCMJ,Q.FZMJ,Q.QSZD_DJDCB_INDEX AS QJID,'QSZD' AS LX FROM QSZD_DJDCB Q)
+            </otherwise>
+        </choose>
+        <where>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+            </if>
+            <if test="zl != null and zl != ''">
+                AND zl LIKE '%'|| #{zl} || '%'
+            </if>
+            <if test="djh != null and djh != ''">
+                AND djh LIKE '%'|| #{djh} || '%'
+            </if>
+        </where>
+    </select>
+
+    <select id="listZdzjxxByPageOrder" parameterType="map" resultType="cn.gtmap.realestate.common.core.dto.building.DjdcbJzxxResponseDTO">
+       select jzdh,xzbz,yzbz,djh from ${tableName}
+        <where>
+            <if test="djh != null and djh != ''">
+                AND djh = #{djh}
+            </if>
+        </where>
+    </select>
+
+    <select id="listZdxxByPageJson" parameterType="map" resultType="map">
+        SELECT D.BDCDYH,D.TDZL AS ZL,D.DJH,D.SCMJ,D.FZMJ,Z.QLRMC FROM ZD_DJDCB D
+        LEFT JOIN ZD_QLR Z ON D.ZD_DJDCB_INDEX = Z.DJDCB_INDEX
+       <where>
+            <if test="djh != null and djh != ''">
+                AND D.djh LIKE '%'|| #{djh} || '%'
+            </if>
+           <if test="zdqlr != null and zdqlr != ''">
+               AND Z.qlrmc LIKE '%'|| #{zdqlr} || '%'
+           </if>
+           <if test="zl != null and zl != ''">
+               AND D.tdzl LIKE '%'|| #{zl} || '%'
+           </if>
+        </where>
+    </select>
+
+    <select id="listZdLczt" parameterType="java.util.Map"  resultType="java.lang.String">
+        <if test="djhList != null and djhList.size > 0">
+            (select djh from zd_djdcb
+            <where>djh in
+                <foreach
+                    collection="
+                        djhList" item="djh" index="index"
+                     open="(" close=")" separator=",">
+                #{djh}
+            </foreach>
+            AND lczt = '0'
+        </where>)
+
+            union all
+
+            (select djh from ${tableName} T
+            <where>
+                djh in
+                <foreach collection="djhList" item="djh" index="index"
+                         open="(" close=")" separator=",">
+                    #{djh}
+                </foreach>
+                AND T.lczt = '0'
+            </where>)
+        </if>
+    </select>
+
+    <select id="listZdLczta" parameterType="java.util.Map"  resultType="java.lang.String">
+        select lczt from zd_djdcb
+        <where>
+            <if test="djhList != null and djhList.size > 0">
+                AND djh in
+                <foreach collection="djhList" item="djh" index="index"
+                         open="(" close=")" separator=",">
+                    #{djh}
+                </foreach>
+            </if>
+            AND lczt IS NOT NULL
+        </where>
+    </select>
+
+    <select id="listZdLcztb" parameterType="java.util.Map"  resultType="java.lang.String">
+        select lczt from ${tableName} T
+        <where>
+    <if test="djhList != null and djhList.size > 0">
+        AND djh in
+        <foreach collection="djhList" item="djh" index="index"
+                 open="(" close=")" separator=",">
+            #{djh}
+        </foreach>
+    </if>
+    AND T.lczt IS NOT NULL
+</where>
+</select>
+
+</mapper>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!--淮安不动产调用供电公司查询过户的用户信息接口 -->
+    <ex:bean id="dian_cxyhxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${dian.cx.url}"/>
+            <ex:property name="logEventName" value="业务系统申请电过户查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="DIAN"/>
+            <ex:property name="dsfFlag" value="DIAN"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/huaian/dian/request.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/huaian/dian/response.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!--淮安不动产调用供电公司过户接口 -->
+    <ex:bean id="dianPush">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${dian.gh.url}"/>
+            <ex:property name="contentType" value="json"/>
+            <ex:property name="logEventName" value="淮安不动产调用供电公司过户接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="DIAN"/>
+            <ex:property name="dsfFlag" value="DIAN"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/huaian/dian/gh_request.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!--淮安不动产调用燃气公司查询过户的用户信息接口，气和电接口参数一样 -->
+    <ex:bean id="qi_cxyhxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${qi.cx.url}"/>
+            <ex:property name="logEventName" value="业务系统申请气过户查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="QI"/>
+            <ex:property name="dsfFlag" value="QI"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/huaian/qi/request.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/huaian/qi/response.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!--淮安不动产调用供气公司过户接口 -->
+    <ex:bean id="qiPush">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${qi.gh.url}"/>
+            <ex:property name="contentType" value="json"/>
+            <ex:property name="logEventName" value="淮安不动产调用供气公司过户接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="QI"/>
+            <ex:property name="dsfFlag" value="QI"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/huaian/qi/gh_request.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!--淮安不动产调用供水公司查询过户的用户信息接口，有加解密 -->
+    <ex:bean id="shui_cxyhxx">
+        <ex:service-info request-type="httpPostForHuaianShui">
+            <ex:property name="url" value="${shui.cx.url}"/>
+            <ex:property name="logEventName" value="业务系统申请水过户查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SHUI"/>
+            <ex:property name="dsfFlag" value="SHUI"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/huaian/shui/request.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/huaian/shui/response.xml"/>
+        </ex:response>
+    </ex:bean>
+    
+    <!--淮安不动产调用供水公司过户接口 -->
+    <!--    淮安的水需要加解密-->
+    <ex:bean id="shuiPush">
+        <ex:service-info request-type="httpPostForHuaianShui">
+            <ex:property name="url" value="${shui.gh.url}"/>
+            <ex:property name="logEventName" value="淮安不动产调用供水公司过户接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SHUI"/>
+            <ex:property name="dsfFlag" value="SHUI"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/huaian/shui/gh_request.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/huaian/shui/gh_response.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!--淮安淮阴区不动产调用供水公司过户接口 -->
+    <ex:bean id="hy_shuigh">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${hy.shui.gh.url}"/>
+            <ex:property name="logEventName" value="淮安淮阴区不动产调用供水公司过户接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="HY_SHUIGH"/>
+            <ex:property name="dsfFlag" value="HY_SHUIGH"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/huaian/shui/hy/gh_request.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!--    淮安淮阴区供水过户接口请求参数key的加密-->
+    <ex:bean id="hysgh_getkey">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="sdqEncryptServiceImpl"/>
+            <ex:property name="methodName" value="getKey"/>
+        </ex:service-info>
+    </ex:bean>
+    
+</beans>

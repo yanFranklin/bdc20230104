@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.init.core.mapper.BdcXmLsgxMapper">
+
+    <select id="queryBdcXmLsgxList" parameterType="map" resultType="cn.gtmap.realestate.common.core.domain.BdcXmLsgxDO">
+        SELECT a.gxid,a.xmid,a.yxmid,a.zxyql,a.wlxm FROM bdc_xm_lsgx a
+        LEFT JOIN bdc_xm b ON b.xmid=a.xmid
+        <where>
+            <if test="xmid != '' and xmid != null">
+                AND a.xmid = #{xmid}
+            </if>
+            <if test="xmids != null">
+                AND a.xmid IN
+                <foreach collection="xmids" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="yxmid != '' and yxmid != null">
+                AND a.yxmid = #{yxmid}
+            </if>
+            <if test="slbh != '' and slbh != null">
+                AND b.slbh = #{slbh}
+            </if>
+            <if test="gzlslid != '' and gzlslid != null">
+                AND b.gzlslid = #{gzlslid}
+            </if>
+            <if test="zxyql != null">
+                AND nvl(a.zxyql,0) = #{zxyql}
+            </if>
+            <if test="wlxm != null">
+                AND nvl(a.wlxm,0) = #{wlxm}
+            </if>
+            <if test="djxls != null">
+                AND b.djxl IN
+                <foreach collection="djxls" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        <if test="order != '' and order != null">
+            order by  ${order}
+        </if>
+    </select>
+
+    <!-- 删除流程项目关系 -->
+    <delete id="deleteBdcXmLsgx">
+        DELETE FROM bdc_xm_lsgx a WHERE a.xmid IN
+        (
+        SELECT b.xmid FROM bdc_xm b
+        WHERE b.gzlslid = #{gzlslid}
+        )
+    </delete>
+
+    <!-- 删除流程项目作为yxmid的项目历史关系 -->
+    <delete id="deleteBdcYxmLsgx">
+        DELETE
+        FROM bdc_xm_lsgx a
+        WHERE a.yxmid IN
+              (
+                  SELECT b.xmid
+                  FROM bdc_xm b
+                  WHERE b.gzlslid = #{gzlslid}
+              )
+    </delete>
+
+    <!-- 通过递归查询出历史项目信息 -->
+    <select id="getAllLsXmByLsgx" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            parameterType="cn.gtmap.realestate.common.core.qo.init.BdcLsxmQO">
+        SELECT * FROM BDC_XM t
+        where t.XMID IN (SELECT t.yxmid  FROM bdc_xm_lsgx t START WITH xmid =#{xmid}
+        CONNECT BY PRIOR yxmid = xmid)
+        <if test="qllxs != null and qllxs.size() > 0">
+            AND t.qllx IN
+            <foreach collection="qllxs" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="pcqllxs != null and pcqllxs.size() > 0">
+            AND t.qllx  NOT IN
+            <foreach collection="pcqllxs" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+</mapper>

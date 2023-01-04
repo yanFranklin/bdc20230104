@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.config.core.mapper.BdcXtFphMapper">
+    <!--分页查询发票号配置-->
+    <select id="listBdcXtFphByPage" parameterType="cn.gtmap.realestate.common.core.qo.config.BdcFphQO"
+            resultType="cn.gtmap.realestate.common.core.vo.config.ui.BdcFphVO">
+        SELECT
+        T.FPHID,
+        T.NF,
+        T.QXDM,
+        T.FPH,
+        T.SYQK,
+        T.CJR,
+        T.CJRID,
+        T.CJSJ,
+        T.SFXXID,
+        T.BZ,
+        T.LQR,
+        T.LQRID,
+        T.LQBM,
+        T.LQBMID,
+        T.ZZJFBS,
+        T.SLBH,
+        S.SYR,
+        S.SYRID,
+        S.SYSJ,
+        S.SYYY,
+        t.fplx
+        FROM
+        BDC_FPH T
+        LEFT JOIN BDC_FPHSYMX S
+        ON T.FPHSYMXID=S.FPHSYMXID
+        <where>
+            <if test="nf != null and nf != ''">
+                AND T.NF like '%'|| #{nf} || '%'
+            </if>
+            <if test="qxdm != null and qxdm != ''">
+                AND T.QXDM = #{qxdm}
+            </if>
+
+            <if test="fph != null and fph != ''">
+                AND T.FPH like '%'|| #{fph} || '%'
+            </if>
+            <if test="0 == syqk || syqk != null and syqk != ''">
+                AND T.SYQK = #{syqk}
+            </if>
+            <if test="lqbm != null and lqbm != ''">
+                AND T.LQBM like '%'|| #{lqbm} || '%'
+            </if>
+            <if test="lqr != null and lqr != ''">
+                AND T.LQR like '%'|| #{lqr} || '%'
+            </if>
+            <if test="lqbmid != null and lqbmid != ''">
+                AND T.LQBMID = #{lqbmid}
+            </if>
+            <if test="lqrid != null and lqrid != ''">
+                AND T.LQRID like '%'|| #{lqrid} || '%'
+            </if>
+            <if test="fphq != null and fphq != ''">
+                AND to_number(T.FPH) <![CDATA[ >= ]]>  to_number(#{fphq})
+            </if>
+            <if test="fphz != null and fphz != ''">
+                AND to_number(T.FPH) <![CDATA[ <= ]]>  to_number(#{fphz})
+            </if>
+            <if test="fplx != null and fplx != ''">
+                AND t.fplx = #{fplx}
+            </if>
+        </where>
+
+        ORDER BY
+        <!--避免$注入，直接判断值-->
+        <if test="field != null and field != '' and order != null and order != ''">
+            <if test="field == 'nf'.toString()">
+                T.NF
+            </if>
+            <if test="field == 'qxdm'.toString()">
+                T.QXDM
+            </if>
+
+            <if test="field == 'fph'.toString()">
+                T.FPH
+            </if>
+            <if test="field == 'lqr'.toString()">
+                T.LQR
+            </if>
+            <if test="field == 'lqbm'.toString()">
+                T.LQBM
+            </if>
+
+            <if test="order == 'desc'.toString()">
+                DESC ,
+            </if>
+            <if test="order == 'asc'.toString()">
+                ASC ,
+            </if>
+        </if>
+
+        T.FPH ASC
+    </select>
+
+
+    <!--查询指定区间发票号数量-->
+    <select id="countYzh" parameterType="cn.gtmap.realestate.common.core.vo.config.ui.BdcYzhVO" resultType="int">
+        SELECT
+            COUNT(*) AS NUM
+        FROM
+            BDC_FPH T
+        WHERE
+            TO_NUMBER(T.FPH)
+          BETWEEN
+            #{qsbh}
+          AND
+            #{jsbh}
+    </select>
+
+    <select id="listBdcXtFph" parameterType="cn.gtmap.realestate.common.core.qo.config.BdcFphQO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcFphDO">
+        <if test="num !=null">
+            SELECT FPHID, NF, QXDM, FPH, SYQK, CJR, CJSJ, SFXXID, BZ,LQRID,LQBMID FROM (
+        </if>
+        SELECT
+        T.FPHID,
+        T.NF,
+        T.QXDM,
+        T.FPH,
+        T.SYQK,
+        T.CJR,
+        T.CJRID,
+        T.CJSJ,
+        T.SFXXID,
+        T.BZ,
+        T.LQR,
+        T.LQRID,
+        T.LQBM,
+        T.LQBMID,
+        T.SLBH,
+        S.FPHSYMXID,
+        S.SYR,
+        S.SYRID,
+        S.SYSJ,
+        S.SYYY
+        FROM
+        BDC_FPH T
+        LEFT JOIN BDC_FPHSYMX S
+        ON T.FPHSYMXID=S.FPHSYMXID
+        <where>
+            nvl(T.ZZJFBS,0) != 1
+            <if test="nf != null and nf != ''">
+                AND T.NF like '%'|| #{nf} || '%'
+            </if>
+            <if test="qxdm != null and qxdm != ''">
+                AND T.QXDM = #{qxdm}
+            </if>
+
+            <if test="fph != null and fph != ''">
+                AND T.FPH like '%'|| #{fph} || '%'
+            </if>
+            <if test="fphid != null and fphid != ''">
+                AND T.FPHID = #{fphid}
+            </if>
+            <if test="0 == syqk || syqk != null and syqk != ''">
+                AND T.SYQK = #{syqk}
+            </if>
+            <if test="lqbm != null and lqbm != ''">
+                AND T.LQBM like '%'|| #{lqbm} || '%'
+            </if>
+            <if test="lqr != null and lqr != ''">
+                AND T.LQR like '%'|| #{lqr} || '%'
+            </if>
+            <if test="lqbmid != null and lqbmid != ''">
+                AND T.LQBMID = #{lqbmid}
+            </if>
+            <if test="lqrid != null and lqrid != ''">
+                AND T.LQRID like '%'|| #{lqrid} || '%'
+            </if>
+        </where>
+
+        ORDER BY
+        <!--避免$注入，直接判断值-->
+        <if test="field != null and field != '' and order != null and order != ''">
+            <if test="field == 'nf'.toString()">
+                T.NF
+            </if>
+            <if test="field == 'qxdm'.toString()">
+                T.QXDM
+            </if>
+
+            <if test="field == 'fph'.toString()">
+                T.FPH
+            </if>
+            <if test="field == 'lqr'.toString()">
+                T.LQR
+            </if>
+            <if test="field == 'lqbm'.toString()">
+                T.LQBM
+            </if>
+
+            <if test="order == 'desc'.toString()">
+                DESC ,
+            </if>
+            <if test="order == 'asc'.toString()">
+                ASC ,
+            </if>
+        </if>
+
+        T.FPH ASC
+        <if test="num !=null">
+            ) C WHERE  <![CDATA[ ROWNUM <= #{num}  ]]>
+        </if>
+    </select>
+    <!--修改发票号状态-->
+    <update id="updateBdcFphSyzt" parameterType="cn.gtmap.realestate.common.core.domain.BdcFphDO">
+        UPDATE BDC_FPH T SET T.FPHSYMXID = #{fphsymxid,jdbcType=VARCHAR},
+        T.SYQK= #{syqk,jdbcType=VARCHAR},
+        T.SLBH= #{slbh,jdbcType=VARCHAR},
+        T.SFXXID= #{sfxxid,jdbcType=VARCHAR}
+        WHERE T.FPHID=#{fphid}
+    </update>
+
+    <select id="listFphSymx" parameterType="String"
+            resultType="cn.gtmap.realestate.common.core.dto.config.BdcFphSymxDTO">
+         select rownum as xh, t.syr,t.sysj,t.syyy,t.syqk,f.slbh,f.lqbm  from BDC_FPHSYMX t
+         left join bdc_fph f on f.fphid = t.fphid where t.fphid = #{fphid}
+    </select>
+
+</mapper>

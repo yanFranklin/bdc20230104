@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!--房管局相关接口服务类  -->
+
+    <!--舒城县存量房交易备案接口 -->
+    <ex:bean id="fgj_clfjybacx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="logEventName" value="舒城县存量房交易备案接口"/>
+            <ex:property name="beanName"
+                         value="shuchengFgjServiceImpl"/>
+            <ex:property name="methodName" value="shuchengClfHyxx"/>
+        </ex:service-info>
+
+        <ex:log dsfFlag="FGJ" logEventName="舒城县存量房交易备案接口" requester="FGJ" responser="BDC"/>
+
+    </ex:bean>
+
+
+    <!--房产提供，获取电子合同 -->
+    <ex:bean id="fgj_getContractImage">
+        <ex:service-info request-type="httpGet">
+            <ex:property name="url" value="${fgj.getcontractimage.url}"/>
+            <ex:property name="token" value="${fgj.token}"/>
+            <ex:property name="logEventName" value="请求房管局,获取电子合同"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FGJ"/>
+            <ex:property name="dsfFlag" value="FGJ"/>
+        </ex:service-info>
+        <ex:log dsfFlag="FGJ" logEventName="请求舒城房管局,获取电子合同" requester="FGJ" responser="BDC"/>
+
+    </ex:bean>
+
+    <!--  规则验证使用，通过xmid获取舒城存量房合同信息 -->
+    <ex:bean id="clfhtxxbyxmid">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="shuchengFgjServiceImpl"/>
+            <ex:property name="methodName" value="getClfHtxxByXmid"/>
+        </ex:service-info>
+        <ex:log dsfFlag="FCJY" logEventName="根据XMID查询舒城房产交易备案信息" requester="BDC" responser="FCJY" />
+    </ex:bean>
+
+    <!--房产提供，获取存量房合同信息 -->
+    <ex:bean id="fgj_GetContract">
+        <ex:service-info request-type="httpGet">
+            <ex:property name="url" value="${fgj.getcontract.url}"/>
+            <ex:property name="token" value="${fgj.token}"/>
+            <ex:property name="logEventName" value="请求房管局,获取存量房合同信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FGJ"/>
+            <ex:property name="dsfFlag" value="FGJ"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/shucheng/fcjy/fcjyClfHtxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/shucheng/fcjy/fcjyClfHtxx/response/data.xml"/>
+        </ex:response>
+        <ex:log dsfFlag="FGJ" logEventName="请求舒城房管局,获取存量房合同信息" requester="FGJ" responser="BDC"/>
+
+    </ex:bean>
+
+    <!--舒城县查询一手房登记数据接口 -->
+    <ex:bean id="fgj_ysfdjsjcx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="logEventName" value="舒城县一手房接口"/>
+            <ex:property name="beanName"
+                         value="shuchengFgjServiceImpl"/>
+            <ex:property name="methodName" value="shuchengYsfDjsj"/>
+        </ex:service-info>
+
+        <ex:log dsfFlag="FGJ" logEventName="舒城县查询一手房登记数据接口" requester="FGJ" responser="BDC"/>
+
+    </ex:bean>
+
+    <!--房产提供，商品房合同信息 -->
+    <ex:bean id="fgj_GetNewContract">
+        <ex:service-info request-type="httpGet">
+            <ex:property name="url" value="${fgj.getnewcontract.url}"/>
+            <ex:property name="token" value="${fgj.token}"/>
+            <ex:property name="logEventName" value="请求房管局,商品房合同信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FGJ"/>
+            <ex:property name="dsfFlag" value="FGJ"/>
+        </ex:service-info>
+        <ex:log dsfFlag="FGJ" logEventName="请求舒城房管局,商品房合同信息" requester="FGJ" responser="BDC"/>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/shucheng/fcjy/fcjySpfBaxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/shucheng/fcjy/fcjySpfBaxx/response/data.xml"/>
+        </ex:response>
+    </ex:bean>
+</beans>

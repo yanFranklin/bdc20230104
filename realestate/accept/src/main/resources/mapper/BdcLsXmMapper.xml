@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.accept.core.mapper.BdcSlYwxxMapper">
+
+    <!--获取到项目的最大受理流水号-->
+    <select id="listBdcSLXmByPageOrder" parameterType="map" resultType="cn.gtmap.realestate.common.core.dto.accept.BdcSlYwxxDTO">
+        SELECT t.xmid,t.jbxxid,t.bdcdyh,t.bdclx,t.djxl,t.ybdcqz,t.zl,t.qlr,t.qjid,t.qlrsjly,t.ywrsjly,t.sfscql,t.qlsjly,t.zszl,t.zsxh,t.sfzlcsh,t.sfzf,t.sfhz,t.sfhyyzxql,t.qllx,t.sfsczs,t.yt,t.qjgldm FROM bdc_sl_xm t
+        <where>
+            <if test="jbxxid != null and jbxxid !=''">
+                AND t.jbxxid=#{jbxxid}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND instr(t.bdcdyh,#{bdcdyh})>0
+            </if>
+            <if test="qlr != null and qlr !=''">
+                AND instr(t.qlr,#{qlr})>0
+            </if>
+            <if test="zl != null and zl !=''">
+                AND instr(t.zl,#{zl})>0
+            </if>
+            <if test="ybdcqz != null and ybdcqz !=''">
+                AND instr(t.ybdcqz,#{ybdcqz})>0
+            </if>
+            <if test="djxl != null and djxl !=''">
+                AND t.djxl=#{djxl}
+            </if>
+            <if test="sfzlcsh != null and sfzlcsh !=''">
+                AND t.sfzlcsh=#{sfzlcsh}
+            </if>
+            <if test="xmidList !=null and xmidList.size() > 0">
+                and t.xmid in
+                <foreach collection="xmidList" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY XMID ASC
+    </select>
+
+    <select id="listBdcSlFwxxByPageOrder" parameterType="cn.gtmap.realestate.common.core.qo.register.BdcBdcdyQO"
+            resultType="cn.gtmap.realestate.common.core.dto.accept.BdcSlFwxxDTO">
+        select
+        t.xmid,t.jbxxid,f.fwxxid,t.bdcdyh,f.ysfwbm,t.zl,t.ybdcqz,t.dzwmj,f.fwbm,t.qllx,t.qlxz,t.zdzhmj,t.zdzhyt,f.fwdh,f.tdsyqssj,f.tdsyjssj,f.fwlx,f.zcs,f.szc,f.fwjg,f.jgsj,f.jzmj,f.ftjzmj,f.fjh,f.fj
+        from bdc_sl_xm t
+        left join bdc_sl_fwxx f on f.xmid=t.xmid
+        left join bdc_sl_jbxx j on j.jbxxid=t.jbxxid
+        <where>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND instr(t.bdcdyh,#{bdcdyh})>0
+            </if>
+            <if test="gzlslid != null and gzlslid !=''">
+                AND j.gzlslid = #{gzlslid}
+            </if>
+            <if test="zl != null and zl !=''">
+                AND instr(t.zl,#{zl})>0
+            </if>
+            <if test="dzwyt != null and dzwyt !=''">
+                AND f.yt = #{dzwyt}
+            </if>
+            <if test="fjh != null and fjh !=''">
+                AND f.fjh = #{fjh}
+            </if>
+            <if test="djxl != null and djxl !=''">
+                AND t.djxl=#{djxl}
+            </if>
+            <if test="xmidList !=null and xmidList.size() > 0">
+                and t.xmid in
+                <foreach collection="xmidList" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY XMID ASC
+    </select>
+
+    <select id="listGwcData" parameterType="map" resultType="cn.gtmap.realestate.common.core.dto.accept.BdcSlYwxxDTO">
+        SELECT
+        t.jbxxid,t.bdcdyh,t.bdclx,t.djxl,t.ybdcqz,t.zl,t.qlr,t.qjid,t.qlrsjly,t.ywrsjly,t.sfscql,t.qlsjly,t.zszl,t.zsxh,t.sfzlcsh,t.sfzf,t.sfhz,t.sfhyyzxql,t.qllx,l.YXMID
+        as xmid,t.qjgldm FROM bdc_sl_xm t
+        LEFT JOIN BDC_SL_XM_LSGX l on l.XMID=t.XMID
+        <where>
+            <if test="jbxxid != null and jbxxid !=''">
+                AND t.jbxxid=#{jbxxid}
+            </if>
+            <if test="sfzlcsh != null and sfzlcsh !=''">
+                AND t.sfzlcsh=#{sfzlcsh}
+            </if>
+            and l.sfwlzs=0
+        </where>
+    </select>
+
+    <!--查询项目表以及关联的主历史关系-->
+    <select id="listGwcSelectDataWithLsgx" parameterType="cn.gtmap.realestate.common.core.qo.accept.BdcSlXmQO" resultType="cn.gtmap.realestate.common.core.vo.accept.ui.BdcSlXmVO">
+        SELECT t.*,l.yxmid FROM bdc_sl_xm t
+        LEFT JOIN BDC_SL_XM_LSGX l ON l.XMID=t.XMID  AND nvl(l.sfwlzs,0) = 0
+        <where>
+            <if test="jbxxid != null and jbxxid !=''">
+                AND t.jbxxid=#{jbxxid}
+            </if>
+            <if test="sfzlcsh != null and sfzlcsh !=''">
+                AND t.sfzlcsh=#{sfzlcsh}
+            </if>
+        </where>
+    </select>
+
+</mapper>

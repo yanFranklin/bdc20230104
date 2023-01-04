@@ -1,0 +1,20 @@
+--liquibase formatted sql
+--preconditions dbms:oracle
+--changeset bdc_yjsf_ddxx:1 failOnError:false runOnChange:true runAlways:false
+CREATE TABLE BDC_YJSF_DDXX
+  (
+    ID      VARCHAR2(32) NOT NULL ENABLE,
+    YJDH    VARCHAR2(32),
+    DDSCSJ  DATE,
+    CZRXM   VARCHAR2(50),
+    DDZT    NUMBER DEFAULT 1,
+    ZTXGSJ  DATE,
+    constraint BDC_YJSF_DDXX primary key(ID)
+);
+COMMENT ON COLUMN BDC_YJSF_DDXX.ID IS '主键';
+COMMENT ON COLUMN BDC_YJSF_DDXX.YJDH IS '月结单号';
+COMMENT ON COLUMN BDC_YJSF_DDXX.DDSCSJ IS '订单生成时间';
+COMMENT ON COLUMN BDC_YJSF_DDXX.CZRXM IS '操作人姓名';
+COMMENT ON COLUMN BDC_YJSF_DDXX.DDZT IS '订单状态（1:未缴费、2:已缴费、-1:已作废）';
+COMMENT ON COLUMN BDC_YJSF_DDXX.ZTXGSJ IS '状态修改时间';
+CREATE INDEX "BDC_YJSF_DDXX_YJDH_INDEX" ON BDC_YJSF_DDXX (YJDH);

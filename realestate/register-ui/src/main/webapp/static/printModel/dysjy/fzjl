@@ -1,0 +1,21 @@
+--主表 xmid,ewm,zlSFX
+select t.slbh,z.zl||#{zlSFX} as zl,t.bz,t.bz,#{ewm} ewm from bdc_xm t left join bdc_xm_zs_gx g on g.xmid = t.xmid left join
+bdc_zs z on z.zsid = g.zsid where t.xmid =#{xmid};
+select to_char(wm_concat(t.qlrmc))sqr,to_char(wm_concat(t.dh))sqrlxdh  from bdc_qlr t where t.qlrlb=1 and  t.xmid =#{xmid} order by t.sxh asc;
+SELECT fzrq, fzr, szr, zsid, lzrzjzl, zl||#{zlSFX}
+FROM (
+	SELECT to_char(z.fzsj, 'yyyy"年"mm"月"dd"日"') AS fzrq, z.fzr, z.szr
+		, z.zsid, f.mc AS lzrzjzl, z.zl AS zl
+	FROM bdc_zs z
+	LEFT JOIN bdc_xm_zs_gx g ON z.zsid = g.zsid
+		LEFT JOIN bdc_zd_zjzl f ON f.dm = z.lzrzjzl
+	WHERE g.xmid = #{xmid}
+		AND g.zsid IS NOT NULL
+	ORDER BY z.zsid ASC
+)
+WHERE rownum = 1
+
+---子表 xmid,zsSFX
+select z.bdcqzh||#{zsSFX} bdcqzh,z.qzysxlh||#{zsSFX} qzysxlh,z.zsid,z.qlr czr,z.lzr,z.lzrzjh,z.lzrdh,j.mc lzrzjzl  from bdc_zs z
+left join bdc_xm_zs_gx g on z.zsid = g.zsid left join bdc_zd_zjzl j on j.dm = z.lzrzjzl
+where g.xmid =#{xmid} and g.zsid is not null order by z.zsid ASC;

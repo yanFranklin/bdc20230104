@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.gtmap.realestate.init.core.mapper.BdcQjgldmMapper">
+	<select id="listQjgldmByRoleCode" parameterType="String" resultType="String">
+		SELECT QJGLDM FROM BDC_JS_QJGLDM_GX t WHERE t.rolecode =#{rolecode}
+		ORDER BY t.xh
+	</select>
+
+	<select id="listDistinctQjgldmByRoleCodeList"  resultType="cn.gtmap.realestate.common.core.domain.BdcZdQjgldmDO">
+		SELECT T.QJGLDM AS DM,Z.MC FROM (
+        SELECT QJGLDM,MIN(XH) AS XH FROM BDC_JS_QJGLDM_GX t
+		WHERE t.ROLECODE IN
+		<foreach collection="roleCodeList" item="rolecode" open="(" close=")" separator=",">
+			#{rolecode,jdbcType=VARCHAR}
+		</foreach>
+		GROUP BY t.QJGLDM
+		) T
+		LEFT JOIN BDC_ZD_QJGLDM z ON Z.dm =T.QJGLDM
+		ORDER BY T.XH
+	</select>
+
+	<select id="listJsQxdmGx" resultType="cn.gtmap.realestate.common.core.domain.BdcJsQxdmGxDO">
+		SELECT ROLECODE,QXDM FROM BDC_JS_QXDM_GX t
+	</select>
+
+	<select id="listMostQjgldmByUserId" resultType="String">
+		with a as (
+			SELECT
+				count(qjgldm) as num, qjgldm
+			FROM
+				BDC_JS_QJGLDM_GX
+			WHERE
+				rolecode IN
+				<foreach collection="roleCodeList" item="rolecode" open="(" close=")" separator=",">
+					#{rolecode,jdbcType=VARCHAR}
+				</foreach>
+			GROUP BY
+				qjgldm
+		)
+		select max(qjgldm) as qjgldm from  a where num = (select max(num) from a)
+	</select>
+
+	<select id="listDistinctQjgldmByDm"  resultType="cn.gtmap.realestate.common.core.domain.BdcZdQjgldmDO">
+		SELECT T.DM,T.MC
+		FROM BDC_ZD_QJGLDM T
+		WHERE t.DM IN
+		<foreach collection="qjgldmList" item="qjgldm" open="(" close=")" separator=",">
+			#{qjgldm,jdbcType=VARCHAR}
+		</foreach>
+	</select>
+
+	<!--分页查询-->
+	<select id="listBdcJsQxdmGxByPage" parameterType="cn.gtmap.realestate.common.core.domain.BdcJsQxdmGxDO"
+			resultType="cn.gtmap.realestate.common.core.domain.BdcJsQxdmGxDO">
+		SELECT ROLECODE,QXDM,GXID FROM BDC_JS_QXDM_GX
+		where 1 = 1
+		<if test="qxdm != null and qxdm != ''">
+			AND instr(qxdm,#{qxdm})>0
+		</if>
+		<if test="rolecode !=null and rolecode !=''">
+			AND rolecode = #{rolecode}
+		</if>
+	</select>
+</mapper>

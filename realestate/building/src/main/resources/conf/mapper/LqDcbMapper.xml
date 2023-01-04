@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.building.core.mapper.LqDcbMapper">
+    <!--分页查询林权调查表信息(有qlr查询条件) -->
+    <select id="listLqDcbByPageOrder" parameterType="map" resultType="map">
+        <choose>
+            <when test="qlr != null and qlr !=''">
+                SELECT B.LQ_DCB_INDEX DCB_INDEX, B.DJH ,B.BDCDYH, B.ZL, B.MJ LMMJ,A.SCMJ,A.FZMJ,B.LQ_DCB_INDEX AS QJID
+                FROM NYD_DJDCB A
+                INNER JOIN LQ_DCB B ON A.DJH=B.DJH
+                INNER JOIN
+                (SELECT DJH FROM NYD_QLR WHERE  SFLDSYQR = '1' AND QLRMC LIKE  '%'||#{qlr} || '%' GROUP BY DJH) C
+                ON B.DJH = C.DJH
+            </when>
+            <otherwise>
+                SELECT B.LQ_DCB_INDEX DCB_INDEX, B.DJH ,B.BDCDYH, B.ZL, B.MJ LMMJ,A.SCMJ,A.FZMJ,B.LQ_DCB_INDEX  AS QJID
+                FROM NYD_DJDCB A
+                INNER JOIN LQ_DCB B ON A.DJH=B.DJH
+            </otherwise>
+        </choose>
+        <where>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND B.bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+            </if>
+            <if test="tdzl != null and tdzl != ''">
+                AND B.zl LIKE '%'|| #{tdzl} || '%'
+            </if>
+            <if test="djh != null and djh != ''">
+                AND B.djh LIKE '%'|| #{djh} || '%'
+            </if>
+        </where>
+    </select>
+
+    <!--分页查询林权调查表信息(有qlr查询条件) -->
+    <select id="listLdmjAndZd" parameterType="map" resultType="map">
+        select qxdm, sum(SCMJ) as SCMJ, sum(DKSCMJ) as DKSCMJ,count(qxdm) as zdsl
+        from (
+        select CASE WHEN substr(bdcdyh, 1, 6) = '341822' THEN Translate('341882' USING NCHAR_CS) ELSE substr(bdcdyh, 1, 6) END as qxdm, SCMJ, 0 as DKSCMJ
+        from NYD_DJDCB
+        where qsxz in (12,33,34,35,36)
+        union all
+        select  CASE WHEN substr(bdcdyh, 1, 6) = '341822' THEN Translate('341882' USING NCHAR_CS) ELSE substr(bdcdyh, 1, 6) END as qxdm, 0 as SCMJ, DKSCMJ
+        from JYQDK_DCB
+        where qsxz in (12,33,34,35,36)
+        ) t
+        <where>
+            <if test="qxdmList != null and qxdmList.size > 0">
+                AND t.qxdm in
+                <foreach collection="qxdmList" item="qxdm" open="(" close=")" separator=",">
+                    #{qxdm}
+                </foreach>
+            </if>
+        </where>
+        group by t.qxdm
+    </select>
+</mapper>

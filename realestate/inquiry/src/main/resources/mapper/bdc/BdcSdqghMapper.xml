@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcSdqghMapper">
+    <select id="listBdcSdqghIn" resultType="cn.gtmap.realestate.common.core.domain.BdcSdqghDO"
+            parameterType="cn.gtmap.realestate.common.core.qo.init.BdcSdqywQO">
+        SELECT * FROM BDC_SDQGH A
+        <where>
+            <if test="id != null and id !=''">
+                AND A.id=#{id}
+            </if>
+            <if test="slbh != null and slbh !=''">
+                AND A.slbh=#{slbh}
+            </if>
+            <if test="gzlslid != null and gzlslid !=''">
+                AND A.gzlslid=#{gzlslid}
+            </if>
+            <if test="consno != null and consno !=''">
+                AND A.consno = #{consno}
+            </if>
+            <if test="blzt != null">
+                AND A.blzt = #{blzt}
+            </if>
+            <if test="ywlx != null">
+                AND A.ywlx = #{ywlx}
+            </if>
+            <if test="ywlxList != null and ywlxList.size > 0">
+                AND A.ywlx in
+                <foreach collection="ywlxList" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="sfbl != null">
+                AND A.sfbl = #{sfbl}
+            </if>
+            <if test="tscs != null">
+                AND A.tscs <![CDATA[ <=  ]]> #{tscs}
+            </if>
+        </where>
+        <if test="sortParameter != null and sortParameter != ''">
+            ORDER BY ${sortParameter}
+        </if>
+    </select>
+    <select id="getQlrxxByGzlslidIn" resultType="cn.gtmap.realestate.common.core.domain.BdcQlrDO"
+            parameterType="String">
+        SELECT A.*  FROM BDC_QLR A INNER JOIN BDC_XM B
+        ON A.XMID = B.XMID WHERE B.GZLSLID =#{gzlslid}
+    </select>
+
+    <update id="updateSdqBlztIn"
+            parameterType="cn.gtmap.realestate.common.core.qo.init.BdcSdqywQO">
+        UPDATE bdc_sdqgh a
+        set a.gzlslid = #{gzlslid}, a.blzt = #{blzt}
+        where
+        a.gzlslid = #{gzlslid}
+        <if test="ywlx != null">
+            and a.ywlx = #{ywlx}
+        </if>
+    </update>
+
+    <select id="getSdqSqbYwDyData" resultType="Map"
+            parameterType="String">
+        select a.consno shui_consno,
+       '' shui_gsdw,
+       a.hzmc shui_yhm,
+       a.hzzl shui_yzl,
+       a.gzlslid,
+       b.*,
+       c.*
+  from bdc_sdqgh a
+ full join (select consno dian_consno,
+                    '' dian_gddw,
+                    hzmc dian_yhm,
+                    hzzl dian_yzl,
+                    gzlslid
+               from bdc_sdqgh
+              where ywlx = 2) b
+    on a.gzlslid = b.gzlslid
+ full join (select consno qi_consno,
+                    '' qi_gqdw,
+                    hzmc qi_yhm,
+                    hzzl qi_yzl,
+                    gzlslid
+               from bdc_sdqgh
+              where ywlx = 3) c
+    on b.gzlslid = c.gzlslid
+ where a.gzlslid = #{gzlslid}
+   and a.ywlx = 1
+    </select>
+
+    <update id="updateSdqBlzt"
+            parameterType="cn.gtmap.realestate.common.core.dto.inquiry.BdcSdqBlztRequestDTO">
+        UPDATE bdc_sdqgh a
+        set a.blzt = #{blzt}
+        <if test="tscs != null">
+             ,a.tscs = #{tscs}
+        </if>
+        <if test="consno != null">
+            ,a.consno = #{consno}
+        </if>
+        <if test="sqsj != null">
+            ,a.sqsj = #{sqsj}
+        </if>
+        <if test="sdqshyj != null">
+            ,a.sdqshyj = #{sdqshyj}
+        </if>
+        where
+        a.ywlx = #{ywlx}
+        <if test="consno != null and consno != ''">
+            and a.consno = #{consno}
+        </if>
+        <if test="gzlslid != null and gzlslid != ''">
+            and a.gzlslid = #{gzlslid}
+        </if>
+    </update>
+
+
+</mapper>

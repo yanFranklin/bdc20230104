@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>交接单查询台账</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link href="../../static/lib/bdcui/css/popup.css" rel="stylesheet"/>
+    <style>
+        body, html {
+            width: 100%;
+            height: 100%;
+        }
+
+        .bdc-container {
+            width: 100%;
+            min-height: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            background-color: #eaedf1;
+        }
+
+        .bdc-update-padding {
+            padding-top: 0;
+        }
+
+        .bdc-yzf {
+            color: #1d87d1;
+        }
+
+        .bdc-jjjs {
+            color: #f54743;
+        }
+
+        .bdc-wzf {
+            color: #f49c67;
+        }
+    </style>
+</head>
+<body>
+<div class="bdc-container">
+    <!--查询条件-->
+    <div class="bdc-search-box">
+        <form class="layui-form" action="">
+            <div class="layui-form-item pf-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">交接单号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="jjdh" name="jjdh" autocomplete="off" placeholder="（模糊）请输入"
+                               class="search layui-input">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">受理编号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="slbh" name="slbh" autocomplete="off" placeholder="（模糊）请输入"
+                               class="layui-input search">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">房屋坐落</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="zl" name="zl" autocomplete="off" placeholder="（模糊）请输入"
+                               class="layui-input search">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+                <div class="layui-inline bdc-button-box">
+                    <a href="javascript:" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                    <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!--表格1-->
+    <div class="bdc-table-box">
+        <table id="tableOne" lay-filter="oneFilter"></table>
+    </div>
+    <!--表格2-->
+    <div class="bdc-table-box bdc-update-padding">
+        <table id="tableTwo" lay-filter="twoFilter"></table>
+    </div>
+
+</div>
+
+
+<!--交接单状态模板-->
+<script id="jjdztTpl" type="text/html">
+    {{#  if(d.jjdzt == 3){ }}
+    <span class="bdc-jjjs">拒绝接收</span>
+    {{#  } else if(d.jjdzt == 2) { }}
+    <span class="bdc-yjs">已接收</span>
+    {{#  } else if(d.jjdzt == 1) { }}
+    <span class="bdc-yzf">已转发</span>
+    {{#  } else { }}
+    <span class="bdc-wzf">未转发</span>
+    {{#  } }}
+</script>
+
+<!-- 权利人模板 -->
+<script id="qlrTpl" type="text/html">
+    {{#  if(d.gzlslid != undefined && d.zhlc == 2){
+        ddyqlr(d.gzlslid)
+    }}
+    <span class="{{d.gzlslid}}_qlr">加载中</span>
+    {{#  } else if(d.qlr == undefined){ }}
+    <span></span>
+    {{#  } else { }}
+    <span>{{d.qlr}}</span>
+    {{# } }}
+</script>
+
+<!-- 义务人模板 -->
+<script id="ywrTpl" type="text/html">
+    {{#  if(d.gzlslid != undefined && d.zhlc == 2){}}
+    <span class="{{d.gzlslid}}_ywr">加载中</span>
+    {{#  } else if(d.ywr == undefined){ }}
+    <span></span>
+    {{#  } else { }}
+    <span>{{d.ywr}}</span>
+    {{# } }}
+</script>
+</body>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/commonSearch.js"></script>
+<script src="../../static/js/jjd/queryJjd.js"></script>
+</html>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.etl.core.mapper.exchange.BdcHtbaMapper">
+
+    <!--分页查询-->
+    <select id="listHtbaByPage" parameterType="map" resultType="cn.gtmap.realestate.common.core.qo.etl.HtbaspfQO">
+        SELECT
+        t.baid, t.htbh, t.basj, t.slbh AS fjid,
+        t.bazt, t.fwbm, t.zl, t.zxshr, t.zxyy, t.zxsj ,
+        q.qlrmc
+        FROM HTBA_SPF t
+        LEFT JOIN HTBA_QLR q
+        ON t.baid = q.baid
+        <where>
+            <if test="htbh != null and htbh != ''">
+                AND instr(t.htbh,#{htbh})>0
+            </if>
+            <if test="zl != null and zl != ''">
+                AND instr(t.zl,#{zl})>0
+            </if>
+            <if test="fwbm != null and fwbm != ''">
+                AND instr(t.fwbm,#{fwbm})>0
+            </if>
+            <if test="qlrmc != null and qlrmc != ''">
+                AND instr(q.qlrmc,#{qlrmc})>0
+            </if>
+        </where>
+
+    </select>
+
+</mapper>

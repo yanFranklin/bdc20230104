@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.supervise.core.mapper.LfCxjzjsMapper">
+    <select id="listWgxwByPageOrder" parameterType="cn.gtmap.realestate.supervise.core.qo.LfWgxwQO"
+            resultType="cn.gtmap.realestate.supervise.core.domain.BdcLfCxjzjsDO">
+        SELECT
+            ID,
+            WGRYJGMC,
+            WGRYJGZJH,
+            WGRYJGDZ,
+            WGXW,
+            ZMWJMC,
+            ZMWJID,
+            ZMWJLJ,
+            ZMWJSCSJ,
+            JLR,
+            JLRID,
+            JLSJ,
+            SHRY,
+            SHRID,
+            SHSJ,
+            SHYJ,
+            SHZT
+        FROM
+            BDC_LF_CXJZJS T
+        <where>
+            <if test="wgryjgmc != null and wgryjgmc != ''">
+                AND T.wgryjgmc like '%' || #{wgryjgmc} || '%'
+            </if>
+            <if test="wgryjgzjh != null and wgryjgzjh != ''">
+                AND T.wgryjgzjh like '%' || #{wgryjgzjh} || '%'
+            </if>
+            <if test="wgryjgdz != null and wgryjgdz != ''">
+                AND T.wgryjgdz like '%' || #{wgryjgdz} || '%'
+            </if>
+            <if test="zmwjmc != null and zmwjmc != ''">
+                AND T.zmwjmc like '%' || #{zmwjmc} || '%'
+            </if>
+            <if test="jlr != null and jlr != ''">
+                AND T.jlr like '%' || #{jlr} || '%'
+            </if>
+            <if test="jlsjq != null and jlsjq != ''">
+                AND to_char(T.jlsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{jlsjq}
+            </if>
+            <if test="jlsjz != null and jlsjz != ''">
+                AND to_char(T.jlsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{jlsjz}
+            </if>
+            <if test="shry != null and shry != ''">
+                AND T.shry like '%' || #{shry} || '%'
+            </if>
+            <if test="shsjq != null and shsjq != ''">
+                AND to_char(T.shsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{shsjq}
+            </if>
+            <if test="shsjz != null and shsjz != ''">
+                AND to_char(T.shsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{shsjz}
+            </if>
+        </where>
+
+        ORDER BY
+            jlsj DESC
+    </select>
+</mapper>

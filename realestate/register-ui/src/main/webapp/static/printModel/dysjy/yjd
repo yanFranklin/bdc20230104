@@ -1,0 +1,50 @@
+----主表
+select t.yjdid,t.yjdbh,to_char(t.yjsj,'yyyy"年"mm"月"dd"日"') yjsj,t.yjr,t.jsr,#{ewm} ewm from bdc_yjd t where t.yjdid = #{yjdid}
+---子表
+SELECT rownum AS xh, xmid, slbh, bdcdyh, bdcqzh
+	, zl, qzysxlh, qlr,zslx
+FROM (
+	SELECT DISTINCT t.xmid, to_char(WM_CONCAT(DISTINCT t.slbh)) AS slbh
+		, to_char(WM_CONCAT(DISTINCT t.bdcdyh)) AS bdcdyh
+		, to_char(WM_CONCAT(DISTINCT t.bdcqzh)) AS bdcqzh
+		, to_char(WM_CONCAT(DISTINCT t.zl)) AS zl
+		, to_char(WM_CONCAT(DISTINCT t3.qzysxlh)) AS qzysxlh
+		, to_char(WM_CONCAT(DISTINCT t.qlr)) AS qlr
+        , to_char(WM_CONCAT(DISTINCT t4.mc)) AS zslx
+	FROM bdc_xm t
+	LEFT JOIN bdc_xm_yjd_gx t1 ON t.xmid = t1.xmid
+	LEFT JOIN bdc_xm_zs_gx t2 ON t1.xmid = t2.xmid
+	LEFT JOIN bdc_zs t3 ON t2.zsid = t3.zsid
+  LEFT JOIN bdc_zd_zslx t4 ON t3.zslx = t4.dm
+	WHERE t1.yjdid = #{yjdid}
+	GROUP BY t.xmid
+	ORDER BY t.xmid
+)
+
+
+------打印字段
+<?xml version="1.0" encoding="utf-8"?>
+
+<fetchdatas>
+  <page>
+    <datas>
+      <data name="yjdbh" type="String">$YJDBH</data>
+      <data name="yjr" type="String">$YJR</data>
+      <data name="yjsj" type="String">$YJSJ</data>
+      <data name="jsr" type="String">$JSR</data>
+		  <data name="ewm" type="Image">$EWM</data>
+    </datas>
+    <detail ID="yjdxm">
+      <row ID="${XMID}">
+        <data name="XH" type="String">$XH</data>
+        <data name="SLBH" type="String">$SLBH</data>
+        <data name="QLR" type="String">$QLR</data>
+        <data name="BDCDYH" type="String">$BDCDYH</data>
+        <data name="ZL" type="String">$ZL</data>
+        <data name="QZYSXLH" type="String">$QZYSXLH</data>
+        <data name="BDCQZH" type="String">$BDCQZH</data>
+        <data name="ZSLX" type="String">$ZSLX</data>
+      </row>
+    </detail>
+  </page>
+</fetchdatas>

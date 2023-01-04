@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <title>信息补录-选择不动产单元</title>
+    <meta content="webkit" name="renderer">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0"
+          name="viewport">
+    <link href="../../static/lib/layui/css/layui.css" media="all" rel="stylesheet">
+    <link href="../../static/lib/form-select/formSelects-v4.css" rel="stylesheet">
+    <link href="../../static/lib/bdcui/css/search.css" rel="stylesheet">
+    <link href="../../static/css/xxbl/process.css" rel="stylesheet">
+    <link href="../../static/lib/bdcui/css/mask.css" rel="stylesheet">
+    <link href="../../static/lib/bdcui/css/popup.css" rel="stylesheet">
+    <link href="../../static/css/xxbl/tsxx.css" rel="stylesheet">
+    <link href="../../static/css/xxbl/xxblSelectBdcdy.css" rel="stylesheet">
+</head>
+<body>
+<div class="bdc-container-box">
+    <form class="bdc-container layui-form">
+        <!--IP地址-->
+        <input id="ipaddress" name="ipaddress" type="hidden"/>
+
+        <div class="bdc-header clear">
+            <p class="bdc-header-this">1. 选择不动产单元<img alt="" src="../../static/lib/registerui/image/arrow.png">
+                <span class="bottom-sj bottom-sj-1"></span>
+                <span class="bottom-sj bottom-sj-2"></span>
+            </p>
+            <p>2. 核验数据-基本信息<img alt="" src="../../static/lib/registerui/image/arrow.png"></p>
+            <p>3. 核验数据-权利信息<img alt="" src="../../static/lib/registerui/image/arrow.png"></p>
+            <p>4. 证书/明信息</p>
+        </div>
+        <!-- 标题栏 -->
+        <p class="bdc-title">1/3：选择不动产单元</p>
+        <!-- 内容区 -->
+        <div class="bdc-inner-content">
+            <input autocomplete="off" class="layui-input bdc-hide" id="yqllx" name="yqllx" type="text">
+            <div class="layui-form-item pf-form-item">
+
+                <!--二级联动，选择流程大类，再选择具体的流程-->
+                <div class="layui-inline bdc-three-combine">
+                    <label class="layui-form-label">办理流程</label>
+                    <div id="process">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item pf-form-item">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">不动产权证号</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" id="bdcqzh" name="bdcqzh" placeholder="请输入" type="text">
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item pf-form-item">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">不动产单元号</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" id="bdcdyh" name="bdcdyh" placeholder="请输入" type="text" value=""/>
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                    <a class="layui-btn bdc-secondary-btn" lay-filter="bdcdyh" lay-submit="" title="选择单元号">选择单元号</a>
+                    <a class="layui-btn bdc-secondary-btn bdc-hide" id="xnbdcdyh" lay-filter="xnbdcdyh" lay-submit="" title="新增虚拟号">新增虚拟号</a>
+                </div>
+            </div>
+            <div class="layui-form-item pf-form-item">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">原产权证号</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" disabled id="ycqzh" name="ycqzh" placeholder="请选择" type="text" value=""/>
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                    <a class="layui-btn bdc-secondary-btn" lay-filter="bdcq" lay-submit="" title="关联产权">关联产权</a>
+
+                </div>
+            </div>
+            <div class="layui-form-item pf-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">查封文号</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" disabled id="cfwh" name="cfwh" placeholder="请选择" type="text" value=""/>
+                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                    </div>
+                    <a class="layui-btn bdc-secondary-btn" lay-filter="cfwh" lay-submit="" title="选择查封">选择查封</a>
+                </div>
+            </div>
+            <!-- 生成虚拟不动产单元号 -->
+            <div class="bdc-hide" id="bdc-popup-large" style="z-index: 999">
+                <form action="" class="layui-form">
+                    <div class="layui-form-item pf-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">单位代码</label>
+                            <div class="layui-input-inline">
+                                <select id="dwdm" lay-filter="dwdm" lay-search="" name="dwdm"></select>
+                            </div>
+                        </div>
+                        <!-- 国家统一标准作为常量 -->
+                        <div class="layui-inline">
+                            <label class="layui-form-label">定着物特征码</label>
+                            <div class="layui-input-inline">
+                                <select id="dzwtzm" lay-filter="dzwtzm" lay-search="" name="dzwtzm">
+                                    <option value="">请选择</option>
+                                    <option value="F">房屋等建筑物、构筑物</option>
+                                    <option value="L">森林或林木</option>
+                                    <option value="Q">其他类型的定着物</option>
+                                    <option value="W">无定着物</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">宗地特征码</label>
+                            <div class="layui-input-inline">
+                                <select id="zdtzm" lay-filter="zdtzm" lay-search="" name="zdtzm"></select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="layui-hide">
+                <div id="tsxx" lay-filter="tsxx"></div>
+            </div>
+
+            <div class="bdc-btn-box">
+                <button class="layui-btn layui-btn-normal bdc-secondary-btn" type="reset">重置</button>
+                <a class="layui-btn bdc-major-btn search" href="javascript:" lay-filter="csh" lay-submit="" title="初始化已填信息">下一步</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+</body>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/xxbl/selectN.js"></script>
+<script src="../../static/js/client-ip.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/nantong/xxbl/xxblCommon.js"></script>
+<script src="../../static/js/nantong/xxbl/xxblSelectbdcdy.js"></script>
+<script src="../../static/js/xxbl/xxblSelectbdcdyCommon.js"></script>
+
+<script id="tsxxTpl" type="text/html">
+    <div class="bdc-right-tips-box" id="bottomTips">
+        <div class="tsxx" id="alertInfo"></div>
+        <div class="tsxx" id="confirmInfo"></div>
+    </div>
+</script>
+</html>

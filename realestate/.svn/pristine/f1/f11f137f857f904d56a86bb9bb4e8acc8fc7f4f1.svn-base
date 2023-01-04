@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--收件信息-->
+<mapper namespace="cn.gtmap.realestate.etl.core.mapper.exchange.QuartzMapper">
+
+    <update id="updateZsSsxz">
+        MERGE INTO YTT_BDCQZS@U_GTJ C
+        USING (SELECT DISTINCT SLBH, SSXZ, BDCDYH
+        FROM BDC_XM
+        WHERE SSXZ IS NOT NULL
+        AND QLLX = 4) B
+        ON (C.ACTIVEID = B.SLBH AND C.BDCDYH = B.BDCDYH)
+        WHEN MATCHED THEN
+        UPDATE SET C.SSXZ = B.SSXZ, C.GXSJ = SYSDATE WHERE NVL(C.SSXZ,'0') <![CDATA[ <> ]]> NVL(B.SSXZ,'0');
+    </update>
+    <update id="updateZmSsxz">
+        MERGE INTO GT_BDCQZM@U_GTJ C
+        USING (SELECT DISTINCT SLBH, SSXZ, BDCDYH
+        FROM BDC_XM
+        WHERE SSXZ IS NOT NULL
+        AND QLLX != 4) B
+        ON (C.ACTIVEID = B.SLBH AND C.BDCDYH = B.BDCDYH)
+        WHEN MATCHED THEN
+        UPDATE SET C.SSXZ = B.SSXZ, C.GXSJ = SYSDATE WHERE NVL(C.SSXZ,'0') <![CDATA[ <> ]]> NVL(B.SSXZ,'0');
+    </update>
+
+</mapper>

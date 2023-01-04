@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.gtmap.realestate.init.core.mapper.BdcGgMapper">
+
+	<update id="batchUpdatebdcggzt">
+		update BDC_GG s set s.ggzt = #{ggzt}
+		<where>
+			<if test="ggids != null">
+				AND s.ggid IN
+				<foreach collection="ggids" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</update>
+
+	<select id="queryBdcGgGlXmxx" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+		SELECT t.xmid, t.bdcdyh, t.gzlslid, t.slbh, t.qllx, t.djxl, t.gzldyid, t.qxdm , t.djsj, t.djjg, t.djbmdm, t.gyfs
+		FROM BDC_XM t
+		WHERE
+			t.xmid in (
+				SELECT gx.XMID FROM BDC_GG_GX gx
+				WHERE  gx.ggid = #{ggid}
+			)
+		order by t.xmid
+	</select>
+
+</mapper>

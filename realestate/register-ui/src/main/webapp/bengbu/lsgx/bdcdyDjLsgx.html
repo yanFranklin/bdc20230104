@@ -1,0 +1,112 @@
+<!--
+ * @author  <a href="mailto:zhuyong@gtmap.cn>zhuyong</a>
+ * @version 1.0, 2020/03/16
+ * @description （ 标准版）不动产单元的登记历史关系展现台账
+-->
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>登记历史</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css"/>
+    <style>
+        @media screen and (max-width: 1280px) {
+            .layui-form-item .layui-input-inline {
+                width: 50%;
+            }
+        }
+
+        .layui-form-item .layui-input-inline .layui-icon-close {
+            position: absolute;
+            top: 8px;
+            right: 25px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<!--************ 条件搜索 ************-->
+<div class="bdc-percentage-container">
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <form class="layui-form" action="" id="form">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline xzq-sele">
+                        <label class="layui-form-label">受理编号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="slbh" name="slbh" autocomplete="off" placeholder="请输入"
+                                   class="layui-input">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">不动产权证号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="bdcqzh" name="bdcqzh" autocomplete="off" placeholder="请输入"
+                                   class="layui-input">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline xzq-sele">
+                        <label class="layui-form-label">权利类型</label>
+                        <div class="layui-input-inline pf-start-time-box">
+                            <select lay-filter="qllx" id="qllx" name="qllx" lay-search="" class="search">
+                                <option value="">请选择</option>
+                            </select>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline xzq-sele">
+                        <label class="layui-form-label">权属状态</label>
+                        <div class="layui-input-inline pf-start-time-box">
+                            <select lay-filter="qszt" id="qszt" name="qszt" lay-search="" class="search">
+                                <option value="">请选择</option>
+                                <option value="0">临时</option>
+                                <option value="1">现势</option>
+                                <option value="2">历史</option>
+                                <option value="3">终止</option>
+                            </select>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box-four">
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                        <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!--************ 证书模板配置列表 ************-->
+    <div class="bdc-table-box">
+        <table id="lsgxTable" lay-filter="lsgxTable"></table>
+    </div>
+</div>
+
+<!--表格上面功能按钮-->
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn" id="djb" lay-event="djb">登记簿</button>
+    </div>
+</script>
+
+<script type="text/html" id="barAction">
+    <a class="layui-btn bdc-major-btn layui-btn-xs" lay-event="process">查看</a>
+</script>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.all.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/bengbu/lsgx/bdcdyDjLsgx.js"></script>
+<script src="../../static/js/lsgx/md5.js"></script>
+
+</body>
+</html>

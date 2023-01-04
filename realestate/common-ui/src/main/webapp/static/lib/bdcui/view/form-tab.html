@@ -1,0 +1,677 @@
+<!--/**-->
+<!--* author: 前端组-->
+<!--* date: 2018-12-14-->
+<!--* version 3.0.0-->
+<!--* describe: form表单填写--带tab切换功能，点击任一tab栏，切换不能页面，需要注意：本页面与其他表单页面不太一样，引用的是form-tab.css-->
+<!--*/-->
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>表单填写--tab切换</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+
+    <!--下拉框需要-->
+    <link rel="stylesheet" href="../../form-select/formSelects-v4.css">
+
+    <link rel="stylesheet" href="../css/search.css" />
+    <link rel="stylesheet" href="../css/table.css" />
+    <link rel="stylesheet" href="../css/form-tab.css" />
+</head>
+<body>
+<div class="layui-form bdc-form-div bdc-not-full-bg">
+    <!--全局 标题和操作按钮 开始-->
+    <div class="bdc-content-fix">
+        <div class="content-title layui-clear">
+            <p>不动产登记受理信息</p>
+            <div class="title-btn-area">
+                <button class="layui-btn bdc-major-btn" lay-submit="" id="submit-btn">提交</button>
+                <button type="reset" class="layui-btn bdc-secondary-btn">保存</button>
+                <i class="btn-tips">*这一行按钮是全局的，在各个tab都需要的时候放在当前位置</i>
+            </div>
+        </div>
+    </div>
+    <!--全局 标题和操作按钮 结束-->
+
+    <div class="layui-tab" lay-filter="tabFilter">
+        <ul class="layui-tab-title">
+            <li class="layui-this">表单填写</li>
+            <li>表格样例</li>
+            <li>逻辑幢信息</li>
+            <li>楼盘表</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div class="bdc-tab-btn">
+                    <i class="btn-tips">*这一行按钮是单个tab要使用的</i>
+                    <a href="javascript:;" class="bdc-third-btn">新增</a>
+                    <a href="javascript:;" class="bdc-third-btn">历史关系</a>
+                </div>
+                <!--表单信息-->
+                <form class="layui-form setOverflow bdc-form-table" action="">
+                    <div class="form-margin-area">
+                        <div class="basic-info">
+                            <div class="title-sign"><p><a id="jbxx" href="javascript:;">基本信息</a></p></div>
+                            <div class="layui-form-item">
+                                <div class="layui-inline bdc-not-null">
+                                    <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>联动选择框</label>
+                                    <div class="layui-input-inline change-input-width90 bdc-change-first-select bdc-radio">
+                                        <select name="city" lay-verify="required" xm-select="select01" xm-select-radio xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                                            <option value="">请选择省</option>
+                                            <option value="浙江" selected="selected">浙江省</option>
+                                            <option value="你的工号">江西省</option>
+                                            <option value="你最喜欢的老师">福建省</option>
+                                        </select>
+                                    </div>
+                                    <div class="layui-input-inline change-input-width90 bdc-radio">
+                                        <select name="city" lay-verify="required" xm-select="select02" xm-select-radio xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                                            <option value="">请选择</option>
+                                            <option value="320001">天宁区</option>
+                                            <option value="320002">钟楼区</option>
+                                            <option value="320003">新北区</option>
+                                            <option value="320004">武进区</option>
+                                            <option value="320005">金坛区</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-inline bdc-not-null">
+                                    <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>可选时间</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" lay-verify="required" class="layui-input" id="endTime">
+                                    </div>
+
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width">不可选时间</label>
+                                    <div class="layui-input-inline bdc-date-disabled">
+                                        <input type="text" class="layui-input" disabled="off" id="startTime">
+                                        <img src="../images/lock.png" alt="">
+                                    </div>
+                                </div>
+
+                                <div class="layui-inline bdc-not-null">
+                                    <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>房屋状况</label>
+                                    <div class="layui-input-inline bdc-radio">
+                                        <select name="city" lay-verify="required" xm-select="select03" xm-select-radio xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                                            <option value="">请选择</option>
+                                            <option value="1">layer</option>
+                                            <option value="2">form</option>
+                                            <option value="3">layim</option>
+                                            <option value="4">element</option>
+                                            <option value="5">laytpl</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width">业主姓名</label>
+                                    <div class="layui-input-inline">
+                                        <select name="modules" lay-search="" disabled="off" id="bdcName">
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="layui-inline bdc-not-null">
+                                    <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>建筑面积</label>
+                                    <div class="layui-input-inline bdc-one-icon">
+                                        <input type="text" lay-verify="required" autocomplete="off" class="layui-input" placeholder="请输入" onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                                        <span>m²</span>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width">房屋面积</label>
+                                    <div class="layui-input-inline bdc-two-icon">
+                                        <input type="text" disabled="off" class="layui-input" placeholder="不可使用" >
+                                        <span>m²</span>
+                                        <img src="../images/lock.png" alt="">
+                                    </div>
+
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width">不可选择单选</label>
+                                    <div class="layui-input-inline bdc-radio">
+                                        <select name="city"  disabled="disabled" xm-select="select04" xm-select-radio xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                                            <option value="">请选择</option>
+                                            <option value="1">layer</option>
+                                            <option value="2">form</option>
+                                            <option value="3">layim</option>
+                                            <option value="4">element</option>
+                                            <option value="5">laytpl</option>
+                                        </select>
+                                        <img src="../images/lock.png" alt="">
+                                    </div>
+                                </div>
+
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width bdc-label-newline">不动产<br>单元号</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" lay-verify="" autocomplete="off" class="layui-input" placeholder="请输入">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width">单选框</label>
+                                    <div class="layui-input-inline">
+                                        <input type="radio" name="sex" value="男" title="男" checked="" class="change-radio-top">
+                                        <input type="radio" name="sex" value="女" title="女" class="change-radio-top">
+                                    </div>
+                                </div>
+                                <div class="layui-inline bdc-two-column">
+                                    <label class="layui-form-label change-label-width">面积单位</label>
+                                    <div class="layui-input-inline">
+                                        <input type="checkbox" name="" title="平方米" lay-skin="primary" checked>
+                                        <input type="checkbox" name="" title="亩" lay-skin="primary">
+                                        <input type="checkbox" name="" title="公顷" lay-skin="primary" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="basic-info">
+                            <div class="title-sign bdc-title-sign-btn">
+                                <p><a id="spfys" href="javascript:;">商品房预售许可</a></p>
+                                <button class="layui-btn layui-btn-sm bdc-secondary-btn">历史关系</button>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-inline bdc-not-null">
+                                    <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>多选下拉</label>
+                                    <div class="layui-input-inline">
+                                        <select name="city" lay-verify="required" xm-select="select05" xm-select-skin="default" xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                                            <option value="">请选择</option>
+                                            <option value="1">layer</option>
+                                            <option value="2">form</option>
+                                            <option value="3">layim</option>
+                                            <option value="4">element</option>
+                                            <option value="5">laytpl</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width">不可选复选</label>
+                                    <div class="layui-input-inline">
+                                        <select name="city" xm-select="select06" disabled="disabled" xm-select-skin="default" xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                                            <option value="">请选择</option>
+                                            <option value="1" selected="selected">layer</option>
+                                            <option value="2">form</option>
+                                            <option value="3">layim</option>
+                                            <option value="4">element</option>
+                                            <option value="5">laytpl</option>
+                                        </select>
+                                        <img src="../images/lock.png" alt="">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width">其他</label>
+                                    <div class="layui-input-inline">
+                                        <select name="city" xm-select="select07" xm-select-skin="default" xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                                            <option value="">请选择</option>
+                                            <option value="1" selected="selected">layer</option>
+                                            <option value="2" selected="selected">form</option>
+                                            <option value="3">layim</option>
+                                            <option value="4">element</option>
+                                            <option value="5">laytpl</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width">商业</label>
+                                    <div class="layui-input-inline">
+                                        <select name="city" xm-select="select08" xm-select-skin="default" xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                                            <option value="">请选择</option>
+                                            <option value="1" selected="selected">layer</option>
+                                            <option value="2" selected="selected">form</option>
+                                            <option value="3">layim</option>
+                                            <option value="4">element</option>
+                                            <option value="5">laytpl</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="layui-inline bdc-two-column bdc-not-null">
+                                    <label class="layui-form-label change-label-width bdc-label-newline"><span class="required-span"><sub>*</sub></span>申请保留房建筑面积</label>
+                                    <div class="layui-input-inline bdc-one-icon">
+                                        <input type="number" lay-verify="required" autocomplete="off" class="layui-input" placeholder="请输入">
+                                        <span>m²</span>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width">总建筑面积</label>
+                                    <div class="layui-input-inline bdc-one-icon">
+                                        <input type="text" disabled="off" class="layui-input" placeholder="不可使用">
+                                        <img src="../images/lock.png" alt="">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width">总套数</label>
+                                    <div class="layui-input-inline bdc-one-btn">
+                                        <input type="text" class="layui-input">
+                                        <a href="javascript:;" class="bdc-compute-btn">计算</a>
+                                    </div>
+                                </div>
+                                <div class="layui-inline bdc-not-null">
+                                    <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>总金额</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" lay-verify="required" autocomplete="off" class="layui-input" placeholder="请输入" >
+                                    </div>
+
+                                </div>
+                                <div class="layui-inline bdc-not-null">
+                                    <label class="layui-form-label change-label-width bdc-label-newline"><span class="required-span"><sub>*</sub></span>申请保留房总套数</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" lay-verify="required" autocomplete="off" class="layui-input" placeholder="请输入" >
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div class="layui-form-item change-textarea-margin">
+                                <label class="layui-form-label change-label-width">预售范围</label>
+                                <div class="layui-input-inline">
+                                    <textarea placeholder="请输入内容" class="layui-textarea change-textarea-width"></textarea>
+                                </div>
+                            </div>
+                            <div class="layui-form-item change-textarea-margin">
+                                <label class="layui-form-label change-label-width">普通文本域</label>
+                                <div class="layui-input-inline">
+                                    <textarea placeholder="请输入内容" class="layui-textarea change-textarea-width"></textarea>
+                                </div>
+                            </div>
+                            <div class="layui-form-item ">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width"></label>
+                                    <div class="layui-input-inline">
+                                        <input type="checkbox" name="like1[write]" lay-skin="primary" title="同意" checked="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="basic-info">
+                            <div class="title-sign"><p><a href="javascript:;">基本信息</a></p></div>
+                            <div class="layui-form-item">
+                                <div class="bdc-jt-table">
+                                    <table class="layui-table" border="1" id="qlrTable">
+                                        <colgroup>
+                                            <col width="200">
+                                            <col width="300">
+                                            <col width="300">
+                                            <col>
+                                            <col width="200">
+                                        </colgroup>
+                                        <thead>
+                                        <tr>
+                                            <th>姓名</th>
+                                            <th>证件号</th>
+                                            <th>证件类型</th>
+                                            <th>手机号</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>张三</td>
+                                            <td>
+                                                <div class="bdc-td-box">
+                                                    <input type="text" name="zjh" class="layui-input" value="458798789565484125">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="bdc-td-box">
+                                                    <select name="zjzl" class="qlr1" id="jdlc-zjzl">
+                                                        <option value="">请选择</option>
+                                                        <option value="1">身份证 </option>
+                                                        <option value="2">港澳台身份证 </option>
+                                                        <option value="3">护照 </option>
+                                                        <option value="4">户口簿 </option>
+                                                        <option value="5">军官证（士兵证） </option>
+                                                        <option value="6" selected="selected">组织机构代码 </option>
+                                                        <option value="7">营业执照 </option>
+                                                        <option value="8">统一社会信息代码 </option>
+                                                        <option value="99">其它 </option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="bdc-td-box">
+                                                    <input type="text" name="sjh" value="13658478954"class="layui-input">
+                                                </div>
+                                            </td>
+                                            <td align="center">
+                                                <button type="button" value="readOnly" class="layui-btn layui-btn-xs bdc-major-btn" >增加</button>
+                                                <button type="button" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn">删除</button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="layui-tab-item">
+                <!--搜索+表格整体-->
+                <!--搜索框开始-->
+                <div class="bdc-search-box">
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item pf-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label bdc-two-lines">抽取批次号抽取批次号</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" id="pfCqpch" autocomplete="off" placeholder="请输入" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">质检人</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" id="pfZjr" autocomplete="off" placeholder="请输入" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline xzq-sele">
+                                <label class="layui-form-label">行政区</label>
+                                <div class="layui-input-inline">
+                                    <select lay-filter="xzqFilter">
+                                        <option value="">请选择</option>
+                                        <option value="">天宁区</option>
+                                        <option value="">钟楼区</option>
+                                        <option value="">新北区</option>
+                                        <option value="">武进区</option>
+                                        <option value="">金坛区</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline pf-xf-state">
+                                <label class="layui-form-label">精确时分秒</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" id="exact" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">权利人</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" lay-verify="title" autocomplete="off" placeholder="请输入" class="layui-input" id="pfQlr">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">质检起始时间</label>
+                                <div class="layui-input-inline pf-start-time-box">
+                                    <input type="text" placeholder="请选择" id="startTime" autocomplete="off" class="layui-input test-item">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">质检结束时间</label>
+                                <div class="layui-input-inline pf-end-time-box">
+                                    <input type="text" placeholder="请选择" id="endTime" autocomplete="off" class="layui-input test-item">
+                                </div>
+                            </div>
+                            <div class="layui-inline bdc-button-box">
+                                <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                                <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!--搜索框结束-->
+
+                <!--表格开始-->
+                <div class="bdc-table-box">
+                    <table id="pageTable" lay-filter="test"></table>
+                </div>
+                <!--表格结束-->
+            </div>
+            <div class="layui-tab-item">
+                <!--表单信息-->
+                <form class="layui-form setOverflow" action="">
+                    <div class="form-margin-area">
+                        <div class="basic-info">
+                            <div class="title-sign"><p><a id="jbxx" href="javascript:;">基本信息</a></p></div>
+                            <div class="layui-form-item">
+                                <div class="layui-inline bdc-not-null">
+                                    <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>联动选择框</label>
+                                    <div class="layui-input-inline change-input-width90 bdc-change-first-select bdc-radio">
+                                        <select name="city" lay-verify="required" xm-select="select01" xm-select-radio xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                                            <option value="">请选择省</option>
+                                            <option value="浙江" selected="selected">浙江省</option>
+                                            <option value="你的工号">江西省</option>
+                                            <option value="你最喜欢的老师">福建省</option>
+                                        </select>
+                                    </div>
+                                    <div class="layui-input-inline change-input-width90 bdc-radio">
+                                        <select name="city" lay-verify="required" xm-select="select02" xm-select-radio xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                                            <option value="">请选择</option>
+                                            <option value="320001">天宁区</option>
+                                            <option value="320002">钟楼区</option>
+                                            <option value="320003">新北区</option>
+                                            <option value="320004">武进区</option>
+                                            <option value="320005">金坛区</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-inline bdc-not-null">
+                                    <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>可选时间</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" lay-verify="required" class="layui-input" id="endTime">
+                                    </div>
+
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width">不可选时间</label>
+                                    <div class="layui-input-inline bdc-date-disabled">
+                                        <input type="text" class="layui-input" disabled="off" id="startTime">
+                                    </div>
+                                </div>
+
+                                <div class="layui-inline bdc-not-null">
+                                    <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>房屋状况</label>
+                                    <div class="layui-input-inline bdc-radio">
+                                        <select name="city" lay-verify="required" xm-select="select03" xm-select-radio xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                                            <option value="">请选择</option>
+                                            <option value="1">layer</option>
+                                            <option value="2">form</option>
+                                            <option value="3">layim</option>
+                                            <option value="4">element</option>
+                                            <option value="5">laytpl</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width">业主姓名</label>
+                                    <div class="layui-input-inline">
+                                        <select name="modules" lay-search="" disabled="off" id="bdcName">
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="layui-inline bdc-not-null">
+                                    <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>建筑面积</label>
+                                    <div class="layui-input-inline bdc-one-icon">
+                                        <input type="text" lay-verify="required" autocomplete="off" class="layui-input" placeholder="请输入" onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                                        <span>m²</span>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width">房屋面积</label>
+                                    <div class="layui-input-inline bdc-two-icon">
+                                        <input type="text" disabled="off" class="layui-input" placeholder="不可使用" >
+                                        <span>m²</span>
+                                        <img src="../images/lock.png" alt="">
+                                    </div>
+
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width">不可选择单选</label>
+                                    <div class="layui-input-inline bdc-radio">
+                                        <select name="city"  disabled="disabled" xm-select="select04" xm-select-radio xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                                            <option value="">请选择</option>
+                                            <option value="1">layer</option>
+                                            <option value="2">form</option>
+                                            <option value="3">layim</option>
+                                            <option value="4">element</option>
+                                            <option value="5">laytpl</option>
+                                        </select>
+                                        <img src="../images/lock.png" alt="">
+                                    </div>
+                                </div>
+
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width bdc-label-newline">不动产<br>单元号</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" lay-verify="" autocomplete="off" class="layui-input" placeholder="请输入">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width">单选框</label>
+                                    <div class="layui-input-inline">
+                                        <input type="radio" name="sex" value="男" title="男" checked="" class="change-radio-top">
+                                        <input type="radio" name="sex" value="女" title="女" class="change-radio-top">
+                                    </div>
+                                </div>
+                                <div class="layui-inline bdc-two-column">
+                                    <label class="layui-form-label change-label-width">面积单位</label>
+                                    <div class="layui-input-inline">
+                                        <input type="checkbox" name="" title="平方米" lay-skin="primary" checked>
+                                        <input type="checkbox" name="" title="亩" lay-skin="primary">
+                                        <input type="checkbox" name="" title="公顷" lay-skin="primary" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="basic-info">
+                            <div class="title-sign"><p><a id="spfys" href="javascript:;">商品房预售许可</a></p></div>
+                            <div class="layui-form-item">
+                                <div class="layui-inline bdc-not-null">
+                                    <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>多选下拉</label>
+                                    <div class="layui-input-inline">
+                                        <select name="city" lay-verify="required" xm-select="select05" xm-select-skin="default" xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                                            <option value="">请选择</option>
+                                            <option value="1">layer</option>
+                                            <option value="2">form</option>
+                                            <option value="3">layim</option>
+                                            <option value="4">element</option>
+                                            <option value="5">laytpl</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width">不可选复选</label>
+                                    <div class="layui-input-inline">
+                                        <select name="city" xm-select="select06" disabled="disabled" xm-select-skin="default" xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                                            <option value="">请选择</option>
+                                            <option value="1" selected="selected">layer</option>
+                                            <option value="2">form</option>
+                                            <option value="3">layim</option>
+                                            <option value="4">element</option>
+                                            <option value="5">laytpl</option>
+                                        </select>
+                                        <img src="../images/lock.png" alt="">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width">其他</label>
+                                    <div class="layui-input-inline">
+                                        <select name="city" xm-select="select07" xm-select-skin="default" xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                                            <option value="">请选择</option>
+                                            <option value="1" selected="selected">layer</option>
+                                            <option value="2" selected="selected">form</option>
+                                            <option value="3">layim</option>
+                                            <option value="4">element</option>
+                                            <option value="5">laytpl</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width">商业</label>
+                                    <div class="layui-input-inline">
+                                        <select name="city" xm-select="select08" xm-select-skin="default" xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                                            <option value="">请选择</option>
+                                            <option value="1" selected="selected">layer</option>
+                                            <option value="2" selected="selected">form</option>
+                                            <option value="3">layim</option>
+                                            <option value="4">element</option>
+                                            <option value="5">laytpl</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="layui-inline bdc-two-column bdc-not-null">
+                                    <label class="layui-form-label change-label-width bdc-label-newline"><span class="required-span"><sub>*</sub></span>申请保留房建筑面积</label>
+                                    <div class="layui-input-inline bdc-one-icon">
+                                        <input type="number" lay-verify="required" autocomplete="off" class="layui-input" placeholder="请输入">
+                                        <span>m²</span>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width">总建筑面积</label>
+                                    <div class="layui-input-inline bdc-one-icon">
+                                        <input type="text" disabled="off" class="layui-input" placeholder="不可使用">
+                                        <img src="../images/lock.png" alt="">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width">总套数</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" class="layui-input"  >
+                                    </div>
+                                </div>
+                                <div class="layui-inline bdc-not-null">
+                                    <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>总金额</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" lay-verify="required" autocomplete="off" class="layui-input" placeholder="请输入" >
+                                    </div>
+
+                                </div>
+                                <div class="layui-inline bdc-not-null">
+                                    <label class="layui-form-label change-label-width bdc-label-newline"><span class="required-span"><sub>*</sub></span>申请保留房总套数</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" lay-verify="required" autocomplete="off" class="layui-input" placeholder="请输入" >
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="layui-tab-item">
+                楼盘表
+            </div>
+        </div>
+    </div>
+</div>
+<div class="bdc-update-tips-box">
+    <div class="bdc-update-tips">
+        <p>以下字段已修改：<span class="bdc-close">关闭</span></p>
+        <div id="updateTips"><p>受理页面的竣工时间（房地产权）, 房地产交易价格（万元）（房地产权）字段不能为空</p></div>
+    </div>
+</div>
+</body>
+<!--表格上面功能按钮-->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn">新增</button>
+        <button class="layui-btn layui-btn-sm bdc-delete-btn">删除</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn">运行</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn">启用</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn">全选</button>
+    </div>
+    <div class="layui-btn-container bdc-export-tools">
+        <span id="export" title="导出"><img src="../images/export.png" alt=""></span>
+    </div>
+</script>
+
+<!--表格内部操作按钮-->
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="edit">配置</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs bdc-secondary-btn" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn" lay-event="del">删除</a>
+</script>
+<script src="../../layui/layui.js"></script>
+<script src="../../jquery/jquery.min.js"></script>
+<script src="../js/common.js"></script>
+<script src="../js/table.js"></script>
+<script src="../js/form-tab.js"></script>
+</html>

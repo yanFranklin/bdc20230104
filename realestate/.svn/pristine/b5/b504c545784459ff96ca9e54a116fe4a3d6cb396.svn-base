@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>居住权信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css"/>
+    <link rel="stylesheet" href="../../static/css/qlxx/common.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/sjsh.css">
+</head>
+<body class="">
+<div class="content-div">
+    <div class="bdc-content-box">
+        <form class="layui-form setOverflow" action="" lay-filter="form" id="jzq">
+            <input type="hidden" name="qlid" id="qlid"/>
+            <input type="hidden" name="xmid" id="xmid"/>
+            <input type="hidden" name="qlxz" id="qlxz"/>
+            <div class="bdc-content-fix">
+                <div class="content-title" style="display:none;">
+                    <p>居住权信息</p>
+                    <div class="title-btn-area .layui-layout-right">
+                        <button type="submit" id="submitBtn" class="layui-btn bdc-major-btn bdc-sjsh-save" lay-submit="" lay-filter="submitBtn">
+                            保存
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!--主体开始部分-->
+            <div class="content-main common-form">
+                <div class="table-name">居住权信息</div>
+                <table class="layui-table new-table" border="1">
+                    <colgroup>
+                        <col width="160">
+                        <col width="70">
+                        <col width="196">
+                        <col width="30">
+                        <col width="160">
+                        <col width="99">
+                        <col width="200">
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <td class="set-back-color">不动产单元号</td>
+                        <td colspan="6">
+                            <div class="bdc-td-box">
+                                <input type="text" class="layui-table-edit" name="bdcdyh" id="bdcdyh">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">房地坐落</td>
+                        <td colspan="6">
+                            <div class="bdc-td-box">
+                                <input type="text" class="layui-table-edit" name="zl" id="zl">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">业务号</td>
+                        <td colspan="3">
+                            <div class="bdc-td-box">
+                                <input type="text" class="layui-table-edit" name="slbh" id="slbh">
+                            </div>
+                        </td>
+                        <td class="set-back-color">登记类型</td>
+                        <td colspan="2">
+                            <select id="djlx" name="djlx" lay-filter="djlx" lay-search="">
+                                <option value=""></option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color set-center" colspan="2">居住权人</td>
+                        <td class="set-back-color set-center" colspan="2">证件种类</td>
+                        <td class="set-back-color set-center" colspan="2">证件号</td>
+                        <td class="set-back-color set-center">权利人类型</td>
+                    </tr>
+                    </tbody>
+                    <tbody id="tbody2">
+                    <tr>
+                        <td class="set-back-color">居住范围</td>
+                        <td colspan="6">
+                            <div class="bdc-td-box"><input type="text" class="layui-table-edit" name="jzfw" id="jzfw">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">居住条件和要求</td>
+                        <td colspan="6">
+                            <div class="bdc-td-box"><input type="text" class="layui-table-edit" name="jztjhyq" id="jztjhyq">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">是否同意设立居住权</td>
+                        <td colspan="3">
+                            <div class="bdc-td-box">
+                                <select lay-search="" name="sftysljzq" id="sftysljzq" class="layui-table-edit">
+                                    <option value="">请选择</option>
+                                    <option value="1" {{# if(bdcQl.sftysljzq=='1' ){ }} selected="selected"
+                                            {{# } }}>是</option>
+                                    <option value="0" {{# if(bdcQl.sftysljzq=='0' ){ }} selected="selected"
+                                            {{# } }}>否</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td class="set-back-color">是否长期</td>
+                        <td colspan="3">
+                            <select id="zsjz" name="zsjz" lay-filter="zsjz" lay-search="">
+                                <option value=""></option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">居住权开始期限</td>
+                        <td colspan="3">
+                            <div class="bdc-td-box">
+                                <input type="text" class="layui-input date test-item" name="jzqkssj" id="jzqkssj">
+                            </div>
+                        </td>
+                        <td class="set-back-color">房屋所有权人</td>
+                        <td colspan="2">
+                            <div class="bdc-td-box">
+                                <input type="text" class="layui-table-edit" name="fwsyqr" id="fwsyqr">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">居住权结束期限</td>
+                        <td colspan="3">
+                            <div class="bdc-td-box">
+                                <input type="text" class="layui-input date test-item" name="jzqjssj" id="jzqjssj">
+                            </div>
+                        </td>
+                        <td class="set-back-color">居住权合同编号</td>
+                        <td colspan="2">
+                            <div class="bdc-td-box"><input type="text" class="layui-table-edit" name="jyhth" id="jyhth">
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="set-back-color">登簿人</td>
+                        <td colspan="3">
+                            <div class="bdc-td-box"><input type="text" class="layui-table-edit" name="dbr" id="dbr">
+                            </div>
+                        </td>
+                        <td class="set-back-color">登记时间</td>
+                        <td colspan="2">
+                            <div class="bdc-td-box">
+                                <input type="text" class="layui-input date test-item" name="djsj" id="djsj">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="set-back-color">不动产权证明号</td>
+                        <td colspan="6">
+                            <div class="bdc-td-box">
+                                <input type="text" class="layui-table-edit" name="bdcqzh" id="bdcqzh">
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="set-back-color">登记原因</td>
+                        <td colspan="6">
+                            <div class="bdc-td-box">
+                                <input type="text" class="layui-table-edit" name="djyy" id="djyy">
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="set-back-color">档案位置</td>
+                        <td colspan="6">
+                            <div class="bdc-td-box"><input type="text" class="layui-table-edit" name="dawz" id="dawz" disabled="disabled">
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr class="set-tr-height158">
+                        <td class="set-back-color">附记</td>
+                        <td colspan="6">
+                            <div class="bdc-fj-box">
+                                <textarea name="fj" id="fj" rows="" cols="" class="change-textarea-width"></textarea>
+                                <a href="javascript:;" class="layui-btn layui-btn-xs bdc-secondary-btn" id="clearFjBtn">清空</a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </form>
+        <div class="bdc-update-tips-box  bdc-hide">
+            <div class="bdc-update-tips">
+                <p>以下字段已修改：<span class="bdc-close">关闭</span></p>
+                <div id="updateTips"><p></p></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--插入权利人模块-->
+<script type="text/html" id="qlrTpl">
+    <tbody>
+    {{# if(d.list && d.list.length > 0){ }}
+    {{# for(var i = 0, len = d.list.length; i < len; i++){ }}
+    <tr>
+        <td class="" colspan="2">
+            <div class="bdc-td-box bdc-one-icon">
+                <input type="text" class="layui-table-edit set-center no-modify" value="{{ d.list[i].qlrmc  || '' }}"
+                       title="{{ d.list[i].qlrmc  || '' }}" name="" disabled="off">
+            </div>
+        </td>
+        <td class="" colspan="2">
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit set-center no-modify" value="{{ d.list[i].zjzlmc  || '' }}"
+                       name="" disabled="off">
+            </div>
+        </td>
+        <td class="" colspan="2">
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit set-center no-modify" value="{{ d.list[i].zjh  || '' }}"
+                       name="" disabled="off">
+            </div>
+        </td>
+        <td class="">
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit set-center no-modify" value="{{ d.list[i].qlrlxmc  || ''}}"
+                       name="" disabled="off">
+            </div>
+        </td>
+    </tr>
+    {{# } }}
+    {{# } else { }}
+    <tr>
+        <td class="" colspan="2">
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit set-center" value="" name="">
+            </div>
+        </td>
+        <td class="" colspan="2">
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit set-center" value="" name="">
+            </div>
+        </td>
+        <td class="" colspan="2">
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit set-center" value="" name="">
+            </div>
+        </td>
+        <td class="">
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit set-center" value="" name="">
+            </div>
+        </td>
+    </tr>
+    {{# } }}
+    </tbody>
+</script>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.all.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/formCenter.js"></script>
+<script src="../../static/js/qlxx/qlxxCheck.js"></script>
+<script src="../../static/js/qlxx/jzqxx.js"></script>
+<script src="../../static/js/yancheng/qlxx/qlxxCommon.js"></script>
+<script src='../../static/lib/bdcui/js/sjsh/editDisabled.js'></script>
+</body>
+</html>

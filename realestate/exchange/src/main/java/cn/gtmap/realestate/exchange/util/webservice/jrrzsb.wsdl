@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://loushang.ws" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="JrrzServiceService" targetNamespace="http://loushang.ws">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://loushang.ws" elementFormDefault="unqualified" targetNamespace="http://loushang.ws" version="1.0">
+
+  <xs:element name="exchangeInfo" type="tns:exchangeInfo"/>
+
+  <xs:element name="exchangeInfoResponse" type="tns:exchangeInfoResponse"/>
+
+  <xs:element name="uploadData" type="tns:uploadData"/>
+
+  <xs:element name="uploadDataResponse" type="tns:uploadDataResponse"/>
+
+  <xs:complexType name="uploadData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element name="arg1" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="uploadDataResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="exchangeInfo">
+    <xs:sequence>
+      <xs:element form="qualified" minOccurs="0" name="args0" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="exchangeInfoResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="uploadDataResponse">
+    <wsdl:part element="tns:uploadDataResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="exchangeInfo">
+    <wsdl:part element="tns:exchangeInfo" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="exchangeInfoResponse">
+    <wsdl:part element="tns:exchangeInfoResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="uploadData">
+    <wsdl:part element="tns:uploadData" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="JrrzService">
+    <wsdl:operation name="uploadData">
+      <wsdl:input message="tns:uploadData" name="uploadData">
+    </wsdl:input>
+      <wsdl:output message="tns:uploadDataResponse" name="uploadDataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="exchangeInfo">
+      <wsdl:input message="tns:exchangeInfo" name="exchangeInfo">
+    </wsdl:input>
+      <wsdl:output message="tns:exchangeInfoResponse" name="exchangeInfoResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="JrrzServiceServiceSoapBinding" type="tns:JrrzService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="uploadData">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="uploadData">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="uploadDataResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="exchangeInfo">
+      <soap:operation soapAction="urn:exchangeInfo" style="document"/>
+      <wsdl:input name="exchangeInfo">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="exchangeInfoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="JrrzServiceService">
+    <wsdl:port binding="tns:JrrzServiceServiceSoapBinding" name="JrrzServicePort">
+      <soap:address location="http://10.0.0.6/realestate-supervise-server/services/jrrzsb"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

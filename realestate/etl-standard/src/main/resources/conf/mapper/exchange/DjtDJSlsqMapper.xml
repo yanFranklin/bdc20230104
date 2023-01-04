@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.etl.core.mapper.DjtDJSlsqMapper">
+    <select id="listDjtDjSlsqDO" resultType="cn.gtmap.realestate.common.core.domain.etl.EtlDjtDjSlsqDO">
+        SELECT * FROM DJT_DJ_SLSQ
+        <where>
+            AND YWH IS NOT NULL
+            <if test="dealflag != null and dealflag !=''">
+                AND dealflag=#{dealflag}
+            </if>
+            <if test="ywh != null and ywh !=''">
+                AND ywh=#{ywh}
+            </if>
+        </where>
+    </select>
+    <update id="updateFlagByYwh" parameterType="map">
+        UPDATE DJT_DJ_SLSQ T SET T.dealflag = #{dealflag,jdbcType=VARCHAR}  WHERE T.ywh =#{ywh}
+        <if test="bdcdyh != null and bdcdyh !=''">
+            AND t.bdcdyh=#{bdcdyh}
+        </if>
+    </update>
+
+    <select id="getExchangeBizMsgId" resultType="java.lang.Integer">
+        select BIZMSGID.nextVal from dual
+    </select>
+</mapper>

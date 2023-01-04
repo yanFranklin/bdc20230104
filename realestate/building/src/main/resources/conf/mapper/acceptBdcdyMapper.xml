@@ -1,0 +1,1243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.building.core.mapper.AcceptBdcdyMapper">
+
+    <!-- 查询土地定着物总数 -->
+    <select id="countTdDzwBdcdy" parameterType="map" resultType="Integer">
+        SELECT count(1) FROM ( ${querySql} )
+        <where>
+            and bdcdyh is not null and (bdczt = '1' or bdczt is null)
+            <if test="djh != null and djh != ''">
+                AND djh=#{djh}
+            </if>
+            <if test="zl != null and zl != ''">
+                <if test='zlmh == null'>
+                    AND zl LIKE '%'|| #{zl} || '%'
+                </if>
+                <if test='zlmh == "1"'>
+                    AND zl = #{zl}
+                </if>
+                <if test='zlmh == "2"'>
+                    AND zl LIKE '%'|| #{zl}
+                </if>
+                <if test='zlmh == "3"'>
+                    AND zl LIKE #{zl} || '%'
+                </if>
+                <if test='zlmh == "4"'>
+                    AND zl LIKE '%'|| #{zl} || '%'
+                </if>
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                <if test='bdcdyhmh == null'>
+                    AND bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+                </if>
+                <if test='bdcdyhmh == "1"'>
+                    AND bdcdyh = #{bdcdyh}
+                </if>
+                <if test='bdcdyhmh == "2"'>
+                    AND bdcdyh LIKE '%'|| #{bdcdyh}
+                </if>
+                <if test='bdcdyhmh == "3"'>
+                    AND bdcdyh LIKE #{bdcdyh} || '%'
+                </if>
+                <if test='bdcdyhmh == "4"'>
+                    AND bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+                </if>
+            </if>
+            <if test="qlxzAndZdtzm != null and qlxzAndZdtzm.size() > 0">
+                AND (
+                substr(bdcdyh,13,2) IN
+                <foreach collection="qlxzAndZdtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="zdtzm != null and zdtzm.size() > 0">
+                AND (
+                substr(bdcdyh,14,1) IN
+                <foreach collection="zdtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="fjh != null and fjh != ''">
+                <if test='fjhmh == null'>
+                    AND FJH LIKE '%' || #{fjh} || '%'
+                </if>
+                <if test='fjhmh == "1"'>
+                    AND FJH = #{fjh}
+                </if>
+                <if test='fjhmh == "2"'>
+                    AND FJH LIKE '%'|| #{fjh}
+                </if>
+                <if test='fjhmh == "3"'>
+                    AND FJH LIKE #{fjh} || '%'
+                </if>
+                <if test='fjhmh == "4"'>
+                    AND FJH LIKE '%' || #{fjh} || '%'
+                </if>
+            </if>
+        </where>
+    </select>
+
+    <!-- 分页查询土地及其定着物类型的不动产单元 -->
+    <select id="listTdDzwBdcdyByPageOrder" parameterType="map" resultType="map">
+        SELECT * FROM ( ${querySql} ) s
+        <where>
+            and bdcdyh is not null and (bdczt = '1' or bdczt is null)
+            <if test="djh != null and djh != ''">
+                AND djh=#{djh}
+            </if>
+            <if test="djhList != null and djhList.size > 0">
+                AND djh in
+                <foreach collection="djhList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="zl != null and zl != ''">
+                <if test='zlmh == null'>
+                    AND zl LIKE '%'|| #{zl} || '%'
+                </if>
+                <if test='zlmh == "1"'>
+                    AND zl = #{zl}
+                </if>
+                <if test='zlmh == "2"'>
+                    AND zl LIKE '%'|| #{zl}
+                </if>
+                <if test='zlmh == "3"'>
+                    AND zl LIKE #{zl} || '%'
+                </if>
+                <if test='zlmh == "4"'>
+                    AND zl LIKE '%'|| #{zl} || '%'
+                </if>
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                <if test='bdcdyhmh == null'>
+                    AND bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+                </if>
+                <if test='bdcdyhmh == "1"'>
+                    AND bdcdyh = #{bdcdyh}
+                </if>
+                <if test='bdcdyhmh == "2"'>
+                    AND bdcdyh LIKE '%'|| #{bdcdyh}
+                </if>
+                <if test='bdcdyhmh == "3"'>
+                    AND bdcdyh LIKE #{bdcdyh} || '%'
+                </if>
+                <if test='bdcdyhmh == "4"'>
+                    AND bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+                </if>
+            </if>
+            <if test="qlxzAndZdtzm != null and qlxzAndZdtzm.size() > 0">
+                AND (
+                substr(bdcdyh,13,2) IN
+                <foreach collection="qlxzAndZdtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="zdtzm != null and zdtzm.size() > 0">
+                AND (
+                substr(bdcdyh,14,1) IN
+                <foreach collection="zdtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="dzwtzm != null and dzwtzm.size() > 0">
+                AND (
+                substr(bdcdyh,20,1) IN
+                <foreach collection="dzwtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="fjh != null and fjh != ''">
+                <if test='fjhmh == null'>
+                    AND FJH LIKE '%' || #{fjh} || '%'
+                </if>
+                <if test='fjhmh == "1"'>
+                    AND FJH = #{fjh}
+                </if>
+                <if test='fjhmh == "2"'>
+                    AND FJH LIKE '%'|| #{fjh}
+                </if>
+                <if test='fjhmh == "3"'>
+                    AND FJH LIKE #{fjh} || '%'
+                </if>
+                <if test='fjhmh == "4"'>
+                    AND FJH LIKE '%' || #{fjh} || '%'
+                </if>
+            </if>
+            <if test="xjxzqh != null and xjxzqh != ''">
+                AND substr(bdcdyh,1,9) = #{xjxzqh}
+            </if>
+            <if test="ghyt != null and ghyt != ''">
+                AND s.yt = #{ghyt}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 查询海域定着物不动产单元总数 -->
+    <select id="countHyDzwBdcdy" parameterType="map" resultType="Integer">
+        <choose>
+            <when test="qlr != null and qlr !=''">
+                SELECT COUNT(1) FROM (
+                SELECT A.BDCDYH, A.ZL, A.ZHDM DJH, A.ZH_DJDCB_INDEX AS QJID,A.BDCDYHZT BDCZT,'ZH' LX FROM ZH_DJDCB A
+                INNER JOIN (SELECT ZHDM FROM ZH_QLR WHERE QLRMC LIKE '%'|| #{qlr} || '%' GROUP BY ZHDM) B ON A.ZHDM =
+                B.ZHDM
+                )
+            </when>
+            <otherwise>
+                SELECT COUNT(1) FROM (SELECT BDCDYH, ZL, ZHDM DJH, ZH_DJDCB_INDEX AS QJID,BDCDYHZT BDCZT,'ZH' LX FROM
+                ZH_DJDCB)
+            </otherwise>
+        </choose>
+        <where>
+            and bdcdyh is not null and (bdczt = '1' or bdczt is null)
+            <if test="djh != null and djh != ''">
+                AND djh=#{djh}
+            </if>
+            <if test="zl != null and zl != ''">
+                <if test='zlmh == null'>
+                    AND zl LIKE '%'|| #{zl} || '%'
+                </if>
+                <if test='zlmh == "1"'>
+                    AND zl = #{zl}
+                </if>
+                <if test='zlmh == "2"'>
+                    AND zl LIKE '%'|| #{zl}
+                </if>
+                <if test='zlmh == "3"'>
+                    AND zl LIKE #{zl} || '%'
+                </if>
+                <if test='zlmh == "4"'>
+                    AND zl LIKE '%'|| #{zl} || '%'
+                </if>
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                <if test='bdcdyhmh == null'>
+                    AND bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+                </if>
+                <if test='bdcdyhmh == "1"'>
+                    AND bdcdyh = #{bdcdyh}
+                </if>
+                <if test='bdcdyhmh == "2"'>
+                    AND bdcdyh LIKE '%'|| #{bdcdyh}
+                </if>
+                <if test='bdcdyhmh == "3"'>
+                    AND bdcdyh LIKE #{bdcdyh} || '%'
+                </if>
+                <if test='bdcdyhmh == "4"'>
+                    AND bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+                </if>
+            </if>
+            <if test="qlxzAndZdtzm != null and qlxzAndZdtzm.size() > 0">
+                AND (
+                substr(bdcdyh,13,2) IN
+                <foreach collection="qlxzAndZdtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="zdtzm != null and zdtzm.size() > 0">
+                AND (
+                substr(bdcdyh,14,1) IN
+                <foreach collection="zdtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="dzwtzm != null and dzwtzm.size() > 0">
+                AND (
+                substr(bdcdyh,20,1) IN
+                <foreach collection="dzwtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+        </where>
+    </select>
+
+    <!-- 分页查询海域及其定着物类型的不动产单元 -->
+    <select id="listHyDzwBdcdyByPageOrder" parameterType="map" resultType="map">
+        <choose>
+            <when test="qlr != null and qlr !=''">
+                SELECT * FROM (
+                SELECT A.BDCDYH, A.ZL, A.ZHDM DJH, A.ZH_DJDCB_INDEX AS QJID,A.BDCDYHZT BDCZT,'ZH' LX,NVL(A.HDYT,A.YHLXB)
+                YT FROM ZH_DJDCB A
+                INNER JOIN (SELECT ZHDM FROM ZH_QLR WHERE QLRMC LIKE '%'|| #{qlr} || '%' GROUP BY ZHDM) B ON A.ZHDM =
+                B.ZHDM
+                )
+            </when>
+            <otherwise>
+                SELECT * FROM (SELECT BDCDYH, ZL, ZHDM DJH, ZH_DJDCB_INDEX AS QJID,BDCDYHZT BDCZT,'ZH' LX,
+                NVL(HDYT,YHLXB) YT FROM ZH_DJDCB)
+            </otherwise>
+        </choose>
+        <where>
+            and bdcdyh is not null and (bdczt = '1' or bdczt is null)
+            <if test="djh != null and djh != ''">
+                AND djh=#{djh}
+            </if>
+            <if test="zl != null and zl != ''">
+                <if test='zlmh == null'>
+                    AND zl LIKE '%'|| #{zl} || '%'
+                </if>
+                <if test='zlmh == "1"'>
+                    AND zl = #{zl}
+                </if>
+                <if test='zlmh == "2"'>
+                    AND zl LIKE '%'|| #{zl}
+                </if>
+                <if test='zlmh == "3"'>
+                    AND zl LIKE #{zl} || '%'
+                </if>
+                <if test='zlmh == "4"'>
+                    AND zl LIKE '%'|| #{zl} || '%'
+                </if>
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                <if test='bdcdyhmh == null'>
+                    AND bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+                </if>
+                <if test='bdcdyhmh == "1"'>
+                    AND bdcdyh = #{bdcdyh}
+                </if>
+                <if test='bdcdyhmh == "2"'>
+                    AND bdcdyh LIKE '%'|| #{bdcdyh}
+                </if>
+                <if test='bdcdyhmh == "3"'>
+                    AND bdcdyh LIKE #{bdcdyh} || '%'
+                </if>
+                <if test='bdcdyhmh == "4"'>
+                    AND bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+                </if>
+            </if>
+            <if test="qlxzAndZdtzm != null and qlxzAndZdtzm.size() > 0">
+                AND (
+                substr(bdcdyh,13,2) IN
+                <foreach collection="qlxzAndZdtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="zdtzm != null and zdtzm.size() > 0">
+                AND (
+                substr(bdcdyh,14,1) IN
+                <foreach collection="zdtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="dzwtzm != null and dzwtzm.size() > 0">
+                AND (
+                substr(bdcdyh,20,1) IN
+                <foreach collection="dzwtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询构筑物不动产单元总数 -->
+    <select id="countGzwBdcdy" parameterType="map" resultType="Integer">
+        <choose>
+            <when test="qlr != null and qlr !=''">
+                SELECT COUNT(1) FROM (
+                SELECT A.BDCDYH, A.ZL, A.ZDZHDM DJH, A.GZW_DCB_INDEX AS QJID,A.ZT BDCZT,'GZW' LX FROM GZW_DCB A
+                INNER JOIN (SELECT GZW_DCB_INDEX FROM GZW_QLR WHERE QLR LIKE '%'||#{qlr}||'%' GROUP BY GZW_DCB_INDEX) B
+                ON A.GZW_DCB_INDEX = B.GZW_DCB_INDEX
+                UNION ALL
+                SELECT Q.BDCDYH,Q.ZL,substr(Q.BDCDYH, 0, 19) DJH,Q.FW_XMXX_INDEX AS QJID,Q.BDCZT BDCZT,'XMXX' AS LX FROM
+                FW_XMXX Q
+                INNER JOIN(SELECT FW_INDEX FROM FW_FCQLR WHERE QLR LIKE '%'||#{qlr}||'%' GROUP BY FW_INDEX) E ON
+                Q.FW_XMXX_INDEX=E.FW_INDEX
+                UNION ALL
+                SELECT Q.BDCDYH,Q.ZLDZ AS ZL,substr(Q.BDCDYH, 0, 19) DJH,Q.FW_DCB_INDEX AS QJID, Q.BDCZT BDCZT,'LJZ' AS
+                LX FROM FW_LJZ Q
+                INNER JOIN (SELECT FW_INDEX FROM FW_FCQLR WHERE QLR LIKE '%'||#{qlr}||'%' GROUP BY FW_INDEX) E ON
+                Q.FW_DCB_INDEX=E.FW_INDEX
+                )
+            </when>
+            <otherwise>
+                SELECT COUNT(1) FROM (SELECT A.BDCDYH, A.ZL, A.ZDZHDM DJH, A.GZW_DCB_INDEX AS QJID,A.ZT BDCZT,'GZW' LX
+                FROM GZW_DCB A
+                UNION ALL
+                SELECT Q.BDCDYH,Q.ZL,substr(Q.BDCDYH, 0, 19) DJH,Q.FW_XMXX_INDEX AS QJID,Q.BDCZT BDCZT,'XMXX' AS LX FROM
+                FW_XMXX Q
+                UNION ALL
+                SELECT Q.BDCDYH,Q.ZLDZ AS ZL,substr(Q.BDCDYH, 0, 19) DJH,Q.FW_DCB_INDEX AS QJID, Q.BDCZT BDCZT,'LJZ' AS
+                LX FROM FW_LJZ Q)
+            </otherwise>
+        </choose>
+        <where>
+            and bdcdyh is not null and (bdczt = '1' or bdczt is null)
+            <if test="djh != null and djh != ''">
+                AND djh=#{djh}
+            </if>
+            <if test="zl != null and zl != ''">
+                <if test='zlmh == null'>
+                    AND zl LIKE '%'|| #{zl} || '%'
+                </if>
+                <if test='zlmh == "1"'>
+                    AND zl = #{zl}
+                </if>
+                <if test='zlmh == "2"'>
+                    AND zl LIKE '%'|| #{zl}
+                </if>
+                <if test='zlmh == "3"'>
+                    AND zl LIKE #{zl} || '%'
+                </if>
+                <if test='zlmh == "4"'>
+                    AND zl LIKE '%'|| #{zl} || '%'
+                </if>
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                <if test='bdcdyhmh == null'>
+                    AND bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+                </if>
+                <if test='bdcdyhmh == "1"'>
+                    AND bdcdyh = #{bdcdyh}
+                </if>
+                <if test='bdcdyhmh == "2"'>
+                    AND bdcdyh LIKE '%'|| #{bdcdyh}
+                </if>
+                <if test='bdcdyhmh == "3"'>
+                    AND bdcdyh LIKE #{bdcdyh} || '%'
+                </if>
+                <if test='bdcdyhmh == "4"'>
+                    AND bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+                </if>
+            </if>
+            <if test="qlxzAndZdtzm != null and qlxzAndZdtzm.size() > 0">
+                AND (
+                substr(bdcdyh,13,2) IN
+                <foreach collection="qlxzAndZdtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="zdtzm != null and zdtzm.size() > 0">
+                AND (
+                substr(bdcdyh,14,1) IN
+                <foreach collection="zdtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="dzwtzm != null and dzwtzm.size() > 0">
+                AND (
+                substr(bdcdyh,20,1) IN
+                <foreach collection="dzwtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+        </where>
+    </select>
+
+    <!-- 分页查询海域及其定着物类型的不动产单元 -->
+    <select id="listGzwBdcdyByPageOrder" parameterType="map" resultType="map">
+        <choose>
+            <when test="qlr != null and qlr !=''">
+                SELECT * FROM (
+                SELECT A.BDCDYH, A.ZL, A.ZDZHDM DJH, A.GZW_DCB_INDEX AS QJID,A.ZT BDCZT,'GZW' LX FROM GZW_DCB A
+                INNER JOIN (SELECT GZW_DCB_INDEX FROM GZW_QLR WHERE QLR LIKE '%'||#{qlr}||'%' GROUP BY GZW_DCB_INDEX) B
+                ON A.GZW_DCB_INDEX = B.GZW_DCB_INDEX
+                UNION ALL
+                SELECT Q.BDCDYH,Q.ZL,substr(Q.BDCDYH, 0, 19) DJH,Q.FW_XMXX_INDEX AS QJID,Q.BDCZT BDCZT,'XMXX' AS LX FROM
+                FW_XMXX Q
+                INNER JOIN(SELECT FW_INDEX FROM FW_FCQLR WHERE QLR LIKE '%'||#{qlr}||'%' GROUP BY FW_INDEX) E ON
+                Q.FW_XMXX_INDEX=E.FW_INDEX
+                UNION ALL
+                SELECT Q.BDCDYH,Q.ZLDZ AS ZL,substr(Q.BDCDYH, 0, 19) DJH,Q.FW_DCB_INDEX AS QJID, Q.BDCZT BDCZT,'LJZ' AS
+                LX FROM FW_LJZ Q
+                INNER JOIN (SELECT FW_INDEX FROM FW_FCQLR WHERE QLR LIKE '%'||#{qlr}||'%' GROUP BY FW_INDEX) E ON
+                Q.FW_DCB_INDEX=E.FW_INDEX
+
+                )
+            </when>
+            <otherwise>
+                SELECT * FROM (
+                SELECT A.BDCDYH, A.ZL, A.ZDZHDM DJH, A.GZW_DCB_INDEX AS QJID,A.ZT BDCZT,'GZW' LX FROM GZW_DCB A
+                UNION ALL
+                SELECT Q.BDCDYH,Q.ZL,substr(Q.BDCDYH, 0, 19) DJH,Q.FW_XMXX_INDEX AS QJID,Q.BDCZT BDCZT,'XMXX' AS LX FROM
+                FW_XMXX Q
+                UNION ALL
+                SELECT Q.BDCDYH,Q.ZLDZ AS ZL,substr(Q.BDCDYH, 0, 19) DJH,Q.FW_DCB_INDEX AS QJID, Q.BDCZT BDCZT,'LJZ' AS
+                LX FROM FW_LJZ Q
+
+                )
+            </otherwise>
+        </choose>
+        <where>
+            and bdcdyh is not null and (bdczt = '1' or bdczt is null)
+            <if test="djh != null and djh != ''">
+                AND djh=#{djh}
+            </if>
+            <if test="djhList != null and djhList.size > 0">
+                AND djh in
+                <foreach collection="djhList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="zl != null and zl != ''">
+                <if test='zlmh == null'>
+                    AND zl LIKE '%'|| #{zl} || '%'
+                </if>
+                <if test='zlmh == "1"'>
+                    AND zl = #{zl}
+                </if>
+                <if test='zlmh == "2"'>
+                    AND zl LIKE '%'|| #{zl}
+                </if>
+                <if test='zlmh == "3"'>
+                    AND zl LIKE #{zl} || '%'
+                </if>
+                <if test='zlmh == "4"'>
+                    AND zl LIKE '%'|| #{zl} || '%'
+                </if>
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                <if test='bdcdyhmh == null'>
+                    AND bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+                </if>
+                <if test='bdcdyhmh == "1"'>
+                    AND bdcdyh = #{bdcdyh}
+                </if>
+                <if test='bdcdyhmh == "2"'>
+                    AND bdcdyh LIKE '%'|| #{bdcdyh}
+                </if>
+                <if test='bdcdyhmh == "3"'>
+                    AND bdcdyh LIKE #{bdcdyh} || '%'
+                </if>
+                <if test='bdcdyhmh == "4"'>
+                    AND bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+                </if>
+            </if>
+            <if test="qlxzAndZdtzm != null and qlxzAndZdtzm.size() > 0">
+                AND (
+                substr(bdcdyh,13,2) IN
+                <foreach collection="qlxzAndZdtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="zdtzm != null and zdtzm.size() > 0">
+                AND (
+                substr(bdcdyh,14,1) IN
+                <foreach collection="zdtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="dzwtzm != null and dzwtzm.size() > 0">
+                AND (
+                substr(bdcdyh,20,1) IN
+                <foreach collection="dzwtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+        </where>
+    </select>
+
+    <!-- 分页查询承包方承包宗地的不动产单元 -->
+    <select id="listCbfCbzdBdcdyByPageOrder" parameterType="map" resultType="map">
+        SELECT * FROM (
+        SELECT N.BDCDYH, N.TDZL AS ZL, A.DJH, N.NYD_DJDCB_INDEX AS QJID,'1' AS BDCZT,'CBZD' LX,B.CBFMC AS QLR,B.CBFZJHM
+        as QLRZJH, B.CBHTBH,N.QSXZ,A.CBZD_DCBCBFREL_INDEX AS QJQLRGXID FROM CBZD_DCBCBF_REL A
+        LEFT JOIN NYD_DJDCB N ON N.BDCDYH =A.BDCDYH
+        INNER JOIN CBZD_CBF B ON A.CBZD_CBF_INDEX = B.CBZD_CBF_INDEX
+        )
+        <where>
+            and bdcdyh is not null
+            <if test="djh != null and djh != ''">
+                AND djh=#{djh}
+            </if>
+            <if test="djhList != null and djhList.size > 0">
+                AND djh in
+                <foreach collection="djhList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="zl != null and zl != ''">
+                <if test='zlmh == null'>
+                    AND zl LIKE '%'|| #{zl} || '%'
+                </if>
+                <if test='zlmh == "1"'>
+                    AND zl = #{zl}
+                </if>
+                <if test='zlmh == "2"'>
+                    AND zl LIKE '%'|| #{zl}
+                </if>
+                <if test='zlmh == "3"'>
+                    AND zl LIKE #{zl} || '%'
+                </if>
+                <if test='zlmh == "4"'>
+                    AND zl LIKE '%'|| #{zl} || '%'
+                </if>
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                <if test='bdcdyhmh == null'>
+                    AND bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+                </if>
+                <if test='bdcdyhmh == "1"'>
+                    AND bdcdyh = #{bdcdyh}
+                </if>
+                <if test='bdcdyhmh == "2"'>
+                    AND bdcdyh LIKE '%'|| #{bdcdyh}
+                </if>
+                <if test='bdcdyhmh == "3"'>
+                    AND bdcdyh LIKE #{bdcdyh} || '%'
+                </if>
+                <if test='bdcdyhmh == "4"'>
+                    AND bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+                </if>
+            </if>
+            <if test="qlxzAndZdtzm != null and qlxzAndZdtzm.size() > 0">
+                AND (
+                substr(bdcdyh,13,2) IN
+                <foreach collection="qlxzAndZdtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="zdtzm != null and zdtzm.size() > 0">
+                AND (
+                substr(bdcdyh,14,1) IN
+                <foreach collection="zdtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="dzwtzm != null and dzwtzm.size() > 0">
+                AND (
+                substr(bdcdyh,20,1) IN
+                <foreach collection="dzwtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="cbhtbh != null and cbhtbh != ''">
+                <if test='cbhtbhmh == null'>
+                    AND cbhtbh LIKE '%'|| #{cbhtbh} || '%'
+                </if>
+                <if test='cbhtbhmh == "1"'>
+                    AND cbhtbh = #{cbhtbh}
+                </if>
+                <if test='cbhtbhmh == "2"'>
+                    AND cbhtbh LIKE '%'|| #{cbhtbh}
+                </if>
+                <if test='cbhtbhmh == "3"'>
+                    AND cbhtbh LIKE #{cbhtbh} || '%'
+                </if>
+                <if test='cbhtbhmh == "4"'>
+                    AND cbhtbh LIKE '%'|| #{cbhtbh} || '%'
+                </if>
+
+            </if>
+            <if test="qlr != null and qlr != ''">
+                <if test='qlrmh == null'>
+                    AND qlr LIKE '%'|| #{qlr} || '%'
+                </if>
+                <if test='qlrmh == "1"'>
+                    AND qlr = #{qlr}
+                </if>
+                <if test='qlrmh == "2"'>
+                    AND qlr LIKE '%'|| #{qlr}
+                </if>
+                <if test='qlrmh == "3"'>
+                    AND qlr LIKE #{qlr} || '%'
+                </if>
+                <if test='qlrmh == "4"'>
+                    AND qlr LIKE '%'|| #{qlr} || '%'
+                </if>
+
+            </if>
+
+        </where>
+    </select>
+
+    <select id="testBdcdyWithQlrByPageOrder" parameterType="map" resultType="map">
+        SELECT * FROM (
+        SELECT * FROM (
+        SELECT Q.BDCDYH, Q.ZL, substr(Q.BDCDYH,0,19) DJH,Q.FW_XMXX_INDEX AS QJID,'XMXX' AS LX, TO_CHAR(Q.BDCZT) BDCZT
+        FROM FW_XMXX Q
+        UNION ALL
+        SELECT Q.BDCDYH,Q.ZLDZ AS ZL,substr(Q.BDCDYH,0,19) DJH, Q.FW_DCB_INDEX AS QJID,'LJZ' AS LX, TO_CHAR(Q.BDCZT)
+        BDCZT FROM FW_LJZ Q
+        UNION ALL
+        SELECT Q.BDCDYH,Q.ZL,substr(Q.BDCDYH,0,19) DJH, Q.FW_HS_INDEX AS QJID,'HS' AS LX, TO_CHAR(Q.BDCZT) BDCZT FROM
+        FW_HS Q
+        UNION ALL
+        SELECT Q.BDCDYH,Q.ZL,substr(Q.BDCDYH,0,19) DJH, Q.FW_HS_INDEX AS QJID,'YCHS' AS LX, TO_CHAR(Q.BDCZT) BDCZT FROM
+        FW_YCHS Q
+        ) Q
+        <if test="qlr != null and qlr != ''">
+            INNER JOIN (SELECT FW_INDEX FROM FW_FCQLR WHERE QLR LIKE '%'|| #{qlr} || '%' GROUP BY FW_INDEX) E ON
+            Q.QJID=E.FW_INDEX
+        </if>
+        )
+        <where>
+            and bdcdyh is not null and (bdczt = '1' or bdczt is null)
+            <if test="djh != null and djh != ''">
+                AND djh=#{djh}
+            </if>
+            <if test="zl != null and zl != ''">
+                AND zl LIKE '%'|| #{zl} || '%'
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+            </if>
+            <if test="qlxzAndZdtzm != null and qlxzAndZdtzm.size() > 0">
+                AND (
+                substr(bdcdyh,13,2) IN
+                <foreach collection="qlxzAndZdtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="zdtzm != null and zdtzm.size() > 0">
+                AND (
+                substr(bdcdyh,14,1) IN
+                <foreach collection="zdtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+        </where>
+    </select>
+
+    <select id="testBdcdyWithQlr2ByPageOrder" parameterType="map" resultType="map">
+        SELECT * FROM (SELECT * FROM (
+        SELECT Q.BDCDYH, Q.ZL, substr(Q.BDCDYH,0,19) DJH,Q.FW_XMXX_INDEX AS QJID,'XMXX' AS LX, TO_CHAR(Q.BDCZT) BDCZT
+        FROM FW_XMXX Q
+        UNION ALL
+        SELECT Q.BDCDYH,Q.ZLDZ AS ZL,substr(Q.BDCDYH,0,19) DJH, Q.FW_DCB_INDEX AS QJID,'LJZ' AS LX, TO_CHAR(Q.BDCZT)
+        BDCZT FROM FW_LJZ Q
+        UNION ALL
+        SELECT Q.BDCDYH,Q.ZL,substr(Q.BDCDYH,0,19) DJH, Q.FW_HS_INDEX AS QJID,'HS' AS LX, TO_CHAR(Q.BDCZT) BDCZT FROM
+        FW_HS Q
+        UNION ALL
+        SELECT Q.BDCDYH,Q.ZL,substr(Q.BDCDYH,0,19) DJH, Q.FW_HS_INDEX AS QJID,'YCHS' AS LX, TO_CHAR(Q.BDCZT) BDCZT FROM
+        FW_YCHS Q
+        ) A
+        <if test="qlr != null and qlr != ''">
+            LEFT JOIN (SELECT DISTINCT FW_INDEX FROM FW_FCQLR B WHERE QLR LIKE '%'|| #{qlr} || '%') B ON A.QJID =
+            B.FW_INDEX
+        </if>
+        )
+        <where>
+            and bdcdyh is not null and (bdczt = '1' or bdczt is null)
+            <if test="qlr != null and qlr != ''">
+                and FW_INDEX is not null
+            </if>
+            <if test="djh != null and djh != ''">
+                AND djh=#{djh}
+            </if>
+            <if test="zl != null and zl != ''">
+                AND zl LIKE '%'|| #{zl} || '%'
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+            </if>
+            <if test="qlxzAndZdtzm != null and qlxzAndZdtzm.size() > 0">
+                AND (
+                substr(bdcdyh,13,2) IN
+                <foreach collection="qlxzAndZdtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="zdtzm != null and zdtzm.size() > 0">
+                AND (
+                substr(bdcdyh,14,1) IN
+                <foreach collection="zdtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+        </where>
+    </select>
+
+
+    <select id="testBdcdyWithQlr4ByPageOrder" parameterType="map" resultType="map">
+        SELECT * FROM (
+        SELECT Q.BDCDYH, Q.ZL, substr(Q.BDCDYH,0,19) DJH,Q.FW_XMXX_INDEX AS QJID,'XMXX' AS LX, TO_CHAR(Q.BDCZT) BDCZT
+        FROM FW_XMXX Q
+        <if test="qlr != null and qlr != ''">
+            INNER JOIN (SELECT FW_INDEX FROM FW_FCQLR WHERE QLR LIKE '%'|| #{qlr} || '%' GROUP BY FW_INDEX) E ON
+            Q.FW_XMXX_INDEX=E.FW_INDEX
+        </if>
+        UNION ALL
+        SELECT Q.BDCDYH,Q.ZLDZ AS ZL,substr(Q.BDCDYH,0,19) DJH, Q.FW_DCB_INDEX AS QJID,'LJZ' AS LX, TO_CHAR(Q.BDCZT)
+        BDCZT FROM FW_LJZ Q
+        <if test="qlr != null and qlr != ''">
+            INNER JOIN (SELECT FW_INDEX FROM FW_FCQLR WHERE QLR LIKE '%'|| #{qlr} || '%' GROUP BY FW_INDEX) E ON
+            Q.FW_DCB_INDEX=E.FW_INDEX
+        </if>
+        UNION ALL
+        SELECT Q.BDCDYH,Q.ZL,substr(Q.BDCDYH,0,19) DJH, Q.FW_HS_INDEX AS QJID,'HS' AS LX, TO_CHAR(Q.BDCZT) BDCZT FROM
+        FW_HS Q
+        <if test="qlr != null and qlr != ''">
+            INNER JOIN (SELECT FW_INDEX FROM FW_FCQLR WHERE QLR LIKE '%'|| #{qlr} || '%' GROUP BY FW_INDEX) E ON
+            Q.FW_HS_INDEX=E.FW_INDEX
+        </if>
+        UNION ALL
+        SELECT Q.BDCDYH,Q.ZL,substr(Q.BDCDYH,0,19) DJH, Q.FW_HS_INDEX AS QJID,'YCHS' AS LX, TO_CHAR(Q.BDCZT) BDCZT FROM
+        FW_YCHS Q
+        <if test="qlr != null and qlr != ''">
+            INNER JOIN (SELECT FW_INDEX FROM FW_FCQLR WHERE QLR LIKE '%'|| #{qlr} || '%' GROUP BY FW_INDEX) E ON
+            Q.FW_HS_INDEX=E.FW_INDEX
+        </if>
+        )
+        <where>
+            and bdcdyh is not null and (bdczt = '1' or bdczt is null)
+            <if test="djh != null and djh != ''">
+                AND djh=#{djh}
+            </if>
+            <if test="zl != null and zl != ''">
+                AND zl LIKE '%'|| #{zl} || '%'
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+            </if>
+            <if test="qlxzAndZdtzm != null and qlxzAndZdtzm.size() > 0">
+                AND (
+                substr(bdcdyh,13,2) IN
+                <foreach collection="qlxzAndZdtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="zdtzm != null and zdtzm.size() > 0">
+                AND (
+                substr(bdcdyh,14,1) IN
+                <foreach collection="zdtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+        </where>
+    </select>
+
+    <select id="testBdcdyWithQlr5ByPageOrder" parameterType="map" resultType="map">
+        SELECT * FROM (
+        SELECT Q.BDCDYH, Q.ZL, substr(Q.BDCDYH,0,19) DJH,Q.FW_XMXX_INDEX AS QJID,'XMXX' AS LX, TO_CHAR(Q.BDCZT) BDCZT
+        FROM FW_XMXX Q
+        <if test="qlr != null and qlr != ''">
+            LEFT JOIN (SELECT DISTINCT FW_INDEX FROM FW_FCQLR B WHERE QLR LIKE '%'|| #{qlr} || '%') B ON Q.FW_XMXX_INDEX
+            =
+            B.FW_INDEX
+            WHERE 1=1 AND B.FW_INDEX IS NOT NULL
+        </if>
+        UNION ALL
+        SELECT Q.BDCDYH,Q.ZLDZ AS ZL,substr(Q.BDCDYH,0,19) DJH, Q.FW_DCB_INDEX AS QJID,'LJZ' AS LX, TO_CHAR(Q.BDCZT)
+        BDCZT FROM FW_LJZ Q
+        <if test="qlr != null and qlr != ''">
+            LEFT JOIN (SELECT DISTINCT FW_INDEX FROM FW_FCQLR B WHERE QLR LIKE '%'|| #{qlr} || '%') B ON Q.FW_DCB_INDEX
+            =
+            B.FW_INDEX
+            WHERE 1=1 AND B.FW_INDEX IS NOT NULL
+        </if>
+        UNION ALL
+        SELECT Q.BDCDYH,Q.ZL,substr(Q.BDCDYH,0,19) DJH, Q.FW_HS_INDEX AS QJID,'HS' AS LX, TO_CHAR(Q.BDCZT) BDCZT FROM
+        FW_HS Q
+        <if test="qlr != null and qlr != ''">
+            LEFT JOIN (SELECT DISTINCT FW_INDEX FROM FW_FCQLR B WHERE QLR LIKE '%'|| #{qlr} || '%') B ON Q.FW_HS_INDEX =
+            B.FW_INDEX
+            WHERE 1=1 AND B.FW_INDEX IS NOT NULL
+        </if>
+        UNION ALL
+        SELECT Q.BDCDYH,Q.ZL,substr(Q.BDCDYH,0,19) DJH, Q.FW_HS_INDEX AS QJID,'YCHS' AS LX, TO_CHAR(Q.BDCZT) BDCZT FROM
+        FW_YCHS Q
+        <if test="qlr != null and qlr != ''">
+            LEFT JOIN (SELECT DISTINCT FW_INDEX FROM FW_FCQLR B WHERE QLR LIKE '%'|| #{qlr} || '%') B ON Q.FW_HS_INDEX =
+            B.FW_INDEX
+            WHERE 1=1 AND B.FW_INDEX IS NOT NULL
+        </if>
+        )
+        <where>
+            and bdcdyh is not null and (bdczt = '1' or bdczt is null)
+            <if test="djh != null and djh != ''">
+                AND djh=#{djh}
+            </if>
+            <if test="zl != null and zl != ''">
+                AND zl LIKE '%'|| #{zl} || '%'
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+            </if>
+            <if test="qlxzAndZdtzm != null and qlxzAndZdtzm.size() > 0">
+                AND (
+                substr(bdcdyh,13,2) IN
+                <foreach collection="qlxzAndZdtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="zdtzm != null and zdtzm.size() > 0">
+                AND (
+                substr(bdcdyh,14,1) IN
+                <foreach collection="zdtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询房屋类型的BDCDY 的 LCZT  -->
+    <select id="getFwBdcdyLcztByBdcdyh" parameterType="map" resultType="map">
+        SELECT BDCDYH, LCZT
+        FROM (
+                 SELECT BDCDYH, LCZT, BDCZT
+                 FROM FW_HS
+                 WHERE BDCDYH = #{bdcdyh}
+                 UNION ALL
+                 SELECT BDCDYH, LCZT, BDCZT
+                 FROM FW_YCHS
+                 WHERE BDCDYH = #{bdcdyh}
+                 UNION ALL
+                 SELECT BDCDYH, LCZT, BDCZT
+                 FROM FW_LJZ
+                 WHERE BDCDYH = #{bdcdyh}
+                 UNION ALL
+                 SELECT BDCDYH, LCZT, BDCZT
+                 FROM FW_XMXX
+                 WHERE BDCDYH = #{bdcdyh}
+             )
+        WHERE (bdczt = '1' OR bdczt IS NULL)
+    </select>
+
+    <!-- 查询土地类型 BDCDY 的 LCZT -->
+    <select id="getTdBdcdyLcztByBdcdyh" parameterType="map" resultType="map">
+        SELECT BDCDYH, LCZT
+        FROM ${zdTableName}
+        WHERE BDCDYH = #{bdcdyh}
+    </select>
+
+    <!-- 查询DCB的BDCDY 的 LCZT -->
+    <select id="getDcbBdcdyLcztByBdcdyh" parameterType="map" resultType="map">
+        SELECT BDCDYH, LCZT
+        FROM (
+                 SELECT BDCDYH, LCZT
+                 FROM LQ_DCB
+                 WHERE BDCDYH = #{bdcdyh}
+                 UNION ALL
+                 SELECT BDCDYH, LCZT
+                 FROM GZW_DCB
+                 WHERE BDCDYH = #{bdcdyh}
+                 UNION ALL
+                 SELECT BDCDYH, LCZT
+                 FROM CBZD_DCB
+                 WHERE BDCDYH = #{bdcdyh}
+             )
+    </select>
+
+    <select id="queryZlBySgbh" resultType="String" parameterType="String">
+        SELECT zl
+        FROM sggadz
+        WHERE sgbh = #{sgbh}
+          AND ROWNUM = 1
+    </select>
+
+    <sql id="listWwsqZdxx">
+        SELECT 'ZD' AS LX,Z.ZD_DJDCB_INDEX AS QJID,'1' AS BDCZT,Z.BDCDYH,Z.TDZL AS ZL,NULL AS MJ,Z.DJH AS
+        BDCDYBH,NVL(Z.FZMJ,Z.SCMJ) as ZDZHMJ,Z.TDYT AS ZDYT,Z.SYQLX AS ZDQLXZ,NULL AS FWJG,NULL AS ZCS,NULL AS SZC,NULL
+        AS FWXZ,NULL AS FWXZMC,NULL AS FWLX,NULL AS GHYT,NULL AS GHYTMC,
+        to_char(Z.QSRQ,'yyyy-MM-dd hh24:mi:ss') AS TDSYQSSJ,to_char(Z.ZZRQ,'yyyy-MM-dd hh24:mi:ss') AS TDSYJSSJ,NULL AS FWDCBINDEX FROM
+        ZD_DJDCB Z
+        <if test="(qlrmc != null and qlrmc !='') or (qlrzjh != null and qlrzjh != '')">
+            INNER JOIN(SELECT DJH FROM ZD_QLR qlr WHERE 1=1
+            <if test="qlrmc != null and qlrmc != ''">
+                AND qlr.qlrmc = #{qlrmc}
+            </if>
+            <if test="qlrzjh != null and qlrzjh != ''">
+                AND qlr.qlrzjh = #{qlrzjh}
+            </if>
+            GROUP BY DJH) W ON Z.DJH=W.DJH
+        </if>
+        UNION ALL
+        SELECT 'QSZD' AS LX,Q.QSZD_DJDCB_INDEX AS QJID,'1' AS BDCZT,Q.BDCDYH,Q.TDZL AS ZL,NULL AS MJ,Q.DJH AS
+        BDCDYBH,NVL(Q.FZMJ,Q.SCMJ) as ZDZHMJ,Q.TDYT AS ZDYT,Q.SYQLX AS ZDQLXZ,NULL AS FWJG,NULL AS ZCS,NULL AS SZC,NULL
+        AS FWXZ,NULL AS FWXZMC,NULL AS FWLX,NULL AS GHYT,NULL AS GHYTMC,to_char(Q.QSRQ,'yyyy-MM-dd hh24:mi:ss') AS TDSYQSSJ,
+        to_char(Q.ZZRQ,'yyyy-MM-dd hh24:mi:ss') AS TDSYJSSJ,NULL AS FWDCBINDEX FROM
+        QSZD_DJDCB Q
+        <if test="(qlrmc != null and qlrmc !='') or (qlrzjh != null and qlrzjh != '')">
+            INNER JOIN(SELECT DJH FROM QSZD_QLR qlr WHERE 1=1
+            <if test="qlrmc != null and qlrmc != ''">
+                AND qlr.qlrmc = #{qlrmc}
+            </if>
+            <if test="qlrzjh != null and qlrzjh != ''">
+                AND qlr.qlrzjh = #{qlrzjh}
+            </if>
+            GROUP BY DJH) W ON Q.DJH=W.DJH
+        </if>
+        UNION ALL
+        SELECT 'NYD' AS LX,N.NYD_DJDCB_INDEX AS QJID,'1' AS BDCZT,N.BDCDYH,N.TDZL AS ZL,NULL AS MJ,N.DJH AS
+        BDCDYBH,NVL(N.FZMJ,N.SCMJ) as ZDZHMJ,N.TDYT AS ZDYT,N.SYQLX AS ZDQLXZ,NULL AS FWJG,NULL AS ZCS,NULL AS SZC,NULL
+        AS FWXZ,NULL AS FWXZMC,NULL AS FWLX,NULL AS GHYT,NULL AS GHYTMC,to_char(N.QSRQ,'yyyy-MM-dd hh24:mi:ss') AS TDSYQSSJ,
+        to_char(N.ZZRQ,'yyyy-MM-dd hh24:mi:ss') AS TDSYJSSJ,NULL AS FWDCBINDEX FROM
+        NYD_DJDCB N
+        <if test="(qlrmc != null and qlrmc !='') or (qlrzjh != null and qlrzjh != '')">
+            INNER JOIN(SELECT DJH FROM NYD_QLR qlr WHERE 1=1
+            <if test="qlrmc != null and qlrmc != ''">
+                AND qlr.qlrmc = #{qlrmc}
+            </if>
+            <if test="qlrzjh != null and qlrzjh != ''">
+                AND qlr.qlrzjh = #{qlrzjh}
+            </if>
+            GROUP BY DJH) W ON N.DJH=W.DJH
+        </if>
+        UNION ALL
+        SELECT 'JYQ' AS LX,J.JYQDKDCB_INDEX AS QJID,'1' AS BDCZT,J.BDCDYH,J.ZL AS ZL,NULL AS MJ,J.DKBM AS
+        BDCDYBH,J.DKSCMJM AS ZDZHMJ,J.TDYT AS ZDYT,J.QLXZ AS ZDQLXZ,NULL AS FWJG,NULL AS ZCS,NULL AS SZC,NULL AS
+        FWXZ,NULL AS FWXZMC,NULL AS FWLX,NULL AS GHYT,NULL AS GHYTMC,to_char(J.JYQQSRQ,'yyyy-MM-dd hh24:mi:ss') AS TDSYQSSJ,
+        to_char(J.JYQZZRQ,'yyyy-MM-dd hh24:mi:ss') AS TDSYJSSJ,NULL AS FWDCBINDEX FROM
+        JYQDK_DCB J
+        <if test="(qlrmc != null and qlrmc !='') or (qlrzjh != null and qlrzjh != '')">
+            INNER JOIN(SELECT R.JYQDKDCB_INDEX FROM JYQDK_DCBQLR_REL R INNER JOIN JYQDK_QLR qlr ON qlr.JYQDKQLR_INDEX
+            =R.JYQDKQLR_INDEX WHERE 1=1
+            <if test="qlrmc != null and qlrmc != ''">
+                AND qlr.qlrmc = #{qlrmc}
+            </if>
+            <if test="qlrzjh != null and qlrzjh != ''">
+                AND qlr.qlrzjh = #{qlrzjh}
+            </if>
+            GROUP BY JYQDKDCB_INDEX) W ON J.JYQDKDCB_INDEX=W.JYQDKDCB_INDEX
+        </if>
+
+    </sql>
+
+    <!-- 外网申请分页查询土地及其定着物类型的不动产单元 -->
+    <select id="listWwsqBdcdyxxDTOByPageOrder" parameterType="map" resultType="map">
+        SELECT * FROM (
+        <if test="cxZd == true">
+            <include refid="listWwsqZdxx"/>
+        </if>
+        <if test="cxZd == true and cxFw == true">
+            UNION ALL
+        </if>
+        <if test="cxFw == true">
+            SELECT 'HS' AS LX,F.FW_HS_INDEX AS QJID,TO_CHAR(F.BDCZT) BDCZT,F.BDCDYH,F.ZL AS ZL,NVL(F.SCJZMJ, F.YCJZMJ) AS MJ,F.FWBM AS
+            BDCDYBH,NULL AS ZDZHMJ,F.TDYT AS ZDYT,F.TDSYQLX AS ZDQLXZ,F.FWJG AS FWJG,NULL AS ZCS,F.WLCS AS SZC,F.FWXZ AS
+            FWXZ,F.FWXZMC AS FWXZMC,F.FWLX AS FWLX,F.GHYT AS GHYT,F.YTMC AS GHYTMC,NULL AS TDSYQSSJ,NULL AS TDSYJSSJ,
+            F.FW_DCB_INDEX AS FWDCBINDEX
+            FROM FW_HS F
+            <if test="(qlrmc != null and qlrmc !='') or (qlrzjh != null and qlrzjh != '')">
+                INNER JOIN(SELECT FW_INDEX FROM FW_FCQLR qlr WHERE 1=1
+                <if test="qlrmc != null and qlrmc != ''">
+                    AND qlr.qlr = #{qlrmc}
+                </if>
+                <if test="qlrzjh != null and qlrzjh != ''">
+                    AND qlr.qlrzjh = #{qlrzjh}
+                </if>
+                GROUP BY FW_INDEX) W ON F.FW_HS_INDEX=W.FW_INDEX
+            </if>
+            UNION ALL
+            SELECT 'YCHS' AS LX,F.FW_HS_INDEX AS QJID,TO_CHAR(F.BDCZT) BDCZT,F.BDCDYH,F.ZL AS ZL,F.YCJZMJ AS MJ,F.FWBM
+            AS BDCDYBH,NULL AS ZDZHMJ,F.TDYT AS ZDYT,F.TDSYQLX AS ZDQLXZ,NULL AS FWJG,NULL AS ZCS,F.WLCS AS SZC,F.FWXZ
+            AS FWXZ,F.FWXZMC AS FWXZMC,F.FWLX AS FWLX,F.GHYT AS GHYT,F.YTMC AS GHYTMC,NULL AS TDSYQSSJ,NULL AS TDSYJSSJ,
+            F.FW_DCB_INDEX AS FWDCBINDEX
+            FROM FW_YCHS F
+            <if test="(qlrmc != null and qlrmc !='') or (qlrzjh != null and qlrzjh != '')">
+                INNER JOIN(SELECT FW_INDEX FROM FW_FCQLR qlr WHERE 1=1
+                <if test="qlrmc != null and qlrmc != ''">
+                    AND qlr.qlr = #{qlrmc}
+                </if>
+                <if test="qlrzjh != null and qlrzjh != ''">
+                    AND qlr.qlrzjh = #{qlrzjh}
+                </if>
+                GROUP BY FW_INDEX) W ON F.FW_HS_INDEX=W.FW_INDEX
+            </if>
+            UNION ALL
+            SELECT 'LJZ' AS LX,F.FW_DCB_INDEX AS QJID,TO_CHAR(F.BDCZT) BDCZT,F.BDCDYH,F.ZLDZ AS ZL,NULL AS MJ,NULL AS
+            BDCDYBH,NULL AS ZDZHMJ,NULL AS ZDYT,NULL AS ZDQLXZ,F.FWJG AS FWJG,F.FWCS AS ZCS,NULL AS SZC,NULL AS FWXZ,NULL
+            AS FWXZMC,NULL AS FWLX,F.FWYT AS GHYT,F.YTMC AS GHYTMC,NULL AS TDSYQSSJ,NULL AS TDSYJSSJ,F.FW_DCB_INDEX AS FWDCBINDEX FROM FW_LJZ F
+            <if test="(qlrmc != null and qlrmc !='') or (qlrzjh != null and qlrzjh != '')">
+                INNER JOIN(SELECT FW_INDEX FROM FW_FCQLR qlr WHERE 1=1
+                <if test="qlrmc != null and qlrmc != ''">
+                    AND qlr.qlr = #{qlrmc}
+                </if>
+                <if test="qlrzjh != null and qlrzjh != ''">
+                    AND qlr.qlrzjh = #{qlrzjh}
+                </if>
+                GROUP BY FW_INDEX) W ON F.FW_DCB_INDEX=W.FW_INDEX
+            </if>
+            UNION ALL
+            SELECT 'XMXX' AS LX,F.FW_XMXX_INDEX AS QJID,TO_CHAR(F.BDCZT) BDCZT,F.BDCDYH,F.ZL AS ZL,NULL AS MJ,F.XMBM AS
+            BDCDYBH,NULL AS ZDZHMJ,NULL AS ZDYT,NULL AS ZDQLXZ,NULL AS FWJG,NULL AS ZCS,NULL AS SZC,F.FWXZ AS FWXZ,NULL
+            AS FWXZMC,F.FWLX AS FWLX,NULL AS GHYT,NULL AS GHYTMC,NULL AS TDSYQSSJ,NULL AS TDSYJSSJ,NULL AS FWDCBINDEX FROM FW_XMXX F
+            <if test="(qlrmc != null and qlrmc !='') or (qlrzjh != null and qlrzjh != '')">
+                INNER JOIN(SELECT FW_INDEX FROM FW_FCQLR qlr WHERE 1=1
+                <if test="qlrmc != null and qlrmc != ''">
+                    AND qlr.qlr = #{qlrmc}
+                </if>
+                <if test="qlrzjh != null and qlrzjh != ''">
+                    AND qlr.qlrzjh = #{qlrzjh}
+                </if>
+                GROUP BY FW_INDEX) W ON F.FW_XMXX_INDEX=W.FW_INDEX
+            </if>
+        </if>
+        )
+        <where>
+            AND bdcdyh IS NOT NULL AND (bdczt = '1' OR bdczt IS NULL)
+            <if test="zl != null and zl != ''">
+                <if test='zlmh == null'>
+                    AND zl = #{zl}
+                </if>
+                <if test='zlmh == "1"'>
+                    AND zl = #{zl}
+                </if>
+                <if test='zlmh == "2"'>
+                    AND zl LIKE '%'|| #{zl}
+                </if>
+                <if test='zlmh == "3"'>
+                    AND zl LIKE #{zl} || '%'
+                </if>
+                <if test='zlmh == "4"'>
+                    AND zl LIKE '%'|| #{zl} || '%'
+                </if>
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                <if test='bdcdyhmh == null'>
+                    AND bdcdyh = #{bdcdyh}
+                </if>
+                <if test='bdcdyhmh == "1"'>
+                    AND bdcdyh = #{bdcdyh}
+                </if>
+                <if test='bdcdyhmh == "2"'>
+                    AND bdcdyh LIKE '%'|| #{bdcdyh}
+                </if>
+                <if test='bdcdyhmh == "3"'>
+                    AND bdcdyh LIKE #{bdcdyh} || '%'
+                </if>
+                <if test='bdcdyhmh == "4"'>
+                    AND bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+                </if>
+            </if>
+            <if test="bdcdybh != null and bdcdybh != ''">
+                AND bdcdybh = #{bdcdybh}
+            </if>
+            <if test="zdtzm != null and zdtzm.size() > 0">
+                AND (
+                substr(bdcdyh,14,1) IN
+                <foreach collection="zdtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+
+            <if test="dzwtzm != null and dzwtzm.size() > 0">
+                AND (
+                substr(bdcdyh,20,1) IN
+                <foreach collection="dzwtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+        </where>
+    </select>
+
+    <!-- 外网申请分页查询构筑物信息的不动产单元 -->
+    <select id="listWwsqGzwxxDTOByPageOrder" parameterType="map" resultType="map">
+        SELECT * FROM (
+        SELECT A.GZW_DCB_INDEX AS QJID,A.ZT BDCZT,'GZW' LX,A.BDCDYH, A.ZL, A.GZWLX AS GZWLXDM,A.GZWGHYT AS GZWGHYTMC,A.MJ AS GZWMJ FROM GZW_DCB A
+        <if test="(qlrmc != null and qlrmc !='')">
+            INNER JOIN (SELECT GZW_DCB_INDEX FROM GZW_QLR WHERE QLR =#{qlrmc} GROUP BY GZW_DCB_INDEX) B
+            ON A.GZW_DCB_INDEX = B.GZW_DCB_INDEX
+        </if>
+        )
+        <where>
+            AND bdcdyh IS NOT NULL AND (bdczt = '1' OR bdczt IS NULL)
+            <if test="zl != null and zl != ''">
+                <if test='zlmh == null'>
+                    AND zl = #{zl}
+                </if>
+                <if test='zlmh == "1"'>
+                    AND zl = #{zl}
+                </if>
+                <if test='zlmh == "2"'>
+                    AND zl LIKE '%'|| #{zl}
+                </if>
+                <if test='zlmh == "3"'>
+                    AND zl LIKE #{zl} || '%'
+                </if>
+                <if test='zlmh == "4"'>
+                    AND zl LIKE '%'|| #{zl} || '%'
+                </if>
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                <if test='bdcdyhmh == null'>
+                    AND bdcdyh = #{bdcdyh}
+                </if>
+                <if test='bdcdyhmh == "1"'>
+                    AND bdcdyh = #{bdcdyh}
+                </if>
+                <if test='bdcdyhmh == "2"'>
+                    AND bdcdyh LIKE '%'|| #{bdcdyh}
+                </if>
+                <if test='bdcdyhmh == "3"'>
+                    AND bdcdyh LIKE #{bdcdyh} || '%'
+                </if>
+                <if test='bdcdyhmh == "4"'>
+                    AND bdcdyh LIKE '%'|| #{bdcdyh} || '%'
+                </if>
+            </if>
+        </where>
+
+
+    </select>
+
+    <!-- 获取权籍权利人-->
+    <select id="queryQjQlr" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.dto.exchange.wwsq.QlrlistResponse">
+
+        <if test="LX != null and LX != '' and LX == 'ZD'.toString()">
+            SELECT QLRMC,QLRZJLX AS QLRSFZJZL,QLRZJH,NULL AS QLRLXDH,FRDBXM AS QLRFDDBR,FRDBZJLX AS
+            QLRFDDBRZJZL,FRDBZJH AS QLRFDDBRZJH,FRDBDHHM AS QLRFDDBRLXDH,QLRLX,NULL AS GYFS,NULL AS GYBL FROM ZD_QLR
+            WHERE DJDCB_INDEX =#{QJID}
+        </if>
+        <if test="LX != null and LX != '' and LX == 'QSZD'.toString()">
+            SELECT QLRMC,QLRZJLX AS QLRSFZJZL,QLRZJH,NULL AS QLRLXDH,FRDBXM AS QLRFDDBR,FRDBZJLX AS
+            QLRFDDBRZJZL,FRDBZJH AS QLRFDDBRZJH,FRDBDHHM AS QLRFDDBRLXDH,QLRLX,NULL AS GYFS,NULL AS GYBL FROM
+            QSZD_QLR
+            WHERE DJDCB_INDEX =#{QJID}
+        </if>
+        <if test="LX != null and LX != '' and LX == 'NYD'.toString()">
+            SELECT QLRMC,QLRZJLX AS QLRSFZJZL,QLRZJH,NULL AS QLRLXDH,FRDBXM AS QLRFDDBR,FRDBZJLX AS
+            QLRFDDBRZJZL,FRDBZJH AS QLRFDDBRZJH,FRDBDHHM AS QLRFDDBRLXDH,QLRLX,NULL AS GYFS,NULL AS GYBL FROM
+            NYD_QLR
+            WHERE DJDCB_INDEX =#{QJID}
+        </if>
+        <if test="LX != null and LX != '' and LX == 'JYQ'.toString()">
+            SELECT c.QLRMC,c.QLRZJLX AS QLRSFZJZL,c.QLRZJH,NULL AS QLRLXDH,c.FRDBXM AS QLRFDDBR,c.FRDBZJLX AS
+            QLRFDDBRZJZL,c.FRDBZJH AS QLRFDDBRZJH,c.FRDBDHHM AS QLRFDDBRLXDH,c.QLRLX,NULL AS GYFS,NULL AS GYBL FROM
+            jyqdk_dcbqlr_rel r
+            JOIN jyqdk_qlr c ON r.jyqdkqlr_index = c.jyqdkqlr_index
+             WHERE r.jyqdkdcb_index =#{QJID}
+        </if>
+        <if test="LX != null and LX != '' and LX == 'GZW'.toString()">
+            SELECT QLR AS QLRMC,QLRZJLX AS QLRSFZJZL,QLRZJH,DH AS QLRLXDH,NULL AS QLRFDDBR,NULL AS
+            QLRFDDBRZJZL,NULL AS QLRFDDBRZJH,NULL AS QLRFDDBRLXDH,NULL AS QLRLX,GYFS,QLBL AS GYBL FROM
+            GZW_QLR
+            WHERE GZW_DCB_INDEX =#{QJID}
+        </if>
+        <if test="LX != null and LX != '' and (LX == 'HS'.toString() or LX == 'YCHS'.toString() or LX == 'LJZ'.toString() or LX == 'XMXX'.toString())">
+            SELECT QLR AS QLRMC,QLRZJLX AS QLRSFZJZL,QLRZJH,DH AS QLRLXDH,NULL AS QLRFDDBR,NULL AS QLRFDDBRZJZL,NULL
+            AS QLRFDDBRZJH,NULL AS QLRFDDBRLXDH,NULL AS QLRLX,GYFS,QLBL AS GYBL FROM FW_FCQLR
+            WHERE FW_INDEX =#{QJID}
+        </if>
+
+    </select>
+
+
+
+
+</mapper>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--收件信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.DjfDjFzMapper">
+
+    <select id="queryDjfDjFzList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.DjfDjFzDO">
+        SELECT DISTINCT x.xmid ywh,
+        nvl(d.fzr,x.dbr) fzry,
+        nvl(d.fzsj,x.djsj) fzsj,
+        d.zslx fzmc,
+        1 fzsl,
+        d.bdcqzh hfzsh,
+        nvl(nvl(d.lzr, REGEXP_SUBSTR(d.qlr, '[^,]+', 1,1)),d.szr) lzrxm,
+        nvl(d.lzrzjzl, '99') lzrzjlb,
+        nvl(d.lzrzjh,'999999') lzrzjhm,
+        '' AS lzrdh,
+        '' AS lzrdz,
+        '' AS lzryb,
+        d.fj bz,
+        substr(x.bdcdyh,0,6) qxdm
+        -- d.qzysxlh as ysxlh
+        FROM bdc_Zs d
+        LEFT JOIN Bdc_Xm_Zs_Gx c on d.zsid = c.zsid
+        LEFT JOIN bdc_xm x ON x.xmid = c.xmid
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND x.xmid = #{ywh}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryDjfDjFzListOld" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.yancheng.yth.old.DjfDjFzOldDO">
+        SELECT DISTINCT x.xmid ywh,
+        nvl(d.fzr,x.dbr) fzry,
+        nvl(d.fzsj,x.djsj) fzsj,
+        d.zslx fzmc,
+        1 fzsl,
+        d.bdcqzh hfzsh,
+        nvl(nvl(d.lzr, REGEXP_SUBSTR(d.qlr, '[^,]+', 1,1)),d.szr) lzrxm,
+        nvl(d.lzrzjzl, '99') lzrzjlb,
+        nvl(d.lzrzjh,'999999') lzrzjhm,
+        '' AS lzrdh,
+        '' AS lzrdz,
+        '' AS lzryb,
+        d.fj bz,
+        d.qxdm
+        -- d.qzysxlh as ysxlh
+        FROM bdc_Zs d
+        LEFT JOIN Bdc_Xm_Zs_Gx c on d.zsid = c.zsid
+        LEFT JOIN bdc_xm x ON x.xmid = c.xmid
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND x.xmid = #{ywh}
+            </if>
+        </where>
+    </select>
+</mapper>

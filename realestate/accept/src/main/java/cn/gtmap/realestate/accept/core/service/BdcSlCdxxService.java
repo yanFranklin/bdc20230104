@@ -1,0 +1,38 @@
+package cn.gtmap.realestate.accept.core.service;
+
+import cn.gtmap.realestate.common.core.domain.accept.BdcSlCdxxDO;
+import cn.gtmap.realestate.common.core.qo.init.BdcCdxxQO;
+
+/**
+ * @program: realestate
+ * @description: 查档信息查询服务
+ * @author: <a href="mailto:gaolining@gtmap.cn">gaolining</a>
+ * @create: 2020-09-23 17:20
+ **/
+public interface BdcSlCdxxService {
+
+    /**
+     * @param bdcCdxxDO
+     * @author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
+     * @description 查询查档信息
+     * @date : 2020/9/23 17:21
+     */
+    BdcSlCdxxDO queryBdcCdxx(BdcCdxxQO bdcCdxxQO);
+
+    /**
+     * @param bdcCdxxDO
+     * @author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
+     * @description 保存查档信息数据
+     * @date : 2020/9/23 17:29
+     */
+    BdcSlCdxxDO saveBdcCdxx(BdcSlCdxxDO bdcCdxxDO);
+
+    /**
+     * @param cdxxid,xmid
+     * @author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
+     * @description 删除查档信息
+     * @date : 2020/9/23 17:37
+     */
+    int deleteBdcCdxx(String cdxxid, String xmid);
+
+}

@@ -1,0 +1,101 @@
+<!--/**-->
+<!--* author: 前端组-->
+<!--* date: 2019-1-8-->
+<!--* version 3.0.0-->
+<!--* describe: 多级表头，每一行不限高，向下拓展-->
+<!--*/-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>打印预览</title>
+    <link rel="stylesheet" href="../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../static/lib/bdcui/css/multistep-header-table.css">
+    <link rel="stylesheet" href="../static/lib/bdcui/css/search.css">
+    <link rel="stylesheet" href="../static/css/bdcYjdDy.css">
+</head>
+<body>
+<div class="bdc-container">
+    <div class="layui-inline bdc-frame-button-box"  style="float: right;margin-bottom: 10px">
+        <a class="layui-btn layui-btn-normal bdc-major-btn" href="javascript:" id="dy" lay-submit="">打印</a>
+    </div>
+    <div>
+        <table class="layui-table">
+            <colgroup>
+                <col width="30">
+                <col width="120">
+                <col width="180">
+                <col width="260">
+                <col width="130">
+                <col width="60">
+                <col width="40">
+            </colgroup>
+            <thead>
+            <tr>
+                <th class="bdc-table-title" colspan="7" ><b>移交清单</b></th>
+            </tr>
+            <tr>
+                <th>序号</th>
+                <th>受理编号</th>
+                <th>业务细类</th>
+                <th>房屋坐落</th>
+                <th>权利人</th>
+                <th>操作者</th>
+                <th>备注</th>
+            </tr>
+            </thead>
+            <tbody id="tableView">
+            </tbody>
+        </table>
+    </div>
+    <div class="bdc-bottom clear">
+        <div class="bdc-list"><p>申请人签名<i></i></p><span>：</span></div>
+        <div class="bdc-list"><p>受理移交<i></i></p>：</div>
+        <div class="bdc-list"><p>审核移交<i></i></p>：</div>
+        <div class="bdc-list"><p>日期<i></i></p>：</div>
+        <div class="bdc-list"><p>日期<i></i></p>：</div>
+        <div class="bdc-list"><p>日期<i></i></p>：</div>
+        <div class="bdc-list"><p>受理签收<i></i></p>：</div>
+        <div class="bdc-list"><p>审核签收<i></i></p>：</div>
+        <div class="bdc-list"><p>发证签收<i></i></p>：</div>
+        <div class="bdc-list"><p>日期<i></i></p>：</div>
+        <div class="bdc-list"><p>日期<i></i></p>：</div>
+        <div class="bdc-list"><p>日期<i></i></p>：</div>
+    </div>
+</div>
+</body>
+<script type="text/html" id="yjdTableTpl">
+    {{#  layui.each(d, function(index, item){ }}
+    <tr class="data">
+        <td>{{index+1}}</td>
+        <td>{{item.slbh==undefined?'':item.slbh}}</td>
+        <td>
+            <div>{{item.businessType==undefined?'':item.businessType}}</div>
+        </td>
+        <td>
+            <div>{{item.zl==undefined?'':item.zl}}</div>
+        </td>
+        <td>
+            <div>{{item.qlr==undefined?'':item.qlr}}</div>
+        </td>
+        <td>
+            <div>{{item.taskAssName==undefined?'':item.taskAssName}}</div>
+        </td>
+        <td>
+            <div>{{item.bz==undefined?'':item.bz}}</div>
+        </td>
+    </tr>
+    {{#  }); }}
+    {{#  if(d.length === 0){ }}
+    无数据
+    {{#  } }}
+</script>
+<script src="../static/lib/jquery/jquery.min.js"></script>
+<script src="../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../static/lib/bdcui/js/common.js"></script>
+<script src="../static/lib/form-select/formSelects-v4.js"/>
+<script src="../static/lib/bdcui/js/mask.js"></script>
+<script src="../static/js/common.js"></script>
+<script src="../static/js/bdcYjdDy.js"></script>
+</html>

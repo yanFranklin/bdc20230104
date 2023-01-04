@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.building.core.mapper.YbdcdyhMapper">
+
+      <!-- 查询房屋原不动产单元号信息列表 -->
+    <select id="queryFwYbdcdyhList" parameterType="list" resultType="cn.gtmap.realestate.common.core.dto.building.YbdcdyhResponseDTO">
+        SELECT
+            t.bdcdyh AS bdcdyh,
+            LISTAGG(TO_CHAR(t.ybdcdyh), ',') WITHIN GROUP ( ORDER BY t.ybdcdyh ) AS ybdcdyh
+        FROM s_sj_hsbgjlb t
+        WHERE t.bglx IN ('合并' , '拆分')
+        <if test="fwBdcdyhList != null and fwBdcdyhList.size > 0">
+            AND t.bdcdyh IN
+            <foreach collection="fwBdcdyhList" item="item" index="index" open="(" separator=", " close=")">
+                #{item, jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        GROUP BY t.bdcdyh
+    </select>
+
+    <!-- 查询土地原不动产单元号信息列表 -->
+    <select id="queryTdYbdcdyhList" parameterType="list" resultType="cn.gtmap.realestate.common.core.dto.building.YbdcdyhResponseDTO">
+        SELECT
+               t.bh AS bdcdyh,
+               LISTAGG(TO_CHAR(t.ybh), ',') WITHIN GROUP ( ORDER BY t.ybh ) AS ybdcdyh
+        FROM s_sj_zdbgjlb t
+        WHERE 1 = 1
+        <if test="tdBdcdyhList != null and tdBdcdyhList.size > 0">
+            AND t.bh IN
+            <foreach collection="tdBdcdyhList" item="item" index="index" open="(" separator=", " close=")">
+                #{item, jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        GROUP BY t.bh
+    </select>
+
+</mapper>

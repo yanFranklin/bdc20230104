@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>修改收费信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/ztree/metroStyle.css" />
+    <link rel="stylesheet" href="../../static/css/fph/editFph.css" />
+</head>
+<body>
+<div class="bdc-popup-large" id="fpxx">
+</div>
+<script type="text/html" id="sfxxTpl">
+    {{# var sfxx = d.sfxx; }}
+    <form class="layui-form" lay-filter="fpxxForm">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">发票号</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="fph" name="fph" value="{{sfxx.fph || ''}}"
+                           placeholder="请输入" class="layui-input">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">收费时间</label>
+                <div class="layui-input-inline">
+                    <input type="text"  autocomplete="off" id="sfsj" name="sfsj" value="{{sfxx.sfsj || ''}}" placeholder="请输入" class="layui-input test-item">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">合计</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="hj" name="hj" value="{{sfxx.hj || ''}}" placeholder="请输入" class="layui-input">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label label-lqbm">开票人姓名</label>
+                <div class="layui-input-inline" style="display: flex;">
+                    <input type="text" id="kprxm" name="kprxm" autocomplete="off" value="{{sfxx.kprxm || ''}}" placeholder="请选择"
+                           class="layui-input" style="width: 100%;">
+                    <div class="layui-btn layui-btn-sm bdc-table-second-btn org_select_show2">选择</div>
+                </div>
+                <div class="org_select_tree2">
+                    <ul id="select_tree2" class="ztree"></ul>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">缴费状态</label>
+                <div class="layui-input-inline">
+                    <select lay-search="" lay-filter="sfzt" id="sfzt" name="sfzt">
+                        <option value="">请选择</option>
+                        <option value="1" {{# if(sfxx.sfzt==1 ){ }} selected="selected" {{# } }}>未缴费</option>
+                        <option value="2" {{# if(sfxx.sfzt==2 ){ }} selected="selected" {{# } }}>已缴费</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">缴费书号</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" id="jfsbm" name="jfsbm" value="{{sfxx.jfsbm || ''}}"
+                           placeholder="请输入" class="layui-input">
+                    <i class="layui-icon layui-icon-close bdc-hide"></i>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">是否线上缴费</label>
+                <div class="layui-input-inline">
+                    <select lay-search="" lay-filter="sfxsjf" id="sfxsjf" name="sfxsjf">
+                        <option value="">请选择</option>
+                        <option value="1" {{# if(sfxx.sfxsjf==1 ){ }} selected="selected" {{# } }}>是</option>
+                        <option value="0" {{# if(sfxx.sfxsjf==0 ){ }} selected="selected" {{# } }}>否</option>
+                    </select>
+                </div>
+            </div>
+            <div class="pannel-form-btns bdc-qlr-btns">
+                <button class="layui-btn bdc-major-btn" id="saveData">保存</button>
+                <button class="layui-btn bdc-secondary-btn" id="cancel">取消</button>
+            </div>
+        </div>
+    </form>
+</script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.all.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/ztree/jquery.ztree.core.js"></script>
+<script src="../../static/ztree/jquery.ztree.excheck.js"></script>
+<script src="../../static/ztree/jquery.ztree.exedit.js"></script>
+<script src="../../static/js/fph/selectTree.js"></script>
+<script src="../../static/lib/bdcui/js/mask.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/fph/edit.js"></script>
+
+</body>
+

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.accept.core.mapper.BdcSlJtcyMapper">
+    <!-- 查询家庭成员 -->
+    <select id="listBdcSlJtcy" resultType="cn.gtmap.realestate.common.core.domain.accept.BdcSlJtcyDO"
+            parameterType="cn.gtmap.realestate.common.core.qo.accept.BdcSlJtcyQO">
+        SELECT * FROM BDC_SL_JTCY A
+        LEFT JOIN BDC_SL_SQR S ON S.SQRID =A.SQRID
+        <where>
+            <if test="jtcymc != null and jtcymc !=''">
+                AND A.jtcymc=#{jtcymc}
+            </if>
+            <if test="zjh != null and zjh !=''">
+                AND A.zjh=#{zjh}
+            </if>
+            <if test="xmid != null and xmid !=''">
+                AND S.xmid=#{xmid}
+            </if>
+            <if test="sqrlb != null and sqrlb !=''">
+                AND S.sqrlb = #{sqrlb}
+            </if>
+            <if test="sqrid != null and sqrid !=''">
+                AND S.sqrid = #{sqrid}
+            </if>
+            <if test="ysqrgx != null and ysqrgx !=''">
+                AND A.ysqrgx = #{ysqrgx}
+            </if>
+
+        </where>
+        order by a.ysqrgx
+
+    </select>
+
+    <!-- 删除家庭成员 -->
+    <delete id="deleteBatchBdcSlJtcy">
+        <if test="sqridList != null and sqridList.size() > 0 ">
+            DELETE FROM bdc_sl_jtcy a
+            <where>
+                <if test="zjh != null and zjh !=''">
+                    AND a.zjh=#{zjh}
+                </if>
+                <if test="sqridList != null">
+                    AND a.sqrid IN
+                    <foreach collection="sqridList" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+        </if>
+    </delete>
+
+    <!-- 删除流程家庭成员 -->
+    <delete id="delBatchJtcyxx">
+        <if test="((xmidList != null and xmidList.size() > 0)) or ((jbxxid != null and jbxxid !=''))">
+            DELETE FROM bdc_sl_jtcy a
+            WHERE a.sqrid IN(
+            SELECT sqrid FROM bdc_sl_sqr s
+            <where>
+              <if test="jbxxid != null and jbxxid !=''">
+                AND s.xmid IN
+                (SELECT b.xmid FROM bdc_sl_xm b
+                WHERE b.jbxxid = #{jbxxid}
+                )
+              </if>
+              <if test="xmidList != null and xmidList.size() > 0">
+                and s.xmid IN
+                <foreach collection="xmidList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+              <if test="sqrlb != null and sqrlb !=''">
+                AND s.sqrlb=#{sqrlb}
+            </if>
+            </where>
+            )
+        </if>
+    </delete>
+
+
+</mapper>

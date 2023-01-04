@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>日志查询</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css"/>
+
+</head>
+<body>
+<div class="bdc-percentage-container">
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <form class="layui-form" action="">
+                <div class="layui-form-item pf-form-item">
+
+                    <div class="layui-inline">
+                        <label id="rzlyLabel"  class="layui-form-label">日志来源</label>
+                        <div id="rzlyDiv"  class="layui-input-inline">
+                            <select id="logSource" name="logSource" lay-filter="logSource" placeholder="请选择日志来源">
+                                <option value="">请选择</option>
+                                <option value="bdc">业务系统</option>
+                                <option value="cloud">大云平台</option>
+                            </select>
+                            <i class="layui-icon layui-icon-close bdc-hide reseticon" style="right: 29px!important;"></i>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label id="rzlxLabel"  class="layui-form-label">日志类型</label>
+                        <div id="rzlxDiv"  class="layui-input-inline">
+                            <select id ='eventName' name="eventName" lay-filter="eventName" lay-search
+                                    placeholder="请选择日志类型">
+                                <option value="">请选择</option>
+
+                                <optgroup label="全量网关">
+                                    <option value="GATEWAY_EVENT" class='source'>全量网关</option>
+                                </optgroup>
+
+                                <optgroup label="特殊重要功能">
+                                    <option value="SDDB" class='source'>手动登簿</option>
+                                    <option value="YZHL" class='source'>业务流程新建验证忽略</option>
+                                    <option value="YZHL_ZF" class='source'>业务流程转发验证忽略</option>
+                                    <option value="YZLW" class='source'>验证例外</option>
+                                    <!--<option value="DSFJK" class="source">第三方接口</option>-->
+                                    <option value="CFQLR" class='source'>拆分权利人</option>
+                                    <option value="GZLW_SH" class='source'>规则例外审核</option>
+                                    <option value="XNBDCDY_LZ" class ='source'>落宗服务</option>
+                                    <option value="XNBDCDY_QXLZ" class ='source'>取消落宗服务</option>
+                                    <option value="FCTDPP_PPTD" class ='source'>房产证和土地证匹配服务</option>
+                                    <option value="FCTDPP_QXPPTD" class ='source'>房产证和土地证取消匹配服务</option>
+                                    <option value="HSHB" class='source'>户室合并</option>
+                                    <option value="XGFPH" class='source'>修改发票号</option>
+                                    <option value="PLXGFPH" class='source'>批量修改发票号</option>
+
+                                </optgroup>
+
+                                <optgroup label="信息补录">
+                                    <option class='source' value="XXBL_CX">信息补录-查询</option>
+                                    <option class='source' value="XXBL_XZ">信息补录-新增</option>
+                                    <option class='source' value="XXBL">信息补录-编辑</option>
+                                    <option class='source' value="XXBL_SC">信息补录-删除</option>
+                                    <option class='source' value="XXBL_CK">信息补录-查看</option>
+                                    <option class='source' value="XXBL_GL">信息补录-关联</option>
+                                </optgroup>
+
+                                <optgroup label="查询台账">
+                                    <option value="CFCX" class ='source'>查封查询</option>
+                                    <option value="CFCX_CKXQ" class ='source'>查封查询-查看详情</option>
+                                    <option value="CFCX_EXPORT" class ='source'>查封查询-导出excel</option>
+                                    <option value="PLCX" class='source'>批量查询</option>
+                                    <option value="PLCX_EXPORT" class='source'>批量查询-导出excel</option>
+                                    <option value="YYCX" class='source'>异议查询</option>
+                                    <option value="YYCX_CKXQ" class='source'>异议查询-查看详情</option>
+                                    <option value="YYCX_EXPORT" class='source'>异议查询-导出excel</option>
+                                    <option value="BDCDYCX" class ='source'>不动产单元查询</option>
+                                    <option value="BDCDYCX_CKDJB" class ='source'>不动产单元查询-查看登记簿</option>
+                                    <option value="BDCDYCX_EXPORT" class ='source'>不动产单元查询-导出excel</option>
+                                    <option value="DYCX" class ='source'>抵押查询</option>
+                                    <option value="DYCX_EXPORT" class ='source'>抵押查询-导出excel</option>
+                                </optgroup>
+
+                                <optgroup label="综合查询">
+                                    <option value="ZHCXLOG" class ='source'>综合查询</option>
+                                    <option value="ZHCXLSGX" class ='source'>综合查询-查看登记历史</option>
+                                    <option value="ZHCXLPB" class ='source'>综合查询-查看楼盘表</option>
+                                    <option value="ZHCXDJB" class ='source'>综合查询-查看登记簿</option>
+                                    <option value="ZHCXDADY" class ='source'>综合查询-档案调用</option>
+                                    <option value="ZHCXTXDW" class ='source'>综合查询-图形定位</option>
+                                    <option value="ZHCXDJDCB" class ='source'>综合查询-地籍调查表</option>
+                                </optgroup>
+                                <optgroup label="电子证照">
+                                    <option value="DZZZCX" class ='source'>电子证照查询</option>
+                                    <option value="DZZZCJ" class ='source'>创建电子证照</option>
+                                    <option value="DZZZZX" class ='source'>注销电子证照</option>
+                                    <option value="DZZZZF" class ='source'>作废电子证照</option>
+
+                                </optgroup>
+
+                                <optgroup label="子规则">
+                                    <option value="ZGZXZ" class ='source'>子规则配置-新增</option>
+                                    <option value="ZGZBJ" class ='source'>子规则配置-编辑</option>
+                                    <option value="ZGZSC" class ='source'>子规则配置-删除</option>
+                                    <option value="ZGZFZ" class ='source'>子规则配置-复制</option>
+                                    <option value="ZGZDC" class ='source'>子规则配置-导出</option>
+                                    <option value="ZGZDR" class ='source'>子规则配置-导入</option>
+                                </optgroup>
+
+                                <optgroup label="组合规则">
+                                    <option value="ZHGZBC" class ='source'>组合规则配置-保存</option>
+                                    <option value="ZHGZBJ" class ='source'>组合规则配置-编辑</option>
+                                    <option value="ZHGZSC" class ='source'>组合规则配置-删除</option>
+                                    <option value="ZHGZFZ" class ='source'>组合规则配置-复制</option>
+                                    <option value="ZHGZDC" class ='source'>组合规则配置-导出</option>
+                                </optgroup>
+
+                                <optgroup label="泛型日志">
+                                     <option value="QUERY" class ='source'>查询</option>
+                                     <option value="EXPORT" class ='source'>导出</option>
+                                     <option value="PRINT" class ='source'>打印</option>
+                                     <option value="CREATE" class ='source'>创建</option>
+                                     <option value="UPDATE" class ='source'>更新</option>
+                                     <option value="SAVE" class ='source'>保存</option>
+                                     <option value="DELETE" class ='source'>删除</option>
+                                     <option value="OTHER" class ='source'>其他</option>
+                                </optgroup>
+                                <optgroup label="档案交接">
+                                    <option value="DAJJDY" class ='source'>档案交接打印</option>
+                                </optgroup>
+
+                                <optgroup label="大云平台">
+                                    <option value="LOGIN_SUCCESS" class ='cloud'>系统登录</option>
+                                    <option value="LOGOUT_SUCCESS" class ='cloud'>系统登出</option>
+                                    <option value="FLOWABLE_CREATE" class ='cloud'>流程创建</option>
+                                    <option value="FLOWABLE_DELETE" class ='cloud'>流程删除</option>
+                                    <option value="FLOWABLE_CLAIM" class ='cloud'>流程认领</option>
+                                    <option value="FLOWABLE_UNCLAIM" class ='cloud'>流程取消认领</option>
+                                    <option value="FLOWABLE_COMPLETE" class ='cloud'>流程转发</option>
+                                    <option value="FLOWABLE_BACK" class ='cloud'>流程退回</option>
+                                    <option value="FLOWABLE_END" class ='cloud'>流程办结</option>
+                                </optgroup>
+                                <optgroup label="评价器人证比对">
+                                    <option value="PJQ_RZBD" class ='cloud'>评价器人证比对记录</option>
+                                </optgroup>
+
+                            </select>
+                            <i class="layui-icon layui-icon-close bdc-hide reseticon" style="right: 29px!important;"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label id="kssjLabel"  class="layui-form-label">开始时间</label>
+                        <div id="kssjDiv"  class="layui-input-inline">
+                            <input type="text" id="begin" name="beginTime" class="layui-input" placeholder="请选择">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label id="jssjLabel"  class="layui-form-label">结束时间</label>
+                        <div id="jssjDiv"  class="layui-input-inline">
+                            <input type="text" id="end" name="endTime" class="layui-input" placeholder="请选择">
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label id="yhmLabel"  class="layui-form-label">用户名</label>
+                        <div id="yhmDiv"  class="layui-input-inline">
+                            <input type="text" id="principal" name="principal" class="layui-input"
+                                   placeholder="请输入">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label id="xmLabel"  class="layui-form-label">姓名</label>
+                        <div id="xmDiv"  class="layui-input-inline">
+                            <input type="text" id="alias" name="alias" class="layui-input"
+                                   placeholder="请输入">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label id="slbhLabel"  class="layui-form-label">受理编号</label>
+                        <div id="slbhDiv"  class="layui-input-inline">
+                            <input type="text" id="slbh" name="slbh" class="layui-input"
+                                   placeholder="请输入">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+
+                    <div class="pf-senior-show bdc-hide">
+                        <div class="layui-inline">
+                            <label id="gnmcLabel"  class="layui-form-label">功能名称</label>
+                            <div id="gnmcDiv"  class="layui-input-inline">
+                                <input type="text" id="viewTypeName" name="viewTypeName" class="layui-input"
+                                       placeholder="请输入">
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="pf-senior-show bdc-hide">-->
+                        <!--<div class="layui-inline">-->
+                            <!--<label class="layui-form-label">打印编号</label>-->
+                            <!--<div class="layui-input-inline">-->
+                                <!--<input type="text" id="zmbh" name="zmbh" class="layui-input" placeholder="请选择">-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--
+                    <div class="layui-inline">
+                        <label class="layui-form-label">权利人</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="qlr" name="qlr" class="layui-input"
+                                   placeholder="请输入">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">证件号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="zjh" name="zjh" class="layui-input"
+                                   placeholder="请输入">
+                        </div>
+                    </div>
+
+                    <div class="pf-senior-show bdc-hide">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">不动产单元号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="bdcdyh" name="bdcdyh" class="layui-input"
+                                       placeholder="请输入">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">坐落</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="zl" name="zl" class="layui-input"
+                                       placeholder="请输入">
+                            </div>
+                        </div>
+                        <div class="layui-inline bdc-hide response-condition">
+                            <label class="layui-form-label">结果记录</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="response" name="response" class="layui-input"
+                                       placeholder="请输入">
+                            </div>
+                        </div>
+                        <div class="layui-inline bdc-hide response-condition" >
+                            <label class="layui-form-label">查询编号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="cxbh" name="response" class="layui-input"
+                                       placeholder="请输入">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">精确查询</label>
+                            <div class="layui-input-inline">
+                                <select name="cxfs" lay-filter="cxfs">
+                                    <option value=""></option>
+                                    <option value="like">否</option>
+                                    <option value="equal">是</option>
+                                </select>
+                            </div>
+                        </div>-->
+                        <div class="layui-inline bdc-button-box">
+                            <a href="javascript:" id="search" lay-filter="search" lay-submit=""
+                               class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                            <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+                            <a href="javascript:" class="layui-btn layui-btn-normal bdc-secondary-btn"
+                                 id="seniorSearch">高级查询</a>
+                        </div>
+                    </div>
+            </form>
+        </div>
+    </div>
+    <div class="bdc-table-box">
+        <table id="logTable" lay-filter="logTable"></table>
+    </div>
+
+
+
+    <!--表格上面功能按钮-->
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <!--<button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="replayLog">日志重现</button>-->
+            <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="exportExcel">导出Excel</button>
+            <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="exportAllExcel">导出全部</button>
+       </div>
+</script>
+
+</div>
+
+<!--隐藏form，为了Excel导出缓存数据使用-->
+<form style="display: none" action="/realestate-inquiry-ui/excel/export" method="POST" id="form">
+    <input type="hidden" id="fileName"   name="fileName"/>
+    <input type="hidden" id="sheetName"  name="sheetName"/>
+    <input type="hidden" id="cellTitle"  name="cellTitle"/>
+    <input type="hidden" id="cellWidth"  name="cellWidth"/>
+    <input type="hidden" id="cellKey"    name="cellKey"/>
+    <input type="hidden" id="data"       name="data"/>
+</form>
+</body>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/commonSearch.js"></script>
+<script src="../../static/js/formCenter.js"></script>
+<script src="../../static/js/log/logList.js"></script>
+</html>

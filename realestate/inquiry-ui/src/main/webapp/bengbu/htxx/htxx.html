@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>合同信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <!--popup.css放到form-tab.css，防止样式冲突-->
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css"/>
+    <link rel="stylesheet" href="../../static/css/bengbu/htxx.css"/>
+</head>
+<body>
+<div class="bdc-form-div bdc-not-full-bg">
+    <!--全局 标题和操作按钮 开始-->
+    <form class="layui-form sl-from bdc-form-table" id="all">
+
+        <!--全局 标题和操作按钮 结束-->
+        <div class="layui-tab fixed-content" lay-filter="tabFilter">
+            <ul class="layui-tab-title" id="liTbale">
+                <li class="layui-this">一手房</li>
+                <li class="">二手房</li>
+            </ul>
+            <div class="layui-tab-content" id="contentTable">
+                <div class="layui-tab-item layui-show" id="spf">
+                    <!--搜索框-->
+                    <div class="bdc-search-content">
+                        <div class="bdc-search-box">
+                            <div class="layui-form-item pf-form-item">
+                                <div class="layui-inline layui-hide jkcx">
+                                    <label class="layui-form-label">身份证号</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" autocomplete="off" id="cxzjh" name="cxzjh" placeholder="（精确）请输入"
+                                               class="layui-input search required">
+                                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                                    </div>
+                                </div>
+                                <div class="layui-inline zjkcx">
+                                    <label class="layui-form-label">合同编号</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" autocomplete="off" id="htbh" name="htbh" placeholder="（精确）请输入"
+                                               class="layui-input search required">
+                                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                                    </div>
+                                </div>
+                                <div class="layui-inline bdc-button-box">
+                                    <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn cxhtxx" id="spfSearch">查询</a>
+                                    <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-margin-area content-main" id="spfHtxx">
+
+<!--                            <table id="clfHtxx" lay-filter="clfHtxx"></table>-->
+
+                    </div>
+                </div>
+                <div class="layui-tab-item" id="clf">
+                    <!--搜索框-->
+                    <div class="bdc-search-content">
+                        <div class="bdc-search-box">
+                            <div class="layui-form-item pf-form-item">
+                                <div class="layui-inline layui-hide jkcx">
+                                    <label class="layui-form-label">身份证号</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" autocomplete="off" id="cxzjh" name="cxzjh" placeholder="（精确）请输入"
+                                               class="layui-input search required">
+                                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                                    </div>
+                                </div>
+                                <div class="layui-inline zjkcx">
+                                    <label class="layui-form-label">合同编号</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" autocomplete="off" id="htbh" name="htbh" placeholder="（精确）请输入"
+                                               class="layui-input search required">
+                                        <i class="layui-icon layui-icon-close bdc-hide"></i>
+                                    </div>
+                                </div>
+                                <div class="layui-inline bdc-button-box">
+                                    <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn cxhtxx" id="clfSearch">查询</a>
+                                    <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-margin-area content-main" id="clfHtxx">
+
+<!--                            <table id="spfHtxx" lay-filter="spfHtxx"></table>-->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/bengbu/htxx/htxx.js"></script>
+
+<script type="text/html" id="spfTpl">
+    <div class="bdc-table-box">
+    <div class="table-name"></div>
+    <div class="bdc-table-box">
+        <table class="layui-table" border="1">
+            <colgroup>
+                <col width="120">
+                <col width="200">
+                <col width="120">
+                <col width="200">
+            </colgroup>
+
+            <tbody>
+            <tr>
+                <td class="set-back-color bdc-set-width">买受人</td>
+                <td colspan="3">
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.msr || ''}}" title="{{d.msr || ''}}" disabled="off">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="set-back-color bdc-set-width">买受人证件号</td>
+                <td colspan="3">
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.msrzjhm || ''}}" title="{{d.msrzjhm || ''}}" disabled="off">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="set-back-color bdc-set-width">合同号</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.htbh || ''}}" title="{{d.htbh || ''}}" disabled="off">
+                    </div>
+                </td>
+                <td class="set-back-color bdc-set-width">house_id</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.houseId || ''}}" title="{{d.houseId || ''}}" disabled="off">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="set-back-color bdc-set-width">合同金额</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.htje || ''}}" title="{{d.htje || ''}}" disabled="off">
+                    </div>
+                </td>
+                <td class="set-back-color bdc-set-width">备案日期</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" value="{{d.barq || ''}}" title="{{d.barq|| ''}}" disabled="off"
+                               class="layui-input date">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="set-back-color bdc-set-width">房屋坐落</td>
+                <td colspan="3">
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.fwzl || ''}}" title="{{d.fwzl || ''}}" disabled="off">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="set-back-color bdc-set-width">开发公司名称</td>
+                <td colspan="3">
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.kfgsmc || ''}}" title="{{d.kfgsmc || ''}}" disabled="off">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="set-back-color bdc-set-width">建筑面积</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.jm || ''}}" title="{{d.jm || ''}}" disabled="off">
+                    </div>
+                </td>
+                <td class="set-back-color bdc-set-width">房屋用途</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.fwyt || ''}}" title="{{d.fwyt || ''}}" disabled="off">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="set-back-color bdc-set-width">房屋编码</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.fwbm || ''}}" title="{{d.fwbm || ''}}" disabled="off">
+                    </div>
+                </td>
+                <td class="set-back-color bdc-set-width">备案时间</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input date" value="{{d.drq || ''}}" title="{{d.drq || ''}}" disabled="off">
+                    </div>
+                </td>
+            </tr>
+            <tr class="set-tr-height">
+                <td class="set-back-color ">备注</td>
+                <td colspan="3"><textarea name="" rows="" cols="">{{d.bz || ''}}</textarea></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    </div>
+</script>
+
+<script type="text/html" id="clfTpl">
+    <div class="bdc-table-box">
+    <div class="table-name"></div>
+    <div class="bdc-table-box">
+        <table class="layui-table" border="1">
+            <colgroup>
+                <col width="120">
+                <col width="200">
+                <col width="120">
+                <col width="200">
+            </colgroup>
+            <tbody>
+            <tr>
+                <td class="set-back-color bdc-set-width">受让方名称</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.srfmc || ''}}" title="{{d.srfmc || ''}}" disabled="off">
+                    </div>
+                </td>
+                <td class="set-back-color bdc-set-width">受让方证件类别</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.msrzjlb || ''}}" title="{{d.msrzjlb || ''}}" disabled="off">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="set-back-color bdc-set-width">受让方证件号</td>
+                <td colspan="3">
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.srfzjhm || ''}}" title="{{d.zjh || ''}}" disabled="off">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="set-back-color bdc-set-width">受让方联系电话</td>
+                <td colspan="3">
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.srflxdh || ''}}" title="{{d.srflxdh || ''}}" disabled="off">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="set-back-color bdc-set-width">转让方名称</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.zrfmc || ''}}" title="{{d.zrfmc || ''}}" disabled="off">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="set-back-color bdc-set-width">转让方证件号码</td>
+                <td colspan="3">
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.zrfzjhm || ''}}" title="{{d.zrfzjhm || ''}}" disabled="off">
+                    </div>
+                </td>
+            </tr>
+           <tr>
+               <td class="set-back-color bdc-set-width">转让方联系电话</td>
+               <td colspan="3">
+                   <div class="bdc-td-box">
+                       <input type="text" class="layui-input" value="{{d.zrflxdh || ''}}" title="{{d.zrflxdh || ''}}" disabled="off">
+                   </div>
+               </td>
+           </tr>
+            <tr>
+                <td class="set-back-color bdc-set-width">合同号</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.htbh || ''}}" title="{{d.htbh || ''}}" disabled="off">
+                    </div>
+                </td>
+                <td class="set-back-color bdc-set-width">付款方式</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.fkfs || ''}}" title="{{d.fkfs || ''}}" disabled="off">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="set-back-color bdc-set-width">合同金额</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.htje || ''}}" title="{{d.htje || ''}}" disabled="off">
+                    </div>
+                </td>
+                <td class="set-back-color bdc-set-width">备案日期</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" value="{{d.barq || ''}}" title="{{d.barq || ''}}" disabled="off"
+                               class="layui-input date">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="set-back-color bdc-set-width">原证号</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.yzh || ''}}" title="{{d.yzh || ''}}" disabled="off">
+                    </div>
+                </td>
+                <td class="set-back-color bdc-set-width">原交易编号</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.yjybh || ''}}" title="{{d.yjybh || ''}}" disabled="off">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="set-back-color bdc-set-width">房屋坐落</td>
+                <td colspan="3">
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.fwzl || ''}}" title="{{d.fwzl || ''}}" disabled="off">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="set-back-color bdc-set-width">经纪机构</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.jjjg || ''}}" title="{{d.jjjg || ''}}" disabled="off">
+                    </div>
+                </td>
+                <td class="set-back-color bdc-set-width">经纪机构代码</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.jjjgdmz || ''}}" title="{{d.jjjgdmz || ''}}" disabled="off">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="set-back-color bdc-set-width">区域</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.qy || ''}}" title="{{d.qy || ''}}" disabled="off">
+                    </div>
+                </td>
+                <td class="set-back-color bdc-set-width">结构</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.jg || ''}}" title="{{d.jg || ''}}" disabled="off">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="set-back-color bdc-set-width">用途</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.yt || ''}}" title="{{d.yt || ''}}" disabled="off">
+                    </div>
+                </td>
+                <td class="set-back-color bdc-set-width">建筑面积</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.jzmj || ''}}" title="{{d.jzmj || ''}}" disabled="off">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="set-back-color bdc-set-width">房屋编码</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input" value="{{d.fwbm || ''}}" title="{{d.fwbm || ''}}" disabled="off">
+                    </div>
+                </td>
+                <td class="set-back-color bdc-set-width">备案时间</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-input date" value="{{d.drq || ''}}" title="{{d.drq || ''}}" disabled="off">
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    </div>
+</script>
+
+</html>

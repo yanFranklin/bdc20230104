@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcdyXxMapper">
+    <select id="listGrzfByPageOrder" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcGrzfQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGrzfCxDTO">
+        select q.bdcqzh,
+        q.qlrmc,
+        q.zjh,
+        q.gyfs,
+        f.zl,
+        f.fjh,
+        f.zh,
+        f.ghyt,
+        f.djsj,
+        x.qszt
+        from bdc_xm x
+        inner join bdc_fdcq f
+        on x.xmid = f.xmid
+        inner join bdc_qlr q
+        on q.xmid = f.xmid
+        where f.qszt in (0, 1)
+        and q.qlrlb = 1
+        and f.ghyt in (10, 11, 111, 112, 12, 13)
+        <if test="(qlrmc != null and qlrmc.size > 0)">
+            and
+            <!--<foreach collection="qlrmc" item="item" index="index" open="(" separator=" or " close=")">
+                q.qlrmc = #{item,jdbcType=VARCHAR}
+            </foreach>-->
+            <foreach collection="qlrmc" item="item" index="index" open="(" separator=" or " close=")">
+                q.qlrmc = #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="(zjh != null and zjh.size > 0)">
+            and
+            <foreach collection="zjh" item="item" index="index" open="(" separator=" or " close=")">
+                q.zjh = #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+
+    </select>
+
+</mapper>

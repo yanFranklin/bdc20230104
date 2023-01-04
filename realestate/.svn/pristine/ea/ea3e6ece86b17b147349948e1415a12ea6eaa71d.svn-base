@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <!-- 盐城非税相关接口 -->
+
+    <!-- 非税统一接口 -->
+    <ex:bean id="fsCommonInterface">
+        <ex:service-info request-type="httpPostWithUrlParam">
+            <ex:property name="logEventName" value="江苏非税统一调用接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FS"/>
+            <ex:property name="dsfFlag" value="FS"/>
+            <ex:property name="url" value="${exchange.feishui.interface.url}"/>
+        </ex:service-info>
+        <ex:log dsfFlag="FS" logEventName="非税统一接口" requester="FS" responser="BDC"/>
+    </ex:bean>
+
+    <!--非税开具电子缴款书接口 -->
+    <ex:bean id="createTaxNotice">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="bdcFsServiceImpl"/>
+            <ex:property name="methodName" value="createTaxNotice"/>
+        </ex:service-info>
+        <ex:log dsfFlag="FS" logEventName="非税开具电子缴款书接口" requester="FS" responser="BDC"/>
+    </ex:bean>
+
+    <!--非税获取缴费状态接口 -->
+    <ex:bean id="confirmPayStatus">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="bdcFsServiceImpl"/>
+            <ex:property name="methodName" value="confirmPayStatus"/>
+        </ex:service-info>
+        <ex:log dsfFlag="FS" logEventName="非税获取缴费状态接口" requester="FS" responser="BDC"/>
+    </ex:bean>
+
+    <!--非税获取电子票号接口 -->
+    <ex:bean id="getEticketNum">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="bdcFsServiceImpl"/>
+            <ex:property name="methodName" value="getEticketNum"/>
+        </ex:service-info>
+        <ex:log dsfFlag="FS" logEventName="非税获取电子票号接口" requester="FS" responser="BDC"/>
+    </ex:bean>
+
+    <!--作废电子缴费书接口 -->
+    <ex:bean id="invalidate">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="bdcFsServiceImpl"/>
+            <ex:property name="methodName" value="invalidate"/>
+        </ex:service-info>
+        <ex:log dsfFlag="FS" logEventName="作废电子缴费书接口" requester="FS" responser="BDC"/>
+    </ex:bean>
+
+    <!--非税根据缴款码获取对应电子票信息接口 -->
+    <ex:bean id="getInvoiceByPaycode">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="bdcFsServiceImpl"/>
+            <ex:property name="methodName" value="getInvoiceByPaycode"/>
+        </ex:service-info>
+        <ex:log dsfFlag="FS" logEventName="非税根据缴款码获取对应电子票信息接口" requester="FS" responser="BDC"/>
+    </ex:bean>
+
+    <!--非税电子票据下载接口 -->
+    <ex:bean id="downloadInvoice">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="bdcFsServiceImpl"/>
+            <ex:property name="methodName" value="downloadInvoice"/>
+        </ex:service-info>
+        <ex:log dsfFlag="FS" logEventName="非税电子票据下载接口" requester="FS" responser="BDC"/>
+    </ex:bean>
+
+    <!--非税接收已单位签名的开票数据接口 -->
+    <ex:bean id="issueInvoice">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="bdcFsServiceImpl"/>
+            <ex:property name="methodName" value="issueInvoice"/>
+        </ex:service-info>
+        <ex:log dsfFlag="FS" logEventName="非税接收已单位签名的开票数据接口" requester="FS" responser="BDC"/>
+    </ex:bean>
+
+</beans>

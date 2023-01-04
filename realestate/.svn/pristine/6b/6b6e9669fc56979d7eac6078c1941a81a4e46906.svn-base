@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <!-- 合肥 省级大数据平台中心接口 -->
+    <!-- sdk api -->
+
+    <!-- 查询婚姻信息 {"Name":"","CardNo":""}-->
+    <ex:bean id="hf_sdk_hyxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="sdkHyxxServiceImpl" />
+            <ex:property name="methodName" value="requestSdkHyxx" />
+        </ex:service-info>
+    </ex:bean>
+    <!-- 查询结婚信息 -->
+    <ex:bean id="hf_sdk_jhxx">
+        <ex:service-info request-type="hfSdkApi">
+            <ex:property name="logEventName" value="省级查询结婚信息" />
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SDKAPI"/>
+            <ex:property name="dsfFlag" value="SDKAPI"/>
+            <ex:property name="host" value="${sdkapi.host}" />
+            <ex:property name="port" value="${sdkapi.httpPort}" />
+            <ex:property name="sdkAppClassName"
+                         value="cn.gtmap.realestate.common.core.dto.exchange.hefei.sdkApiApp.SdkApiJhxxApp"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 查询结婚信息 -->
+    <ex:bean id="hf_sdk_lhxx">
+        <ex:service-info request-type="hfSdkApi">
+            <ex:property name="logEventName" value="省级查询离婚信息" />
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SDKAPI"/>
+            <ex:property name="dsfFlag" value="SDKAPI"/>
+            <ex:property name="host" value="${sdkapi.host}" />
+            <ex:property name="port" value="${sdkapi.httpPort}" />
+            <ex:property name="sdkAppClassName"
+                         value="cn.gtmap.realestate.common.core.dto.exchange.hefei.sdkApiApp.SdkApiLhxxApp"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 获取查询token 参数：{"appID":"0c05e32b-e9d5-40e5-baff-b5b0b1983f96"}-->
+    <ex:bean id="hf_sdk_token">
+        <ex:service-info request-type="hfSdkApi">
+            <ex:property name="logEventName" value="省级查询获取token" />
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SDKAPI"/>
+            <ex:property name="dsfFlag" value="SDKAPI"/>
+            <ex:property name="host" value="${sdkapi.host}" />
+            <ex:property name="port" value="${sdkapi.httpPort}" />
+            <ex:property name="sdkAppClassName"
+                         value="cn.gtmap.realestate.common.core.dto.exchange.hefei.sdkApiApp.SdkApiTokenApp"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/hefei/sdkapi/token/request/param.xml"/>
+        </ex:request>
+    </ex:bean>
+
+</beans>

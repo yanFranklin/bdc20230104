@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.certificate.core.mapper.BdcGdxxMapper">
+
+    <!-- 获取归档信息列表（可配置分页）南通 -->
+    <select id="listBdcGdxxHfByPage" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.dto.certificate.BdcXmGdxxDTO">
+        SELECT a.gzlslid,a.slbh,a.bdcdyh,a.bdcqzh,a.zl,a.gdxxid,a.xmid,a.qszt,a.slsj,
+        a.daid,a.mlh,a.ajh,a.damx,a.dah,a.ajjs,a.ajys,a.bz,a.gdxx, a.gdrxm,a.gdsj,a.yjdid,a.rn
+        FROM (SELECT x.gzlslid,x.slbh,x.bdcdyh,
+        case
+          when x.qllx=95 or x.qllx =37 then decode(x.bdcqzh,'',x.ycqzh,x.bdcqzh)
+          else x.bdcqzh
+        end
+          bdcqzh,
+        x.zl,t.gdxxid,x.xmid,x.qszt,x.slsj,
+        t.daid,t.mlh,t.ajh,t.damx,t.dah,t.ajjs,t.ajys,t.bz
+        ,t.gdxx, t.gdrxm,t.gdsj,t1.yjdid,ROW_NUMBER() OVER(PARTITION BY x.gzlslid ORDER BY x.qszt ASC,x.xmid ASC) rn
+        FROM bdc_xm x
+        LEFT JOIN bdc_gdxx t ON x.xmid=t.xmid
+        LEFT JOIN bdc_xm_yjd_gx t1 ON x.xmid = t1.xmid
+        <if test="zslx != null and zslx != ''">
+            LEFT JOIN bdc_xm_zs_gx B ON x.XMID = B.XMID
+            LEFT JOIN bdc_zs C ON B.ZSID = C.ZSID
+        </if>
+        <if test="qlrmc != null and qlrmc != ''">
+            INNER JOIN (SELECT DISTINCT xmid FROM bdc_qlr bq WHERE bq.qlrmc = #{qlrmc}) q on x.XMID = q.XMID
+        </if>
+        where x.qszt !=0
+          and x.ajzt = 2
+        <if test="daid != null and daid != ''">
+            AND t.daid = #{daid}
+        </if>
+        <if test="xmid != null and xmid != ''">
+            AND x.xmid = #{xmid}
+        </if>
+        <if test="bdcdyh != null and bdcdyh != ''">
+            AND instr(x.bdcdyh,#{bdcdyh})>0
+        </if>
+        <if test="bdcqzh != null and bdcqzh != ''">
+            AND instr(x.bdcqzh, #{bdcqzh})>0
+        </if>
+        <if test="zl != null and zl != ''">
+            AND instr(x.zl,#{zl})>0
+        </if>
+        <if test="slbh != null and slbh != ''">
+            AND
+            <if test="slbhmhlx == null || slbhmhlx == '' || slbhmhlx == 0">
+                x.slbh = #{slbh,jdbcType=VARCHAR}
+            </if>
+            <if test="slbhmhlx == 1">
+                x.slbh like '%' || #{slbh,jdbcType=VARCHAR}
+            </if>
+            <if test="slbhmhlx == 2">
+                x.slbh like #{slbh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="slbhmhlx == 3">
+                x.slbh like '%' || #{slbh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+        <if test="gdrxm != null and gdrxm != ''">
+            AND t.gdrxm = #{gdrxm}
+        </if>
+        <if test="qxdm != null and qxdm != ''">
+            AND x.qxdm = #{qxdm}
+        </if>
+        <if test="smqsr != null and smqsr.size() > 0">
+            AND x.slbh in
+            <foreach collection="smqsr" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="lcmc != null and lcmc != ''">
+            AND x.gzldyid = #{lcmc}
+        </if>
+        <if test="kssj != null and kssj != ''">
+            AND to_char(x.DJSJ,'yyyy-MM-dd') >= #{kssj}
+        </if>
+        <if test="jzsj != null and jzsj != ''">
+            <![CDATA[
+                  AND to_char(x.DJSJ,'yyyy-MM-dd') <= #{jzsj}
+                   ]]>
+        </if>
+        <if test="zslx != null and zslx != ''">
+            AND C.ZSLX = #{zslx,jdbcType=VARCHAR}
+        </if>
+        <choose>
+            <when test="sfygd != null and sfygd == 1">
+                AND t.gdxxid is not null
+            </when>
+            <when test="sfygd != null and sfygd == 0">
+                AND t.gdxxid is null
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="sfyyj != null and sfyyj == 1">
+                AND t1.yjdid is not null
+            </when>
+            <when test="sfyyj != null and sfyyj == 0">
+                AND t1.yjdid is null
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+        ) a
+        WHERE a.rn = 1
+        <choose>
+            <when test="sortParameter != null and sortParameter != ''">
+                ORDER BY ${sortParameter}
+            </when>
+            <otherwise>
+                ORDER BY a.slbh desc
+            </otherwise>
+        </choose>
+    </select>
+
+
+
+    <!-- 获取归档信息列表（可配置分页）南通 -->
+    <select id="listBdcGdxxNtByPage" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.dto.certificate.BdcXmGdxxDTO">
+        SELECT x.gzlslid,x.slbh,x.bdcdyh,
+        case
+        when x.qllx=95 or x.qllx=37 then decode(x.bdcqzh,'',x.ycqzh,x.bdcqzh)
+        end
+        bdcqzh,
+        x.zl,t.gdxxid,x.xmid,
+        t.daid,t.mlh,t.ajh,t.damx,t.dah,t.ajjs,t.ajys,t.bz
+        ,t.gdxx, t.gdrxm,t.gdsj,t1.yjdid
+        FROM bdc_xm x
+        LEFT JOIN bdc_gdxx t ON x.xmid=t.xmid
+        LEFT JOIN bdc_xm_yjd_gx t1 ON x.xmid = t1.xmid
+        <if test="zslx != null and zslx != ''">
+            LEFT JOIN bdc_xm_zs_gx B ON x.XMID = B.XMID
+            LEFT JOIN bdc_zs C ON B.ZSID = C.ZSID
+        </if>
+        <if test="qlrmc != null and qlrmc != ''">
+            INNER JOIN (SELECT DISTINCT xmid FROM bdc_qlr bq WHERE bq.qlrmc = #{qlrmc}) q on x.XMID = q.XMID
+        </if>
+        <where>
+            <if test="daid != null and daid != ''">
+                AND t.daid = #{daid}
+            </if>
+            <if test="xmid != null and xmid != ''">
+                AND x.xmid = #{xmid}
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND instr(x.bdcdyh,#{bdcdyh})>0
+            </if>
+            <if test="bdcqzh != null and bdcqzh != ''">
+                AND instr(x.bdcqzh, #{bdcqzh})>0
+            </if>
+            <if test="zl != null and zl != ''">
+                AND instr(x.zl,#{zl})>0
+            </if>
+            <if test="slbh != null and slbh != ''">
+                AND
+                <if test="slbhmhlx == null || slbhmhlx == '' || slbhmhlx == 0">
+                    x.slbh = #{slbh,jdbcType=VARCHAR}
+                </if>
+                <if test="slbhmhlx == 1">
+                    x.slbh like '%' || #{slbh,jdbcType=VARCHAR}
+                </if>
+                <if test="slbhmhlx == 2">
+                    x.slbh like #{slbh,jdbcType=VARCHAR} || '%'
+                </if>
+                <if test="slbhmhlx == 3">
+                    x.slbh like '%' || #{slbh,jdbcType=VARCHAR} || '%'
+                </if>
+            </if>
+            <if test="gdrxm != null and gdrxm != ''">
+                AND t.gdrxm = #{gdrxm}
+            </if>
+            <if test="qxdm != null and qxdm != ''">
+                AND x.qxdm = #{qxdm}
+            </if>
+            <if test="smqsr != null and smqsr.size() > 0">
+                AND x.slbh in
+                <foreach collection="smqsr" item="item" open="(" separator=" , " close=")">
+                #{item}
+                </foreach>
+            </if>
+            <choose>
+                <when test="sfygd != null and sfygd == 1">
+                    AND t.gdxxid is not null
+                </when>
+                <when test="sfygd != null and sfygd == 0">
+                    AND t.gdxxid is null
+                </when>
+                <otherwise>
+                </otherwise>
+            </choose>
+            <choose>
+                <when test="sfyyj != null and sfyyj == 1">
+                    AND t1.yjdid is not null
+                </when>
+                <when test="sfyyj != null and sfyyj == 0">
+                    AND t1.yjdid is null
+                </when>
+                <otherwise>
+                </otherwise>
+            </choose>
+            <if test="lcmc != null and lcmc != ''">
+                AND x.gzldyid = #{lcmc}
+            </if>
+            <if test="kssj != null and kssj != ''">
+                AND to_char(x.DJSJ,'yyyy-MM-dd') >= #{kssj}
+            </if>
+            <if test="jzsj != null and jzsj != ''">
+                <![CDATA[
+                  AND to_char(x.DJSJ,'yyyy-MM-dd') <= #{jzsj}
+                   ]]>
+            </if>
+            <if test="zslx != null and zslx != ''">
+                AND C.ZSLX = #{zslx,jdbcType=VARCHAR}
+            </if>
+        </where>
+        <choose>
+            <when test="sortParameter != null and sortParameter != ''">
+                ORDER BY ${sortParameter}
+            </when>
+            <otherwise>
+                ORDER BY x.slbh desc
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="listBdcSlGdxx" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.dto.certificate.BdcXmGdxxDTO">
+        SELECT
+        t.daid,
+        t.mlh,
+        t.ajh,
+        t.damx,
+        t.dah,
+        t.ajjs,
+        t.ajys,
+        t.bz,
+        t.gdxx,
+        t.gdrxm,
+        t.gdsj,
+        t1.yjdid,t1.xmid
+        from
+        bdc_gdxx t
+        right JOIN bdc_xm_yjd_gx t1 ON t.xmid = t1.xmid
+        <where>
+            <if test="daid != null and daid != ''">
+                AND t.daid = #{daid}
+            </if>
+            <if test="gdrxm != null and gdrxm != ''">
+                AND t.gdrxm = #{gdrxm}
+            </if>
+            <if test="xmidList != null and xmidList.size > 0">
+                AND t1.xmid in <foreach collection="xmidList"
+                                        item="xmid"
+                                        open="("
+                                        close=")"
+                                        separator=",">
+                    #{xmid}
+            </foreach>
+            </if>
+            <choose>
+                <when test="sfygd != null and sfygd == 1">
+                    AND t.gdxxid is not null
+                </when>
+                <when test="sfygd != null and sfygd == 0">
+                    AND t.gdxxid is null
+                </when>
+                <otherwise>
+                </otherwise>
+            </choose>
+            <choose>
+                <when test="sfyyj != null and sfyyj == 1">
+                    AND t1.yjdid is not null
+                </when>
+                <when test="sfyyj != null and sfyyj == 0">
+                    AND t1.yjdid is null
+                </when>
+                <otherwise>
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+    <select id="getBdcGdxxByGzlslid" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.domain.certificate.BdcGdxxDO">
+        select
+            daid,damx
+        from
+            bdc_gdxx gd
+        left join
+            bdc_xm xm
+        on
+            gd.xmid = xm.xmid
+        where
+            xm.gzlslid = #{gzlslid}
+            <if test="xmid != null and xmid != ''">
+                and gd.xmid = #{xmid,jdbcType=VARCHAR}
+            </if>
+            <if test="damx != null and damx != ''" >
+                and damx = #{damx, jdbcType=VARCHAR}
+            </if>
+
+            and rownum = 1
+    </select>
+
+    <select id="searchDaIdByXmId" parameterType="java.lang.String" resultType="java.lang.String">
+        select distinct (t1.daid) from bdc_gdxx t1 where t1.xmid = #{xmId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryBdcGdxxByXmid" parameterType="java.lang.String"
+            resultType="cn.gtmap.realestate.common.core.domain.certificate.BdcGdxxDO" >
+        select * from bdc_gdxx t1 where t1.xmid = #{xmid,jdbcType=VARCHAR}
+    </select>
+</mapper>

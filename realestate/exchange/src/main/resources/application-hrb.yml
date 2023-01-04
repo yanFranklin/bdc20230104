@@ -1,0 +1,88 @@
+info:
+  name: ${conf.spring.application.name}
+  component: Exchange Application
+
+app:
+  # 云应用注册中心地址
+  center: http://192.168.10.87:8000/eureka/
+  # 授权认证服务器地址
+  oauth: http://192.168.10.87:8002/account
+  portal-ui: http://127.0.0.1/realestate-portal-ui
+  security:
+    # 模块鉴权地址，用于hasUrlAuthority、 hasModuleAuthority表达式鉴权
+    moduleAuthPath: http://account/account
+    # 配置不需要权限控制的静态资源
+    ignores: /realestate-exchange/accessLog/refreshDefaultTable,/image/**,/css/**,/js/**,/webjars/**,/realestate-exchange/wwsq/sl,/realestate-exchange/rest/v1.0/access/**,/realestate-exchange/rest/v1.0/access/model
+    # 配置页面访问的权限控制策略
+    authorities:
+      # 不需要权限控制的访问资源，策略如下
+      permitAll: /2/**
+      # 限定拥有可读的模块操作才能访问
+      hasUrlAuthority('read'): /auth/users,/auth/orgs
+      # 限定对模块编码 yhgl 拥有新增操作的用户可以访问
+      hasModuleAuthority('yhgl:add'): /auth/user/create
+      # 限定 ROLE_USER 角色的用户才能访问的资源
+      hasAnyAuthority('ROLE_USER'): /resource1/**,/catalog1/**
+      # 对未作配置的路径是否需要登陆认证后才能访问
+      authenticated : true
+    # 配置资源访问范围， 该配置下的资源路径页面无法直接访
+    resources:
+      # 限定拥有get_account_info 访问范围的客户端才能访问
+      authenticated: /realestate-exchange/rest/v1.0/**
+
+spring:
+  aop:
+    proxy-target-class: true
+  datasource:
+    server:
+      url: jdbc:oracle:thin:@192.168.10.86:1521/orcl
+      username: bdcdj_3
+      password: e/lWYHJj7d9rXmgsItIxLw2oWP4XasfqoDXA0AKNYHgeSJQK8IKgU8/+ia1ax4mr9ki4QZbrQrCW9WMkHDOPAA==
+      publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK8ev+xi3qANIZpQGhndeKtc2EOlsPd48VIhphnl3OoOKqynJuQo7qZrJekk8iqXHgvze3bnFrFyTtf3vxGIamsCAwEAAQ==
+    gx:
+      url: jdbc:oracle:thin:@192.168.10.86:1521/orcl
+      username: bdcdj_3
+      password: e/lWYHJj7d9rXmgsItIxLw2oWP4XasfqoDXA0AKNYHgeSJQK8IKgU8/+ia1ax4mr9ki4QZbrQrCW9WMkHDOPAA==
+      publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK8ev+xi3qANIZpQGhndeKtc2EOlsPd48VIhphnl3OoOKqynJuQo7qZrJekk8iqXHgvze3bnFrFyTtf3vxGIamsCAwEAAQ==
+    sjpt:
+      url: jdbc:oracle:thin:@192.168.10.86:1521/orcl
+      username: bdcdj_gxsj_gs
+      password: e/lWYHJj7d9rXmgsItIxLw2oWP4XasfqoDXA0AKNYHgeSJQK8IKgU8/+ia1ax4mr9ki4QZbrQrCW9WMkHDOPAA==
+      publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK8ev+xi3qANIZpQGhndeKtc2EOlsPd48VIhphnl3OoOKqynJuQo7qZrJekk8iqXHgvze3bnFrFyTtf3vxGIamsCAwEAAQ==
+  rabbitmq:
+    host: 192.168.10.87
+    port: 5672
+    username: guest
+    password: guest
+  redis:
+    port: 6379
+    host: 192.168.10.87
+  #引入配置文件 application-config.yml
+  profiles:
+    include: config,interface,HefeiInf,limit,nantongInf
+
+
+server:
+  port: ${port:10008}
+
+logging:
+  level:
+    org.springframework: WARN
+    cn.gtmap.gtc: DEBUG
+
+# 第三方接口配置版本号
+data:
+  version: nantong
+
+# 是否需要保存共享库（gx数据源）默认不保存
+nationalAccessSaveGxDb: false
+
+# 省级上报方式及开关配置
+provinceAccess:
+  type: ftp
+  switch: true
+# 国家上报方式及开关配置
+nationalAccess:
+  type: sftp
+  switch: false
+

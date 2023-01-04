@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--家庭成员-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.ZttGyJtcyMapper">
+    <select id="queryZttGyJtcyListOld" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.ZttGyJtcyDO">
+        SELECT DISTINCT
+        (select bdcdyh from bdc_xm where xmid = #{xmid}) as bdcdyh,
+        t.xh AS SXH,
+        t.YHZGX as JTGXDM,
+        t.JTCYZJH as SFZHM,
+        t.FZJG,
+        t.SSHY,
+        t.GJ,
+        t.XB,
+        t.DH,
+        t.DZ,
+        t.YB,
+        t.GZDW,
+        t.DZYJ,
+        t.SFGYR,
+        's' as test,
+        t.BZ
+        FROM BDC_JTCY t
+        <where>
+            <if test="jtcyids != null">
+                AND t.jtcyid in
+                <foreach collection="jtcyids" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="queryZttGyJtcyList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.ZttGyJtcyDO">
+        SELECT DISTINCT
+        (select bdcdyh from bdc_xm where xmid = #{xmid}) as bdcdyh,
+
+        t.xh AS SXH,
+        t.YHZGX as JTGXDM,
+        t.JTCYZJH as SFZHM,
+        t.FZJG,
+        t.SSHY,
+        t.GJ,
+        t.XB,
+        t.DH,
+        t.DZ,
+        t.YB,
+        t.GZDW,
+        t.DZYJ,
+        t.SFGYR,
+        's' as test,
+        t.BZ
+
+        FROM bdc_jtcy t
+        JOIN bdc_qlr_hkb_gx h ON h.hkbbm = t.hkbbm AND h.hkbbbh=t.hkbbbh
+        JOIN bdc_qlr q ON q.qlrid = h.qlrid
+        <where>
+            <if test="qlrlb != null and qlrlb !=''">
+                AND q.qlrlb =#{qlrlb}
+            </if>
+            <if test="xmid != null and xmid !=''">
+                AND q.xmid =#{xmid}
+            </if>
+            <if test="qlrid != null and qlrid !=''">
+                AND q.qlrid =#{qlrid}
+            </if>
+            <if test="qlridList != null and qlridList.size() > 0">
+                AND q.qlrid IN
+                <foreach collection="qlridList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+
+    </select>
+
+</mapper>

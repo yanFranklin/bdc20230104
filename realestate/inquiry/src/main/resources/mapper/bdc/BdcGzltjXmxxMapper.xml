@@ -1,0 +1,686 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcGzltjXmxxMapper">
+
+    <!-- 根据项目统计，人员受理办件量 -->
+    <select id="countRyBjlByXmid" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count(xmid) as num, t.slrid as ryid
+        FROM BDC_XM t
+        <where>
+            <if test="kssj != null and kssj != ''">
+                AND t.slsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="jzsj != null and jzsj != ''">
+                AND t.slsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="ryidList != null and ryidList.size() > 0">
+                AND t.slrid IN
+                <foreach collection="ryidList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="process != null and process != ''">
+                and t.gzldyid in
+                <foreach collection="process.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY t.slrid
+    </select>
+
+    <!-- 根据项目统计，部门受理办件量 -->
+    <select id="countBmBjlByXmid" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count(xmid) as num, t.djbmdm as bmdm
+        FROM BDC_XM t
+        <where>
+            <if test="kssj != null and kssj != ''">
+                AND t.slsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="jzsj != null and jzsj != ''">
+                AND t.slsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="djjg != null and djjg != ''">
+                AND t.djbmdm = #{djjg}
+            </if>
+            <if test="process != null and process != ''">
+                and t.gzldyid in
+                <foreach collection="process.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY t.djbmdm
+    </select>
+
+    <!-- 根据工作流实例ID统计， 人员受理办件量 -->
+    <select id="countRyBjlByGzlslid" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count(x.gzlslid) as num, x.slrid as ryid
+        FROM(
+            SELECT DISTINCT t.gzlslid, t.slrid
+            FROM BDC_XM t
+            <where>
+                <if test="kssj != null and kssj != ''">
+                    AND t.slsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+                </if>
+                <if test="jzsj != null and jzsj != ''">
+                    AND t.slsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+                </if>
+                <if test="ryidList != null and ryidList.size() > 0">
+                    AND t.slrid IN
+                    <foreach collection="ryidList" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="process != null and process != ''">
+                    and t.gzldyid in
+                    <foreach collection="process.split(',')" item="item" open="(" close=")" separator=",">
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+            </where>
+        ) x
+        GROUP BY x.slrid
+    </select>
+
+    <!-- 根据工作流实例ID统计， 部门受理办件量 -->
+    <select id="countBmBjlByGzlslid" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count(x.gzlslid) as num, x.djbmdm as bmdm
+        FROM(
+            SELECT DISTINCT t.gzlslid, t.djbmdm
+            FROM BDC_XM t
+            <where>
+                <if test="kssj != null and kssj != ''">
+                    AND t.slsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+                </if>
+                <if test="jzsj != null and jzsj != ''">
+                    AND t.slsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+                </if>
+                <if test="djjg != null and djjg != ''">
+                    AND t.djbmdm = #{djjg}
+                </if>
+                <if test="process != null and process != ''">
+                    and t.gzldyid in
+                    <foreach collection="process.split(',')" item="item" open="(" close=")" separator=",">
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+            </where>
+        ) x
+        GROUP BY x.djbmdm
+    </select>
+
+
+
+    <!-- 复审                -->
+
+
+    <!-- 根据项目统计人员复审办件量 -->
+    <select id="countRyFslByXmid" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count(xm.xmid) as num, sh.shryid as ryid
+        FROM BDC_XM xm
+            LEFT JOIN BDC_SHXX sh ON xm.gzlslid = sh.gzlslid
+        <where>
+            <if test="kssj != null and kssj != ''">
+                AND sh.jdmc =  #{jdmc}
+            </if>
+            <if test="kssj != null and kssj != ''">
+                AND sh.qmsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="jzsj != null and jzsj != ''">
+                AND sh.qmsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="ryidList != null and ryidList.size() > 0">
+                AND sh.shryid IN
+                <foreach collection="ryidList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY sh.shryid
+    </select>
+
+    <!-- 根据工作流实例ID统计，人员复审办件量 -->
+    <select id="countRyFslByGzlslid" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count(x.gzlslid) as num, x.ryid
+        FROM (
+            SELECT DISTINCT sh.gzlslid, sh.shryid as ryid
+            FROM BDC_SHXX sh
+            <where>
+                <if test="kssj != null and kssj != ''">
+                    AND sh.jdmc =  #{jdmc}
+                </if>
+                <if test="kssj != null and kssj != ''">
+                    AND sh.qmsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+                </if>
+                <if test="jzsj != null and jzsj != ''">
+                    AND sh.qmsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+                </if>
+                <if test="ryidList != null and ryidList.size() > 0">
+                    AND sh.shryid IN
+                    <foreach collection="ryidList" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+        ) x
+        GROUP BY x.ryid
+    </select>
+
+    <!-- 根据项目统计部门复审办件量 -->
+    <select id="countBmFslByXmid" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count(xm.xmid) as num, xm.djbmdm as bmdm
+        FROM BDC_XM xm
+        LEFT JOIN BDC_SHXX sh ON xm.gzlslid = sh.gzlslid
+        <where>
+            <if test="jdmc != null and jdmc != ''">
+                AND sh.jdmc =  #{jdmc}
+            </if>
+            <if test="kssj != null and kssj != ''">
+                AND sh.qmsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="jzsj != null and jzsj != ''">
+                AND sh.qmsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="djjg != null and djjg != ''">
+                AND xm.djbmdm = #{djjg}
+            </if>
+            <if test="process != null and process != ''">
+                and xm.gzldyid in
+                <foreach collection="process.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY xm.djbmdm
+    </select>
+
+    <!-- 根据工作流实例ID统计，部门复审办件量 -->
+    <select id="countBmFslByGzlslid" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count( distinct xm.gzlslid) as num, xm.djbmdm as bmdm
+        FROM BDC_XM xm
+        LEFT JOIN BDC_SHXX sh ON xm.gzlslid = sh.gzlslid
+        <where>
+            <if test="jdmc != null and jdmc != ''">
+                AND sh.jdmc =  #{jdmc}
+            </if>
+            <if test="kssj != null and kssj != ''">
+                AND sh.qmsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="jzsj != null and jzsj != ''">
+                AND sh.qmsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="djjg != null and djjg != ''">
+                AND xm.djbmdm = #{djjg}
+            </if>
+            <if test="process != null and process != ''">
+                and xm.gzldyid in
+                <foreach collection="process.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY xm.djbmdm
+    </select>
+
+
+    <!-- 发证                -->
+
+    <!-- 根据项目统计人员发证办件量 -->
+    <select id="countRyFzlByXmid" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count(xm.xmid) as num, zs.fzr as ryid
+        from BDC_ZS zs
+        INNER JOIN BDC_XM_ZS_GX gx on zs.ZSID = gx.ZSID
+        INNER JOIN BDC_XM xm on xm.XMID = gx.XMID
+        <where>
+            <if test="kssj != null and kssj != ''">
+                AND zs.fzsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="jzsj != null and jzsj != ''">
+                AND zs.fzsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="ryidList != null and ryidList.size() > 0">
+                AND zs.fzr IN
+                <foreach collection="ryidList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY zs.fzr
+    </select>
+
+    <!-- 根据工作流实例ID统计，人员发证办件量 -->
+    <select id="countRyFzlByGzlslid" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count(x.gzlslid) as num, x.ryid
+        FROM (
+        SELECT DISTINCT xm.gzlslid, zs.fzr as ryid
+        from BDC_ZS zs
+        INNER JOIN BDC_XM_ZS_GX gx on zs.ZSID = gx.ZSID
+        INNER JOIN BDC_XM xm on xm.XMID = gx.XMID
+        <where>
+            <if test="kssj != null and kssj != ''">
+                AND zs.fzsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="jzsj != null and jzsj != ''">
+                AND zs.fzsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="ryidList != null and ryidList.size() > 0">
+                AND zs.fzr IN
+                <foreach collection="ryidList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        ) x
+        GROUP BY x.ryid
+    </select>
+
+    <!-- 根据项目统计部门发证办件量 -->
+    <select id="countBmFzlByXmid" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count(xm.xmid) as num, xm.djbmdm as bmdm
+        FROM BDC_XM xm
+        INNER JOIN BDC_XM_ZS_GX gx on gx.xmid = xm.xmid
+        INNER JOIN BDC_ZS zs ON zs.zsid = gx.zsid
+        <where>
+            <if test="kssj != null and kssj != ''">
+                AND zs.fzsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="jzsj != null and jzsj != ''">
+                AND zs.fzsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="djjg != null and djjg != ''">
+                AND xm.djbmdm = #{djjg}
+            </if>
+            <if test="process != null and process != ''">
+                and xm.gzldyid in
+                <foreach collection="process.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY xm.djbmdm
+    </select>
+
+    <!-- 根据工作流实例ID统计，部门发证办件量 -->
+    <select id="countBmFzlByGzlslid" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count( distinct xm.gzlslid) as num, xm.djbmdm as bmdm
+        FROM BDC_XM xm
+        INNER JOIN BDC_XM_ZS_GX gx on gx.xmid = xm.xmid
+        INNER JOIN BDC_ZS zs ON zs.zsid = gx.zsid
+        <where>
+            <if test="kssj != null and kssj != ''">
+                AND zs.fzsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="jzsj != null and jzsj != ''">
+                AND zs.fzsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="djjg != null and djjg != ''">
+                AND xm.djbmdm = #{djjg}
+            </if>
+            <if test="process != null and process != ''">
+                and xm.gzldyid in
+                <foreach collection="process.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY xm.djbmdm
+    </select>
+
+
+
+
+    <!--  统计人员缮证量信息 -->
+    <select id="countRySzlxx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count(zs.zsid) as num,  zs.szrid as ryid
+        FROM bdc_zs zs
+        <where>
+            <if test="kssj != null and kssj != ''">
+                AND zs.szsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="jzsj != null and jzsj != ''">
+                AND zs.szsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="zslx != null">
+                AND zs.zslx = #{zslx}
+            </if>
+            <if test="zsys != null and zsys == 1 "><!-- 纸质证-->
+                AND zs.qzysxlh is not null
+            </if>
+            <if test="zsys != null and zsys == 2 "><!-- 电子证-->
+                and zs.zzbs is not null
+            </if>
+            <if test="zsys != null and zsys == 3 "><!-- 即是纸质又是电子证-->
+                AND zs.qzysxlh is not null AND zs.zzbs is not null
+            </if>
+            <if test="ryidList != null and ryidList.size() > 0">
+                AND zs.szrid IN
+                <foreach collection="ryidList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY zs.szrid
+    </select>
+
+    <!--  统计部门缮证量信息 -->
+    <select id="countBmSzlxx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count(zs.zsid) as num,  zs.djbmdm as bmdm
+        FROM bdc_zs zs
+        <where>
+            <if test="kssj != null and kssj != ''">
+                AND zs.szsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="jzsj != null and jzsj != ''">
+                AND zs.szsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="zslx != null">
+                AND zs.zslx = #{zslx}
+            </if>
+            <if test="zsys != null and zsys == 1 "><!-- 纸质证-->
+                AND zs.qzysxlh is not null
+            </if>
+            <if test="zsys != null and zsys == 2 "><!-- 电子证-->
+                and zs.zzbs is not null
+            </if>
+            <if test="zsys != null and zsys == 3 "><!-- 即是纸质又是电子证-->
+                AND zs.qzysxlh is not null AND zs.zzbs is not null
+            </if>
+            <if test="djjg != null and djjg != ''">
+                AND zs.djbmdm = #{djjg}
+            </if>
+        </where>
+        GROUP BY zs.djbmdm
+    </select>
+
+    <!--  统计人员发证量信息 -->
+    <select id="countRyFzlxx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count(zs.zsid) as num, zs.fzrid as ryid
+        FROM bdc_zs zs
+        WHERE zs.qzysxlh is not null and  zs.lzr is not null and zs.fzsj is not null
+            <if test="kssj != null and kssj != ''">
+                AND zs.fzsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="jzsj != null and jzsj != ''">
+                AND zs.fzsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="ryidList != null and ryidList.size() > 0">
+                AND zs.szrid IN
+                <foreach collection="ryidList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        GROUP BY zs.fzrid
+    </select>
+
+    <!--  统计人员按登记小类、项目分组计算收件量信息 -->
+    <select id="countRyDjlxSjlxxByXmid" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count(t.xmid) as num, t.djlx, t.slrid as ryid
+        FROM bdc_xm t
+        <where>
+            <if test="kssj != null and kssj != ''">
+                AND t.slsj <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="jzsj != null and jzsj != ''">
+                AND t.slsj <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="ryidList != null and ryidList.size() > 0">
+                AND t.slrid IN
+                <foreach collection="ryidList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="process != null and process != ''">
+                and t.gzldyid not in
+                <foreach collection="process.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY t.slrid, t.djlx
+        ORDER BY t.slrid
+    </select>
+
+    <!--  统计人员按权利类型、项目分组计算收件量信息 -->
+    <select id="countRyQllxSjlxxByXmid" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count(t.xmid) as num, t.qllx, t.slrid as ryid
+        FROM bdc_xm t
+        <where>
+            <if test="kssj != null and kssj != ''">
+                AND t.slsj <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="jzsj != null and jzsj != ''">
+                AND t.slsj <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="ryidList != null and ryidList.size() > 0">
+                AND t.slrid IN
+                <foreach collection="ryidList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="qllxList != null and qllxList.size() > 0">
+                AND t.qllx IN
+                <foreach collection="qllxList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="process != null and process != ''">
+                and t.gzldyid not in
+                <foreach collection="process.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY t.slrid, t.qllx
+        ORDER BY t.slrid
+    </select>
+
+    <!--  统计人员按登记小类、流程分组计算收件量信息 -->
+    <select id="countRyDjlxSjlxxByGzlslid" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count(x.gzlslid) as num, x.djlx, x.slrid as ryid
+        FROM(
+            SELECT DISTINCT t.gzlslid, t.slrid, t.djlx
+            FROM BDC_XM t
+            <where>
+                <if test="kssj != null and kssj != ''">
+                    AND t.slsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+                </if>
+                <if test="jzsj != null and jzsj != ''">
+                    AND t.slsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+                </if>
+                <if test="ryidList != null and ryidList.size() > 0">
+                    AND t.slrid IN
+                    <foreach collection="ryidList" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="process != null and process != ''">
+                    and t.gzldyid not in
+                    <foreach collection="process.split(',')" item="item" open="(" close=")" separator=",">
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+            </where>
+        ) x
+        GROUP BY x.slrid, x.djlx
+        ORDER BY x.slrid
+    </select>
+
+    <!--  统计人员按权利类型、流程分组计算收件量信息 -->
+    <select id="countRyQllxSjlxxByGzlslid" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count(x.gzlslid) as num, x.qllx, x.slrid as ryid
+        FROM(
+            SELECT DISTINCT t.gzlslid, t.slrid, t.qllx
+            FROM BDC_XM t
+            <where>
+                <if test="kssj != null and kssj != ''">
+                    AND t.slsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+                </if>
+                <if test="jzsj != null and jzsj != ''">
+                    AND t.slsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+                </if>
+                <if test="ryidList != null and ryidList.size() > 0">
+                    AND t.slrid IN
+                    <foreach collection="ryidList" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="qllxList != null and qllxList.size() > 0">
+                    AND t.qllx IN
+                    <foreach collection="qllxList" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="process != null and process != ''">
+                    and t.gzldyid not in
+                    <foreach collection="process.split(',')" item="item" open="(" close=")" separator=",">
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+            </where>
+        ) x
+        GROUP BY x.slrid, x.qllx
+        ORDER BY x.slrid
+    </select>
+
+    <!--  统计部门按登记小类、项目分组计算收件量信息 -->
+    <select id="countBmDjlxSjlxxByXmid" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count(t.xmid) as num, t.djlx, t.djbmdm as bmdm
+        FROM bdc_xm t
+        <where>
+            <if test="kssj != null and kssj != ''">
+                AND t.slsj <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="jzsj != null and jzsj != ''">
+                AND t.slsj <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="djjg != null and djjg != ''">
+                AND t.djbmdm = #{djjg}
+            </if>
+            <if test="process != null and process != ''">
+                and t.gzldyid not in
+                <foreach collection="process.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY t.djbmdm, t.djlx
+        ORDER BY t.djbmdm
+    </select>
+
+    <!--  统计部门按登记小类、流程分组计算收件量信息 -->
+    <select id="countBmDjlxSjlxxByGzlslid" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count(x.gzlslid) as num, x.djlx, x.djbmdm as bmdm
+        FROM(
+            SELECT DISTINCT t.gzlslid, t.djbmdm, t.djlx
+            FROM BDC_XM t
+            <where>
+                <if test="kssj != null and kssj != ''">
+                    AND t.slsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+                </if>
+                <if test="jzsj != null and jzsj != ''">
+                    AND t.slsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+                </if>
+                <if test="djjg != null and djjg != ''">
+                    AND t.djbmdm = #{djjg}
+                </if>
+                <if test="process != null and process != ''">
+                    and t.gzldyid not in
+                    <foreach collection="process.split(',')" item="item" open="(" close=")" separator=",">
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+            </where>
+        ) x
+        GROUP BY x.djbmdm, x.djlx
+        ORDER BY x.djbmdm
+    </select>
+
+    <!--  统计部门按登记小类、项目分组计算收件量信息 -->
+    <select id="countBmQllxSjlxxByXmid" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count(t.xmid) as num, t.qllx, t.djbmdm as bmdm
+        FROM bdc_xm t
+        <where>
+            <if test="kssj != null and kssj != ''">
+                AND t.slsj <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="jzsj != null and jzsj != ''">
+                AND t.slsj <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+            </if>
+            <if test="djjg != null and djjg != ''">
+                AND t.djbmdm = #{djjg}
+            </if>
+            <if test="qllxList != null and qllxList.size() > 0">
+                AND t.qllx IN
+                <foreach collection="qllxList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="process != null and process != ''">
+                and t.gzldyid not in
+                <foreach collection="process.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY t.djbmdm, t.qllx
+        ORDER BY t.djbmdm
+    </select>
+
+    <!--  统计部门按登记小类、流程分组计算收件量信息 -->
+    <select id="countBmQllxSjlxxByGzlslid" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.GzltjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcGzltjXmxxDTO">
+        SELECT count(x.gzlslid) as num, x.qllx, x.djbmdm as bmdm
+        FROM(
+            SELECT DISTINCT t.gzlslid, t.djbmdm, t.qllx
+            FROM BDC_XM t
+            <where>
+                <if test="kssj != null and kssj != ''">
+                    AND t.slsj  <![CDATA[>=]]> to_date(#{kssj}, 'yyyymmddhh24miss')
+                </if>
+                <if test="jzsj != null and jzsj != ''">
+                    AND t.slsj  <![CDATA[<=]]> to_date(#{jzsj}, 'yyyymmddhh24miss')
+                </if>
+                <if test="djjg != null and djjg != ''">
+                    AND t.djbmdm = #{djjg}
+                </if>
+                <if test="qllxList != null and qllxList.size() > 0">
+                    AND t.qllx IN
+                    <foreach collection="qllxList" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="process != null and process != ''">
+                    and t.gzldyid not in
+                    <foreach collection="process.split(',')" item="item" open="(" close=")" separator=",">
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+            </where>
+        ) x
+        GROUP BY x.djbmdm, x.qllx
+        ORDER BY x.djbmdm
+    </select>
+</mapper>

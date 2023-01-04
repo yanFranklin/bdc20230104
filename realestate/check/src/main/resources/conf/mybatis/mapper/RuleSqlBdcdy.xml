@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.check.core.mapper.RuleSqlMapper">
+
+    <!--不动产单元存在两个或以上现势产权-->
+    <select id="selectMultiXsFdcq" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        SELECT t.bdcdyh,count(distinct qlid), t.xmid FROM (
+        SELECT f.qlid,x.xmid,x.bdcdyh FROM bdc_xm x
+        INNER JOIN bdc_fdcq f ON x.bdcdyh = f.bdcdyh AND f.qszt='1'
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !=''">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        ) t
+        <where>
+            <if test="xmid != null and xmid !='' ">
+                AND t.xmid = #{xmid}
+            </if>
+        </where>
+        GROUP BY t.bdcdyh, t.xmid HAVING COUNT(distinct t.qlid)>1
+    </select>
+
+    <!--不动产单元存在两个或以上现势土地使用权-->
+    <select id="selectMultiXsTdsyq" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        SELECT t.bdcdyh,count(distinct qlid), t.xmid FROM (
+        SELECT f.qlid,x.xmid,x.bdcdyh FROM bdc_xm x
+        INNER JOIN bdc_tdsyq f ON x.bdcdyh = f.bdcdyh AND f.qszt='1'
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !=''">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        ) t
+        <where>
+            <if test="xmid != null and xmid !='' ">
+                AND t.xmid = #{xmid}
+            </if>
+        </where>
+        GROUP BY t.bdcdyh, t.xmid HAVING COUNT(distinct t.qlid)>1
+    </select>
+
+    <!--不动产单元存在两个或以上现势土地承包农用地使用权-->
+    <select id="selectMultiXsNydsyq" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        SELECT t.bdcdyh,count(distinct qlid), t.xmid FROM (
+        SELECT f.qlid,x.xmid,x.bdcdyh FROM bdc_xm x
+        INNER JOIN bdc_tdcbnydsyq f ON x.bdcdyh = f.bdcdyh AND f.qszt='1'
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !=''">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        ) t
+        <where>
+            <if test="xmid != null and xmid !='' ">
+                AND t.xmid = #{xmid}
+            </if>
+        </where>
+        GROUP BY t.bdcdyh, t.xmid HAVING COUNT(distinct t.qlid)>1
+    </select>
+
+    <!--不动产单元存在两个或以上现势建设用地使用权-->
+    <select id="selectMultiXsJsydzjdsyq" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        SELECT t.bdcdyh,count(distinct qlid), t.xmid FROM (
+        SELECT f.qlid,x.xmid,x.bdcdyh FROM bdc_xm x
+        INNER JOIN bdc_jsydsyq f ON x.bdcdyh = f.bdcdyh AND f.qszt='1'
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !=''">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        ) t
+        <where>
+            <if test="xmid != null and xmid !='' ">
+                AND t.xmid = #{xmid}
+            </if>
+        </where>
+        GROUP BY t.bdcdyh, t.xmid HAVING COUNT(distinct t.qlid)>1
+    </select>
+
+    <!--不动产单元存在两个或以上现势构（建）筑物所有权-->
+    <select id="selectMultiXsGjzwsyq" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        SELECT t.bdcdyh,count(distinct qlid), t.xmid FROM (
+        SELECT f.qlid,x.xmid,x.bdcdyh FROM bdc_xm x
+        INNER JOIN bdc_gjzwsyq f ON x.bdcdyh = f.bdcdyh AND f.qszt='1'
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !=''">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        ) t
+        <where>
+            <if test="xmid != null and xmid !='' ">
+                AND t.xmid = #{xmid}
+            </if>
+        </where>
+        GROUP BY t.bdcdyh, t.xmid HAVING COUNT(distinct t.qlid)>1
+    </select>
+
+    <!--不动产单元存在两个或以上现势海域使用权-->
+    <select id="selectMultiXsHysyq" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        SELECT t.bdcdyh,count(distinct qlid), t.xmid FROM (
+        SELECT f.qlid,x.xmid,x.bdcdyh FROM bdc_xm x
+        INNER JOIN bdc_hysyq f ON x.bdcdyh = f.bdcdyh AND f.qszt='1'
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !=''">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        ) t
+        <where>
+            <if test="xmid != null and xmid !='' ">
+                AND t.xmid = #{xmid}
+            </if>
+        </where>
+        GROUP BY t.bdcdyh, t.xmid HAVING COUNT(distinct t.qlid)>1
+    </select>
+
+    <!--不动产单元存在两个或以上现势林权-->
+    <select id="selectMultiXsLq" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        SELECT t.bdcdyh,count(distinct qlid), t.xmid FROM (
+        SELECT f.qlid,x.xmid,x.bdcdyh FROM bdc_xm x
+        INNER JOIN bdc_lq f ON x.bdcdyh = f.bdcdyh AND f.qszt='1'
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !=''">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        ) t
+        <where>
+            <if test="xmid != null and xmid !='' ">
+                AND t.xmid = #{xmid}
+            </if>
+        </where>
+        GROUP BY t.bdcdyh, t.xmid HAVING COUNT(distinct t.qlid)>1
+    </select>
+
+    <!-- 原权利没有被注销的项目 -->
+    <select id="selectYqlNotZx" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        select x.slbh,x.xmid,x.bdcdyh,a.bdcqzh xzwh,x.gzldyid,a.xmid xzwhxmid,x.djxl,x.gzldyid from bdc_xm x
+        inner join bdc_xm_lsgx r on x.xmid = r.xmid and r.yxmid is not null
+        left join bdc_xm a on a.xmid = r.yxmid
+        where (x.ajzt=2 or x.djsj is not null) and a.qllx=x.qllx and a.qszt!=2
+        <if test="xmid != null and xmid !=''">
+            and x.xmid = #{xmid}
+        </if>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !=''">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 预转现流程登簿后，预告权利未注销  -->
+    <select id="selectYgzxNotZx" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        select DISTINCT x.slbh,x.xmid,x.bdcdyh,a.bdcqzh xzwh,x.gzldyid,a.xmid xzwhxmid,x.djxl,x.gzldyid from bdc_xm x
+        inner join bdc_fdcq f on f.xmid=x.xmid
+        inner join bdc_yg c on c.bdcdyh=x.bdcdyh and c.qszt!=2 and c.ygdjzl in (1,2)
+        left join bdc_xm a on a.xmid=c.xmid
+        where x.djsj is not null
+        <if test="xmid != null and xmid !=''">
+            and x.xmid = #{xmid}
+        </if>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !=''">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!--检查解封项目登簿后原查封（不动产）未解封-->
+    <select id="selectBdcXmJfBdcYcfWjf" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        SELECT x.slbh,x.xmid,x.bdcdyh,c.cfwh xzwh,x.gzldyid,c.xmid xzwhxmid,x.djxl,x.gzldyid FROM BDC_XM X
+        INNER JOIN bdc_xm_lsgx r ON x.xmid = r.xmid
+        INNER JOIN bdc_cf c ON r.yxmid=c.xmid
+        WHERE x.ajzt=2 AND nvl(c.qszt,0)!=2
+        <if test="xmid != null and xmid !=''">
+            and x.xmid = #{xmid}
+        </if>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !=''">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!--检查解封项目登簿后原查封（不动产）解封文号为空-->
+    <select id="selectBdcXmJfBdcYcfJfwhIsNull" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        SELECT x.slbh,x.xmid,x.bdcdyh,c.cfwh xzwh,x.gzldyid,c.xmid xzwhxmid,x.djxl,x.gzldyid FROM BDC_XM X
+        INNER JOIN bdc_xm_lsgx r ON x.xmid = r.xmid
+        INNER JOIN bdc_cf c ON r.yxmid=c.xmid
+        WHERE x.ajzt=2 AND c.jfwh IS NULL
+        <if test="xmid != null and xmid !=''">
+            and x.xmid = #{xmid}
+        </if>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !=''">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!--检查解封项目登簿后原查封（不动产）解封业务号为空-->
+    <select id="selectBdcXmJfBdcYcfJfywhIsNull" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        SELECT x.slbh,x.xmid,x.bdcdyh,c.cfwh xzwh,x.gzldyid,c.xmid xzwhxmid,x.djxl,x.gzldyid FROM BDC_XM X
+        INNER JOIN bdc_xm_lsgx r ON x.xmid = r.xmid
+        INNER JOIN bdc_cf c ON r.yxmid=c.xmid
+        WHERE x.ajzt=2 AND c.jfywh IS NULL
+        <if test="xmid != null and xmid !=''">
+            and x.xmid = #{xmid}
+        </if>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !=''">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+</mapper>        

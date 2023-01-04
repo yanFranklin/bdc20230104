@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--界址线信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.QlfQlJsydsyqMapper">
+
+    <select id="queryQlfQlJsydsyqList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.QlfQlJsydsyqDO">
+        SELECT DISTINCT
+        l.yxmid as ssywh,
+        c.ZDZHYT as yt,
+		round(trunc(t.syqjssj-t.syqqssj)/365)||'年' as tdsyqx,
+        t.jedw,
+        a.zddm,
+        c.bdcdyh,
+        c.xmid AS ywh,
+        t.qllx,
+        t.djlx,
+        nvl(t.djyy, '/') djyy,
+        t.syqmj,
+        t.syqqssj,
+        t.syqjssj,
+        round(nvl(t.qdjg,0),4) qdjg,
+        replace(c.bdcqzh, '/', '、') AS bdcqzh,
+        substr(c.bdcdyh,0,6) as qxdm,
+        t.djjg,
+        t.dbr,
+        t.djsj,
+        t.fj,
+        t.qszt,
+        t.zl
+        FROM bdc_jsydsyq t
+        LEFT JOIN bdc_bdcdjb_zdjbxx a ON t.bdcdyh = a.bdcdyh
+        LEFT JOIN bdc_xm c ON c.xmid = t.xmid
+        LEFT JOIN bdc_xm_lsgx l ON l.xmid=c.xmid and nvl(l.WLXM,0) = 0
+        LEFT JOIN bdc_xmfb fb ON fb.xmid = c.xmid
+
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND c.xmid = #{ywh}
+            </if>
+            <if test="yywh != null and yywh !=''">
+                AND L.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND c.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+
+</mapper>

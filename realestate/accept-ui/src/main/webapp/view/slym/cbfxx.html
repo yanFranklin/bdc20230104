@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <title>承包方信息</title>
+    <meta name="renderer" content="webkit">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/slymForm.css"/>
+    <style type="text/css">
+        #bdc-popup-large .layui-form-item .bdc-two-column{
+            width: 620px;
+        }
+        #bdc-popup-large .layui-form-item .bdc-two-column .layui-input-inline{
+            width: 513px;
+        }
+        .bdc-jt-table{
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+<div lay-filter="cbfxx" id="bdc-popup-large">
+
+</div>
+<!--承包方信息模板-->
+<script type="text/html" id="cbfxxTpL">
+    <form class="layui-form sl-from bdc-form-table" id="htxxForm" lay-filter="htxxForm">
+    <div class="basic-info">
+    {{# layui.each(d.cbfAndJtcyxxList, function(cbflength, cbfAndJtcyxx){ }}
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">承包方(代表)<br>名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" class="layui-input bdc-qlr" value="{{cbfAndJtcyxx.cbfxx.qlrmc || ''}}" name="qlrmc" id="cbfmc" title="{{cbfAndJtcyxx.cbfxx.qlrmc || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">承包方(代表)<br>证件类型</label>
+                <div class="layui-input-inline">
+                    <select name="zjzl" lay-search="" lay-filter="zjzl" class="bdc-qlr" id="cbfzjzl">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                        <option value="{{item.DM}}" {{# if(cbfAndJtcyxx.cbfxx.zjzl==item.DM ){ }} selected="selected"
+                                {{#
+                                } }}>{{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width bdc-label-newline">承包方(代表)<br>证件号</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" class="layui-input bdc-qlr" value="{{cbfAndJtcyxx.cbfxx.zjh || ''}}" name="zjh" id="cbfzjh" title="{{cbfAndJtcyxx.cbfxx.zjh || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">联系电话</label>
+                <div class="layui-input-inline">
+                    <input type="text" lay-verify="lxdh" lay-verify="lxdh" autocomplete="off" class="layui-input bdc-qlr" value="{{cbfAndJtcyxx.cbfxx.dh || ''}}" name="dh" id="cbfdh" title="{{cbfAndJtcyxx.cbfxx.dh || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline bdc-two-column">
+                <label class="layui-form-label change-label-widthe">承包方住址</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" class="layui-input bdc-qlr" value="{{cbfAndJtcyxx.cbfxx.txdz || ''}}" name="txdz" id="cbftxdz" title="{{cbfAndJtcyxx.cbfxx.txdz || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">共有方式</label>
+                <div class="layui-input-inline">
+                    <select name="gyfs" lay-search="" lay-filter="gyfs" class="bdc-qlr" id="cbfgyfs">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.gyfs, function(index, item){ }}
+                        <option value="{{item.DM}}" {{# if(cbfAndJtcyxx.cbfxx.gyfs==item.DM ){ }} selected="selected"
+                                {{#
+                                } }}>{{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label change-label-width">权利比例</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete="off" class="layui-input bdc-qlr" value="{{cbfAndJtcyxx.cbfxx.qlbl || ''}}" name="qlbl" id="cbfqlbl" title="{{cbfAndJtcyxx.cbfxx.qlbl || ''}}">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <!--家庭成员信息-->
+            <div class="bdc-jt-table">
+                <table class="layui-table jtcy-table" border="1" name="jtcyTable">
+                    <!--设立列宽度-->
+                    <colgroup>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th width="50px">序号</th>
+                        <th>家庭成员名称</th>
+                        <th width="70px">性别</th>
+                        <th style="min-width: 100px">证件种类</th>
+                        <th style="min-width: 150px">证件号</th>
+                        <th>与户主关系</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{# if(!cbfAndJtcyxx.jtcyList ||cbfAndJtcyxx.jtcyList.length==0) { }}
+                    <tr class="bdc-table-none">
+                        <td colspan="10">
+                            <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据</div>
+                        </td>
+                    </tr>
+                    {{# } else { }}
+                    {{# } }}
+                    {{# layui.each(cbfAndJtcyxx.jtcyList, function(jtcylength, jtcyxx){ }}
+                    <tr>
+                        <input type="hidden" name="hkbbm" id="hkbbm" value="{{jtcyxx.hkbbm || ''}}">
+                        <input type="hidden" name="jtcyid" id="jtcyid" value="{{jtcyxx.jtcyid || ''}}">
+                        <td class="bdc-jtcy-xh">{{jtcylength+1}}</td>
+                        <td>
+                            <input type="text" lay-verify="" id="jtcymc" name="jtcymc" value="{{jtcyxx.jtcymc || ''}}"
+                                   class="layui-input jtcy" title="{{jtcyxx.jtcymc || ''}}">
+                        </td>
+                        <td>
+                            <select name="xb" lay-search="" lay-filter="xb" class="jtcy" id="xb">
+                                <option value="">请选择</option>
+                                {{# layui.each(d.zd.xb, function(index, item){ }}
+                                <option value="{{item.DM || ''}}" {{# if(jtcyxx.xb==item.DM ){ }} selected="selected" {{#
+                                        } }}>{{item.MC || ''}}</option>
+                                {{# }); }}
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" lay-verify="" id="jtcyzjzlMc" name="jtcyzjzlMc" value="身份证"
+                                   class="layui-input" title="身份证" disabled="off">
+                        </td>
+                        <td>
+                            <input type="text" lay-verify="identitynew" id="jtcyzjh" name="jtcyzjh" value="{{jtcyxx.jtcyzjh || ''}}"
+                                   class="layui-input jtcy" title="{{jtcyxx.jtcyzjh || ''}}">
+                        </td>
+                        <td>
+                            <select name="yhzgx" lay-search="" lay-filter="yhzgx" class="jtcy" id="yhzgx">
+                                <option value="">请选择</option>
+                                {{# layui.each(d.zd.yhzgx, function(index, item){ }}
+                                <option value="{{item.DM || ''}}" {{# if(jtcyxx.yhzgx==item.DM ){ }} selected="selected" {{#
+                                        } }}>{{item.MC || ''}}</option>
+                                {{# }); }}
+                            </select>
+                        </td>
+                    </tr>
+                    {{# }); }}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {{# }); }}
+    </div>
+    </form>
+</script>
+</body>
+
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<!--小数计算防精度缺失-->
+<script src="../../static/lib/mathjs/math.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/slymCommon.js"></script>
+<script src='../../static/js/slym/cbfxx.js'></script>
+
+</html>

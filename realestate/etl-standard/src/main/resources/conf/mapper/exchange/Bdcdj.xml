@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--收件信息-->
+<mapper namespace="cn.gtmap.realestate.etl.core.mapper.exchange.BdcdjMapper">
+
+    <select id="queryYttBdcqzs" parameterType="java.lang.String"
+            resultType="cn.gtmap.realestate.etl.core.domian.YttBdcqzsDo">
+        SELECT DISTINCT z.zhlsh as certid,a.SLBH AS ACTIVEID,CASE WHEN nvl(a.QSZT,0)=1 THEN '是' ELSE '否' END AS
+        SFYX,z.SZSJ AS
+        zssj,
+        z.BDCQZH AS CERTNO,q.QLRMC AS qlr,q.GYQK,z.ZL,z.BDCDYH,z.QLLX,z.QLXZ,z.YT,z.MJ,z.syqx,z.QLQTZK,z.FJ AS
+        QZFJ,q.ZJZL AS zjlx
+        ,q.ZJH AS zjhm,z.qzysxlh AS YSBH,a.QXDM AS sbzz,a.SSXZ,k.DJSJ AS zxsj
+        FROM bdc_zs z
+        LEFT JOIN bdc_xm_zs_gx t ON z.zsid=t.zsid
+        LEFT JOIN BDC_XM a ON a.xmid = t.xmid
+        LEFT JOIN BDC_QLR q ON q.ZSID = z.ZSID AND q.QLRLB='1'
+        LEFT JOIN bdc_xm_lsgx m ON m.YXMID = a.xmid and nvl(m.WLXM,0) = 0
+        left join bdc_xm k on m.xmid = k.xmid
+        WHERE z.ZSLX='1' AND a.xmid = #{xmid}
+    </select>
+    <select id="queryGtBdcqzms" parameterType="java.lang.String"
+            resultType="cn.gtmap.realestate.etl.core.domian.GtBdcqzmDo">
+        SELECT DISTINCT z.BDCQZH,z.ZHLSH,z.NF,z.sqsjc,z.SZSXQC,q.QLRMC AS
+        qlr,q.GYQK,z.ZL,z.BDCDYH,z.QLLX,z.QLXZ,z.YT,z.MJ,z.SYQX
+        ,z.QLQTZK,z.FJ,to_char(a.DJSJ,'yyyy') as DBRQ_YEAR,to_char(a.DJSJ,'MM') as DBRQ_MONTH,to_char(a.DJSJ,'dd') as
+        DBRQ_DAY,
+        z.YWR,a.QSZT,a.SSXZ,z.qzysxlh AS ysbh,k.DJSJ AS zxsj
+        FROM bdc_zs z
+        LEFT JOIN bdc_xm_zs_gx t ON z.zsid=t.zsid
+        LEFT JOIN BDC_XM a ON a.xmid = t.xmid
+        LEFT JOIN BDC_QLR q ON q.ZSID = z.ZSID AND q.QLRLB='1'
+        LEFT JOIN bdc_xm_lsgx m ON m.YXMID = a.xmid and nvl(m.WLXM,0) = 0
+        left join bdc_xm k on m.xmid = k.xmid
+        WHERE z.ZSLX='2' AND a.xmid = #{xmid}
+    </select>
+
+    <select id="queryGtCqxxs" parameterType="java.lang.String"
+            resultType="cn.gtmap.realestate.etl.core.domian.GtCqxxDo">
+        SELECT DISTINCT
+        a.YWR,
+        a.YWRZJH,
+        q.QLRMC AS qlr,
+        q.ZJH AS qlrzjh,
+        a.ZL,
+        z.BDCQZH,a.DJSJ,a.BDCDYH
+        FROM
+        BDC_XM a
+        LEFT JOIN bdc_xm_zs_gx t ON a.XMID=t.XMID
+        LEFT JOIN bdc_zs z ON z.zsid=t.zsid
+        LEFT JOIN bdc_qlr q ON z.zsid = q.zsid AND q.QLRLB = '1'
+        WHERE a.xmid = #{xmid}
+    </select>
+
+    <select id="queryGtDyaqFws" parameterType="java.lang.String"
+            resultType="cn.gtmap.realestate.etl.core.domian.GtDyaqFwDo">
+        SELECT DISTINCT
+        z.BDCQZH,q.QLRMC AS qlr,q.ZJH AS qlrzjh,d.BDBZZQSE,d.ZWLXQSSJ,d.ZWLXJSSJ,a.ZL,a.QSZT,a.BDCDYH
+        FROM
+        BDC_DYAQ d
+        LEFT JOIN BDC_XM a ON a.XMID = d.XMID
+        LEFT JOIN bdc_xm_zs_gx t ON a.XMID = t.XMID
+        LEFT JOIN bdc_zs z ON z.zsid = t.zsid
+        LEFT JOIN BDC_QLR q ON z.zsid = q.zsid AND q.QLRLB = '1'
+        WHERE a.xmid = #{xmid}
+    </select>
+    <select id="queryGtDyaqTds" parameterType="java.lang.String"
+            resultType="cn.gtmap.realestate.etl.core.domian.GtDyaqTdDo">
+        SELECT DISTINCT
+        z.BDCQZH,q.QLRMC AS qlr,q.ZJH AS qlrzjh,d.BDBZZQSE,d.ZWLXQSSJ,d.ZWLXJSSJ,a.ZL,a.QSZT,a.BDCDYH
+        FROM
+        BDC_DYAQ d
+        LEFT JOIN BDC_XM a ON a.XMID = d.XMID
+        LEFT JOIN bdc_xm_zs_gx t ON a.XMID = t.XMID
+        LEFT JOIN bdc_zs z ON z.zsid = t.zsid
+        LEFT JOIN BDC_QLR q ON z.zsid = q.zsid AND q.QLRLB = '1'
+        WHERE a.xmid = #{xmid}
+    </select>
+    <select id="queryGtCfFws" parameterType="java.lang.String"
+            resultType="cn.gtmap.realestate.etl.core.domian.GtCfFwDo">
+        SELECT DISTINCT
+        c.CFJG,c.CFWH,c.CFQSSJ,c.CFJSSJ,c.JFJG,c.JFWH,c.JFDJSJ,CASE WHEN nvl(c.QSZT,1)=1 THEN '是' ELSE '否' END AS SFYX,
+        b.ZDSZD,b.ZDSZN,b.ZDSZX,b.ZDSZB,c.BDCDYH,c.ZL
+        FROM
+        BDC_CF c
+        LEFT JOIN bdc_bdcdjb_zdjbxx b ON substr(c.BDCDYH,0,19) = b.zddm
+        WHERE c.xmid = #{xmid}
+    </select>
+    <select id="queryGtCfTds" parameterType="java.lang.String"
+            resultType="cn.gtmap.realestate.etl.core.domian.GtCfTdDo">
+        SELECT DISTINCT
+        c.CFJG,c.CFWH,c.CFQSSJ,c.CFJSSJ,c.JFJG,c.JFWH,c.JFDJSJ,CASE WHEN nvl(c.QSZT,1)=1 THEN '是' ELSE '否' END AS SFYX,
+        b.ZDSZD,b.ZDSZN,b.ZDSZX,b.ZDSZB,c.BDCDYH,c.ZL
+        FROM
+        BDC_CF c
+        LEFT JOIN bdc_bdcdjb_zdjbxx b ON substr(c.BDCDYH,0,19) = b.zddm
+        WHERE c.xmid = #{xmid}
+    </select>
+
+    <select id="getDsjjCfFwId" resultType="java.lang.Integer">
+        select DSJJ_CF_FW_ID.nextVal from dual
+    </select>
+
+</mapper>

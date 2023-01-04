@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!-- 盐城一体化 退件通知接口 -->
+    <ex:bean id="tj_tjxx">
+        <!-- 请求结构体 -->
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="YTH"/>
+            <ex:property name="dsfFlag" value="YTH"/>
+            <ex:property name="url" value="${yth.tjxx.url}"/>
+        </ex:service-info>
+        <!-- 输入结构体 -->
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/yth/jbxx.xml"/>
+            <ex:element name="DJT_DJ_SLSQ" dozerXml="conf/dozer/yancheng/yth/sqxx.xml"/>
+            <ex:element name="DJF_DJ_SF" dozerXml="conf/dozer/yancheng/yth/sfxx.xml"/>
+        </ex:request>
+        <!-- 输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/yth/data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+
+   <!-- 盐城一体化推送申请信息接口 -->
+    <ex:bean id="ts_slsqxx">
+        <!-- 请求结构体 -->
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="YTH"/>
+            <ex:property name="dsfFlag" value="YTH"/>
+            <ex:property name="url" value="${yth.tsslsqxx.url}"/>
+        </ex:service-info>
+        <!-- 输入结构体 -->
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/yth/jbxx.xml"/>
+            <ex:element name="DJT_DJ_SLSQ" dozerXml="conf/dozer/yancheng/yth/sqxx.xml"/>
+            <ex:element name="DJF_DJ_SF" dozerXml="conf/dozer/yancheng/yth/sfxx.xml"/>
+        </ex:request>
+        <!-- 输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/yth/data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 盐城一体化推送审核信息接口 -->
+    <ex:bean id="ts_shxx">
+        <!-- 请求结构体 -->
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="YTH"/>
+            <ex:property name="dsfFlag" value="YTH"/>
+            <ex:property name="url" value="${yth.tsshxx.url}"/>
+        </ex:service-info>
+        <!-- 输入结构体 -->
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/yth/jbxx.xml"/>
+            <ex:element name="DJF_DJ_SH" dozerXml="conf/dozer/yancheng/yth/shxx.xml"/>
+       <!--     <ex:element sourceService="qlxx" />-->
+        </ex:request>
+        <!-- 输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/yth/data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 权利信息对照 -->
+    <ex:bean id="qlxx">
+        <ex:request>
+            <ex:element name="QLT_FW_FDCQ_YZ" dozerXml="conf/dozer/yancheng/yth/qlxx/zyqlxx.xml"/>
+            <ex:element name="QLF_QL_DYAQ" dozerXml="conf/dozer/yancheng/yth/qlxx/dyqlxx.xml"/>
+            <ex:element name="QLF_QL_YGDJ" dozerXml="conf/dozer/yancheng/yth/qlxx/ygqlxx.xml"/>
+            <ex:element name="QLF_QL_CFDJ" dozerXml="conf/dozer/yancheng/yth/qlxx/cfqlxx.xml"/>
+            <ex:element name="QLF_QL_ZXDJ" dozerXml="conf/dozer/yancheng/yth/qlxx/zxqlxx.xml"/>
+            <ex:element name="QLF_QL_YYDJ" dozerXml="conf/dozer/yancheng/yth/qlxx/yyqlxx.xml"/>
+        </ex:request>
+    </ex:bean>
+
+    <!-- 盐城一体化推送发证信息接口 -->
+    <ex:bean id="ts_fzsqxx">
+        <!-- 请求结构体 -->
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="YTH"/>
+            <ex:property name="dsfFlag" value="YTH"/>
+            <ex:property name="url" value="${yth.tsfzsqxx.url}"/>
+        </ex:service-info>
+        <!-- 输入结构体 -->
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/yth/jbxx.xml"/>
+            <ex:element name="ZTT_GY_QLR" dozerXml="conf/dozer/yancheng/yth/qlrxx.xml"/>
+            <ex:element name="DJF_DJ_SZ" dozerXml="conf/dozer/yancheng/yth/szxx.xml"/>
+            <ex:element name="DJF_DJ_FZ" dozerXml="conf/dozer/yancheng/yth/fzxx.xml"/>
+            <ex:element sourceService="qlxx" />
+            <ex:element name="FJ_F_100" dozerXml="conf/dozer/yancheng/yth/fjxx.xml"/>
+        </ex:request>
+        <!-- 输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/yth/data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 盐城一体化推送预测楼盘信息接口 -->
+    <ex:bean id="yc_ythtsyclp">
+        <!-- 请求结构体 -->
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="YTH"/>
+            <ex:property name="dsfFlag" value="YTH"/>
+            <ex:property name="url" value="${yth.tsyclp.url}"/>
+        </ex:service-info>
+        <!-- 输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/yth/data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+
+    <!-- 盐城一体化推送查解封信息接口 -->
+    <ex:bean id="yc_ythtscjfxx">
+        <!-- 请求结构体 -->
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="YTH"/>
+            <ex:property name="dsfFlag" value="YTH"/>
+            <ex:property name="url" value="${yth.tsyccjf.url}"/>
+        </ex:service-info>
+        <!-- 输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/yth/data.xml"/>
+        </ex:response>
+    </ex:bean>
+</beans>

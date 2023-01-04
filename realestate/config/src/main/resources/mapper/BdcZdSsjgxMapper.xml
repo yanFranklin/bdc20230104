@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.config.core.mapper.BdcZdSsjgxMapper">
+
+    <!--分页查询证书印制号模板配置-->
+    <select id="listSsjgx" parameterType="cn.gtmap.realestate.common.core.qo.config.BdcZdSsjGxQO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcZdSsjGxDO">
+        SELECT FMLDM,ZMLDM,FMLMC,ZMLMC,ZT,YMDZ,JKDZ,JKMC
+        FROM
+        BDC_ZD_SSJGX T
+        <where>
+            T.ZT = '1'
+            <if test="fmldm != null and fmldm != ''">
+                AND T.fmldm = #{fmldm}
+            </if>
+            <if test="zmldm != null and zmldm != ''">
+                AND T.zmldm = #{zmldm}
+            </if>
+            <if test="fmlmc != null and fmlmc != ''">
+                AND T.fmlmc = #{fmlmc}
+            </if>
+            <if test="zmlmc != null and zmlmc != ''">
+                AND T.zmlmc = #{zmlmc}
+            </if>
+            <if test="ymdz != null and ymdz != ''">
+                AND T.ymdz = #{ymdz}
+            </if>
+            <if test="jkdz != null and jkdz != ''">
+                AND T.jkdz = #{jkdz}
+            </if>
+            <if test="jkmc != null and jkmc != ''">
+                AND T.jkmc = #{jkmc}
+            </if>
+        </where>
+    </select>
+
+    <select id="getSsjgxByZmldm" parameterType="java.lang.String" resultType="cn.gtmap.realestate.common.core.domain.BdcZdSsjGxDO">
+        SELECT FMLDM,ZMLDM,FMLMC,ZMLMC,ZT,YMDZ,JKDZ,JKMC
+        FROM
+        BDC_ZD_SSJGX T
+        <where>
+            <if test="zmldm != null and zmldm != ''">
+                AND T.zmldm = #{zmldm}
+            </if>
+        </where>
+    </select>
+
+    <select id="getSsjgxByFmldms" parameterType="java.util.List" resultType="cn.gtmap.realestate.common.core.domain.BdcZdSsjGxDO">
+        SELECT FMLDM,ZMLDM,FMLMC,ZMLMC,ZT,YMDZ,JKDZ,JKMC
+        FROM
+        BDC_ZD_SSJGX T
+        <where>
+            <if test="fmldms != null">
+                AND T.FMLDM IN
+                <foreach collection="fmldms" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!--分页查询证书印制号模板配置-->
+    <select id="listBdcZdSsjGxByPage" parameterType="cn.gtmap.realestate.common.core.qo.config.BdcZdSsjGxQO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcZdSsjGxDO">
+        SELECT FMLDM,ZMLDM,FMLMC,ZMLMC,ZT,YMDZ,JKDZ,JKMC,ID
+        FROM
+        BDC_ZD_SSJGX T
+        <where>
+            T.ZT = '1'
+            <if test="fmldm != null and fmldm != ''">
+                AND T.fmldm  #{fmldm}
+            </if>
+            <if test="zmldm != null and zmldm != ''">
+                AND T.zmldm = #{zmldm}
+            </if>
+            <if test="fmlmc != null and fmlmc != ''">
+                AND T.fmlmc LIKE '%'|| #{fmlmc} || '%'
+            </if>
+            <if test="zmlmc != null and zmlmc != ''">
+                AND T.zmlmc LIKE '%'|| #{zmlmc} || '%'
+            </if>
+            <if test="ymdz != null and ymdz != ''">
+                AND T.ymdz = #{ymdz}
+            </if>
+            <if test="jkdz != null and jkdz != ''">
+                AND T.jkdz = #{jkdz}
+            </if>
+            <if test="jkmc != null and jkmc != ''">
+                AND T.jkmc = #{jkmc}
+            </if>
+        </where>
+        ORDER BY T.ID DESC
+    </select>
+
+</mapper>

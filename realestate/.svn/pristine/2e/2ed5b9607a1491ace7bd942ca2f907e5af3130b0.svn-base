@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.sjpt.GkcxMapper">
+
+    <select id="getZfcxLsh" resultType="java.lang.Integer">
+        select BDC_ZfCX_LSH_SEQ.nextVal from dual
+    </select>
+
+    <select id="getBdcxxLybh" resultType="java.lang.Integer">
+        select BDC_XXLYCX_LSH_SEQ.nextval lsh from dual
+    </select>
+
+    <select id="getCxjFwqscxLsh" resultType="java.lang.Integer">
+        select BDC_CXJFWQSCX_LSH_SEQ.nextVal from dual
+    </select>
+
+    <select id="getBdcXxcxbh" resultType="map">
+        select nvl(max(cxbh),0) cxbh from bdc_xxcxjl t
+        <where>
+            <if test="cxlb != null and cxlb != ''">
+                and cxlb = #{cxlb}
+            </if>
+            <if test="czlb != null and czlb != ''">
+                and czlb = #{czlb}
+            </if>
+            <if test="prefix != null and prefix != ''">
+                and cxbh like #{prefix} ||'%'
+            </if>
+            <if test="length != null and length != ''">
+                and length(cxbh) = #{length}
+            </if>
+            <if test="preFix != null and preFix != ''">
+                and and substr(cxbh,1,length(#{preFix)}) = #{preFix}
+            </if>
+            <if test="isNumeric != null and isNumeric == 'true'">
+                and cxbh not like '%[^0-9]%'
+            </if>
+        </where>
+    </select>
+
+    <select id="getFwqsCxLsh" resultType="java.lang.Integer">
+        select BDC_FWQSCX_LSH_SEQ.nextval lsh from dual
+    </select>
+</mapper>

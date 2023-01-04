@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.cloudMapper.BdcCloudMapper">
+    <select id="countBjsc" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.BjsctjQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcBjscTjDTO">
+        select
+        rel.djyy djyy,
+        p.proc_ins_id as gzlslid,
+       p.start_user_dep as bmid,
+       p.proc_def_name as gzldymc,
+       p.proc_def_key as gzldyid,
+       round(ttt.costtime / 7.5 / 60, 3) bjsc
+          from ACT_ST_PROC p
+         inner join (select tt.proc_ins_id, sum(caltime) as costtime
+                       from (select t.proc_ins_id,
+                                    t.task_name,
+                                    max(t.task_start_date) starttime,
+                                    case
+                                      when t.task_name = '受理' then
+                                       t.FULL_STATISTICS_TIME - t.SUM_CLAIM_TIME -
+                                       t.SUM_LOCK_TIME
+                                      else
+                                       t.FULL_STATISTICS_TIME - t.SUM_LOCK_TIME
+                                    end caltime
+                               from ACT_ST_TASK t
+                              where proc_ins_id in
+                                    (select distinct tt.proc_ins_id
+                                       from (select t.proc_ins_id, t.task_name
+                                               from ACT_ST_TASK t
+                                              where t.task_name in
+                                                    ('受理', '登簿', '登簿制证')
+                                                and t.task_end_date is not null
+                                              group by t.proc_ins_id, t.task_name
+                                            ) tt
+                                      group by tt.proc_ins_id
+                                     having count(1) = 2)
+                                and t.task_name in
+                                    ('受理', '登簿', '登簿制证', '审核')
+                              group by t.proc_ins_id,
+                                       t.task_name,
+                                       t.FULL_STATISTICS_TIME,
+                                       t.SUM_CLAIM_TIME,
+                                       t.SUM_LOCK_TIME) tt
+                      group by tt.proc_ins_id) ttt
+              on p.proc_ins_id = ttt.proc_ins_id
+            inner join act_st_pro_rel rel
+              on rel.proc_ins_id = ttt.proc_ins_id
+            <where>
+                <if test="kssj !=null and kssj !=''">
+                    AND to_char(p.proc_start_time,'yyyy-MM-dd') <![CDATA[>=]]> #{kssj}
+                </if>
+                <if test="jzsj !=null and jzsj !=''">
+                    AND to_char(p.proc_start_time,'yyyy-MM-dd') <![CDATA[<=]]> #{jzsj}
+                </if>
+
+                <if test="djjglist != null and djjglist.size() > 0">
+                    AND p.start_user_dep in
+                    <foreach collection="djjglist" item="item" open="(" separator=" , " close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="djyylist != null and djyylist.size() > 0">
+                    AND rel.djyy in
+                    <foreach collection="djyylist" item="item" open="(" separator=" , " close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="processnamelist != null and processnamelist.size() > 0">
+                    AND p.proc_def_key in
+                    <foreach collection="processnamelist" item="item" open="(" separator=" , " close=")">
+                        #{item}
+                    </foreach>
+                </if>
+
+                <if test="splylist != null and splylist.size() > 0">
+                    AND rel.sply in
+                    <foreach collection="splylist" item="item" open="(" separator=" , " close=")">
+                        #{item}
+                    </foreach>
+                </if>
+
+            </where>
+    </select>
+</mapper>

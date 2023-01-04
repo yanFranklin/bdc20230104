@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.building.core.mapper.FwHsMapper">
+    <select id="listFwHs" parameterType="map" resultType="cn.gtmap.realestate.common.core.domain.building.FwHsDO">
+        SELECT T.FW_HS_INDEX,T.FW_DCB_INDEX,T.YSDM,T.BDCDYH,T.WLCS,T.DYCS,T.SXH,T.FJH,T.QLID,T.CG,T.DYH,
+        T.CH,T.YCJZMJ,T.YCTNJZMJ,T.YCFTJZMJ,T.YCDXBFJZMJ,T.YCQTJZMJ,T.YCFTXS,T.SCJZMJ,T.SCTNJZMJ,T.SCFTJZMJ,
+        T.SCDXBFJZMJ,T.SCQTJZMJ,T.SCFTXS,T.GYTDMJ,T.FTTDMJ,T.DYTDMJ,T.ZL,T.JYJG,T.GHYT,T.GHYT2,T.GHYT3,T.FWLX,
+        T.FWXZ,T.D,T.N,T.X,T.B,T.CQLY,T.FJSM,T.DCYJ,T.DCZ,T.DCSJ,T.FWHX,T.HXJG,T.JCZXCD,T.QLZT,T.HBFX,T.HBHS,
+        T.GYQK,T.SFCSBH,T.FCDAH,T.FW_HST_INDEX,T.BDCZT,T.BZ,T.FWBM,T.BGBH,T.ISFSSS,T.QSRQ,T.SYFTTDMJJS,T.TDSYQLX,
+        T.TDYT,T.YCFWBM,T.ZZRQ,T.YSFWBM,T.QSMYC,T.ZZMYC,T.FWJG FROM fw_hs T
+        <where>
+            <if test="fwDcbIndex != null and fwDcbIndex != ''">
+                AND t.fw_dcb_index = #{fwDcbIndex}
+            </if>
+            <if test="ybdcdyh != null and ybdcdyh != ''">
+                AND t.ybdcdyh = #{ybdcdyh}
+            </if>
+            <if test="bdczt != null and bdczt != ''">
+                AND NVL(T.BDCZT,'1') = #{bdczt}
+            </if>
+        </where>
+        order by t.wlcs desc,t.dyh asc, t.fjh asc,t.sxh asc
+    </select>
+
+    <select id="listFwHsWithQlr" parameterType="map" resultType="cn.gtmap.realestate.common.core.dto.building.FwhsQlrDTO">
+        SELECT T.FW_HS_INDEX,T.FW_DCB_INDEX,T.YSDM,T.BDCDYH,T.WLCS,T.DYCS,T.SXH,T.FJH,T.QLID,T.CG,T.DYH,
+        T.CH,T.YCJZMJ,T.YCTNJZMJ,T.YCFTJZMJ,T.YCDXBFJZMJ,T.YCQTJZMJ,T.YCFTXS,T.SCJZMJ,T.SCTNJZMJ,T.SCFTJZMJ,
+        T.SCDXBFJZMJ,T.SCQTJZMJ,T.SCFTXS,T.GYTDMJ,T.FTTDMJ,T.DYTDMJ,T.ZL,T.JYJG,T.GHYT,T.GHYT2,T.GHYT3,T.FWLX,
+        T.FWXZ,T.D,T.N,T.X,T.B,T.CQLY,T.FJSM,T.DCYJ,T.DCZ,T.DCSJ,T.FWHX,T.HXJG,T.JCZXCD,T.QLZT,T.HBFX,T.HBHS,
+        T.GYQK,T.SFCSBH,T.FCDAH,T.FW_HST_INDEX,T.BDCZT,T.BZ,T.FWBM,T.BGBH,T.ISFSSS,T.QSRQ,T.SYFTTDMJJS,T.TDSYQLX,
+        T.TDYT,T.YCFWBM,T.ZZRQ,T.YSFWBM,T.QSMYC,T.ZZMYC,l.fwjg,wm_concat(to_char(f.qlr)) qlr FROM fw_hs T
+        left join fw_fcqlr f on f.fw_index = t.FW_HS_INDEX
+        left join fw_ljz l on l.fw_dcb_index = t.fw_dcb_index
+        <where>
+            <if test="fwDcbIndex != null and fwDcbIndex != ''">
+                AND t.fw_dcb_index = #{fwDcbIndex}
+            </if>
+            <if test="ybdcdyh != null and ybdcdyh != ''">
+                AND t.ybdcdyh = #{ybdcdyh}
+            </if>
+            <if test="bdczt != null and bdczt != ''">
+                AND NVL(T.BDCZT,'1') = #{bdczt}
+            </if>
+        </where>
+        group by (T.FW_HS_INDEX,T.FW_DCB_INDEX,T.YSDM,T.BDCDYH,T.WLCS,T.DYCS,T.SXH,T.FJH,T.QLID,T.CG,T.DYH,
+        T.CH,T.YCJZMJ,T.YCTNJZMJ,T.YCFTJZMJ,T.YCDXBFJZMJ,T.YCQTJZMJ,T.YCFTXS,T.SCJZMJ,T.SCTNJZMJ,T.SCFTJZMJ,
+        T.SCDXBFJZMJ,T.SCQTJZMJ,T.SCFTXS,T.GYTDMJ,T.FTTDMJ,T.DYTDMJ,T.ZL,T.JYJG,T.GHYT,T.GHYT2,T.GHYT3,T.FWLX,
+        T.FWXZ,T.D,T.N,T.X,T.B,T.CQLY,T.FJSM,T.DCYJ,T.DCZ,T.DCSJ,T.FWHX,T.HXJG,T.JCZXCD,T.QLZT,T.HBFX,T.HBHS,
+        T.GYQK,T.SFCSBH,T.FCDAH,T.FW_HST_INDEX,T.BDCZT,T.BZ,T.FWBM,T.BGBH,T.ISFSSS,T.QSRQ,T.SYFTTDMJJS,T.TDSYQLX,
+        T.TDYT,T.YCFWBM,T.ZZRQ,T.YSFWBM,T.QSMYC,T.ZZMYC,l.FWJG)
+    </select>
+
+    <select id="listFwHsByPageOrder" parameterType="map" resultType="cn.gtmap.realestate.common.core.domain.building.FwHsDO">
+        SELECT T.FW_HS_INDEX,T.FW_DCB_INDEX,T.YSDM,T.BDCDYH,T.WLCS,T.DYCS,T.SXH,T.FJH,T.QLID,T.CG,T.DYH,
+        T.CH,T.YCJZMJ,T.YCTNJZMJ,T.YCFTJZMJ,T.YCDXBFJZMJ,T.YCQTJZMJ,T.YCFTXS,T.SCJZMJ,T.SCTNJZMJ,T.SCFTJZMJ,
+        T.SCDXBFJZMJ,T.SCQTJZMJ,T.SCFTXS,T.GYTDMJ,T.FTTDMJ,T.DYTDMJ,T.ZL,T.JYJG,T.GHYT,T.GHYT2,T.GHYT3,T.FWLX,
+        T.FWXZ,T.D,T.N,T.X,T.B,T.CQLY,T.FJSM,T.DCYJ,T.DCZ,T.DCSJ,T.FWHX,T.HXJG,T.JCZXCD,T.QLZT,T.HBFX,T.HBHS,
+        T.GYQK,T.SFCSBH,T.FCDAH,T.FW_HST_INDEX,T.BDCZT,T.BZ,T.FWBM,T.BGBH,T.ISFSSS,T.QSRQ,T.SYFTTDMJJS,T.TDSYQLX,
+        T.TDYT,T.YCFWBM,T.ZZRQ,T.YSFWBM,T.TDDYSFSF  FROM fw_hs T
+        <where>
+            <if test="ycfwbms != null and ycfwbms.size() > 0 ">
+                <foreach collection="ycfwbms" item="item" open="(" separator=" or " close=")">
+                    (T.ycfwbm = #{item} or T.ycfwbm LIKE '%;'||#{item} or T.ycfwbm LIKE #{item}||';%')
+                </foreach>
+            </if>
+            <if test="fwDcbIndex != null and fwDcbIndex != ''">
+                AND t.fw_dcb_index = #{fwDcbIndex}
+            </if>
+            <if test="zl != null and zl != ''">
+                AND t.zl like '%' || #{zl} || '%'
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND t.bdcdyh like '%' || #{bdcdyh} || '%'
+            </if>
+            <if test="fjh != null and fjh != ''">
+                AND t.fjh = #{fjh}
+            </if>
+            <if test="dyh != null and dyh != ''">
+                AND t.dyh like #{dyh} || '%'
+            </if>
+            <if test="fwbm != null and fwbm != ''">
+                AND t.fwbm = #{fwbm}
+            </if>
+            <if test="fcdah != null and fcdah != ''">
+                AND t.fcdah = #{fcdah}
+            </if>
+            <if test="fwlx != null and fwlx != ''">
+                AND t.fwlx = #{fwlx}
+            </if>
+            <if test="ghyt != null and ghyt != ''">
+                AND t.ghyt = #{ghyt}
+            </if>
+            <if test="fwxz != null and fwxz != ''">
+                AND t.fwxz = #{fwxz}
+            </if>
+            <if test="bdczt != null and bdczt != ''">
+                AND nvl(t.bdczt,'1') = #{bdczt}
+            </if>
+            <if test="fwhsIndexList != null and fwhsIndexList.size > 0">
+                AND fw_hs_index in
+                <foreach collection="fwhsIndexList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="bdcdyhList != null and bdcdyhList.size > 0">
+                AND t.bdcdyh in
+                <foreach collection="bdcdyhList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="djhList != null and djhList.size > 0">
+                AND substr(t.BDCDYH,0,19) in
+                <foreach collection="djhList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="listFwHsHbZhsByPageOrder" parameterType="map" resultType="cn.gtmap.realestate.common.core.dto.building.FwHsHbZhsRequestDTO">
+        SELECT* FROM
+        (SELECT FW_HS_INDEX, FW_HS_INDEX AS HSINDEX,DYH,WLCS,FJH,'主户室' AS FJLX,N''
+        AS ZHSFJH FROM FW_HS
+        UNION ALL
+        SELECT Z.FW_HS_INDEX,Z.FW_ZHS_INDEX AS HSINDEX,Z.DYH,Z.WLCS,Z.FJH,'子户室' AS FJLX,
+        H.FJH AS ZHSFJH FROM FW_ZHS Z LEFT JOIN FW_HS H ON Z.FW_HS_INDEX=H.FW_HS_INDEX
+        UNION ALL
+        SELECT FW_HS_INDEX, FW_HS_INDEX AS HSINDEX,DYH,WLCS,FJH,'主户室' AS FJLX,N''
+        AS ZHSFJH FROM FW_YCHS
+        UNION ALL
+        SELECT Z.FW_HS_INDEX,Z.FW_ZHS_INDEX AS HSINDEX,Z.DYH,Z.WLCS,Z.FJH,'子户室' AS FJLX,
+        H.FJH AS ZHSFJH FROM FW_ZHS Z LEFT JOIN FW_YCHS H ON Z.FW_HS_INDEX=H.FW_HS_INDEX
+        )
+        <where>
+            <if test="fwhsIndexList != null and fwhsIndexList.size > 0">
+                AND fw_hs_index in
+                <foreach collection="fwhsIndexList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!-- 批量更新房屋户室 -->
+    <update id="batchUpdateFwhs" parameterType="map">
+        <if test="((fwhsIndexList != null and fwhsIndexList.size > 0)
+        or (fwDcbIndex != null and fwDcbIndex != ''))
+        and statment != null and statment != ''">
+            UPDATE FW_HS SET ${statment}
+            <where>
+                <if test="fwDcbIndex != null and fwDcbIndex != ''">
+                    AND fw_dcb_index = #{fwDcbIndex}
+                </if>
+                <if test="fwhsIndexList != null and fwhsIndexList.size > 0">
+                    AND FW_HS_INDEX IN
+                    <foreach collection="fwhsIndexList" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="updateNullOnly != null">
+                    AND ${updateNullOnly}
+                </if>
+            </where>
+        </if>
+    </update>
+
+    <!-- 批量更新房屋户室 -->
+    <update id="replaceUpdateFwhs" parameterType="map">
+        <if test="(fwhsIndexList != null and fwhsIndexList.size > 0) or (fwDcbIndex != null and fwDcbIndex !='')">
+            UPDATE FW_HS SET ${column} = replace(${column},#{thz},#{mbz})
+            <where>
+                <if test="fwhsIndexList != null and fwhsIndexList.size > 0">
+                    AND FW_HS_INDEX IN
+                    <foreach collection="fwhsIndexList" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="fwDcbIndex != null and fwDcbIndex != ''">
+                    AND FW_DCB_INDEX = #{fwDcbIndex}
+                </if>
+            </where>
+        </if>
+    </update>
+
+    <select id="queryDjdcbFwhsByBdcdyh" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.dto.building.DjdcbFwhsResponseDTO">
+        SELECT H.BDCDYH,
+               H.DYH,
+               H.FJH,
+               H.WLCS,
+               H.DYCS,
+               H.SXH,
+               H.CG,
+               H.SCJZMJ,
+               H.HXJG,
+               H.SCTNJZMJ,
+               H.GHYT,
+               H.SCFTJZMJ,
+               L.LJZH,
+               L.LSZD,
+               L.XMMC,
+               Q.QLRMC
+        FROM FW_HS H
+                 LEFT JOIN FW_LJZ L ON H.FW_DCB_INDEX = L.FW_DCB_INDEX
+                 LEFT JOIN ZD_DJDCB Z ON L.LSZD = Z.DJH
+                 LEFT JOIN ZD_QLR Q ON Z.ZD_DJDCB_INDEX = Q.DJDCB_INDEX
+        WHERE h.bdcdyh = #{bdcdyh}
+    </select>
+
+    <select id="listFwhsByHouseId" resultType="map" parameterType="map">
+        SELECT T.FW_HS_INDEX,T.FW_DCB_INDEX,T.YSDM,T.BDCDYH,T.WLCS,T.DYCS,T.SXH,T.FJH,T.QLID,T.CG,T.DYH,
+        T.CH,T.YCJZMJ,T.YCTNJZMJ,T.YCFTJZMJ,T.YCDXBFJZMJ,T.YCQTJZMJ,T.YCFTXS,T.SCJZMJ,T.SCTNJZMJ,T.SCFTJZMJ,
+        T.SCDXBFJZMJ,T.SCQTJZMJ,T.SCFTXS,T.GYTDMJ,T.FTTDMJ,T.DYTDMJ,T.ZL,T.JYJG,T.GHYT,T.GHYT2,T.GHYT3,T.FWLX,
+        T.FWXZ,T.D,T.N,T.X,T.B,T.CQLY,T.FJSM,T.DCYJ,T.DCZ,T.DCSJ,T.FWHX,T.HXJG,T.JCZXCD,T.QLZT,T.HBFX,T.HBHS,
+        T.GYQK,T.SFCSBH,T.FCDAH,T.FW_HST_INDEX,T.BDCZT,T.BZ,T.FWBM,T.BGBH,T.ISFSSS,T.QSRQ,T.SYFTTDMJJS,T.TDSYQLX,
+        T.TDYT,T.YCFWBM,T.ZZRQ,T.YSFWBM,T.QSMYC,T.ZZMYC,T.FWJG,t.HOUSE_ID FROM fw_hs T
+        <where>
+            <if test="houseid != null and houseid != ''">
+                AND t.HOUSE_ID = #{houseid}
+            </if>
+        </where>
+    </select>
+
+    <select id="listFwhsByZl" resultType="map" parameterType="map">
+        SELECT T.FW_HS_INDEX,T.FW_DCB_INDEX,T.YSDM,T.BDCDYH,T.WLCS,T.DYCS,T.SXH,T.FJH,T.QLID,T.CG,T.DYH,
+        T.CH,T.YCJZMJ,T.YCTNJZMJ,T.YCFTJZMJ,T.YCDXBFJZMJ,T.YCQTJZMJ,T.YCFTXS,T.SCJZMJ,T.SCTNJZMJ,T.SCFTJZMJ,
+        T.SCDXBFJZMJ,T.SCQTJZMJ,T.SCFTXS,T.GYTDMJ,T.FTTDMJ,T.DYTDMJ,T.ZL,T.JYJG,T.GHYT,T.GHYT2,T.GHYT3,T.FWLX,
+        T.FWXZ,T.D,T.N,T.X,T.B,T.CQLY,T.FJSM,T.DCYJ,T.DCZ,T.DCSJ,T.FWHX,T.HXJG,T.JCZXCD,T.QLZT,T.HBFX,T.HBHS,
+        T.GYQK,T.SFCSBH,T.FCDAH,T.FW_HST_INDEX,T.BDCZT,T.BZ,T.FWBM,T.BGBH,T.ISFSSS,T.QSRQ,T.SYFTTDMJJS,T.TDSYQLX,
+        T.TDYT,T.YCFWBM,T.ZZRQ,T.YSFWBM,T.QSMYC,T.ZZMYC,T.FWJG,t.HOUSE_ID FROM fw_hs T
+        <where>
+            <if test="zl != null and zl != ''">
+                AND t.ZL like '%' || #{zl} || '%'
+            </if>
+        </where>
+    </select>
+
+    <select id="queryFwhsLcztByBdcdyh" parameterType="java.util.List" resultType="java.lang.String">
+        SELECT t.bdcdyh FROM fw_hs t
+        <where>
+            t.lczt = '0'
+            AND bdcdyh in
+            <foreach collection="bdcdyhList" item="bdcdyh" index="index"
+                     open="(" close=")" separator=",">
+                #{bdcdyh}
+            </foreach>
+        </where>
+    </select>
+
+    <update id="updateFwhsTddysfxx" parameterType="cn.gtmap.realestate.common.core.qo.building.BdcTddysfxxQO">
+        <if test="(bdcdyhList != null and bdcdyhList.size > 0)">
+            UPDATE fw_hs t
+            <set>
+                t.tddysfsf = #{tddysfsf,jdbcType=VARCHAR},
+                t.tddysfsj = #{tddysfsj,jdbcType=TIMESTAMP},
+                t.tddysfczr = #{tddysfczr,jdbcType=VARCHAR}
+            </set>
+            <where>
+                AND t.bdcdyh IN
+                <foreach collection="bdcdyhList" item="bdcdyh" open="(" close=")" separator=",">
+                    #{bdcdyh}
+                </foreach>
+            </where>
+        </if>
+    </update>
+
+    <select id="listFwhsHouseIdByBdcdyh" parameterType="map" resultType="cn.gtmap.realestate.common.core.dto.building.FwHsHouseIdDTO">
+        SELECT T.FW_HS_INDEX,T.FW_DCB_INDEX,T.YSDM,T.BDCDYH,T.WLCS,T.DYCS,T.SXH,T.FJH,T.QLID,T.CG,T.DYH,
+        T.CH,T.YCJZMJ,T.YCTNJZMJ,T.YCFTJZMJ,T.YCDXBFJZMJ,T.YCQTJZMJ,T.YCFTXS,T.SCJZMJ,T.SCTNJZMJ,T.SCFTJZMJ,
+        T.SCDXBFJZMJ,T.SCQTJZMJ,T.SCFTXS,T.GYTDMJ,T.FTTDMJ,T.DYTDMJ,T.ZL,T.JYJG,T.GHYT,T.GHYT2,T.GHYT3,T.FWLX,
+        T.FWXZ,T.D,T.N,T.X,T.B,T.CQLY,T.FJSM,T.DCYJ,T.DCZ,T.DCSJ,T.FWHX,T.HXJG,T.JCZXCD,T.QLZT,T.HBFX,T.HBHS,
+        T.GYQK,T.SFCSBH,T.FCDAH,T.FW_HST_INDEX,T.BDCZT,T.BZ,T.FWBM,T.BGBH,T.ISFSSS,T.QSRQ,T.SYFTTDMJJS,T.TDSYQLX,
+        T.TDYT,T.YCFWBM,T.ZZRQ,T.YSFWBM,T.QSMYC,T.ZZMYC,T.FWJG,t.HOUSE_ID FROM fw_hs T
+        <where>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND t.BDCDYH = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+</mapper>

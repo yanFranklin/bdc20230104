@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--收件信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.SjptMapper">
+
+    <select id="getQlidByQlr"  resultType="map" parameterType="java.util.Map">
+        SELECT T.QLID FROM ${tableName} T INNER JOIN BDC_QLR T1 ON T.XMID = T1.XMID
+        <where>
+            <if test="qlrmc != null and qlrmc !=''">
+                AND T1.QLRMC = #{qlrmc}
+            </if>
+            <if test="zjh != null and zjh !=''">
+                AND T1.ZJH = #{zjh}
+            </if>
+            <if test="qlrlb != null and qlrlb !=''">
+                AND T1.QLRLB = #{qlrlb}
+            </if>
+            <if test="qlxzAndZdtzm != null and qlxzAndZdtzm.size() > 0">
+                AND (
+                substr(bdcdyh,13,2) IN
+                <foreach collection="qlxzAndZdtzm" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+        </where>
+    </select>
+</mapper>

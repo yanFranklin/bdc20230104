@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>cn.gtmap.realestate</groupId>
+    <artifactId>common-gc-v1</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <start.sec.version>1.2.25</start.sec.version>
+        <security.version>4.2.6.RELEASE</security.version>
+        <workflow.version>1.3.0.78</workflow.version>
+        <uac.version>1.3.22</uac.version>
+        <storage.version>1.3.13</storage.version>
+        <form.version>1.2.13</form.version>
+        <model.version>1.2.1</model.version>
+        <message.version>1.0.8</message.version>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <encoding>UTF-8</encoding>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>central repository</name>
+            <url>http://dev.gtis.com.cn/nexus/content/groups/public/</url>
+            <layout>default</layout>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>cn.gtmap.realestate</groupId>
+            <artifactId>common-base</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <!--引入工作流公共包依赖-->
+        <dependency>
+            <groupId>cn.gtmap.gtc.workflow</groupId>
+            <artifactId>common</artifactId>
+            <version>${workflow.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.alibaba</groupId>
+                    <artifactId>fastjson</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--引入人员权限公共包依赖-->
+        <dependency>
+            <groupId>cn.gtmap.gtc.starter</groupId>
+            <artifactId>gtmap-security-cloud-app-starter</artifactId>
+            <version>${start.sec.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.alibaba</groupId>
+                    <artifactId>fastjson</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.gtmap.gtc.uac</groupId>
+            <artifactId>common</artifactId>
+            <version>${uac.version}</version>
+        </dependency>
+        <!--引入文档中心公共依赖-->
+        <dependency>
+            <groupId>cn.gtmap.gtc.storage</groupId>
+            <artifactId>common</artifactId>
+            <version>${storage.version}</version>
+        </dependency>
+        <!--引入表单公共依赖-->
+        <dependency>
+            <groupId>cn.gtmap.gtc.report</groupId>
+            <artifactId>form-client</artifactId>
+            <version>${form.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.alibaba</groupId>
+                    <artifactId>fastjson</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>cn.gtmap.gtc.report</groupId>
+            <artifactId>utils</artifactId>
+            <version>1.1.0-SNAPSHOT</version>
+        </dependency>
+        <!--引入模型公共依赖-->
+        <dependency>
+            <groupId>cn.gtmap.gtc.report</groupId>
+            <artifactId>model-client</artifactId>
+            <version>${model.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.gtmap.gtc.csc</groupId>
+            <artifactId>message-common</artifactId>
+            <version>${message.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.alibaba</groupId>
+                    <artifactId>fastjson</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${security.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-redis</artifactId>
+            <version>1.8.4.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.gtmap.gtc.csc</groupId>
+            <artifactId>feign-common</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.iflytek.fsp.shield</groupId>
+            <artifactId>api-gw-sdk-java</artifactId>
+            <version>1.8.6</version>
+            <!--            <scope>system</scope>-->
+            <!--            <systemPath>${basedir}/lib/api-gw-sdk-java-V1.8.6.jar</systemPath>-->
+        </dependency>
+
+        <!-- liquibase -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>3.5.3</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+
+        </plugins>
+    </build>
+    <distributionManagement>
+        <repository>
+            <id>realestate-repository</id>
+            <url>http://192.168.0.60:8081/nexus/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
+</project>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <!-- 合肥、房改房接口 -->
+
+    <!-- 房改房推送业务信息询问接口 参数是 {"slbh":"5696","xmid":"12312"} -->
+    <ex:bean id="fgf_tsywxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="房改房推送业务信息询问接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FGF"/>
+            <ex:property name="dsfFlag" value="FGF"/>
+            <ex:property name="url" value="${fgf.tsywxx.url}" />
+        </ex:service-info>
+        <ex:request dozerXml="conf/dozer/hefei/fgf/tsywxx/request/collect.xml">
+            <ex:element name="xmxx" sourceService="querybdcxmbyxmid"
+                        dozerXml="conf/dozer/hefei/fgf/tsywxx/request/xmxx.xml" />
+            <ex:element name="fdcq" sourceService="getFdcqByXmidWithNoQszt"
+                        dozerXml="conf/dozer/hefei/fgf/tsywxx/request/fdcq.xml" />
+            <ex:element name="qlrxx" sourceService="wmcatQlrxx_ywr"
+                        dozerXml="conf/dozer/hefei/fgf/tsywxx/request/qlrxx.xml" />
+            <!-- 查询上一手证书 的附记 和登记时间 -->
+            <ex:element sourceService="fgf_tsywxx_yfdcq"/>
+        </ex:request>
+    </ex:bean>
+
+    <!-- 查询上一手证书 -->
+    <ex:bean id="fgf_tsywxx_yzs">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="commonServiceImpl" />
+            <ex:property name="methodName" value="queryYzsByXmid" />
+            <ex:property name="params" value="xmid" />
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 查询上一手产权 -->
+    <ex:bean id="fgf_tsywxx_yfdcq">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="commonServiceImpl" />
+            <ex:property name="methodName" value="queryYFdcqByXmid" />
+            <ex:property name="params" value="xmid" />
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 房改房查询询问结果接口 参数是 {"slbh":"5696","xmid":"12312"} -->
+    <ex:bean id="fgf_cxxwjg">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="房改房查询询问结果接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FGF"/>
+            <ex:property name="dsfFlag" value="FGF"/>
+            <ex:property name="url" value="${fgf.cxxwjg.url}" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/hefei/fgf/cxxwjg/request/param.xml" />
+        </ex:request>
+    </ex:bean>
+
+    <!-- 提供给 省直房改房 更新项目表是否省直房改房标识 -->
+    <ex:bean id="update_sfszfgf">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="szfgfServiceImpl"/>
+            <ex:property name="methodName" value="updateSfszfgf"/>
+        </ex:service-info>
+        <ex:log dsfFlag="SZFGF" requester="SZFGF"
+                responser="BDC" logEventName="省直房改房更新项目表是否省直房改房标识"/>
+    </ex:bean>
+
+    <!-- 省级干部房改房名单验证 -->
+    <ex:bean id="fgf_mdyz">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="省直房改房名单验证接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FGF"/>
+            <ex:property name="dsfFlag" value="FGF"/>
+            <ex:property name="url" value="${fgf.mdyz.url}"/>
+        </ex:service-info>
+    </ex:bean>
+    <!-- 省级干部房改房数据推送 -->
+    <ex:bean id="fgf_sjts">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="省直房改房数据推送接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FGF"/>
+            <ex:property name="dsfFlag" value="FGF"/>
+            <ex:property name="url" value="${fgf.sjts.url}"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <ex:bean id="fgf_cqxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="szfgfServiceImpl"/>
+            <ex:property name="methodName" value="queryCqxx"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/hefei/fgf/cqxx/response/data.xml"
+                        saveNull="java.util.ArrayList"/>
+        </ex:response>
+    </ex:bean>
+
+</beans>

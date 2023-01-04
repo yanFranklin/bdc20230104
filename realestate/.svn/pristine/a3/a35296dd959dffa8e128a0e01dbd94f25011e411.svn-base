@@ -1,0 +1,358 @@
+﻿national-access-sftp:           # 国家 sftp 上报
+  nationalQuartz: false
+  ip: #'114.115.167.164'       # sftp 主机 ip
+  port: '22'                  # sftp 主机 端口
+  username: 'root'            # sftp 主机用户名
+  password: '123456'   # sftp 主机密码
+  connenttimes: 3             # 尝试连接次数
+  path: '/home/xml'           # 上传路径
+  respath: '/home/xml'        # 获取响应报文路径
+  xsdpath: 'D:\bs5\bdcdj_exchange\egov-home\bdc\conf\exchange\xsd'   # 本地 xsd 校验文件路径
+  reEditFileEnable: false     # 是否开启编辑文件（防止文件未传完被读）
+  # 上报后获取响应报文的重试次数 默认0 -1为不获取
+  downResponseRetryTimes: -1
+
+province-access-ftp:              # 省级 ftp 上报
+  nationalQuartz: true
+  version: hefei
+  #ip: '11.48.6.4'              # ftp 主机 ip
+  ip: '192.168.10.84'
+  port: '21'                    # ftp 主机 端口
+  username: 'gt'
+  password: 'gtis'
+  #username: '340000'     # ftp 主机用户名
+  #password: '123456'         # ftp 主机密码
+  path: ''                  # 上传路径
+  respath: ''          # 获取响应报文路径
+#  xsdpath: 'D:\xsd'     # 本地 xsd 校验文件路径
+  #isConvert: true       #字典转换
+  # 上报后获取响应报文的重试次数 默认0 -1为不获取
+  downResponseRetryTimes: 0
+
+city-access-ftp:              # 市级 ftp 上报
+  nationalQuartz: true
+  version: hefei
+  #ip: '11.48.6.4'              # ftp 主机 ip
+  ip: '192.168.2.125'
+  port: '22'                    # ftp 主机 端口
+  username: 'root'
+  password: 'abc123!@#'
+  #username: '340000'     # ftp 主机用户名
+  #password: '123456'         # ftp 主机密码
+  path: ''                  # 上传路径
+  respath: ''          # 获取响应报文路径
+  xsdpath: 'D:\xsd'     # 本地 xsd 校验文件路径
+  #isConvert: true       #字典转换
+  # 上报后获取响应报文的重试次数 默认0 -1为不获取
+  downResponseRetryTimes: 0
+
+# 登簿日志上报配置
+accessLog:
+  sqqxdmList: 340100,340111,340104
+  zszmh-default: /   #默认值设置
+  turn-on-areacode: true   #是否开启多区县登簿上报
+  turn-on-bizbs: true  #是否开启补报标识
+  turn-on-yzx: false   #是否开启一致性上报
+  areacode-qxdm: { '340101': '340101-1','340102': '320102-1' }   #区县代码对应areacode
+  turn-on-cheating: false   #是否开启作弊模式
+  turn-on-details: true     #是否开启登簿日志详情
+  nationalEnble: false                    #判断是否开启国家上报日志
+  provinceEnble: true                     #判断是否开启省级上报日志
+  nationalUrl:                            #上报国家地址
+  provinceUrl: http://192.168.2.104:8088/realestate-supervise-server/services/jrrzsb?wsdl         #省级上报登簿日志地址(url)
+  conditionTime:                          #配置日志接入查询登簿量是以项目办结时间还是登簿时间(bjsj/dbsj),不配置或配空默认为dbsj
+  provinceType: jiangsu                     #根据各地区配置相应的名字 ex:standard,anhui(目前只包含这几种，只能从以上中选择一个配置)
+  nationalType: standard                  #根据各地区配置相应的名字 ex:standard(目前只包含这几种，只能从以上中选择一个配置)
+  quartztime: 0 30 21 * * ? *              # 0 0 22 * * ? *   每晚9点
+  xmlPath:
+  zszmhfgf: ;    #证书证明好分割符
+  replacezf: 、  #拼接所用字符
+  turn-on-replacezf: false  #是否开启拼接所用字符
+
+provinceAccessSftp:             # 省级 sftp 上报
+  ip: '114.115.167.164'         # sftp 主机 ip
+  port: '22'                    # sftp 主机 端口
+  username: 'root'              # sftp 主机用户名
+  password: '123456a?'     # sftp 主机密码
+  connenttimes: 3               # 尝试连接次数
+  path: '/gtmap_client/client_source'             # 上传路径
+  respath: '/home/xml'          # 获取响应报文路径
+  xsdpath: '/usr/bwsb/xsd'     # 本地 xsd 校验文件路径
+  reEditFileEnable: false       # 是否开启编辑文件（防止文件未传完被读）
+
+#nationalAccessFtp:              # 国家 ftp 上报
+#  ip: '10.1.1.153'              # ftp 主机 ip
+#  port: '21'                    # ftp 主机 端口
+#  username: 'Administrator'     # ftp 主机用户名
+#  password: 'Qweasd123'         # ftp 主机密码
+#  path: ''                      # 上传路径
+#  respath: '/home/xml'          # 获取响应报文路径
+#  xsdpath: 'D:\谷歌下载\xsd'     # 本地 xsd 校验文件路径
+
+#外市县上报 ETL 的区县代码与对应的区划名称
+wsx.access.qxdm: 340121,340122,340123,340124,340181
+wsx.access.qxmc: 长丰区,肥东区,肥西区,庐江区,巢湖区
+
+#合肥上报区县代码
+hefei.access.qxdm: 340102,340103,340104,340111
+hefei.access.qxmc: 瑶海区,庐阳区,蜀山区,包河区
+
+
+#定时任务获取响应数据配置
+#第一种模式：每次触发定时任务 获取3天内，根据上报日期升序排序 的 前2千条
+#定时表达式
+accessResponse.sjjr.cron: 0 0 9,11,13,15,17,19,21,23 * * ?
+#开关
+accessResponse.sjjr.switch: false
+# 省级上报方式及开关配置
+provinceAccess:
+  type: ftp
+  switch: true
+# 国家上报方式及开关配置
+nationalAccess:
+  type: sftp
+  switch: false
+cityAccess:
+  type: ftp
+  switch: false
+
+
+
+
+access:
+  newbizbs: true
+  sbxz:
+    cron: 0 0 23 * * ?
+  dyaGzldyidArr: smMwR2SaARTp8MYm      #抵押业务工作流定义id
+  outTimeGzldyidArr: aHjazkjriDsreaRt    #上报超1个工作日不上报配置工作流定义id
+  newAccess: true      #是否启用新上报方式
+  newDefault: true    #新版上报是否开启新版默认值 新默认值为/ 旧版为不传
+  version: standard   #上报版本（默认standard）
+  response:
+    enable: false   #是否启动定时获取响应报文：true /false  默认false #第二种模式：每次触发查询所有未获取响应的报文 执行获取响应报文请求
+    quartztime: 0 50 10 * * ? *     #定时获取响应报文的时间： 默认 0 0 20 * * ? *
+  xnbdcdyh: false   #虚拟BDCDYH的项目是否上报 默认为 false
+  filter:
+    xzqdm: 340101   #上报需要过滤的XZQDM
+  pldy:
+    single: false   #上报批量抵押流程只上报一条 (true/false)
+    dealYwh: true   #判断是否在上报批量抵押业务时  处理业务号为SLBH,默认不处理
+    dealDyje: false   #判断是否在上报批量抵押业务时  处理抵押金额(true/false),默认不处理
+  check:
+    sbfwq-status: true    #是否开启每天检测ftp状态
+    quartztime: 0 0 8 * * ?   #默认每天八点检测服务器状态
+    gzyzCode: 1,2,3
+  jrdbldb:
+    cron: 0 0 8 * * ?  #接入登簿量比较
+  error:
+    dh: 17612160501
+    checkstatus-msgtype: sbfwqcheck
+  slsjfromdy: true  # 受理时间是否读取大云平台
+lastday:
+  dbsfsb:
+    cron: 0 0 8 * * ? #前一天登簿日志是否上报
+
+
+#上报查询权籍数据开关
+switch.datasource.flag: true
+
+#工作日超时天数配置，配置为double类型
+outWorkDay: 1.0
+#抵押上报不超过几个月配置，为整数型
+dyaMonth: 6
+
+#南通市财政局非税收入系统支付服务配置
+#nantong:
+#  ntfssr:
+#    qxdm: '045022' # 获取token参数中的qxdm
+#    secret: 688407410A7259D92A75316F8F8321759F89158ECCA927A1608135019EB757CB # 秘钥
+#    #测试环境URL
+#    baseurl: http://101.201.50.247:8400/payment/
+#    #正式环境URL
+#    baseurl: http://app.js.abchina.com/jiangsu/nantong/payment/
+#    creater: 04502201 # 创建者编码
+
+#配置一张网是否办结才需要推送证照信息(true:是)
+yzw.bjtszzxx.enable: false
+#配置一张网是否办结才需要推送物流信息信息(true:是)
+yzw.bjtswlxx.enable: false
+#配置推送一张网结果证照表是否需要推送XML证照封装信息(true:是)
+yzw.jgzzXml.enable: true
+#配置推送一张网结果证照表是否需要推送json证照照面信息(true:是)
+yzw.jgzzJson.enable: true
+#配置是否需要上传证照文件
+yzw.zzFile.enable: true
+#配置证照文件所存文件夹名称
+yzw.zzFile.folderName: 不动产电子证照
+#按行政区代码分库推送一张网数据
+infApply.area.enble: false
+#是否推数据到一张网里
+shareData.yzw.enable: true
+# 证书类型 与 证照实施清单主键对应关系
+yzw.ssqd.uuid: "{1: '2396EB4489134A828E9E5A9EF8176C70',2: '778CBCFD0602481997832DDAE2D449A5'}"
+# 一张网推送ETL地址
+etl.url: http://192.168.10.82:8800/realestate-etl
+#一张网组织机构配置
+yzw:
+  org:
+    340101:
+      id: 10101
+      name: 要素大市场
+    340104:
+      id: 10102
+      name: 包河登记中心
+
+# 一张网定时任务配置
+#定时检查中间库开关
+yzw.checkQlyg.switch:
+#定时检查中间库时间： 默认 0 0 23 * * ?
+yzw.checkQlyg.cron: 0 0 23 * * ?
+#定时检查中间库验证规则代码,多个用英文逗号隔开,3(超期未办结规则),4(退件未推送)
+yzw.checkQlyg.yzlxList: 3,4
+##一张网验证超期未办结验证预留天数
+yzw.cqwbjyz: 5
+##一张网推送验证规则代码,多个用英文逗号隔开
+yzw.tsCheck.yzlxList: 1,2,3,4,5,6
+#一张网台账问题数据处理默认办结人
+yzw.tz.bjr:
+#一张网证件种类为身份证对应的代码值
+yzw.sfzzjzl: 0
+#一张网证件种类代码集合,多个用英文逗号隔开
+yzw.zjzlList: 0,1,2,3,4,5,6,7,8,9,10
+
+yzw.version: yancheng
+
+
+#判断判断是否需要共享Sync表(true/false),默认不处理
+share.db.sync: false
+#判断是否需要验证同名权利人证件号为空或不规则的情况,不配置默认为验证(true)
+zzcxj.valid.qlrzjh: false
+#自助查询机有房无房接口: 权利人名称和证件号必填验证（true 两个参数都要；fasle，允许只根据权利人证件号查询） ，默认false
+zzcxj.valid.qlrmczjhbt: true
+#自助查询机有房无房接口: 产权限制状态展示，默认只展示查封/抵押两种，预告/预抵押/异议/锁定 需要此处配置
+zzcxj.xzzt.xzlx: yg,ydya,yy,sd
+#是否需要将权利人名称作为查询条件
+zzcxj.qlrmc: true
+# 房产是否需要区分区县代码（数据权限控制）
+zzcxj.fcqfqxdm: true
+# 权属是否需要区分区县代码（数据权限控制）
+zzcxj.qsqfqxdm: true
+
+
+#自动转发节点名称
+wwsq.zdzf.jdmc: 审核登簿
+#裁定过户流程判断
+wwsq.cdgh.gzldyid:
+#银行系统通知受理状态地址
+yhxt.updateslzt.url:
+
+# 是否开启监听外网申请FTP压缩文件进行创件功能
+wwsqftp.enable: false
+# 定时监听FTP文件目录下是否有新增的申请文件，默认一分钟监听一次
+wwsqftp.cron: 0 */50 * * * ?
+# 外网申请FTP压缩文件存放服务器 IP username password port
+wwsqftp.ip: 192.168.2.86
+wwsqftp.username: FtpAdmin
+wwsqftp.password: Gtmap123
+wwsqftp.port: 21
+# 外网申请FTP压缩文件在FTP服务器存放路径
+wwsqftp.ftpFilePath: test
+# 登记处理完成后FTP文件移动到已完成目录路径
+wwsqftp.hasResolvedFtpFilePath: old
+# 登记创件完成返回信息文件在FTP服务器存放路径
+wwsqftp.responseFilePath: response
+# 登记文件操作缓存目录（可以配置和打印一个路径）
+wwsqftp.dengji.filepath: D:\\var
+# 文件编码方式，默认GBK
+wwsqftp.encoding: GBK
+
+#税务访问文件中心地址
+sw:
+  fj:
+    ip_port: http://192.168.2.87:8030
+
+dbxx.jdmc: 登簿
+
+
+
+# 南通抵押创建接口和抵押注销创建流程接口中附件支持ftp文件的传输 IP username password port
+dycj.wwsqftp.ip: 192.168.2.86
+dycj.wwsqftp.username: FtpAdmin
+dycj.wwsqftp.password: Gtmap123
+dycj.wwsqftp.port: 21
+
+# 盐城市本级精准查询配置 （需求52436）
+ycsscx:
+  # 接口标识，为了和省厅接口区分
+  jkbs: ycsj,sw,ga,mz
+  # openid验证地址
+  checkopenid:
+    url: http://127.0.0.1:8000/1122
+
+#长三角和省级电子证照信息查询地址
+csj:
+  getcertdata:
+    url: ntcert/getCertData
+    #长三角和省级电子证照信息超时时长配置（单位为毫秒）
+    soTimeout: 3000
+  #苏服码接口地址
+  getsfmdata:
+    url: ntcert/getSFMData
+    soTimeout: 3000
+
+# 查询权利人产权信息
+cxqlrcqxx:
+  # 区县代码集合
+  qxdmjh:
+  # 查询的权利类型集合
+  qllxjh: 3,4,5,6,7,8,96
+qxdm:
+  convert: true
+
+ykq.token.username: dj3
+ykq.token.password: 123456
+ykq.token.url: http://192.168.50.34:8080/estateplat-ykq/rest/v1.0/interface/token
+# 指定税务的接口厂商
+ykq.sw.csdm: nk
+# 调用税务接口的方式， 默认：nk（直接调用南开）; ykq(调用一卡清进行中转)
+sw.interface.type: ykq
+ykq.payorder.jffs: 5
+ykq.sfcj: JSYH
+## 生成订单V3
+ykq.scdd.v3.url: http://192.168.50.34:8080/estateplat-ykq/rest/v3.0/interface/scdd
+## 查询缴费状态
+ykq.cxddxx.v2.url: http://192.168.50.34:8080/estateplat-ykq/rest/v2.0/interface/cxsfzt
+## 4.2.6.1.【A001】增量房核税A001  beanName: ykq_sw_zlfrwts
+ykq.sw.zlfrwts.url: http://192.168.50.34:8080/estateplat-ykq/rest/v2.0/swfw/hs/zlf
+## 4.2.6.2.【A002】存量房核税A002 beanName: ykq_sw_clfrwts
+ykq.sw.clfrwTs.url: http://192.168.50.34:8080/estateplat-ykq/rest/v2.0/swfw/hs/clf
+## 4.2.6.3.【A003】任务状态接收A003 beanName: ykq_sw_rwzt
+ykq.sw.rwzt.url: http://192.168.50.34:8080/estateplat-ykq/rest/v2.0/swfw/rwzt
+## 4.2.6.4.【A004】增量房计税信息获取A004 beanName: ykq_sw_zlfskxxhq
+ykq.sw.zlfskxxhq.url: http://192.168.50.34:8080/estateplat-ykq/rest/v2.0/swfw/zlfskxxhq
+## 4.2.6.5.【A005】存量房计税信息获取A005 beanName: ykq_sw_clfskxxhq
+ykq.sw.clfskxxhq.url: http://192.168.50.34:8080/estateplat-ykq/rest/v2.0/swfw/clfskxxhq
+## 4.2.6.6.【A006】影像资料信息接收A006 beanName: ykq_sw_yxzlxxjs
+ykq.sw.yxzlxxjs.url: http://192.168.50.34:8080/estateplat-ykq/rest/v2.0/swfw/yxzljs
+## 4.2.6.9.【A009】获取完税信息A009 beanName: ykq_sw_qswsxxhq
+ykq.sw.qswsxxhq.url: http://192.168.50.34:8080/estateplat-ykq/rest/v2.0/swfw/hqwsxx
+## 4.2.6.12.【A014】获取申报信息A014 beanName: ykq_sw_fcjysbxx
+ykq.sw.fcjysbxx.url: http://192.168.50.34:8080/estateplat-ykq/rest/v2.0/swfw/hqsbxx
+## 4.2.6.13.【A015】确认申报信息A015 beanName: ykq_sw_fcjysbxxqr
+ykq.sw.fcjysbxxqr.url: http://192.168.50.34:8080/estateplat-ykq/rest/v2.0/swfw/qrsbxx
+## 4.2.6.14.【A017】获取待缴款信息A017 beanName: ykq_sw_queryFcjyyjkList
+ykq.sw.queryFcjyyjkList.url: http://192.168.50.34:8080/estateplat-ykq/rest/v2.0/swfw/hqdjkqd
+## 4.2.6.15.【A018】房产交易缴款二维码获取A018 beanName: ykq_sw_getFcjyewmJkxx
+ykq.sw.getFcjyewmJkxx.url: http://192.168.50.34:8080/estateplat-ykq/rest/v2.0/swfw/getfcjyewmjkxx
+## 4.2.6.16.【A019】缴款结果查询 A019 beanName: ykq_sw_queryewmjkxx
+ykq.sw.queryewmjkxx.url: http://192.168.50.34:8080/estateplat-ykq/rest/v2.0/swfw/jkjgcx
+## 4.2.6.17.【A020】契税完税凭证获取 A020 beanName: ykq_sw_qswspzhq
+ykq.sw.qswspzHq.url: http://192.168.50.34:8080/estateplat-ykq/rest/v2.0/swfw/hqqswspz
+## 4.2.6.18.【A021】契税联系单获取A021 beanName: ykq_sw_qslxdhq
+ykq.sw.qslxdHq.url: http://192.168.50.34:8080/estateplat-ykq/rest/v2.0/swfw/hqqslxd
+## 4.2.6.19.【A022】税费同缴缴款信息获取A022 beanName: ykq_sw_fcjydjkxxhq
+ykq.sw.fcjydjkxxHq.url: http://192.168.50.34:8080/estateplat-ykq/rest/v2.0/swfw/hqsftjjkxx
+##  4.2.4.1.	获取电子发票明细  ykq_dzfpmx
+ykq.dzfpmx.url: http://192.168.50.34:8080/estateplat-ykq/rest/v1.0/interface/dzfpmx
+##  4.2.6.10.	申报状态信息  ykq_sw_sbztcx
+ykq.sw.sbztcx.url: http://192.168.50.34:8080/estateplat-ykq/rest/v1.0/interface/dzfpmx

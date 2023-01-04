@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.certificate.core.mapper.BdcDzzzMlxxMapper">
+
+    <insert id="insertBdcDzzzMlxx" parameterType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzMlxxDO">
+        INSERT INTO bdc_dzzz_mlxx t (mlid, zzid, zzmc, zzlxdm, zzbh, zzbs, zzbfjg, zzbfjgdm, zzbfrq, czzt, czztdm, czztdmlx,
+        czztdmlxdm, zzyxqqsrq, zzyxqjzrq, zzqzr, zzqzsj, zzqzmc, cjsj, dwdm, bdcqzh, bdcdyh, zzwjlj, gdzt, zstype)
+        VALUES (#{mlid,jdbcType=VARCHAR},#{zzid,jdbcType=VARCHAR},#{zzmc,jdbcType=VARCHAR},#{zzlxdm,jdbcType=VARCHAR},#{zzbh,jdbcType=VARCHAR}
+        ,#{zzbs,jdbcType=VARCHAR},#{zzbfjg,jdbcType=VARCHAR},#{zzbfjgdm,jdbcType=VARCHAR},#{zzbfrq,jdbcType=TIMESTAMP},#{czzt,jdbcType=VARCHAR}
+        ,#{czztdm,jdbcType=VARCHAR},#{czztdmlx,jdbcType=VARCHAR},#{czztdmlxdm,jdbcType=VARCHAR},#{zzyxqqsrq,jdbcType=TIMESTAMP},#{zzyxqjzrq,jdbcType=TIMESTAMP}
+        ,#{zzqzr,jdbcType=VARCHAR},#{zzqzsj,jdbcType=TIMESTAMP},#{zzqzmc,jdbcType=VARCHAR},#{cjsj,jdbcType=TIMESTAMP},#{dwdm,jdbcType=VARCHAR}
+        ,#{bdcqzh,jdbcType=VARCHAR},#{bdcdyh,jdbcType=VARCHAR},#{zzwjlj,jdbcType=VARCHAR},#{gdzt,jdbcType=INTEGER},#{zstype,jdbcType=INTEGER})
+    </insert>
+
+    <select id="queryBdcDzzzMlxxByMap" parameterType="java.util.Map" resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzMlxxDO">
+        SELECT t.mlid, t.zzid, t.zzmc, t.zzlxdm, t.zzbh, t.zzbs, t.zzbfjg, t.zzbfjgdm, t.zzbfrq, t.czzt, t.czztdm, t.czztdmlx,
+        t.czztdmlxdm, t.zzyxqqsrq, t.zzyxqjzrq, t.zzqzr, t.zzqzsj, t.zzqzmc, t.cjsj, t.dwdm, t.bdcqzh, t.bdcdyh, t.zzwjlj, t.gdzt, t.zstype
+        FROM bdc_dzzz_mlxx t
+        <where>
+            <if test="dwdm != null and dwdm !=''">
+                AND t.dwdm =#{dwdm}
+            </if>
+            <if test="gdzt != null and gdzt !=''">
+                AND t.gdzt =#{gdzt}
+            </if>
+            <if test="czzt != null and czzt !=''">
+                AND t.czzt LIKE '%' || #{czzt} || '%'
+            </if>
+            <if test="czztdm != null and czztdm !=''">
+                AND t.czztdm =#{czztdm}
+            </if>
+            <if test="czztdmlx != null and czztdmlx !=''">
+                AND t.czztdmlx =#{czztdmlx}
+            </if>
+            <if test="czztdmlxdm != null and czztdmlxdm !=''">
+                AND t.czztdmlxdm =#{czztdmlxdm}
+            </if>
+            <if test="zzlxdm != null and zzlxdm != ''">
+                AND t.zzlxdm =#{zzlxdm}
+            </if>
+            <if test="zzbh != null and zzbh != ''">
+                AND t.zzbh LIKE '%' || #{zzbh} || '%'
+            </if>
+            <if test="zzbs != null and zzbs != ''">
+                AND t.zzbs =#{zzbs}
+            </if>
+            <if test="cjsjqssj != null">
+                <![CDATA[   AND t.cjsj >= #{cjsjqssj,jdbcType=TIMESTAMP} ]]>
+            </if>
+            <if test="cjsjjssj != null">
+                <![CDATA[   AND t.cjsj <= #{cjsjjssj,jdbcType=TIMESTAMP} ]]>
+            </if>
+            <if test="zzid != null and zzid !=''">
+                AND t.zzid =#{zzid}
+            </if>
+            <if test="zzbs != null and zzbs !=''">
+                AND t.zzbs =#{zzbs}
+            </if>
+        </where>
+        <if test="sort != null and sort != ''">
+            ORDER BY #{sort}
+        </if>
+    </select>
+
+    <select id="countBdcDzzzMlxx" parameterType="java.util.Map"
+            resultType="java.util.Map">
+        SELECT
+        COUNT(*) total_count,
+        SUM(CASE WHEN t.zstype='不动产权' THEN 1 ELSE 0 END) AS zs_count,
+        SUM(CASE WHEN t.zstype='不动产证明' THEN 1 ELSE 0 END) AS zms_count,
+        SUM(CASE WHEN t.zstype='首次登记证' THEN 1 ELSE 0 END) AS scdjz_count
+        FROM bdc_dzzz_mlxx t
+        <where>
+            <if test="cjsjqssj != null">
+                <![CDATA[   AND t.cjsj >= #{cjsjqssj,jdbcType=TIMESTAMP} ]]>
+            </if>
+            <if test="cjsjjssj != null">
+                <![CDATA[   AND t.cjsj <= #{cjsjjssj,jdbcType=TIMESTAMP} ]]>
+            </if>
+        </where>
+    </select>
+
+    <select id="countMlxxQuantitativeDistribution" parameterType="java.util.Map"
+            resultType="java.util.Map">
+        SELECT
+        c.szsdwdm,c.szsmc mc,
+        SUM(a.total_count) total_count,SUM(a.zs_count) zs_count,SUM(a.zms_count) zms_count,SUM(a.scdjz_count) scdjz_count FROM
+        (SELECT
+        dwdm,
+        COUNT(*) total_count,
+        SUM(CASE WHEN t.zstype='不动产权' THEN 1 ELSE 0 END) AS zs_count,
+        SUM(CASE WHEN t.zstype='不动产证明' THEN 1 ELSE 0 END) AS zms_count,
+        SUM(CASE WHEN t.zstype='首次登记证' THEN 1 ELSE 0 END) AS scdjz_count
+        FROM bdc_dzzz_mlxx t
+         GROUP BY dwdm
+        ) a
+        LEFT JOIN bdc_dzzz_config c ON a.dwdm = c.dwdm  GROUP BY c.szsmc,c.szsdwdm ORDER BY c.szsdwdm
+    </select>
+
+    <delete id="deleteBdcDzzzMlxxByZzid" parameterType="String">
+        DELETE BDC_DZZZ_MLXX WHERE zzid = #{zzid}
+    </delete>
+
+    <select id="queryBdcDzzzMlxxByZzid" parameterType="String" resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzMlxxDO">
+        SELECT t.mlid, t.zzid, t.zzmc, t.zzlxdm, t.zzbh, t.zzbs, t.zzbfjg, t.zzbfjgdm, t.zzbfrq, t.czzt, t.czztdm, t.czztdmlx,
+        t.czztdmlxdm, t.zzyxqqsrq, t.zzyxqjzrq, t.zzqzr, t.zzqzsj, t.zzqzmc, t.cjsj, t.dwdm, t.bdcqzh, t.bdcdyh, t.zzwjlj, t.gdzt, t.zstype
+        FROM bdc_dzzz_mlxx t WHERE t.zzid = #{zzid}
+    </select>
+
+    <select id="queryBdcDzzzMlxxByMlid" parameterType="String" resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzMlxxDO">
+        SELECT t.mlid, t.zzid, t.zzmc, t.zzlxdm, t.zzbh, t.zzbs, t.zzbfjg, t.zzbfjgdm, t.zzbfrq, t.czzt, t.czztdm, t.czztdmlx,
+        t.czztdmlxdm, t.zzyxqqsrq, t.zzyxqjzrq, t.zzqzr, t.zzqzsj, t.zzqzmc, t.cjsj, t.dwdm, t.bdcqzh, t.bdcdyh, t.zzwjlj, t.gdzt, t.zstype
+        FROM bdc_dzzz_mlxx t WHERE t.mlid = #{mlid}
+    </select>
+
+</mapper>

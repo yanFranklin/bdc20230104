@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--层信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.KttFwCMapper">
+
+    <select id="queryKttFwCList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.domain.exchange.KttFwCDO">
+        SELECT DISTINCT nvl(c.ch,c.wlcs) ch, d.zrzh,c.wlcs as sjc,c.dycs as myc,0.001 cjzmj,
+        0.001 cgyjzmj,0.01 cg,0.001 sptymj,
+        SUBSTR(a.BDCDYH,0,6) qxdm ,to_char(C.BDCDYH) bdcdyh, D.LJZH LJZBH ,D.LJZH, k.bsm zrzbsm
+        FROM
+        bdc_xm a
+        <if test="isYc == null or isYc ==''">
+            LEFT JOIN (SELECT t.bdcdyh,t.fw_dcb_index,t.ch,t.wlcs,t.dycs,t.cg
+            FROM djsj_fwhs t WHERE t.bdcdyh IS NOT NULL
+            UNION All
+            SELECT t1.bdcdyh,t1.fw_dcb_index,null ch,t1.wlcs,t1.dycs,t1.cg
+            FROM djsj_fwychs t1
+            WHERE t1.bdcdyh IS NOT NULL AND t1.bdcdyh NOT IN (SELECT bdcdyh FROM djsj_fwhs WHERE bdcdyh IS NOT NULL)
+            ) c ON c.bdcdyh = a.bdcdyh
+            LEFT JOIN djsj_fw_ljz d ON c.fw_dcb_index=d.fw_dcb_index
+            left join djsj_fw_k k on k.lszd = d.LSZD and k.zrzh = d.ZRZH
+        </if>
+        <if test="isYc != null and isYc !=''">
+            LEFT JOIN djsj_fwychs c ON c.bdcdyh = a.bdcdyh
+            LEFT JOIN djsj_fw_ljz d on c.fw_dcb_index=d.fw_dcb_index
+            left join djsj_fw_k k on k.lszd = d.LSZD and k.zrzh = d.ZRZH
+        </if>
+        <where>
+            d.lszd IS NOT NULL AND d.zrzh IS NOT NULL AND c.wlcs IS NOT NULL
+            <if test="ywh != null and ywh !=''">
+                AND a.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND a.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+        union all
+        <!--项目内多幢层信息-->
+        SELECT DISTINCT nvl(hs.ch,hs.wlcs) ch, e.zrzh,hs.wlcs as sjc,hs.dycs as myc,0.001 cjzmj,
+        0.001 cgyjzmj,0.01 cg,0.001 sptymj,
+        SUBSTR(a.BDCDYH,0,6) qxdm ,C.BDCDYH, e.LJZH LJZBH ,e.LJZH, k.bsm zrzbsm
+        FROM
+        bdc_xm a
+        LEFT JOIN bdc_fdcq c ON c.xmid = a.xmid
+        inner JOIN bdc_fdcq_fdcqxm dz ON dz.qlid = c.qlid
+        LEFT JOIN djsj_fw_xmxx d ON c.bdcdyh=d.bdcdyh
+        LEFT JOIN djsj_fw_ljz e on e.fw_xmxx_index=d.fw_xmxx_index
+        left join djsj_fwhs hs on hs.fw_dcb_index = e.fw_dcb_index
+        left join djsj_fw_k k on k.lszd = e.LSZD and k.zrzh = e.ZRZH
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND a.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND a.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+</mapper>

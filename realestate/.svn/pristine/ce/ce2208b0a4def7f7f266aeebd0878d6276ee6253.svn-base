@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+   <!--8.1 获取用户token -->
+    <ex:bean id="sjpt_token_req">
+        <ex:request>
+            <!-- beanName 为 sjpt_token-->
+            <ex:element dozerXml="conf/dozer/sjpt/token/request/tokenBeanName.xml" />
+            <ex:element name="requestObject" dozerXml="conf/dozer/sjpt/token/request/tokenRequestObject.xml" />
+        </ex:request>
+        <ex:response extendRequestBody="true">
+            <ex:element sourceService="getToken" />
+        </ex:response>
+    </ex:bean>
+
+    <!-- getToken公共函数 处理获取省级平台token请求服务-->
+    <ex:bean id="sjpt_token">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="url" value="${sjpt.token.url}" />
+            <ex:property name="logEventName" value="省级平台查询TOKEN"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SJPT"/>
+            <ex:property name="dsfFlag" value="SJPT"/>
+            <ex:property name="contentType" value="application/x-www-form-urlencoded" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="gxData" dozerXml="conf/dozer/sjpt/token/request/httpTokenParam.xml" />
+        </ex:request>
+        <ex:response resultKey="token">
+            <ex:element  dozerXml="conf/dozer/sjpt/token/response/httpTokenResponse.xml" />
+        </ex:response>
+    </ex:bean>
+
+</beans>

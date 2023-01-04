@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://dozer.sourceforge.net"
+          xsi:schemaLocation="http://dozer.sourceforge.net
+          http://dozer.sourceforge.net/schema/beanmapping.xsd">
+    <!--    电过户请求参数对照-->
+    <mapping map-null="true" map-empty-string="true" wildcard="false" type="one-way">
+        <class-a>cn.gtmap.realestate.common.core.dto.exchange.sdqgh.dian.sqgh.request.SdqGhRequestDTO</class-a>
+        <class-b>com.alibaba.fastjson.JSONObject</class-b>
+        <field>
+            <a>consno</a>
+            <b>electricFeeNum</b>
+        </field>
+        <field>
+            <a>ywrmc</a>
+            <b>originalUserName</b>
+        </field>
+        <field>
+            <a>ywrzjh</a>
+            <b>originalUserCard</b>
+        </field>
+        <field>
+            <a>ywrdh</a>
+            <b>oldMobile</b>
+        </field>
+        <field>
+            <a>qlrmc</a>
+            <b>newUserName</b>
+        </field>
+        <field>
+            <a>qlrzjh</a>
+            <b>newOriginalUserCard</b>
+        </field>
+        <field>
+            <a>qlrdh</a>
+            <b>newMobile</b>
+        </field>
+<!--        截取bdcdyh的前19位-->
+        <field custom-converter="cn.gtmap.realestate.common.core.dozer.converters.gtmap.SubStringCustomConverter"
+               custom-converter-param="0,19">
+            <a>bdcdyh</a>
+            <b>qxno</b>
+        </field>
+        <field>
+            <a>bdcdyh</a>
+            <b>bdcno</b>
+        </field>
+        <field>
+            <a>zl</a>
+            <b>address</b>
+        </field>
+        <field>
+            <a>slbh</a>
+            <b>contractId</b>
+        </field>
+        <field>
+            <a>dwdm</a>
+            <b>org_no</b>
+        </field>
+        <field map-id="fj_data">
+            <a>data</a>
+            <b>data</b>
+<!--            必填，List转JsonArray-->
+            <b-deep-index-hint>com.alibaba.fastjson.JSONArray</b-deep-index-hint>
+        </field>
+    </mapping>
+
+    <mapping map-id="fj_data"  type="one-way" wildcard="false">
+        <class-a>cn.gtmap.realestate.common.core.dto.exchange.sdqgh.dian.sqgh.request.SdqGhFileDTO</class-a>
+        <class-b>com.alibaba.fastjson.JSONObject</class-b>
+        <field>
+            <a>fileName</a>
+            <b>fileName</b>
+        </field>
+        <field>
+            <a>fileData</a>
+            <b>fileData</b>
+        </field>
+    </mapping>
+
+</mappings>

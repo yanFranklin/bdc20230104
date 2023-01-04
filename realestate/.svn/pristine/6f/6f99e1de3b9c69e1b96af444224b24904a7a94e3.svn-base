@@ -1,0 +1,41 @@
+info:
+  name: ${spring.application.name}
+  component: Etl Application
+
+app:
+#  center: http://192.168.0.43:8000/eureka/
+#  oauth: http://192.168.0.43:8002/account
+  #center: http://127.0.0.1:8000/eureka/
+  #oauth: http://127.0.0.1:8002/account
+  center: http://192.168.64.15:8000/eureka/
+  oauth: http://192.168.64.15:8030/account
+  security:
+    moduleAuthPath: http://account/account
+    ignores: /index/**,/realestate-etl/rest/v1.0/**,/image/**,/css/**,/js/**,/webjars/**
+    authorities:
+      permitAll: /**
+      hasUrlAuthority('read'): /auth/users,/auth/orgs
+      hasModuleAuthority('yhgl:add'): /auth/user/create
+      hasAnyAuthority('ROLE_USER'): /resource1/**,/catalog1/**,/index
+      hasAnyAuthority('ROLE_ADMIN_2'): /call
+      authenticated : true
+    resources:
+      hasScope('get_portal_info'): /realestate-etl/res/**
+
+spring:
+  rabbitmq:
+    username: guest
+    password: guest
+    addresses: 192.168.64.18:5672, 192.168.64.19:5672
+  redis:
+    cluster:
+      nodes: 192.168.64.18:7000,192.168.64.18:7001,192.168.64.18:7002,192.168.64.19:7003,192.168.64.19:7004,192.168.64.19:7005
+  datasource:
+      url: jdbc:oracle:thin:@200.1.1.191:1521/orcl
+      username: jk_fd
+      password: jk_fd
+  messages:
+        basename: conf/message/messages
+
+server:
+  port: ${port:8800}

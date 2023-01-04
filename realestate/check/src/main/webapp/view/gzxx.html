@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>规则展现</title>
+    <link href="../static/lib/layui/css/layui.css" media="all" rel="stylesheet">
+    <link href="../static/lib/bdcui/css/table.css" media="all" rel="stylesheet">
+    <link href="../static/lib/bdcui/css/popup.css" media="all" rel="stylesheet">
+    <link href="../static/lib/bdcui/css/mask.css" media="all" rel="stylesheet">
+    <!--下拉框需要-->
+    <link rel="stylesheet" href="../static/lib/form-select/formSelects-v4.css">
+    <link href="../static/lib/bdcui/css/search.css" media="all" rel="stylesheet">
+    <link href="../static/lib/registerui/css/percentage-layout.css" media="all" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/gzxx.css">
+</head>
+<body>
+    <div class="bdc-percentage-container bdc-line-search-container">
+        <!--查询条件-->
+        <div class="bdc-search-content">
+            <div class="bdc-search-box">
+                <form class="layui-form" >
+                    <div class="layui-form-item pf-form-item">
+                        <div class="layui-inline">
+                            <label id="gzcodeLabel"  class="layui-form-label">规则code</label>
+                            <div id="gzcodeDiv"  class="layui-input-inline">
+                                <input type="text" autocomplete="off" placeholder="请输入" id="code" class="layui-input">
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            </div>
+                        </div>
+                        <div class="layui-inline xzq-sele">
+                            <label id="tsxxLabel"  class="layui-form-label">提示信息</label>
+                            <div id="tsxxDiv"  class="layui-input-inline">
+                                <input type="text" autocomplete="off" placeholder="请输入" id="tsxxSearch" class="layui-input">
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            </div>
+                        </div>
+                        <div class="layui-inline xzq-sele">
+                            <label id="sfhlLabel"  class="layui-form-label">是否忽略</label>
+                            <div id="sfhlDiv"  class="layui-input-inline">
+                                <select name="sfhl" id="sfhlSearch">
+                                    <option value="" selected></option>
+                                    <option value="0">不忽略</option>
+                                    <option value="1">忽略</option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline bdc-button-box">
+                            <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                            <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn">重置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!--表格-->
+        <div class="bdc-table-box">
+            <table id="pageTable" lay-filter="test"></table>
+        </div>
+    </div>
+
+    <!--查看解决方案及原因页面-->
+    <div id="bdcJjfaLayer" class="bdc-hide">
+        <div class="bdc-table-box">
+            <table id="jjfaTable" lay-filter="jjfaFilter"></table>
+        </div>
+    </div>
+</body>
+<!--表格上面功能按钮-->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <a href="javascript:;" class="layui-btn layui-btn-sm bdc-major-btn" lay-event="add">新增</a>
+        <a href="javascript:;" class="layui-btn layui-btn-sm bdc-delete-btn" lay-event="delete">删除</a>
+        <a href="javascript:;" class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="update" >修改</a>
+        <a href="javascript:;" class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="ignore">忽略</a>
+        <a href="javascript:;" class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="select">选择</a>
+    </div>
+</script>
+<script type="text/html" id="barDemo">
+    <a href="javascript:;" class="bdc-show-btn" lay-event="show"><i class="layui-icon layui-icon-down"></i></a>
+    <a href="javascript:;" class="bdc-show-btn bdc-hide" lay-event="hide"><i class="layui-icon layui-icon-up"></i></a>
+</script>
+
+<!--规则等级-->
+<script type="text/html" id="gzdjTpl">
+    {{# if(d.GZDJ == 1){  }}
+    <span class="bdc-red"> 致命 </span>
+    {{# }else if(d.GZDJ == 2){ }}
+    <span class="bdc-orange"> 严重 </span>
+    {{# }else if(d.GZDJ == 3){ }}
+    <span class="bdc-blue"> 一般 </span>
+    {{# }else if(d.GZDJ == 4){ }}
+    <span class="bdc-gray"> 建议 </span>
+    {{# } }}
+</script>
+
+<!--规则类型-->
+<script type="text/html" id="gzlxTpl">
+    {{# if(d.GZLX == 1){  }}
+    　SQL
+    {{# }else if(d.GZLX == 2){ }}
+     服务
+    {{# } }}
+</script>
+
+<!--包含流程-->
+<script type="text/html" id="bhlcTpl">
+    {{#  if(d.BHLC){ }}
+    {{  getLcmc(d.BHLC) }}
+    {{#  } }}
+</script>
+
+<!--去除流程-->
+<script type="text/html" id="qclcTpl">
+    {{#  if(d.QCLC){ }}
+    {{  getLcmc(d.QCLC) }}
+    {{#  } }}
+</script>
+
+<!--新增配置-->
+<div id="bdc-popup-large" class="bdc-hide bdc-big-layer-css">
+    <form class="layui-form" action="#"  id="gzForm" lay-filter="xzpzFilter">
+        <div class="layui-form-item pf-form-item">
+            <input name="gzid"  id="gzid" type="text" autocomplete="off" placeholder="请输入" class="layui-input bdc-hide">
+            <div class="layui-inline">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>规则code</label>
+                <div class="layui-input-inline">
+                    <input name="gzcode" id="gzcode" type="text" autocomplete="off" placeholder="请输入" class="layui-input" lay-verify="required">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>规则分组</label>
+                <div class="layui-input-inline bdc-radio">
+                    <select name="gzfz" id="gzfz">
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>规则类型</label>
+                <div class="layui-input-inline bdc-radio">
+                    <select name="gzlx" id="gzlx">
+                        <option value="1" selected>SQL</option>
+                        <option value="2">服务</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">包含流程</label>
+                <div class="layui-input-inline">
+                    <select name="bhlc" id="bhlc" xm-select="bhlcSelect" xm-select-skin="default" xm-select-show-count="2" xm-select-height="34px" xm-select-search="" xm-select-search-type="dl">
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">去除流程</label>
+                <div class="layui-input-inline">
+                    <select name="qclc" id="qclc" xm-select="qclcSelect" xm-select-skin="default" xm-select-show-count="2" xm-select-height="34px" xm-select-search="" xm-select-search-type="dl">
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>规则等级</label>
+                <div class="layui-input-inline bdc-radio">
+                    <select name="gzdj" id="gzdj">
+                        <option value="1" selected>致命</option>
+                        <option value="2">严重</option>
+                        <option value="3">一般</option>
+                        <option value="4">建议</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline bdc-complete-line">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>规则描述</label>
+                <div class="layui-input-inline">
+                    <textarea name="gzms" id="gzms" placeholder="请输入" class="layui-textarea" lay-verify="required"></textarea>
+                </div>
+            </div>
+            <div class="layui-inline bdc-complete-line">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>提示信息</label>
+                <div class="layui-input-inline">
+                    <textarea name="tsxx" id="tsxx" placeholder="请输入" class="layui-textarea" lay-verify="required"></textarea>
+                </div>
+            </div>
+            <div class="bdc-pz-btns">
+                <div class="bdc-left-btn">
+                    <a href="javascript:;" id="knyyLink">可能原因及解决方案</a>
+                </div>
+                <a href="javascript:;" class="layui-btn bdc-major-btn"  lay-submit="" id="savePz">保存</a>
+                <a href="javascript:;" class="layui-btn bdc-secondary-btn" id="cancelPz">取消</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--解决方案-->
+<div id="bdc-popup-jjfa" class="bdc-hide bdc-big-layer-css">
+    <form class="layui-form" action="#"  id="jjfaForm" lay-filter="jjfaFilter">
+        <div class="layui-form-item pf-form-item">
+            <input name="id"  id="id" type="text" autocomplete="off" placeholder="请输入" class="layui-input bdc-hide">
+            <div class="layui-inline bdc-complete-line">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>可能原因</label>
+                <div class="layui-input-inline">
+                    <textarea name="knyy" id="knyy"  class="layui-textarea" ></textarea>
+                </div>
+            </div>
+            <div class="layui-inline bdc-complete-line">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>解决方案</label>
+                <div class="layui-input-inline">
+                    <textarea name="jjfa" id="jjfa"  class="layui-textarea" ></textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--看解决方案及原因表格上面功能按钮-->
+<script type="text/html" id="toolbarJjfa">
+    <div class="layui-btn-container">
+        <a href="javascript:;" class="layui-btn layui-btn-sm bdc-major-btn" lay-event="add">新增</a>
+        <a href="javascript:;" class="layui-btn layui-btn-sm bdc-major-btn" lay-event="update">修改</a>
+        <a href="javascript:;" class="layui-btn layui-btn-sm bdc-major-btn" lay-event="delete">删除</a>
+    </div>
+</script>
+<script src="../static/lib/jquery/jquery.min.js"></script>
+<script src="../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../static/lib/bdcui/js/common.js"></script>
+<script src="../static/js/common.js"></script>
+<script src="../static/js/formCenter.js"></script>
+<script src="../static/js/gzxx.js"></script>
+</html>

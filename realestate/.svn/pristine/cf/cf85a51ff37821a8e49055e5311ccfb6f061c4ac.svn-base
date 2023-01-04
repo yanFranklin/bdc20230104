@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>登记簿页面</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/common.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css">
+    <link rel="stylesheet" href="../../static/css/djbxx/bdcDjbCbjyq.css"/>
+</head>
+<body>
+<div class="bdc-form-div building-notitle">
+    <!--全局 标题和操作按钮 开始-->
+    <!--全局 标题和操作按钮 结束-->
+    <div id="djdcbContent" class="layui-tab fixed-content" lay-filter="tabFilter">
+        <ul class="layui-tab-title" id="liTable">
+            <li class="layui-this">登记簿封面</li>
+            <li>登记簿首页</li>
+            <li class="bdc-first-click dkxx">地块信息</li>
+            <li class="bdc-first-click htft">附图</li>
+        </ul>
+
+        <div class="layui-tab-content" id="tab-content">
+        </div>
+    </div>
+</div>
+<div class="bdc-hide" id="layer-ft" style="width: 100%;height: 100%;text-align: center">
+</div>
+<script type="text/html" id="djcCbjyqTpl">
+    {{# var cbjyq = d.cbjyq}}
+    <!-- 登记簿封面 -->
+    <div class="layui-tab-item layui-show">
+        <!-- 页数 -->
+        <div class="bdc-tab-btn">第1页/共4页</div>
+        <div class="form-margin-area content-div">
+            <div id="djbfmContent">
+                <div class="bdc-content-box">
+                    <form class="layui-form setOverflow" action="" lay-filter="djbxx">
+                        <div class="content-main">
+                            <!-- 页数 -->
+<!--                            <div class="content-target-tip bdc-tab-btn">第1页/共4页</div>-->
+                            <div class="table-name">
+                                <p id="sqs">{{d.bdcdjb.sqs}}{{d.bdcdjb.sq}}</p>
+                                <p>土地承包经营权登记簿</p>
+                            </div>
+                            <div class="table-name-second" >
+                                <p>（家庭承包方式）</p>
+                            </div>
+                            <div class="bdc-table-box">
+                                <table class="layui-table second-table" border="1">
+                                    <colgroup>
+                                        <col width="200" span="2">
+                                    </colgroup>
+                                    <tbody>
+                                    <tr class="td-noborder">
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr class="td-noborder">
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr class="td-noborder">
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr class="td-noborder">
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr class="td-noborder">
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr class="td-noborder">
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                                <div class="table-name-third">
+                                    <p>承包方：{{cbjyq.qlr || ''}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 登记簿首页 -->
+    <div class="layui-tab-item">
+        <!-- 页数 -->
+        <div class="bdc-tab-btn">第2页/共4页</div>
+        <div class="form-margin-area content-div">
+            <div id="syContent">
+                <div class="bdc-content-box">
+                    <form class="layui-form setOverflow" action="" lay-filter="form">
+                        <!--主体开始部分-->
+                        <div class="content-main common-form">
+                            <!-- 页数 -->
+<!--                            <div class="content-target-tip">第2页/共4页</div>-->
+                            <div class="table-name" style="">{{d.bdcdjb.sqs}}{{d.bdcdjb.sq}}土地承包经营权登记簿</div>
+                            <table class="layui-table new-table" border="1">
+                                <colgroup>
+                                    <col width="200">
+                                    <col width="100">
+                                    <col width="120">
+                                    <col width="200">
+                                    <col width="100">
+                                    <col width="120">
+                                </colgroup>
+                                <tbody>
+
+                                <tr class="td-noborder">
+                                    <td colspan="3" class="">
+
+                                    <td colspan="3" style="text-align: right">
+                                        单位：（亩、块）
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="set-back-color">承包方代表</td>
+                                    <td colspan="5"><input type="text" class="layui-table-edit" readonly value="{{cbjyq.qlr || ''}}"></td>
+                                </tr>
+                                <tr>
+                                    <td class="set-back-color">身份证号码</td>
+                                    <td colspan="5"><input type="text" class="layui-table-edit" readonly value="{{cbjyq.qlrzjh || ''}}"></td>
+                                </tr>
+                                <tr>
+                                    <td class="set-back-color">承包方住址</td>
+                                    <td colspan="5"><input type="text" class="layui-table-edit" readonly  value="{{cbjyq.cbftxdz || ''}}"></td>
+                                </tr>
+                                <tr>
+                                    <td class="set-back-color">承包方联系方式</td>
+                                    <td colspan="5"><input type="text" class="layui-table-edit" readonly  value="{{cbjyq.cbflxdh || ''}}"></td>
+                                </tr>
+                                <tr>
+                                    <td class="set-back-color" colspan="6">承包方家庭成员情况</td>
+                                </tr>
+                                <tr>
+                                    <td class="set-back-color">姓名</td>
+                                    <td class="set-back-color">性别</td>
+                                    <td class="set-back-color">与承包方代表关系</td>
+                                    <td class="set-back-color">身份证号码</td>
+                                    <td class="set-back-color">是否共有人</td>
+                                    <td class="set-back-color">备注</td>
+                                </tr>
+                                {{# layui.each(cbjyq.jtcyDOList, function(i, item){ }}
+                                <tr>
+                                    <td><input type="text" class="layui-table-edit" readonly value="{{item.jtcymc || ''}}"></td>
+                                    <td><input type="text" class="layui-table-edit" readonly value="{{item.xb || ''}}"></td>
+                                    <td><input type="text" class="layui-table-edit" readonly value="{{item.yhzgx || ''}}"></td>
+                                    <td><input type="text" class="layui-table-edit" readonly value="{{item.jtcyzjh || ''}}"></td>
+                                    <td><input type="text" class="layui-table-edit" readonly value="是"></td>
+                                    <td><input type="text" class="layui-table-edit" readonly value="{{item.bz || ''}}"></td>
+                                </tr>
+                                {{# }); }}
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 地块信息 -->
+    <div class="layui-tab-item">
+        <!-- 页数 -->
+        <div class="bdc-tab-btn">第3页/共4页</div>
+        <div class="form-margin-area">
+            <div id="dkfbContent">
+                <div id="cbdklList" class="basic-info" style="padding: 10px;">
+<!--                    <div class="change-ys-right">第3页/共4页</div>-->
+                    <div class="bdc-table-box">
+                        <table id="dkxxTable" class="layui-table" lay-filter="dkxxTable">
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 附图 -->
+    <div class="layui-tab-item">
+        <!-- 页数 -->
+        <div class="bdc-tab-btn">第4页/共4页</div>
+        <div class="form-margin-area">
+            <div id="htftContent">
+                <div class="basic-info" style="padding: 10px;">
+<!--                    <div class="change-ys-right">第4页/共4页</div>-->
+                    <div class="bdc-table-box">
+                        <table id="htftTable" class="layui-table" lay-filter="htftTable">
+                            <thead>
+                            <tr class="gray-tr">
+                                <th width="50px">序号</th>
+                                <th>合同编号</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {{# if(!cbjyq.htdkList ||cbjyq.htdkList.length==0) { }}
+                            <tr class="bdc-table-none">
+                                <td colspan="2">
+                                    <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据</div>
+                                </td>
+                            </tr>
+                            {{# } else { }}
+                            {{# layui.each(cbjyq.htdkList, function(i, item){ }}
+                            {{# if(item.htbh && item.htbh.length>0){ }}
+                            <tr>
+                                <td>{{i+1}}</td>
+                                <td><a href="javascript:;" class="bdc-ft-btn">{{item.htbh || ''}}</a></td>
+                            </tr>
+                            {{# } }}
+                            {{# }); }}
+                            {{# } }}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container bdc-export-tools">
+    </div>
+</script>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/bdcui/js/form-tab.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/table.js"></script>
+<script src="../../static/js/djbxx/bdcDjbCbjyq.js"></script>
+</body>
+</html>

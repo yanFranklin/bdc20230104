@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.config.core.mapper.BdcXtZsmbPzMapper">
+
+    <!-- 校验SQL（需要注意SQL注入问题，在逻辑层校验） -->
+    <select id="checkSql" parameterType="java.lang.String" resultType="java.util.Map">
+        ${mbsql}
+    </select>
+
+    <!--分页查询证书模板配置-->
+    <select id="listBdcXtZsmbPzByPageOrder" parameterType="cn.gtmap.realestate.common.core.qo.config.BdcXtZsmbPzQO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcXtZsmbPzDO">
+        SELECT
+        ZSMBID,
+        QLLX,
+        MBSQL,
+        PZRQ
+        FROM
+        BDC_XT_ZSMB_PZ T
+        <where>
+            <if test="qllx != null and qllx != ''">
+                AND T.QLLX = #{qllx}
+            </if>
+            <if test="slbh != null and slbh != ''">
+                AND t.qllx in(select qllx from bdc_xm where slbh=#{slbh})
+            </if>
+        </where>
+
+        ORDER BY
+        <if test="field != null and field != '' and order != null and order != ''">
+            <if test="field == 'qllx'.toString()">
+                T.QLLX
+            </if>
+            <if test="field == 'qllxmc'.toString()">
+                T.QLLX
+            </if>
+            <if test="field == 'pzrq'.toString()">
+                T.PZRQ
+            </if>
+
+            <if test="order == 'desc'.toString()">
+                DESC NULLS LAST,
+            </if>
+            <if test="order == 'asc'.toString()">
+                ASC ,
+            </if>
+        </if>
+
+        T.QLLX ASC
+    </select>
+    <select id="queryXtZsmbPzByQllx" parameterType="Integer"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcXtZsmbPzDO">
+        SELECT ZSMBID,
+        QLLX,
+        MBSQL,
+        PZRQ
+        FROM BDC_XT_ZSMB_PZ t
+        <where>
+            <if test="qllx != null and qllx != ''">
+                AND T.QLLX = #{qllx}
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

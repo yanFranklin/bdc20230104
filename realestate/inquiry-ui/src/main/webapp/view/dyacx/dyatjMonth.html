@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>抵押统计月报查询</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css">
+    <!--formSelects-v4.css 和 search.css 顺序不能错-->
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/css/dyacx/dyacxList.css">
+</head>
+
+<body>
+<div class="bdc-percentage-container bdc-line-search-container">
+    <!--查询条件-->
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">部门名称</label>
+                    <div class="layui-input-inline">
+                        <!--
+                        <select class="bdc-dyatj bdc-bmmc" name="bmmc" xm-select="selectBmmc" xm-select-radio xm-select-height="34px">
+                        </select>
+                        -->
+                        <select xm-select="selectBmmc" lay-verify="required" name="bmmc" id="bmmc" xm-select-skin="default" xm-select-show-count="2" xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">开始时间</label>
+                    <div class="layui-input-inline">
+                        <input id="kssj" autocomplete="off" class="layui-input test-item bdc-dyatj" type="text"
+                               name="kssj" placeholder="请选择"/>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">截止时间</label>
+                    <div class="layui-input-inline">
+                        <input id="jzsj" autocomplete="off" class="layui-input test-item bdc-dyatj" type="text"
+                               name="jzsj" placeholder="请选择"/>
+                    </div>
+                </div>
+                <div class="layui-inline bdc-button-box">
+                    <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                    <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn">重置</button>
+                    <!--<a href="javascript:;" class="layui-btn layui-btn-normal bdc-secondary-btn" id="seniorSearch">高级查询</a>-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--表格-->
+            <form class="layui-form" action="" lay-filter="form">
+                <div class="content-main">
+                        <!-- 查询结果表单 -->
+                        <div class="bdc-table-box">
+                            <table class="layui-table" border="1">
+                                <tbody>
+                                <div class="change-inline">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label set-right">填报单位：</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" class="layui-input"  name="dwmc">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label set-right">负责人：</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" class="layui-input" name="fzr">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label set-right">填报人：</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" class="layui-input" name="tbr">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label set-right">填报日期：</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" class="layui-input" name="tbrq">
+                                        </div>
+                                    </div>
+                                </div>
+
+<!--                                <tr>-->
+<!--                                    <td colspan="1" class="set-back-color set-right">填报单位：</td>-->
+<!--                                    <td colspan="2">-->
+<!--                                        <input type="text" class="layui-table-edit" name="dwmc">-->
+<!--                                    </td>-->
+<!--                                    <td colspan="1" class="set-back-color set-right">负责人：</td>-->
+<!--                                    <td colspan="1">-->
+<!--                                        <input type="text" class="layui-table-edit" name="fzr">-->
+<!--                                    </td>-->
+<!--                                    <td colspan="1" class="set-back-color set-right">填报人：</td>-->
+<!--                                    <td colspan="1">-->
+<!--                                        <input type="text" class="layui-table-edit" name="tbr">-->
+<!--                                    </td>-->
+<!--                                    <td colspan="1" class="set-back-color set-right">填报日期：</td>-->
+<!--                                    <td colspan="2">-->
+<!--                                        <input type="text" class="layui-table-edit" name="tbrq">-->
+<!--                                    </td>-->
+<!--                                </tr>-->
+
+                                <tr>
+                                    <td colspan="1" class="set-back-color set-left">
+                                        <button type="button" class="layui-btn layui-btn-sm bdc-major-btn" id="printBtn" onclick=""
+                                        >打印
+                                        </button>
+
+                                    </td>
+                                    <td colspan="9" class="set-back-color set-right change-border">单位：本（份）、公顷、万元</td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="3" colspan="1" class="set-back-color">(市区)名</td>
+                                    <td colspan="9" class="set-back-color">抵押权登记</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="set-back-color">本月</td>
+                                    <td colspan="3" class="set-back-color">本年</td>
+                                    <td colspan="3" class="set-back-color">处于抵押状态</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1" class="set-back-color">份数</td>
+                                    <td colspan="1" class="set-back-color">面积</td>
+                                    <td colspan="1" class="set-back-color">抵押金额</td>
+                                    <td colspan="1" class="set-back-color">份数</td>
+                                    <td colspan="1" class="set-back-color">面积</td>
+                                    <td colspan="1" class="set-back-color">抵押金额</td>
+                                    <td colspan="1" class="set-back-color">份数</td>
+                                    <td colspan="1" class="set-back-color">面积</td>
+                                    <td colspan="1" class="set-back-color">抵押金额</td>
+                                </tr>
+                                </tbody>
+                                <tbody id="dataTitle">
+                                <!--模板数据信息-->
+                                <!--
+                                <tr>
+                                    <td colspan="1">
+                                        <div class="bdc-td-box">
+                                            <input type="text" class="layui-table-edit" name="" id="">
+                                        </div>
+                                    </td>
+                                    <td colspan="1">
+                                        <div class="bdc-td-box">
+                                            <input type="text" class="layui-table-edit" name="" id="">
+                                        </div>
+                                    </td>
+                                    <td colspan="1">
+                                        <div class="bdc-td-box">
+                                            <input type="text" class="layui-table-edit" name="" id="">
+                                        </div>
+                                    </td>
+                                    <td colspan="1">
+                                        <div class="bdc-td-box">
+                                            <input type="text" class="layui-table-edit" name="" id="">
+                                        </div>
+                                    </td>
+                                    <td colspan="1">
+                                        <div class="bdc-td-box">
+                                            <input type="text" class="layui-table-edit" name="" id="">
+                                        </div>
+                                    </td>
+                                    <td colspan="1">
+                                        <div class="bdc-td-box">
+                                            <input type="text" class="layui-table-edit" name="" id="">
+                                        </div>
+                                    </td>
+                                    <td colspan="1">
+                                        <div class="bdc-td-box">
+                                            <input type="text" class="layui-table-edit" name="" id="">
+                                        </div>
+                                    </td>
+                                    <td colspan="1">
+                                        <div class="bdc-td-box">
+                                            <input type="text" class="layui-table-edit" name="" id="">
+                                        </div>
+                                    </td>
+                                    <td colspan="1">
+                                        <div class="bdc-td-box">
+                                            <input type="text" class="layui-table-edit" name="" id="">
+                                        </div>
+                                    </td>
+                                    <td colspan="1">
+                                        <div class="bdc-td-box">
+                                            <input type="text" class="layui-table-edit" name="" id="">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1" class="set-back-color">合计</td>
+                                    <td colspan="1">
+                                        <div class="bdc-td-box">
+                                            <input type="text" class="layui-table-edit" name="" id="">
+                                        </div>
+                                    </td>
+                                    <td colspan="1">
+                                        <div class="bdc-td-box">
+                                            <input type="text" class="layui-table-edit" name="" id="">
+                                        </div>
+                                    </td>
+                                    <td colspan="1">
+                                        <div class="bdc-td-box">
+                                            <input type="text" class="layui-table-edit" name="" id="">
+                                        </div>
+                                    </td>
+                                    <td colspan="1">
+                                        <div class="bdc-td-box">
+                                            <input type="text" class="layui-table-edit" name="" id="">
+                                        </div>
+                                    </td>
+                                    <td colspan="1">
+                                        <div class="bdc-td-box">
+                                            <input type="text" class="layui-table-edit" name="" id="">
+                                        </div>
+                                    </td>
+                                    <td colspan="1">
+                                        <div class="bdc-td-box">
+                                            <input type="text" class="layui-table-edit" name="" id="">
+                                        </div>
+                                    </td>
+                                    <td colspan="1">
+                                        <div class="bdc-td-box">
+                                            <input type="text" class="layui-table-edit" name="" id="">
+                                        </div>
+                                    </td>
+                                    <td colspan="1">
+                                        <div class="bdc-td-box">
+                                            <input type="text" class="layui-table-edit" name="" id="">
+                                        </div>
+                                    </td>
+                                    <td colspan="1">
+                                        <div class="bdc-td-box">
+                                            <input type="text" class="layui-table-edit" name="" id="">
+                                        </div>
+                                    </td>
+                                </tr>
+                                -->
+                                </tbody>
+                            </table>
+                            <div class="gnature">
+                                   <label class="layui-form-label">备注：</label>
+                                   <div class="layui-input-inline">
+                                       <p>1、不动产登记证书已发证数为不动产登记机构“新开旧停”以来已发证总数；</p>
+                                       <p>2、抵押权登记包括个人和单位抵押登记数据（个人抵押登记数据暂无法统计的可以先不统计）；</p>
+                                       <p>3、处于抵押状态数据为不动产登记机构“新开旧停”以来数据总量；  </p>
+                                       <p>4、面积单位统一换算为公顷，金额单位统一换算为万元；</p>
+                                       <p>5、改表格请各市于每月7号之前上报。</p>
+                                   </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+</div>
+<script type="text/html" id="dytjxx">
+    {{# layui.each(d, function(index, item){ }}
+    <tr>
+        {{# if(item.bmmc=='合计'){ }}
+        <td colspan="1" class="set-back-color">合计</td>
+        {{# }else{}}
+        <td colspan="1">
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" name=""
+                       title="{{item.bmmc||''}}" value="{{item.bmmc||''}}" disabled="off">
+            </div>
+        </td>
+        {{# }}}
+        <td colspan="1">
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" name=""
+                       title="{{item.monthSum||''}}" value="{{item.monthSum||''}}" disabled="off">
+            </div>
+        </td>
+        <td colspan="1">
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" name=""
+                       title="{{item.monthDyaMjSum||''}}" value="{{item.monthDyaMjSum||''}}" disabled="off">
+            </div>
+        </td>
+        <td colspan="1">
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" name=""
+                       title="{{item.monthDyaJeSum||''}}" value="{{item.monthDyaJeSum||''}}" disabled="off">
+            </div>
+        </td>
+        <td colspan="1">
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" name=""
+                       title="{{item.yearSum||''}}" value="{{item.yearSum||''}}" disabled="off">
+            </div>
+        </td>
+        <td colspan="1">
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" name=""
+                       title="{{item.yearDyaMjSum||''}}" value="{{item.yearDyaMjSum||''}}" disabled="off">
+            </div>
+        </td>
+        <td colspan="1">
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" name=""
+                       title="{{item.yearDyaJeSum||''}}" value="{{item.yearDyaJeSum||''}}" disabled="off">
+            </div>
+        </td>
+        <td colspan="1">
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" name=""
+                       title="{{item.validSum||''}}" value="{{item.validSum||''}}" disabled="off">
+            </div>
+        </td>
+        <td colspan="1">
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" name=""
+                       title="{{item.validDyaMjSum||''}}" value="{{item.validDyaMjSum||''}}" disabled="off">
+            </div>
+        </td>
+        <td colspan="1">
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" name=""
+                       title="{{item.validDyaJeSum||''}}" value="{{item.validDyaJeSum||''}}" disabled="off">
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+</script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/dyaCx/dyatjCommon.js"></script>
+<script src="../../static/js/dyaCx/dyatjMonth.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+</body>
+
+</html>

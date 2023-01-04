@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <ex:bean id="yzt_fj">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="YZT"/>
+            <ex:property name="dsfFlag" value="YZT"/>
+            <ex:property name="url" value="${yzt.fj.url}"/>
+        </ex:service-info>
+        <ex:log dsfFlag="YZT" logEventName="查询合同附件" requester="BDC" responser="YZT"/>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/yzt/fj/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/yzt/fj/response/data.xml"/>
+        </ex:response>
+    </ex:bean>
+    <ex:bean id="yzt_fj_by_specialparam">
+        <ex:service-info request-type="httpGet">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="YZT"/>
+            <ex:property name="dsfFlag" value="YZT"/>
+            <ex:property name="url" value="${yzt.fj.by.special.param.url}"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element sourceService="dealWithFjxxResponseStr2List"/>
+        </ex:response>
+        <ex:log dsfFlag="YZT" logEventName="查询供地合同附件" requester="BDC" responser="YZT"/>
+    </ex:bean>
+    <ex:bean id="dealWithFjxxResponseStr2List">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="gdServiceImpl"/>
+            <ex:property name="methodName" value="dealWithFjxxResponseStr2List"/>
+        </ex:service-info>
+    </ex:bean>
+    <ex:bean id="yzt_cx_gdspxx">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="YZT"/>
+            <ex:property name="dsfFlag" value="YZT"/>
+            <ex:property name="url" value="${yzt.cxgdspxx.url}"/>
+        </ex:service-info>
+        <ex:log dsfFlag="YZT" logEventName="查询供地审批信息" requester="BDC" responser="YZT"/>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/yzt/cxgdspxx/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/yzt/cxgdspxx/response/data.xml"/>
+        </ex:response>
+    </ex:bean>
+</beans>

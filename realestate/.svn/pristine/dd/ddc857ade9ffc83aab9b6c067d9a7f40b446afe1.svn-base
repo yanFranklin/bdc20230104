@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <title>新增业务数据</title>
+    <meta name="renderer" content="webkit">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <!--下拉框需要-->
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/common.css"/>
+    <link rel="stylesheet" href="../../static/css/slymForm.css"/>
+    <link rel="stylesheet" href="../../static/css/qlr.css"/>
+    <style type="text/css">
+        /*用于调整下拉列表高度*/
+        .select-height .layui-form-select dl {
+            max-height: 210px;
+        }
+
+    </style>
+</head>
+<body>
+<div lay-filter="qlrxx" id="bdc-popup-large"></div>
+</body>
+<script type="text/html" id="addQlrTmpl">
+    {{# if(d.ywsj){ }}
+    {{# var ywsj = d.ywsj }}
+    <form class="layui-form bdc-not-full-bg" id="addYwsjForm" lay-filter="addYwsjForm">
+        <input type="hidden" name="xmid" class ="ywsj" value="{{ywsj.xmid || ''}}"/>
+        <div class="layui-form-item pf-form-item" >
+            <div class="layui-inline"  style="display: none">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>序号</label>
+                <div class="layui-input-inline bdc-one-icon">
+                    <input type="number" class="layui-input ywsj" name="xh" id="xh" value="{{ywsj.xh || ''}}"
+                           disabled="off">
+                </div>
+            </div>
+            <div class="layui-inline"  style="display: none">
+                <label class="layui-form-label">权利人</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input ywsj" name="qlr" id="qlr" value="{{ywsj.qlr || ''}}"
+                           title="{{''}}">
+                </div>
+            </div>
+            <div class="layui-inline"  style="display: none">
+                <label class="layui-form-label">区县代码</label>
+                <div class="layui-input-inline">
+                    <select name="qxdm" id="qxdm" lay-search="" lay-filter="" class="ywsj">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.qx, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(ywsj.qxdm ==item.DM ){ }} selected="selected" {{# } }} >
+                            {{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline"  style="display: none">
+                <label class="layui-form-label">权利类型</label>
+                <div class="layui-input-inline">
+                    <select name="qllx" id="qllx" lay-search="" lay-filter="qllx" class="ywsj">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.qllx, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(ywsj.qllx ==item.DM ){ }} selected="selected" {{# } }} >
+                            {{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-inline"  style="display: none">
+                <label class="layui-form-label">用途</label>
+                <div class="layui-input-inline">
+                    <select name="dzwyt" id="dzwyt" lay-search="" lay-filter="dzwyt" class="ywsj">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.fwyt, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(ywsj.dzwyt ==item.DM ){ }} selected="selected" {{# } }}>
+                            {{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-inline"  style="display: none">
+                <label class="layui-form-label">面积</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input ywsj" name="zdzhmj" id="zdzhmj" value="{{ywsj.zdzhmj || ''}}"
+                           title="{{ywsj.zdzhmj || ''}}">
+                </div>
+            </div>
+
+            <div class="layui-inline  bdc-complete-line"  style="display: none">
+                <label class="layui-form-label">坐落</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input ywsj" name="zl" id="zl" value="{{ywsj.zl || ''}}"
+                           title="{{''}}">
+                </div>
+            </div>
+
+            <div class="layui-inline  bdc-complete-line"  style="display: none">
+                <label class="layui-form-label">不动产单元号</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input ywsj" name="bdcdyh" id="bdcdyh" value="{{ywsj.bdcdyh || ''}}"
+                           title="{{''}}">
+                </div>
+            </div>
+
+            <div class="layui-inline bdc-complete-line"  style="display: none">
+                <label class="layui-form-label bdc-label-newline">不动产权证<br>号/证明号</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input ywsj" name="bdcqzh" id="bdcqzh" value="{{ywsj.bdcqzh || ''}}"
+                           title="{{ywsj.bdcqzh || ''}}">
+                </div>
+            </div>
+
+            <div class="layui-inline bdc-complete-line"  style="display: none">
+                <label class="layui-form-label">更正内容</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input ywsjt" name="gznr" id="gznr" value="{{ywsj.gznr || ''}}"
+                           title="{{ywsj.gznr || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline bdc-complete-line"  style="display: none">
+                <label class="layui-form-label">注销原因</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input ywsj" name="zxyy" id="zxyy" value="{{ywsj.zxyy || ''}}"
+                           title="{{ywsj.zxyy || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline bdc-complete-line"  style="display: none">
+                <label class="layui-form-label">撤销原因</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input ywsj" name="cxyy" id="cxyy" value="{{ywsj.cxyy || ''}}"
+                           title="{{ywsj.cxyy || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline bdc-complete-line"  style="display:none">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input ywsj" name="bz" id="bz" value="{{ywsj.bz || ''}}"
+                           title="{{ywsj.bz || ''}}">
+                </div>
+            </div>
+        </div>
+    </form>
+
+    {{#  } }}
+
+
+</script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/changzhou/ggtz/addYwsj.js"></script>
+<script src='../../static/js/formCenter.js'></script>
+<script src='../../static/js/readCard.js'></script>
+<!--表单验证公共方法-->
+<script src='../../static/js/slymyz.js'></script>
+</html>

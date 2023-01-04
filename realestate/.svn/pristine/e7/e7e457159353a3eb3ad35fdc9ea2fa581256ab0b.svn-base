@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <title>婚姻信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <style type="text/css">
+        .content-div {
+            padding-top: 0px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content-div">
+        <div class="bdc-content-box">
+            <form class="layui-form setOverflow" action="">
+                <div class="content-main">
+                    <div class="table-name">婚姻信息</div>
+                    <div class="bdc-table-box" id="hyxxForm"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<!--小数计算防精度缺失-->
+<script src="../../static/lib/mathjs/math.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/bengbu/slym/hyxx.js"></script>
+<script type="text/javascript">
+    var zjh = getQueryString("zjh");
+</script>
+<script type="text/html" id="hyxxTpl">
+    <table class="layui-table" border="1">
+        <colgroup>
+            <col width="100">
+            <col width="150">
+            <col width="100">
+            <col width="180">
+            <col width="100">
+            <col width="100">
+        </colgroup>
+        <tbody>
+        {{# if(!d || d.length == 0){ }}
+
+        {{# } else { }}
+        {{# layui.each(d, function(i, hyxx){ }}
+        <tr>
+            <td colspan="4" class="set-back-color set-center">婚姻状况：{{hyxx.xxlx || ''}}</td>
+        </tr>
+        <tr>
+            <td class="set-back-color">姓名</td>
+            <td>
+                <div class="bdc-td-box">
+                    <input type="text" class="layui-input" value="{{hyxx.xm || ''}}" title="" disabled="off">
+                </div>
+            </td>
+            <td class="set-back-color">性别</td>
+            <td>
+                <div class="bdc-td-box">
+                    <input type="text" class="layui-input" value="{{hyxx.xb || ''}}" title="" disabled="off">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="set-back-color">出生日期</td>
+            <td>
+                <div class="bdc-td-box">
+                    <input type="text" class="layui-input" value="{{hyxx.csrq || ''}}" title="" disabled="off">
+                </div>
+            </td>
+            <td class="set-back-color">证件号码</td>
+            <td>
+                <div class="bdc-td-box">
+                    <input type="text" class="layui-input" value="{{hyxx.zjhm || ''}}" title="" disabled="off">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="set-back-color">国籍</td>
+            <td>
+                <div class="bdc-td-box">
+                    <input type="text" class="layui-input" value="{{hyxx.gj || ''}}" title="" disabled="off">
+                </div>
+            </td>
+            <td class="set-back-color">婚姻状况</td>
+            <td>
+                <div class="bdc-td-box">
+                    <input type="text" class="layui-input" value="{{hyxx.hyzt || ''}}" title="" disabled="off">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="set-back-color">证印制号</td>
+            <td colspan="3">
+                <div class="bdc-td-box">
+                    <input type="text" class="layui-input" value="{{hyxx.zyzh || ''}}" title="" disabled="off">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="set-back-color">配偶姓名</td>
+            <td>
+                <div class="bdc-td-box">
+                    <input type="text" class="layui-input" value="{{hyxx.jtcy.jtcymc || ''}}" title="" disabled="off">
+                </div>
+            </td>
+            <td class="set-back-color">配偶性别</td>
+            <td>
+                <div class="bdc-td-box">
+                    <input type="text" class="layui-input" value="{{hyxx.jtcy.xb || ''}}" title="" disabled="off">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="set-back-color">配偶出生日期</td>
+            <td>
+                <div class="bdc-td-box">
+                    <input type="text" class="layui-input" value="{{hyxx.jtcy.csrq || ''}}" title="" disabled="off">
+                </div>
+            </td>
+            <td class="set-back-color">配偶证件号码</td>
+            <td>
+                <div class="bdc-td-box">
+                    <input type="text" class="layui-input" value="{{hyxx.jtcy.zjh || ''}}" title="" disabled="off">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="set-back-color">配偶国籍</td>
+            <td>
+                <div class="bdc-td-box">
+                    <input type="text" class="layui-input" value="{{hyxx.jtcy.gj || ''}}" title="" disabled="off">
+                </div>
+            </td>
+            <td class="set-back-color">配偶婚姻状况</td>
+            <td>
+                <div class="bdc-td-box">
+                    <input type="text" class="layui-input" value="{{hyxx.jtcy.hyzt || ''}}" title="" disabled="off">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="set-back-color">配偶证印制号</td>
+            <td colspan="3">
+                <div class="bdc-td-box">
+                    <input type="text" class="layui-input" value="{{hyxx.jtcy.zyzh || ''}}" title="" disabled="off">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="set-back-color">结婚登记日期</td>
+            <td colspan="3">
+                <div class="bdc-td-box">
+                    <input type="text" class="layui-input" value="{{hyxx.djrq || ''}}" title="" disabled="off">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="set-back-color">结婚证字号</td>
+            <td colspan="3">
+                <div class="bdc-td-box">
+                    <input type="text" class="layui-input" value="{{hyxx.hyzjzh || ''}}" title="" disabled="off">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="set-back-color">承办机关名称</td>
+            <td colspan="3">
+                <div class="bdc-td-box">
+                    <input type="text" class="layui-input" value="{{hyxx.cbjgmc || ''}}" title="" disabled="off">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="set-back-color">登记员姓名</td>
+            <td colspan="3">
+                <div class="bdc-td-box">
+                    <input type="text" class="layui-input" value="{{hyxx.djyxm || ''}}" title="" disabled="off">
+                </div>
+            </td>
+        </tr>
+        {{# });}}
+        {{# }}}
+        </tbody>
+    </table>
+</script>
+</html>

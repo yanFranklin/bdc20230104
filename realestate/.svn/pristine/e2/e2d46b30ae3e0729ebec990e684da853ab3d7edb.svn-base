@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.supervise.core.mapper.LfDczjjgMapper">
+    <select id="listZjxxByPageOrder" parameterType="cn.gtmap.realestate.supervise.core.qo.LfZjxxQO"
+            resultType="cn.gtmap.realestate.supervise.core.domain.BdcLfDczjjgZjxxDO">
+        SELECT
+            ID,
+            ZJRYID,
+            ZJRY,
+            ZJBMID,
+            ZJBM,
+            ZJSJ,
+            ZJWJMC,
+            ZJWJID,
+            ZJWJLJ,
+            ZJQKBZ,
+            ZJWJSCSJ,
+            SFWC,
+            SCYJ,
+            SCRYID,
+            SCRY,
+            SCBMID,
+            SCBM,
+            SCSJ,
+            ZJLX,
+            SFASSCZJWJ,
+            SFASSCZGWJ
+        FROM
+            BDC_LF_DCZJJG_ZJXX T
+        <where>
+            <if test="zjry != null and zjry != ''">
+                AND T.ZJRY like '%' || #{zjry} || '%'
+            </if>
+            <if test="zjbm != null and zjbm != ''">
+                AND T.ZJBM like '%' || #{zjbm} || '%'
+            </if>
+            <if test="zjlx != null and zjlx != ''">
+                AND T.ZJLX = #{zjlx}
+            </if>
+            <if test="zjwjscsjq != null and zjwjscsjq != ''">
+                AND to_char(T.ZJSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{zjwjscsjq}
+            </if>
+            <if test="zjwjscsjz != null and zjwjscsjz != ''">
+                AND to_char(T.ZJSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{zjwjscsjz}
+            </if>
+        </where>
+
+        ORDER BY
+            ZJSJ DESC
+    </select>
+
+    <select id="listZjxxWithoutFj" parameterType="cn.gtmap.realestate.supervise.core.qo.LfZjxxQO"
+            resultType="cn.gtmap.realestate.supervise.core.domain.BdcLfDczjjgZjxxDO">
+        SELECT T.ID, T.ZJRYID, T.ZJRY, T.ZJBMID, T.ZJBM, T.ZJSJ, T.ZJWJMC, T.ZJWJID, T.ZJWJLJ,
+               T.ZJQKBZ, T.ZJWJSCSJ,T.SFWC, T.SCYJ, T.SCRYID, T.SCRY, T.SCBMID, T.SCBM, T.SCSJ,
+               T.ZJLX
+        FROM
+        BDC_LF_DCZJJG_ZJXX T
+        left join BDC_LF_FJXX F on T.ID = F.YWID
+        <where>
+            F.ID is NULL
+            <if test="zjlx != null and zjlx != ''">
+                AND T.ZJLX = #{zjlx}
+            </if>
+            <if test="zjsjq != null and zjsjq != ''">
+                AND to_char(T.ZJSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{zjsjq}
+            </if>
+            <if test="zjsjz != null and zjsjz != ''">
+                AND to_char(T.ZJSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{zjsjz}
+            </if>
+        </where>
+        ORDER BY
+        ZJSJ DESC
+    </select>
+
+    <select id="zjxxWithoutZgwj" parameterType="cn.gtmap.realestate.supervise.core.qo.LfZjxxQO"
+            resultType="cn.gtmap.realestate.supervise.core.domain.BdcLfDczjjgZjxxDO">
+        SELECT T.ID, T.ZJRYID, T.ZJRY, T.ZJBMID, T.ZJBM, T.ZJSJ, T.ZJWJMC, T.ZJWJID, T.ZJWJLJ,
+        T.ZJQKBZ, T.ZJWJSCSJ,T.SFWC, T.SCYJ, T.SCRYID, T.SCRY, T.SCBMID, T.SCBM, T.SCSJ,
+        T.ZJLX
+        FROM
+        BDC_LF_DCZJJG_ZJXX T
+        left join BDC_LF_DCZJJG_ZGQK G on T.ID = G.ZJXXID
+        <where>
+            G.ZGWJID is NULL
+            <if test="zjlx != null and zjlx != ''">
+                AND T.ZJLX = #{zjlx}
+            </if>
+            <if test="id != null and id != ''">
+                AND T.ID = #{id}
+            </if>
+        </where>
+    </select>
+</mapper>

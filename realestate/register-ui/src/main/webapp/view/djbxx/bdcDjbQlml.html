@@ -1,0 +1,62 @@
+<!--/**-->
+<!--* author: 前端组-->
+<!--* date: 2019-1-8-->
+<!--* version 3.0.0-->
+<!--* describe: 多级表头，每一行不限高，向下拓展-->
+<!--*/-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>不动产单元目录</title>
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/multistep-header-table.css">
+    <link rel="stylesheet" href="../../static/css/djbxx/bdcDjbQlml.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <script src="../../static/lib/jquery/jquery.min.js"></script>
+    <script src="../../static/lib/layui/layui.js"></script>
+    <!--添加水印-->
+    <script src="../../static/lib/bdcui/js/common.js"></script>
+    <script src="../../static/js/common.js"></script>
+    <script src="../../static/js/djbxx/djbCss.js"></script>
+</head>
+<body>
+<div class="bdc-container">
+    <p class="bdc-table-tips"><span id="bs"></span> &nbsp;&nbsp; 第<span id="ys">1</span>页</p>
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th class="bdc-table-title" colspan="8">不动产权利登记目录</th>
+        </tr>
+        <tr>
+            <th>序号</th>
+            <th>不动产单元号</th>
+            <th>不动产类型</th>
+            <th>所在本数</th>
+            <th>备注</th>
+        </tr>
+        </thead>
+        <tbody id="tableView">
+        </tbody>
+    </table>
+    <div id="tablePage"></div>
+</div>
+</body>
+<script type="text/html" id="tableTpl">
+    {{#  layui.each(d, function(index, item){ }}
+    <tr>
+        <td>{{=item.xh}}</td>
+        <td>{{=item.bdcdyh}}</td>
+        <td>{{=item.bdclx}}</td>
+        <td>{{=item.xh}}</td>
+        <td>{{=item.bz}}</td>
+    </tr>
+    {{#  }); }}
+
+    {{#  if(d.length === 0){ }}
+    无数据
+    {{#  } }}
+</script>
+<script src="../../static/js/djbxx/bdcDjbQlml.js"></script>
+
+</html>

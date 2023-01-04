@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <ex:bean id="nt_wxbjzt">
+        <ex:request>
+            <ex:element listToObject="true" sourceService="listBdcXmBySlbh"/>
+        </ex:request>
+        <ex:response dozerXml="conf/dozer/nantong/bjzt/wxbjzt/response/data.xml" extendRequestBody="true">
+            <ex:element name="success" sourceService="checkResultIsEmpty"/>
+            <ex:element name="bjzt" sourceService="queryBjztByBdcXm"/>
+            <ex:element dozerXml="conf/dozer/nantong/bjzt/wxbjzt/response/bdcXm.xml"/>
+        </ex:response>
+        <ex:log dsfFlag="WX" logEventName="微信查询办件状态" requester="WX" responser="BDC"/>
+    </ex:bean>
+</beans>

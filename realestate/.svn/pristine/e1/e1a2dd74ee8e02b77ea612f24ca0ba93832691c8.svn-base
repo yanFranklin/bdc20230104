@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcDyaXxMapper">
+    <!--月报中的月份统计信息-->
+    <select id="getMonthDyatjXx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.DyaTjQO"
+            resultType="cn.gtmap.realestate.common.core.vo.inquiry.count.BdcDyaTjVO">
+        select count(*) monthSum,round(nvl（sum(y.dyje),0),4) monthDyaJeSum,round(nvl(sum(y.dymj),0)/10000,4)
+        monthDyaMjSum from (
+        select sum (o.dymj) dymj, o.slbh,o.dyje from(
+
+        select
+        t.slbh,
+        sum(t.fwdymj) dymj,
+        case when t.dyfs = '2' then t.zgzqe else t.bdbzzqse end as dyje
+        from bdc_dyaq t
+        where exists (select x.xmid from bdc_xm x
+        <where>
+            <if test="cxkssj != null">
+                and to_char(x.djsj,'yyyyMMdd') <![CDATA[>=]]> to_char(#{cxkssj},'yyyyMMdd')
+            </if>
+            <if test="cxjssj != null">
+                and to_char(x.djsj,'yyyyMMdd') <![CDATA[<=]]> to_char(#{cxjssj},'yyyyMMdd')
+            </if>
+            <if test="bmmc != null and bmmc != ''">
+                and x.djjg = #{bmmc}
+            </if>
+            <if test="gzldyidList != null and gzldyidList.size>0">
+                and nvl(x.gzldyid,'gzldyid') not in
+                <foreach item="gzldyid" index="index" collection="gzldyidList" open="(" separator="," close=")">
+                    #{gzldyid}
+                </foreach>
+            </if>
+            and t.xmid = x.xmid and (t.dybdclx=2 or t.dybdclx=4) and (x.qllx=95 or x.qllx=37)
+
+            and ((x.djlx = 100
+
+             and
+            not exists(
+            select 1
+            from bdc_xm xx
+            where xx.bdcdyh = t.bdcdyh
+            and (xx.djlx = 300 or xx.djlx = 500)
+            and (xx.qllx = 95 or xx.qllx = 37)
+            and xx.qszt = 1
+            <if test="cxkssj != null">
+                and to_char(x.djsj,'yyyyMMdd') <![CDATA[>=]]> to_char(#{cxkssj},'yyyyMMdd')
+            </if>
+
+            )
+            ) or
+            ((x.djlx = 300 or x.djlx = 500) and x.qszt = 1))
+
+        </where>
+        ) group by t.slbh,t.zgzqe,t.dyfs,t.bdbzzqse
+
+        union all
+        select
+        t.slbh,
+        sum(t.tddymj) dymj,
+        case when t.dyfs = '2' then t.zgzqe else t.bdbzzqse end as dyje
+        from bdc_dyaq t
+        where exists (select x.xmid from bdc_xm x
+        <where>
+            <if test="cxkssj != null">
+                and to_char(x.djsj,'yyyyMMdd') <![CDATA[>=]]> to_char(#{cxkssj},'yyyyMMdd')
+            </if>
+            <if test="cxjssj != null">
+                and to_char(x.djsj,'yyyyMMdd') <![CDATA[<=]]> to_char(#{cxjssj},'yyyyMMdd')
+            </if>
+            <if test="bmmc != null and bmmc != ''">
+                and x.djjg = #{bmmc}
+            </if>
+            <if test="gzldyidList != null and gzldyidList.size>0">
+                and nvl(x.gzldyid,'gzldyid') not in
+                <foreach item="gzldyid" index="index" collection="gzldyidList" open="(" separator="," close=")">
+                    #{gzldyid}
+                </foreach>
+            </if>
+            and t.xmid = x.xmid and (t.dybdclx=1) and (x.qllx=95 or x.qllx=37)
+            and ((x.djlx = 100
+
+             and
+            not exists(
+            select 1
+            from bdc_xm xx
+            where xx.bdcdyh = t.bdcdyh
+            and (xx.djlx = 300 or xx.djlx = 500)
+            and (xx.qllx = 95 or xx.qllx=37)
+            and xx.qszt = 1
+            <if test="cxkssj != null">
+                and to_char(x.djsj,'yyyyMMdd') <![CDATA[>=]]> to_char(#{cxkssj},'yyyyMMdd')
+            </if>
+
+            )
+            ) or
+            ((x.djlx = 300 or x.djlx = 500) and x.qszt = 1))
+        </where>
+        ) group by t.slbh,t.zgzqe,t.dyfs,t.bdbzzqse
+
+        union all
+        select t.slbh,sum(t.jzmj) dymj,t.qdjg dyje from bdc_yg t
+        where t.qszt = 1 and exists (select x.xmid from bdc_xm x
+        <where>
+            <if test="cxkssj != null">
+                and to_char(x.djsj,'yyyyMMdd') <![CDATA[>=]]> to_char(#{cxkssj},'yyyyMMdd')
+            </if>
+            <if test="cxjssj != null">
+                and to_char(x.djsj,'yyyyMMdd') <![CDATA[<=]]> to_char(#{cxjssj},'yyyyMMdd')
+            </if>
+            <if test="bmmc != null and bmmc != ''">
+                and x.djjg = #{bmmc}
+            </if>
+            <if test="gzldyidList != null and gzldyidList.size>0">
+                and nvl(x.gzldyid,'gzldyid') not in
+                <foreach item="gzldyid" index="index" collection="gzldyidList" open="(" separator="," close=")">
+                    #{gzldyid}
+                </foreach>
+            </if>
+
+            and t.xmid = x.xmid and (t.ygdjzl=3 or t.ygdjzl=4) and x.djlx=700 and x.qllx=96
+        </where>
+        ) group by t.slbh,t.qdjg
+
+        )o group by o.slbh,o.dyje
+        )y
+    </select>
+    <!--月报中的年份统计信息-->
+    <select id="getYearDyatjXx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.DyaTjQO"
+            resultType="cn.gtmap.realestate.common.core.vo.inquiry.count.BdcDyaTjVO">
+        select count(*) yearSum,round(nvl（sum(y.dyje),0),4) yearDyaJeSum,round(nvl(sum(y.dymj),0)/10000,4) yearDyaMjSum
+        from (
+
+        select sum (o.dymj) dymj, o.slbh,o.dyje from(
+        select
+        t.slbh,
+        sum(t.fwdymj) dymj,
+        case when t.dyfs = '2' then t.zgzqe else t.bdbzzqse end as dyje
+        from bdc_dyaq t
+        where exists (select x.xmid from bdc_xm x
+        <where>
+            <if test="cxkssj != null">
+                and to_char(x.djsj,'yyyyMMdd') <![CDATA[>=]]> to_char(#{cxkssj},'yyyy')||'0101'
+            </if>
+            <if test="cxjssj != null">
+                and to_char(x.djsj,'yyyyMMdd') <![CDATA[<=]]> to_char(#{cxjssj},'yyyyMMdd')
+            </if>
+            <if test="bmmc != null and bmmc != ''">
+                and x.djjg = #{bmmc}
+            </if>
+            <if test="gzldyidList != null and gzldyidList.size>0">
+                and nvl(x.gzldyid,'gzldyid') not in
+                <foreach item="gzldyid" index="index" collection="gzldyidList" open="(" separator="," close=")">
+                    #{gzldyid}
+                </foreach>
+            </if>
+            and t.xmid = x.xmid and (t.dybdclx=2 or t.dybdclx=4)
+
+            and ((x.djlx = 100
+
+            and
+            not exists(
+            select 1
+            from bdc_xm xx
+            where xx.bdcdyh = t.bdcdyh
+            and (xx.djlx = 300 or xx.djlx = 500)
+            and (xx.qllx = 95 or xx.qllx =37)
+            and xx.qszt = 1
+            <if test="cxkssj != null">
+                and to_char(x.djsj,'yyyyMMdd') <![CDATA[>=]]> to_char(#{cxkssj},'yyyy')||'0101'
+            </if>
+
+            )
+            ) or
+            ((x.djlx = 300 or x.djlx = 500) and x.qszt = 1))
+        </where>
+        ) group by t.slbh,t.zgzqe,t.dyfs,t.bdbzzqse
+
+        union all
+        select
+        t.slbh,
+        sum(t.tddymj) dymj,
+        case when t.dyfs = '2' then t.zgzqe else t.bdbzzqse end as dyje
+        from bdc_dyaq t
+        where exists (select x.xmid from bdc_xm x
+        <where>
+            <if test="cxkssj != null">
+                and to_char(x.djsj,'yyyyMMdd') <![CDATA[>=]]> to_char(#{cxkssj},'yyyy')||'0101'
+            </if>
+            <if test="cxjssj != null">
+                and to_char(x.djsj,'yyyyMMdd') <![CDATA[<=]]> to_char(#{cxjssj},'yyyyMMdd')
+            </if>
+            <if test="bmmc != null and bmmc != ''">
+                and x.djjg = #{bmmc}
+            </if>
+            <if test="gzldyidList != null and gzldyidList.size>0">
+                and nvl(x.gzldyid,'gzldyid') not in
+                <foreach item="gzldyid" index="index" collection="gzldyidList" open="(" separator="," close=")">
+                    #{gzldyid}
+                </foreach>
+            </if>
+            and t.xmid = x.xmid and (t.dybdclx=1)
+            and ((x.djlx = 100
+
+            and
+            not exists(
+            select 1
+            from bdc_xm xx
+            where xx.bdcdyh = t.bdcdyh
+            and (xx.djlx = 300 or xx.djlx = 500)
+            and (xx.qllx = 95 or xx.qllx =37)
+            and xx.qszt = 1
+            <if test="cxkssj != null">
+                and to_char(x.djsj,'yyyyMMdd') <![CDATA[>=]]> to_char(#{cxkssj},'yyyy')||'0101'
+            </if>
+
+            )
+            ) or
+            ((x.djlx = 300 or x.djlx = 500) and x.qszt = 1))
+
+        </where>
+        ) group by t.slbh,t.zgzqe,t.dyfs,t.bdbzzqse
+
+        union all
+        select t.slbh,sum(t.jzmj) dymj,t.qdjg dyje from bdc_yg t
+        where t.qszt = 1 and exists (select x.xmid from bdc_xm x
+        <where>
+            <if test="cxkssj != null">
+                and to_char(x.djsj,'yyyyMMdd') <![CDATA[>=]]> to_char(#{cxkssj},'yyyy')||'0101'
+            </if>
+            <if test="cxjssj != null">
+                and to_char(x.djsj,'yyyyMMdd') <![CDATA[<=]]> to_char(#{cxjssj},'yyyyMMdd')
+            </if>
+            <if test="bmmc != null and bmmc != ''">
+                and x.djjg = #{bmmc}
+            </if>
+            <if test="gzldyidList != null and gzldyidList.size>0">
+                and nvl(x.gzldyid,'gzldyid') not in
+                <foreach item="gzldyid" index="index" collection="gzldyidList" open="(" separator="," close=")">
+                    #{gzldyid}
+                </foreach>
+            </if>
+
+            and t.xmid = x.xmid and (t.ygdjzl=3 or t.ygdjzl=4) and x.djlx=700 and x.qllx=96
+        </where>
+        ) group by t.slbh,t.qdjg
+        )o group by o.slbh,o.dyje
+        )y
+    </select>
+    <!--月报中的现势的抵押统计信息-->
+    <select id="getValidDyatjXx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.DyaTjQO"
+            resultType="cn.gtmap.realestate.common.core.vo.inquiry.count.BdcDyaTjVO">
+        select count(*) validSum,nvl(sum(y.dyje),0) validDyaJeSum,nvl(sum(y.dymj),0)/10000 validDyaMjSum from (
+        select sum (o.dymj) dymj, o.slbh,o.dyje from(
+        select
+        t.slbh,
+        sum(t.fwdymj) dymj,
+        case when t.dyfs = '2' then t.zgzqe else t.bdbzzqse end as dyje
+        from bdc_dyaq t inner join bdc_xm x on t.xmid=
+        x.xmid
+        <where>
+            <if test="bmmc != null and bmmc != ''">
+                and x.djjg = #{bmmc}
+            </if>
+            and (t.dybdclx=2 or t.dybdclx=4) and x.qszt=1 and (x.qllx=95 or x.qllx =37)
+        </where>
+        group by t.slbh,t.zgzqe,t.dyfs,t.bdbzzqse
+        union all
+        select
+        t.slbh,
+        sum(t.tddymj) dymj,
+        case when t.dyfs = '2' then t.zgzqe else t.bdbzzqse end as dyje
+        from bdc_dyaq t inner join bdc_xm x on t.xmid=
+        x.xmid
+        <where>
+            <if test="bmmc != null and bmmc != ''">
+                and x.djjg = #{bmmc}
+            </if>
+            and (t.dybdclx=1) and x.qszt=1 and (x.qllx=95 or x.qllx=37)
+        </where>
+        group by t.slbh,t.zgzqe,t.dyfs,t.bdbzzqse
+        union all
+        select t.slbh, sum(t.jzmj) dymj,t.qdjg dyje from bdc_yg t inner join bdc_xm x on t.xmid= x.xmid
+        <where>
+            <if test="bmmc != null and bmmc != ''">
+                and x.djjg = #{bmmc}
+            </if>
+            and (t.ygdjzl=3 or t.ygdjzl=4) and x.qszt=1 and x.qllx=96
+
+            group  by t.slbh,t.qdjg
+        </where>
+        )o group by o.slbh,o.dyje
+        )y
+    </select>
+
+    <!--日报统计信息-->
+    <select id="getDayDyatjXx" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.count.DyaTjQO"
+            resultType="cn.gtmap.realestate.common.core.vo.inquiry.count.BdcDyaTjVO">
+        select * from (
+        select count(*) daySum,nvl(sum(y.dyje),0)/10000 dayDyaJeSum,to_char(y.djsj,'yyyyMMdd') djrq from (
+        select r.slbh,r.dyje,r.djsj from (
+        select
+        row_number() over(partition by t.slbh order by t.xmid asc ) rn,
+        t.slbh,
+        case when t.dyfs = '2' then t.zgzqe else t.bdbzzqse end as dyje,
+        t.djsj
+        from
+        bdc_dyaq
+        t
+        where exists (select x.xmid from bdc_xm x
+        <where>
+            <if test="cxkssj != null">
+                and to_char(x.djsj,'yyyyMMdd') <![CDATA[>=]]> to_char(#{cxkssj},'yyyyMMdd')
+            </if>
+            <if test="cxjssj != null">
+                and to_char(x.djsj,'yyyyMMdd') <![CDATA[<=]]> to_char(#{cxjssj},'yyyyMMdd')
+            </if>
+            <if test="bmmc != null and bmmc != ''">
+                and x.djjg = #{bmmc}
+            </if>
+            <if test="gzldyidList != null and gzldyidList.size>0">
+                and nvl(x.gzldyid,'gzldyid') not in
+                <foreach item="gzldyid" index="index" collection="gzldyidList" open="(" separator="," close=")">
+                    #{gzldyid}
+                </foreach>
+            </if>
+            and t.xmid = x.xmid and (x.qllx=95 or x.qllx=37)
+            and t.dybdclx in(1,2,4)
+
+            and ((x.djlx = 100  and
+            not exists(
+            select 1
+            from bdc_xm xx
+            where xx.bdcdyh = t.bdcdyh
+            and (xx.djlx = 300 or xx.djlx = 500)
+            and (xx.qllx = 95 or xx.qllx=37)
+            and xx.qszt = 1
+            <if test="cxkssj != null">
+                and to_char(x.djsj,'yyyyMMdd') <![CDATA[>=]]> to_char(#{cxkssj},'yyyyMMdd')
+            </if>
+
+            )
+            ) or
+            ((x.djlx = 300 or x.djlx = 500 ) and x.qszt = 1))
+        </where>
+        )
+        )r where r.rn=1
+
+        union all
+        select r.slbh,r.dyje,r.djsj from (
+        select row_number() over(partition by t.slbh order by t.xmid asc ) rn,t.slbh,t.qdjg dyje,t.djsj from bdc_yg t
+        where t.qszt = 1 and exists (select x.xmid from bdc_xm x
+        <where>
+            <if test="cxkssj != null">
+                and to_char(x.djsj,'yyyyMMdd') <![CDATA[>=]]> to_char(#{cxkssj},'yyyyMMdd')
+            </if>
+            <if test="cxjssj != null">
+                and to_char(x.djsj,'yyyyMMdd') <![CDATA[<=]]> to_char(#{cxjssj},'yyyyMMdd')
+            </if>
+            <if test="bmmc != null and bmmc != ''">
+                and x.djjg = #{bmmc}
+            </if>
+            <if test="gzldyidList != null and gzldyidList.size>0">
+                and nvl(x.gzldyid,'gzldyid') not in
+                <foreach item="gzldyid" index="index" collection="gzldyidList" open="(" separator="," close=")">
+                    #{gzldyid}
+                </foreach>
+            </if>
+            and t.xmid = x.xmid and (t.ygdjzl=3 or t.ygdjzl=4) and x.djlx=700 and x.qllx=96
+        </where>
+        )
+        )r where r.rn=1
+
+        )y group by to_char(y.djsj,'yyyyMMdd')
+        )m order by m.djrq
+    </select>
+
+    <select id="listDyaByXmid" resultType="map">
+        select * from bdc_dyaq where 1 = 1
+        <if test="xmid != null and xmid != ''">
+            and xmid = #{xmid,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="listDyaByBdcdyh" resultType="map">
+        select * from bdc_dyaq where qszt != 2
+        <if test="bdcdyh != null and bdcdyh != ''">
+            and bdcdyh = #{bdcdyh,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="listBdcDyaqByBdcdyhs" resultType="cn.gtmap.realestate.common.core.domain.BdcDyaqDO">
+        select * from bdc_dyaq where 1 = 1
+        <if test="list != null and list.size() > 0 ">
+            and bdcdyh in
+            <foreach collection="list" item="item" separator="," open="(" close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+    <select id="listDyaByBdcdyhAndqszt" resultType="map">
+        select * from bdc_dyaq where 1 = 1
+        <if test="bdcdyh != null and bdcdyh != ''">
+            and bdcdyh = #{bdcdyh,jdbcType=VARCHAR}
+        </if>
+        <if test="qszt != null and qszt != ''">
+            and qszt = #{qszt}
+        </if>
+    </select>
+
+    <select id="listBdcDyaqByDjhAndQszt" resultType="cn.gtmap.realestate.common.core.domain.BdcDyaqDO">
+        select * from bdc_dyaq where 1 = 1
+        <if test="djh != null and djh != ''">
+            and substr(bdcdyh,0,19) = #{djh}
+        </if>
+        <if test="qszt != null">
+            and qszt = #{qszt}
+        </if>
+        <if test="dybdclx != null">
+            and dybdclx = #{dybdclx}
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.init.core.mapper.BdcJtcyMapper">
+
+    <select id="queryLastBbhJtcyByHzZJH" parameterType="map" resultType="cn.gtmap.realestate.common.core.domain.BdcJtcyDO">
+        SELECT j.* FROM bdc_jtcy j
+        JOIN (SELECT h.hkbbm,MAX(h.hkbbbh) hkbbbh FROM bdc_jtcy h  WHERE h.jtcyzjh = #{hzzjh} AND h.yhzgx IN('0','01','02') GROUP BY h.hkbbm) h
+        ON h.hkbbm = j.hkbbm AND h.hkbbbh = j.hkbbbh
+    </select>
+
+    <select id="queryJtcy" parameterType="map" resultType="cn.gtmap.realestate.common.core.domain.BdcJtcyDO">
+        SELECT y.* FROM bdc_jtcy y
+        JOIN bdc_qlr_hkb_gx h ON h.hkbbm = y.hkbbm AND h.hkbbbh=y.hkbbbh
+        JOIN bdc_qlr q ON q.qlrid = h.qlrid
+        <where>
+            <if test="qlrlb != null and qlrlb !=''">
+                AND q.qlrlb =#{qlrlb}
+            </if>
+            <if test="xmid != null and xmid !=''">
+                AND q.xmid =#{xmid}
+            </if>
+            <if test="qlrid != null and qlrid !=''">
+                AND q.qlrid =#{qlrid}
+            </if>
+            <if test="qlridList != null and qlridList.size() > 0">
+                AND q.qlrid IN
+                <foreach collection="qlridList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where> ORDER BY h.hkbbm,y.yhzgx ASC
+    </select>
+    <select id="queryBdcQlrHkbGx" parameterType="cn.gtmap.realestate.common.core.qo.init.BdcQlrHkbGxQO"
+            resultType="cn.gtmap.realestate.common.core.dto.init.BdcQlrHkbGxDTO">
+        SELECT g.*,q.zjh  FROM bdc_qlr_hkb_gx g
+        JOIN bdc_qlr q on g.qlrid= q.qlrid
+        <where>
+            <if test="qlrid != null and qlrid !=''">
+                AND g.qlrid=#{qlrid}
+            </if>
+            <if test="xmid != null and xmid !=''">
+                AND q.xmid = #{xmid}
+            </if>
+            <if test="qlrlb != null and qlrlb !=''">
+                AND q.qlrlb = #{qlrlb}
+            </if>
+        </where>
+    </select>
+    <select id="listBdcQlrHkbGxDO" parameterType="cn.gtmap.realestate.common.core.qo.init.BdcQlrHkbGxQO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcQlrHkbGxDO">
+        SELECT g.*  FROM bdc_qlr_hkb_gx g
+        JOIN bdc_qlr q ON g.qlrid= q.qlrid
+        <if test="jtcyid != null and jtcyid !=''">
+        JOIN bdc_jtcy j ON g.hkbbm =j.hkbbm and g.hkbbbh =j.hkbbbh
+        </if>
+        <where>
+            <if test="qlrid != null and qlrid !=''">
+                AND g.qlrid=#{qlrid}
+            </if>
+            <if test="xmid != null and xmid !=''">
+                AND q.xmid = #{xmid}
+            </if>
+            <if test="qlrlb != null and qlrlb !=''">
+                AND q.qlrlb = #{qlrlb}
+            </if>
+            <if test="jtcyid != null and jtcyid !=''">
+                AND j.jtcyid = #{jtcyid}
+            </if>
+            <if test="zjh != null and zjh !=''">
+                AND q.zjh = #{zjh}
+            </if>
+            <if test="gzlslid != null and gzlslid !=''">
+                AND
+                (q.xmid IN (select xmid from bdc_xm where gzlslid =#{gzlslid}))
+            </if>
+            <!--这里需要排除的流程-->
+            <if test="lwgzlslid != null and lwgzlslid !=''">
+                AND
+                (q.xmid NOT IN (select xmid from bdc_xm where gzlslid =#{lwgzlslid}))
+            </if>
+        </where>
+    </select>
+    <delete id="deleteQlrHkbGx">
+        DELETE FROM bdc_qlr_hkb_gx g
+        WHERE g.qlrid IN
+        ( SELECT a.qlrid FROM bdc_qlr a
+        WHERE a.xmid IN
+        (SELECT b.xmid FROM bdc_xm b
+        WHERE b.gzlslid = #{gzlslid})
+        <if test="qlrlb != null and qlrlb !=''">
+            AND a.qlrlb=#{qlrlb}
+        </if>
+        <if test="qlrmc != null and qlrmc !=''">
+            AND a.qlrmc=#{qlrmc}
+        </if>
+        <if test="zjh != null and zjh !=''">
+            AND a.zjh=#{zjh}
+        </if>
+        )
+    </delete>
+</mapper>

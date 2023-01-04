@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!-- 人证对比查询接口 -->
+    <ex:bean id="rzdbcx_cz">
+        <!-- 请求结构体 -->
+        <ex:service-info request-type="httpPost">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="RZDB"/>
+            <ex:property name="dsfFlag" value="RZDB"/>
+            <ex:property name="url" value="${rzdb.cx.url}" />
+        </ex:service-info>
+        <!-- 输入结构体 -->
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/rzdb/cx/req/rzdbcx_req.xml"/>
+        </ex:request>
+        <!-- 输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/rzdb/cx/resp/rzdbcx_resp.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 推送缴费地址给摩科评价器接口 -->
+    <ex:bean id="tsjfdz_mk">
+        <!-- 请求结构体 -->
+        <ex:service-info request-type="httpPostWithUrlParam">
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="MK"/>
+            <ex:property name="dsfFlag" value="MK"/>
+            <ex:property name="url" value="${tsjfdz.mkpjq.url}" />
+        </ex:service-info>
+        <!-- 输入结构体 -->
+        <!--<ex:request>
+            <ex:element dozerXml="conf/dozer/yancheng/rzdb/cx/req/rzdbcx_req.xml"/>
+        </ex:request>-->
+        <!-- 输出结构体 -->
+        <!--<ex:response>
+            <ex:element dozerXml="conf/dozer/yancheng/tsjfdz_mk/resp/respon.xml"/>
+        </ex:response>-->
+    </ex:bean>
+</beans>

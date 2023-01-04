@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>特殊业务配置</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../../static/lib/layui/css/layui.css" media="all">
+    <!--formSelects-v4.css 和 search.css 顺序不能错-->
+    <link rel="stylesheet" href="../../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/search.css" />
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/table.css" />
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/popup.css" />
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/mask.css" />
+    <link rel="stylesheet" href="../../../static/lib/registerui/css/percentage-layout.css"/>
+    <link rel="stylesheet" href="../../../static/css/config/yml/pzym.css">
+</head>
+<body>
+<div class="bdc-percentage-container bdc-line-search-container">
+    <!--查询条件开始-->
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <form class="layui-form" lay-filter="searchFilter">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">配置名称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="pzmc" autocomplete="off" placeholder="请输入" class="layui-input ">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">配置类型</label>
+                        <div class="layui-input-inline">
+                            <select lay-filter="" name="pzlx" lay-search="" id="pzlx">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">配置状态</label>
+                        <div class="layui-input-inline">
+                            <select id="pzzt" name="pzzt" lay-filter="pzzt" placeholder="请选择配置状态" class="search">
+                                <option value="">请选择</option>
+                                <option value="0">未配置</option>
+                                <option value="1">已配置</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">配置说明</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="pzsm" autocomplete="off" placeholder="请输入" class="layui-input">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">配置系统</label>
+                        <div class="layui-input-inline">
+                            <select xm-select="selectPzZxt" lay-verify="" name="pzzxt" id="pzzxt"
+                                    xm-select-search="" xm-select-height="34px" xm-select-skin="default" xm-select-show-count="2" xm-select-search-type="dl">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">功能模块</label>
+                        <div class="layui-input-inline">
+                            <select lay-filter="gnmk" name="gnmk" lay-search="" id="gnmk">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">全字段模糊</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="qzdmh" autocomplete="off" placeholder="请输入" class="layui-input">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                        <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-secondary-btn" id="import">apollo导入</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--查询条件结束-->
+    <!-- 定义导入excel的文件域 -->
+    <form enctype="multipart/form-data" id="uploadFile" method="post" action="">
+        <input type="file" id="importExcelFile" name="importExcelFile" accept="application/vnd.ms-excel"
+               style="position:absolute;top:0px;right:0px;cursor:pointer; opacity:0;filter:alpha(opacity:0);z-index:999;display: none;"
+               onchange="importFile(this)">
+    </form>
+    <!--表格开始-->
+    <div class="bdc-table-box">
+        <table id="pzTable" lay-filter="pzFilter"></table>
+    </div>
+    <!--表格结束-->
+</div>
+
+<!--布尔型 配置-->
+<div id="bdc-popup-radio" class="bdc-hide">
+    <form class="layui-form" action="">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <p class="bdc-tips-words">
+                    <span class="bdc-pzsm">配置说明</span><span class="bdc-radio-pzsm"></span>
+                </p>
+            </div>
+            <div class="layui-inline bdc-bool-radio">
+                <label class="layui-form-label">布尔型</label>
+                <div class="layui-input-inline">
+                    <input type="radio" name="setBool" lay-filter="boolFilter" value="true" title="是" class="bdc-radio-yes">
+                    <input type="radio" name="setBool" lay-filter="boolFilter" value="false" title="否" class="bdc-radio-no">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--文本 配置-->
+<div id="textPz" class="bdc-layer-textarea bdc-hide">
+    <form class="layui-form" action="">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <p class="bdc-tips-words">
+                    <span class="bdc-pzsm">配置说明</span><span class="bdc-text-pzsm"></span>
+                </p>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">文本内容</label>
+                <div class="layui-input-inline bdc-end-time-box">
+                    <textarea name="desc" placeholder="请输入" class="layui-textarea" id="bdc-text-pzz"></textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--隐藏form，为了导出缓存数据使用-->
+<form style="display: none" action="/realestate-inquiry-ui/rest/v1.0/tsywpz/export" method="POST" id="tsywpzfile">
+    <input type="hidden" id="filedata"   name="filedata"/>
+</form>
+
+<!--功能模块配置-->
+<div id="modelpzdiv" class="bdc-layer-textarea bdc-hide">
+</div>
+
+<!--表格上面功能按钮-->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <!--<button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="add">新增</button>-->
+        <button class="layui-btn layui-btn-sm bdc-delete-btn" lay-event="delete">删除</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="exportPzx">导出</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="importPzx" type="button" id="importPzx">导入</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="modelPz" type="button" id="modelPz">模块配置</button>
+    </div>
+</script>
+
+<!--表格内部操作按钮-->
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="edit">配置</a>
+    <!--<a class="layui-btn layui-btn-xs bdc-secondary-btn" lay-event="modify">修改</a>-->
+</script>
+
+<!--状态模板-->
+<script type="text/html" id="ztTpl">
+    {{#  if(d.pzzt == 1){ }}
+    <span style="color: #1d87d1;">已配置</span>
+    {{# }else{ }}
+    <span style="color: #f54743;">未配置</span>
+    {{#  } }}
+</script>
+
+<script type="text/html" id="modelPzTpl">
+    <form class="layui-form" lay-filter="">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">功能模块</label>
+                <div class="layui-input-inline">
+                    <select lay-filter="gnmkpz" name="gnmkpz" lay-search="" id="gnmkpz">
+                        <option value="">请选择</option>
+                        {{# layui.each(d, function(index, item){ }}
+                        <option value="{{item.DM || ''}}">{{item.MC || ''}}</option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </form>
+</script>
+
+<script src="../../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../../static/lib/bdcui/js/common.js"></script>
+<script src="../../../static/js/config/yml/jquery-form.js"></script>
+<script src="../../../static/js/config/common.js"></script>
+<script src="../../../static/js/config/yml/pzym.js"></script>
+<script src="../../../static/js/config/gzyzCommon.js"></script>
+</body>
+</html>

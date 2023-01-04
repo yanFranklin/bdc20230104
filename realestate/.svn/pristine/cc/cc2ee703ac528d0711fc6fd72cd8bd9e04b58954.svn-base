@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>配置查询条件</title>
+    <link rel="stylesheet" href="../../../layui/css/layui.css">
+    <link rel="stylesheet" href="../css/search.css">
+    <link rel="stylesheet" href="../css/search-pz.css">
+</head>
+<body>
+    <div class="bdc-container">
+        <!--<div class="bdc-title">-->
+            <!--<span>配置查询条件</span>-->
+            <!--<div class="bdc-btn-box">-->
+                <!--<a href="javascript:;" id="save" class="layui-btn layui-btn-normal bdc-major-btn">保存</a>-->
+            <!--</div>-->
+        <!--</div>-->
+        <div class="bdc-search-box">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+
+                </div>
+            </form>
+        </div>
+        <div class="bdc-btn-box">
+            <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="saveUpdate">提交</a>
+        </div>
+    </div>
+</body>
+<!--表格内部操作按钮-->
+<script type="text/html" id="contentTpl">
+    {{#  layui.each(d, function(index, item){ }}
+    <div class="layui-inline">
+        <label class="layui-form-label {{# if(item.name.length > 6){ }} bdc-two-lines {{# } }}">{{item.name}}</label>
+        <div class="layui-input-inline">
+            <input type="checkbox" name="{{item.name}}" lay-skin="switch" lay-filter="isShow" lay-text="显示|隐藏" {{#  if(item.isShow){ }} checked {{#  } }} >
+        </div>
+    </div>
+    {{#  }); }}
+</script>
+<script src="../../jquery/jquery.min.js"></script>
+<script src="../../../layui/layui.js"></script>
+<script src="../js/search-pz.js"></script>
+</html>

@@ -1,0 +1,70 @@
+info:
+  name: ${spring.application.name}
+  component: Certificate Application
+
+app:
+  center: http://192.168.2.99:8000/eureka/
+  oauth: http://192.168.2.99:8002/account
+  security:
+    moduleAuthPath: http://account/account
+    # 权限开放： 静态资源、打印接口、移交单、发证记录打印
+    ignores: /image/**,/css/**,/js/**,/webjars/**,/realestate-certificate/rest/v1.0/zs/print/**,/realestate-certificate/rest/v1.0/yjd/print/**,/realestate-certificate/rest/v1.0/fzjl/print/**
+    authorities:
+      permitAll: /index2
+      hasUrlAuthority('read'): /auth/users,/auth/orgs,/abc/index
+      hasModuleAuthority('yhgl:add'): /auth/user/create
+      hasAnyAuthority('ROLE_USER'): /resource1/**,/catalog1/**,/index
+      hasAnyAuthority('ROLE_ADMIN_2'): /call
+      authenticated: true
+    resources:
+      authenticated: /realestate-certificate/rest/v1.0/**
+#      hasScope('get_certificate_info'): /realestate-certificate/**
+  services:
+#    accept-app: accept-app3
+    init-app: init-app0
+#    certificate-app: certificate-app3
+#    register-app: register-app3
+
+spring:
+  rabbitmq:
+    host: 192.168.0.60
+    port: 5672
+    username: guest
+    password: guest
+  redis:
+    port: 6379
+    host: 192.168.0.60
+  datasource:
+    url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+    username: bdcdj_hefei
+    password: e/lWYHJj7d9rXmgsItIxLw2oWP4XasfqoDXA0AKNYHgeSJQK8IKgU8/+ia1ax4mr9ki4QZbrQrCW9WMkHDOPAA==
+    publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK8ev+xi3qANIZpQGhndeKtc2EOlsPd48VIhphnl3OoOKqynJuQo7qZrJekk8iqXHgvze3bnFrFyTtf3vxGIamsCAwEAAQ==
+  http:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 1000MB
+
+  profiles:
+    include: config  #引入配置文件 application-config.yml
+
+server:
+  port: ${port:8669}
+
+logging:
+  security:
+    collection:
+      authorizationSuccess: false
+      authenticationSuccess: false
+  level:
+    org.springframework: WARN
+    cn.gtmap.gtc.plugins: DEBUG
+#    cn.gtmap.realestate.certificate.core.mapper: DEBUG
+
+management:
+  security:
+    enabled: true
+
+endpoints:
+  enabled: true
+  shutdown:
+    enabled: true

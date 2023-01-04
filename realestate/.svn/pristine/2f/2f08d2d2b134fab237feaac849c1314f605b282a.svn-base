@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>发送消息详情</title>
+    <link href="../static/lib/layui/css/layui.css" media="all" rel="stylesheet">
+    <link rel="stylesheet" href="../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../static/lib/bdcui/css/application.css"/>
+    <link rel="stylesheet" href="../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../static/css/msg-detail.css">
+</head>
+<body>
+<div class="bdc-table">
+    <!--主体开始部分-->
+    <div class="content-main common-form">
+        <div class="bdc-catalog-title" ><p>消息详情</p></div>
+        <div id="xxxq"></div>
+    </div>
+</div>
+</body>
+</html>
+<script src="../static/lib/jquery/jquery.min.js"></script>
+<script src="../static/lib/layui/layui.js"></script>
+<script src="../static/js/common.js"></script>
+<script src="../static/js/msg-detail.js"></script>
+<script type="text/html" id="xxxqTpl">
+    <table class="layui-table new-table" border="1">
+        <colgroup>
+            <col width="160">
+            <col width="160">
+        </colgroup>
+        <tbody>
+        <tr>
+            <td class="set-back-color">名称</td>
+            <td class="bdc-td-box">
+                {{d.msgTypeName}}
+            </td>
+        </tr>
+        <tr>
+            <td class="set-back-color">发送者</td>
+            <td class="bdc-td-box">
+                {{d.producerName}}
+            </td>
+        </tr>
+        <tr>
+            <td class="set-back-color">发送标题</td>
+            <td class="bdc-td-box">{{d.msgTitle}}
+            </td>
+        </tr>
+        <tr>
+            <td class="set-back-color">流程名称</td>
+            <td class="bdc-td-box">{{d.msgTypeName}}
+            </td>
+        </tr>
+        <tr>
+            <td class="set-back-color">类型</td>
+            <td class="bdc-td-box">
+                {{# if(d.producerType == 'system'){ }}
+                系统平台
+                {{#} else if(d.producerType == 'organization'){ }}
+                组织
+                {{#} else if(d.producerType == 'role'){ }}
+                角色
+                {{#} else { }}
+                个人
+                {{# } }}
+            </td>
+        </tr>
+        <tr>
+            {{# if( d.msgType == 'CUSTOM'){ }}
+            <td class="set-back-color">发送内容</td>
+            {{#} else{}}
+            <td class="set-back-color">操作原因</td>
+            {{# } }}
+            <td class="bdc-td-box" style="white-space: pre-wrap;">
+                {{d.msgContent}}
+            </td>
+        </tr>
+        {{#  if(d.fjbs==1){ }}
+        <tr>
+            <td class="set-back-color" >附件</td>
+            <td class="bdc-td-box">
+                <a class="layui-btn bdc-major-btn layui-btn-xs" id="download">下载</a>
+            </td>
+        </tr>
+        {{#}}}
+        </tbody>
+    </table>
+    {{#  if(d.read==0){ }}
+    <div class="layui-inline bdc-frame-button-box">
+        <button class="layui-btn layui-btn-normal" id="read">标为已读</button>
+    </div>
+    {{#}}}
+</script>

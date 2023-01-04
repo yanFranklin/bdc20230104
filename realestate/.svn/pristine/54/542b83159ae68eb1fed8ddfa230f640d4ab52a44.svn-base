@@ -1,0 +1,101 @@
+-----打印类型   ycslsfd
+-----参数 qlr,qlrzjh,ywr,ywrzjh,zl,lxdh,ywrlxdh,qlrdlr,dxhj,sfxxid,qlrlb
+   主表
+-----sql
+select #{qlr} qlr ,#{qlrzjh} qlrzjh,#{ywr} ywr,#{ywrzjh} ywrzjh,#{zl} zl,#{lxdh} qlrlxdh,#{ywrlxdh} ywrlxdh,#{qlrdlr} qlrdlr,#{dxhj} dxhj from dual;
+
+select to_char(t.slsj,'yyyy"年"mm"月"dd"日"') slsj,t.slr,t.slbh,t.djjg,t.lcmc,#{djxlmc} djxl from bdc_sl_jbxx t left join bdc_sl_xm x on x.jbxxid=t.jbxxid
+where x.xmid=#{xmid};
+
+select t.dxsmj,t.glmj,t.ckmj,t.ycmj from bdc_sl_fwxx t where t.xmid=#{xmid};
+
+select j.htmj,j.jyje from bdc_sl_jyxx j where j.xmid=#{xmid};
+
+select t.hdjsjg, (case to_char(t.wszt) when '1' then '已缴费确认' when '0' then '未缴费确认' end) wszt from bdc_sl_hsxx t where t.xmid=#{xmid} and t.sqrlb='1';
+
+select t.ynse zzsynse,t.jmse zzsjmse,t.sjnse zzssjnse from bdc_sl_hsxx_mx t left join bdc_sl_hsxx h on t.hsxxid=h.hsxxid where h.xmid=#{xmid} and t.mxzl='12' and h.sqrlb='1';
+
+select t.ynse dfjyfjfynse,t.jmse dfjyfjfjmse,t.sjnse dfjyfjfsjnse from bdc_sl_hsxx_mx t left join bdc_sl_hsxx h on t.hsxxid=h.hsxxid  where h.xmid=#{xmid} and t.mxzl='14' and h.sqrlb='1';
+
+select t.ynse jyfjfynse,t.jmse jyfjfjmse,t.sjnse jyfjfsjnse from bdc_sl_hsxx_mx t left join bdc_sl_hsxx h on t.hsxxid=h.hsxxid  where h.xmid=#{xmid} and t.mxzl='13' and h.sqrlb='1';
+select t.ynse cswhjsynse,t.jmse cswhjsjmse,t.sjnse cswhjssjnse from bdc_sl_hsxx_mx t left join bdc_sl_hsxx h on t.hsxxid=h.hsxxid  where h.xmid=#{xmid} and t.mxzl='15' and h.sqrlb='1';
+select t.ynse grsdsynse,t.jmse grsdsjmse,t.sjnse grsdssjnse from bdc_sl_hsxx_mx t left join bdc_sl_hsxx h on t.hsxxid=h.hsxxid  where h.xmid=#{xmid} and t.mxzl='16' and h.sqrlb='1';
+
+select t.ynsehj,t.jmsehj,t.sjyzhj from bdc_sl_hsxx t where t.xmid=#{xmid} and t.sqrlb='1';
+select t.ynse qsynse,t.jmse qsjmse ,t.sjnse qssjnse,h.ynsehj qsynhj,h.jmsehj qsjmhj,h.sjyzhj qsyzhj from bdc_sl_hsxx_mx t left join bdc_sl_hsxx h on h.hsxxid=t.hsxxid where h.xmid=#{xmid} and t.mxzl='11' and h.sqrlb='2';
+select t.hj from bdc_sl_sfxx t where t.sfxxid=#{sfxxid} and t.qlrlb='1'
+
+------子表
+=-----参数
+
+sfxxid,xmid
+------sql
+select s.sfxmid, #{qlr} qlr, s.sfxmmc, s.sl,s.ysje,(select t.djjg  from bdc_sl_jbxx t left join bdc_sl_xm x on x.jbxxid=t.jbxxid
+where x.xmid=#{xmid}) djjg from bdc_sl_sfxm s
+where s.sfxxid=#{sfxxid} and s.qlrlb='1';
+
+
+------xml
+<?xml version="1.0" encoding="utf-8"?>
+<fetchdatas>
+    <page>
+        <datas>
+            <data name="qlr" type="String">$QLR</data>
+            <data name="qlrzjh" type="String">$QLRZJH</data>
+            <data name="ywr" type="String">$YWR</data>
+            <data name="ywrzjh" type="String">$YWRZJH</data>
+            <data name="slsj" type="String">$SLSJ</data>
+            <data name="zl" type="String">$ZL</data>
+            <data name="htmj" type="String">$HTMJ</data>
+            <data name="ycmj" type="String">$YCMJ</data>
+            <data name="ckmj" type="String">$CKMJ</data>
+            <data name="glmj" type="String">$GLMJ</data>
+            <data name="dxsmj" type="String">$DXSMJ</data>
+            <data name="jyje" type="String">$JYJE</data>
+            <data name="hdjsjg" type="String">$HDJSJG</data>
+            <data name="zzsynse" type="String">$ZZSYNSE</data>
+            <data name="jyfjfynse" type="String">$JYFJFYNSE</data>
+            <data name="dfjyfjfynse" type="String">$DFJYFJFYNSE</data>
+            <data name="cswhjsynse" type="String">$CSWHJSYNSE</data>
+            <data name="grsdsynse" type="String">$GRSDSYNSE</data>
+            <data name="ynsehj" type="String">$YNSEHJ</data>
+            <data name="zzsjmse" type="String">$ZZSJMSE</data>
+            <data name="jyfjfjmse" type="String">$JYFJFJMSE</data>
+            <data name="dfjyfjfjmse" type="String">$DFJYFJFJMSE</data>
+            <data name="cswhjsjmse" type="String">$CSWHJSJMSE</data>
+            <data name="grsdsjmse" type="String">$GRSDSJMSE</data>
+            <data name="jmsehj" type="String">$JMSEHJ</data>
+            <data name="zzssjnse" type="String">$ZZSSJNSE</data>
+            <data name="jyfjfsjnse" type="String">$JYFJFSJNSE</data>
+            <data name="dfjyfjfsjnse" type="String">$DFJYFJFSJNSE</data>
+            <data name="cswhjssjnse" type="String">$CSWHJSSJNSE</data>
+            <data name="grsdssjnse" type="String">$GRSDSSJNSE</data>
+            <data name="sjyzhj" type="String">$SJYZHJ</data>
+            <data name="qsynse" type="String">$QSYNSE</data>
+            <data name="qsynhj" type="String">$QSYNHJ</data>
+            <data name="qsjmse" type="String">$QSJMSE</data>
+            <data name="qsjmhj" type="String">$QSJMHJ</data>
+            <data name="qssjnse" type="String">$QSSJNSE</data>
+            <data name="qsyzhj" type="String">$QSYZHJ</data>
+            <data name="lcmc" type="String">$LCMC</data>
+            <data name="djxl" type="String">$DJXL</data>
+            <data name="lxdh" type="String">$LXDH</data>
+            <data name="ywrlxdh" type="String">$YWRLXDH</data>
+            <data name="qlrdlr" type="String">$QLRDLR</data>
+            <data name="dxhj" type="String">$DXHJ</data>
+            <data name="hj" type="String">$HJ</data>
+            <data name="slr" type="String">$SLR</data>
+            <data name="slbh" type="String">$SLBH</data>
+            <data name="wszt" type="String">$WSZT</data>
+        </datas>
+        <detail ID="bdcsfxm">
+            <row ID="${SFXMID}">
+                <data name="qlr" type="String">$QLR</data>
+                <data name="sfxmmc" type="String">$SFXMMC</data>
+                <data name="sl" type="String">$SL</data>
+                <data name="ysje" type="String">$YSJE</data>
+                <data name="djjg" type="String">$DJJG</data>
+            </row>
+        </detail>
+    </page>
+</fetchdatas>

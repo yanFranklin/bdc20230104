@@ -1,0 +1,49 @@
+info:
+  name: ${spring.application.name}
+  component: Etl Application
+
+app:
+#  center: http://192.168.0.43:8000/eureka/
+#  oauth: http://192.168.0.43:8002/account
+  #center: http://127.0.0.1:8000/eureka/
+  #oauth: http://127.0.0.1:8002/account
+  center: http://192.168.10.87:8000/eureka
+  oauth: http://192.168.10.87:8002/account
+  security:
+    moduleAuthPath: http://account/account
+    ignores: /index/**,/realestate-etl/rest/v1.0/**,/image/**,/css/**,/js/**,/webjars/**
+    authorities:
+      permitAll: /**
+      hasUrlAuthority('read'): /auth/users,/auth/orgs
+      hasModuleAuthority('yhgl:add'): /auth/user/create
+      hasAnyAuthority('ROLE_USER'): /resource1/**,/catalog1/**,/index
+      hasAnyAuthority('ROLE_ADMIN_2'): /call
+      authenticated : true
+    resources:
+      hasScope('get_portal_info'): /realestate-etl/res/**
+
+spring:
+  rabbitmq:
+    port: 5672
+    username: guest
+    password: guest
+    addresses: 192.168.10.87
+  redis:
+    port: 6379
+    host: 192.168.10.87
+  datasource:
+      bdcdj:
+        url: jdbc:oracle:thin:@192.168.10.86:1521/orcl
+        username: bdcdj_3
+        password: gtis
+      exchange:
+        url: jdbc:oracle:thin:@192.168.10.86:1521/orcl
+        username: bdcdj_gxsj_gs
+        password: gtis
+  messages:
+        basename: conf/message/messages
+
+server:
+  port: ${port:8800}
+
+

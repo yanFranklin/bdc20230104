@@ -1,0 +1,47 @@
+info:
+  name: InterchangeApp
+  component: Interchange Application
+
+
+server:
+  port: ${port:9996}
+
+logging:
+  level:
+    org.springframework: WARN
+
+
+# 推送公告信息定时任务设置
+yancheng.xtggts.cron: 0/20 * * * * ?
+
+# 不动产3.0系统获取公告信息接口，对应登记应用需要放开这个接口权限
+# 例如：http://127.0.0.1:10003/realestate-exchange/rest/v1.0/interface/generateXtgg
+ggxx.bdcdjurl : http://192.168.2.125:10002/realestate-exchange/rest/v1.0/interface/generateXtgg
+
+# 推送公告信息后回调的登记3.0接口地址，用于记录成功推送的公告信息，对应登记应用需要放开这个接口权限
+# 例如：http://127.0.0.1:10003/realestate-exchange/rest/v1.0/interface/insertBatchBdcGg
+ggxx.bdcdjlogurl : http://192.168.2.125:10002/realestate-exchange/rest/v1.0/interface/insertBatchBdcGg
+
+# 局网站接收公告信息接口
+# 例如：http://zrzy.jiangsu.gov.cn/yc/gtzx/bdcdjgg/
+ggxx.jwzurl: http://127.0.0.1:8599/realestate-inquiry/rest/v1.0/test/ggxx
+
+
+# 查询待推送公告信息时间范围：开始时间，默认 00:00:00
+ggxx.starttime: '00:00:00'
+# 查询待推送公告信息时间范围：结束时间，默认 "23:59:59"
+ggxx.endtime: '23:59:59'
+# 查询待推送公告信息：审批来源，默认 1，多个英文逗号分隔
+ggxx.sply: 1
+# 查询待推送公告信息：公告类型，默认 1，多个英文逗号分隔
+ggxx.gglx: 1
+# 查询待推送公告信息：工作流定义id，默认空，即查询所有流程的公告，多个英文逗号分隔
+ggxx.gzldyid:
+
+# 推送局网站公告信息字段中栏目columnname对应值，默认 不动产登记公告
+ggxx.columnname: 不动产登记公告
+# 推送局网站公告信息字段中栏目编码columncode对应值，默认 5783
+ggxx.columncode: 5783
+
+# 保存到公告记录表BDC_GG的公告人姓名ggrxm
+ggxx.ggrxm: 盐城市自然资源和规划局

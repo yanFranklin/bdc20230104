@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--同步信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.exchange.SyncDataMapper">
+
+    <insert id="insertSyncData" parameterType="java.util.Map">
+        insert into sync_data(keycode,indate,sprocname,xmzt,scope,flag,errcount,status,djbh) values (#{ywh},#{createtime},#{djlxmc},#{xmzt},#{djlx},0,0,0,#{djbh})
+    </insert>
+
+    <update id="updateSyncDataXmzt" parameterType="java.util.Map">
+        update sync_data
+        SET
+           xmzt = #{xmzt},
+           flag=0,
+           errcount=0,
+           status=0,
+           djbh = #{djbh},
+           outdate = null
+        WHERE
+           keycode = #{ywh}
+    </update>
+
+    <select id="getSyncDataByYwh" parameterType="java.util.Map" resultType="java.util.Map">
+        select keycode, indate, outdate, scope, sprocname, flag, errcount, xmzt, status from sync_data
+        where
+        <if test="ywh != null and ywh !=''">
+            keycode = #{ywh}
+        </if>
+        <if test="xmzt != null and xmzt !=''">
+            and xmzt= #{xmzt}
+        </if>
+    </select>
+
+</mapper>

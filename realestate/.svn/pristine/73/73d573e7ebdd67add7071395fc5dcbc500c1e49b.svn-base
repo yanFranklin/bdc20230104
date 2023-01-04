@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>不动产登记信息查询</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/yhcx/yhcx.css">
+
+</head>
+
+<body>
+<div class="content-div">
+    <div class="bdc-content-box">
+        <div class="layui-form-item pf-form-item">
+            <div class="bdc-search-box">
+                <form class="layui-form" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">权利人</label>
+                            <div class="layui-input-inline">
+                                <input type="text" autocomplete="off" id="qlr" name="qlr" placeholder="(精确)请输入" ondblclick="ReadIDCardNewQlrAndZjh()" class="layui-input search">
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">不动产权证号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" autocomplete="off"  id="bdcqzh" name="bdcqzh" placeholder="(精确)请输入" class="layui-input search">
+                                <i class="layui-icon layui-icon-close bdc-hide"></i>
+                            </div>
+                        </div>
+                        <div class="layui-inline bdc-button-box">
+                            <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                            <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn">重置
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <form class="layui-form" action="">
+            <div class="content-main" id="yhcxjg">
+                <!-- 查询结果表单 -->
+                <div class="table-name">南通市不动产登记信息查询结果</div>
+                <div class="bdc-table-box">
+                    <table class="layui-table" border="1">
+                        <colgroup>
+                            <col width="50">
+                            <col width="150">
+                            <col width="50">
+                            <col width="50">
+                            <col width="50">
+                            <col width="150">
+                            <col width="50">
+                            <col width="75">
+                            <col width="75">
+                            <col width="90">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <td rowspan="4" class="set-back-color set-center">权<br>利<br>登<br>记<br>信<br>息</td>
+                            <td colspan="2" class="set-back-color">权利人</td>
+                            <td colspan="4">
+                                <div class="bdc-td-box">
+                                    <textarea class="layui-textarea change-textarea-width" disabled="disabled" name="cqqlr" id="cqqlr"></textarea>
+                                </div>
+                            </td>
+                            <td colspan="2" class="set-back-color">证书号</td>
+                            <td colspan="4">
+                                <div class="bdc-td-box">
+                                    <input type="text" class="layui-table-edit" name="zsh" id="zsh">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="set-back-color">登记时间</td>
+                            <td colspan="4">
+                                <div class="bdc-td-box">
+                                    <input type="text" class="layui-table-edit" name="djsj" id="djsj">
+                                </div>
+                            </td>
+                            <td colspan="2" class="set-back-color">共有情况</td>
+                            <td colspan="4">
+                                <div class="bdc-td-box">
+                                    <input type="text" class="layui-table-edit" name="gyqk" id="gyqk">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="set-back-color">是否注销</td>
+                            <td colspan="4">
+                                <div class="bdc-td-box">
+                                    <input type="text" class="layui-table-edit" name="sfzx" id="sfzx">
+                                </div>
+                            </td>
+                            <td colspan="2" class="set-back-color">注销时间</td>
+                            <td colspan="4">
+                                <div class="bdc-td-box">
+                                    <input type="text" class="layui-table-edit">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="set-tr-height78">
+                            <td colspan="2" class="set-back-color">附记</td>
+                            <td colspan="10">
+                                <div class="bdc-td-box">
+                                    <input type="text" class="layui-table-edit" name="fj" id="fj">
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                        <tbody id="tbody-bdcdyxx">
+
+                        </tbody>
+                        <tbody>
+                        <tr>
+                            <td colspan="13" class="set-back-color">土地状况</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="set-back-color">土地使用取得方式</td>
+                            <td colspan="4">
+                                <div class="bdc-td-box">
+                                    <input type="text" class="layui-table-edit" name="tdqdfs" id="tdqdfs">
+                                </div>
+                            </td>
+                            <td colspan="2" class="set-back-color">土地使用年限</td>
+                            <td colspan="3">
+                                <div class="bdc-td-box">
+                                    <input type="text" class="layui-table-edit" name="syqjssj" id="syqjssj">
+                                </div>
+                            </td>
+                            <td colspan="2" class="set-back-color">止</td>
+                        </tr>
+                        </tbody>
+                        <tbody id="tbody2">
+
+                        </tbody>
+                        <tbody id="tbody3">
+
+                        </tbody>
+                        <tbody>
+                        <tr class="set-tr-height78">
+                            <td colspan="13" class="change-left">
+                                <div class="layui-inline change-width">
+                                    <label class="layui-form-label change-label-width">异议登记情况:</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" class="layui-input" name="yysx" id="yysx">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="set-tr-height78 yhcx-sd" style="display:none">
+                            <td colspan="13" class="change-left">
+                                <div class="layui-inline change-width">
+                                    <label class="layui-form-label change-label-width">行政限制:</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" class="layui-input" name="sd" id="sd" value="">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="set-tr-height78">
+                            <td colspan="13" class="change-left">
+                                <br>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width">查阅日期：</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" class="layui-input" name="cyrq" id="cyrq">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width">单位盖章：</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" class="layui-input" placeholder=>
+                                    </div>
+                                </div>
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script type="text/html" id="bdcdyxxTpl">
+    <tr>
+        <td colspan="3" class="set-back-color">不动产单元号、地籍号</td>
+        <td colspan="4" class="set-back-color">坐落</td>
+        <td class="set-back-color">总层数</td>
+        <td class="set-back-color">所在层</td>
+        <td class="set-back-color">规划用途</td>
+        <td class="set-back-color">房屋性质</td>
+        <td class="set-back-color">建筑面积</td>
+        <td class="set-back-color">土地使用面积</td>
+    </tr>
+    {{# layui.each(d, function(index, item){ }}
+    <tr>
+        <td colspan="3">
+            <div class="bdc-td-box">
+                <textarea class="layui-textarea change-textarea-width" disabled="disabled">{{item.bdcdyh || ''}}</textarea>
+            </div>
+        </td>
+        <td colspan="4">
+            <div class="bdc-td-box">
+                <textarea class="layui-textarea change-textarea-width" disabled="disabled">{{item.zl || ''}}</textarea>
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" value="{{item.zcs || ''}}" title="{{item.zcs || ''}}">
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" value="{{item.szc || ''}}" title="{{item.szc || ''}}">
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" value="{{item.ghyt || ''}}" title="{{item.ghyt || ''}}">
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" value="{{item.fwxz || ''}}" title="{{item.fwxz || ''}}">
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" value="{{item.jzmj || ''}}" title="{{item.jzmj || ''}}">
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" value="{{item.tdsyqmj || ''}}" title="{{item.tdsyqmj || ''}}">
+            </div>
+        </td>
+    </tr>
+    {{# }) }}
+</script>
+<!-- 抵押权利信息模板 -->
+<script type="text/html" id="dyDataTpl">
+    <tr>
+        <td colspan="13" class="set-back-color">他项权证信息</td>
+    </tr>
+    <tr>
+        <td class="set-back-color">序号</td>
+        <td colspan="2" class="set-back-color">坐落</td>
+        <td colspan="3" class="set-back-color">不动产证明号</td>
+        <td colspan="2" class="set-back-color">抵押权人</td>
+        <td class="set-back-color">抵押方式</td>
+        <td class="set-back-color">被担保主<br>债权数额<br>(万元)</td>
+        <td class="set-back-color">最高债权额<br>(万元)</td>
+        <td class="set-back-color">债务履行期限</td>
+        <td class="set-back-color">载簿时间</td>
+    </tr>
+    {{# layui.each(d, function(index, item){ }}
+    <tr>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" value="{{item.index || ''}}" title="{{item.index || ''}}">
+            </div>
+        </td>
+        <td colspan="2">
+            <div class="bdc-td-box">
+                <textarea class="layui-textarea change-textarea-width" disabled="disabled">{{item.zl || ''}}</textarea>
+            </div>
+        </td>
+        <td colspan="3">
+            <div class="bdc-td-box">
+                <textarea class="layui-textarea change-textarea-width" disabled="disabled">{{item.bdcqzh || ''}}</textarea>
+            </div>
+        </td>
+        <td colspan="2">
+            <div class="bdc-td-box">
+                <textarea class="layui-textarea change-textarea-width" disabled="disabled">{{item.qlr || ''}}</textarea>
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" value="{{item.dyfs || ''}}" title="{{item.dyfs || ''}}">
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" value="{{item.dyje || ''}}" title="{{item.dyje || ''}}">
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" value="{{item.zgzqe || ''}}" title="{{item.zgzqe || ''}}">
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" value="{{item.zwlxjssj || ''}}" title="{{item.zwlxjssj || ''}}">
+            </div>
+        </td>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" value="{{item.djsj || ''}}" title="{{item.djsj || ''}}">
+            </div>
+        </td>
+    </tr>
+    {{# }) }}
+</script>
+<!-- 限制权利信息模板 -->
+<script type="text/html" id="cfDataTpl">
+    <tr>
+        <td colspan="13" class="set-back-color">限制权利信息</td>
+    </tr>
+    <tr>
+        <td class="set-back-color">序号</td>
+        <td colspan="2" class="set-back-color">坐落</td>
+        <td colspan="4" class="set-back-color">查封机构</td>
+        <td colspan="3" class="set-back-color">查封文号</td>
+        <td colspan="3" class="set-back-color">查封送达时间</td>
+    </tr>
+    {{# layui.each(d, function(index, item){ }}
+    <tr>
+        <td>
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" value="{{item.index || ''}}" title="{{item.index || ''}}">
+            </div>
+        </td>
+        <td colspan="2">
+            <div class="bdc-td-box">
+                <textarea class="layui-textarea change-textarea-width" name="fj" disabled="disabled">{{item.zl || ''}}</textarea>
+            </div>
+        </td>
+        <td colspan="4">
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" value="{{item.cfjg || ''}}" title="{{item.cfjg || ''}}">
+            </div>
+        </td>
+        <td colspan="3">
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" value="{{item.cfwh || ''}}" title="{{item.cfwh || ''}}">
+            </div>
+        </td>
+        <td colspan="3">
+            <div class="bdc-td-box">
+                <input type="text" class="layui-table-edit" value="{{item.cfsj || ''}}" title="{{item.cfsj || ''}}">
+            </div>
+        </td>
+    </tr>
+    {{# }) }}
+</script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.all.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/lib/bdcui/js/application.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/lib/bdcui/js/readIdCard.js"></script>
+<script src="../../static/js/readCard.js"></script>
+<script src="../../static/js/yhcx/yhcx.js"></script>
+
+</html>

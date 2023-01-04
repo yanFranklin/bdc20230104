@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--汇交日志信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.accessLog.RegisterLogMapper">
+
+    <select id="listRegisterLogByPage" parameterType="cn.gtmap.realestate.exchange.core.qo.RegisterLogQO"
+            resultType="cn.gtmap.realestate.exchange.core.dto.RegisterLogDTO">
+        SELECT t.id, to_char(t.jrrq, 'yyyy-MM-dd') jrrq, xzqdm,
+               (case t.cgbs when 0 then '失败' when 1 then '成功' end) cgbsmc,
+               t.cgbs, q.mc xzqmc,
+               (case t.sjcgbs when 0 then '失败' when 1 then '成功' end) sjcgbsmc,
+               t.sjcgbs
+        FROM (
+            SELECT id,jrrq,xzqdm,cgbs,sjcgbs,
+                   Row_Number() OVER(PARTITION BY x.xzqdm, trunc(jrrq) ORDER BY x.jrrq desc, x.cgbs desc, x.sjcgbs desc ) as num
+            FROM  BDC_JR_DBRZJL x
+        ) t left join bdc_zd_qx q on q.dm = t.xzqdm
+        where t.num=1
+        <if test="xzqdm != null and xzqdm !=''">
+            and t.xzqdm = #{xzqdm}
+        </if>
+        <if test="jssj != null and jssj !=''">
+            and to_char(t.jrrq,'yyyy-MM-dd') <![CDATA[<=]]> #{jssj}
+        </if>
+        <if test="kssj != null and kssj !=''">
+            and to_char(t.jrrq,'yyyy-MM-dd') <![CDATA[>=]]> #{kssj}
+        </if>
+        order by t.jrrq desc
+    </select>
+
+</mapper>

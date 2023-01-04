@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title class="bdc_subsystem">不动产电子证照应用信息</title>
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <link rel="stylesheet" href="../../static/thirdControl/layui/css/layui.css" media="all">
+    <script src="../../static/thirdControl/layui/layui.js"></script>
+    <script src="../../static/thirdControl/jquery/jquery.min.js"></script>
+    <script src="../../static/js/common.js?v=1.1"></script>
+    <link rel="stylesheet" href="../../static/thirdControl/bdcui/css/table.css">
+    <link rel="stylesheet" href="../../static/thirdControl/bdcui/css/search.css">
+</head>
+<body>
+<div class="bdc-table-box">
+
+    <!--表单模块-->
+    <form class="layui-form">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">应用名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="yymc" class="layui-input" placeholder="请输入应用名称">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <button class="layui-btn layui-btn-normal bdc-major-btn" lay-submit="" id="query" lay-filter="query"
+                        type="button">
+                    查询
+                </button>
+                <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+            </div>
+        </div>
+    </form>
+    <hr class="layui-bg-gray">
+    <table id="dzzzTokenList" lay-filter="dataTable"></table>
+</div>
+<script type="text/html" id="tokenListToolBarTmpl">
+    <div class="layui-btn-container">
+        <span class="layui-btn layui-btn-xs bdc-edit-btn" lay-event="editToken">修改</span>
+        <span class="layui-btn layui-btn-xs bdc-delete-btn" lay-event="delete">删除</span>
+    </div>
+</script>
+<script type="text/html" id="toolbarTable">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="addToken">增加</button>
+    </div>
+</script>
+<script src="../../static/thirdControl/bdcui/js/table.js"></script>
+
+<script>
+    layui.use(['jquery', 'layer', 'element', 'form', 'table', 'util'], function () {
+        var $ = layui.jquery;
+        var element = layui.element;
+        var form = layui.form;
+        var table = layui.table;
+        var util = layui.util;
+
+        //提交表单
+        form.on("submit(query)", function (data) {
+            tableReload('dzzzTokenList', data.field);
+            return false;
+        });
+
+        var tableConfig = {
+            toolbar: "#toolbarTable"
+            //, elem: '#dzzzTokenList'
+            , method: "POST"
+            , url: '/realestate-e-certificate/listDzzzTokenByPageJson'
+            , cols: [[ //表头
+                {field: 'yymc', title: '应用名称', width: '40%'}
+                ,{field: 'yybm', title: '应用部门', width: '20%'}
+                ,{field: 'yyqx', title: '应用权限', width: '20%'}
+                , {title: '操作', align: 'center', width: '20%', fixed: 'right', toolbar: '#tokenListToolBarTmpl'}
+            ]]
+        };
+        //加载表格
+        loadDataTablbeByUrl("#dzzzTokenList", tableConfig);
+
+        table.on('tool(dataTable)', function (obj) {
+            var data = obj.data;
+            if (data && data.yyid) {
+                if (obj.event === "delete") {
+                    layer.confirm('确定删除？', function (index) {
+                        deleteDzzzToken(data);
+                        return false
+                    });
+                }
+                else if (obj.event === "editToken") {
+                    editToken(data);
+                    return false
+                }
+            } else {
+                layer.alert("当前数据主键缺失，请检查数据");
+                return false
+            }
+        });
+
+        table.on('toolbar(dataTable)', function (obj) {
+            if (obj.event === "addToken") {
+                addToken();
+            }
+        });
+    });
+    function deleteDzzzToken(data) {
+        var data = {
+            yyid: data.yyid
+        };
+        postDataToServer("/realestate-e-certificate/deleteBdcDzzzToken", data, "GET" , false, 'application/json;charset=utf-8');
+        refreshView();
+    }
+
+    function editToken(data){
+        var d = layer.open({
+            type: 2,
+            title: "修改应用名称",
+            maxmin: true,
+            area: ['70%', '100%'],
+            fixed: false, //不固定
+            content: '/realestate-e-certificate/view/token/bdcDzzzTokenForm.html?yyid='+ data.yyid
+            , end: function (index, layero) {
+                refreshView();
+                return false;
+            }
+        });
+    }
+
+    function addToken(){
+        var add = layer.open({
+            type: 2,
+            title: "新增应用名称",
+            maxmin: true,
+            area: ['70%', '100%'],
+            fixed: false, //不固定
+            content: '/realestate-e-certificate/view/token/bdcDzzzTokenForm.html'
+            , end: function (index, layero) {
+                refreshView();
+                return false;
+            }
+        });
+    }
+</script>
+</body>
+</html>
+
+

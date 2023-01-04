@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>申请项目</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+
+    <!--下拉框需要-->
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <style>
+        .overflow-scroll {
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form bdc-form-div bdc-not-full-bg">
+    <!--全局 标题和操作按钮 开始-->
+    <div class="bdc-content-fix">
+        <div class="content-title layui-clear">
+            <p>外网申请信息</p>
+        </div>
+    </div>
+    <!--全局 标题和操作按钮 结束-->
+    <div class="layui-tab" lay-filter="tabFilter">
+        <ul class="layui-tab-title" id="liContent">
+
+        </ul>
+        <div class="layui-tab-content" id="sqxxContent">
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/html" id="liTpl">
+    {{# layui.each(d.sqxxList, function(sqxxlen, sqxx){ }}
+    <li {{# if(sqxxlen == 0){ }} class="layui-this" {{# } }}>申请信息</li>
+    {{# }); }}
+    <li>基本信息</li>
+</script>
+<script type="text/html" id="jbxxTpl">
+    <form class="layui-form bdc-form-table" id="jbxxForm" lay-filter="jbxxForm">
+        <div class="basic-info">
+            <div class="title-sign">
+                <p>基本信息</p>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">收件编号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="sqslbh" id="sqslbh" lay-verify="" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">申请人</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="sqrmc" id="sqrmc" lay-verify="" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">申请时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="sqsj" class="layui-input test-item"
+                               id="sqsj">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label change-label-width">业务类型</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="lcmc" id="lcmc" lay-verify="" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline bdc-two-column">
+                    <label class="layui-form-label change-label-width">面积单位</label>
+                    <div class="layui-input-inline">
+                        <input type="checkbox" name="mjdw" title="平方米" lay-skin="primary">
+                        <input type="checkbox" name="mjdw" title="亩" lay-skin="primary">
+                        <input type="checkbox" name="mjdw" title="公顷" lay-skin="primary">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="basic-info">
+            <div class="title-sign"><p><a id="clxx" href="javascript:;">材料信息</a></p></div>
+            <div class="layui-form-item">
+                <div class="bdc-jt-table">
+                    <table class="layui-table" border="1" id="clxxTable" lay-filter="clxxTable">
+                        <colgroup>
+
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th width="30px">序号</th>
+                            <th style="min-width: 500px">材料名称</th>
+                            <th style="min-width: 50px">份数</th>
+                            <th style="min-width: 50px">页数</th>
+                            <th style="min-width: 100px">类型</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{# if(d.sqxx&&d.sqxx.gxWwSqxxClxxDoList){ }}
+                        {{# var clxxList=d.sqxx.gxWwSqxxClxxDoList }}
+                        {{# }else{ }}
+                        {{# var clxxList=[] }}
+                        {{# } }}
+                        {{# if(!clxxList ||clxxList.length ===0) { }}
+                        <tr class="bdc-table-none">
+                            <td colspan="3">
+                                <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据</div>
+                            </td>
+                        </tr>
+                        {{# } else { }}
+                        {{# layui.each(clxxList, function(clxxlen, clxx){ }}
+                        <tr>
+                            <td>
+                                <div class="bdc-td-box">
+                                    <input type="text" name="xh" title="{{clxx.xh ||''}}" value="{{clxx.xh ||''}}"
+                                           class="layui-input">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="bdc-td-box">
+                                    <input type="text" name="clmc" title="{{clxx.clmc ||''}}" value="{{clxx.clmc ||''}}"
+                                           class="layui-input">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="bdc-td-box">
+                                    <input type="text" name="fs" title="{{clxx.fs ||''}}" value="{{clxx.fs ||''}}"
+                                           class="layui-input">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="bdc-td-box">
+                                    <input type="text" name="ys" title="{{clxx.ys ||''}}" value="{{clxx.ys ||''}}"
+                                           class="layui-input">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="bdc-td-box">
+                                    <select name="cllx" class="" id="cllx">
+                                        <option value=""></option>
+                                        <option value="1" {{# if(1==clxx.cllx ){ }} selected="selected"
+                                                {{# } }}>原件
+                                        </option>
+                                        <option value="2" {{# if(2==clxx.cllx ){ }} selected="selected"
+                                                {{# } }}>复印件
+                                        </option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        {{# }); }}
+                        {{# } }}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+</script>
+<script type="text/html" id="sqxxTpl">
+
+    {{# layui.each(d.sqxxList, function(sqxxlen, sqxx){ }}
+    <div {{# if(sqxxlen == 0){ }} class="layui-tab-item layui-show" {{# }else{ }} class="layui-tab-item" {{# } }}>
+        <!--表单信息-->
+        <form class="layui-form setOverflow bdc-form-table" action="" lay-filter="sqxxForm{{(sqxxlen +1) ||''}}">
+            <div class="form-margin-area">
+                <div class="basic-info">
+                    <div class="title-sign bdc-title-sign-btn">
+                        <p>登记原因</p>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">登记原因</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="djyy" id="djyy" lay-verify="" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="basic-info">
+                    <div class="title-sign"><p><a id="qlrxx" href="javascript:;">权利人信息</a></p></div>
+                    <div class="layui-form-item overflow-scroll">
+                        <div class="bdc-jt-table">
+                            <table class="layui-table" border="1" id="qlrxxTable" lay-filter="qlrxxTable">
+                                <colgroup>
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th style="width: 30px">序号</th>
+                                    <th style="min-width: 60px">类别</th>
+                                    <th style="min-width: 60px">名称</th>
+                                    <th style="min-width: 60px">证件类型</th>
+                                    <th style="min-width: 100px">证件号</th>
+                                    <th>共有方式</th>
+                                    <th>共有比例</th>
+                                    <th style="min-width: 60px">联系电话</th>
+                                    <th style="min-width: 60px ">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {{# if(sqxx){ }}
+                                {{# var qlrList=sqxx.gxWwSqxxQlrDoList }}
+                                {{# }else{ }}
+                                {{# var qlrList=[] }}
+                                {{# } }}
+                                {{# if(!qlrList ||qlrList.length ===0) { }}
+                                <tr class="bdc-table-none">
+                                    <td colspan="11">
+                                        <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据</div>
+                                    </td>
+                                </tr>
+                                {{# } else { }}
+                                {{# layui.each(qlrList, function(qlrlen, qlr){ }}
+                                <tr>
+                                    <td>{{qlrlen+1}}</td>
+                                    <td>
+                                        <div class="bdc-td-box">
+                                            <select name="qlrlx" id="qlrlx">
+                                                <option value="">请选择</option>
+                                                <option value="qlr" {{# if(qlr.qlrlx=="qlr"){ }} selected="selected"
+                                                        {{# } }}>权利人
+                                                </option>
+                                                <option value="ywr" {{# if(qlr.qlrlx=="ywr"){ }} selected="selected"
+                                                        {{# } }}>义务人
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="bdc-td-box">
+                                            <input type="text" name="qlrmc" title="{{qlr.qlrmc ||''}}" value="{{qlr.qlrmc ||''}}" class="layui-input">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="bdc-td-box">
+                                            <select name="qlrsfzjzl" class="" id="qlrsfzjzl">
+                                                <option value=""></option>
+                                                {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                                                <option value="{{item.DM }}" title="{{item.MC || ''}}" {{# if(qlr.qlrsfzjzl==item.DM ){ }} selected="selected" {{#
+                                                        } }}>{{item.MC || ''}}
+                                                </option>
+                                                {{# }); }}
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="bdc-td-box">
+                                            <input type="text" name="qlrzjh" title="{{qlr.qlrzjh ||''}}" value="{{qlr.qlrzjh ||''}}" class="layui-input">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="bdc-td-box">
+                                            <div class="bdc-td-box">
+                                                <select name="gyfs" class="" id="gyfs">
+                                                    <option value=""></option>
+                                                    {{# layui.each(d.zd.gyfs, function(index, item){ }}
+                                                    <option value="{{item.DM }}" title="{{item.MC || ''}}" {{# if(qlr.gyfs==item.DM ){ }} selected="selected" {{#
+                                                            } }}>{{item.MC || ''}}
+                                                    </option>
+                                                    {{# }); }}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="bdc-td-box">
+                                            <input type="text" name="qlbl" title="{{qlr.qlbl ||''}}" value="{{qlr.qlbl ||''}}" class="layui-input">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="bdc-td-box">
+                                            <input type="text" name="qlrlxdh" title="{{qlr.qlrlxdh ||''}}" value="{{qlr.qlrlxdh ||''}}" class="layui-input">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="layui-btn layui-btn-xs bdc-major-btn" name="qlrxx"
+                                                onclick="showQlr('{{qlr.qlrid || \'\'}}')"
+                                                id="zhlc-qlrxx">详细
+                                        </button>
+
+                                    </td>
+                                </tr>
+                                {{# }); }}
+                                {{# } }}
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="basic-info">
+                    <div class="title-sign"><p><a id="sqxx" href="javascript:;">申请信息</a></p></div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">是否分别持证</label>
+                            <div class="layui-input-inline bdc-radio">
+                                <select name="sffbcz" id="sffbcz">
+                                    <option value=""></option>
+                                    <option value="是">是</option>
+                                    <option value="否">否</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+
+                        <div class="layui-inline bdc-two-column">
+                            <label class="layui-form-label change-label-width">不动产单元号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="bdcdyh" id="bdcdyh" lay-verify="" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">取得方式</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="qdfs" id="qdfs" lay-verify="" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">不动产类型</label>
+                            <div class="layui-input-inline bdc-radio">
+                                <select name="bdclx" id="bdclx">
+                                    <option value=""></option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">行政区划</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="xzqh" id="xzqh" lay-verify="" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">所属乡镇</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="ssxz" id="ssxz" lay-verify="" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        </div>
+                      <div class="layui-form-item">
+                        <!--交易字段开始-->
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">交易合同号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="htbh" id="htbh" lay-verify="" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">交易价格(万元)</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="jyjg" id="jyjg" lay-verify="" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                          <div class="layui-inline" name="fdcqxx">
+                              <label class="layui-form-label change-label-width">总层数</label>
+                              <div class="layui-input-inline bdc-one-icon">
+                                  <input type="number" name="zcs" id="zcs" autocomplete="off"
+                                         class="layui-input">
+                              </div>
+                          </div>
+                          <div class="layui-inline" name="fdcqxx">
+                              <label class="layui-form-label change-label-width">所在层</label>
+                              <div class="layui-input-inline bdc-one-icon">
+                                  <input type="text" name="szc" id="szc" autocomplete="off"
+                                         class="layui-input">
+                              </div>
+                          </div>
+                          </div>
+                    <div class="layui-form-item">
+
+                        <div class="layui-inline bdc-two-column">
+                            <label class="layui-form-label change-label-width">坐落</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="zl" id="zl" lay-verify="" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+
+                        <div name="fdcqxx">
+                            <div class="layui-inline">
+                                <label class="layui-form-label change-label-width">幢号</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="zrzh" id="zrzh" lay-verify="" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label change-label-width">房间号</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="fjh" id="fjh" lay-verify="" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label change-label-width">房屋性质</label>
+                                <div class="layui-input-inline bdc-radio">
+                                    <select name="fwxz" id="fwxz">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label change-label-width">规划用途</label>
+                                <div class="layui-input-inline bdc-radio">
+                                    <select name="fwyt" id="fwyt">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label change-label-width">房屋结构</label>
+                                <div class="layui-input-inline bdc-radio">
+                                    <select name="fwjg" id="fwjg">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label change-label-width">房屋类型</label>
+                                <div class="layui-input-inline bdc-radio">
+                                    <select name="fwlx" id="fwlx">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label change-label-width">建筑面积</label>
+                                <div class="layui-input-inline bdc-one-icon">
+                                    <input type="number" name="mj" id="mj" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label change-label-width">专有建筑面积</label>
+                                <div class="layui-input-inline bdc-one-icon">
+                                    <input type="number" name="zyjzmj" id="zyjzmj" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label change-label-width">分摊建筑面积</label>
+                                <div class="layui-input-inline bdc-one-icon">
+                                    <input type="number" name="ftjzmj" id="ftjzmj" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label change-label-width">竣工时间</label>
+                                <div class="layui-input-inline bdc-one-icon">
+                                    <input type="text" name="jgsj" id="jgsj" autocomplete="off"
+                                           class="layui-input test-item">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label change-label-width">宗地面积</label>
+                                <div class="layui-input-inline bdc-one-icon">
+                                    <input type="text" name="tdmj" id="tdmj" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                            </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">使用权面积</label>
+                            <div class="layui-input-inline bdc-one-icon">
+                                <input type="text" name="syqmj" id="syqmj" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label change-label-width">独用土地面积</label>
+                                <div class="layui-input-inline bdc-one-icon">
+                                    <input type="text" name="dymj" id="dymj" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label change-label-width">分摊土地面积</label>
+                                <div class="layui-input-inline bdc-one-icon">
+                                    <input type="number" name="fttdmj" id="fttdmj" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                            </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">宗地情况</label>
+                            <div class="layui-input-inline bdc-one-icon">
+                                <input type="text" name="zdqk" id="zdqk" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label change-label-width">权利性质</label>
+                                <div class="layui-input-inline">
+                                    <select name="zdzhqlxz" id="zdzhqlxz">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">地段级别</label>
+                            <div class="layui-input-inline bdc-one-icon">
+                                <input type="text" name="ddjb" id="ddjb" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        </div>
+                        </div>
+
+                    <div class="layui-form-item" name="fdcqxx">
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label change-label-width">宗地用途</label>
+                                <div class="layui-input-inline bdc-radio">
+                                    <select name="tdyt" id="tdyt">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label change-label-width bdc-label-newline">土地使用<br>起始时间</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="tdsyksqx" class="layui-input test-item" id="tdsyksqx">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label change-label-width bdc-label-newline">土地使用<br>结束时间</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="tdsyjsqx" class="layui-input test-item" id="tdsyjsqx">
+                                </div>
+                            </div>
+                        </div>
+                    <div class="layui-form-item" name="fdcqxx">
+                            <div class="layui-inline">
+                                <label class="layui-form-label change-label-width">宗地用途2</label>
+                                <div class="layui-input-inline bdc-radio">
+                                    <select name="tdyt2" id="tdyt2">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label change-label-width bdc-label-newline">土地使用<br>起始时间2</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="tdsyksqx2" class="layui-input test-item" id="tdsyksqx2">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label change-label-width bdc-label-newline">土地使用<br>结束时间2</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="tdsyjsqx2" class="layui-input test-item" id="tdsyjsqx2">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item" name="fdcqxx">
+                            <div class="layui-inline">
+                                <label class="layui-form-label change-label-width">宗地用途3</label>
+                                <div class="layui-input-inline bdc-radio">
+                                    <select name="tdyt3" id="tdyt3">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label change-label-width bdc-label-newline">土地使用<br>起始时间3</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="tdsyksqx3" class="layui-input test-item" id="tdsyksqx3" >
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label change-label-width bdc-label-newline">土地使用<br>结束时间3</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="tdsyjsqx3" class="layui-input test-item" id="tdsyjsqx3">
+                                </div>
+                            </div>
+                        </div>
+                    <div class="layui-form-item" name="dyaqxx">
+                        <!--抵押字段开始-->
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">抵押方式</label>
+                            <div class="layui-input-inline bdc-radio">
+                                <select name="dyfs">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width bdc-label-newline">禁止抵押期间抵押物转让</label>
+                            <div class="layui-input-inline bdc-radio">
+                                <select name="sfczdyyd" id="sfczdyyd">
+                                    <option value=""></option>
+                                    <option value="1">是</option>
+                                    <option value="0">否</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">担保范围</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="dbfw" id="dbfw" lay-verify="" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">抵押范围</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="dyfw" id="dyfw" lay-verify="" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">房产抵押面积</label>
+                            <div class="layui-input-inline bdc-one-icon">
+                                <input type="text" name="fwdymj" id="fwdymj" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">土地抵押面积</label>
+                            <div class="layui-input-inline bdc-one-icon">
+                                <input type="text" name="tddymj" id="tddymj" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width bdc-label-newline">抵押物价值<br>(万元)</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="bdcjz" id="bdcjz" lay-verify="" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width bdc-label-newline">债权数额<br>(万元)</label>
+                            <div class="layui-input-inline bdc-one-icon">
+                                <input type="number" name="bdbzzqse" id="bdbzzqse" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width bdc-label-newline">债务履行<br>起始时间</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="zwlxqxksrq" class="layui-input test-item"
+                                       id="zwlxqxksrq">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width bdc-label-newline">债务履行<br>结束时间</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="zwlxqxjsrq" class="layui-input test-item"
+                                       id="zwlxqxjsrq">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">债务人</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="zwr" id="zwr" lay-verify="" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">贷款方式</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="dkfs" id="dkfs" lay-verify="" autocomplete="off"
+                                       class="layui-input">
+
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">抵押顺位</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="dysw" id="dysw" lay-verify="" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="layui-form-item" name="cfxx">
+                        <!--查封字段开始-->
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">查封机关</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="cfjg" id="cfjg" lay-verify="" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">查封文号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="cfwh" id="cfwh" lay-verify="" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">查封起始时间</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="cfksrq" id="cfksrq" class="layui-input test-item" id="cfksrq">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">查封结束时间</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="cfjsrq" id="cfjsrq" class="layui-input test-item" id="cfjsrq">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">查封文件</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="cfwj" id="cfwj" lay-verify="" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">查封类型</label>
+                            <div class="layui-input-inline bdc-radio">
+                                <select name="cflx" id="cflx">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">解封机关</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="jfjg" id="jfjg" lay-verify="" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">解封文号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="jfwh" id="jfwh" lay-verify="" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label change-label-width">解封文件</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="jfwj" id="jfwj" lay-verify="" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item change-textarea-margin">
+                        <label class="layui-form-label change-label-width">备注</label>
+                        <div class="layui-input-inline">
+                            <textarea name="bz" id="bz" class="layui-textarea change-textarea-width"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item change-textarea-margin">
+                        <label class="layui-form-label change-label-width">附记</label>
+                        <div class="layui-input-inline">
+                            <textarea name="fj" id="fj" class="layui-textarea change-textarea-width"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item change-textarea-margin">
+                        <label class="layui-form-label change-label-width">退回意见</label>
+                        <div class="layui-input-inline">
+                            <textarea name="thyj" id="thyj" class="layui-textarea change-textarea-width"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+    {{# }); }}
+    </div>
+    <div class="layui-tab-item" id="jbxxContent">
+
+    </div>
+</script>
+
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/lib/bdcui/js/table.js"></script>
+<script src="../../static/js/wwsq/sqxx.js"></script>
+</html>

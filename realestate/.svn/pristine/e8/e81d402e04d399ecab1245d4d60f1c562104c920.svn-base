@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>产权证号匹配</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+
+    <link rel="stylesheet" href="../../static/css/dyhgz/cqppzh.css">
+</head>
+<body>
+<div  id="cqzhpp" class="iframe-show">
+    <div class="layui-form-item" id="cqzh">
+    </div>
+    <div class="layui-form-item" id="ppzh">
+    </div>
+    <div class="layui-form-item" id="xzql">
+    </div>
+</div>
+
+</body>
+<script type="text/html" id="cqxxTpl">
+    <div class="bdc-default-list">
+        <p class="bdc-bdcdyh"> 产权证号：{{d.bdcqzh}}</p>
+        <div class="layui-tab-info">
+            <ul class="accordion">
+                {{# layui.each(d.cqXzqlLsgxModelList, function(index, item){ }}
+                <li class="bdc-outer-li bdc-invented-li">
+                    <a class="link">
+                        <i class="fa fa-caret-right">
+                        </i>
+                        {{#  if(item.cqlsgxModelDTO.qszt==1 ){  }}
+                        <span style="color:#55BD55 "> {{ item.cqlsgxModelDTO.bdcqzh ||'无证号'}}</span>（现势）
+                        {{#  }else if(item.cqlsgxModelDTO.qszt==2){ }}
+                        <span style="color:#D7DBDC"> {{ item.cqlsgxModelDTO.bdcqzh ||'无证号'}}</span>（历史）
+                        {{#  }else{ }}
+                        {{ item.cqlsgxModelDTO.bdcqzh ||'无证号'}}（临时）
+                        {{#  } }}
+                    </a>
+                    {{# if( item.lsgxXzqlModelDTO){ }}
+                    <ul class="submenu bdc-submenu-child">
+
+                        <!--抵押信息开始-->
+                        {{# if( item.lsgxXzqlModelDTO.dyLsgxModel.length>0){ }}
+                        <li class="bdc-inner-li bdc-invented-li">
+                            <a class="childrenlink">
+                                <i class="fa fa-caret-right"></i>
+                                抵押信息</a>
+                            <ul class="secondmenu bdc-submenu-child">
+                                {{# layui.each(item.lsgxXzqlModelDTO.dyLsgxModel, function(index, item){ }}
+                                {{#  if(item.bdcQl){  }}
+                                <li class="bdc-inner-li bdc-invented-li  xx-li">
+                                    {{#  if(item.qszt==1 ){  }}
+                                    <span style="color:#55BD55 "> {{ item.bdcqzh ||'无证号'}}</span>（现势）
+                                    {{#  }else if(item.qszt==2){ }}
+                                    <span style="color:#D7DBDC"> {{ item.bdcqzh ||'无证号'}}</span>（历史）
+                                    {{#  }else{ }}
+                                    {{ item.bdcqzh ||'无证号'}}（临时）
+                                    {{#  } }}
+                                </li>
+                                {{#  } }}
+                                {{# });}}
+                            </ul>
+                        </li>
+                        {{#} }}
+                        <!--抵押信息结束-->
+
+                        <!--居住权开始-->
+                        {{# if( item.lsgxXzqlModelDTO.jzLsgxModel.length>0){ }}
+                        <li class="bdc-inner-li bdc-invented-li">
+                            <a class="childrenlink">
+                                <i class="fa fa-caret-right"></i>
+                                居住权</a>
+                            <ul class="secondmenu bdc-submenu-child">
+                                {{# layui.each(item.lsgxXzqlModelDTO.jzLsgxModel, function(index, item){ }}
+                                {{#  if(item.bdcQl){  }}
+                                <li class="bdc-inner-li bdc-invented-li  xx-li">
+                                    {{#  if(item.qszt==1 ){  }}
+                                    <span style="color:#55BD55 "> {{ item.bdcqzh ||'无证号'}}</span>（现势）
+                                    {{#  }else if(item.qszt==2){ }}
+                                    <span style="color:#D7DBDC"> {{ item.bdcqzh ||'无证号'}}</span>（历史）
+                                    {{#  }else{ }}
+                                    {{ item.bdcqzh ||'无证号'}}（临时）
+                                    {{#  } }}
+                                </li>
+                                {{#  } }}
+                                {{# });}}
+                            </ul>
+                        </li>
+                        {{#} }}
+                        <!--居住权结束-->
+
+                        <!--查封信息开始-->
+                        {{# if( item.lsgxXzqlModelDTO.cfLsgxModel.length>0){ }}
+                        <li class="bdc-inner-li bdc-invented-li">
+                            <a class="childrenlink">
+                                <i class="fa fa-caret-right"></i>
+                                查封信息</a>
+                            <ul class="secondmenu bdc-submenu-child">
+                                {{# layui.each(item.lsgxXzqlModelDTO.cfLsgxModel, function(index, item){ }}
+                                {{#  if(item.bdcQl){  }}
+                                <li class="bdc-inner-li bdc-invented-li  xx-li">
+                                    {{#  if(item.qszt==1 ){  }}
+                                    <span style="color:#55BD55 "> {{ item.bdcqzh ||'无证号'}}</span>（现势）
+                                    {{#  }else if(item.qszt==2){ }}
+                                    <span style="color:#D7DBDC"> {{ item.bdcqzh ||'无证号'}}</span>（历史）
+                                    {{#  }else{ }}
+                                    {{ item.bdcqzh ||'无证号'}}（临时）
+                                    {{#  } }}
+                                </li>
+                                {{#  } }}
+                                {{# });}}
+                            </ul>
+                        </li>
+                        {{#} }}
+                        <!--查封信息结束-->
+
+                        <!--异议信息开始-->
+                        {{# if( item.lsgxXzqlModelDTO.yyLsgxModel.length>0){ }}
+                        <li class="bdc-inner-li bdc-invented-li">
+                            <a class="childrenlink">
+                                <i class="fa fa-caret-right"></i>
+                                异议信息</a>
+                            <ul class="secondmenu bdc-submenu-child">
+                                {{# layui.each(item.lsgxXzqlModelDTO.yyLsgxModel, function(index, item){ }}
+                                {{#  if(item.bdcQl){  }}
+                                <li class="bdc-inner-li bdc-invented-li  xx-li">
+                                    {{#  if(item.qszt==1 ){  }}
+                                    <span style="color:#55BD55 "> {{ item.bdcqzh ||'无证号'}}</span>（现势）
+                                    {{#  }else if(item.qszt==2){ }}
+                                    <span style="color:#D7DBDC"> {{ item.bdcqzh ||'无证号'}}</span>（历史）
+                                    {{#  }else{ }}
+                                    {{ item.bdcqzh ||'无证号'}}（临时）
+                                    {{#  } }}
+                                </li>
+                                {{#  } }}
+                                {{# });}}
+                            </ul>
+                        </li>
+                        {{#} }}
+                        <!--异议信息结束-->
+
+                        <!--预抵押信息开始-->
+                        {{# if( item.lsgxXzqlModelDTO.ygLsgxModel.length>0){ }}
+                        <li class="bdc-inner-li bdc-invented-li">
+                            <a class="childrenlink">
+                                <i class="fa fa-caret-right"></i>
+                                预抵押信息</a>
+                            <ul class="secondmenu bdc-submenu-child">
+                                {{# layui.each(item.lsgxXzqlModelDTO.ygLsgxModel, function(index, item){ }}
+                                {{#  if(item.bdcQl){  }}
+                                <li class="bdc-inner-li bdc-invented-li  xx-li">
+                                    {{#  if(item.qszt==1 ){  }}
+                                    <span style="color:#55BD55 "> {{ item.bdcqzh ||'无证号'}}</span>（现势）
+                                    {{#  }else if(item.qszt==2){ }}
+                                    <span style="color:#D7DBDC"> {{ item.bdcqzh ||'无证号'}}</span>（历史）
+                                    {{#  }else{ }}
+                                    {{ item.bdcqzh ||'无证号'}}（临时）
+                                    {{#  } }}
+                                </li>
+                                {{#  } }}
+                                {{# });}}
+                            </ul>
+                        </li>
+                        {{#} }}
+                        <!--预抵押信息结束-->
+
+                        <!--地役信息开始-->
+                        {{# if( item.lsgxXzqlModelDTO.dyiLsgxModel.length>0){ }}
+                        <li class="bdc-inner-li bdc-invented-li">
+                            <a class="childrenlink">
+                                <i class="fa fa-caret-right"></i>
+                                地役信息</a>
+                            <ul class="secondmenu bdc-submenu-child">
+                                {{# layui.each(item.lsgxXzqlModelDTO.dyiLsgxModel, function(index, item){ }}
+                                {{#  if(item.bdcQl){  }}
+                                <li class="bdc-inner-li bdc-invented-li  xx-li">
+                                    {{#  if(item.qszt==1 ){  }}
+                                    <span style="color:#55BD55 "> {{ item.bdcqzh ||'无证号'}}</span>（现势）
+                                    {{#  }else if(item.qszt==2){ }}
+                                    <span style="color:#D7DBDC"> {{ item.bdcqzh ||'无证号'}}</span>（历史）
+                                    {{#  }else{ }}
+                                    {{ item.bdcqzh ||'无证号'}}（临时）
+                                    {{#  } }}
+                                </li>
+                                {{#  } }}
+                                {{# });}}
+                            </ul>
+                        </li>
+                        {{#} }}
+                        <!--地役信息结束-->
+                    </ul>
+                    {{#} }}
+                </li>
+                {{# }); }}
+            </ul>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="ppxxTpl">
+    <div class="bdc-default-list">
+        <p class="bdc-bdcdyh"> 匹配证号：{{d.bdcqzh}}
+        </p>
+        {{# if(d.bdcqzh==""){ }}
+        <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据</div>
+        {{# }else{ }}
+        <div class="layui-tab-info">
+            <ul class="accordion">
+                {{# layui.each(d.cqXzqlLsgxModelList, function(index, item){ }}
+                <li class="bdc-outer-li bdc-invented-li">
+                    <a class="link">
+                        <i class="fa fa-caret-right">
+                        </i>
+                        {{#  if(item.cqlsgxModelDTO.qszt==1 ){  }}
+                        <span style="color:#55BD55 "> {{ item.cqlsgxModelDTO.bdcqzh ||'无证号'}}</span>（现势）
+                        {{#  }else if(item.cqlsgxModelDTO.qszt==2){ }}
+                        <span style="color:#D7DBDC"> {{ item.cqlsgxModelDTO.bdcqzh ||'无证号'}}</span>（历史）
+                        {{#  }else{ }}
+                        {{ item.cqlsgxModelDTO.bdcqzh ||'无证号'}}（临时）
+                        {{#  } }}
+                    </a>
+                    {{# if( item.lsgxXzqlModelDTO){ }}
+                    <ul class="submenu bdc-submenu-child">
+
+                        <!--抵押信息开始-->
+                        {{# if( item.lsgxXzqlModelDTO.dyLsgxModel.length>0){ }}
+                        <li class="bdc-inner-li bdc-invented-li">
+                            <a class="childrenlink">
+                                <i class="fa fa-caret-right"></i>
+                                抵押信息</a>
+                            <ul class="secondmenu bdc-submenu-child">
+                                {{# layui.each(item.lsgxXzqlModelDTO.dyLsgxModel, function(index, item){ }}
+                                <li class="bdc-inner-li bdc-invented-li  xx-li">
+                                    {{#  if(item.qszt==1 ){  }}
+                                    <span style="color:#55BD55 "> {{ item.bdcqzh ||'无证号'}}</span>（现势）
+                                    {{#  }else if(item.qszt==2){ }}
+                                    <span style="color:#D7DBDC"> {{ item.bdcqzh ||'无证号'}}</span>（历史）
+                                    {{#  }else{ }}
+                                    {{ item.bdcqzh ||'无证号'}}（临时）
+                                    {{#  } }}
+                                </li>
+                                {{# });}}
+                            </ul>
+                        </li>
+                        {{#} }}
+                        <!--抵押信息结束-->
+
+                        <!--居住权开始-->
+                        {{# if( item.lsgxXzqlModelDTO.jzLsgxModel.length>0){ }}
+                        <li class="bdc-inner-li bdc-invented-li">
+                            <a class="childrenlink">
+                                <i class="fa fa-caret-right"></i>
+                                居住权</a>
+                            <ul class="secondmenu bdc-submenu-child">
+                                {{# layui.each(item.lsgxXzqlModelDTO.jzLsgxModel, function(index, item){ }}
+                                <li class="bdc-inner-li bdc-invented-li  xx-li">
+                                    {{#  if(item.qszt==1 ){  }}
+                                    <span style="color:#55BD55 "> {{ item.bdcqzh ||'无证号'}}</span>（现势）
+                                    {{#  }else if(item.qszt==2){ }}
+                                    <span style="color:#D7DBDC"> {{ item.bdcqzh ||'无证号'}}</span>（历史）
+                                    {{#  }else{ }}
+                                    {{ item.bdcqzh ||'无证号'}}（临时）
+                                    {{#  } }}
+                                </li>
+                                {{# });}}
+                            </ul>
+                        </li>
+                        {{#} }}
+                        <!--居住权结束-->
+
+                        <!--查封信息开始-->
+                        {{# if( item.lsgxXzqlModelDTO.cfLsgxModel.length>0){ }}
+                        <li class="bdc-inner-li bdc-invented-li">
+                            <a class="childrenlink">
+                                <i class="fa fa-caret-right"></i>
+                                查封信息</a>
+                            <ul class="secondmenu bdc-submenu-child">
+                                {{# layui.each(item.lsgxXzqlModelDTO.cfLsgxModel, function(index, item){ }}
+                                <li class="bdc-inner-li bdc-invented-li  xx-li">
+                                    {{#  if(item.qszt==1 ){  }}
+                                    <span style="color:#55BD55 "> {{ item.bdcqzh ||'无证号'}}</span>（现势）
+                                    {{#  }else if(item.qszt==2){ }}
+                                    <span style="color:#D7DBDC"> {{ item.bdcqzh ||'无证号'}}</span>（历史）
+                                    {{#  }else{ }}
+                                    {{ item.bdcqzh ||'无证号'}}（临时）
+                                    {{#  } }}
+                                </li>
+                                {{# });}}
+                            </ul>
+                        </li>
+                        {{#} }}
+                        <!--查封信息结束-->
+
+                        <!--异议信息开始-->
+                        {{# if( item.lsgxXzqlModelDTO.yyLsgxModel.length>0){ }}
+                        <li class="bdc-inner-li bdc-invented-li">
+                            <a class="childrenlink">
+                                <i class="fa fa-caret-right"></i>
+                                异议信息</a>
+                            <ul class="secondmenu bdc-submenu-child">
+                                {{# layui.each(item.lsgxXzqlModelDTO.yyLsgxModel, function(index, item){ }}
+                                <li class="bdc-inner-li bdc-invented-li  xx-li">
+                                    {{#  if(item.qszt==1 ){  }}
+                                    <span style="color:#55BD55 "> {{ item.bdcqzh ||'无证号'}}</span>（现势）
+                                    {{#  }else if(item.qszt==2){ }}
+                                    <span style="color:#D7DBDC"> {{ item.bdcqzh ||'无证号'}}</span>（历史）
+                                    {{#  }else{ }}
+                                    {{ item.bdcqzh ||'无证号'}}（临时）
+                                    {{#  } }}
+                                </li>
+                                {{# });}}
+                            </ul>
+                        </li>
+                        {{#} }}
+                        <!--异议信息结束-->
+
+                        <!--预抵押信息开始-->
+                        {{# if( item.lsgxXzqlModelDTO.ygLsgxModel.length>0){ }}
+                        <li class="bdc-inner-li bdc-invented-li">
+                            <a class="childrenlink">
+                                <i class="fa fa-caret-right"></i>
+                                预抵押信息</a>
+                            <ul class="secondmenu bdc-submenu-child">
+                                {{# layui.each(item.lsgxXzqlModelDTO.ygLsgxModel, function(index, item){ }}
+                                <li class="bdc-inner-li bdc-invented-li  xx-li">
+                                    {{#  if(item.qszt==1 ){  }}
+                                    <span style="color:#55BD55 "> {{ item.bdcqzh ||'无证号'}}</span>（现势）
+                                    {{#  }else if(item.qszt==2){ }}
+                                    <span style="color:#D7DBDC"> {{ item.bdcqzh ||'无证号'}}</span>（历史）
+                                    {{#  }else{ }}
+                                    {{ item.bdcqzh ||'无证号'}}（临时）
+                                    {{#  } }}
+                                </li>
+                                {{# });}}c
+                            </ul>
+                        </li>
+                        {{#} }}
+                        <!--预抵押信息结束-->
+
+                        <!--地役信息开始-->
+                        {{# if( item.lsgxXzqlModelDTO.dyiLsgxModel.length>0){ }}
+                        <li class="bdc-inner-li bdc-invented-li">
+                            <a class="childrenlink">
+                                <i class="fa fa-caret-right"></i>
+                                地役信息</a>
+                            <ul class="secondmenu bdc-submenu-child">
+                                {{# layui.each(item.lsgxXzqlModelDTO.dyiLsgxModel, function(index, item){ }}
+                                <li class="bdc-inner-li bdc-invented-li  xx-li">
+                                    {{#  if(item.qszt==1 ){  }}
+                                    <span style="color:#55BD55 "> {{ item.bdcqzh ||'无证号'}}</span>（现势）
+                                    {{#  }else if(item.qszt==2){ }}
+                                    <span style="color:#D7DBDC"> {{ item.bdcqzh ||'无证号'}}</span>（历史）
+                                    {{#  }else{ }}
+                                    {{ item.bdcqzh ||'无证号'}}（临时）
+                                    {{#  } }}
+                                </li>
+                                {{# });}}
+                            </ul>
+                        </li>
+                        {{#} }}
+                        <!--地役信息结束-->
+                    </ul>
+                    {{#} }}
+                </li>
+                {{# }); }}
+            </ul>
+        </div>
+        {{# } }}
+    </div>
+</script>
+<script type="text/html" id="xzxxTpl">
+        <div class="layui-tab-info">
+            {{# if( d.lsgxXzqlModelDTO){ }}
+            <ul class="submenu bdc-submenu-child">
+                <!--抵押信息开始-->
+                {{# if( d.lsgxXzqlModelDTO.dyLsgxModel.length>0){ }}
+                <li class="bdc-inner-li bdc-invented-li">
+                    <a class="childrenlink">
+                        <i class="fa fa-caret-right"></i>
+                        抵押信息</a>
+                    <ul class="secondmenu bdc-submenu-child">
+                        {{# layui.each(d.lsgxXzqlModelDTO.dyLsgxModel, function(index, item){ }}
+                        <li class="bdc-inner-li bdc-invented-li  xx-li">
+                            {{#  if(item.qszt==1 ){  }}
+                            <span style="color:#55BD55 "> {{item.bdcqzh ||'无证号'}}</span>（现势）
+                            {{#  }else if(item.qszt==2){ }}
+                            <span style="color:#D7DBDC"> {{item.bdcqzh ||'无证号'}}</span>（历史）
+                            {{#  }else{ }}
+                            {{item.bdcqzh ||'无证号'}}（临时）
+                            {{#  } }}
+                        </li>
+                        {{# });}}
+                    </ul>
+                </li>
+                {{#} }}
+                <!--抵押信息结束-->
+
+                <!--居住权开始-->
+                {{# if( d.lsgxXzqlModelDTO.jzLsgxModel.length>0){ }}
+                <li class="bdc-inner-li bdc-invented-li">
+                    <a class="childrenlink">
+                        <i class="fa fa-caret-right"></i>
+                        居住权</a>
+                    <ul class="secondmenu bdc-submenu-child">
+                        {{# layui.each(d.lsgxXzqlModelDTO.jzLsgxModel, function(index, item){ }}
+                        <li class="bdc-inner-li bdc-invented-li  xx-li">
+                            {{#  if(item.qszt==1 ){  }}
+                            <span style="color:#55BD55 "> {{item.bdcqzh ||'无证号'}}</span>（现势）
+                            {{#  }else if(item.qszt==2){ }}
+                            <span style="color:#D7DBDC"> {{item.bdcqzh ||'无证号'}}</span>（历史）
+                            {{#  }else{ }}
+                            {{item.bdcqzh ||'无证号'}}（临时）
+                            {{#  } }}
+                        </li>
+                        {{# });}}
+                    </ul>
+                </li>
+                {{#} }}
+                <!--居住权结束-->
+
+                <!--查封信息开始-->
+                {{# if( d.lsgxXzqlModelDTO.cfLsgxModel.length>0){ }}
+                <li class="bdc-inner-li bdc-invented-li">
+                    <a class="childrenlink">
+                        <i class="fa fa-caret-right"></i>
+                        查封信息</a>
+                    <ul class="secondmenu bdc-submenu-child">
+                        {{# layui.each(d.lsgxXzqlModelDTO.cfLsgxModel, function(index, item){ }}
+                        <li class="bdc-inner-li bdc-invented-li  xx-li">
+                            {{#  if(item.qszt==1 ){  }}
+                            <span style="color:#55BD55 "> {{item.bdcqzh ||'无证号'}}</span>（现势）
+                            {{#  }else if(item.qszt==2){ }}
+                            <span style="color:#D7DBDC"> {{item.bdcqzh ||'无证号'}}</span>（历史）
+                            {{#  }else{ }}
+                            {{item.bdcqzh ||'无证号'}}（临时）
+                            {{#  } }}
+                        </li>
+                        {{# });}}
+                    </ul>
+                </li>
+                {{#} }}
+                <!--查封信息结束-->
+
+                <!--异议信息开始-->
+                {{# if( d.lsgxXzqlModelDTO.yyLsgxModel.length>0){ }}
+                <li class="bdc-inner-li bdc-invented-li">
+                    <a class="childrenlink">
+                        <i class="fa fa-caret-right"></i>
+                        异议信息</a>
+                    <ul class="secondmenu bdc-submenu-child">
+                        {{# layui.each(d.lsgxXzqlModelDTO.yyLsgxModel, function(index, item){ }}
+                        <li class="bdc-inner-li bdc-invented-li  xx-li">
+                            {{#  if(item.qszt==1 ){  }}
+                            <span style="color:#55BD55 "> {{item.bdcqzh ||'无证号'}}</span>（现势）
+                            {{#  }else if(item.qszt==2){ }}
+                            <span style="color:#D7DBDC"> {{item.bdcqzh ||'无证号'}}</span>（历史）
+                            {{#  }else{ }}
+                            {{item.bdcqzh ||'无证号'}}（临时）
+                            {{#  } }}
+                        </li>
+                        {{# });}}
+                    </ul>
+                </li>
+                {{#} }}
+                <!--异议信息结束-->
+
+                <!--预抵押信息开始-->
+                {{# if( d.lsgxXzqlModelDTO.ygLsgxModel.length>0){ }}
+                <li class="bdc-inner-li bdc-invented-li">
+                    <a class="childrenlink">
+                        <i class="fa fa-caret-right"></i>
+                        预抵押信息</a>
+                    <ul class="secondmenu bdc-submenu-child">
+                        {{# layui.each(d.lsgxXzqlModelDTO.ygLsgxModel, function(index, item){ }}
+                        <li class="bdc-inner-li bdc-invented-li  xx-li">
+                            {{#  if(item.qszt==1 ){  }}
+                            <span style="color:#55BD55 "> {{item.bdcqzh ||'无证号'}}</span>（现势）
+                            {{#  }else if(item.qszt==2){ }}
+                            <span style="color:#D7DBDC"> {{item.bdcqzh ||'无证号'}}</span>（历史）
+                            {{#  }else{ }}
+                            {{item.bdcqzh ||'无证号'}}（临时）
+                            {{#  } }}
+                        </li>
+                        {{# });}}
+                    </ul>
+                </li>
+                {{#} }}
+                <!--预抵押信息结束-->
+
+                <!--地役信息开始-->
+                {{# if( d.lsgxXzqlModelDTO.dyiLsgxModel.length>0){ }}
+                <li class="bdc-inner-li bdc-invented-li">
+                    <a class="childrenlink">
+                        <i class="fa fa-caret-right"></i>
+                        地役信息</a>
+                    <ul class="secondmenu bdc-submenu-child">
+                        {{# layui.each(d.lsgxXzqlModelDTO.dyiLsgxModel, function(index, item){ }}
+                        <li class="bdc-inner-li bdc-invented-li  xx-li">
+                            {{#  if(item.qszt==1 ){  }}
+                            <span style="color:#55BD55 "> {{item.bdcqzh ||'无证号'}}</span>（现势）
+                            {{#  }else if(item.qszt==2){ }}
+                            <span style="color:#D7DBDC"> {{item.bdcqzh ||'无证号'}}</span>（历史）
+                            {{#  }else{ }}
+                            {{item.bdcqzh ||'无证号'}}（临时）
+                            {{#  } }}
+                        </li>
+                        {{# });}}
+                    </ul>
+                </li>
+                {{#} }}
+                <!--地役信息结束-->
+            </ul>
+            {{#} }}
+        </div>
+    </div>
+</script>
+<script type="text/html" id="dysdxxTpl">
+    <div class="bdc-default-list">
+        <div class="layui-tab-info">
+            <ul class="submenu bdc-submenu-child">
+                {{# if( d.sdxx.length>0){ }}
+                <li class="bdc-inner-li bdc-invented-li">
+                    <a class="childrenlink">
+                        <i class="fa fa-caret-right"></i>
+                        单元锁定信息</a>
+                    <ul class="secondmenu bdc-submenu-child">
+                        {{# layui.each(d.sdxx, function(index, item){ }}
+                        <li class="bdc-inner-li bdc-invented-li  xx-li">
+                            {{#  if(item.sdzt==1 ){  }}
+                            <span style="color:#55BD55 "> 锁定单元号:{{ item.bdcdyh}} 锁定原因:{{ item.sdyy}}</span>
+                            {{#  }else if(item.sdzt==0){ }}
+                            <span style="color:#D7DBDC"> 锁定单元号:{{ item.bdcdyh}} 锁定原因:{{ item.sdyy}}</span>
+                            {{#  }else{ }}
+                            锁定单元号:{{ item.bdcdyh}} 锁定原因:{{ item.sdyy}}
+                            {{#  } }}
+
+                        </li>
+                        {{# });}}
+                    </ul>
+                </li>
+                {{#} }}
+            </ul>
+
+        </div>
+    </div>
+</script>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/dyhgz/xmlsgx.js"></script>
+</html>

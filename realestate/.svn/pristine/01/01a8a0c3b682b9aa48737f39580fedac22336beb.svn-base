@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.certificate.core.mapper.BdcDzzzZzxxMapper">
+    <select id="queryBdcDzzzZzxxByZzid" parameterType="string"
+            resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzZzxxDO">
+        SELECT zzid, zsid, zzmc, zzlxdm, zzbh, zzbs, zzbfjg, zzbfjgdm, zzbfrq, czzt, czztdm, czztdmlx,
+        czztdmlxdm, zzyxqqsrq, zzyxqjzrq, zzbgsj, zzbgyy, zzqzr,
+        zzqzsj, zzqzmc, cjsj, zzwjlj, zzzt,szzs,bdcqzh,zzlsh,zzqzlj,qzzt,dzqzwybs
+        FROM bdc_dzzz_zzxx WHERE zzid=#{zzid}
+    </select>
+
+    <select id="queryBdcDzzzZzxxByZsid" parameterType="string"
+            resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzZzxxDO">
+        SELECT zzid, zsid, zzmc, zzlxdm, zzbh, zzbs, zzbfjg, zzbfjgdm, zzbfrq, czzt, czztdm, czztdmlx,
+        czztdmlxdm, zzyxqqsrq, zzyxqjzrq, zzbgsj, zzbgyy, zzqzr,
+        zzqzsj, zzqzmc, cjsj, zzwjlj, zzzt,szzs,bdcqzh,zzlsh,zzqzlj,qzzt,dzqzwybs
+        FROM bdc_dzzz_zzxx WHERE zsid=#{zsid}
+    </select>
+
+    <select id="queryBdcDzzzZzxxByBdcqzh" parameterType="string"
+            resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzZzxxDO">
+        SELECT zzid, zsid, zzmc, zzlxdm, zzbh, zzbs, zzbfjg, zzbfjgdm, zzbfrq, czzt, czztdm, czztdmlx,
+        czztdmlxdm, zzyxqqsrq, zzyxqjzrq, zzbgsj, zzbgyy, zzqzr,
+        zzqzsj, zzqzmc, cjsj, zzwjlj, zzzt,szzs,bdcqzh,zzlsh,zzqzlj,qzzt,dzqzwybs
+        FROM bdc_dzzz_zzxx WHERE bdcqzh=#{bdcqzh}
+    </select>
+
+    <select id="queryBdcDzzzZzxxByMap" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzZzxxDO">
+        SELECT a.zzid, zsid, zzmc, zzlxdm, zzbh, zzbs, zzbfjg, zzbfjgdm, zzbfrq, czzt, czztdm, czztdmlx,
+        czztdmlxdm, zzyxqqsrq, zzyxqjzrq, zzbgsj, zzbgyy, zzqzr,
+        zzqzsj, zzqzmc, a.cjsj, zzwjlj, zzzt,szzs,a.bdcqzh,zzqzlj,qzzt,dzqzwybs
+        FROM bdc_dzzz_zzxx a
+        LEFT JOIN bdc_dzzz_ywxx b on a.zzid = b.zzid
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND b.ywh=#{ywh}
+            </if>
+            <if test="bdcqzh != null and bdcqzh !=''">
+                AND a.bdcqzh=#{bdcqzh}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryBdcDzzzZzxxByZzbs" parameterType="string"
+            resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzZzxxDO">
+        SELECT zzid, zsid, zzmc, zzlxdm, zzbh, zzbs, zzbfjg, zzbfjgdm, zzbfrq, czzt, czztdm, czztdmlx,
+        czztdmlxdm, zzyxqqsrq, zzyxqjzrq, zzbgsj, zzbgyy, zzqzr,
+        zzqzsj, zzqzmc, cjsj, zzwjlj, zzzt,szzs,bdcqzh,zzlsh,zzqzlj,qzzt,dzqzwybs
+        FROM bdc_dzzz_zzxx WHERE zzbs=#{zzbs}
+    </select>
+
+    <select id="getBdcDzzzZzxxByPage" parameterType="java.util.Map"
+            resultType="java.util.Map">
+        SELECT a.zzid AS "zzid",a.czzt AS "czzt", a.bdcqzh AS "bdcqzh", a.zzqzlj AS "zzqzlj", b.zl AS "zl", b.bdcdyh AS
+        "bdcdyh",c.szsxqc AS "szsxqc"
+        , a.zzmc AS "zzmc", a.zzbs AS "zzbs", a.zzbfjg AS "zzbfjg", a.zzbgyy AS "zzbgyy", a.zzyxqjzrq AS "zzyxqjzrq"
+        , a.zzzt AS "zzzt", a.qzzt AS "qzzt"
+        FROM bdc_dzzz_zzxx a
+        LEFT JOIN bdc_dzzz_ywxx b on a.zzid = b.zzid
+        LEFT JOIN bdc_dzzz_config c on b.dwdm = c.dwdm
+        <where>
+            <if test="zzmc != null and zzmc !=''">
+                AND a.zzmc like '%' || #{zzmc}||'%'
+            </if>
+            <if test="dwdm != null and dwdm !=''">
+                AND b.dwdm like #{dwdm}||'%'
+            </if>
+            <if test="zzlxdm != null and zzlxdm != ''">
+                AND a.zzlxdm =#{zzlxdm}
+            </if>
+            <if test="zl != null and zl !=''">
+                AND b.zl like '%' || #{zl}|| '%'
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND b.bdcdyh LIKE '%' || #{bdcdyh} || '%'
+            </if>
+            <if test="bdcqzh != null and bdcqzh !=''">
+                AND a.bdcqzh LIKE '%' || #{bdcqzh} || '%'
+            </if>
+            <if test="czzt != null and czzt !=''">
+                AND a.czzt LIKE '%' || #{czzt} || '%'
+            </if>
+            <if test="zzbgyy != null and zzbgyy !=''">
+                AND nvl(a.zzbgyy,'1')=#{zzbgyy}
+            </if>
+            <if test="cjsjqssj != null">
+                <![CDATA[   AND a.cjsj >= #{cjsjqssj,jdbcType=TIMESTAMP} ]]>
+            </if>
+            <if test="cjsjjssj != null">
+                <![CDATA[   AND a.cjsj <= #{cjsjjssj,jdbcType=TIMESTAMP} ]]>
+            </if>
+            <if test="qzzt != null">
+                AND a.qzzt =#{qzzt}
+            </if>
+            <if test="czztArr != null">
+                AND a.czzt IN
+                <foreach item="item" index="index" collection="czztArr" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY a.cjsj DESC
+    </select>
+
+
+    <select id="getBdcDzzzZzxxDoListByMap" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzZzxxDO">
+        SELECT DISTINCT t.zzid, t.zsid, t.zzmc, t.zzlxdm, t.zzbh, t.zzbs, t.zzbfjg, t.zzbfjgdm, t.zzbfrq, t.czzt,
+        t.czztdm, t.czztdmlx, t.czztdmlxdm, t.zzyxqqsrq, t.zzyxqjzrq,t.zzbgsj, t.zzbgyy, t.zzqzr, t.zzqzsj,
+        t.zzqzmc, t.cjsj, t.zzwjlj, t.zzzt,t.szzs,t.bdcqzh,t.zzqzlj FROM bdc_dzzz_zzxx t
+        LEFT JOIN bdc_dzzz_ywxx y ON t.zzid = y.zzid
+        LEFT JOIN bdc_dzzz_zzxx_czzt z ON t.zzid =z.zzid
+        <where>
+            <if test="czzt != null and czzt !=''">
+                AND z.czzt = #{czzt}
+            </if>
+            <if test="czztdm != null and czztdm !=''">
+                AND z.czztdm =#{czztdm}
+            </if>
+            <if test="czztdmlx != null and czztdmlx !=''">
+                AND z.czztdmlx =#{czztdmlx}
+            </if>
+            <if test="czztdmlxdm != null and czztdmlxdm !=''">
+                AND z.czztdmlxdm =#{czztdmlxdm}
+            </if>
+            <if test="zzlxdm != null and zzlxdm != ''">
+                AND t.zzlxdm =#{zzlxdm}
+            </if>
+            <if test="zzbh != null and zzbh != ''">
+                AND t.zzbh LIKE '%' || #{zzbh} || '%'
+            </if>
+            <if test="zzbs != null and zzbs != ''">
+                AND t.zzbs =#{zzbs}
+            </if>
+            <if test="cjsjqssj != null">
+                <![CDATA[   AND t.cjsj >= #{cjsjqssj,jdbcType=TIMESTAMP} ]]>
+            </if>
+            <if test="cjsjjssj != null">
+                <![CDATA[   AND t.cjsj <= #{cjsjjssj,jdbcType=TIMESTAMP} ]]>
+            </if>
+            <if test="zsid != null and zsid !=''">
+                AND t.zsid =#{zsid}
+            </if>
+            <if test="bdcqzh != null and bdcqzh !=''">
+                AND t.bdcqzh =#{bdcqzh}
+            </if>
+            <if test="zzzt != null and zzzt !=''">
+                AND t.zzzt = #{zzzt}
+            </if>
+            <if test="dwdmArr != null">
+                AND y.dwdm IN
+                <foreach item="item" index="index" collection="dwdmArr" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY t.cjsj DESC
+    </select>
+
+    <select id="getBdcDzzzZzxxDoByMap" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzZzxxDO">
+        SELECT t.zzid, t.zsid, t.zzmc, t.zzlxdm, t.zzbh, t.zzbs, t.zzbfjg, t.zzbfjgdm, t.zzbfrq, t.czzt,
+        t.czztdm, t.czztdmlx, t.czztdmlxdm, t.zzyxqqsrq, t.zzyxqjzrq,t.zzbgsj, t.zzbgyy, t.zzqzr, t.zzqzsj,
+        t.zzqzmc, t.cjsj, t.zzwjlj, t.zzzt,t.szzs,t.bdcqzh,t.zzqzlj,t.qzzt FROM bdc_dzzz_zzxx t
+        LEFT JOIN bdc_dzzz_ywxx y ON t.zzid = y.zzid
+        <where>
+            <if test="zzlxdm != null and zzlxdm != ''">
+                AND t.zzlxdm =#{zzlxdm}
+            </if>
+            <if test="zzbh != null and zzbh != ''">
+                AND t.zzbh LIKE '%' || #{zzbh} || '%'
+            </if>
+            <if test="zzbs != null and zzbs != ''">
+                AND t.zzbs =#{zzbs}
+            </if>
+            <if test="zsid != null and zsid !=''">
+                AND t.zsid =#{zsid}
+            </if>
+            <if test="bdcqzh != null and bdcqzh !=''">
+                AND t.bdcqzh =#{bdcqzh}
+            </if>
+            <if test="ywh != null and ywh !=''">
+                AND y.ywh=#{ywh}
+            </if>
+            <if test="tbzt != null">
+                AND y.tbzt =#{tbzt}
+            </if>
+            <if test="dwdmArr != null">
+                AND y.dwdm IN
+                <foreach item="item" index="index" collection="dwdmArr" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertBdcDzzzZzxx" parameterType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzZzxxDO">
+        INSERT INTO bdc_dzzz_zzxx t (t.zzid, t.zsid, t.zzmc, t.zzlxdm, t.zzbh, t.zzbs, t.zzbfjg, t.zzbfjgdm, t.zzbfrq, t.czzt,
+        t.czztdm, t.czztdmlx, t.czztdmlxdm, t.zzyxqqsrq, t.zzyxqjzrq, t.zzbgsj, t.zzbgyy, t.zzqzr, t.zzqzsj, t.zzqzmc, t.cjsj, t.zzwjlj,
+        t.zzzt,t.bdcqzh,t.zzlsh,t.zzqzlj,t.qzzt,t.dzqzwybs)  VALUES (#{zzid,jdbcType=VARCHAR},#{zsid,jdbcType=VARCHAR},#{zzmc,jdbcType=VARCHAR},#{zzlxdm,jdbcType=VARCHAR},#{zzbh,jdbcType=VARCHAR}
+        ,#{zzbs,jdbcType=VARCHAR},#{zzbfjg,jdbcType=VARCHAR},#{zzbfjgdm,jdbcType=VARCHAR},#{zzbfrq,jdbcType=TIMESTAMP},#{czzt,jdbcType=VARCHAR}
+        ,#{czztdm,jdbcType=VARCHAR},#{czztdmlx,jdbcType=VARCHAR},#{czztdmlxdm,jdbcType=VARCHAR},#{zzyxqqsrq,jdbcType=TIMESTAMP},#{zzyxqjzrq,jdbcType=TIMESTAMP}
+        ,#{zzbgsj,jdbcType=TIMESTAMP},#{zzbgyy,jdbcType=VARCHAR},#{zzqzr,jdbcType=VARCHAR},#{zzqzsj,jdbcType=TIMESTAMP},#{zzqzmc,jdbcType=VARCHAR}
+        ,#{cjsj,jdbcType=TIMESTAMP},#{zzwjlj,jdbcType=VARCHAR},#{zzzt,jdbcType=INTEGER},#{bdcqzh,jdbcType=VARCHAR},#{zzlsh,jdbcType=VARCHAR},#{zzqzlj,jdbcType=VARCHAR}
+        ,#{qzzt,jdbcType=INTEGER},#{dzqzwybs,jdbcType=VARCHAR})
+     </insert>
+
+    <update id="updateBdcDzzzByZzid" parameterType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzZzxxDO">
+        UPDATE bdc_dzzz_zzxx t
+        <set>
+            <if test="zzwjlj != null and zzwjlj != ''">
+                t.zzwjlj = #{zzwjlj} ,
+            </if>
+            <if test="zzqzlj != null and zzqzlj != ''">
+                t.zzqzlj = #{zzqzlj} ,
+            </if>
+            <if test="zzqzr != null and zzqzr != ''">
+                t.zzqzr = #{zzqzr} ,
+            </if>
+            <if test="zzqzsj != null">
+                t.zzqzsj = #{zzqzsj} ,
+            </if>
+            <if test="szzs != null and szzs != ''">
+                t.szzs = #{szzs} ,
+            </if>
+            <if test="zzzt != null">
+                t.zzzt = #{zzzt} ,
+            </if>
+            <if test="zzbgsj != null">
+                t.zzbgsj = #{zzbgsj} ,
+            </if>
+            <if test="zzbgyy != null and zzbgyy != ''">
+                t.zzbgyy = #{zzbgyy}
+            </if>
+            <if test="qzzt != null and qzzt != ''">
+                t.qzzt = #{qzzt}
+            </if>
+        </set>
+        WHERE t.zzid = #{zzid}
+    </update>
+
+    <update id="updateBdcDzzzByZzbs" parameterType="cn.gtmap.realestate.certificate.core.model.domain.BdcDzzzZzxxDO">
+        UPDATE bdc_dzzz_zzxx t
+        <set>
+            <if test="zzwjlj != null and zzwjlj != ''">
+                t.zzwjlj = #{zzwjlj} ,
+            </if>
+            <if test="zzqzlj != null and zzqzlj != ''">
+                t.zzqzlj = #{zzqzlj} ,
+            </if>
+            <if test="zzqzr != null and zzqzr != ''">
+                t.zzqzr = #{zzqzr} ,
+            </if>
+            <if test="zzqzsj != null">
+                t.zzqzsj = #{zzqzsj} ,
+            </if>
+            <if test="szzs != null and szzs != ''">
+                t.szzs = #{szzs} ,
+            </if>
+            <if test="zzzt != null">
+                t.zzzt = #{zzzt} ,
+            </if>
+            <if test="zzbgsj != null">
+                t.zzbgsj = #{zzbgsj} ,
+            </if>
+            <if test="zzbgyy != null and zzbgyy != ''">
+                t.zzbgyy = #{zzbgyy}
+            </if>
+            <if test="qzzt != null and qzzt != ''">
+                t.qzzt = #{qzzt}
+            </if>
+            <if test="zsid != null and zsid != ''">
+                t.zsid = #{zsid}
+            </if>
+        </set>
+        WHERE t.zzbs = #{zzbs}
+    </update>
+
+    <delete id="deleteBdcDzzzByZzid" parameterType="String">
+        DELETE BDC_DZZZ_ZZXX WHERE zzid = #{zzid}
+    </delete>
+
+    <select id="countBdcDzzzZzxx" parameterType="java.util.Map"
+            resultType="java.util.Map">
+        SELECT
+        <if test="zzbfjgdmGroup != null and zzbfjgdmGroup != ''">
+            c.szsxqc mc,
+        </if>
+        a.total_count,a.zs_count,a.zms_count,a.scdjz_count FROM
+        (SELECT
+        <if test="zzbfjgdmGroup != null and zzbfjgdmGroup != ''">
+            y.dwdm,
+        </if>
+        COUNT(*) total_count,
+        SUM(CASE WHEN y.zstype='不动产权' THEN 1 ELSE 0 END) AS zs_count,
+        SUM(CASE WHEN y.zstype='不动产证明' THEN 1 ELSE 0 END) AS zms_count,
+        SUM(CASE WHEN y.zstype='首次登记证' THEN 1 ELSE 0 END) AS scdjz_count
+        FROM bdc_dzzz_ywxx y
+        LEFT JOIN bdc_dzzz_zzxx t ON t.zzid = y.zzid
+        <where>
+            <if test="cjsjqssj != null">
+                <![CDATA[   AND t.zzbfrq >= #{cjsjqssj,jdbcType=TIMESTAMP} ]]>
+            </if>
+            <if test="cjsjjssj != null">
+                <![CDATA[   AND t.zzbfrq <= #{cjsjjssj,jdbcType=TIMESTAMP} ]]>
+            </if>
+        </where>
+        <if test="zzbfjgdmGroup != null and zzbfjgdmGroup != ''">
+            GROUP BY y.dwdm
+        </if>
+        ) a
+        <if test="zzbfjgdmGroup != null and zzbfjgdmGroup != ''">
+            LEFT JOIN bdc_dzzz_config c ON a.dwdm = c.dwdm
+        </if>
+    </select>
+
+    <select id="countZzxxZxAndQf" parameterType="java.util.Map"
+            resultType="java.util.Map">
+        SELECT
+        c.szsdwdm,c.szsmc mc,SUM(a.zzqf_count) zzqf_count,SUM(a.zzzx_count) zzzx_count FROM
+        (SELECT
+        y.dwdm,
+        SUM(CASE WHEN t.zzzt=1 THEN 1 ELSE 0 END) AS zzqf_count,
+        SUM(CASE WHEN t.zzzt=2 THEN 1 ELSE 0 END) AS zzzx_count
+        FROM bdc_dzzz_ywxx y
+        LEFT JOIN bdc_dzzz_zzxx t ON t.zzid = y.zzid
+         GROUP BY y.dwdm
+        ) a
+        LEFT JOIN bdc_dzzz_config c ON a.dwdm = c.dwdm GROUP BY c.szsmc,c.szsdwdm ORDER BY c.szsdwdm
+    </select>
+
+</mapper>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>工作流事件配置</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css"/>
+    <style type="text/css">
+        .search { /*用于查询标识*/
+        }
+    </style>
+</head>
+<body>
+<div class="bdc-percentage-container">
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <form id="form" class="layui-form" action="">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">流程名称</label>
+                        <div class="layui-input-inline">
+                            <select lay-filter="lcmc" id="lcmc" name="lcmc" lay-search="" class="search">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">节点名称</label>
+                        <div class="layui-input-inline">
+                            <select lay-search="" name="jdmc" id="jdmc" class="search">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">事件名称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="sjmc" name="sjmc" placeholder="请输入" autocomplete="off"
+                                   class="layui-input search">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">事件类型</label>
+                        <div class="layui-input-inline">
+                            <select lay-search="" name="sjlx" id="sjlx" class="search">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline bdc-button-box bdc-button-box-four">
+                        <!--<a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>-->
+                        <button class="layui-btn layui-btn-normal bdc-major-btn" type="button" lay-submit="" id="search"
+                                lay-filter="search">查询
+                        </button>
+                        <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="bdc-table-box">
+        <table id="sjTable" lay-data="{id: 'sjTable'}" lay-filter="sjTable"></table>
+    </div>
+</div>
+
+<!--隐藏form，为了导出缓存数据使用-->
+<form style="display: none" action="/realestate-inquiry-ui/zgz/export" method="POST" id="zgzfile">
+    <input type="hidden" id="filedata" name="filedata"/>
+</form>
+
+<!--表格上面功能按钮-->
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="add">新增</button>
+        <button class="layui-btn layui-btn-sm bdc-delete-btn" lay-event="delete">删除</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="edit">编辑</button>
+    </div>
+</script>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="ygljk">已关联接口</a>
+</script>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.all.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<!--<script src="../../static/js/dtcx/commonCx.js"></script>-->
+<!--<script src="../../static/js/table.js"></script>-->
+<script src="../../static/js/workflow/bdcgzlsjList.js"></script>
+
+<!--IE获取IP地址-->
+<script language="javascript">
+    try {
+        var service = locator.ConnectServer();
+        service.Security_.ImpersonationLevel = 3;
+        service.InstancesOfAsync(foo, 'Win32_NetworkAdapterConfiguration');
+    } catch (err) {
+        // do nothing
+    }
+</script>
+<script FOR="foo" EVENT="OnObjectReady(objObject,objAsyncContext)" LANGUAGE="JScript">
+    try {
+        if (objObject.IPEnabled != null && objObject.IPEnabled != "undefined" && objObject.IPEnabled == true) {
+            if (objObject.IPEnabled && objObject.IPAddress(0) != null && objObject.IPAddress(0) != "undefined")
+                $("#ipaddress").val(objObject.IPAddress(0));
+        }
+    } catch (err) {
+        // do nothing
+    }
+</script>
+</body>
+</html>

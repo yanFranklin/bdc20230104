@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--建筑物区分所有权业主共有部分信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.QlfFwFdcqQfsyqMapper">
+    <select id="queryQlfFwFdcqQfsyqList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.QlfFwFdcqQfsyqDO">
+        SELECT DISTINCT
+        a.xmid ywh,
+        l.yxmid as ssywh,
+        a.djlx,
+        a.bdcdyh,
+        substr(a.bdcdyh,0,6) as qxdm,
+        t.djjg,
+        t.dbr,
+        t.djsj,
+        m.fj,
+        a.qszt,
+        a.qllx,
+        m.jgzwbh,
+        m.jgzwmc,
+        m.jgzwsl,
+        m.jgzwmj,
+        m.fttdmj
+        FROM bdc_fdcq3_gyxx m
+        LEFT JOIN bdc_fdcq3 t ON m.XMID=t.XMID
+        LEFT JOIN bdc_xm a ON m.xmid = a.xmid
+        LEFT JOIN bdc_xm_lsgx l ON l.xmid=a.xmid and nvl(l.WLXM,0) = 0
+        LEFT JOIN bdc_gjzwsyq q ON q.qlid = m.qlid
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND a.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND a.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+    <select id="queryQlfFwFdcqQfsyqListOld" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.yancheng.yth.old.QlfFwFdcqQfsyqOldDO">
+        SELECT DISTINCT
+        a.xmid ywh,
+        a.bdcdyh,
+        substr(a.bdcdyh,0,6) as qxdm,
+        t.djjg,
+        t.dbr,
+        t.djsj,
+        m.fj,
+        a.qszt,
+        a.qllx,
+        m.jgzwbh,
+        m.jgzwmc,
+        m.jgzwsl,
+        m.jgzwmj,
+        m.fttdmj
+        FROM bdc_fdcq3_gyxx m
+        LEFT JOIN bdc_fdcq3 t ON m.XMID=t.XMID
+        LEFT JOIN bdc_xm a ON m.xmid = a.xmid
+        LEFT JOIN bdc_gjzwsyq q ON q.qlid = m.qlid
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND a.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND a.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+</mapper>

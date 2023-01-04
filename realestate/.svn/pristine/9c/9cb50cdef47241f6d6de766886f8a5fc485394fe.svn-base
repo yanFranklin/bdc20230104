@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--宗地基本信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.KttZdjbxxMapper">
+
+    <select id="queryKttZdjbxxList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.KttZdjbxxDO">
+        SELECT 0 AS bsm,
+
+        b.zddm,
+        x.bdcdyh,
+        b.zdtzm,
+        b.zl,
+        b.zdmj,
+        b.mjdw,
+        b.yt,
+        b.dj,
+        b.jg,
+        b.qllx,
+        b.qlxz,
+        b.qlsdfs,
+        b.rjl,
+        b.jzmd,
+        b.jzxg,
+        b.zdszd,
+        b.zdszb,
+        b.zdszn,
+        b.zdszx,
+        '无' AS zdt,
+        b.zddm djh,
+        '无' dah,
+        b.fj bz,
+        nvl(b.zt,'0') zt,
+        substr(x.bdcdyh,0,6) qxdm,
+        b.djsj,
+        nvl(b.dbr, '无') AS dbr,
+        nvl(a.djjg, '无') AS djjgbm,
+        nvl(a.djjg, '无') AS djjgmc,
+        a.jd jdh,
+        a.jf jfh,
+        a.zu zh
+        FROM bdc_bdcdjb_zdjbxx b
+        LEFT JOIN bdc_bdcdjb a ON a.zdzhh = b.zddm
+        LEFT JOIN bdc_xm x ON substr(x.BDCDYH,0,19) = b.zddm
+        where x.bdcdyh is not null
+        <if test="ywh != null and ywh !=''">
+            AND x.xmid = #{ywh}
+        </if>
+        <if test="bdcdyh != null and bdcdyh !=''">
+            AND x.bdcdyh = #{bdcdyh}
+        </if>
+    </select>
+
+    <select id="queryKttZdjbxxListOld" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.yancheng.yth.old.KttZdjbxxOldDO">
+        SELECT 0 AS bsm,
+
+        b.zddm,
+        x.bdcdyh,
+        b.zdtzm,
+        b.zl,
+        b.zdmj,
+        b.mjdw,
+        b.yt,
+        b.dj,
+        b.jg,
+        b.qllx,
+        b.qlxz,
+        b.qlsdfs,
+        b.rjl,
+        b.jzmd,
+        b.jzxg,
+        b.zdszd,
+        b.zdszb,
+        b.zdszn,
+        b.zdszx,
+        '无' AS zdt,
+        b.zddm djh,
+        '无' dah,
+        b.fj bz,
+        nvl(b.zt,'0') zt,
+        substr(x.bdcdyh,0,6) qxdm,
+        b.djsj,
+        nvl(b.dbr, '无') AS dbr,
+        nvl(a.djjg, '无') AS djjgbm,
+        nvl(a.djjg, '无') AS djjgmc,
+        a.jd jdh,
+        a.jf jfh,
+        a.zu zh
+        FROM bdc_bdcdjb_zdjbxx b
+        LEFT JOIN bdc_bdcdjb a ON a.zdzhh = b.zddm
+        LEFT JOIN bdc_xm x ON substr(x.BDCDYH,0,19) = b.zddm
+        where x.bdcdyh is not null
+        <if test="ywh != null and ywh !=''">
+            AND x.xmid = #{ywh}
+        </if>
+        <if test="bdcdyh != null and bdcdyh !=''">
+            AND x.bdcdyh = #{bdcdyh}
+        </if>
+    </select>
+
+</mapper>

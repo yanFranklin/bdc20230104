@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.natural.core.mapper.ZrzyZsMapper">
+  <resultMap id="BaseResultMap" type="cn.gtmap.realestate.common.core.domain.natural.ZrzyZsDO">
+    <id column="ZSID" jdbcType="VARCHAR" property="zsid" />
+    <result column="XMID" jdbcType="VARCHAR" property="xmid" />
+    <result column="ZRZYCQZH" jdbcType="VARCHAR" property="zrzycqzh" />
+    <result column="ZHLSH" jdbcType="VARCHAR" property="zhlsh" />
+    <result column="NF" jdbcType="DECIMAL" property="nf" />
+    <result column="QZYSXLH" jdbcType="VARCHAR" property="qzysxlh" />
+    <result column="ZRZYZK" jdbcType="VARCHAR" property="zrzyzk" />
+    <result column="FJ" jdbcType="VARCHAR" property="fj" />
+    <result column="SQSJC" jdbcType="VARCHAR" property="sqsjc" />
+    <result column="SZQXQC" jdbcType="VARCHAR" property="szqxqc" />
+    <result column="FZR" jdbcType="VARCHAR" property="fzr" />
+    <result column="FZRID" jdbcType="VARCHAR" property="fzrid" />
+    <result column="FZSJ" jdbcType="TIMESTAMP" property="fzsj" />
+    <result column="SZR" jdbcType="VARCHAR" property="szr" />
+    <result column="SZRID" jdbcType="VARCHAR" property="szrid" />
+    <result column="SZSJ" jdbcType="TIMESTAMP" property="szsj" />
+    <result column="EWMNR" jdbcType="VARCHAR" property="ewmnr" />
+    <result column="ZRZYCQZHJC" jdbcType="VARCHAR" property="zrzycqzhjc" />
+    <result column="ZRZYDJDYH" jdbcType="VARCHAR" property="zrzydjdyh" />
+    <result column="DJDYMC" jdbcType="VARCHAR" property="djdymc" />
+    <result column="DJDYLX" jdbcType="VARCHAR" property="djdylx" />
+    <result column="KJFW" jdbcType="VARCHAR" property="kjfw" />
+    <result column="SYQZT" jdbcType="VARCHAR" property="syqzt" />
+    <result column="DBXSZT" jdbcType="VARCHAR" property="dbxszt" />
+    <result column="QLXSFS" jdbcType="VARCHAR" property="qlxsfs" />
+    <result column="DLXSZT" jdbcType="VARCHAR" property="dlxszt" />
+    <result column="XSNR" jdbcType="VARCHAR" property="xsnr" />
+    <result column="MJ" jdbcType="DECIMAL" property="mj" />
+    <result column="GYMJ" jdbcType="DECIMAL" property="gymj" />
+    <result column="JTMJ" jdbcType="DECIMAL" property="jtmj" />
+    <result column="ZYQMJ" jdbcType="DECIMAL" property="zyqmj" />
+  </resultMap>
+  <sql id="Base_Column_List">
+     ZSID, XMID, ZRZYCQZH, ZHLSH, NF, QZYSXLH, ZRZYZK, FJ, SQSJC, SZQXQC, FZR, FZRID,
+    FZSJ, SZR, SZRID, SZSJ, EWMNR, ZRZYCQZHJC, ZRZYDJDYH, DJDYMC, DJDYLX, KJFW, SYQZT,
+    DBXSZT, QLXSFS, DLXSZT, XSNR, MJ, GYMJ, JTMJ, ZYQMJ
+  </sql>
+  <select id="selectByXmid" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ZRZY_ZS
+   <where>
+     <if test="xmid != null">
+       XMID = #{xmid,jdbcType=VARCHAR}
+     </if>
+   </where>
+  </select>
+
+  <!--
+       获取数据库中证号当前最大顺序号
+       1、预留证号和废号有些地区可能不开启，所以动态拼接
+   -->
+  <select id="queryMaxSxh" parameterType="cn.gtmap.realestate.natural.core.bo.ZrzyZscCqzhBO" resultType="Integer">
+    SELECT
+    NVL(MAX(ZHXLH), 0) AS MAXSXH
+    FROM
+    (
+    SELECT NVL(ZHXLH, 0) AS ZHXLH, QXDM, NF FROM ZRZY_ZS
+    )
+    WHERE
+    NF = #{nf}
+
+    <!--证号是否区分区县代码-->
+    <if test="zhqfqxdm == 1">
+      AND
+      <choose>
+        <!--优先用分组区划查询-->
+        <when test="qxdms != null and qxdms != ''">
+          QXDM IN
+          <foreach collection="qxdms.split(',')" item="item" open="(" separator="," close=")">
+            #{item}
+          </foreach>
+        </when>
+        <!--没有和其它区划共用流水号则只根据当前区划查询-->
+        <otherwise>
+          QXDM = #{qxdm}
+        </otherwise>
+      </choose>
+    </if>
+    <!--证号是否区分登记部门-->
+    <if test="zhqfbm == 1">
+      AND DJBMDM =  #{djbmdm}
+    </if>
+  </select>
+
+
+  <!--
+     查询指定初始顺序号到最大顺序号之间所有顺序号
+     1、查询结果一定要保证递增有序性
+     2、返回的集合需要保证互异性、有序性、确定性，用LinkedHashSet
+ -->
+  <select id="querySxh" parameterType="cn.gtmap.realestate.natural.core.bo.ZrzyZscCqzhBO" resultType="Integer">
+    SELECT
+    DISTINCT ZHXLH
+    FROM
+    (
+    SELECT NVL(ZHXLH, 0) AS ZHXLH, QXDM, NF FROM ZRZY_ZS
+    )
+    WHERE
+    NF = #{nf}
+
+    <!--证号是否区分区县代码-->
+    <if test="zhqfqxdm == 1">
+      AND
+      <choose>
+        <!--优先用分组区划查询-->
+        <when test="qxdms != null and qxdms != ''">
+          QXDM IN
+          <foreach collection="qxdms.split(',')" item="item" open="(" separator="," close=")">
+            #{item}
+          </foreach>
+        </when>
+        <!--没有和其它区划共用流水号则只根据当前区划查询-->
+        <otherwise>
+          QXDM = #{qxdm}
+        </otherwise>
+      </choose>
+    </if>
+    AND
+    ZHXLH &gt;= #{cssxh}
+    AND
+    ZHXLH &lt;= #{sxh}
+    ORDER BY
+    ZHXLH ASC
+  </select>
+
+</mapper>

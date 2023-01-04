@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8" />
+    <title class="bdc_subsystem">接口查询台账</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../../static/lib/registerui/css/percentage-layout.css"/>
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/popup.css"/>
+    <style>
+        .layui-table td.layui-table-col-special .layui-table-cell {
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+<!--************ 条件搜索 ************-->
+<div class="bdc-percentage-container bdc-line-search-container">
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <form id="form" class="layui-form" action="">
+                <div class="layui-form-item pf-form-item">
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">接口名称</label>
+                        <div class="layui-input-inline ">
+                            <input class="layui-input" id="name" name="name" placeholder="请输入" type="text" />
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">接口地址</label>
+                        <div class="layui-input-inline ">
+                            <input class="layui-input" id="url" name="url" placeholder="请输入" type="text" />
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">接口描述</label>
+                        <div class="layui-input-inline ">
+                            <input class="layui-input" id="description" name="description" placeholder="请输入" type="text" />
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">发布状态</label>
+                        <div class="layui-input-inline ">
+                            <select name="releaseStatus" id="releaseStatus">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">接口消费方</label>
+                        <div class="layui-input-inline ">
+                            <select name="consumer" id="consumer" xm-select="consumer" xm-select-skin="default" xm-select-show-count="2" xm-select-search="" xm-select-height="34px" xm-select-search-type="dl"></select>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <button class="layui-btn bdc-major-btn" id="query" lay-filter="query" lay-submit="query">查询
+                        </button>
+                        <button class="layui-btn bdc-secondary-btn reset-btn" type="reset">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="bdc-table-box" style="margin-top: 35px;">
+        <form enctype="multipart/form-data" id="uploadFile" method="post" action="">
+            <input type="file" id="importFile" name="importFile" accept="text/plain"
+                   style="position:absolute;top:0px;right:0px;cursor:pointer; opacity:0;filter:alpha(opacity:0);z-index:999;"
+                   onchange="importTXT(this)">
+        </form>
+        <table id="apiTable" lay-filter="apiTable"></table>
+    </div>
+</div>
+
+<!--隐藏form，为了导出缓存数据使用-->
+<form style="display: none" action="/realestate-inquiry-ui/rest/v1.0/apiManagement/api-docs/export" method="POST" id="apidoc">
+    <input type="hidden" id="filedata" name="filedata"/>
+</form>
+
+<!--隐藏form，为了导出缓存数据使用-->
+<form style="display: none" action="/realestate-inquiry-ui/rest/v1.0/apiManagement/export/interface" method="POST" id="apiConfiguration">
+    <input type="hidden" id="ids" name="ids"/>
+</form>
+
+<!--表格上面功能按钮-->
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="add">新增</button>
+        <button class="layui-btn layui-btn-sm bdc-delete-btn" lay-event="batchDelete">删除</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="allrztj">日志统计</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="additionalLearning">补录</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="importInterface">导入</button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="exportInterface">导出</button>
+    </div>
+</script>
+
+<script type="text/html" id="api_tool_bar">
+    {{# if(d.type === 0){ }}
+    {{# if (d.releaseStatus === 0){ }}
+    <!--测试、发布、编辑、删除-->
+    <a class="layui-btn layui-btn-xs  bdc-major-btn" lay-event="release">发布</a>
+    <a class="layui-btn layui-btn-xs bdc-secondary-btn" lay-event="test">测试</a>
+    <a class="layui-btn layui-btn-xs bdc-secondary-btn" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-xs bdc-secondary-btn bdc-more-btn">
+        更多<i class="layui-icon layui-icon-down"></i>
+    </a>
+    <div class="bdc-table-btn-more">
+        <a lay-event="detail">详情</a>
+        <a lay-event="copy">复制</a>
+        <a lay-event="export">导出接口文档</a>
+        <a lay-event="queryLog">查看接口日志</a>
+        <!--            <a lay-event="delete">删除</a>-->
+    </div>
+    {{#  } else { }}
+    <!--测试、取消发布、详情-->
+    <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="unPublish">取消发布</a>
+    <a class="layui-btn layui-btn-xs bdc-secondary-btn" lay-event="test">测试</a>
+    <a class="layui-btn layui-btn-xs bdc-secondary-btn" lay-event="detail">详情</a>
+    <a class="layui-btn layui-btn-xs bdc-secondary-btn bdc-more-btn">
+        更多<i class="layui-icon layui-icon-down"></i>
+    </a>
+    <div class="bdc-table-btn-more">
+        <a lay-event="copy">复制</a>
+        <a lay-event="export">导出接口文档</a>
+        <a lay-event="queryLog">查看接口日志</a>
+    </div>
+    {{# } }}
+    {{#  } else { }}
+    <a class="layui-btn layui-btn-xs bdc-secondary-btn" lay-event="test">测试</a>
+    <a class="layui-btn layui-btn-xs bdc-secondary-btn" lay-event="queryLog">查看接口日志</a>
+    {{# } }}
+</script>
+
+<script src="../../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../../static/js/config/jquery-form.js"></script>
+<script src="../../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../../static/lib/bdcui/js/common.js"></script>
+<script src="../../../static/js/config/common.js"></script>
+<script src="../../../static/js/config/jkgl/jkList.js"></script>
+
+</body>
+</html>

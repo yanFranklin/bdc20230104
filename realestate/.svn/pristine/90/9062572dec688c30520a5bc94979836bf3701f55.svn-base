@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.check.core.mapper.RuleSqlMapper">
+    <!-- 检查是否存在在查封（不动产数据）状态下的产权证办理变更、转移、换证、遗失补证、更正、期转现等登记流程（房地产权）-->
+    <select id="selectBdcCfDoFdcq" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        SELECT x.xmid ,x.slbh,x.djxl,x.bdcdyh,f.cfwh xzwh,f.xmid xzwhxmid,x.gzldyid FROM bdc_xm x
+        INNER JOIN bdc_fdcq t ON x.xmid = t.xmid
+        <if test="xmid != null and xmid !=''">
+            AND x.xmid = #{xmid}
+        </if>
+        INNER JOIN bdc_cf f ON x.bdcdyh = f.bdcdyh
+        LEFT JOIN bdc_gzlw_sh c ON (c.gzlslid=x.gzlslid OR c.slbh=x.slbh) AND x.bdcdyh=c.bdcdyh AND f.xmid=c.xmid
+        <![CDATA[   WHERE ((t.djsj IS NULL AND  nvl(f.qszt,0) != 2 ) OR (t.djsj >= f.CFQSSJ AND (t.djsj <= f.jfdjsj OR nvl(f.qszt,0) != 2 ))) AND c.gzlwid IS NULL ]]>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 检查是否存在在查封（不动产数据）状态下的产权证办理变更、转移、换证、遗失补证、更正、期转现等登记流程（建筑物区分所有权业主共有部分登记信息）-->
+    <select id="selectBdcCfDoFdcq3" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        SELECT x.xmid ,x.slbh,x.djxl,x.bdcdyh,f.cfwh xzwh,f.xmid xzwhxmid,x.gzldyid FROM bdc_xm x
+        INNER JOIN bdc_fdcq3 t ON x.xmid = t.xmid
+        <if test="xmid != null and xmid !=''">
+            AND x.xmid = #{xmid}
+        </if>
+        INNER JOIN bdc_cf f ON x.bdcdyh = f.bdcdyh
+        LEFT JOIN bdc_gzlw_sh c ON (c.gzlslid=x.gzlslid OR c.slbh=x.slbh) AND x.bdcdyh=c.bdcdyh AND f.xmid=c.xmid
+        <![CDATA[   WHERE ((t.djsj IS NULL AND  nvl(f.qszt,0) != 2 ) OR (t.djsj >= f.CFQSSJ AND (t.djsj <= f.jfdjsj OR nvl(f.qszt,0) != 2 ))) AND c.gzlwid IS NULL ]]>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 检查是否存在在查封（不动产数据）状态下的产权证办理变更、转移、换证、遗失补证、更正、期转现等登记流程（土地所有权）-->
+    <select id="selectBdcCfDoTdsyq" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        SELECT x.xmid ,x.slbh,x.djxl,x.bdcdyh,f.cfwh xzwh,f.xmid xzwhxmid,x.gzldyid FROM bdc_xm x
+        INNER JOIN bdc_tdsyq t ON x.xmid = t.xmid
+        <if test="xmid != null and xmid !=''">
+            AND x.xmid = #{xmid}
+        </if>
+        INNER JOIN bdc_cf f ON x.bdcdyh = f.bdcdyh
+        LEFT JOIN bdc_gzlw_sh c ON (c.gzlslid=x.gzlslid OR c.slbh=x.slbh) AND x.bdcdyh=c.bdcdyh AND f.xmid=c.xmid
+        <![CDATA[   WHERE ((t.djsj IS NULL AND  nvl(f.qszt,0) != 2 ) OR (t.djsj >= f.CFQSSJ AND (t.djsj <= f.jfdjsj OR nvl(f.qszt,0) != 2 ))) AND c.gzlwid IS NULL ]]>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 检查是否存在在查封（不动产数据）状态下的产权证办理变更、转移、换证、遗失补证、更正、期转现等登记流程（农用地使用权）-->
+    <select id="selectBdcCfDoNydsyq" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        SELECT x.xmid ,x.slbh,x.djxl,x.bdcdyh,f.cfwh xzwh,f.xmid xzwhxmid,x.gzldyid FROM bdc_xm x
+        INNER JOIN bdc_tdcbnydsyq t ON x.xmid = t.xmid
+        <if test="xmid != null and xmid !=''">
+            AND x.xmid = #{xmid}
+        </if>
+        INNER JOIN bdc_cf f ON x.bdcdyh = f.bdcdyh
+        LEFT JOIN bdc_gzlw_sh c ON (c.gzlslid=x.gzlslid OR c.slbh=x.slbh) AND x.bdcdyh=c.bdcdyh AND f.xmid=c.xmid
+        <![CDATA[   WHERE ((t.djsj IS NULL AND  nvl(f.qszt,0) != 2 ) OR (t.djsj >= f.CFQSSJ AND (t.djsj <= f.jfdjsj OR nvl(f.qszt,0) != 2 ))) AND c.gzlwid IS NULL ]]>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 检查是否存在在查封（不动产数据）状态下的产权证办理变更、转移、换证、遗失补证、更正、期转现等登记流程（建设用地、宅基地使用权）-->
+    <select id="selectBdcCfDoJsydzjdsyq" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        SELECT x.xmid ,x.slbh,x.djxl,x.bdcdyh,f.cfwh xzwh,f.xmid xzwhxmid,x.gzldyid FROM bdc_xm x
+        INNER JOIN bdc_jsydsyq t ON x.xmid = t.xmid
+        <if test="xmid != null and xmid !=''">
+            AND x.xmid = #{xmid}
+        </if>
+        INNER JOIN bdc_cf f ON x.bdcdyh = f.bdcdyh
+        LEFT JOIN bdc_gzlw_sh c ON (c.gzlslid=x.gzlslid OR c.slbh=x.slbh) AND x.bdcdyh=c.bdcdyh AND f.xmid=c.xmid
+        <![CDATA[   WHERE ((t.djsj IS NULL AND  nvl(f.qszt,0) != 2 ) OR (t.djsj >= f.CFQSSJ AND (t.djsj <= f.jfdjsj OR nvl(f.qszt,0) != 2 ))) AND c.gzlwid IS NULL ]]>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 检查是否存在在查封（不动产数据）状态下的产权证办理变更、转移、换证、遗失补证、更正、期转现等登记流程（构（建）筑物所有权）-->
+    <select id="selectBdcCfDoGjzwsyq" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        SELECT x.xmid ,x.slbh,x.djxl,x.bdcdyh,f.cfwh xzwh,f.xmid xzwhxmid,x.gzldyid FROM bdc_xm x
+        INNER JOIN bdc_gjzwsyq t ON x.xmid = t.xmid
+        <if test="xmid != null and xmid !=''">
+            AND x.xmid = #{xmid}
+        </if>
+        INNER JOIN bdc_cf f ON x.bdcdyh = f.bdcdyh
+        LEFT JOIN bdc_gzlw_sh c ON (c.gzlslid=x.gzlslid OR c.slbh=x.slbh) AND x.bdcdyh=c.bdcdyh AND f.xmid=c.xmid
+        <![CDATA[   WHERE ((t.djsj IS NULL AND  nvl(f.qszt,0) != 2 ) OR (t.djsj >= f.CFQSSJ AND (t.djsj <= f.jfdjsj OR nvl(f.qszt,0) != 2 ))) AND c.gzlwid IS NULL ]]>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 检查是否存在在查封（不动产数据）状态下的产权证办理变更、转移、换证、遗失补证、更正、期转现等登记流程（海域所有权）-->
+    <select id="selectBdcCfDoHysyq" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        SELECT x.xmid ,x.slbh,x.djxl,x.bdcdyh,f.cfwh xzwh,f.xmid xzwhxmid,x.gzldyid FROM bdc_xm x
+        INNER JOIN bdc_hysyq t ON x.xmid = t.xmid
+        <if test="xmid != null and xmid !=''">
+            AND x.xmid = #{xmid}
+        </if>
+        INNER JOIN bdc_cf f ON x.bdcdyh = f.bdcdyh
+        LEFT JOIN bdc_gzlw_sh c ON (c.gzlslid=x.gzlslid OR c.slbh=x.slbh) AND x.bdcdyh=c.bdcdyh AND f.xmid=c.xmid
+        <![CDATA[   WHERE ((t.djsj IS NULL AND  nvl(f.qszt,0) != 2 ) OR (t.djsj >= f.CFQSSJ AND (t.djsj <= f.jfdjsj OR nvl(f.qszt,0) != 2 ))) AND c.gzlwid IS NULL ]]>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 检查是否存在在查封（不动产数据）状态下的产权证办理变更、转移、换证、遗失补证、更正、期转现等登记流程（林权）-->
+    <select id="selectBdcCfDoLq" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        SELECT x.xmid ,x.slbh,x.djxl,x.bdcdyh,f.cfwh xzwh,f.xmid xzwhxmid,x.gzldyid FROM bdc_xm x
+        INNER JOIN bdc_lq t ON x.xmid = t.xmid
+        <if test="xmid != null and xmid !=''">
+            AND x.xmid = #{xmid}
+        </if>
+        INNER JOIN bdc_cf f ON x.bdcdyh = f.bdcdyh
+        LEFT JOIN bdc_gzlw_sh c ON (c.gzlslid=x.gzlslid OR c.slbh=x.slbh) AND x.bdcdyh=c.bdcdyh AND f.xmid=c.xmid
+        <![CDATA[   WHERE ((t.djsj IS NULL AND  nvl(f.qszt,0) != 2 ) OR (t.djsj >= f.CFQSSJ AND (t.djsj <= f.jfdjsj OR nvl(f.qszt,0) != 2 ))) AND c.gzlwid IS NULL ]]>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 检查是否存在在查封（不动产数据）状态下的产权证办理变更、转移、换证、遗失补证、更正、期转现等登记流程（预告）-->
+    <select id="selectBdcCfDoYg" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        SELECT x.xmid ,x.slbh,x.djxl,x.bdcdyh,f.cfwh xzwh,f.xmid xzwhxmid,x.gzldyid FROM bdc_xm x
+        INNER JOIN bdc_yg t ON x.xmid = t.xmid
+        <if test="xmid != null and xmid !=''">
+            AND x.xmid = #{xmid}
+        </if>
+        INNER JOIN bdc_cf f ON x.bdcdyh = f.bdcdyh
+        LEFT JOIN bdc_gzlw_sh c ON (c.gzlslid=x.gzlslid OR c.slbh=x.slbh) AND x.bdcdyh=c.bdcdyh AND f.xmid=c.xmid
+        <![CDATA[   WHERE ((t.djsj IS NULL AND  nvl(f.qszt,0) != 2 ) OR (t.djsj >= f.CFQSSJ AND (t.djsj <= f.jfdjsj OR nvl(f.qszt,0) != 2 ))) AND c.gzlwid IS NULL ]]>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!--检查是否存在在查封（不动产数据）状态下的产权证办理抵押、预抵押、在建工程抵押登记流程（抵押） -->
+    <select id="selectBdcCfDoDya" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        SELECT x.xmid ,x.slbh,x.djxl,x.bdcdyh,f.cfwh xzwh,f.xmid xzwhxmid,x.gzldyid FROM bdc_xm x
+        INNER JOIN bdc_dyaq t ON x.xmid = t.xmid
+        <if test="xmid != null and xmid !=''">
+            AND x.xmid = #{xmid}
+        </if>
+        INNER JOIN bdc_cf f ON x.bdcdyh = f.bdcdyh
+        LEFT JOIN bdc_gzlw_sh c ON (c.gzlslid=x.gzlslid OR c.slbh=x.slbh) AND x.bdcdyh=c.bdcdyh AND f.xmid=c.xmid
+        <![CDATA[   WHERE ((t.djsj IS NULL AND  nvl(f.qszt,0) != 2 ) OR (t.djsj >= f.CFQSSJ AND (t.djsj <= f.jfdjsj OR nvl(f.qszt,0) != 2 ))) AND c.gzlwid IS NULL ]]>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 检查是否存在在查封（不动产数据）状态下的产权证办理注销登记流程（注销产权）-->
+    <select id="selectBdcCfDoZxCq" parameterType="cn.gtmap.realestate.common.core.domain.BdcXmDO"
+            resultType="java.util.Map">
+        SELECT x.xmid ,x.slbh,x.djxl,x.bdcdyh,f.cfwh xzwh,f.xmid xzwhxmid,x.gzldyid FROM bdc_xm x
+        INNER JOIN bdc_cf f ON x.bdcdyh = f.bdcdyh
+        LEFT JOIN bdc_gzlw_sh c ON (c.gzlslid=x.gzlslid OR c.slbh=x.slbh) AND x.bdcdyh=c.bdcdyh AND f.xmid=c.xmid
+        <![CDATA[   WHERE ((x.djsj IS NULL AND  nvl(f.qszt,0) != 2 ) OR (x.djsj >= f.CFQSSJ AND (x.djsj <= f.jfdjsj OR nvl(f.qszt,0) != 2 ))) AND c.gzlwid IS NULL ]]>
+        <if test="xmid != null and xmid !=''">
+            AND x.xmid = #{xmid}
+        </if>
+        <if test="lastExcuteTime != null">
+            AND x.slsj > #{lastExcuteTime}
+        </if>
+        <if test="bhlc != null and bhlc !='' ">
+            AND x.gzldyid IN
+            <foreach collection="bhlc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qclc != null and qclc != ''">
+            AND x.gzldyid not IN
+            <foreach collection="qclc.split(',')" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+</mapper>        

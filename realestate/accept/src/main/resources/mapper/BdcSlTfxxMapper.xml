@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.accept.core.mapper.BdcSlTfxxMapper">
+
+    <!--查询退费信息-->
+    <select id="listBdcSlTfxxByPage" parameterType="cn.gtmap.realestate.common.core.qo.accept.BdcSlTfxxQO"
+            resultType="cn.gtmap.realestate.common.core.domain.accept.BdcSlTfxxDO">
+        SELECT  t.*
+        FROM BDC_SL_TFXX t
+        <where>
+            <if test="sfkssj != null and sfkssj != ''">
+                <![CDATA[and (t.sfsj >= to_date(#{sfkssj},'yyyy-MM-dd HH24:mi:ss'))]]>
+            </if>
+            <if test="sfjssj != null and sfjssj != ''">
+                <![CDATA[and (t.sfsj <= to_date(#{sfjssj},'yyyy-MM-dd HH24:mi:ss'))]]>
+            </if>
+            <if test="sqtfkssj != null and sqtfkssj != ''">
+                <![CDATA[and (t.sqtfsj = to_date(#{sqtfkssj},'yyyy-MM-dd HH24:mi:ss'))]]>
+            </if>
+            <if test="sqtfjssj != null and sqtfjssj != ''">
+                <![CDATA[and (t.sqtfsj >= to_date(#{sqtfjssj},'yyyy-MM-dd HH24:mi:ss'))]]>
+            </if>
+            <if test="slbh != null and slbh != ''">
+                and t.slbh = #{slbh}
+            </if>
+            <if test="bmmc != null and bmmc != ''">
+                and t.bmmc = #{bmmc}
+            </if>
+            <if test="pjlx != null and pjlx != ''">
+                and t.pjlx = #{pjlx}
+            </if>
+        </where>
+    </select>
+
+</mapper>

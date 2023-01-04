@@ -1,0 +1,141 @@
+<!--/**-->
+<!--* author: 前端组-->
+<!--* date: 2018-12-14-->
+<!--* version 3.0.0-->
+<!--* describe: 查询条件一栏放三个，默认最多两行，多的点击高级查询收缩，本示例包含输入框，单选，多选，其中EasyUI只有多选时才需要，没有多选不需要引入相应的css和js-->
+<!--*/-->
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>演示链接</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <link rel="stylesheet" href="../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../static/css/common.css" />
+    <link rel="stylesheet" href="../static/css/form.css" />
+    <link rel="stylesheet" href="../static/lib/bdcui/css/search.css" />
+</head>
+<body>
+<div class="bdc-form-div">
+    <form class="layui-form setOverflow" lay-filter="form">
+        <div class="content-title layui-clear">
+            <p>演示列表</p>
+        </div>
+        <div class="form-margin-area" style="min-height: 500px">
+            <div class="basic-info" id="show">
+
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+<script src="../static/lib/layui/layui.js"></script>
+<script src="../static/lib/js/jquery.min.js"></script>
+<script src="../static/js/jquery.validate.js"></script>
+<!--小数计算防精度缺失-->
+<script src="../static/lib/mathjs/math.js"></script>
+<script src="../static/js/common.js"></script>
+<script type="text/html" id="showTpl">
+    <br class="layui-form-item">
+    <div class="layui-inline margin-top-ipt">
+        <label class="layui-form-label change-label-width">简单受理界面</label>
+        <div class="layui-input-inline">
+            <button type="button" class="layui-btn url bdc-secondary-btn">
+                {{d.acceptUiUrl || ''}}/view/slym/slym.html?processInsId=475582
+            </button>
+        </div>
+    </div>
+    </br>
+    </br>
+    <div class="layui-inline margin-top-ipt">
+        <label class="layui-form-label change-label-width">组合受理界面</label>
+        <div class="layui-input-inline">
+            <button type="button" class="layui-btn url bdc-secondary-btn">
+                {{d.acceptUiUrl || ''}}/view/slym/slymzh.html?processInsId=460779
+            </button>
+        </div>
+    </div>
+    </br>
+    </br>
+    <div class="layui-inline margin-top-ipt">
+        <label class="layui-form-label change-label-width">批量受理界面</label>
+        <div class="layui-input-inline">
+            <button type="button" class="layui-btn url bdc-secondary-btn">
+                {{d.acceptUiUrl || ''}}/view/slym/slympl.html?processInsId=460954
+            </button>
+        </div>
+    </div>
+    </br>
+    </br>
+    <div class="layui-inline margin-top-ipt">
+        <label class="layui-form-label change-label-width">选择不动产单元界面</label>
+        <div class="layui-input-inline">
+            <button type="button" class="layui-btn url bdc-secondary-btn">
+                {{d.acceptUiUrl || ''}}/view/query/selectBdcdyh.html
+            </button>
+        </div>
+    </div>
+    </br>
+    </br>
+    <div class="layui-inline margin-top-ipt">
+        <label class="layui-form-label change-label-width">收费信息界面</label>
+        <div class="layui-input-inline">
+            <button type="button" class="layui-btn url bdc-secondary-btn">
+                {{d.acceptUiUrl || ''}}/view/sfxx/sfxx.html?processInsId=123456
+            </button>
+        </div>
+    </div>
+    </br>
+    </br>
+    <div class="layui-inline margin-top-ipt">
+        <label class="layui-form-label change-label-width">购物车界面</label>
+        <div class="layui-input-inline">
+            <button type="button" class="layui-btn url bdc-secondary-btn">
+                {{d.acceptUiUrl || ''}}/view/query/gwc.html
+            </button>
+        </div>
+    </div>
+    </br>
+    </br>
+    <div class="layui-inline margin-top-ipt">
+        <label class="layui-form-label change-label-width">规则组合界面</label>
+        <div class="layui-input-inline">
+            <button type="button" class="layui-btn url bdc-secondary-btn">
+                {{d.ruleUiUrl || ''}}/bdcGzYwgz
+            </button>
+        </div>
+    </div>
+    </br>
+    </br>
+    <div class="layui-inline margin-top-ipt">
+        <label class="layui-form-label change-label-width">业务规则界面</label>
+        <div class="layui-input-inline">
+            <button type="button" class="layui-btn url bdc-secondary-btn">
+                {{d.ruleUiUrl || ''}}/bdcGzZh
+            </button>
+        </div>
+    </div>
+</script>
+
+<script>
+    layui.use(['form', 'jquery', 'laytpl', 'element', 'laydate'], function () {
+        var form = layui.form;
+        var laytpl = layui.laytpl;
+        var json = {
+            acceptUiUrl: acceptUiUrl,
+            ruleUiUrl: ruleUiUrl
+        }
+        var tpl = showTpl.innerHTML, view = document.getElementById('show');
+        //渲染数据
+        laytpl(tpl).render(json, function (html) {
+            view.innerHTML = html;
+        });
+        form.render();
+        $(".url").click(function(){
+            window.open(this.innerText);
+        });
+    })
+</script>
+</html>

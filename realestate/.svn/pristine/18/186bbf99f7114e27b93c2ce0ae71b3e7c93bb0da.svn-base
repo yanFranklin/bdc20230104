@@ -1,0 +1,104 @@
+spring:
+  profiles:
+    active: v1
+  application:
+    name: accept-ui
+    admin:
+      enabled: true
+  cloud:
+    config:
+      name: accept-ui
+      enabled: false
+      failFast: false
+#      uri: http://192.168.90.11:8001
+      discovery:
+        enabled: false
+        service-id: config-app
+  sleuth:
+    sampler:
+      percentage: 1
+  http:
+    encoding:
+      charset: UTF-8
+      force: true
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+
+
+eureka:
+  instance:
+    hostname: ${spring.application.name}
+    preferIpAddress: true
+  client:
+    serviceUrl:
+      defaultZone: ${app.center}
+    healthcheck:
+      enabled: true
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 10000
+        loggerLevel: basic
+  httpclient:
+    enabled: true
+  hystrix:
+    enabled: true
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+#          strategy: THREAD
+          strategy: SEMAPHORE
+          semaphore:
+            maxConcurrentRequests: 1000
+          thread:
+            timeoutInMilliseconds: 300000
+
+ribbon:
+  okhttp:
+    enabled: true
+  eureka:
+    enabled: true
+  ConnectTimeout: 1000000
+  ReadTimeout: 2000000
+#  超时后最大重连次数
+  MaxAutoRetries: 0
+  MaxAutoRetriesNextServer: 0
+
+security:
+  oauth2:
+    sso:
+      login-path: /login
+    client:
+      access-token-uri: ${app.oauth}/oauth/token
+      user-authorization-uri: ${app.oauth}/oauth/authorize
+      client-id: acceptUiClientId
+      client-secret: acceptUiClientSecret
+    resource:
+      prefer-token-info: true
+      user-info-uri: ${app.oauth}/oauth/user
+      token-info-uri: ${app.oauth}/oauth/check_token
+      loadBalanced: true
+
+# 日志系统配置
+log:
+  #请求入参拦截开关
+  spring-switch: false
+  #log日志开关
+  logback-switch: false
+  appender:
+    # 是否开启记录日志至es中，开启日志功能时，该配置必须配置为 true
+    enabled: false
+    ignores: Apollo
+    level: error
+    appname: accept-ui
+    redis-host: ${spring.redis.host}
+    redis-port: ${spring.redis.port}

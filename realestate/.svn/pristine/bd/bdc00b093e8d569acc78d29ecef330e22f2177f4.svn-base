@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!-- 外网申请 更新受理状态 -->
+    <ex:bean id="wwsqupdateslzt">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="slztServiceImpl"/>
+            <ex:property name="methodName" value="updateSlzt"/>
+        </ex:service-info>
+    </ex:bean>
+
+
+    <!-- 自助查询机使用 -->
+    <ex:bean id="cxj_getCqzxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="standardGrdacx"/>
+            <ex:property name="methodName" value="grdacx"/>
+            <ex:property name="params" value="param"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="param" dozerXml="conf/dozer/wwsq/getWwsqCqzxx/request/param.xml" notEmpty="true"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerRelXml="data.xml"
+                        saveNull="cn.gtmap.realestate.exchange.core.dto.wwsq.getWwsqCqzxx.response.GetWwsqCqzxxResponseDTO"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 获取外网申请信息分页 -->
+    <ex:bean id="getWwsqYwxxFy">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.etl.HlwCreateFeignService"/>
+            <ex:property name="methodName" value="listHlwYwxxByPageJson"/>
+            <ex:property name="params" value="pageable,paramJson"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="pageable" sourceService="getPageable"/>
+            <ex:element name="paramJson" dozerRelXml="param.xml" objectToJsonString="true"/>
+        </ex:request>
+    </ex:bean>
+    <!-- 根据主键查询外网申请信息后进行创建 -->
+    <ex:bean id="initWwsqXxByEtl">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.etl.HlwCreateFeignService"/>
+            <ex:property name="methodName" value="listHlwYwxxByHlwXmid"/>
+            <ex:property name="params" value="hlwxmid,slr"/>
+        </ex:service-info>
+        <ex:response resultKey="result">
+            <ex:element name="cjResponse" sourceService="acceptCjService"/>
+            <ex:element name="result" sourceService="acceptCjService_response"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 4.4.2 合肥验证及初始化接口（合肥已使用） -->
+    <ex:bean id="initWwsqxx">
+        <ex:request>
+            <ex:element name="acceptCjParam" noSetRequestBody="true"  sourceService="initWwsqxx_acceptCjParam"/>
+            <ex:element name="fjclList" dozerXml="conf/dozer/wwsq/init/zy/request/fjcl.xml"/>
+            <ex:element dozerXml="conf/dozer/wwsq/init/zy/request/spxtywh.xml" listToObject="true"/>
+            <!-- 是否自动转发 -->
+            <ex:element dozerXml="conf/dozer/wwsq/init/zy/request/autoturn.xml" listToObject="true"/>
+        </ex:request>
+        <ex:response resultKey="result" extendRequestBody="true">
+            <ex:element name="cjResponse" sourceService="acceptCjService"/>
+            <ex:element name="result" sourceService="acceptCjService_response" appendRequestBody="true"/>
+        </ex:response>
+        <ex:log dsfFlag="WWSQ" logEventName="合肥验证及初始化接口" requester="WWSQ" responser="BDC"/>
+    </ex:bean>
+    <ex:bean id="initWwsqxx_acceptCjParam">
+        <ex:request dozerXml="conf/dozer/wwsq/init/zy/request/bdcSlxxDTO.xml">
+            <ex:element name="bdcSlJbxx" noSetRequestBody="true"
+                        dozerXml="conf/dozer/wwsq/init/zy/request/bdcSlJbxx.xml"
+                        listToObject="true"/>
+            <ex:element name="bdcSlXmList" noSetRequestBody="true"
+                        dozerXml="conf/dozer/wwsq/init/zy/request/bdcSlXm.xml"/>
+            <!--过户信息 -->
+            <ex:element name="ghxx" noSetRequestBody="true" dozerXml="conf/dozer/wwsq/init/zy/request/bdcGhxx.xml"/>
+            <!--sfxx信息 -->
+            <ex:element dozerXml="conf/dozer/wwsq/init/zy/request/bdcSfxx.xml" name="sf" noSetRequestBody="true"/>
+            <!-- 判断是否需要规则验证  gzyz  sfss -->
+            <ex:element dozerXml="conf/dozer/wwsq/init/zy/request/cjyz.xml"/>
+        </ex:request>
+    </ex:bean>
+
+</beans>

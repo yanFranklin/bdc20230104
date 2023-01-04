@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.supervise.core.mapper.LfSfycMapper">
+    <select id="listYcsfxxByPageOrder" parameterType="cn.gtmap.realestate.supervise.core.qo.LfSfxxQO"
+            resultType="cn.gtmap.realestate.supervise.core.dto.BdcLfSfxxDTO">
+        SELECT
+            DISTINCT J.SLBH, J.GZLSLID, J.GZLDYID, S.SFXXID, S.SFSJ, S.XMID, S.JFRXM, S.SFRXM, S.BZ, X.SFXMMC, X.YSJE, X.SSJE
+        FROM
+            BDC_SL_SFXX S
+        JOIN
+            BDC_SL_SFXM X ON S.SFXXID = X.SFXXID
+        JOIN
+            BDC_SL_XM M ON S.XMID = M.XMID
+        JOIN
+            BDC_SL_JBXX J ON M.JBXXID = J.JBXXID
+        where
+            X.SSJE <![CDATA[<]]> X.YSJE
+            AND S.BZ IS  NULL
+            <if test="slbh != null and slbh != ''">
+                AND J.SLBH like '%' || #{slbh} || '%'
+            </if>
+            <if test="sfxmmc != null and sfxmmc != ''">
+                AND X.SFXMMC like '%' || #{sfxmmc} || '%'
+            </if>
+            <if test="sfrxm != null and sfrxm != ''">
+                AND S.SFRXM like '%' || #{sfrxm} || '%'
+            </if>
+            <if test="sfsjq != null and sfsjq != ''">
+                AND to_char(S.SFSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{sfsjq}
+            </if>
+            <if test="sfsjz != null and sfsjz != ''">
+                AND to_char(S.SFSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{sfsjz}
+            </if>
+        ORDER BY
+            S.SFSJ DESC NULLS LAST
+    </select>
+</mapper>

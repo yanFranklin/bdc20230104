@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--收件信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.DjfDjGdMapper">
+    <select id="queryDjfDjGdList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.DjfDjGdDO">
+        SELECT A.XMID YWH,A.Djlx djdl,A.DJXL,A.ZL,A.BDCQZH QZHM,
+        NVL(B.AJJS,0) WJJS,NVL(B.AJYS,0) ZYS,
+        B.GDRXM GDRY,NVL(B.GDSJ,sysdate) GDSJ,B.BZ,substr(A.BDCDYH,0,6) as QXDM,
+        B.DAH,'/' as DACFJBM
+        FROM BDC_GDXX B LEFT JOIN BDC_XM A ON A.XMID = B.XMID
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND A.xmid = #{ywh}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryDjfDjGdListOld" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.yancheng.yth.old.DjfDjGdOldDO">
+        SELECT A.XMID YWH,A.Djlx djdl,A.DJXL,A.ZL,A.BDCQZH QZHM,
+        NVL(B.AJJS,0) WJJS,NVL(B.AJYS,0) ZYS,
+        B.GDRXM GDRY,NVL(B.GDSJ,sysdate) GDSJ,B.BZ,substr(A.BDCDYH,0,6) as QXDM
+        FROM BDC_GDXX B LEFT JOIN BDC_XM A ON A.XMID = B.XMID
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND A.xmid = #{ywh}
+            </if>
+        </where>
+    </select>
+</mapper>

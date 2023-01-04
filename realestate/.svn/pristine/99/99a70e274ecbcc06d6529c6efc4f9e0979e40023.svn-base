@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.init.core.mapper.BdcLcpzMapper">
+
+    <select id="listBdcDjlxDjxlQllxByPage" resultType="cn.gtmap.realestate.common.core.vo.config.ui.BdcDjlxDjxlQllxVO"
+            parameterType="cn.gtmap.realestate.common.core.vo.config.ui.BdcDjlxDjxlQllxVO">
+        select rownum as xh,d.dm as djlxDm,d.mc as djlxMc,l.id as djlxDjxlGxId,xl.dm as djxlDm,xl.mc as djxlMc,
+        xq.id as djxlQllxGxId,q.dm as qllxDm,q.mc as qllxMc,xy.djyy as djyy,xy.sfmr as djyySfmr,xy.id as djxlDjyyGxId
+        from bdc_zd_djlx d left join bdc_djlx_djxl_gx l on d.dm=l.djlx
+        left join bdc_zd_djxl xl on l.djxl=xl.dm
+        left join bdc_djxl_qllx_gx xq on xl.dm=xq.djxl
+        left join bdc_zd_qllx q on xq.qllx=q.dm
+        left join bdc_djxl_djyy_gx xy on xl.dm=xy.djxl
+        <where>
+            <if test="djlx != null and djlx !=''">
+                AND d.dm=#{djlx}
+            </if>
+            <if test="djxl != null and djxl !=''">
+                AND xl.dm=#{djxl}
+            </if>
+            <if test="qllx != null and qllx !=''">
+                AND q.dm=#{qllx}
+            </if>
+            <if test="djyy != null and djyy !=''">
+                AND instr(xy.djyy ,#{djyy} )>0
+            </if>
+            <if test="djyySfmr != null and djyySfmr !=''">
+                AND xy.sfmr=#{djyySfmr}
+            </if>
+            <if test="djlxDjxlGxId != null and djlxDjxlGxId !=''">
+                AND l.id=#{djlxDjxlGxId}
+            </if>
+            <if test="djxlQllxGxId != null and djxlQllxGxId !=''">
+                AND xq.id=#{djxlQllxGxId}
+            </if>
+            <if test="djxlDjyyGxId != null and djxlDjyyGxId !=''">
+                AND xy.id=#{djxlDjyyGxId}
+            </if>
+        </where>
+        order by d.dm,xl.dm
+    </select>
+
+    <select id="listBdcDjxlDjyyByPage" resultType="cn.gtmap.realestate.common.core.domain.BdcDjxlDjyyGxDO"
+            parameterType="cn.gtmap.realestate.common.core.domain.BdcDjxlDjyyGxDO">
+        select id,djxl,djyy,sfmr,gzldyid,sxh from bdc_djxl_djyy_gx
+        <where>
+            <if test="djxl!=null and djxl!=''">
+                and  djxl=#{djxl}
+            </if>
+            <if test="sfmr!=null and sfmr!=''">
+                and  sfmr=#{sfmr}
+            </if>
+            <if test="gzldyid!=null and gzldyid!=''">
+                and  (gzldyid IS NULL OR gzldyid=#{gzldyid})
+            </if>
+        </where>
+        order by sxh asc
+    </select>
+
+</mapper>

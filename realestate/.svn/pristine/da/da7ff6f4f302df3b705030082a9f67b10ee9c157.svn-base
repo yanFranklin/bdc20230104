@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.accept.core.mapper.BdcSlDyaqMapper">
+    <!--删除不动产受理抵押信息-->
+    <delete id="deleteBdcSlDyaq" parameterType="cn.gtmap.realestate.common.core.dto.accept.BdcSlDeleteCsDTO">
+        <if test="xmidList != null and xmidList.size>0">
+        DELETE FROM bdc_sl_dyaq a
+          <where>
+            <if test="xmidList != null">
+                AND a.xmid IN
+                <foreach collection="xmidList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        </if>
+
+    </delete>
+
+    <update id="updateBdcSlDyaqRyzdPl" parameterType="java.util.Map">
+        <if test="xmidList != null and xmidList.size>0">
+            UPDATE bdc_sl_dyaq t
+            <set>
+                t.zwr = #{zwr,jdbcType=VARCHAR}
+            </set>
+            <where>
+                <if test="xmidList != null">
+                    AND t.xmid IN
+                    <foreach collection="xmidList" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+        </if>
+
+    </update>
+</mapper>

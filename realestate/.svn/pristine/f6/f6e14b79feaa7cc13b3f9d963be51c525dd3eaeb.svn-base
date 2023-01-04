@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>综合法人库-死亡医学证明查询</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/css/common.css"/>
+</head>
+<body>
+
+<div class="content-div gxjklc-div">
+    <!--查询条件-->
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <!--一行的-->
+            <form class="layui-form" action="">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">死者证件号码</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input search" name="szzjhm" id="szzjhm" placeholder="请输入" type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                        <button type="reset" id="reset" class="layui-btn bdc-secondary-btn reset-btn">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="bdc-content-box">
+        <form class="layui-form setOverflow" action="">
+            <div class="bdc-content-fix">
+                <div class="content-title">
+                    <p>死亡医学证明查询(综合法人库)</p>
+                    <div class="title-btn-area .layui-layout-right">
+                        <button type="reset" class="layui-btn bdc-secondary-btn upload-pdf">上传PDF</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-main">
+                <div class="table-name"></div>
+
+                <div class="bdc-table-box">
+                    <table class="layui-table" border="1">
+                        <colgroup>
+                            <col width="50">
+                            <col width="100">
+                            <col width="150">
+                            <col width="100">
+                            <col width="150">
+                        </colgroup>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/html" id="cxywcsTpl">
+    {{# if(d.cxywcs){ }}
+    {{# layui.each(d.cxywcs,function(index,item){  }}
+    <tr>
+        <td class="set-back-color set-center">查询条件</td>
+        <td class="set-back-color">死者证件号码</td>
+        <td colspan="3"><input type="text" class="layui-table-edit zjh" value="{{ item.szzjhm || ''}}" disabled="off"></td>
+    </tr>
+    <!--查询结果-->
+    <tr>
+        <td class="set-back-color set-center" rowspan="10">查<br>询<br>结<br>果</td>
+        <td class="set-back-color">死者姓名</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">死者证件号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">性别</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">性别编码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">死者家属姓名</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">死亡地点</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">联系电话</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">出生日期</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">民族</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">民族编码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">年龄</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">国家或地区代码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">死者有效身份证件类型</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">直接死亡原因疾病名称</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">报告单位所属县区名称</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">疾病ICD10编码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">死者生前常驻地址国标</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">死亡日期</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">常住地址</td>
+        <td colspan="3"><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td colspan="5" class="quarantine"></td>
+    </tr>
+    {{# }); }}
+    {{# }else{ }}
+    <tr>
+        <td class="set-back-color set-center">查询条件</td>
+        <td class="set-back-color">死者证件号码</td>
+        <td colspan="3"><input type="text" class="layui-table-edit zjh" value="" disabled="off"></td>
+    </tr>
+    <!--查询结果-->
+    <tr>
+        <td class="set-back-color set-center" rowspan="10">查<br>询<br>结<br>果</td>
+        <td class="set-back-color">死者姓名</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">死者证件号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+
+        <td class="set-back-color">性别</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">性别编码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">死者家属姓名</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">死亡地点</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">联系电话</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">出生日期</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">民族</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">民族编码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">年龄</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">国家或地区代码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">死者有效身份证件类型</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">直接死亡原因疾病名称</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">报告单位所属县区名称</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">疾病ICD10编码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">死者生前常驻地址国标</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">死亡日期</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">常住地址</td>
+        <td colspan="3"><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td colspan="5" class="quarantine"></td>
+    </tr>
+    {{# } }}
+</script>
+<script type="text/html" id="tableTpl">
+    {{# if(d){ }}
+    {{# layui.each(d,function(index,item){  }}
+    <tr>
+        <td class="set-back-color set-center">查询条件</td>
+        <td class="set-back-color">死者证件号码</td>
+        <td colspan="3"><input type="text" class="layui-table-edit zjh" value="{{ item.szzjhm || ''}}" disabled="off"></td>
+    </tr>
+    <!--查询结果-->
+    <tr>
+        <td class="set-back-color set-center" rowspan="10">查<br>询<br>结<br>果</td>
+        <td class="set-back-color">死者姓名</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.szxm || ''}}"></td>
+        <td class="set-back-color">死者证件号码</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.szzjhm || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">性别</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.xb || ''}}"></td>
+        <td class="set-back-color">性别编码</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.xbdm || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">死者家属姓名</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.szjsxm || ''}}"></td>
+        <td class="set-back-color">死亡地点</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.swdd || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">联系电话</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.lxdh || ''}}"></td>
+        <td class="set-back-color">出生日期</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.csrq || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">民族</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.mz || ''}}"></td>
+        <td class="set-back-color">民族编码</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.mzbm || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">年龄</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.nl || ''}}"></td>
+        <td class="set-back-color">国家或地区代码</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.gjhdqszdm || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">死者有效身份证件类型</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.szyxsfzjlx || ''}}"></td>
+        <td class="set-back-color">直接死亡原因疾病名称</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.zjswyyjbmc || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">报告单位所属县区名称</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.bgdwssxqmc || ''}}"></td>
+        <td class="set-back-color">疾病ICD10编码</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.jbicd10bm || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">死者生前常驻地址国标</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.szsqczdz || ''}}"></td>
+        <td class="set-back-color">死亡日期</td>
+        <td><input type="text" class="layui-table-edit" value="{{ item.swrq || ''}}"></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">常住地址</td>
+        <td colspan="3"><input type="text" class="layui-table-edit" value="{{ item.czdz || ''}}"></td>
+    </tr>
+    <tr>
+        <td colspan="5" class="quarantine"></td>
+    </tr>
+    {{# }); }}
+    {{# }else{ }}
+    <tr>
+        <td class="set-back-color set-center">查询条件</td>
+        <td class="set-back-color">死者证件号码</td>
+        <td colspan="3"><input type="text" class="layui-table-edit zjh" value="" disabled="off"></td>
+    </tr>
+    <!--查询结果-->
+    <tr>
+        <td class="set-back-color set-center" rowspan="10">查<br>询<br>结<br>果</td>
+        <td class="set-back-color">死者姓名</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">死者证件号码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+
+        <td class="set-back-color">性别</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">性别编码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">死者家属姓名</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">死亡地点</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">联系电话</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">出生日期</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">民族</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">民族编码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">年龄</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">国家或地区代码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">死者有效身份证件类型</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">直接死亡原因疾病名称</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">报告单位所属县区名称</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">疾病ICD10编码</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">死者生前常驻地址国标</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+        <td class="set-back-color">死亡日期</td>
+        <td><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td class="set-back-color">常住地址</td>
+        <td colspan="3"><input type="text" class="layui-table-edit" value=""></td>
+    </tr>
+    <tr>
+        <td colspan="5" class="quarantine"></td>
+    </tr>
+    {{# } }}
+</script>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/bdcui/js/mask.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/gxjklc/gxjkCommon.js"></script>
+<script src="../../static/js/yancheng/sjgx/lcshijSwyxzm.js"></script>
+</body>
+</html>

@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!-- 推送税务 存量房信息 -->
+    <ex:bean id="tsSwxxClf">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="推送税务存量房信息" />
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SW"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="url" value="${sw.clfxx.url}" />
+        </ex:service-info>
+        <ex:request dozerXml="conf/dozer/hefei/sw/clfxx/swclfxx_mode.xml">
+            <ex:element name="crfxxlb" dozerXml="conf/dozer/hefei/sw/clfxx/swclfxx_crf.xml"/>
+            <ex:element name="srfxxlb" dozerXml="conf/dozer/hefei/sw/clfxx/swclfxx_srf.xml"/>
+            <ex:element name="head" dozerXml="conf/dozer/hefei/sw/clfxx/swclfxx_head.xml"/>
+            <ex:element name="body" dozerXml="conf/dozer/hefei/sw/clfxx/swclfxx_info.xml"/>
+            <ex:element name="sdsjcxm" dozerXml="conf/dozer/hefei/sw/clfxx/swclfxx_sdsjc.xml"/>
+            <ex:element name="fzzjsxm" dozerXml="conf/dozer/hefei/sw/clfxx/swclfxx_fzzjs.xml"/>
+            <ex:element name="sfzxqs" sourceService="swsfzxqs" />
+            <ex:element name="fctpfjsy" sourceService="swTsFjclPl" />
+        </ex:request>
+        <!-- 输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/hefei/sw/cx/resp/swcx_resp_head.xml"/>
+            <ex:element name="jbrxx" dozerXml="conf/dozer/hefei/sw/cx/resp/swcx_resp_jbrxx.xml"/>
+            <ex:element name="hsxxList" dozerXml="conf/dozer/hefei/sw/cx/resp/swcx_resp_hsxx.xml" />
+        </ex:response>
+    </ex:bean>
+
+    <!-- 推送税务 存量房信息 德宽版-->
+    <ex:bean id="tsSwxxClf_dk">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="hefeiSwServiceImpl"/>
+            <ex:property name="methodName" value="postClfSwxxAndFjxx"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 批量推送税务 存量房信息 德宽版-->
+    <ex:bean id="tsSwxxClf_dk_pl">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="hefeiSwServiceImpl"/>
+            <ex:property name="methodName" value="postPlClfSwxxAndFjxx"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 推送税务 商品房信息 -->
+    <ex:bean id="tsSwxxSpf">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="推送税务商品房信息" />
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SW"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="url" value="${sw.zlfxx.url}" />
+        </ex:service-info>
+        <ex:request dozerXml="conf/dozer/hefei/sw/spfxx/swspfxx_mode.xml">
+            <ex:element name="head" dozerXml="conf/dozer/hefei/sw/spfxx/swspfxx_head.xml"/>
+            <ex:element name="body" dozerXml="conf/dozer/hefei/sw/spfxx/swspfxx_info.xml"/>
+            <ex:element name="kfsxxlb" dozerXml="conf/dozer/hefei/sw/spfxx/swspfxx_kfs.xml"/>
+            <ex:element name="srfxxlb" dozerXml="conf/dozer/hefei/sw/spfxx/swspfxx_srf.xml"/>
+            <ex:element name="fctpfjsy" sourceService="swTsFjclPl" />
+        </ex:request>
+        <!-- 输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/hefei/sw/cx/resp/swcx_resp_head.xml"/>
+            <ex:element name="jbrxx" dozerXml="conf/dozer/hefei/sw/cx/resp/swcx_resp_jbrxx.xml"/>
+            <ex:element name="hsxxList" dozerXml="conf/dozer/hefei/sw/cx/resp/swcx_resp_hsxx.xml" />
+        </ex:response>
+    </ex:bean>
+
+
+    <ex:bean id="swsfzxqs">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="hefeiSwServiceImpl" />
+            <ex:property name="methodName" value="dealSfzxqs" />
+            <ex:property name="params" value="sqrlist" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="sqrlist" dozerRelXml="param.xml" />
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="countFjxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="hefeiSwServiceImpl"/>
+            <ex:property name="methodName" value="countFjxx"/>
+            <ex:property name="params" value="fjclList"/>
+        </ex:service-info>
+    </ex:bean>
+    <ex:bean id="combineClfSwxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="hefeiSwServiceImpl"/>
+            <ex:property name="methodName" value="combineClfSwxx"/>
+        </ex:service-info>
+    </ex:bean>
+    <ex:bean id="combineSpfSwxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="hefeiSwServiceImpl"/>
+            <ex:property name="methodName" value="combineSpfSwxx"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 批量推送附件 返回值为 Fctpfjsy-->
+    <ex:bean id="swTsFjclPl">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="hefeiSwServiceImpl" />
+            <ex:property name="methodName" value="dealFjcl" />
+            <ex:property name="params" value="fjlist,slbh,xmid" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="fjlist" dozerXml="conf/dozer/hefei/sw/tsfjclpl/request/param.xml"/>
+            <ex:element dozerXml="conf/dozer/hefei/sw/tsfjclpl/request/slbh.xml"/>
+        </ex:request>
+    </ex:bean>
+
+
+
+    <!-- 调用税务接口 单个推送附件 -->
+    <ex:bean id="swTsFjcl">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="税务推送附件接口" />
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SW"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="url" value="${sw.tsfjcl.url}" />
+        </ex:service-info>
+        <ex:request dozerXml="conf/dozer/hefei/sw/tsfjcl/request/collect.xml">
+            <ex:element name="head" dozerXml="conf/dozer/hefei/sw/tsfjcl/request/head.xml"/>
+            <ex:element name="fctpfjlb" dozerXml="conf/dozer/hefei/sw/tsfjcl/request/fjcllist.xml" objectToList="true"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/hefei/sw/tsfjcl/response/data.xml" />
+        </ex:response>
+    </ex:bean>
+
+
+    <!-- 税务申报取消作废接口 -->
+    <ex:bean id="swQxzf">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="税务申报取消作废接口" />
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SW"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="url" value="${sw.qxzf.url}" />
+        </ex:service-info>
+        <ex:request dozerXml="conf/dozer/hefei/sw/qxzf/swqxzf_mode.xml">
+            <ex:element name="head" dozerXml="conf/dozer/hefei/sw/qxzf/swqxzf_head.xml"/>
+            <ex:element name="body" dozerXml="conf/dozer/hefei/sw/qxzf/swqxzf_body.xml"/>
+        </ex:request>
+        <!-- 输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/hefei/dksw/qxzf/resp/swcx_resp_head.xml"/>
+        </ex:response>
+    </ex:bean>
+
+
+
+    <!-- 税务查询接口 -->
+    <ex:bean id="swCxxx">
+        <!-- 请求结构体 -->
+        <ex:service-info request-type="restPost">
+            <ex:property name="logEventName" value="税务查询接口" />
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SW"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="url" value="${sw.cxxx.url}" />
+        </ex:service-info>
+        <!-- 输入结构体 -->
+        <ex:request dozerXml="conf/dozer/hefei/sw/cx/req/swcx_req_mode.xml">
+            <ex:element name="head" dozerXml="conf/dozer/hefei/sw/cx/req/swcx_req_head.xml"/>
+            <ex:element name="body" dozerXml="conf/dozer/hefei/sw/cx/req/swcx_req_body.xml"/>
+        </ex:request>
+        <!-- 输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/hefei/sw/cx/resp/swcx_resp_head.xml"/>
+            <ex:element name="jbrxx" dozerXml="conf/dozer/hefei/sw/cx/resp/swcx_resp_jbrxx.xml"/>
+            <ex:element name="hsxxList" dozerXml="conf/dozer/hefei/sw/cx/resp/swcx_resp_hsxx.xml" />
+        </ex:response>
+    </ex:bean>
+
+
+    <!-- 接收税务完税状态 TODO 暂时没有 -->
+    <ex:bean id="jsWszt">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="cn.gtmap.realestate.common.core.service.feign.accept.BdcSwFeignService" />
+            <ex:property name="methodName" value="updateWsztByHtbh" />
+            <ex:property name="params" value="htbh,wszt" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/hefei/sw/jswszt/request/param.xml"/>
+        </ex:request>
+        <ex:log dsfFlag="SW" logEventName="接收税务完税状态接口" requester="SW" responser="BDC" />
+    </ex:bean>
+
+    <!-- 商品房完税状态接口 -->
+    <ex:bean id="spfwszt">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${sw.spfwszt.url}" />
+            <ex:property name="logEventName" value="商品房完税状态接口" />
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SW"/>
+            <ex:property name="dsfFlag" value="SW"/>
+        </ex:service-info>
+        <!-- 输入结构体 -->
+        <ex:request>
+            <ex:element name="head" dozerXml="conf/dozer/hefei/sw/cxwszt/request/head.xml" />
+            <ex:element name="body" dozerXml="conf/dozer/hefei/sw/cxwszt/request/data.xml" />
+        </ex:request>
+        <ex:response dozerXml="conf/dozer/hefei/sw/cxwszt/response/collect.xml">
+            <ex:element dozerXml="conf/dozer/hefei/sw/cxwszt/response/data.xml" />
+            <ex:element name="srfhsxx" dozerXml="conf/dozer/hefei/sw/cxwszt/response/srf.xml" />
+            <ex:element name="crfhsxx" dozerXml="conf/dozer/hefei/sw/cxwszt/response/crf.xml" />
+        </ex:response>
+    </ex:bean>
+
+
+
+    <!-- 根据合同号 查询 税务 三要素 -->
+    <ex:bean id="swsys">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="查询税务三要素接口" />
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SW"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="url" value="${sw.swsys.url}" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="head" dozerXml="conf/dozer/hefei/sw/sys/request/head.xml" />
+            <ex:element name="body" dozerXml="conf/dozer/hefei/sw/sys/request/data.xml" />
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/hefei/sw/sys/response/data.xml" />
+        </ex:response>
+    </ex:bean>
+
+
+    <!-- 保存税务三要素 到 受理库 内部使用 -->
+    <ex:bean id="saveSwsys">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="cn.gtmap.realestate.common.core.service.feign.accept.BdcSwFeignService" />
+            <ex:property name="methodName" value="insertSwsys"/>
+            <ex:property name="params" value="sysxx,slbh" />
+        </ex:service-info>
+    </ex:bean>
+
+
+    <!-- 为受理提供  处理三要素 并且 推送缴库入库 -->
+    <ex:bean id="getSysAndJkrk">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="sfSsxxServiceImpl" />
+            <ex:property name="methodName" value="getSysAndTsjkrk" />
+            <ex:property name="params" value="slbh,sfyj" />
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 批量推送附件 返回值为 Fctpfjsy-->
+    <ex:bean id="receive_swhsxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.accept.BdcSwFeignService"/>
+            <ex:property name="methodName" value="insertOrUpdateSwxx"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/hefei/dksw/receive_swhsxx/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/hefei/dksw/receive_swhsxx/data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 德宽接口-->
+    <!-- 推送税务 存量房信息 德宽版-->
+    <ex:bean id="tsSwxxClf_http_dk">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="推送税务存量房信息-德宽"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SW"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="httpsRequest" value="true"/>
+            <ex:property name="xPlatToken" value="${dksw.token}"/>
+            <ex:property name="url" value="${dksw.clfxx.url}"/>
+        </ex:service-info>
+        <ex:request name="params" sourceService="combineClfSwxx">
+            <ex:element name="qlrs" dozerXml="conf/dozer/hefei/dksw/clfxx/swclfxx_qlr.xml"/>
+            <ex:element name="head" dozerXml="conf/dozer/hefei/dksw/clfxx/swclfxx_head.xml"/>
+            <ex:element name="body" dozerXml="conf/dozer/hefei/dksw/clfxx/swclfxx_info.xml"/>
+            <ex:element name="sdsjcxm" dozerXml="conf/dozer/hefei/dksw/clfxx/swclfxx_sdsjcxm.xml"/>
+            <ex:element dozerXml="conf/dozer/hefei/dksw/clfxx/swclfxx_tdcrj.xml" name="tdcrj"/>
+            <ex:element name="sstpfjzs" sourceService="countFjxx"/>
+        </ex:request>
+        <!-- 输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/hefei/dksw/resp/swcx_resp_head.xml"/>
+        </ex:response>
+    </ex:bean>
+    <!-- 推送税务 商品房信息 德宽版-->
+    <ex:bean id="tsSwxxSpf_dk">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="hefeiSwServiceImpl"/>
+            <ex:property name="methodName" value="postSpfSwxxAndFjxx"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 批量推送税务 商品房信息 德宽版-->
+    <ex:bean id="tsSwxxSpf_dk_pl">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="hefeiSwServiceImpl"/>
+            <ex:property name="methodName" value="postPlSpfSwxxAndFjxx"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 推送税务 商品房信息 德宽版-->
+    <ex:bean id="tsSwxxSpf_http_dk">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="推送税务商品房信息-德宽"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SW"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="httpsRequest" value="true"/>
+            <ex:property name="xPlatToken" value="${dksw.token}"/>
+            <ex:property name="url" value="${dksw.zlfxx.url}"/>
+        </ex:service-info>
+        <ex:request name="params" sourceService="combineSpfSwxx">
+            <ex:element name="qlrs" dozerXml="conf/dozer/hefei/dksw/spfxx/swspfxx_qlr.xml"/>
+            <ex:element name="head" dozerXml="conf/dozer/hefei/dksw/spfxx/swspfxx_head.xml"/>
+            <ex:element name="body" dozerXml="conf/dozer/hefei/dksw/spfxx/swspfxx_info.xml"/>
+            <ex:element name="sstpfjzs" sourceService="countFjxx"/>
+        </ex:request>
+        <!-- 输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/hefei/dksw/resp/swcx_resp_head.xml"/>
+        </ex:response>
+    </ex:bean>
+    <!-- 批量推送附件 返回值为 Fctpfjsy-->
+    <ex:bean id="swTsFjclPl_dk">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="hefeiSwServiceImpl"/>
+            <ex:property name="methodName" value="dealFjcl_dk"/>
+            <ex:property name="params" value="fjlist,slbh,fwuuid,tdbz,head"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="fjlist" dozerXml="conf/dozer/hefei/sw/tsfjclpl/request/param.xml"/>
+            <ex:element name="head" dozerXml="conf/dozer/hefei/dksw/tsfjclpl/head.xml"/>
+            <ex:element dozerXml="conf/dozer/hefei/sw/tsfjclpl/request/slbh.xml"/>
+        </ex:request>
+    </ex:bean>
+    <!-- 调用税务接口 单个推送附件 -->
+    <ex:bean id="swTsFjcl_dk">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="税务推送附件接口-德宽"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SW"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="httpsRequest" value="true"/>
+            <ex:property name="xPlatToken" value="${dksw.token}"/>
+            <ex:property name="url" value="${dksw.tsfjcl.url}"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/hefei/dksw/tsfjcl/response/data.xml"/>
+        </ex:response>
+    </ex:bean>
+    <!-- 税务申报取消作废接口-德宽版本 -->
+    <ex:bean id="swQxzf_dk">
+        <!-- 请求结构体 -->
+        <ex:service-info request-type="httpGet">
+            <ex:property name="logEventName" value="税务申报取消作废接口-德宽"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SW"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="httpsRequest" value="true"/>
+            <ex:property name="getUseNameValuePair" value="true"/>
+            <ex:property name="xPlatToken" value="${dksw.token}"/>
+            <ex:property name="url" value="${dksw.qxzf.url}"/>
+        </ex:service-info>
+        <!-- 输入结构体 -->
+        <ex:request>
+            <ex:element name="params" dozerXml="conf/dozer/hefei/dksw/qxzf/req/swcx_req_mode.xml"/>
+        </ex:request>
+        <!-- 输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/hefei/dksw/qxzf/resp/swcx_resp_head.xml"/>
+        </ex:response>
+    </ex:bean>
+    <!-- 税务查询接口-德宽版本 -->
+    <ex:bean id="swCxxx_dk">
+        <!-- 请求结构体 -->
+        <ex:service-info request-type="httpGet">
+            <ex:property name="logEventName" value="税务查询接口-德宽"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SW"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="httpsRequest" value="true"/>
+            <ex:property name="getUseNameValuePair" value="true"/>
+            <ex:property name="xPlatToken" value="${dksw.token}"/>
+            <ex:property name="url" value="${dksw.cxxx.url}"/>
+        </ex:service-info>
+        <!-- 输入结构体 -->
+        <ex:request>
+            <ex:element name="params" dozerXml="conf/dozer/hefei/dksw/cx/req/swcx_req_mode.xml"/>
+        </ex:request>
+        <!-- 输出结构体 -->
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/hefei/dksw/cx/resp/swcx_resp_head.xml"/>
+        </ex:response>
+    </ex:bean>
+    <!-- 查询完税信息含房源编号-德宽版本 -->
+    <ex:bean id="spfwszt_dk">
+        <!-- 请求结构体 -->
+        <ex:service-info request-type="httpGet">
+            <ex:property name="logEventName" value="查询完税信息-德宽"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SW"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="httpsRequest" value="true"/>
+            <ex:property name="getUseNameValuePair" value="true"/>
+            <ex:property name="xPlatToken" value="${dksw.token}"/>
+            <ex:property name="url" value="${dksw.wsxx.url}"/>
+        </ex:service-info>
+        <!-- 输入结构体 -->
+        <ex:request>
+            <ex:element name="params" dozerXml="conf/dozer/hefei/dksw/wsxx/req/swcx_req_mode.xml"/>
+        </ex:request>
+        <!-- 输出结构体 -->
+        <ex:response dozerXml="conf/dozer/hefei/dksw/wsxx/resp/collect.xml">
+            <ex:element dozerXml="conf/dozer/hefei/dksw/wsxx/resp/swcx_resp_head.xml"/>
+            <ex:element name="srfhsxx" dozerXml="conf/dozer/hefei/dksw/wsxx/resp/srf.xml"/>
+            <ex:element name="crfhsxx" dozerXml="conf/dozer/hefei/dksw/wsxx/resp/crf.xml"/>
+        </ex:response>
+    </ex:bean>
+    <!-- 查询 税务 三要素-德宽版本 -->
+    <ex:bean id="swsys_dk">
+        <!-- 请求结构体 -->
+        <ex:service-info request-type="httpGet">
+            <ex:property name="logEventName" value="查询税务三要素接口-德宽"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SW"/>
+            <ex:property name="dsfFlag" value="SW"/>
+            <ex:property name="httpsRequest" value="true"/>
+            <ex:property name="getUseNameValuePair" value="true"/>
+            <ex:property name="xPlatToken" value="${dksw.token}"/>
+            <ex:property name="url" value="${dksw.swsys.url}"/>
+        </ex:service-info>
+        <!-- 输入结构体 -->
+        <ex:request>
+            <ex:element name="params" dozerXml="conf/dozer/hefei/dksw/sys/req/req_mode.xml"/>
+        </ex:request>
+        <!-- 输出结构体 -->
+        <ex:response resultKey="sysList">
+            <ex:element dozerXml="conf/dozer/hefei/dksw/sys/resp/resp_head.xml"/>
+        </ex:response>
+    </ex:bean>
+
+</beans>

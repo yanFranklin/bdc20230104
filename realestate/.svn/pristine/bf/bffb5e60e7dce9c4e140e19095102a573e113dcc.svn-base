@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.etl.core.mapper.HtbaQlrMapper">
+    <select id="listHtbaQlr" resultType="cn.gtmap.realestate.common.core.domain.etl.HtbaQlrDO" parameterType="String" >
+        select t.* from Htba_qlr t left join HTBA_FWXX f on t.baid=f.baid
+        <where>
+            <if test="fwhsindex != null and fwhsindex != ''">
+                and f.fwid=#{fwhsindex}
+            </if>
+        </where>
+    </select>
+
+    <select id="listHtbaQlrByParamMap" resultType="cn.gtmap.realestate.common.core.domain.etl.HtbaQlrDO" parameterType="map" >
+        select t.* from Htba_qlr t left join HTBA_FWXX f on t.baid=f.baid
+        where 1=1
+
+        <if test="qlrlb != null and qlrlb != ''">
+            and t.qlrlb=#{qlrlb}
+        </if>
+
+        <if test="bdcdyh != null and bdcdyh != ''">
+            and f.bdcdyh=#{bdcdyh}
+        </if>
+
+        <if test="fwhsindex != null and fwhsindex != ''">
+            and f.fwid=#{fwhsindex}
+        </if>
+
+    </select>
+
+    <select id="listMsr" resultType="cn.gtmap.realestate.common.core.vo.etl.HtbaMsrVO" parameterType="map">
+        select t.qlrmc,f.bdcdyh from Htba_qlr t
+            left join HTBA_FWXX f on t.baid=f.baid
+            left join HTBA_spf s on t.baid=s.baid
+        where 1=1
+        <if test="bdcdyhs != null and bdcdyhs.size() > 0">
+            AND f.bdcdyh IN
+            <foreach collection="bdcdyhs" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="qlrlb != null and qlrlb != '' ">
+            AND t.qlrlb = #{qlrlb}
+        </if>
+        <if test="bazt != null and bazt != '' ">
+            AND s.bazt = #{bazt}
+        </if>
+    </select>
+</mapper>

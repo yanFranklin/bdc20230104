@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>不动产电子证照签章信息</title>
+    <link rel="stylesheet" href="../../static/thirdControl/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/thirdControl/bdcui/css/common.css">
+    <link rel="stylesheet" href="../../static/thirdControl/bdcui/css/form.css?v=1.0.2">
+    <link rel="stylesheet" href="../../static/thirdControl/bdcui/css/table.css">
+    <link rel="stylesheet" href="../../static/thirdControl/bdcui/css/search.css">
+    <script src="../../static/thirdControl/layui/layui.js"></script>
+    <script src="../../static/thirdControl/softdog/jquery-1.9.1.min.js"></script>
+    <script src="../../static/thirdControl/softdog/promise.min.js"></script>
+    <script src="../../static/thirdControl/softdog/kg-xhr.js"></script>
+    <script src="../../static/thirdControl/softdog/kg-CryptAPICtrl.js"></script>
+    <script src="../../static/thirdControl/softdog/kg-iWebAssist.js"></script>
+    <script src="../../static/thirdControl/softdog/kg-jsonp.js"></script>
+    <script src="../../static/thirdControl/softdog/kg-manage.js"></script>
+    <script src="../../static/thirdControl/softdog/promise.js"></script>
+    <script src="../../static/js/common.js?v=1.1"></script>
+</head>
+<body>
+<object id="CryptAPICtrl" BORDER="0" WIDTH="0" HEIGHT="0" CLASSID="clsid:BCE5CCE5-959F-4DC0-BCF3-6C2916D48AA2"></object>
+<div class="bdc-table-box">
+
+    <!--表单模块-->
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">持证主体</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="czzt" class="layui-input" placeholder="请输入持证主体">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">抵押人(义务人)</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="ywr" class="layui-input" placeholder="请输入抵押人(义务人)">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">不动产单元号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="bdcdyh" class="layui-input" placeholder="请输入不动产单元号">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">不动产权证号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="bdcqzh" class="layui-input" placeholder="请输入不动产权证号">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+
+            <div class="layui-inline">
+                <label class="layui-form-label">颁发时间段</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="cjsjqssj" id="cjsjqssj" class="layui-input" placeholder="请输入起始时间">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">至</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="cjsjjssj" id="cjsjjssj" class="layui-input" placeholder="请输入截止时间">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">证照类型代码</label>
+                <div class="layui-input-inline">
+                    <select name="zzlxdm" id="zzlxdm">
+                        <option value="">请选择</option>
+                        <option value="11100000MB03271699001">中华人民共和国不动产权证</option>
+                        <option value="11100000MB03271699022 ">中华人民共和国不动产登记证明</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">是否签章</label>
+                <div class="layui-input-inline">
+                    <select name="qzzt" id="qzzt">
+                        <option value="1">未签章</option>
+                        <option value="2">已签章</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+
+            <div class="layui-inline">
+                <label class="layui-form-label">是否作废</label>
+                <div class="layui-input-inline">
+                    <select name="zzbgyy" id="zzbgyy">
+                        <option value="1">未作废</option>
+                        <option value="2">已作废</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">行政区</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="szsxqc" class="layui-input" placeholder="请输入行政区">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+            </div>
+            <div class="layui-inline">
+                <button class="layui-btn layui-btn-normal bdc-major-btn" lay-submit="" id="query" lay-filter="query"
+                        type="button">
+                    查询
+                </button>
+                <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+                <button class="layui-btn layui-btn-normal bdc-major-btn" lay-submit="" id="signs" lay-filter="signs"
+                        type="button">
+                    批量签章
+                </button>
+            </div>
+        </div>
+    </form>
+    <hr class="layui-bg-gray">
+    <table id="dzzzZzxxList" lay-data="{id: 'dzzzZzxxList'}" lay-filter="dataTable"></table>
+</div>
+<script type="text/html" id="zzxxListToolBarTmpl">
+    <div class="layui-btn-container">
+        <span class="layui-btn layui-btn-xs bdc-major-btn" lay-event="view">查看证照</span>
+        <span class="layui-btn layui-btn-xs bdc-major-btn" lay-event="sign">签章</span>
+        <span class="layui-btn layui-btn-xs bdc-major-btn" lay-event="cancellation">作废</span>
+    </div>
+</script>
+<script src="../../static/thirdControl/bdcui/js/table.js"></script>
+<script src="../../static/js/dzqzGgCz.js"></script>
+</body>
+</html>

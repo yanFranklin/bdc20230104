@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!-- 6.9 查询申请反馈 -->
+    <ex:bean id="sjpt_cxsq_fk">
+        <ex:service-info request-type="httpPost">
+            <ex:property name="logEventName" value="省级平台查询申请反馈"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="SJPT"/>
+            <ex:property name="dsfFlag" value="SJPT"/>
+            <ex:property name="url" value="${sjpt.cxsqfk.url}" />
+        </ex:service-info>
+        <ex:request name="gxData">
+            <!-- 注意element顺序 不能反-->
+            <ex:element name="data" dozerXml="conf/dozer/sjpt/cxsqFk/request/data.xml" />
+            <ex:element name="head" dozerXml="conf/dozer/sjpt/cxsqFk/request/head.xml" />
+        </ex:request>
+        <ex:response tokenErrorService="checkResultTokenError" tokenType="sjpt_token">
+            <!-- TODO  查询文书结果 处理-->
+        </ex:response>
+    </ex:bean>
+
+</beans>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--用海状况-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.exchange.ShareDataMapper">
+
+    <select id="queryKtfZhYhzkList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.KtfZhYhzkDO">
+        SELECT
+        t.zhdm,
+        t.yhfs,
+        t.yhmj,
+        t.jtyt,
+        t.syjes,
+        t.qxdm
+        FROM KTF_ZH_YHZK t
+        <where>
+            <if test="YWH != null and YWH !=''">
+                AND t.ywh = #{YWH}
+            </if>
+        </where>
+    </select>
+</mapper>

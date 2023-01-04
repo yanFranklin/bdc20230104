@@ -1,0 +1,118 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: etl-app
+    admin:
+      enabled: true
+  cloud:
+    config:
+      name: etl-app
+      enabled: false
+      failFast: false
+#      uri: http://192.168.90.11:8001
+      discovery:
+        enabled: false
+        service-id: config-app
+  sleuth:
+    sampler:
+      percentage: 1
+  http:
+    encoding:
+      charset: UTF-8
+      force: true
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 1000MB
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+
+eureka:
+  instance:
+    hostname: ${spring.application.name}
+    preferIpAddress: true
+  client:
+    serviceUrl:
+      defaultZone: ${app.center}
+    healthcheck:
+      enabled: true
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 10000
+        loggerLevel: basic
+  httpclient:
+    enabled:  false
+  hystrix:
+    enabled: false
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+#          strategy: THREAD
+          strategy: SEMAPHORE
+          semaphore:
+            maxConcurrentRequests: 1000
+          thread:
+            timeoutInMilliseconds: 10000
+
+ribbon:
+  okhttp:
+    enabled: true
+  eureka:
+    enabled: true
+
+management:
+  security:
+    enabled: false
+
+endpoints:
+  enabled: true
+  shutdown:
+    enabled: true
+
+security:
+  basic:
+    enabled: false
+  oauth2:
+    sso:
+      login-path: /login
+    client:
+      access-token-uri: ${app.oauth}/oauth/token
+      user-authorization-uri: ${app.oauth}/oauth/authorize
+      client-id: etlClient
+      client-secret: etlSecret
+    resource:
+      prefer-token-info: true
+      user-info-uri: ${app.oauth}/oauth/user
+      token-info-uri: ${app.oauth}/oauth/check_token
+      loadBalanced: true
+
+druid:
+  initialSize: 10
+  minIdle: 10
+  maxActive: 100
+  maxWait: 10000
+  timeBetweenEvictionRunsMillis: 60000
+  minEvictableIdleTimeMillis: 300000
+  validationQuery: SELECT SYSDATE FROM DUAL
+  testWhileIdle: true
+  testOnBorrow: false
+  testOnReturn: false
+  poolPreparedStatements: true
+  maxPoolPreparedStatementPerConnectionSize: 20
+
+
+logging:
+  security:
+    collection:
+      authorizationSuccess: false
+      authenticationSuccess: false

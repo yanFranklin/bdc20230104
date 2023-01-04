@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--界址线信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.QlfQlJsydsyqMapper">
+
+    <select id="queryQlfQlJsydsyqList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.QlfQlJsydsyqDO">
+        SELECT DISTINCT
+        a.zddm,
+        c.bdcdyh,
+        c.xmid AS ywh,
+        t.qllx,
+        t.djlx,
+        nvl(t.djyy, '/') djyy,
+        t.syqmj,
+        t.syqqssj,
+        t.syqjssj,
+        t.qdjg,
+        replace(c.bdcqzh, '/', '、') AS bdcqzh,
+        substr(c.bdcdyh,0,6) qxdm,
+        t.djjg,
+        t.dbr,
+        t.djsj,
+        t.fj,
+        t.qszt,
+        t.dytdmj,
+        t.zl
+        FROM bdc_jsydsyq t
+        LEFT JOIN bdc_bdcdjb_zdjbxx a ON t.bdcdyh = a.bdcdyh
+        LEFT JOIN bdc_xm c ON c.xmid = t.xmid
+        <if test="yywh != null and yywh !=''">
+            LEFT JOIN BDC_XM_LSGX L ON L.YXMID = C.XMID and nvl(l.WLXM,0) = 0
+        </if>
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND c.xmid = #{ywh}
+            </if>
+            <if test="yywh != null and yywh !=''">
+                AND L.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND c.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryQlfQlJsydsyqListOld" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.yancheng.yth.old.QlfQlJsydsyqOldDO">
+        SELECT DISTINCT
+        a.zddm,
+        c.bdcdyh,
+        c.xmid AS ywh,
+        t.qllx,
+        t.djlx,
+        nvl(t.djyy, '/') djyy,
+        t.syqmj,
+        t.syqqssj,
+        t.syqjssj,
+        t.qdjg,
+        replace(c.bdcqzh, '/', '、') AS bdcqzh,
+        substr(c.bdcdyh,0,6) qxdm,
+        t.djjg,
+        t.dbr,
+        t.djsj,
+        t.fj,
+        t.qszt,
+        t.dytdmj,
+        t.zl
+        FROM bdc_jsydsyq t
+        LEFT JOIN bdc_bdcdjb_zdjbxx a ON t.bdcdyh = a.bdcdyh
+        LEFT JOIN bdc_xm c ON c.xmid = t.xmid
+        <if test="yywh != null and yywh !=''">
+            LEFT JOIN BDC_XM_LSGX L ON L.YXMID = C.XMID and nvl(l.WLXM,0) = 0
+        </if>
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND c.xmid = #{ywh}
+            </if>
+            <if test="yywh != null and yywh !=''">
+                AND L.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND c.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcZhdpCxMapper">
+    <select id="listBdcZhdp" parameterType="java.util.Map" resultType="java.util.Map">
+        select nvl(count(h.hjid),0) dhrs,r.zxmc,r.xywmc ywmc,nvl(round(count(h.hjid)*nvl(r.ddsj,20)/r.cks,0),0) ddsj,nvl(r.cks,0) cks from BDC_ZXYW_YWBM_REL r
+        left join BDC_HJXX h on r.zxmc = h.zxmc and r.ywbm = h.ywbm and (h.hjzt = 0 or h.hjzt is null)
+        where (h.scsj >= #{starttime} or h.scsj is null)
+          and (#{endtime} >= h.scsj or h.scsj is null)
+          and r.sfxs = 1
+        group by r.zxmc,r.xywmc,r.cks,r.zxsxh,r.ddsj
+        order by r.zxsxh,r.zxmc,r.xywmc
+    </select>
+
+</mapper>

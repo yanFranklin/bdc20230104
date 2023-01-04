@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcFczmMapper">
+    <!--获取指定项目的下一手项目信息-->
+    <select id="getBdcXmNextXmDO" parameterType="java.lang.String" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        select
+            x.xmid,
+            x.djsj
+        from
+            bdc_xm x
+        where
+            xmid in
+            (
+                select
+                    xmid
+                from
+                    bdc_xm_lsgx
+                where
+                    yxmid = #{xmid}
+                    and
+                    zxyql = 1
+            )
+    </select>
+
+    <!--
+        将当前选择的现势单元号和匹配的房屋或土地记录合集
+    -->
+    <select id="queryPpdyxx" parameterType="list" resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcQszmQO">
+        select bdcdyh, max(bdclx) as bdclx from
+        (
+            select distinct bdcdyh, bdclx from bdc_xm  where qszt = 1 and xmid in
+            <foreach collection="list" item="item" open="(" close=")" separator=",">
+                #{item.xmid, jdbcType=VARCHAR}
+            </foreach>
+
+            <!--
+                盐城权属证明匹配的房屋土地选择其中一个也要打印出另一个
+            -->
+            union
+            select distinct bdcdyh, bdclx from bdc_xm  where qszt = 1 and xmid in
+            (
+                 select fwcqxmid from bdc_fctd_ppgx where tdcqxmid in
+                 (
+                    select xmid from bdc_xm where qszt = 1 and bdcdyh in
+                    <foreach collection="list" item="item" open="(" close=")" separator=",">
+                        #{item.bdcdyh, jdbcType=VARCHAR}
+                    </foreach>
+                  )
+                 union
+                 select tdcqxmid from bdc_fctd_ppgx where fwcqxmid in
+                 (
+                    select xmid from bdc_xm where qszt = 1  and bdcdyh in
+                    <foreach collection="list" item="item" open="(" close=")" separator=",">
+                        #{item.bdcdyh, jdbcType=VARCHAR}
+                    </foreach>
+                 )
+            )
+
+            <!--
+                盐城住房和跃层原先相同单元号，造成相同单元多个现势产权，处理数据后通过BDC_DYDZGX保存关联关系，
+                在打印权属证明的时候不论选择主房还是跃层记录都要同时打印出主房跃层证明
+            -->
+            union
+            select distinct bdcdyh, bdclx from bdc_xm  where qszt = 1 and xmid in
+            (
+                select fwxmid as xmid from BDC_DYDZGX where ycxmid in
+                <foreach collection="list" item="item" open="(" close=")" separator=",">
+                    #{item.xmid, jdbcType=VARCHAR}
+                </foreach>
+                union
+                select ycxmid as xmid from BDC_DYDZGX where fwxmid in
+                <foreach collection="list" item="item" open="(" close=")" separator=",">
+                    #{item.xmid, jdbcType=VARCHAR}
+                </foreach>
+            )
+        ) group by bdcdyh
+    </select>
+
+
+    <select id="queryBdcdyJzmj" parameterType="String" resultType="String">
+        select to_char(max(jzmj)) as jzmj from
+        (
+            select jzmj from bdc_fdcq where bdcdyh = #{bdcdyh, jdbcType=VARCHAR} and qszt = 1
+            union
+            select jzmj from bdc_yg where bdcdyh = #{bdcdyh, jdbcType=VARCHAR} and qszt = 1
+            union
+            select jgzwmj as jzmj from bdc_fdcq3 INNER JOIN bdc_fdcq3_gyxx on  bdc_fdcq3_gyxx.xmid =  bdc_fdcq3.xmid
+            where bdc_fdcq3.bdcdyh = #{bdcdyh, jdbcType=VARCHAR} and qszt = 1
+        )
+    </select>
+
+
+
+    <select id="listXmidGhytMap" parameterType="String" resultType="map">
+        <if test="(xmidList != null and xmidList.size>0) and (bxsghytList != null and bxsghytList.size>0)">
+            SELECT xm.xmid
+            <if test="(bxsghytList != null and bxsghytList.size>0)">
+                ,case when xm.dzwyt in
+                <foreach collection="bxsghytList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                    then fc.ytmc
+                else  zd.mc end as ghyt
+            </if>
+
+            FROM bdc_xm xm
+            left join bdc_fdcq fc on xm.xmid = fc.xmid
+            left join bdc_zd_fwyt zd on zd.dm = xm.dzwyt
+            <where>
+                <if test="xmidList != null and xmidList.size>0">
+                    AND xm.xmid IN
+                    <foreach collection="xmidList" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+        </if>
+    </select>
+
+
+</mapper>

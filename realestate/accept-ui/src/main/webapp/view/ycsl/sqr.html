@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <title>申请人</title>
+    <meta name="renderer" content="webkit">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <!--下拉框需要-->
+    <link rel="stylesheet" href="../../static/lib/form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/css/common.css"/>
+    <link rel="stylesheet" href="../../static/css/slymForm.css"/>
+    <link rel="stylesheet" href="../../static/css/qlr.css"/>
+    <style type="text/css">
+        /*用于调整下拉列表高度*/
+        .select-height .layui-form-select dl {
+            max-height: 210px;
+        }
+    </style>
+</head>
+<body>
+<object id="CertCtl" TYPE="application/cert-reader" width=0 height=0"></object>
+<div lay-filter="qlrxx" id="bdc-popup-large"></div>
+</body>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<!--小数计算防精度缺失-->
+<script src="../../static/lib/mathjs/math.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<!--受理表单操作公共方法-->
+<script src='../../static/js/slymCommon.js'></script>
+<script src="../../static/js/ycsl/slycym_sqr.js"></script>
+<script src='../../static/js/formCenter.js'></script>
+<script src='../../static/js/nantong/readIdCard.js'></script>
+<!--表单验证公共方法-->
+<script src='../../static/js/slymyz.js'></script>
+<script type="text/javascript">
+    var sqrid = getQueryString("sqrid");
+    var xmid = getQueryString("xmid");
+    var xmidList = getQueryString("xmidList");
+    var processInsId = getQueryString("processInsId");
+    var formStateId = getQueryString("formStateId");
+    var readOnly = getQueryString("readOnly");
+    var jbxxid = getQueryString("jbxxid");
+</script>
+<script type="text/html" id="addSqrTmpl">
+    {{#  if(d.sqr){ }}
+    {{# var sqr=d.sqr }}
+    <form class="layui-form bdc-not-full-bg" id="sqrForm" lay-filter="sqrForm">
+        <input type="hidden" name="sqrid" value="{{sqr.sqrid || ''}}"/>
+        <input type="hidden" name="xmid" id="xmid" value="{{sqr.xmid || ''}}"/>
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">申请人类别</label>
+                <div class="layui-input-inline">
+                    <select name="sqrlb" id="sqrlb" lay-search="" lay-filter="sqrlb">
+                        {{# layui.each(d.zd.qlrlb, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(sqr.sqrlb==item.DM ){ }} selected="selected" {{# } }}>
+                            {{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label">权利人类型</label>
+                <div class="layui-input-inline select-height">
+                    <select name="sqrlx" id="sqrlx" lay-search="" lay-filter="sqrlx">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.qlrlx, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(sqr.sqrlx==item.DM ){ }} selected="selected" {{# } }}>
+                            {{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-inline bdc-not-null">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>顺序号</label>
+                <div class="layui-input-inline bdc-one-icon">
+                    <input type="number" class="layui-input" name="sxh" id="sxh" value="{{sqr.sxh || ''}}"
+                           disabled="off">
+                </div>
+            </div>
+
+            <div class="layui-inline bdc-not-null">
+                <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>申请人</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" autocomplete="true" name="sqrmc"
+                           ondblclick="sqrReadIdCard(this)" value="{{sqr.sqrmc || ''}}" id="sqrmc"
+                           lay-verify="required" title="{{sqr.sqrmc || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">是否持证人</label>
+                <div class="layui-input-inline">
+                    <input type="radio" name="sfczr" id="sfczr" value="1" title="是" checked {{# if(sqr.sfczr=='1'){ }}
+                           checked {{# } }}>
+                    <input type="radio" name="sfczr" value="0" title="否" {{# if(sqr.sfczr=='0'){ }} checked {{# } }}>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label bdc-label-newline">申请人<br>联系电话</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" name="dh" id="dh" value="{{sqr.dh || ''}}"
+                           title="{{sqr.dh || ''}}" lay-verify="lxdh">
+                </div>
+            </div>
+            <div class="layui-inline xzq-sele">
+                <label class="layui-form-label">身份证件种类</label>
+                <div class="layui-input-inline">
+                    <select name="zjzl" lay-search="" lay-filter="zjzl" id="zjzl">
+                        {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                        <option value="{{item.DM || ''}}" {{# if(sqr.zjzl==item.DM ){ }} selected="selected" {{# } }}>
+                            {{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">证件号</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" name="zjh" id="zjh" value="{{sqr.zjh || ''}}"
+                           title="{{sqr.zjh || ''}}">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label ">共有方式</label>
+                <div class="layui-input-inline">
+                    <select name="gyfs" id="gyfs" lay-search="" lay-filter="gyfs">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.gyfs, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(sqr.gyfs==item.DM ){ }} selected="selected" {{# } }}>
+                            {{item.MC || \'\'}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label ">共有比例</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" id="qlbl" name="qlbl" value="{{sqr.qlbl  ||''}}" lay-verify="qlbl1">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">邮编</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" id="yb" name="yb" value="{{sqr.yb || ''}}"
+                           title="{{sqr.yb || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline bdc-complete-line">
+                <label class="layui-form-label">通讯地址</label>
+                <div class="layui-input-inline bdc-end-time-box">
+                    <input type="text" class="layui-input" name="txdz" id="txdz" value="{{sqr.txdz || ''}}"
+                           title="{{sqr.txdz || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">代理人名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" name="dlrmc" ondblclick="dlrReadIdCard(this)" id="dlrmc"
+                           value="{{sqr.dlrmc || ''}}" title="{{sqr.dlrmc || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">代理机构名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" name="dljg" id="dljg" value="{{sqr.dljg || ''}}"
+                           title="{{sqr.dljg || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label bdc-label-newline">代理人<br>联系电话</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" id="dlrdh" name="dlrdh" value="{{sqr.dlrdh || ''}}"
+                           title="{{sqr.dlrdh || ''}}" lay-verify="lxdh">
+                </div>
+            </div>
+            <div class="layui-inline xzq-sele">
+                <label class="layui-form-label bdc-label-newline">代理人<br>证件种类</label>
+                <div class="layui-input-inline select-height">
+                    <select name="dlrzjzl" lay-search="" lay-filter="zjzl" id="dlrzjzl">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                        <option value="{{item.DM || '0'}}" {{# if(sqr.dlrzjzl==item.DM ){ }} selected="selected" {{# }
+                                }}>{{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">代理人证件号</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" id="dlrzjh" name="dlrzjh" value="{{sqr.dlrzjh || ''}}"
+                           title="{{sqr.dlrzjh || ''}}">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">法定代表人</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" id="frmc" name="frmc" ondblclick="fddbrReadIdCard(this)"
+                           value="{{sqr.frmc || ''}}" title="{{sqr.frmc || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label bdc-label-newline">法人代表<br>证件种类</label>
+                <div class="layui-input-inline select-height">
+                    <select name="frzjzl" lay-search="" lay-filter="zjzl" id="frzjzl">
+                        <option value="">请选择</option>
+                        {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                        <option value="{{item.DM || ''}}" {{# if(sqr.frzjzl==item.DM ){ }} selected="selected" {{# } }}>
+                            {{item.MC || ''}}
+                        </option>
+                        {{# }); }}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label bdc-label-newline">法人代表<br>证件号</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" id="frzjh" name="frzjh" value="{{sqr.frzjh || ''}}"
+                           title="{{sqr.frzjh || ''}}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label bdc-label-newline">代表人<br>联系电话</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" id="frdh" name="frdh" value="{{sqr.frdh || ''}}"
+                           title="{{sqr.frdh || ''}}" lay-verify="lxdh">
+                </div>
+            </div>
+
+        </div>
+        <div class="pannel-form-btns">
+            <button class="layui-btn bdc-major-btn" lay-submit="" id="updateSqr" lay-filter="updateSqr">保存</button>
+            <button class="layui-btn bdc-secondary-btn" id="cancelEdit" onclick="cancel()">取消</button>
+            <span class="layui-btn bdc-secondary-btn nextBtn" id="next" onclick="nextForm()">新增</span>
+        </div>
+    </form>
+    {{#  } }}
+</script>
+</html>

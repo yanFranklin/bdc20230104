@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--户室信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.exchange.ShareDataMapper">
+
+    <!--业务数据库  各个地方权籍库不标准，比如hs里面的yt和hxjg应该是导入字典代码，他们导入的是汉字，导致不能入库-->
+    <select id="queryKttFwHList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.KttFwHDO">
+        select distinct t.bdcdyh,
+        t.hh,
+        t.fwbm,
+        t.zrzh,
+        t.ljzh,
+        t.ch,
+        t.zl,
+        t.mjdw,
+        t.sjcs,
+        t.shbw,
+        t.hx,
+        t.hxjg,
+        t.fwyt1,
+        t.fwyt2,
+        t.fwyt3,
+        t.ycjzmj,
+        t.yctnjzmj,
+        t.ycftjzmj,
+        t.ycdxbfjzmj,
+        t.ycqtjzmj,
+        t.ycftxs,
+        t.scjzmj,
+        t.sctnjzmj,
+        t.scftjzmj,
+        t.scdxbfjzmj,
+        t.scftxs,
+        t.gytdmj,
+        t.fttdmj,
+        t.dytdmj,
+        t.fwlx,
+        t.fwxz,
+        t.fcfht,
+        t.zt,
+        t.qxdm
+        from ktt_fw_h t
+        <where>
+            <if test="YWH != null and YWH !=''">
+                and t.ywh = #{YWH}
+            </if>
+            <if test="BDCDYH != null and BDCDYH !=''">
+                and t.bdcdyh = #{BDCDYH}
+            </if>
+        </where>
+    </select>
+</mapper>

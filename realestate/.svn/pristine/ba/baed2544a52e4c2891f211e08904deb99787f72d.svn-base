@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>规则引擎子规则配置</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../../static/css/engine/zgz/smartMenu.css">
+    <link rel="stylesheet" href="../../../static/lib/font-awesome-4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="../../../static/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../../static/lib/bdcui/css/mask.css" />
+    <link rel="stylesheet" href="../../../static/css/engine/zgz/index.css"/>
+    <link rel="stylesheet" href="../../../static/css/engine/zgz/nav.css"/>
+</head>
+<body>
+<div class="bdc-form-div">
+    <!--全局 标题和操作按钮 开始-->
+    <div class="bdc-content-fix">
+        <div class="content-title layui-clear">
+            <p>子规则信息</p>
+            <div class="title-btn-area">
+                <button class="layui-btn bdc-major-btn" lay-submit="" id="submit-btn">保存</button>
+                <button class="layui-btn bdc-table-second-btn" id="check-btn">验证</button>
+                <input type="hidden" id="checkflag">
+            </div>
+        </div>
+    </div>
+    <!--全局 标题和操作按钮 结束-->
+    <div class="layui-tab" lay-filter="tabFilter">
+        <ul class="layui-tab-title">
+            <li class="layui-this">基本信息</li>
+            <li>数据流</li>
+            <li class="jgjyTab">结果校验（图形）</li>
+            <li class="bmjyTab">结果校验（编码）</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item bdc-basic layui-show">
+                <!--基本信息-->
+                <form id='jbxxFrom' lay-filter="jbxxFrom" class="layui-form setOverflow" action="">
+                    <input type="hidden" id="gzid" name="gzid" class="search"/>
+
+                    <div class="form-margin-area">
+                        <div class="basic-info">
+                            <div id="jbxx" class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>规则名称</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" lay-verify="required" autocomplete="off" class="layui-input"
+                                               id="gzmc" name="gzmc" placeholder="请输入">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width"><span class="required-span"><sub>*</sub></span>优先级</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" lay-verify="required|number" class="layui-input" id="yxj"
+                                               name="yxj">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width">配置人员</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" lay-verify="required" autocomplete="off" class="layui-input"
+                                               id="pzr" name="pzr" placeholder="请输入">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width">配置日期</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" class="layui-input" id="pzrq" name="pzrq">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label change-label-width">排除验证标识</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" lay-verify="required" autocomplete="off" class="layui-input"
+                                               id="pcqh" name="pcqh" placeholder="请输入">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item change-textarea-margin">
+                                <label class="layui-form-label change-label-width">用途说明</label>
+                                <div class="layui-input-inline">
+                                    <textarea id="ytsm" class="layui-textarea" name="ytsm"></textarea>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="layui-form-item change-textarea-margin">
+                                <label class="layui-form-label change-label-width"><b>优先级说明</b></label>
+                                <div class="layui-input-inline">
+                                    <input type="text" lay-verify="required" autocomplete="off" class="layui-input"
+                                           value="A、优先级在规则子系统不区分具体含义，具体使用用途由各业务子系统定义维护" readonly>
+                                </div>
+                            </div>
+                            <div class="layui-form-item change-textarea-margin">
+                                <label class="layui-form-label change-label-width"></label>
+                                <div class="layui-input-inline">
+                                    <input type="text" lay-verify="required" autocomplete="off" class="layui-input"
+                                           value="B、目前业务子系统约定的优先级用于规则验证时候提示信息样式，具体含义：" readonly>
+                                </div>
+                            </div>
+                            <div class="layui-form-item change-textarea-margin">
+                                <label class="layui-form-label change-label-width"></label>
+                                <div class="layui-input-inline">
+                                    <input type="text" lay-verify="required" autocomplete="off" class="layui-input"
+                                           value="&nbsp;&nbsp;&nbsp;&nbsp;1  可忽略； 3  警告，不可忽略； 4  可例外" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="layui-tab-item bdc-sjl">
+                <div class="bdc-container">
+                    <!--收缩左侧列表-->
+                    <div class="bdc-aside-zoom">
+                        <a class="bdc-aside-close" href="javascript:;"><i class="fa fa-chevron-left"
+                                                                          aria-hidden="true"></i></a>
+                        <a class="bdc-aside-open bdc-hide" href="javascript:;"><i class="fa fa-chevron-right"
+                                                                                  aria-hidden="true"></i></a>
+                    </div>
+
+                    <!--左侧菜单栏开始-->
+                    <div class="bdc-menu-aside" id="asideBox">
+                        <div class="aside" id="asideCon">
+                            <h4>数据流</h4>
+                            <div id="aside">
+                                <ul id="accordion" class="accordion">
+                                    <!--一级-->
+                                    <li class="bdc-outer-li bdc-invented-li" data-num="230103001006GB00004">
+                                        <a class="link">
+                                            <i class="fa fa-caret-right"></i>
+                                            <img src="../../../static/image/file.png" alt="图标" class="docu-icon">
+                                            数据流集合
+                                        </a>
+                                        <ul class="submenu">
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="asideLine"></div>
+                    <!--左侧菜单栏结束-->
+
+                    <!--右侧主内容开始-->
+                    <div class="bdc-right-content">
+                        <!--内容存放开始-->
+                        <div class="content-div" id="contentView">
+                            <iframe id="childFrame"></iframe>
+                        </div>
+                        <!--内容存放结束-->
+                    </div>
+                    <!--右侧主内容结束-->
+                </div>
+            </div>
+            <div class="layui-tab-item bdc-jgjy">
+                <!--结果校验-->
+                <form class="layui-form setOverflow clear" action="">
+                    <!--左侧取值区-->
+                    <div class="bdc-left-content">
+                        <div class="basic-info">
+                            <div class="title-sign"><p><a href="javascript:;">参数列表</a></p></div>
+                            <div class="layui-form-item">
+                                <table id="cslb" lay-filter="cslb"></table>
+                            </div>
+                        </div>
+                        <div class="basic-info">
+                            <div class="title-sign"><p><a href="javascript:;">结果列表</a></p></div>
+                            <div class="layui-form-item">
+                                <table id="jglb" lay-filter="jglb"></table>
+                            </div>
+                        </div>
+                        <div class="basic-info">
+                            <div class="title-sign"><p><a href="javascript:;">校验操作符</a></p></div>
+                            <div class="layui-form-item bdc-btn-more">
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-primary"
+                                        onclick="addSign('>');">&nbsp;&nbsp;>&nbsp;&nbsp;
+                                </button>
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-primary"
+                                        onclick="addSign('>=');">&nbsp;>=&nbsp;
+                                </button>
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-primary"
+                                        onclick="addSign('<');">&nbsp;&nbsp;<&nbsp;&nbsp;&nbsp;
+                                </button>
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-primary"
+                                        onclick="addSign('<=');">&nbsp;<=&nbsp;
+                                </button>
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-primary"
+                                        onclick="addSign('==');">&nbsp;==&nbsp;
+                                </button>
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-primary"
+                                        onclick="addSign('!=');">&nbsp;!=&nbsp;
+                                </button>
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-primary"
+                                        onclick="addSign('包含');">&nbsp;包含&nbsp;
+                                </button>
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-primary"
+                                        onclick="addSign('不包含');">不包含
+                                </button>
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-primary"
+                                        onclick="addSign('开始于');">开始于
+                                </button>
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-primary"
+                                        onclick="addSign('结束于');">结束于
+                                </button>
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-primary"
+                                        onclick="addSign('不为空');">不为空
+                                </button>
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-primary"
+                                        onclick="addSign('为空');">为空
+                                </button>
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-primary"
+                                        onclick="addSign('(');">&nbsp;&nbsp;&nbsp;(&nbsp;&nbsp;&nbsp;
+                                </button>
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-primary"
+                                        onclick="addSign(')');">&nbsp;&nbsp;&nbsp;)&nbsp;&nbsp;&nbsp;
+                                </button>
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-primary"
+                                        onclick="addSign('并且');">并且
+                                </button>
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-primary"
+                                        onclick="addSign('或');">&nbsp;&nbsp;或&nbsp;&nbsp;
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!--右侧取值内容-->
+                    <div class="bdc-right-content">
+                        <div class="basic-info">
+                            <div class="title-sign"><p><a href="javascript:;">提示说明</a></p></div>
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <ul>
+                                        <li>1、规则表达式字段用空格分隔，例如：xmxx&nbsp;&nbsp;&nbsp;不为空</li>
+                                        <li>2、服务执行结果为基础类型，直接引用变量即可</li>
+                                        <li>3、服务执行结果为实体，取用属性值，格式：xmxxDTO.bdcdyh</li>
+                                        <li>4、SQL&nbsp;执行结果为集合，取用字段值，格式：xmxx[0].BDCDYH</li>
+                                        <li>5、规则示例：( xmxx 不为空 并且 xmxx.qllx == 96 ) 或 xmxx[0].YWR 包含 "红"</li>
+                                        <li>6、规则表达式中存在校验操作符时，前后要用空格分隔</li>
+                                        <li>&nbsp;&nbsp; 【说明：(、) 括号可以不分隔，不为空、为空 前面需要分隔】</li>
+                                        <li>&nbsp;</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="basic-info">
+                            <div class="title-sign"><p><a href="javascript:;">规则验证</a></p></div>
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <table id="gzbds" lay-filter="gzbds"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!--编码方式设置校验规则-->
+            <div class="layui-tab-item bdc-jgjy">
+                <div class="bdc-left-content" style="height: 100%;padding-right: 15px;">
+                    <div class="basic-info" style="padding-top: 0px">
+                        <div class="title-sign">
+                            <div class="layui-col-xs6">
+                                <p style="margin-top: 10px;"><a href="javascript:;">代码内容</a></p>
+                            </div>
+                            <div class="layui-col-xs6" style="text-align: right;">
+                                <button class="layui-btn layui-btn-sm bdc-table-second-btn" id="code-format">格式化</button>
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="margin-top: 0px;">
+                            <div class="layui-inline">
+                                <textarea id="jydm" name="jydm" placeholder="请输入内容" class="layui-textarea" style="height: 100%;"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bdc-right-content" style="padding-left: 15px;">
+                    <div class="basic-info" style="padding-top: 0px;">
+                        <div class="title-sign">
+                            <div class="layui-row">
+                                <div class="layui-col-xs6">
+                                <p style="margin-top: 10px;"><a href="javascript:;">校验参数</a></p>
+                            </div>
+                                <div class="layui-col-xs6" style="text-align: right;">
+                                    <button class="layui-btn layui-btn-sm bdc-table-second-btn" id="check-code">验证</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="margin-top:0px;">
+                            <div class="layui-inline">
+                                <textarea id="param"  placeholder='* 测试参数，不保存入库；&#13;&#10;* 参数示例【JSON格式】:
+ {
+    "xmxx": [
+      { "xmid" : "1001280" , "zl" : "中国台湾省" } ,
+      { "xmid" : "1001281" , "zl" : "中国北京市" }
+    ] ,
+    "res" : { "NUM" : 10 }
+ }'
+                                           class="layui-textarea" style="min-height: 200px;"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="basic-info">
+                        <div class="title-sign"><p><a href="javascript:;">校验结果</a></p></div>
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <textarea id="jyjg" name="jyjg"  placeholder="" class="layui-textarea" style="min-height: 200px;" readonly></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<!--结果校验-->
+<script type="text/html" id="jgjyDemo">
+    <button type="button" class="layui-btn layui-btn-xs bdc-major-btn" lay-event="getData">选用</button>
+</script>
+
+<!--提示信息-->
+<script type="text/html" id="tsxxDemo">
+    <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="edit">选用</a>
+</script>
+
+<!--表格上面功能按钮-->
+<script type="text/html" id="gzbdsBtn">
+    <button type="button" class="layui-btn layui-btn-sm bdc-major-btn" lay-event="add">新增</button>
+    <button type="button" class="layui-btn layui-btn-sm bdc-delete-btn" lay-event="del">删除</button>
+</script>
+
+<script src="../../../static/lib/layui/layui.js"></script>
+<script src="../../../static/lib/jquery/jquery.min.js"></script>
+<!--添加水印-->
+<script src="../../../static/lib/bdcui/js/common.js"></script>
+<script src="../../../static/js/engine/zgz/jquery-smartMenu.js"></script>
+<script src="../../../static/js/engine/common.js"></script>
+<script src='../../../static/js/jquery.cookie.js'></script>
+<script src="../../../static/js/engine/gdzgz/editBdcGdZgz.js"></script>
+<script src="../../../static/js/engine/zgz/tree.js"></script>
+
+<!--IE获取IP地址-->
+<object classid="CLSID:76A64158-CB41-11D1-8B02-00600806D9B6" id="locator" style="display:none;visibility:hidden"></object>
+<object classid="CLSID:75718C9A-F029-11d1-A1AC-00C04FB6C223" id="foo" style="display:none;visibility:hidden"></object>
+<script language="javascript">
+    try{
+        var service = locator.ConnectServer();
+        service.Security_.ImpersonationLevel = 3;
+        service.InstancesOfAsync(foo, 'Win32_NetworkAdapterConfiguration');
+    } catch(err) {
+        // do nothing
+    }
+</script>
+<script FOR="foo" EVENT="OnObjectReady(objObject,objAsyncContext)" LANGUAGE="JScript">
+    try{
+        if (objObject.IPEnabled != null && objObject.IPEnabled != "undefined" && objObject.IPEnabled == true) {
+            if (objObject.IPEnabled && objObject.IPAddress(0) != null && objObject.IPAddress(0) != "undefined")
+                $("#ipaddress").val( objObject.IPAddress(0));
+        }
+    } catch(err) {
+        // do nothing
+    }
+</script>
+</html>

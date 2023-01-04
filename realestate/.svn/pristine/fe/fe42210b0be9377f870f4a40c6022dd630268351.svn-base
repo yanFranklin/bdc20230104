@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!-- 部级接口 婚姻登记信息 -->
+    <ex:bean id="bjjk_hydjxx">
+        <ex:request resultKey="data">
+            <ex:element sourceService="bjjk_hydjxx_request" />
+            <ex:element name="data" dozerXml="conf/dozer/bjjk/hydjxx/response/data.xml" saveNull="java.util.ArrayList" />
+        </ex:request>
+    </ex:bean>
+
+    <ex:bean id="bjjk_hydjxx_request">
+        <ex:service-info request-type="httpPostJson">
+            <!--<ex:property name="logEventName" value="部级接口婚姻登记信息查询"/>-->
+            <!--<ex:property name="requester" value="BDC"/>-->
+            <!--<ex:property name="responser" value="BJJK"/>-->
+            <ex:property name="hyjkFlag" value="BJHYJK"/>
+            <ex:property name="url" value="${bjjk.hydjxx.url}" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="head" dozerXml="conf/dozer/bjjk/hydjxx/request/head.xml" />
+            <ex:element name="param" dozerXml="conf/dozer/bjjk/hydjxx/request/param.xml" objectToJsonString="true"
+                        encodeMethod="cn.gtmap.realestate.exchange.service.impl.inf.bjjk.BjjkServiceImpl.encode"/>
+        </ex:request>
+        <ex:response>
+            <ex:element sourceService="decodeResponse" />
+        </ex:response>
+    </ex:bean>
+
+    <!-- 国家级接口的返回过滤 -->
+    <ex:bean id="bjjk_filter">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="bjjkServiceImpl" />
+            <ex:property name="methodName" value="filterHyxx" />
+            <ex:property name="params" value="qlrmc,bjjkResponse" />
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 部级接口 社会组织统一信用代码信息 -->
+    <ex:bean id="bjjk_shzz">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="社会组织统一信用代码信息查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="BJJK"/>
+            <ex:property name="dsfFlag" value="BJJK"/>
+            <ex:property name="url" value="${bjjk.shzz.url}" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="head" dozerXml="conf/dozer/bjjk/shzz/request/head.xml" />
+            <ex:element name="param" dozerXml="conf/dozer/bjjk/shzz/request/param.xml" objectToJsonString="true"
+                        encodeMethod="cn.gtmap.realestate.exchange.service.impl.inf.bjjk.BjjkServiceImpl.encode"/>
+        </ex:request>
+        <ex:response resultKey="data">
+            <ex:element sourceService="decodeResponse" />
+            <ex:element name="data" dozerXml="conf/dozer/bjjk/shzz/response/data.xml"  saveNull="java.util.ArrayList"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 部级接口 金融许可证查询 -->
+    <ex:bean id="bjjk_jrxkz">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="金融许可证查询"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="BJJK"/>
+            <ex:property name="dsfFlag" value="BJJK"/>
+            <ex:property name="url" value="${bjjk.jrxkz.url}" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="head" dozerXml="conf/dozer/bjjk/jrxkz/request/head.xml" />
+            <ex:element name="param" dozerXml="conf/dozer/bjjk/jrxkz/request/param.xml" objectToJsonString="true"
+                        encodeMethod="cn.gtmap.realestate.exchange.service.impl.inf.bjjk.BjjkServiceImpl.encode"/>
+        </ex:request>
+        <ex:response resultKey="data">
+            <ex:element sourceService="decodeResponse" />
+            <ex:element name="data" dozerXml="conf/dozer/bjjk/jrxkz/response/data.xml"  saveNull="java.util.HashMap" />
+        </ex:response>
+    </ex:bean>
+
+
+    <!-- 部级接口 中编办查询接口 -->
+    <ex:bean id="bjjk_zbb">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="中编办查询接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="BJJK"/>
+            <ex:property name="dsfFlag" value="BJJK"/>
+            <ex:property name="url" value="${bjjk.zbb.url}" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="head" dozerXml="conf/dozer/bjjk/zbb/request/head.xml" />
+            <ex:element name="param" dozerXml="conf/dozer/bjjk/zbb/request/param.xml" objectToJsonString="true"
+                        encodeMethod="cn.gtmap.realestate.exchange.service.impl.inf.bjjk.BjjkServiceImpl.encode"/>
+        </ex:request>
+        <ex:response resultKey="data">
+            <ex:element sourceService="decodeResponse" />
+            <ex:element name="data" dozerXml="conf/dozer/bjjk/zbb/response/data.xml"  saveNull="java.util.ArrayList" />
+        </ex:response>
+    </ex:bean>
+
+
+    <!-- 部级接口 司法判决查询 -->
+    <ex:bean id="bjjk_sfpjcx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="查询文书申请接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="BJJK"/>
+            <ex:property name="dsfFlag" value="BJJK"/>
+            <ex:property name="url" value="${bjjk.sfpjcx.url}" />
+        </ex:service-info>
+        <ex:request dozerXml="conf/dozer/bjjk/sfpjcx/request/collect.xml">
+            <ex:element name="head" dozerXml="conf/dozer/bjjk/sfpjcx/request/head.xml" />
+            <!--<ex:element dozerXml="conf/dozer/hefei/bjjk/sfpjcx/request/datas.xml" />-->
+            <ex:element name="param" sourceService="bjjk_sfpjcx_setCxqqdh" dozerXml="conf/dozer/bjjk/sfpjcx/request/param.xml"
+                        objectToJsonString="true"
+                        encodeMethod="cn.gtmap.realestate.exchange.service.impl.inf.bjjk.BjjkServiceImpl.encode"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/bjjk/sfpjcx/response/data.xml" />
+        </ex:response>
+    </ex:bean>
+    <ex:bean id="bjjk_sfpjcx_setCxqqdh">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="bjjkServiceImpl" />
+            <ex:property name="methodName" value="setCxqqdhToList" />
+            <ex:property name="params" value="head,datas" />
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 部级接口 司法判决查询反馈 -->
+    <ex:bean id="bjjk_sfpjcxfk">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="查询文书申请反馈接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="BJJK"/>
+            <ex:property name="dsfFlag" value="BJJK"/>
+            <ex:property name="url" value="${bjjk.sfpjcxfk.url}" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="head" dozerXml="conf/dozer/bjjk/sfpjcxfk/request/head.xml" />
+            <ex:element name="param" dozerXml="conf/dozer/bjjk/sfpjcxfk/request/param.xml" objectToJsonString="true"
+                        encodeMethod="cn.gtmap.realestate.exchange.service.impl.inf.bjjk.BjjkServiceImpl.encode"/>
+        </ex:request>
+        <ex:response resultKey="wslist">
+            <ex:element sourceService="decodeResponse" />
+            <ex:element name="wslist" dozerXml="conf/dozer/bjjk/sfpjcxfk/response/data.xml" saveNull="java.util.ArrayList" />
+        </ex:response>
+    </ex:bean>
+
+    <!-- 部级接口  公安身份核查 接口 -->
+    <ex:bean id="bjjk_gasfhc" >
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="公安身份核查接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="BJJK"/>
+            <ex:property name="dsfFlag" value="BJJK"/>
+            <ex:property name="url" value="${bjjk.gasfhc.url}" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="head" dozerXml="conf/dozer/bjjk/gasfhc/request/head.xml" />
+            <ex:element name="param" dozerXml="conf/dozer/bjjk/gasfhc/request/param.xml" objectToJsonString="true"
+                        encodeMethod="cn.gtmap.realestate.exchange.service.impl.inf.bjjk.BjjkServiceImpl.encode"/>
+        </ex:request>
+        <ex:response resultKey="data">
+            <ex:element sourceService="decodeResponse" />
+            <ex:element name="data" dozerXml="conf/dozer/bjjk/gasfhc/response/data.xml" saveNull="java.util.ArrayList"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 部级接口 解码服务 -->
+    <ex:bean id="decodeResponse">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="bjjkServiceImpl" />
+            <ex:property name="methodName" value="decode" />
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 部级接口 查询请求单号 -->
+    <ex:bean id="bjjk_cxqqdh">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="bjjkServiceImpl" />
+            <ex:property name="methodName" value="getCxqqdh" />
+            <ex:property name="paramRequired" value="false" />
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 公安身份核查 查询信息单号 -->
+    <ex:bean id="bjjk_gasfhc_messageseq">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="bjjkServiceImpl" />
+            <ex:property name="methodName" value="getGasfhcMessageSeq" />
+            <ex:property name="noArgs" value="true" />
+        </ex:service-info>
+    </ex:bean>
+
+
+    <!-- 部级接口 地名信息查询 （需求41720） -->
+    <ex:bean id="bjjk_dmxxcx">
+        <ex:request resultKey="data">
+            <ex:element sourceService="bjjk_dmxxcx_request" />
+            <ex:element name="data" dozerXml="conf/dozer/bjjk/dmxxcx/response/data.xml" saveNull="java.util.ArrayList" />
+        </ex:request>
+    </ex:bean>
+
+    <ex:bean id="bjjk_dmxxcx_request">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="dmxxFlag" value="DMXXCX"/>
+            <ex:property name="url" value="${bjjk.dmxxcx.url}" />
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="head" dozerXml="conf/dozer/bjjk/dmxxcx/request/head.xml" />
+            <ex:element name="param" dozerXml="conf/dozer/bjjk/dmxxcx/request/param.xml" objectToJsonString="true"
+                        encodeMethod="cn.gtmap.realestate.exchange.service.impl.inf.bjjk.BjjkServiceImpl.encode"/>
+        </ex:request>
+        <ex:response>
+            <ex:element sourceService="decodeResponse" />
+        </ex:response>
+    </ex:bean>
+</beans>

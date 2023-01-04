@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.init.core.mapper.BdcQlrMapper">
+    <!-- 删除权利人 -->
+    <delete id="deleteQlr" parameterType="map">
+        DELETE FROM bdc_qlr a WHERE a.xmid IN
+        (SELECT b.xmid FROM bdc_xm b
+            WHERE b.gzlslid = #{gzlslid}
+        <if test="djxl != null and djxl !=''">
+            AND b.djxl=#{djxl}
+        </if>
+        )
+        <if test="qlrmc != null and qlrmc !=''">
+            AND a.qlrmc=#{qlrmc}
+        </if>
+        <if test="zjh != null and zjh !=''">
+            AND a.zjh=#{zjh}
+        </if>
+        <if test="qlrlb != null and qlrlb !=''">
+            AND a.qlrlb=#{qlrlb}
+        </if>
+        <if test="xmidList != null and xmidList.size() > 0">
+            AND a.xmid IN
+            <foreach collection="xmidList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </delete>
+
+    <delete id="deleteBatchQlr">
+        DELETE FROM bdc_qlr a
+        <where>
+            <if test="qlridlist != null">
+                AND a.qlrid IN
+                <foreach collection="qlridlist" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </delete>
+
+    <select id="listAllBdcQlr" parameterType="map" resultType="cn.gtmap.realestate.common.core.domain.BdcQlrDO">
+        SELECT q.qlrly,q.qlrid, q.xmid, q.qlrmc, q.zjzl, q.zjh, q.txdz, q.yb, q.xb, q.frmc, q.frdh, q.dlrmc, q.dlrdh, q.dljg, q.qlrlx, q.qlrlb, q.gyfs, q.gyqk, q.dh, q.sshy, q.bz, q.sfczr, q.sxh, q.bdcqzh, q.zsid, q.frzjzl, q.frzjh, q.dlrzjzl, q.dlrzjh, q.qlrftmj, q.qlbl
+        FROM bdc_xm t
+        RIGHT JOIN bdc_qlr q ON q.xmid = t.xmid
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND t.gzlslid = #{gzlslid}
+            </if>
+            <if test="qlrlb != null and qlrlb != ''">
+                AND q.qlrlb = #{qlrlb}
+            </if>
+            <if test="djxl != null and djxl != ''">
+                AND t.djxl = #{djxl}
+            </if>
+            <if test="slbh != null and slbh != ''">
+                AND t.slbh = #{slbh}
+            </if>
+            <if test="qszt != null and qszt != ''">
+                AND t.qszt = #{qszt}
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND t.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="qllxs != null and qllxs.size() > 0">
+                AND t.qllx IN
+                <foreach collection="qllxs" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="xmidList != null and xmidList.size() > 0">
+                AND t.xmid IN
+                <foreach collection="xmidList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        order by q.xmid,q.qlrlb,q.sxh
+    </select>
+
+    <update id="updateQlrZsid" parameterType="map" >
+        update   bdc_qlr a   set a.zsid=#{zsid}
+        where a.qlrlb=1
+        <if test="qlrmc != null and qlrmc != ''">
+            AND a.qlrmc = #{qlrmc}
+        </if>
+        <if test="zjh != null and zjh != ''">
+            AND a.zjh = #{zjh}
+        </if>
+        AND a.xmid in (select b.xmid from bdc_xm b  where  b.gzlslid=#{gzlslid})
+    </update>
+
+    <!-- 批量更新不动产权利人 -->
+    <update id="updateBatchBdcQlr" parameterType="map">
+        <if test="statement != null and ((gzlslid != null and gzlslid !=''))">
+            ${statement}
+            <where>
+                <if test="gzlslid != null and gzlslid !=''">
+                    AND xmid IN (
+                    SELECT x.xmid
+                    FROM bdc_xm x
+                    WHERE x.gzlslid = #{gzlslid}
+                    <if test="djxl != null and djxl !=''">
+                        AND x.djxl = #{djxl}
+                    </if>
+                    <if test="xmidList != null and xmidList.size() > 0">
+                        AND x.xmid IN
+                        <foreach collection="xmidList" item="item" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                    )
+                </if>
+                <if test="qlrmc != null and qlrmc !=''">
+                    AND qlrmc=#{qlrmc}
+                </if>
+                <if test="zjh != null and zjh !=''">
+                    AND zjh=#{zjh}
+                </if>
+                <if test="qlrlb != null and qlrlb !=''">
+                    AND qlrlb=#{qlrlb}
+                </if>
+            </where>
+        </if>
+    </update>
+
+    <!--删除第三权利人-->
+    <delete id="deleteDsQlr" parameterType="map">
+        DELETE FROM bdc_dsqlr a WHERE a.xmid IN
+        (SELECT b.xmid FROM bdc_xm b
+        WHERE b.gzlslid = #{gzlslid}
+        <if test="djxl != null and djxl !=''">
+            AND b.djxl=#{djxl}
+        </if>
+        )
+        <if test="qlrmc != null and qlrmc !=''">
+            AND a.qlrmc=#{qlrmc}
+        </if>
+        <if test="zjh != null and zjh !=''">
+            AND a.zjh=#{zjh}
+        </if>
+        <if test="qlrlb != null and qlrlb !=''">
+            AND a.qlrlb=#{qlrlb}
+        </if>
+        <if test="xmidList != null and xmidList.size() > 0">
+            AND a.xmid IN
+            <foreach collection="xmidList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </delete>
+
+    <select id="queryBdcQlrWithMhlx" parameterType="cn.gtmap.realestate.common.core.qo.init.BdcQlrQO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcQlrDO">
+        SELECT *
+        FROM BDC_QLR
+        <where>
+            <if test="qlrlb != null and qlrlb != ''">
+                AND qlrlb = #{qlrlb}
+            </if>
+            <if test="xmid != null and xmid != ''">
+                AND xmid = #{xmid}
+            </if>
+            <if test="qlrid != null and qlrid != ''">
+                AND qlrid = #{qlrid}
+            </if>
+            <if test="qlrmc != null and qlrmc != ''">
+                <if test="mhlx == null || mhlx == 0">
+                    AND qlrmc = #{qlrmc}
+                </if>
+                <if test="mhlx == 1">
+                    AND qlrmc LIKE '%' || #{qlrmc} || '%'
+                </if>
+            </if>
+            <if test="zjh != null and zjh != ''">
+                <if test="mhlx == null || mhlx == 0">
+                    AND zjh = #{zjh}
+                </if>
+                <if test="mhlx == 1">
+                    AND zjh LIKE '%' || #{zjh} || '%'
+                </if>
+            </if>
+            <if test="dlrmc != null and dlrmc != ''">
+                <if test="mhlx == null || mhlx == 0">
+                    AND dlrmc = #{dlrmc}
+                </if>
+                <if test="mhlx == 1">
+                    AND dlrmc LIKE '%' || #{dlrmc} || '%'
+                </if>
+            </if>
+            <if test="dlrzjh != null and dlrzjh != ''">
+                <if test="mhlx == null || mhlx == 0">
+                    AND dlrzjh = #{dlrzjh}
+                </if>
+                <if test="mhlx == 1">
+                    AND dlrzjh LIKE '%' || #{dlrzjh} || '%'
+                </if>
+            </if>
+        </where>
+        order by sxh
+    </select>
+
+    <!--查询证书（证明）关联的权利人（义务人）信息-->
+    <select id="listBdcQlrByZsid" parameterType="cn.gtmap.realestate.common.core.qo.init.BdcQlrQO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcQlrDO">
+        SELECT
+            distinct q.qlrly,q.qlrid, q.xmid, q.qlrmc, q.zjzl, q.zjh, q.txdz, q.yb, q.xb, q.frmc, q.frdh, q.dlrmc, q.dlrdh, q.dljg, q.qlrlx, q.qlrlb, q.gyfs, q.gyqk, q.dh, q.sshy, q.bz, q.sfczr, q.sxh, q.bdcqzh, q.zsid, q.frzjzl, q.frzjh, q.dlrzjzl, q.dlrzjh, q.qlrftmj, q.qlbl
+        FROM
+            bdc_qlr q
+        JOIN
+            bdc_xm_zs_gx g on q.xmid = g.xmid
+        <where>
+            <if test="zsid != null and zsid != ''">
+                AND g.zsid = #{zsid}
+            </if>
+            <if test="qlrlb != null and qlrlb != ''">
+                AND q.qlrlb = #{qlrlb}
+            </if>
+        </where>
+        order by q.sxh asc
+    </select>
+</mapper>

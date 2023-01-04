@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--构筑物-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.KttGzwMapper">
+
+    <select id="queryKttGzwList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.KttGzwDO">
+        SELECT DISTINCT
+        b.bdcdyh,SUBSTR(b.BDCDYH,0,19) as zdzhdm,m.jgzwmc as gzwmc,b.zl,'1' mjdw,m.jgzwmj as mj,'1' as zt
+        FROM bdc_fdcq3_gyxx m
+        LEFT JOIN bdc_xm b ON m.xmid = b.xmid
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND b.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND b.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.supervise.core.mapper.LfCxycjgMapper">
+    <!--统计指定角色下用户平均查询次数-->
+    <select id="countRoleAverageQueryNumber" parameterType="cn.gtmap.realestate.supervise.core.qo.LfCxycQO" resultType="Double">
+        SELECT
+            NVL(AVG(NUM), 0) AS AVGNUM
+        FROM
+        (
+            SELECT
+                COUNT(*) AS NUM
+            FROM
+                BDC_XT_CX_LOG T
+            WHERE
+                rzlx = 'ZHCX'
+
+                <if test="cxsjq != null and cxsjq != ''">
+                    AND to_char(T.CZSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{cxsjq}
+                </if>
+                <if test="cxsjz != null and cxsjz != ''">
+                    AND to_char(T.CZSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{cxsjz}
+                </if>
+                <if test="yhids != null and yhids.size() > 0">
+                    AND T.YHID IN
+                    <foreach collection="yhids" item="yhid" open="(" separator="," close=")" >
+                        #{yhid}
+                    </foreach>
+                </if>
+            GROUP BY
+                YHM,YHID,YHZH
+        )
+    </select>
+
+    <!--统计指定角色下用户平均查询次数-->
+    <select id="countUserQueryNumber" parameterType="cn.gtmap.realestate.supervise.core.qo.LfCxycQO"
+            resultType="cn.gtmap.realestate.supervise.core.dto.LfCxycDTO">
+        SELECT
+            NVL(COUNT(*),0) AS CXCS, YHM, YHID, YHZH, MAX(SZBM) AS SZBM
+        FROM
+            BDC_XT_CX_LOG T
+        WHERE
+            rzlx = 'ZHCX'
+
+            <if test="cxsjq != null and cxsjq != ''">
+                AND to_char(T.CZSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{cxsjq}
+            </if>
+            <if test="cxsjz != null and cxsjz != ''">
+                AND to_char(T.CZSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{cxsjz}
+            </if>
+            <if test="yhids != null and yhids.size() > 0">
+                AND T.YHID IN
+                <foreach collection="yhids" item="yhid" open="(" separator="," close=")" >
+                    #{yhid}
+                </foreach>
+            </if>
+        GROUP BY
+            YHM,YHID,YHZH
+        ORDER BY
+            YHM
+    </select>
+
+    <!--查询指定用户查询日志-->
+    <select id="listUserQueryLogByPage" parameterType="cn.gtmap.realestate.supervise.core.qo.LfLogQO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcXtCxLogDO">
+        SELECT
+            ID, YHM, YHZH, YHID, DLIP, CXTJ, to_char(substr(CXJG, 0, 2000)) AS CXJG, CZSJ, SZBM, SZBMID, QLRMC, QLRZJH, ZL, BDCDYH, BDCQZH, RZLX
+        FROM
+            BDC_XT_CX_LOG T
+        <where>
+            rzlx = 'ZHCX'
+
+            <if test="yhid != null and yhid != ''">
+                AND T.YHID = #{yhid}
+            </if>
+            <if test="cxsjq != null and cxsjq != ''">
+                AND to_char(T.CZSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{cxsjq}
+            </if>
+            <if test="cxsjz != null and cxsjz != ''">
+                AND to_char(T.CZSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{cxsjz}
+            </if>
+            <if test="cfcxzdz != null and cfcxzdz != ''">
+                <if test="cfcxzd != null and cfcxzd != '' and cfcxzd == '权利人名称'">
+                    AND T.QLRMC = #{cfcxzdz}
+                </if>
+                <if test="cfcxzd != null and cfcxzd != '' and cfcxzd == '权利人证件号'">
+                    AND T.QLRZJH = #{cfcxzdz}
+                </if>
+                <if test="cfcxzd != null and cfcxzd != '' and cfcxzd == '坐落'">
+                    AND T.ZL = #{cfcxzdz}
+                </if>
+            </if>
+        </where>
+
+        ORDER BY
+            CZSJ DESC
+    </select>
+
+    <!--统计相同条件查询异常-->
+    <select id="listXtzdcfcxycTableData" parameterType="cn.gtmap.realestate.supervise.core.qo.LfCxycQO"
+            resultType="cn.gtmap.realestate.supervise.core.dto.LfCxycDTO">
+        SELECT
+            CXCS, YHM, YHID, YHZH, CFCXZD, CFCXZDZ, SZBM
+        FROM
+        (
+            <include refid="zlcfcx"></include>
+            UNION
+            <include refid="qlrmccfcx"></include>
+            UNION
+            <include refid="qlrzjhcfcx"></include>
+        )
+        ORDER BY
+            CFCXZD ASC, YHM ASC
+    </select>
+
+    <!--坐落重复查询-->
+    <sql id="zlcfcx">
+        SELECT
+          NVL(COUNT(*),0) AS CXCS, YHM, YHID, YHZH, '坐落' AS CFCXZD, ZL AS CFCXZDZ, MAX(SZBM) AS SZBM
+        FROM
+          BDC_XT_CX_LOG T
+        WHERE
+          RZLX = 'ZHCX'
+          AND
+          ZL IS NOT NULL
+
+         <if test="cxsjq != null and cxsjq != ''">
+            AND to_char(T.CZSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{cxsjq}
+         </if>
+         <if test="cxsjz != null and cxsjz != ''">
+            AND to_char(T.CZSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{cxsjz}
+         </if>
+        GROUP BY
+          YHM,YHID,YHZH,ZL
+        HAVING
+          NVL(COUNT(*),0) >= #{ycbz}
+    </sql>
+
+    <!--权利人名称重复查询-->
+    <sql id="qlrmccfcx">
+        SELECT
+          NVL(COUNT(*),0) AS CXCS, YHM, YHID, YHZH, '权利人名称' AS CFCXZD, QLRMC AS CFCXZDZ, MAX(SZBM) AS SZBM
+        FROM
+          BDC_XT_CX_LOG T
+        WHERE
+          RZLX = 'ZHCX'
+          AND
+          QLRMC IS NOT NULL
+
+          <if test="cxsjq != null and cxsjq != ''">
+            AND to_char(T.CZSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{cxsjq}
+          </if>
+          <if test="cxsjz != null and cxsjz != ''">
+            AND to_char(T.CZSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{cxsjz}
+          </if>
+        GROUP BY
+          YHM,YHID,YHZH,QLRMC
+        HAVING
+          NVL(COUNT(*),0) >= #{ycbz}
+    </sql>
+
+    <!--权利人证件号重复查询-->
+    <sql id="qlrzjhcfcx">
+        SELECT
+          NVL(COUNT(*),0) AS CXCS, YHM, YHID, YHZH, '权利人证件号' AS CFCXZD, QLRZJH AS CFCXZDZ, MAX(SZBM) AS SZBM
+        FROM
+          BDC_XT_CX_LOG T
+        WHERE
+          RZLX = 'ZHCX'
+          AND
+          QLRZJH IS NOT NULL
+
+          <if test="cxsjq != null and cxsjq != ''">
+            AND to_char(T.CZSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{cxsjq}
+          </if>
+          <if test="cxsjz != null and cxsjz != ''">
+            AND to_char(T.CZSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{cxsjz}
+          </if>
+        GROUP BY
+          YHM,YHID,YHZH,QLRZJH
+        HAVING
+          NVL(COUNT(*),0) >= #{ycbz}
+    </sql>
+
+    <!--统计指定字段重复查询次数-->
+    <select id="listXtzdcfcxycChartData" parameterType="cn.gtmap.realestate.supervise.core.qo.LfCxycQO"
+            resultType="cn.gtmap.realestate.supervise.core.dto.LfCxycDTO">
+        SELECT
+            SUM(CXCS) AS CXCS , MAX(YHM) AS YHM, MAX(YHID) AS YHID, MAX(YHZH) AS YHZH
+        FROM
+            (
+                  SELECT
+                      NVL(COUNT(*),0) AS CXCS, YHM, YHID, YHZH
+                  FROM
+                      BDC_XT_CX_LOG T
+                  WHERE
+                      RZLX = 'ZHCX'
+
+                      <if test="cfcxzd != null and cfcxzd != '' and cfcxzd == 'qlrmc'">
+                        AND T.QLRMC IS NOT NULL
+                      </if>
+                      <if test="cfcxzd != null and cfcxzd != '' and cfcxzd == 'qlrzjh'">
+                        AND T.QLRZJH IS NOT NULL
+                      </if>
+                      <if test="cfcxzd != null and cfcxzd != '' and cfcxzd == 'zl'">
+                        AND T.ZL IS NOT NULL
+                      </if>
+                      <if test="cxsjq != null and cxsjq != ''">
+                        AND to_char(T.CZSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{cxsjq}
+                      </if>
+                      <if test="cxsjz != null and cxsjz != ''">
+                        AND to_char(T.CZSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{cxsjz}
+                      </if>
+                  GROUP BY
+                        YHM,YHID,YHZH
+
+                        <if test="cfcxzd != null and cfcxzd != '' and cfcxzd == 'qlrmc'">
+                            , QLRMC
+                        </if>
+                        <if test="cfcxzd != null and cfcxzd != '' and cfcxzd == 'qlrzjh'">
+                            , QLRZJH
+                        </if>
+                        <if test="cfcxzd != null and cfcxzd != '' and cfcxzd == 'zl'">
+                            , ZL
+                        </if>
+                  HAVING
+                      NVL(COUNT(*),0) >= #{ycbz}
+            )
+        GROUP BY
+            YHM,YHID,YHZH
+    </select>
+
+    <!--统计指定字段重复查询次数,被查询人统计图表-->
+    <select id="listXtzdcfcxycBcxrChartData" parameterType="cn.gtmap.realestate.supervise.core.qo.LfCxycQO"
+            resultType="cn.gtmap.realestate.supervise.core.dto.LfCxycDTO">
+        SELECT
+        NVL(COUNT(*),0) AS CXCS, QLRMC,QLRZJH
+        FROM
+        BDC_XT_CX_LOG T
+        WHERE
+        RZLX = 'ZHCX' AND QLRMC is not null
+
+        <if test="cxsjq != null and cxsjq != ''">
+            AND to_char(T.CZSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{cxsjq}
+        </if>
+        <if test="cxsjz != null and cxsjz != ''">
+            AND to_char(T.CZSJ,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{cxsjz}
+        </if>
+        GROUP BY
+        QLRMC,QLRZJH
+        HAVING
+        NVL(COUNT(*),0) >= #{ycbz}
+    </select>
+</mapper>

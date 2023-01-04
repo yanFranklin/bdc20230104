@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.accept.core.mapper.BdcSlHsxxMapper">
+
+    <!-- 批量更新完税状态-->
+    <update id="updateBatchWszt" parameterType="map">
+        <if test="gzlslid != null and gzlslid != ''">
+            UPDATE BDC_SL_HSXX t
+            <set>
+                t.wszt = #{wszt,jdbcType=VARCHAR}
+            </set>
+            WHERE t.xmid IN
+            (SELECT xmid FROM  BDC_SL_XM
+            WHERE jbxxid IN
+            (
+            SELECT jbxxid from BDC_SL_JBXX
+            WHERE gzlslid =#{gzlslid}
+            )
+            )
+
+        </if>
+    </update>
+
+
+    <update id="updateWsztByqlrlb" parameterType="map">
+        <if test="gzlslid != null and gzlslid != ''">
+            UPDATE BDC_SL_HSXX t
+            <set>
+                t.wszt = #{wszt,jdbcType=VARCHAR}
+            </set>
+            WHERE t.xmid IN
+            (SELECT xmid FROM  BDC_SL_XM
+            WHERE jbxxid IN
+            (
+            SELECT jbxxid from BDC_SL_JBXX
+            WHERE gzlslid =#{gzlslid}
+            )
+            )
+            <if test="sqrlb != null and sqrlb != ''">
+             and t.sqrlb = #{sqrlb}
+            </if>
+        </if>
+    </update>
+    <!-- 批量更新不动产核税信息-->
+    <update id="batchUpdateBdcSlHsxx" parameterType="map">
+        <if test="gzlslid != null and gzlslid != ''">
+            UPDATE BDC_SL_HSXX t
+            <set>
+                <if test="jypzh != null and jypzh != ''">
+                   t.jypzh = #{jypzh,jdbcType=VARCHAR},
+                </if>
+                <if test="ytsswzt != null">
+                    t.ytsswzt = #{ytsswzt,jdbcType=INTEGER},
+                </if>
+                <if test="yhjkrkzt != null">
+                    t.yhjkrkzt = #{yhjkrkzt,jdbcType=INTEGER},
+                </if>
+            </set>
+            WHERE t.xmid IN
+            (
+                SELECT xmid FROM  BDC_SL_XM
+                WHERE jbxxid IN ( SELECT jbxxid from BDC_SL_JBXX WHERE gzlslid =#{gzlslid} )
+            )
+        </if>
+    </update>
+
+    <select id="listBdcSlHsxxByGzlslid" resultType="cn.gtmap.realestate.common.core.domain.accept.BdcSlHsxxDO" parameterType="String">
+        <if test="(gzlslid != null and gzlslid !='') or (slbh != null and slbh !='')">
+        SELECT * FROM BDC_SL_HSXX t
+            <where>
+                <if test="gzlslid != null and gzlslid != ''">
+                AND t.xmid in (
+                    SELECT xmid FROM  BDC_SL_XM
+                    WHERE jbxxid IN ( SELECT jbxxid from BDC_SL_JBXX WHERE gzlslid =#{gzlslid} )
+                )
+                </if>
+                <if test="slbh != null and slbh != ''">
+                AND t.xmid in (
+                SELECT xmid FROM  BDC_SL_XM
+                WHERE jbxxid IN ( SELECT jbxxid from BDC_SL_JBXX WHERE slbh =#{slbh} )
+                )
+            </if>
+            </where>
+        </if>
+    </select>
+
+    <select id="listBdcSlSysxx" resultType="cn.gtmap.realestate.common.core.domain.accept.BdcSlSysxxDO" parameterType="String">
+        <if test="(gzlslid != null and gzlslid !='') or (slbh != null and slbh !='') or (hsxxid != null and hsxxid !='')">
+            SELECT * FROM BDC_SL_SYSXX t
+            <where>
+                <if test="(gzlslid != null and gzlslid !='') or (slbh != null and slbh !='')">
+                    AND t.xmid in (
+                    SELECT xmid FROM  BDC_SL_XM
+                    WHERE jbxxid IN ( SELECT jbxxid from BDC_SL_JBXX
+                    WHERE 1=1
+                    <if test="gzlslid != null and gzlslid != ''">
+                        AND gzlslid =#{gzlslid}
+                    </if>
+                    <if test="slbh != null and slbh != ''">
+                        AND slbh =#{slbh}
+                    </if>
+                    )
+                    )
+                </if>
+                <if test="hsxxid != null and hsxxid != ''">
+                    AND t.hsxxid =#{hsxxid}
+                </if>
+            </where>
+        </if>
+    </select>
+
+    <!-- 税务信息分页-->
+    <select id="listSwxxByPage" parameterType="map" resultType="cn.gtmap.realestate.common.core.vo.accept.ui.BdcSwxxVO">
+        SELECT distinct x.xmid,x.bdcdyh,x.zl,x.qlr,x.djxl FROM  bdc_sl_hsxx h
+        LEFT JOIN bdc_sl_xm x ON h.xmid =x.xmid
+        LEFT JOIN bdc_sl_jbxx j ON j.jbxxid =x.jbxxid
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                and j.gzlslid =#{gzlslid}
+            </if>
+        </where>
+        order by bdcdyh
+    </select>
+
+    <select id="listBdcSlHsxxByGzlslidAndSqrlb" resultType="cn.gtmap.realestate.common.core.domain.accept.BdcSlHsxxDO" parameterType="String">
+        SELECT * FROM BDC_SL_HSXX t
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND t.xmid in (
+                SELECT xmid FROM  BDC_SL_XM
+                WHERE jbxxid IN ( SELECT jbxxid from BDC_SL_JBXX WHERE gzlslid =#{gzlslid} )
+                )
+            </if>
+            <if test="sqrlb != null and sqrlb != ''">
+                AND t.sqrlb =#{sqrlb}
+            </if>
+        </where>
+    </select>
+</mapper>

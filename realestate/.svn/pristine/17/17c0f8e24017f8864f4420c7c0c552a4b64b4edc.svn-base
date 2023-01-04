@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcSdMapper">
+
+    <select id="queryBdcDysd" parameterType="cn.gtmap.realestate.common.core.qo.init.BdcDysdQO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcDysdDO">
+        SELECT DYSDID,BDCDYH,BDCDYWYBH,BDCLX,SDZT,SDYY,SDR,SDRID,SDSJ,JSR,JSRID,JSSJ,JSYY,BZ,SDSQJG,SDSQWH,SDLX,GZLSLID,XMID
+        FROM BDC_DYSD
+        <where>
+            <if test="gzlslidList != null and gzlslidList.size() > 0">
+                AND GZLSLID in
+                <foreach collection="gzlslidList" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="bdcdyhList != null and bdcdyhList.size() > 0">
+                AND BDCDYH in
+                <foreach collection="bdcdyhList" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="xmidList != null and xmidList.size() > 0">
+                AND XMID in
+                <foreach collection="xmidList" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="sdzt != null">
+                AND SDZT = #{sdzt,jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryBdcZssd" parameterType="cn.gtmap.realestate.common.core.qo.init.BdcZssdQO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcZssdDO">
+        SELECT ZSSDID,GZLSLID,XMID,CQZH,ZSID,BDCLX,SDZT,SDYY,SDR,SDRID,SDSJ,JSR,JSRID,JSSJ,JSYY,BZ,SDSQJG,SDSQWH,SDLX
+        FROM BDC_ZSSD
+        <where>
+            <if test="xmidList != null and xmidList.size() > 0">
+                AND XMID in
+                <foreach collection="xmidList" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="sdzt != null">
+                AND SDZT = #{sdzt,jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryBdcdySdByBdcdyh" resultType="cn.gtmap.realestate.common.core.domain.BdcDysdDO">
+        select
+               dysdid,
+               bdcdyh,
+               bdcdywybh,
+               bdclx,
+               sdzt,
+               sdyy,
+               sdr,
+               sdrid,
+               sdsj,
+               jsr,
+               jsrid,
+               jssj,
+               jsyy,
+               bz,
+               sdsqjg,
+               sdsqwh
+        from
+             bdc_dysd
+        where bdcdyh = #{bdcdyh,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryBdcZsSdByCqzh" resultType="cn.gtmap.realestate.common.core.domain.BdcZssdDO">
+        select
+            zssdid,
+            gzlslid,
+            xmid,
+            cqzh,
+            zsid,
+            bdclx,
+            sdzt,
+            sdyy,
+            sdr,
+            sdrid,
+            sdsj,
+            jsr,
+            jsrid,
+            jssj,
+            jsyy,
+            bz,
+            sdsqjg,
+            sdsqwh
+        from
+             bdc_zssd
+        where cqzh = #{cqzh,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateBdcdySdByBdcdyh" parameterType="cn.gtmap.realestate.common.core.domain.BdcDysdDO">
+        update bdc_dysd
+        <set>
+            <if test="bdcdywybh != null and bdcdywybh != ''">
+                bdcdywybh = #{bdcdywybh,jdbcType=VARCHAR},
+            </if>
+            <if test="bdclx != null">
+                bdclx = #{bdclx,jdbcType=INTEGER},
+            </if>
+            <if test="sdzt != null">
+                sdzt = #{sdzt,jdbcType=INTEGER},
+            </if>
+            <if test="sdyy != null and sdyy != ''">
+                sdyy = #{sdyy,jdbcType=VARCHAR},
+            </if>
+            <if test="sdr != null and sdr != ''">
+                sdr = #{sdr,jdbcType=VARCHAR},
+            </if>
+            <if test="sdrid != null and sdrid != ''">
+                sdrid = #{sdrid,jdbcType=VARCHAR},
+            </if>
+            <if test="jsr != null and jsr != ''">
+                jsr = #{jsr,jdbcType=VARCHAR},
+            </if>
+            <if test="jsrid != null and jsrid != ''">
+                jsrid = #{jsrid,jdbcType=VARCHAR},
+            </if>
+            <if test="jsrid != null and jsrid != ''">
+                jsrid = #{jsrid,jdbcType=VARCHAR},
+            </if>
+            jssj = sysdate,
+            <if test="sdsqjg != null and sdsqjg != ''">
+                sdsqjg = #{sdsqjg,jdbcType=VARCHAR},
+            </if>
+            <if test="sdsqwh != null and sdsqwh != ''">
+                sdsqwh = #{sdsqwh,jdbcType=VARCHAR},
+            </if>
+            <if test="jsyy != null and jsyy != ''">
+                jsyy = #{jsyy,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where
+        bdcdyh = #{bdcdyh,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateBdczsSdByCqzh" parameterType="cn.gtmap.realestate.common.core.domain.BdcZssdDO">
+        update bdc_zssd
+        <set>
+            <if test="bdclx != null">
+                bdclx = #{bdclx,jdbcType=INTEGER},
+            </if>
+            <if test="sdzt != null">
+                sdzt = #{sdzt,jdbcType=INTEGER},
+            </if>
+            <if test="sdyy != null and sdyy != ''">
+                sdyy = #{sdyy,jdbcType=VARCHAR},
+            </if>
+            <if test="sdr != null and sdr != ''">
+                sdr = #{sdr,jdbcType=VARCHAR},
+            </if>
+            <if test="sdrid != null and sdrid != ''">
+                sdrid = #{sdrid,jdbcType=VARCHAR},
+            </if>
+            <if test="jsr != null and jsr != ''">
+                jsr = #{jsr,jdbcType=VARCHAR},
+            </if>
+            <if test="jsrid != null and jsrid != ''">
+                jsrid = #{jsrid,jdbcType=VARCHAR},
+            </if>
+            <if test="jsrid != null and jsrid != ''">
+                jsrid = #{jsrid,jdbcType=VARCHAR},
+            </if>
+            jssj = sysdate,
+            <if test="sdsqjg != null and sdsqjg != ''">
+                sdsqjg = #{sdsqjg,jdbcType=VARCHAR},
+            </if>
+            <if test="sdsqwh != null and sdsqwh != ''">
+                sdsqwh = #{sdsqwh,jdbcType=VARCHAR},
+            </if>
+            <if test="jsyy != null and jsyy != ''">
+                jsyy = #{jsyy,jdbcType=VARCHAR},
+            </if>
+
+        </set>
+        where
+        cqzh = #{cqzh,jdbcType=VARCHAR}
+    </update>
+
+    <select id="queryBdcZsSdByCqzhs" resultType="cn.gtmap.realestate.common.core.domain.BdcZssdDO">
+        select
+            zssdid,
+            gzlslid,
+            xmid,
+            cqzh,
+            zsid,
+            bdclx,
+            sdzt,
+            sdyy,
+            sdr,
+            sdrid,
+            sdsj,
+            jsr,
+            jsrid,
+            jssj,
+            jsyy,
+            bz,
+            sdsqjg,
+            sdsqwh
+        from
+            bdc_zssd
+        <if test="list != null and list.size() > 0 ">
+            where cqzh in
+            <foreach collection="list" open="(" close=")" item="item" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+
+    <delete id="batchDeleteBdcZssd">
+        DELETE FROM bdc_zssd a
+        <where>
+            <if test="list != null">
+                AND a.zssdid IN
+                <foreach collection="list" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </delete>
+
+    <select id="queryYxmBdcqzhByXmid" resultType="cn.gtmap.realestate.common.core.domain.BdcZssdDO">
+        select
+        bdc_zssd.zssdid,
+        bdc_zssd.gzlslid,
+        bdc_zssd.xmid,
+        bdc_zssd.cqzh,
+        bdc_zssd.zsid,
+        bdc_zssd.bdclx,
+        bdc_zssd.sdzt,
+        bdc_zssd.sdyy,
+        bdc_zssd.sdr,
+        bdc_zssd.sdrid,
+        bdc_zssd.sdsj,
+        bdc_zssd.jsr,
+        bdc_zssd.jsrid,
+        bdc_zssd.jssj,
+        bdc_zssd.jsyy,
+        bdc_zssd.bz,
+        bdc_zssd.sdsqjg,
+        bdc_zssd.sdsqwh,
+        bdc_zssd.sdlx
+        from
+        bdc_xm
+        INNER JOIN BDC_XM_ZS_GX on bdc_xm.xmid = BDC_XM_ZS_GX.xmid
+        INNER JOIN bdc_zssd on bdc_zssd.zsid = BDC_XM_ZS_GX.zsid
+        where bdc_xm.xmid = #{xmid} and bdc_zssd.sdzt = 1
+    </select>
+</mapper>

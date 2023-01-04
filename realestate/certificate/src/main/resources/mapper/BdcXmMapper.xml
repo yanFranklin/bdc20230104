@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.certificate.core.mapper.BdcXmMapper">
+    <select id="listBdcXmByProInsID" parameterType="string" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT
+        YBDCDYH,BFQLQTZK,YSFWBM,ZFXZSPBH,YXTCQZH,SPLY,GZLDYID,SQRSM,AJZT,SFWTAJ,GZLJDMC,QXDM,SLSJ,SLRID,SLR,XMLY,JSSJ,DJXL,BDCLX,YCQZH,YFCZH,YTDZH,GZLSLID,SPXTYWH,SSXZ,DJJG,SPXTBLZT,SPXTBLZTMC,BDCDYH,BDCDYWYBH,GYFS,DJSJ,DBR,QSZT,ZL,DZWMJ,YHLXA,YHLXB,GZWLX,LZ,MJDW,ZDZHMJ,QLR,QLRZJH,YWR,YWRZJH,JYHTH,BDCDYFWLX,BDCQZH,QLXZ,CLSJPPZT,QLRLX,GZLDYMC,CNQX,YWRZJZL,QLRZJZL,YTDYTMC,DJBMDM,DZWYT,DZWYT2,DZWYT3,ZDZHYT,ZDZHYT2,ZDZHYT3,XMID,SLBH,QLLX,DJLX,DJYY,SQZSBS,SQFBCZ,BZ
+        FROM
+        BDC_XM
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                gzlslid = #{gzlslid}
+            </if>
+        </where>
+
+    </select>
+
+    <select id="listBdcXmfbByProInsID" parameterType="string" resultType="cn.gtmap.realestate.common.core.domain.BdcXmFbDO">
+        SELECT
+        XMID,ZDSYLX,GZLSLID,SFSZFGF,QLCFBS,QLQTZK,FJ,SFYT,DDJB,FWSGBH,JDJFZ,SYQX,SFAHDJ,QJGLDM,SFHSZS,SFGG,CQLY,SFZJJG,SFGYZ,SZSX,LZFS
+        FROM
+        BDC_XMFB
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                gzlslid = #{gzlslid}
+            </if>
+        </where>
+
+    </select>
+
+    <select id="listBdcXmfbByZsid" parameterType="string" resultType="cn.gtmap.realestate.common.core.domain.BdcXmFbDO">
+        SELECT
+        FB.XMID,ZDSYLX,FB.GZLSLID,SFSZFGF,QLCFBS,FB.QLQTZK,FB.FJ,SFYT,DDJB,FWSGBH,JDJFZ,FB.SYQX,SFAHDJ,QJGLDM,SFHSZS,SFGG,CQLY,SFZJJG,SFGYZ,SZSX,LZFS
+        FROM
+        BDC_ZS ZS
+        LEFT JOIN BDC_XM_ZS_GX GX on GX.ZSID = ZS.ZSID
+        LEFT JOIN BDC_XMFB FB ON GX.XMID = FB.XMID
+        where
+            ZS.ZSID = #{zsid}
+    </select>
+
+    <select id="listBdcXmBfxxByProInsIDList" resultType="cn.gtmap.realestate.common.core.dto.init.BdcXmDTO">
+        SELECT
+            XMID,SLBH,GZLSLID,BDCDYH,QLLX,DJXL,GZLDYID
+        FROM
+        BDC_XM a
+        WHERE
+        a.GZLSLID in
+        <foreach collection="gzlslidList" item="gzlslid" index="index" open="(" close=")" separator=",">
+            #{gzlslid}
+        </foreach>
+    </select>
+
+    <select id="listBdcXmByslbhList" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT
+        XMID,GZLSLID,SLBH
+        FROM
+        BDC_XM a
+        WHERE
+        a.SLBH in
+        <foreach collection="slbhList" item="slbh" index="index" open="(" close=")" separator=",">
+            #{slbh}
+        </foreach>
+    </select>
+
+    <select id="listBdcXmByZsid" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT xm.*
+        FROM
+        BDC_XM xm LEFT JOIN BDC_XM_ZS_GX gx on xm.xmid = gx.xmid
+                  LEFT JOIN bdc_zs zs on zs.zsid = gx.zsid
+        <where>
+            <if test="zsid != null and zsid != ''">
+                zs.zsid = #{zsid}
+            </if>
+        </where>
+    </select>
+
+    <select id="listBdcXmZsGxByGzlslidList" resultType="cn.gtmap.realestate.common.core.domain.BdcXmZsGxDO">
+        SELECT  gx.gxid, gx.xmid, gx.zsid
+        FROM BDC_XM_ZS_GX gx
+        LEFT JOIN BDC_XM xm on  gx.xmid = xm.xmid
+        WHERE
+            xm.GZLSLID in
+            <foreach collection="gzlslidList" item="gzlslid" index="index" open="(" close=")" separator=",">
+                #{gzlslid}
+            </foreach>
+    </select>
+
+    <select id="listLsZzxxForYcCancel" parameterType="Integer" resultType="cn.gtmap.realestate.certificate.core.dto.BdcCancelECertificateDTO">
+        SELECT
+        dzzz.ZZBS,
+        dzzz.ZZZT,
+        gx.XMID,
+        zs.BDCQZH,
+        zs.ZSID,
+        xm.GZLSLID,
+        zs.ZZID
+        FROM
+        BDC_ZS zs
+        LEFT JOIN bdc_dzzz_zzxx_vm dzzz ON zs.BDCQZH = dzzz.BDCQZH
+        LEFT JOIN BDC_XM_ZS_GX gx ON gx.ZSID = zs.ZSID
+        LEFT JOIN BDC_XM xm ON xm.XMID = gx.XMID
+        LEFT JOIN BDC_FDCQ fdcq ON fdcq.xmid = gx.xmid
+        AND fdcq.QSZT = 2
+        LEFT JOIN BDC_JSYDSYQ js ON js.xmid = gx.xmid
+        AND js.QSZT = 2
+        LEFT JOIN BDC_DYAQ dyaq ON dyaq.xmid = gx.xmid
+        AND dyaq.QSZT = 2
+        LEFT JOIN BDC_YG yg ON yg.xmid = gx.xmid
+        AND yg.QSZT = 2
+        LEFT JOIN BDC_YY yy ON yy.xmid = gx.xmid
+        AND yy.QSZT = 2
+        WHERE
+        gx.xmid IS NOT NULL
+        AND dzzz.zzbs IS NOT NULL
+        AND dzzz.zzzt = 1
+        AND xm.qszt = 2
+        AND zs.zslx in (1,2)
+        AND (
+        fdcq.QLID IS NOT NULL
+        OR js.QLID IS NOT NULL
+        OR dyaq.QLID IS NOT NULL
+        OR yg.QLID IS NOT NULL
+        OR yy.QLID IS NOT NULL
+        )
+            <if test="count != null and count != ''">
+                AND ROWNUM <![CDATA[ <= ]]> #{count}
+            </if>
+    </select>
+
+    <select id="listBdcZxYxm" parameterType="String" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        <if test="gzlslid != null and gzlslid != ''">
+            select distinct xmid, slbh, gzlslid from bdc_xm where xmid in
+            (
+                select yxmid from bdc_xm_lsgx where xmid in
+                (
+                    select xmid from bdc_xm where gzlslid = #{gzlslid}
+                )
+                and zxyql = 1
+            )
+        </if>
+    </select>
+</mapper>

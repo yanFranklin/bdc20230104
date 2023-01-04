@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcJscMapper">
+
+    <!--登记总件数-->
+    <select id="queryDjSl" resultType="java.lang.Integer">
+        select count(*) as sl
+        from bdc_xm
+                 INNER JOIN bdc_lq on bdc_xm.xmid = bdc_lq.xmid
+    </select>
+
+    <!--登记总件数-->
+    <select id="queryDjMj" resultType="java.lang.Integer">
+        select sum(syqmj) as zmj
+        from bdc_xm
+                 INNER JOIN bdc_lq on bdc_xm.xmid = bdc_lq.xmid
+    </select>
+
+    <!--查询林权登记数量-->
+    <select id="queryJscDjslDy" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.jsc.JscDjslDTO">
+        select count(xmid) as num,type,tendencyDate from (
+        select bdc_xm.xmid as xmid,
+        bdc_xm.djsj as djsj,
+        <if test='summaryDimension != null and summaryDimension == "MONTH" '>
+            to_char(bdc_xm.djsj,'yyyy-mm') as tendencyDate,
+        </if>
+        <if test='summaryDimension != null and summaryDimension == "DAY" '>
+            to_char(bdc_xm.djsj,'yyyy-mm-dd') as tendencyDate,
+        </if>
+        <if test='summaryDimension != null and summaryDimension == "YEAR" '>
+            to_char(bdc_xm.djsj,'yyyy') as tendencyDate,
+        </if>
+        <if test='summaryDimension == null'>
+            bdc_xm.xmid as tendencyDate,
+        </if>
+        '抵押' as type
+        from bdc_xm
+        INNER JOIN bdc_dyaq on bdc_dyaq.xmid = bdc_xm.xmid
+        <where>
+            <if test="kssj != null">
+                AND bdc_xm.djsj <![CDATA[>=]]> #{kssj}
+            </if>
+            <if test="jssj != null">
+                AND bdc_xm.djsj <![CDATA[<=]]> #{jssj}
+            </if>
+        </where>
+        ) t
+        group by type,tendencyDate
+    </select>
+    <select id="queryJscDjslCf" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.jsc.JscDjslDTO">
+        select count(xmid) as num,type,tendencyDate from (
+        select bdc_xm.xmid as xmid,
+        bdc_xm.djsj as djsj,
+        <if test='summaryDimension != null and summaryDimension == "MONTH" '>
+            to_char(bdc_xm.djsj,'yyyy-mm') as tendencyDate,
+        </if>
+        <if test='summaryDimension != null and summaryDimension == "DAY" '>
+            to_char(bdc_xm.djsj,'yyyy-mm-dd') as tendencyDate,
+        </if>
+        <if test='summaryDimension != null and summaryDimension == "YEAR" '>
+            to_char(bdc_xm.djsj,'yyyy') as tendencyDate,
+        </if>
+        <if test='summaryDimension == null'>
+            bdc_xm.xmid as tendencyDate,
+        </if>
+        '查封' as type
+        from bdc_xm
+        INNER JOIN bdc_cf on bdc_cf.xmid = bdc_xm.xmid
+        <where>
+            <if test="kssj != null">
+                AND bdc_xm.djsj <![CDATA[>=]]> #{kssj}
+            </if>
+            <if test="jssj != null">
+                AND bdc_xm.djsj <![CDATA[<=]]> #{jssj}
+            </if>
+        </where>
+
+        ) t
+        group by type,tendencyDate
+    </select>
+    <select id="queryJscDjslDj" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.jsc.JscDjslDTO">
+        select count(xmid) as num,type,tendencyDate from (
+        select bdc_xm.xmid as xmid,
+        bdc_xm.djsj as djsj,
+        <if test='summaryDimension != null and summaryDimension == "MONTH" '>
+            to_char(bdc_xm.djsj,'yyyy-mm') as tendencyDate,
+        </if>
+        <if test='summaryDimension != null and summaryDimension == "DAY" '>
+            to_char(bdc_xm.djsj,'yyyy-mm-dd') as tendencyDate,
+        </if>
+        <if test='summaryDimension != null and summaryDimension == "YEAR" '>
+            to_char(bdc_xm.djsj,'yyyy') as tendencyDate,
+        </if>
+        <if test='summaryDimension == null'>
+            bdc_xm.xmid as tendencyDate,
+        </if>
+        '林权' as type
+        from bdc_xm
+        INNER JOIN bdc_lq on bdc_lq.xmid = bdc_xm.xmid
+        <where>
+            <if test="kssj != null">
+                AND bdc_xm.djsj <![CDATA[>=]]> #{kssj}
+            </if>
+            <if test="jssj != null">
+                AND bdc_xm.djsj <![CDATA[<=]]> #{jssj}
+            </if>
+        </where>
+        ) t
+        group by type,tendencyDate
+    </select>
+
+    <!--已经办理-->
+    <select id="queryJscSummaryYb" parameterType="map" resultType="java.lang.Integer">
+        select count(*) as sl
+        from bdc_xm
+        where ajzt = 2 and qszt = 1
+        <if test="kssj != null ">
+            AND jssj <![CDATA[>=]]> #{kssj}
+        </if>
+        <if test="jssj != null ">
+            AND jssj <![CDATA[<=]]> #{jssj}
+        </if>
+    </select>
+
+    <!--办理中-->
+    <select id="queryJscSummaryBlz" parameterType="map" resultType="java.lang.Integer">
+        select count(*) as sl
+        from bdc_xm
+        where ajzt = 1 and qszt = 1
+        <if test="kssj != null">
+            AND slsj <![CDATA[>=]]> #{kssj}
+        </if>
+        <if test="jssj != null">
+            AND slsj <![CDATA[<=]]> #{jssj}
+        </if>
+    </select>
+
+    <!--历史遗留问题-->
+    <select id="queryJscSummaryBlLsyl" parameterType="map" resultType="java.lang.Integer">
+        select count(*) as sl
+        from bdc_wtsj
+        where wtsjzt = 1
+        <if test="kssj != null">
+            AND cjsj <![CDATA[>=]]> #{kssj}
+        </if>
+        <if test="jssj != null">
+            AND cjsj <![CDATA[<=]]> #{jssj}
+        </if>
+    </select>
+
+
+    <!--林权权利情况-->
+    <select id="queryJscQl" resultType="cn.gtmap.realestate.common.core.dto.inquiry.jsc.JscLqqlDTO">
+        select qxdm,
+        bdc_lq.qllx as type ,
+        count(t.xmid) as num
+        from (select CASE WHEN bdc_xm.qxdm = '341822' THEN '341882' ELSE bdc_xm.qxdm END as qxdm,
+                     bdc_xm.xmid,bdc_xm.djsj from bdc_xm ) t
+        INNER JOIN bdc_lq on bdc_lq.xmid = t.xmid
+        <where>
+            <if test="kssj != null ">
+                AND t.djsj <![CDATA[>=]]> #{kssj}
+            </if>
+            <if test="jssj != null ">
+                AND t.djsj <![CDATA[<=]]> #{jssj}
+            </if>
+            <if test="qxdms != null and qxdms.size > 0">
+                AND t.qxdm in
+                <foreach collection="qxdms" item="item" index="idx" open="" separator=" , " close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        group by qxdm,bdc_lq.qllx
+    </select>
+
+
+    <!--林权交易情况-->
+    <select id="queryJscJyqk" resultType="cn.gtmap.realestate.common.core.dto.inquiry.jsc.JscLqjyDTO">
+        select CASE WHEN bdc_xm.qxdm = '341822' THEN '341882'
+            ELSE bdc_xm.qxdm END as qxdm,count(bdc_xm.xmid) as jysl
+        from bdc_xm
+        INNER JOIN bdc_lq on bdc_lq.xmid = bdc_xm.xmid
+        <where>
+            <if test="djlx != null and djlx != ''">
+                bdc_xm.djlx = #{djlx}
+            </if>
+            <if test="kssj != null">
+                AND bdc_xm.djsj <![CDATA[>=]]> #{kssj}
+            </if>
+            <if test="jssj != null">
+                AND bdc_xm.djsj <![CDATA[<=]]> #{jssj}
+            </if>
+            <if test="qxdms != null and qxdms.size > 0">
+                AND bdc_xm.qxdm in
+                <foreach collection="qxdms" item="item" index="idx" open="" separator=" , " close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        group by qxdm
+    </select>
+
+    <!--登记总件数-->
+    <select id="queryQXDjSl" resultType="cn.gtmap.realestate.common.core.dto.inquiry.jsc.JscLqjyDTO">
+        select qxdm,
+               count(t.xmid) as jysl,
+               sum(syqmj) as mj
+        from (select CASE WHEN bdc_xm.qxdm = '341822' THEN '341882' ELSE bdc_xm.qxdm END as qxdm,bdc_xm.xmid from bdc_xm ) t
+        INNER JOIN bdc_lq on t.xmid = bdc_lq.xmid
+        group by qxdm
+    </select>
+
+
+    <!--历史遗留问题原始数据-->
+    <select id="querylsylsj" resultType="cn.gtmap.realestate.common.core.dto.inquiry.jsc.JscLsylwtDTO">
+        select qxdm, wtsjzt, lsylwtlx, count(qxdm) as wtsl
+        from (select CASE WHEN substr(BDC_WTSJ.wtsj, 1, 6) = '341822' THEN '341882' ELSE substr(BDC_WTSJ.wtsj, 1, 6) END as qxdm, BDC_WTSJ.wtsjzt, BDC_WTSJ.lsylwtlx
+        from BDC_WTSJ
+        where WTSJLB = 1
+        and lsylwtlx is not null
+        and BDC_WTSJ.wtsj is not null
+        UNION all
+        select CASE WHEN substr(BDC_XM.BDCDYH, 1, 6) = '341822' THEN '341882' ELSE substr(BDC_XM.BDCDYH, 1, 6) END as qxdm, BDC_WTSJ.wtsjzt, BDC_WTSJ.lsylwtlx
+        from BDC_WTSJ
+        INNER JOIN BDC_XM on BDC_XM.BDCQZH = BDC_WTSJ.WTSJ
+        where BDC_WTSJ.WTSJLB = 2
+        and BDC_XM.BDCQZH is not null
+        and lsylwtlx is not null) t
+        <where>
+            <if test="qxdms != null and qxdms.size > 0">
+                AND t.qxdm in
+                <foreach collection="qxdms" item="item" index="idx" open="(" separator=" , " close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        group by qxdm, wtsjzt, lsylwtlx
+    </select>
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.accept.core.mapper.BdcSlZjjgMapper">
+    <select id="listBdcSlZjjg" parameterType="cn.gtmap.realestate.common.core.qo.accept.BdcSlZjjgQO"
+            resultType="cn.gtmap.realestate.common.core.domain.accept.BdcSlZjjgDO">
+        select t.zjjgid,t.gzlslid,t.xzqdm,t.cqzh,t.fwzl,t.zjjgqrxx,t.cqxmid,t.xmid,t.zt,t.cxyy from bdc_sl_zjjg t
+        <where>
+            <if test="cqxmid != '' and cqxmid != null">
+                and t.cqxmid = #{cqxmid}
+            </if>
+            <if test="gzlslid != '' and gzlslid != null">
+                and t.gzlslid = #{gzlslid}
+            </if>
+            <if test="cqzh != '' and cqzh != null">
+                and t.cqzh = #{cqzh}
+            </if>
+            <if test="zt != null and  zt == 0">
+                AND nvl(t.zt, 0) = #{zt}
+            </if>
+            <if test="zt != null and zt == 1">
+                AND nvl(t.zt, 0) = #{zt}
+            </if>
+            <if test="xmid != '' and xmid != null">
+                and t.xmid = #{xmid}
+            </if>
+        </where>
+    </select>
+</mapper>

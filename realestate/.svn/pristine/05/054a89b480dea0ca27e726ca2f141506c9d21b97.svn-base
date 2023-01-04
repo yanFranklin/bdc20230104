@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!-- 工程审批系统-获取项目的详细信息 -->
+    <ex:bean id="getProjectInfos">
+        <ex:service-info request-type="httpGet">
+            <ex:property name="url" value="${gcsp.get.project.info.url}"/>
+            <ex:property name="logEventName" value="工程审批系统-获取项目的详细信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GCSP"/>
+            <ex:property name="dsfFlag" value="GCSP"/>
+        </ex:service-info>
+        <ex:log dsfFlag="GCSP" logEventName="工程审批系统-获取项目的详细信息" requester="GCSP" responser="BDC"/>
+    </ex:bean>
+
+    <!-- 工程审批系统-获取项目的相关附件信息 -->
+    <ex:bean id="getProjectMats">
+        <ex:service-info request-type="httpGet">
+            <ex:property name="url" value="${gcsp.get.project.mats.url}"/>
+            <ex:property name="logEventName" value="工程审批系统-获取项目的相关附件信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GCSP"/>
+            <ex:property name="dsfFlag" value="GCSP"/>
+        </ex:service-info>
+        <ex:log dsfFlag="GCSP" logEventName="工程审批系统-获取项目的相关附件信息" requester="GCSP" responser="BDC"/>
+    </ex:bean>
+
+
+    <!-- 工程审批系统-通知工程审批系统审批完成 -->
+    <ex:bean id="gcsp_receive">
+        <ex:service-info request-type="httpPostWithUrlParam">
+            <ex:property name="url" value="${gcsp.receive.url}"/>
+            <ex:property name="logEventName" value="工程审批系统-通知工程审批系统审批完成"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GCSP"/>
+            <ex:property name="dsfFlag" value="GCSP"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/bengbu/gcsp/spztts/param.xml"/>
+        </ex:request>
+
+        <ex:log dsfFlag="GCSP" logEventName="工程审批系统-通知工程审批系统审批完成" requester="BDC" responser="GCSP"/>
+    </ex:bean>
+
+    <!-- 工程审批系统-电子证照推送接口 -->
+    <ex:bean id="gcsp_tsdzzz">
+        <ex:service-info request-type="httpPostWithUrlParam">
+            <ex:property name="url" value="${gcsp.tsdzzz.url}"/>
+            <ex:property name="logEventName" value="工程审批系统-电子证照推送接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GCSP"/>
+            <ex:property name="dsfFlag" value="GCSP"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/bengbu/gcsp/tsdzzz/param.xml"/>
+        </ex:request>
+
+        <ex:log dsfFlag="GCSP" logEventName="工程审批系统-电子证照推送接口" requester="BDC" responser="GCSP"/>
+    </ex:bean>
+
+</beans>

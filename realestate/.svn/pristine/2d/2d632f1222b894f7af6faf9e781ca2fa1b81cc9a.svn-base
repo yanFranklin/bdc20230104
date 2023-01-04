@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.certificate.core.mapper.BdcJjdMapper">
+
+    <select id="listBdcAjxxByPage" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.dto.register.BdcAjxxDTO">
+        SELECT x.gzlslid,x.slbh,x.xmid,t1.jjdid,x.ajzt,
+            CASE WHEN t2.num > 1 THEN x.bdcdyh||'等' ELSE x.bdcdyh END bdcdyh,
+            CASE WHEN t2.num > 1 AND x.BDCQZH IS NOT NULL THEN x.bdcqzh||'等' ELSE x.bdcqzh END bdcqzh,
+            CASE WHEN t2.num > 1 THEN x.zl||'等' ELSE x.zl END zl
+        FROM bdc_xm x
+        LEFT JOIN (SELECT MAX(yjdid) jjdid, xmid FROM bdc_xm_yjd_gx t1 GROUP BY xmid) t1 ON t1.xmid = x.gzlslid
+        LEFT JOIN (
+            SELECT MAX(xmid) XMID, COUNT(DISTINCT bdcdyh) num FROM bdc_xm
+            <where>
+                <if test="zl != null and zl != ''">
+                    AND instr(zl,#{zl})>0
+                </if>
+                <if test="slbh != null and slbh != ''">
+                    AND slbh = #{slbh}
+                </if>
+                <if test="smqsr != null and smqsr.size() > 0">
+                    AND slbh in
+                    <foreach collection="smqsr" item="item" open="(" separator=" , " close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+        GROUP BY SLBH) t2 ON t2.XMID = x.xmid
+        WHERE x.xmid IN (SELECT MAX(xmid) XMID FROM bdc_xm
+        <where>
+            <if test="zl != null and zl != ''">
+                AND instr(zl,#{zl})>0
+            </if>
+            <if test="slbh != null and slbh != ''">
+                AND slbh = #{slbh}
+            </if>
+            <if test="smqsr != null and smqsr.size() > 0">
+                AND slbh in
+                <foreach collection="smqsr" item="item" open="(" separator=" , " close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY SLBH)
+        <choose>
+            <when test="smqsr != null and smqsr.size() > 0">
+                ORDER BY "DECODE"(slbh,
+                <foreach collection="smqsr" item="item" index ="index" separator=" , " close=")">
+                    #{item}, #{index}
+                </foreach>
+            </when>
+            <otherwise>
+                ORDER BY x.slbh desc
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="listBdcAjxx" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.dto.register.BdcAjxxDTO">
+        SELECT x.gzlslid,x.slbh,x.xmid,t1.jjdid,x.ajzt,
+        CASE WHEN t2.num > 1 THEN x.bdcdyh||'等' ELSE x.bdcdyh END bdcdyh,
+        CASE WHEN t2.num > 1 AND x.BDCQZH IS NOT NULL THEN x.bdcqzh||'等' ELSE x.bdcqzh END bdcqzh,
+        CASE WHEN t2.num > 1 THEN x.zl||'等' ELSE x.zl END zl
+        FROM bdc_xm x
+        LEFT JOIN (SELECT MAX(yjdid) jjdid, xmid FROM bdc_xm_yjd_gx t1 GROUP BY xmid) t1 ON t1.xmid = x.gzlslid
+        LEFT JOIN (
+        SELECT MAX(xmid) XMID, COUNT(DISTINCT bdcdyh) num FROM bdc_xm
+        <where>
+            <if test="zl != null and zl != ''">
+                AND instr(zl,#{zl})>0
+            </if>
+            <if test="slbh != null and slbh != ''">
+                AND slbh = #{slbh}
+            </if>
+            <if test="smqsr != null and smqsr.size() > 0">
+                AND slbh in
+                <foreach collection="smqsr" item="item" open="(" separator=" , " close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY SLBH）t2 ON t2.XMID = x.xmid
+        WHERE x.xmid IN (SELECT MAX(xmid) XMID FROM bdc_xm
+        <where>
+            <if test="zl != null and zl != ''">
+                AND instr(zl,#{zl})>0
+            </if>
+            <if test="slbh != null and slbh != ''">
+                AND slbh = #{slbh}
+            </if>
+            <if test="smqsr != null and smqsr.size() > 0">
+                AND slbh in
+                <foreach collection="smqsr" item="item" open="(" separator=" , " close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY SLBH)
+        <choose>
+            <when test="smqsr != null and smqsr.size() > 0">
+                ORDER BY "DECODE"(slbh,
+                <foreach collection="smqsr" item="item" index ="index" separator=" , " close=")">
+                    #{item}, #{index}
+                </foreach>
+            </when>
+            <otherwise>
+                ORDER BY x.slbh desc
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="listBdcJjdByPage" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcJjdDO">
+        SELECT a.jjdid, a.jjdh, a.jjdlx, a.jjdzt, a.zfrid, a.zfr, a.zfsj, a.zfks, a.jsrid, a.jsr, a.jssj, a.jsks, a.dah, a.gdzt, a.zt
+        FROM bdc_jjd a
+        WHERE EXISTS (
+        <!-- 当前用户为转发人 -->
+            SELECT t1.yjdid
+            FROM bdc_xm_yjd_gx t1
+            INNER JOIN bdc_xm x ON t1.xmid = x.gzlslid
+        WHERE a.jjdid = t1.yjdid
+        <if test="slbh != null and slbh != ''">
+            AND instr(x.slbh,#{slbh})>0
+        </if>
+        <if test="jjdh != null and jjdh != ''">
+            AND instr(a.jjdh, #{jjdh})>0
+        </if>
+        <if test="zfrid != null and zfrid != ''">
+            AND a.zfrid=#{zfrid}
+        </if>
+        <if test="zl != null and zl != ''">
+            AND instr(zl, #{zl})>0
+        </if>
+        <if test="ajzt != null and ajzt != ''">
+            AND ajzt=#{ajzt}
+        </if>
+        <if test="jjdlx != null and jjdlx != ''">
+            AND jjdlx=#{jjdlx}
+        </if>
+        <if test="jjdzt != null and jjdzt != ''">
+            AND a.jjdzt = to_number(#{jjdzt, jdbcType=VARCHAR})
+        </if>
+        UNION ALL
+        <!-- 当前用户为接收人 -->
+        SELECT t1.yjdid
+        FROM bdc_xm_yjd_gx t1
+        INNER JOIN bdc_xm x ON t1.xmid = x.gzlslid
+        WHERE a.jjdid = t1.yjdid AND a.jjdzt!=0
+        <if test="slbh != null and slbh != ''">
+            AND instr(x.slbh,#{slbh})>0
+        </if>
+        <if test="jjdh != null and jjdh != ''">
+            AND instr(a.jjdh, #{jjdh})>0
+        </if>
+        <if test="jsrid != null and jsrid != ''">
+            AND a.jsrid= #{jsrid}
+        </if>
+        <if test="zl != null and zl != ''">
+            AND instr(zl, #{zl})>0
+        </if>
+        <if test="ajzt != null and ajzt != ''">
+            AND ajzt=#{ajzt}
+        </if>
+        <if test="jjdlx != null and jjdlx != ''">
+            AND jjdlx=#{jjdlx}
+        </if>
+        <if test="jjdzt != null and jjdzt != ''">
+            AND a.jjdzt = to_number(#{jjdzt, jdbcType=VARCHAR})
+        </if>
+        UNION ALL
+        <!-- 当前用户所属接收科室 -->
+        SELECT t1.yjdid
+        FROM bdc_xm_yjd_gx t1
+        INNER JOIN bdc_xm x ON t1.xmid = x.gzlslid
+        WHERE a.jjdid = t1.yjdid AND a.jsrid IS NULL AND a.jjdzt!=0
+        <if test="slbh != null and slbh != ''">
+            AND instr(x.slbh,#{slbh})>0
+        </if>
+        <if test="jjdh != null and jjdh != ''">
+            AND instr(a.jjdh, #{jjdh})>0
+        </if>
+        <if test="ajzt != null and ajzt != ''">
+            AND ajzt=#{ajzt}
+        </if>
+        <if test="zl != null and zl != ''">
+            AND instr(zl, #{zl})>0
+        </if>
+        <if test="jjdlx != null and jjdlx != ''">
+            AND jjdlx=#{jjdlx}
+        </if>
+        <if test="jsks != null and jsks.size() > 0">
+            AND a.jsks in
+            <foreach collection="jsks" item="item" open="(" separator=" , " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="jjdzt != null and jjdzt != ''">
+            AND a.jjdzt = to_number(#{jjdzt, jdbcType=VARCHAR})
+        </if>
+        UNION ALL
+        <!-- 接收人和接收科室均为空，转发给全部 -->
+        SELECT t1.yjdid
+        FROM bdc_xm_yjd_gx t1
+        INNER JOIN bdc_xm x ON t1.xmid = x.gzlslid
+        WHERE a.jjdid = t1.yjdid AND a.jsrid IS NULL AND a.jsks IS NULL AND a.jjdzt!=0
+        <if test="slbh != null and slbh != ''">
+                AND instr(x.slbh,#{slbh})>0
+            </if>
+            <if test="jjdh != null and jjdh != ''">
+                AND instr(a.jjdh, #{jjdh})>0
+            </if>
+            <if test="ajzt != null and ajzt != ''">
+                AND ajzt=#{ajzt}
+            </if>
+            <if test="zl != null and zl != ''">
+                AND instr(zl, #{zl})>0
+            </if>
+            <if test="jjdlx != null and jjdlx != ''">
+                AND jjdlx=#{jjdlx}
+            </if>
+            <if test="jjdzt != null and jjdzt != ''">
+                AND a.jjdzt = to_number(#{jjdzt,jdbcType=VARCHAR})
+            </if>
+        ) AND a.jjdzt != 2 -- 确认接收的不显示
+        ORDER BY
+            <if test="field != null and field == 'jjdzt'.toString">
+                <if test="order != null and order == 'asc'.toString">
+                    a.jjdzt ASC  NULLS  LAST,
+                </if>
+                <if test="order != null and order == 'desc'.toString">
+                    a.jjdzt DESC NULLS  LAST,
+                </if>
+            </if>
+            <!--默认按照受理时间倒序排序-->
+            a.ZFSJ DESC  NULLS  LAST,
+            a.JJDH DESC  NULLS  LAST
+    </select>
+
+    <select id="listAllBdcJjdByPage" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcJjdDO">
+        SELECT a.jjdid, a.jjdh, a.jjdlx, a.jjdzt, a.zfrid, a.zfr, a.zfsj, a.zfks, a.jsrid, a.jsr, a.jssj, a.jsks, a.dah, a.gdzt, a.zt
+        FROM bdc_jjd a
+        WHERE EXISTS (
+        SELECT t1.yjdid
+        FROM bdc_xm_yjd_gx t1
+        INNER JOIN bdc_xm x ON t1.xmid = x.gzlslid
+        WHERE a.jjdid = t1.yjdid
+        <if test="slbh != null and slbh != ''">
+            AND instr(x.slbh,#{slbh})>0
+        </if>
+        <if test="jjdh != null and jjdh != ''">
+            AND instr(a.jjdh, #{jjdh})>0
+        </if>
+        <if test="zfr != null and zfr != ''">
+            AND instr(a.zfr, #{zfr})>0
+        </if>
+        <if test="zfrid != null and zfrid != ''">
+            AND a.zfrid=#{zfrid}
+        </if>
+        <if test="jsr != null and jsr != ''">
+            AND instr(a.jsr, #{jsr})>0
+        </if>
+        <if test="zl != null and zl != ''">
+            AND instr(zl, #{zl})>0
+        </if>
+        <if test="ajzt != null and ajzt != ''">
+            AND ajzt=#{ajzt}
+        </if>
+        <if test="jjdlx != null and jjdlx != ''">
+            AND jjdlx=#{jjdlx}
+        </if>
+        )
+        ORDER BY
+        <!--默认按照受理时间倒序排序-->
+        a.ZFSJ DESC  NULLS  LAST,
+        a.JJDH DESC  NULLS  LAST
+    </select>
+
+    <select id="listBdcJjdxmByPage" parameterType="String"
+            resultType="cn.gtmap.realestate.common.core.dto.certificate.BdcJjdXmDTO">
+        SELECT x.SLBH, x.GZLDYMC, x.GZLSLID, t.gxid, z.mc AS djlxmc, t.zhlc
+        ,CASE WHEN t.num > 1 AND t.qlrnum > 1 THEN x.qlr||'等' ELSE x.QLR END QLR
+        ,CASE WHEN t.num > 1 AND t.ywrnum > 1 THEN x.ywr||'等' ELSE x.ywr END ywr
+        ,CASE WHEN t.num > 1 THEN x.bdcdyh||'等' ELSE x.bdcdyh END bdcdyh
+        ,CASE WHEN t.num > 1 THEN x.zl||'等' ELSE x.zl END zl
+        FROM  (
+        SELECT MAX(x.XMID) XMID, MAX(x.GZLDYMC) GZLDYMC, MAX(t.GXID) GXID, COUNT(DISTINCT bdcdyh) num, COUNT(DISTINCT x.djxl) zhlc,
+        count(DISTINCT x.qlr) qlrnum, count(DISTINCT x.ywr) ywrnum
+        FROM bdc_xm x
+        LEFT JOIN bdc_xm_yjd_gx t ON t.xmid = x.gzlslid
+        <where>
+            <if test="jjdid != null and jjdid != ''">
+                AND yjdid = #{jjdid}
+            </if>
+        </where>
+        group by x.GZLSLID ) t
+        LEFT JOIN bdc_xm x ON x.xmid = t.XMID
+        LEFT JOIN bdc_zd_djlx z ON x.djlx = z.dm
+        LEFT JOIN BDC_XM_YJD_GX g ON g.gxid = t.gxid
+        ORDER BY g.sxh
+    </select>
+
+    <select id="queryJjdXm" parameterType="cn.gtmap.realestate.common.core.qo.certificate.BdcJjdXmQO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT t.xmid, t.gzlslid, t.slbh, t.ajzt
+        ,CASE WHEN t.num > 1 THEN t.bdcdyh||'等' ELSE t.bdcdyh END bdcdyh
+        ,CASE WHEN t.num > 1 AND t.bdcqzh IS NOT NULL THEN t.bdcqzh||'等' ELSE t.bdcqzh END bdcqzh
+        ,CASE WHEN t.num > 1 THEN t.zl||'等' ELSE t.zl END zl
+        FROM(
+        SELECT MAX(x.xmid) xmid, x.gzlslid, MAX(x.SLBH) slbh, MAX(x.AJZT) ajzt, COUNT(DISTINCT bdcdyh) num, MAX(bdcdyh)
+        bdcdyh, MAX(bdcqzh) bdcqzh, MAX(zl) zl
+        FROM BDC_XM x
+        LEFT JOIN BDC_XM_YJD_GX g ON x.gzlslid = g.xmid -- 按照项目添加交接单，所以用 gzlslid 进行关联
+        <where>
+                <if test="isYj == false">
+                    AND g.YJDID IS NULL
+                </if>
+                <if test="begin != null and begin != '' and end != null and end != ''">
+                    AND x.SlSJ BETWEEN to_date(#{begin},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{end},'yyyy-mm-dd hh24:mi:ss')
+                </if>
+                <if test="ajzt != null and ajzt != ''">
+                    AND x.ajzt = #{ajzt}
+                </if>
+                <if test="slrid != null and slrid != ''">
+                    AND x.slrid = #{slrid}
+                </if>
+                <if test="djlx != null and djlx != ''">
+                    AND x.djlx = #{djlx}
+                </if>
+            </where>
+            GROUP BY x.gzlslid
+        ) t
+    </select>
+
+    <select id="listBdcJjd" resultType="cn.gtmap.realestate.common.core.domain.BdcJjdDO"
+            parameterType="cn.gtmap.realestate.common.core.qo.certificate.BdcJjdQO">
+        SELECT * FROM BDC_JJD A
+        <where>
+            <if test="jjdid != null and jjdid !=''">
+                AND A.jjdid=#{jjdid}
+            </if>
+            <if test="jjdh != null and jjdh !=''">
+                AND A.jjdh=#{jjdh}
+            </if>
+            <if test="dajjGzlslid != null and dajjGzlslid !=''">
+                AND A.gzlslid=#{dajjGzlslid}
+            </if>
+        </where>
+        ORDER BY A.zfsj ASC
+    </select>
+
+    <select id="queryBdcJjd" resultType="cn.gtmap.realestate.common.core.domain.BdcJjdDO">
+        SELECT * FROM BDC_JJD A where A.jjdzt in (0,1,3,4,5,6,7)
+        ORDER BY A.cjsj ASC
+    </select>
+
+    <select id="queryBdcJjdByGzlslid" resultType="cn.gtmap.realestate.common.core.domain.BdcJjdDO"
+            parameterType="String">
+        SELECT a.* FROM BDC_JJD a
+        LEFT JOIN BDC_XM_YJD_GX g ON a.jjdid = g.yjdid
+        where g.xmid=#{gzlslid}
+        ORDER BY a.zfsj ASC,a.JJDH ASC
+    </select>
+
+    <delete id="deleteJjdGx" parameterType="String">
+        DELETE FROM BDC_XM_YJD_GX a WHERE a.xmid IN
+        (SELECT g.xmid FROM BDC_JJD b
+            LEFT JOIN BDC_XM_YJD_GX g ON g.yjdid = b.jjdid
+            WHERE b.jjdid = #{jjdid})
+    </delete>
+
+    <update id="updateJjdzt" parameterType="java.util.List">
+        <foreach collection="bdcJjdDOlist" item="item" index="index"  open="begin" close=";end;" separator=";">
+            UPDATE BDC_JJD d SET d.JJDZT = 2
+            <if test="item.jsks!=null and ''!=item.jsks">
+                ,d.JSKS=#{item.jsks}
+            </if>
+            <if test="item.jssj!=null">
+                ,d.jssj = #{item.jssj}
+            </if>
+            where d.jjdid=#{item.jjdid}
+        </foreach>
+    </update>
+
+    <select id="getBdcJjdListByGzlslid" resultType="cn.gtmap.realestate.common.core.domain.BdcJjdDO" parameterType="String">
+        select b.* from BDC_XM_YJD_GX a
+        INNER JOIN
+        BDC_JJD b ON a.YJDID=b.JJDID Where a.XMID =#{gzlslid}
+        order by b.jjdh desc,b.cjsj desc
+    </select>
+
+    <select id="getAllNewJjdByJjdid" resultType="cn.gtmap.realestate.common.core.domain.BdcJjdDO" parameterType="String">
+        SELECT DISTINCT b.* FROM BDC_XM_YJD_GX a
+        INNER JOIN BDC_JJD b ON a.YJDID=b.JJDID
+        WHERE a.XMID IN (
+            SELECT a.XMID FROM BDC_JJD b
+            LEFT JOIN BDC_XM_YJD_GX a ON b.JJDID=a.YJDID
+            WHERE b.JJDID=#{jjdid}
+            )
+        ORDER BY b.JJDH DESC,b.CJSJ DESC
+    </select>
+
+    <select id="getBdcXmDOByJjdid" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO" parameterType="String">
+        SELECT x.* FROM BDC_XM x WHERE x.GZLSLID IN (
+        SELECT a.XMID FROM BDC_JJD b
+            LEFT JOIN BDC_XM_YJD_GX a ON b.JJDID=a.YJDID
+            WHERE b.JJDID=#{jjdid}
+        )
+        order by x.JSSJ DESC
+    </select>
+
+    <select id="queryJjdGxByGzlslidList" resultType="cn.gtmap.realestate.common.core.domain.BdcXmYjdGxDO" parameterType="String">
+        SELECT A.* FROM BDC_XM_YJD_GX A LEFT JOIN BDC_JJD B ON A.YJDID = B.JJDID
+        <where>
+            <if test="gzlslidList != null and gzlslidList.size() > 0">
+                B.GZLSLID IN
+                <foreach collection="gzlslidList" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </select>
+</mapper>

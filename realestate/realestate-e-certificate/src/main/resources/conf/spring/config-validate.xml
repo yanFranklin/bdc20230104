@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+    <!--不动产电子证照验证服务-->
+    <bean id="bdcDzzzCheckInfoService" class="cn.gtmap.realestate.certificate.core.service.impl.BdcDzzzCheckInfoServiceImpl">
+        <property name="bdcDzzzValidateMap">
+            <map>
+                <!--电子证照参数合法验证-->
+                <entry key="4">
+                    <bean class="cn.gtmap.realestate.certificate.core.service.impl.validator.BdcDzzzZzxxParameterErrorServiceImpl"/>
+                </entry>
+                <!--电子证照信息必填项验证-->
+                <entry key="5">
+                    <bean class="cn.gtmap.realestate.certificate.core.service.impl.validator.BdcDzzzZzxxRequiredServiceImpl"/>
+                </entry>
+                <!--电子证照信息已入库-->
+                <entry key="7">
+                    <bean class="cn.gtmap.realestate.certificate.core.service.impl.validator.BdcDzzzZzxxInsertServiceImpl"/>
+                </entry>
+                <!--验证是否已生成过电子证照PDF-->
+                <entry key="6">
+                    <bean class="cn.gtmap.realestate.certificate.core.service.impl.validator.BdcDzzzZzxxCreatePdfServiceImpl"/>
+                </entry>
+                <!--验证注销证照接口原因是否按照国标传参-->
+                <entry key="8">
+                    <bean class="cn.gtmap.realestate.certificate.core.service.impl.validator.BdcDzzzZzxxZxyyServiceImpl"/>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <!--电子签章服务-->
+    <bean id="bdcDzqzCheckService"
+          class="cn.gtmap.realestate.certificate.core.service.impl.sign.BdcDzqzCheckServiceImpl">
+        <property name="bdcDzqzValidateServiceMap">
+            <map>
+                <!--电子证照参数合法验证-->
+                <entry key="4">
+                    <bean class="cn.gtmap.realestate.certificate.core.service.impl.validator.BdcDzzzZzxxParameterErrorServiceImpl"/>
+                </entry>
+                <!--电子证照信息必填项验证-->
+                <entry key="5">
+                    <bean class="cn.gtmap.realestate.certificate.core.service.impl.validator.BdcDzzzZzxxRequiredServiceImpl"/>
+                </entry>
+                <!--电子证照信息已入库-->
+                <entry key="7">
+                    <bean class="cn.gtmap.realestate.certificate.core.service.impl.sign.BdcDzzzQzxxInsertServiceImpl"/>
+                </entry>
+                <!--验证是否已生成过电子证照PDF-->
+                <entry key="6">
+                    <bean class="cn.gtmap.realestate.certificate.core.service.impl.sign.BdcDzzzQzxxCreatePdfServiceImpl"/>
+                </entry>
+                <!--验证注销证照接口原因是否按照国标传参-->
+                <entry key="8">
+                    <bean class="cn.gtmap.realestate.certificate.core.service.impl.validator.BdcDzzzZzxxZxyyServiceImpl"/>
+                </entry>
+            </map>
+        </property>
+    </bean>
+</beans>

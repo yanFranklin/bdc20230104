@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.accept.core.mapper.BdcSlXzxxMapper">
+    <select id="listBdcSlxzxxByPage" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.vo.accept.ui.BdcSlXzxxVO">
+        select t.*, j.slbh
+        from bdc_sl_xzxx t
+                 left join bdc_sl_jbxx j on j.gzlslid = t.GZLSLID
+        where t.GZLSLID = #{gzlslid}
+    </select>
+
+    <select id="listBdcSlxzxxPlByPage" resultType="cn.gtmap.realestate.common.core.dto.accept.BdcSlXzxxPlDTO"
+            parameterType="map">
+        select t.slbh,t.GZLSLID,t.slr from bdc_sl_jbxx t
+        <where>
+            <if test="gzlslids != null and gzlslids !=''">
+                and t.gzlslid in
+                <foreach collection="gzlslids.split(',')" open="(" close=")" item="item" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+</mapper>

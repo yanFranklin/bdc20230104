@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+
+    <!-- 读取房产交易存量房合同信息接口 -->
+    <ex:bean id="czFcjyClfHtxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${fcjy.clf.url}"/>
+            <ex:property name="logEventName" value="查询存量房交易基本信息接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="soTimeout" value="${sw.soTimeout}"/>
+
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerRelXml="param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerRelXml="data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- contractNo读取商品房备案信息-->
+    <ex:bean id="czFcjySpfBaxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${fcjy.spf.url}"/>
+            <ex:property name="logEventName" value="查询商品房交易基本信息接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="soTimeout" value="${sw.soTimeout}"/>
+
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerRelXml="param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerRelXml="data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 读取房产交易存量房合同信息接口 -->
+    <ex:bean id="fcjyClfHtxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${fcjy.clf2.url}"/>
+            <ex:property name="logEventName" value="读取房产交易存量房合同信息接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="soTimeout" value="${sw.soTimeout}"/>
+
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerRelXml="param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerRelXml="data.xml"/>
+        </ex:response>
+    </ex:bean>
+    <!-- contractNo读取商品房备案信息-->
+    <ex:bean id="fcjySpfBaxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${fcjy.spf2.url}"/>
+            <ex:property name="logEventName" value="根据合同号读取商品房备案信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="FCJY"/>
+            <ex:property name="dsfFlag" value="FCJY"/>
+            <ex:property name="soTimeout" value="${sw.soTimeout}"/>
+
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerRelXml="param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerRelXml="data.xml"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 内部使用 -->
+    <ex:bean id="getRoomidXzxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="qzViewDataServiceImpl"/>
+            <ex:property name="methodName" value="dvHlwListByParamMap"/>
+            <ex:property name="params" value="param"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="param" dozerRelXml="param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerRelXml="data.xml" listToObject="true"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 常州 通知原登记系统 3.0已登簿办结 -->
+    <ex:bean id="noticeydjxt">
+        <ex:service-info request-type="httpGet">
+            <ex:property name="url" value="${ydjxt.djzt.url}"/>
+            <ex:property name="logEventName" value="通知原登记系统登簿办结"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="YDJXT"/>
+            <ex:property name="dsfFlag" value="YDJXT"/>
+        </ex:service-info>
+        <ex:request replaceRequestBody="true">
+            <ex:element sourceService="queryBdcXmByGzlslid"/>
+        </ex:request>
+        <ex:response extendRequestBody="true" excludeKey="updatezt">
+            <ex:element dozerRelXml="data.xml"/>
+            <ex:element name="updatezt" sourceService="updateCzOuterInner"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 根据工作流实例id查询项目  -->
+    <ex:bean id="queryBdcXmByGzlslid">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="commonServiceImpl"/>
+            <ex:property name="methodName" value="listBdcXmByGzlslid"/>
+            <ex:property name="params" value="processInsId"/>
+        </ex:service-info>
+        <ex:response>
+            <ex:element dozerRelXml="data.xml" listToObject="true"/>
+        </ex:response>
+    </ex:bean>
+
+    <!-- 处理返回信息-->
+    <ex:bean id="updateCzOuterInner">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.accept.BdcDsfdjJhxxFeignService"/>
+            <ex:property name="methodName" value="updateDsfdjJhxxByBdcslbh"/>
+            <ex:property name="params" value="jsonObject,bdcslbh"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerRelXml="bdcslbh.xml"/>
+            <ex:element name="jsonObject" dozerRelXml="param.xml"/>
+        </ex:request>
+        <ex:log dsfFlag="CZFCJY" logEventName="常州调用更新第三方日志信息" requester="CZFCJY" responser="BDC"/>
+    </ex:bean>
+    <!-- 自动退回-->
+    <ex:bean id="zdthbyslbh">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="dyServiceImpl"/>
+            <ex:property name="methodName" value="zdthBySlbh"/>
+            <ex:property name="params" value="bdcslbh"/>
+        </ex:service-info>
+        <ex:log dsfFlag="CZFCJY" logEventName="常州原登记系统自动退回" requester="CZFCJY" responser="BDC"/>
+    </ex:bean>
+
+
+</beans>

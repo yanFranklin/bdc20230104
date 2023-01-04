@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.register.core.mapper.BdcXxblZsMapper">
+
+    <!-- 分页查询信息补录证书信息 -->
+    <select id="listBdcXxblZsByPage" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.vo.register.ui.BdcZsVO">
+        SELECT *
+        FROM (
+        SELECT ROW_NUMBER() OVER (PARTITION BY z.zsid ORDER BY q.qszt ASC) AS rn
+        , z.zsid, z.bdcdyh, z.bdcqzh, z.zhlsh, z.nf
+        , z.qzysxlh, z.qlqtzk, z.qxdm, z.szsxqc, z.fzr
+        , z.fzsj, z.lzr, z.lzsj, z.lzrzjh,z.lzrzjzl, z.szr
+        , z.szsj, z.zslx, z.fj, z.zl, z.qlr
+        , z.ywr, z.gyfs, z.qllx, z.yt, z.mj
+        , z.qlxz, z.syqx,z.zmqlsx,q.djyy,q.qszt,z.dyzt,q.xmid
+        FROM bdc_zs z
+        LEFT JOIN bdc_xm_zs_gx x ON z.zsid = x.zsid
+        LEFT JOIN bdc_xm q ON q.xmid = x.xmid
+        <where>
+            <if test="xmid != null and xmid != ''">
+                AND q.xmid = #{xmid}
+            </if>
+
+            <if test="gzlslid != null and gzlslid != ''">
+                AND q.gzlslid = #{gzlslid}
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND z.bdcdyh LIKE '%' || #{bdcdyh} || '%'
+            </if>
+            <if test="bdcqzh != null and bdcqzh != ''">
+                AND z.bdcqzh LIKE '%' || #{bdcqzh} || '%'
+            </if>
+            <if test="zl != null and zl != ''">
+                AND z.zl LIKE '%' || #{zl} || '%'
+            </if>
+            <if test="qlr != null and qlr != ''">
+                AND instr(z.qlr,#{qlr})>0
+            </if>
+            <if test="qsztList != null and qsztList.size>0">
+                AND q.qszt IN
+                <foreach collection="qsztList" item="qszt" open="(" close=")" separator=",">
+                    #{qszt}
+                </foreach>
+            </if>
+        </where>
+        <choose>
+            <when test="sortParameter != null and sortParameter != ''">
+                ORDER BY ${sortParameter}
+            </when>
+            <otherwise>
+                ORDER BY z.bdcdyh ASC,z.bdcqzh ASC
+            </otherwise>
+        </choose>
+        )
+        WHERE rn = 1
+    </select>
+
+</mapper>

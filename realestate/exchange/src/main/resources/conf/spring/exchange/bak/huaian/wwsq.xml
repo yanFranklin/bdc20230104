@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!-- 测试降级的bak方法 -->
+    <ex:bean id="testBak">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="standardGrdacx"/>
+            <ex:property name="methodName" value="grdacx"/>
+            <ex:property name="params" value="param"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="param" dozerXml="conf/dozer/bak/wwsq/getWwsqCqzxx/request/param.xml" notEmpty="true"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/bak/wwsq/getWwsqCqzxx/response/data.xml"
+                        saveNull="cn.gtmap.realestate.exchange.core.dto.wwsq.getWwsqCqzxx.response.GetWwsqCqzxxResponseDTO"/>
+        </ex:response>
+    </ex:bean>
+</beans>

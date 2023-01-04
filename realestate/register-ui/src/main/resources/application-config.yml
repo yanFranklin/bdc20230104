@@ -1,0 +1,149 @@
+register.ui:
+  # wsyz功能背景：合肥不动产登记平台所有涉税业务登簿前检测其税票真伪性
+  # 完税验证配置，需要验证完税信息的登记类型和登记小类的对应关系配置（登记类型：登记小类1,登记小类2,...）
+  wsyz:
+    # 第1级为登记类型
+    200:
+      # 第2级为登记小类:bdc_djxl_djyy_gx表中的id值，多个以英文逗号分隔（登记小类：登记原因名称1,登记原因名称2,...）
+      # 配置了登记原因，则验证满足登记小类和登记原因的件。不配置登记原因，则验证满足登记小类的所有件。
+     2000410:
+     2000301: 国有建设用地使用权转移登记
+     2000401: 商品房转移登记,ceshi
+sczmd:
+  # 土地基本信息根据房屋用途隐藏（true：开启配置，false：关闭配置）
+  tdjbxx-fwyt-hide: true
+  # 房屋用途代码（英文逗号分隔）
+  fwyt-dm: 100103,200204,200301
+  # 页面元素name值（英文逗号分隔）
+  tdjbxx-elementName: zdzhyt,tdsyqmj,tdqlxz,tdsyjssj
+  #首次证明单--车库车位证明单流程
+  ckcw.gzldyid: jssGBGGfEFAhpjhx
+xxbl:
+  # 补录是否保留生成虚拟号功能（true：开启配置，false：关闭配置，默认关闭）
+  scxnbdcdyh: true
+  # 关闭生成虚拟号配置，特殊流程需要保留此功能，配置对应流程的定义key 值
+  xnbdcdyhtslckeys: Nn3ypWH8waMNhKcH,z4ntkcJFcksbbjZc,rfMXydMX5mXsdd56
+  # 补录修改流程
+  modifyKey: AGZN7twQDziEMeN5
+  # 新增不显示产权证号的流程 gzldyid，多个用逗号隔开
+  showcqzh: zAks8CDshxeYNpdF,rTpdjmY8GR8A3YEB
+  # 信息补录流程基本信息页面lc_home.html是否需要自动保存登簿人信息
+  lc:
+    sfxydbr: false
+  xxblyz: false
+
+
+  modify:
+    gzldyid: AGZN7twQDziEMeN5
+    zssd: false
+  delete:
+    gzldyid: NBjGaJjdrxfbnMmX
+  rollback:
+    gzldyid: jkS66ydaCDKrB8Dh
+# 蚌埠：登记历史查看1.0项目受理图片指定档案模型为 Ywsltp
+bengbu:
+  djls-damx: Ywsltp
+  # 蚌埠：证书的共有方式特殊处理
+  #0：标准版，1：蚌埠 默认0
+  tsgyfs: 1
+
+# 是否提示邮储银行的提示 南通:true,海门:false,默认true
+sftsYcyh: true
+nantong:
+  ckOrcwZmdDzwyt: 10,102
+
+# 设置不动产单元展示顺序是否需要和受理添加不动产单元顺序一致
+# true: 需要 ； false: 不需要
+bdcdyxssx:
+  # 批量登记历史页面
+  pldjls: true
+
+#盐城层高配置值
+cg: 1,2,3,4,5
+
+#房屋所在曾配置读取 szc/szmyc
+fwszc:
+
+xxbl.xmly: 3
+
+dajj.dahprefix.qllxMap.1: 11.1
+dajj.dahprefix.qllxMap.2: 11.1
+dajj.dahprefix.qllxMap.3: 11.1
+dajj.dahprefix.qllxMap.4: 11.1
+dajj.dahprefix.qllxMap.95: 11.2
+dajj.dahprefix.qllxMap.92: 11.3
+sfxx.nosfxm:  {6: 'AXSwxcCC6Y3t3Aer,r5wJBF4dZbPFXbzf'}
+#xxbl.query.xmly: 2,5
+
+# 档案号需要特殊处理的区划（多个英文逗号分隔），例如武进
+dajj.tsqh: 320412
+# 武进档案号生成规则：设置指定登记小类对应的编号类型
+## 类型1：国有档案号G+乡镇代码+年份-顺序号（例 G1052017-1）
+dajj.dahprefix2.configMap.1: 4001101,1000402
+## 类型2：集体档案号C+乡镇代码+年份-顺序号（例 C1052017-1）
+dajj.dahprefix2.configMap.2: 9000404,9999907
+## 类型3：档案号即抵押证明号
+dajj.dahprefix2.configMap.3: 2000401,9990405
+## 类型4：档案号即受理编号
+dajj.dahprefix2.configMap.4: 1000401,7000406,9990402
+## 类型5：档案号为 JA+乡镇代码+年份-顺序号 （例 JA0022021-1）
+dajj.dahprefix2.configMap.5: 2000302
+
+dajj:
+  dahprefix2.mlhconfigMap.1: 16
+
+
+# 常州电子签章PDF地址
+dzqz.pdf.url: http://192.168.2.87:8030
+print.mode:
+
+# 打印证书证明时，不验证发票号的流程
+dyzszm.nofph.gzldyid: tbpYyyRfnQyZyr5C
+
+# 需要排除验证缴费状态的工作流定义ID集合
+exclude.check.jfzt: tbpYyyRfnQyZyr5C
+
+# 权利信息 预告页面保存时数据库取得价格和交易金额同时保存取得价格
+qlxx.yg.qdjg_jyje: true
+
+# 打印证书时验证是否收费逻辑 --yancheng
+zszmprint.sfsf.gzldyid: jsEKwceZQswjPAyx
+#档案目录最后一个文件夹配置
+daml.lastfolder: 权属证明,申请书
+#档案目录的行高列宽
+daml.tableConfig:
+
+# 常州注销登记的流程id
+zxdj.processId: CKzF24dxrBcT6XWr,DYsdF3Q5Qf7sFfFk
+
+##首次登记证明单证明内容,用$分隔
+sczmd.zmnr: 郑重声明：$1、本登记证明仅供交易管理部门办理商品房现房销售及登记机构办理商品房、拆迁安置房转移登记业务使用；$2、本登记证明仅反映所登记房屋填发日期时点的房屋状态。
+
+xmndz:
+  nosumfzmj:
+    zdtzm: JC
+
+# 常州户室图url
+hst.httpurl: http://11.11.11.2:8071/cz_read_info/api/readinfoapi?readid=
+dajj.fdjyw.yysys: tjEkWSYix4QPBJHJ
+shxx:
+  print:
+    zhlcsplit: true
+    zhlcbtn:
+      aHjazkjriDsreaRt:
+        2000404: '{"spb":"审批表(转移)"}'
+        9990401: '{"spb":"审批表(抵押)"}'
+    zhajlcdyid: aHjazkjriDsreaRt
+
+#盐城一体化邮寄信息推送保存附件，文件夹名称
+yth.yjxx.wjjmc: 一体化EMS测试2
+#盐城发证记录界面获取EMS人员材料信息,保存文件夹名称
+emsry.wjjmc: EMS人员
+
+# 抵押物清单抵押土地面积特殊处理流程定义ID
+# 如果房屋+土地一起抵押，抵押土地面积取值为：不动产类型是土地的抵押土地面积之和；如果是房屋，抵押土地面积取值就是0
+dyawqd:
+  tddyamj:
+    tscllc: 11222,Wxh43r6si5zCpkbN,33555
+#证书二维码展示的内容
+zszm.ewmnr.version: 3

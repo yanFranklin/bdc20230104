@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.config.core.mapper.BdcXtMryjMapper">
+
+    <!--分页查询-->
+    <select id="listBdcXtMryjByPage" parameterType="cn.gtmap.realestate.common.core.domain.BdcXtMryjDO" resultType="cn.gtmap.realestate.common.core.vo.config.ui.BdcXtMryjPzVO">
+        SELECT
+        t.mryjid,
+        t.gzldyid,
+        t.gzldymc,
+        t.cjrid,
+        t.sfky,
+        t.jdmc,
+        t.yj,
+        t.yjlx,
+        t.sjlx
+        FROM BDC_XT_MRYJ t
+        <where>
+            <if test="gzldyid != null and gzldyid != ''">
+                AND t.gzldyid = #{gzldyid}
+            </if>
+            <if test="gzldymc != null and gzldymc != ''">
+                AND t.gzldymc LIKE #{gzldymc} || '%'
+            </if>
+            <if test="cjrid != null and cjrid != ''">
+                AND t.cjrid = #{cjrid}
+            </if>
+            <if test="sfky != null">
+                AND t.sfky = #{sfky}
+            </if>
+            <if test="yjlx != null">
+                AND t.yjlx = #{yjlx}
+            </if>
+            <if test="jdmc != null and jdmc != ''">
+                AND t.jdmc = #{jdmc}
+            </if>
+        </where>
+
+    </select>
+</mapper>

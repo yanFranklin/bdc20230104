@@ -1,0 +1,3160 @@
+[
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "8f6a201e941a44358e790e67fc8f2052",
+                "tsxx": "不动产单元号、唯一编号对照关系与权籍不一致",
+                "gzbds": "result 不为空 并且 result == false",
+                "gzid": "6c798e5be20b4a0d92032c7ecd124b2a"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "fwff": "1",
+                "sjly": "2",
+                "jgblbs": "result",
+                "qqyy": "accept-app",
+                "sjlid": "1f9add75604c42daac397cd49ddb4be1",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "1f9add75604c42daac397cd49ddb4be1",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "e3313e1ba60c49d8aa34b9af038476a6"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "查询权籍关系是否一致",
+                "gzid": "6c798e5be20b4a0d92032c7ecd124b2a",
+                "sjnr": "/realestate-accept/rest/v1.0/gzyz/qjgxsfyz/#{1}"
+            }
+        ],
+        "gzmc": "【其他4】验证不动产单元号、唯一编号与权籍是否一致",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1591695136000,
+        "ytsm": "【固定规则V3.0】其他验证——验证登记库中BDCDYH、BDCDYWYBH的对应关系与权籍中对应关系是否一致",
+        "gzid": "6c798e5be20b4a0d92032c7ecd124b2a"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "3da1f8969ad1467895a6a52e70a3e532",
+                "tsxx": "已创建项目，不可取消！",
+                "gzbds": "fctdppgx 不为空 并且 fctdppgx[0].NUM > 0 并且 xmxx 不为空 并且 xmxx[0].XMNUM > 0",
+                "gzid": "7eab633055ef47f193ed61b0183d330a"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "fctdppgx",
+                "sjlid": "329f95f3b05a473d8d39b8a1f554a921",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "xnxmid",
+                        "sjlid": "329f95f3b05a473d8d39b8a1f554a921",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "1ec35f34c2724653bc347c0918e2f134"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "查询房地匹配关系表",
+                "gzid": "7eab633055ef47f193ed61b0183d330a",
+                "sjnr": "select count(*)  as  num   from bdc_fctd_ppgx where fwcqxmid=#{1}"
+            },
+            {
+                "sjly": "1",
+                "jgblbs": "xmxx",
+                "sjlid": "44061a833d6448bcab842c6dc1036efa",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "xnxmid",
+                        "sjlid": "44061a833d6448bcab842c6dc1036efa",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "f6d2a9ac0d0143848015e61c494a4d1a"
+                    }
+                ],
+                "sjlsx": 1,
+                "sjlmc": "查询项目历史关系",
+                "gzid": "7eab633055ef47f193ed61b0183d330a",
+                "sjnr": "select  count(*)  as  xmnum  from BDC_XM xm left join bdc_xm_lsgx gx on xm.xmid = gx.xmid where gx.yxmid = #{1} and xm.xmly = 1"
+            }
+        ],
+        "gzmc": "【匹配验证8】房产证已匹配土地证并已创建项目，验证能否取消匹配土地证",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1600999232000,
+        "ytsm": "【固定规则V3.0】房产证已匹配土地证并已创建项目，验证能否取消匹配土地证",
+        "gzid": "7eab633055ef47f193ed61b0183d330a"
+    },
+    {
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "sdxx",
+                "sjlid": "50513c78897e4bd2b9a06849caad955f",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "50513c78897e4bd2b9a06849caad955f",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "ca9dc51f840c4a8a8c74df79c46bc97d"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "验证证书锁定数据",
+                "gzid": "9e99485dd70442719f10d6f683d377f3",
+                "sjnr": "select  sdyy from bdc_zssd  where  sdzt = 1  and  zsid   in\n(\n  select  zsid  from   BDC_XM_ZS_GX   where  xmid  in\n   (  select   xmid  from  bdc_xm  where  qszt  =  1   and  bdcdyh = #{1}  )\n)"
+            }
+        ],
+        "gzmc": "【锁定1】验证证书存在锁定",
+        "pzr": "管理员",
+        "jydm": "package cn.gtmap.realestate.engine.service.impl;\n\nimport java.util.ArrayList;\nimport java.util.List;\nimport java.util.Map;\n\n/**\n * 不动产子规则动态编码验证类 注意：包名、类名、方法签名请不要改动！\n *\n * @version 1.0, GTMAP\n */\npublic class RuleCheck {\n\n  /**\n   * 对数据流执行结果进行判断，获取对应的提示信息\n   *\n   * @param checkResult 数据流执行结果集合\n   * @return { List } 子规则提示信息\n   */\n  public <T> List<String> getTsxxList(Map<String, T> checkResult) {\n    if (null == checkResult) {\n      return null;\n    }\n    List<String> tsxxList = new ArrayList();\n\n    // ---------------------\n    List<Map<String, Object>> sdxxList = (List<Map<String, Object>>) checkResult.get(\"sdxx\");\n    if (sdxxList.size() > 0) {\n      String sdyy = (String) sdxxList.get(0).get(\"SDYY\");\n      tsxxList.add(\"该不动产单元#{bdcdyh}证书被锁定，锁定原因：\" + sdyy + \"，请核实无误后解锁办理\");\n    }\n\n    // ---------------------\n    return tsxxList;\n  }\n}\n",
+        "yxj": 3,
+        "pzrq": 1593680526000,
+        "ytsm": "【固定规则V3.0】锁定验证——验证证书存在锁定",
+        "gzid": "9e99485dd70442719f10d6f683d377f3"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "6390f602297a46cbb9c97f007a0f4e7a",
+                "tsxx": "该不动产单元#{bdcdyh}所在宗地存在查封",
+                "gzbds": "cfxx1  不为空  并且    cfxx1[0].NUM  > 0",
+                "gzid": "b8bbb396bdc94d32840372090601f97e"
+            },
+            {
+                "bdsid": "524ed9831db04bff8914b59ab4a8e151",
+                "tsxx": "该不动产单元#{bdcdyh}所在宗地存在查封",
+                "gzbds": "cfxx2  不为空  并且    cfxx2[0].NUM  > 0",
+                "gzid": "b8bbb396bdc94d32840372090601f97e"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "cfxx1",
+                "sjlid": "ddfa42a23321401783b980cf15bcd3bf",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "ddfa42a23321401783b980cf15bcd3bf",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "ff726d98ab304d80b63620e27e07b990"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "ddfa42a23321401783b980cf15bcd3bf",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "5a54c3a36ff946a1adf24c1a94cbeac6"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "ddfa42a23321401783b980cf15bcd3bf",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "3",
+                        "sjlcsid": "058baeb2212d4183999d9b0d290ff331"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "根据宗地的不动产单元号查询查封信息",
+                "gzid": "b8bbb396bdc94d32840372090601f97e",
+                "sjnr": "select count(*)  as  num   from bdc_cf  where qszt  in  (0,  1)  and   bdcdyh = (   select case when length( #{1} ) > 19 then substr( #{2} ,0, 19) || 'W00000000' else  #{3}  end   as bdcdyh from dual)"
+            },
+            {
+                "sjly": "1",
+                "jgblbs": "cfxx2",
+                "sjlid": "401b1219383647f5a47ea9cb0077bca9",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "401b1219383647f5a47ea9cb0077bca9",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "9ad314c179d94940a353d5ac6c796c20"
+                    }
+                ],
+                "sjlsx": 1,
+                "sjlmc": "根据宗地的不动产单元唯一编码验证查封",
+                "gzid": "b8bbb396bdc94d32840372090601f97e",
+                "sjnr": "select count(*)  as  num   from bdc_cf  where qszt  in  (0,  1)   and   bdcdywybh   in(       select  bdcdywybh  from  bdc_xm  where  bdcdyh  =    substr( #{1} ,0, 19)  ||  'W00000000' )"
+            }
+        ],
+        "gzmc": "【查封2】验证所在宗地是否存在查封",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1584091168000,
+        "ytsm": "【固定规则V3.0】查封验证——验证所在宗地是否存在查封",
+        "gzid": "b8bbb396bdc94d32840372090601f97e"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "c0ec53e9e0a846938a1cb42df5bedac5",
+                "tsxx": "该不动产单元#{bdcdyh}存在预告！",
+                "gzbds": "ygzt 不为空 并且 ygzt[0].NUM > 0 ",
+                "gzid": "55bd30eb2efd46f595fd4440fd093981"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "ygzt",
+                "sjlid": "7da1ee6103464bb6822b8b74690a711c",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "7da1ee6103464bb6822b8b74690a711c",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "c1eefd90e2664bde941c0b7c809ba52b"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "查询预告表",
+                "gzid": "55bd30eb2efd46f595fd4440fd093981",
+                "sjnr": "select  count(*)  as num from bdc_yg where  qszt = 1    and    ygdjzl   in   (1  ,  2 )   and  bdcdyh = #{1} "
+            }
+        ],
+        "gzmc": "【预告3】验证不动产单元是否存在预告",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1590109691000,
+        "ytsm": "【固定规则V3.0】验证不动产单元——验证该不动产单元是否存在预告——用于选择不动产单元验证",
+        "gzid": "55bd30eb2efd46f595fd4440fd093981"
+    },
+    {
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "sdxx",
+                "sjlid": "efb7722a5cac442599cb06b2e5468d93",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "efb7722a5cac442599cb06b2e5468d93",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "05388deacc6143919a71a496c6cbfd3d"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "验证证书锁定数据",
+                "gzid": "b9572f1b6176487698c07770901f9376",
+                "sjnr": "select  sdyy from bdc_zssd  where  sdzt = 1  and  zsid   in\n(\n  select  zsid  from   BDC_XM_ZS_GX   where  xmid  in\n   (  select   xmid  from  bdc_xm  where  qszt  =  1   and  bdcdyh =  substr( #{1} ,0, 19) || 'W00000000'\n  )\n)"
+            },
+            {
+                "sjly": "1",
+                "jgblbs": "res",
+                "sjlid": "d359e5eaf4f94174845e76fa8fb6f2fc",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "d359e5eaf4f94174845e76fa8fb6f2fc",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "8e629761dc814fec99154fdc6a6f38f5"
+                    }
+                ],
+                "sjlsx": 1,
+                "sjlmc": "获取不动产单元号",
+                "gzid": "b9572f1b6176487698c07770901f9376",
+                "sjnr": "select #{1} as  bdcdyh from dual"
+            }
+        ],
+        "gzmc": "【锁定2】验证所在宗地的证书存在锁定",
+        "pzr": "管理员",
+        "jydm": "package cn.gtmap.realestate.engine.service.impl;\n\nimport java.util.ArrayList;\nimport java.util.List;\nimport java.util.Map;\n\n/**\n * 不动产子规则动态编码验证类 注意：包名、类名、方法签名请不要改动！\n *\n * @version 1.0, GTMAP\n */\npublic class RuleCheck {\n\n  /**\n   * 对数据流执行结果进行判断，获取对应的提示信息\n   *\n   * @param checkResult 数据流执行结果集合\n   * @return { List } 子规则提示信息\n   */\n  public <T> List<String> getTsxxList(Map<String, T> checkResult) {\n    if (null == checkResult) {\n      return null;\n    }\n    List<String> tsxxList = new ArrayList();\n\n    // ---------------------\n    List<Map<String, Object>> sdxxList = (List<Map<String, Object>>) checkResult.get(\"sdxx\");\n    if (sdxxList.size() > 0) {\n      String bdcdyh =\n          (String) ((List<Map<String, Object>>) checkResult.get(\"res\")).get(0).get(\"BDCDYH\");\n      String sdyy = (String) sdxxList.get(0).get(\"SDYY\");\n      tsxxList.add(\"该不动产单元\" + bdcdyh + \"所在宗地的证书存在锁定，锁定原因：\" + sdyy + \"，请核实无误后解锁办理\");\n    }\n    // ---------------------\n    return tsxxList;\n  }\n}\n",
+        "yxj": 3,
+        "pzrq": 1592391745000,
+        "ytsm": "【固定规则V3.0】锁定验证——验证所在宗地的证书存在锁定",
+        "gzid": "b9572f1b6176487698c07770901f9376"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "519d1891d4bb47fb87eeeaca8ade6fb9",
+                "tsxx": "该户主正在办理其他承包经营权业务，请核查!",
+                "gzbds": "res 不为空 并且 res[0].NUM > 0",
+                "gzid": "f5cd4e5979564d62a0f4eebff014bc79"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "res",
+                "sjlid": "cbe66e9c46ed41189e4486d1fa2acb09",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "gzlslid",
+                        "sjlid": "cbe66e9c46ed41189e4486d1fa2acb09",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "08fcd2c267234ae0ba303ec7d3ce1850"
+                    },
+                    {
+                        "sjlcsmc": "qlrzjh",
+                        "sjlid": "cbe66e9c46ed41189e4486d1fa2acb09",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "7c34176f5d634cfaac2ac2a7e0aed0c5"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "验证当前登记的户主是否在系统中办理其他的承包经营权业务",
+                "gzid": "f5cd4e5979564d62a0f4eebff014bc79",
+                "sjnr": "select count(*)  as  num,max(xmid) as xmid from bdc_xm x where x.xmid in( select xmid from bdc_qlr q where  q.zjh=#{2} and q.qlrlb='1') and x.qllx=9 and x.ajzt=1 and x.xmid not in(select xmid from bdc_xm where gzlslid = #{1} )"
+            }
+        ],
+        "gzmc": "【承包1】验证该户是否正在办理其他的承包经营权业务；",
+        "yxj": 3,
+        "pzrq": 1604901565000,
+        "ytsm": "验证当前登记的户主是否在系统中办理其他的承包经营权业务",
+        "gzid": "f5cd4e5979564d62a0f4eebff014bc79"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "1732ef2159e64e2bb639d0864f70250d",
+                "tsxx": "该不动产单元#{bdcdyh}存在查封",
+                "gzbds": "cfxx2  不为空  并且   cfxx2[0].QLID 不为空",
+                "gzid": "43DH3916EI1J1001"
+            },
+            {
+                "bdsid": "a86c8bc6d4c64a709386ffb75e02ebb3",
+                "tsxx": "该不动产单元#{bdcdyh}存在查封",
+                "gzbds": "cfxx1  不为空  并且   cfxx1[0].QLID 不为空",
+                "gzid": "43DH3916EI1J1001"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "cfxx1",
+                "sjlid": "6cda24d7c09448d6bba8561c2e4b7eb7",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "6cda24d7c09448d6bba8561c2e4b7eb7",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "fa1d6a5b07b54ec192956baf0d72d82c"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "6cda24d7c09448d6bba8561c2e4b7eb7",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "ab538f884dc4425dab611308ccb9e7f8"
+                    },
+                    {
+                        "sjlcsmc": "gzid",
+                        "sjlid": "6cda24d7c09448d6bba8561c2e4b7eb7",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "3",
+                        "sjlcsid": "f5f2e046768e4671bd563df1a53998a3"
+                    },
+                    {
+                        "sjlcsmc": "slbh",
+                        "sjlid": "6cda24d7c09448d6bba8561c2e4b7eb7",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "4",
+                        "sjlcsid": "a63c48d3e3f64e618da06262c96b388f"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "根据不动产单元号验证查封",
+                "gzid": "43DH3916EI1J1001",
+                "sjnr": "select  xmid,qlid,bdcdyh   from bdc_cf  where qszt  in  (0,  1)  and   bdcdyh  = #{1} \nand xmid not in ( select xmid from BDC_GZLW_SH where shzt=1 and bdcdyh=#{2} and gzid=&{3}  and slbh=#{4})"
+            },
+            {
+                "sjly": "1",
+                "jgblbs": "cfxx2",
+                "sjlid": "d495bc4b21864f5e8b0ecae9aad64e09",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "d495bc4b21864f5e8b0ecae9aad64e09",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "9052a537c6454de087ff4eb955cf3c79"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "d495bc4b21864f5e8b0ecae9aad64e09",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "3fa4314a12a14808beff34f10141ed2b"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "d495bc4b21864f5e8b0ecae9aad64e09",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "3",
+                        "sjlcsid": "91691e0fa1e749cc87d9a12a3e18c91c"
+                    },
+                    {
+                        "sjlcsmc": "gzid",
+                        "sjlid": "d495bc4b21864f5e8b0ecae9aad64e09",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "4",
+                        "sjlcsid": "e03479d64e054c03b06914ee29b71d25"
+                    },
+                    {
+                        "sjlcsmc": "slbh",
+                        "sjlid": "d495bc4b21864f5e8b0ecae9aad64e09",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "5",
+                        "sjlcsid": "ec650c26d7ac4b12bd6cd4163898b7d1"
+                    }
+                ],
+                "sjlsx": 1,
+                "sjlmc": "根据不动产单元唯一编号号查询查封信息",
+                "gzid": "43DH3916EI1J1001",
+                "sjnr": "select    xmid,qlid,bdcdyh   from bdc_cf  where qszt  in  (0,  1)   and   BDCDYWYBH in \n(\n   select  BDCDYWYBH   from  bdc_xm     where  bdcdyh  =  #{1}\n    UNION \n    select  BDCDYWYBH   from  bdc_cf     where  bdcdyh  =  #{2}\n)\nand xmid not in ( select xmid from BDC_GZLW_SH where shzt=1 and bdcdyh=#{3} and gzid=&{4}  and slbh=#{5})\n"
+            }
+        ],
+        "gzmc": "【查封-例外】验证不动产单元是否存在查封",
+        "pzr": "管理员",
+        "yxj": 4,
+        "pzrq": 1584092367000,
+        "ytsm": "【固定规则V3.0】查封验证——验证不动产单元是否存在查封（例外）",
+        "gzid": "43DH3916EI1J1001"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "41dff8b6d6644bb8a1ebba212219481d",
+                "tsxx": "房产证已匹配土地证，是否继续？",
+                "gzbds": "fctdppgx 不为空 并且 fctdppgx[0].NUM > 0",
+                "gzid": "4c38b6cb8c994cff979086fd41a067a1"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "fctdppgx",
+                "sjlid": "6e283014522d43a1ad65f28a6cbb7d15",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "xnxmid",
+                        "sjlid": "6e283014522d43a1ad65f28a6cbb7d15",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "ecc9ee9830604413b965a0643156619e"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "查询房屋土地匹配关系表",
+                "gzid": "4c38b6cb8c994cff979086fd41a067a1",
+                "sjnr": "select count(*)  as  num   from bdc_fctd_ppgx where fwcqxmid=#{1}"
+            }
+        ],
+        "gzmc": "【匹配验证3】验证房产证是否已匹配了土地证",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1584092570000,
+        "ytsm": "【固定规则V3.0】验证房产证是否已匹配了土地证",
+        "gzid": "4c38b6cb8c994cff979086fd41a067a1"
+    },
+    {
+        "bdcGzSjlDTOList": [
+            {
+                        "fwff": "1",
+                        "sjly": "2",
+                        "jgblbs": "sdxx",
+                        "qqyy": "register-app",
+                        "sjlid": "930ded69ba11450e9f302c8f8fd4a624",
+                        "bdcGzSjlCsDOList": [
+                            {
+                                "sjlcsid": "6438af7e7ac442739edfe8e2dc821cc1",
+                                "sjlcsmc": "bdcdyh",
+                                "sjlcsxh": "1",
+                                "sjlcszl": "2",
+                                "sjlid": "930ded69ba11450e9f302c8f8fd4a624"
+                            }
+                        ],
+                        "sjlsx": 0,
+                        "sjlmc": "查询锁定信息",
+                        "gzid": "f7cfdaed57fd40b3a0d555091d4faeb7",
+                        "sjnr": "/realestate-register/rest/v1.0/bdcdy/#{1}/zdsd"
+                    },
+            {
+                "sjly": "1",
+                "jgblbs": "sdxx2",
+                "sjlid": "a21e2caae0d44ebf9a32d6c95e64c37a",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "a21e2caae0d44ebf9a32d6c95e64c37a",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "57a8c2bc19ad426ba61c995b3292d897"
+                    }
+                ],
+                "sjlsx": 1,
+                "sjlmc": "查询登记库宗地",
+                "gzid": "f7cfdaed57fd40b3a0d555091d4faeb7",
+                "sjnr": "select sdyy from bdc_dysd where  sdzt=1 and bdcdyh= substr(#{1}, 0, 19)||'W00000000'"
+            },
+            {
+                "sjly": "1",
+                "jgblbs": "res",
+                "sjlid": "7b6b729b525842b3b71b2dadc2d0f39b",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "7b6b729b525842b3b71b2dadc2d0f39b",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "8aedc28ca307479d8fd50d0563ff36b7"
+                    }
+                ],
+                "sjlsx": 2,
+                "sjlmc": "获取不动产单元号",
+                "gzid": "f7cfdaed57fd40b3a0d555091d4faeb7",
+                "sjnr": "select #{1} as  bdcdyh from dual"
+            }
+        ],
+        "gzmc": "【锁定4】验证所在宗地不动产单元锁定",
+        "pzr": "管理员",
+        "jydm": "package cn.gtmap.realestate.engine.service.impl;\n\nimport java.util.ArrayList;\nimport java.util.List;\nimport java.util.Map;\n\n/**\n * 不动产子规则动态编码验证类 注意：包名、类名、方法签名请不要改动！\n *\n * @version 1.0, GTMAP\n */\npublic class RuleCheck {\n\n  /**\n   * 对数据流执行结果进行判断，获取对应的提示信息\n   *\n   * @param checkResult 数据流执行结果集合\n   * @return { List } 子规则提示信息\n   */\n  public <T> List<String> getTsxxList(Map<String, T> checkResult) {\n    if (null == checkResult) {\n      return null;\n    }\n    List<String> tsxxList = new ArrayList();\n\n    // ---------------------\n    List<Map<String, Object>> sdxxList = (List<Map<String, Object>>) checkResult.get(\"sdxx2\");\n    if (sdxxList.size() > 0) {\n      String bdcdyh =\n          (String) ((List<Map<String, Object>>) checkResult.get(\"res\")).get(0).get(\"BDCDYH\");\n      String sdyy = (String) sdxxList.get(0).get(\"SDYY\");\n      tsxxList.add(\"该不动产单元\" + bdcdyh + \"所在宗地存在锁定，锁定原因：\" + sdyy + \"，请核实无误后解锁办理\");\n    }\n    tsxxList.addAll((List<String>) checkResult.get(\"sdxx\"));\n    // ---------------------\n    return tsxxList;\n  }\n}\n",
+        "yxj": 3,
+        "pzrq": 1603681089000,
+        "ytsm": "【固定规则V3.0】锁定验证——验证所在宗地不动产单元锁定",
+        "gzid": "f7cfdaed57fd40b3a0d555091d4faeb7"
+    },
+    {
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "dyaxx",
+                "sjlid": "0262fbc26aea4cc0bf4c2551d935214a",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "0262fbc26aea4cc0bf4c2551d935214a",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "ba61fbfae2314e78a3c2418005a6104d"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "验证宗地抵押",
+                "gzid": "49acbfc3d75b427590012331b70f3bb2",
+                "sjnr": "select count(*)  as  num, bdcdyh  from bdc_dyaq  where qszt =  1   and   bdcdyh  =  substr(#{1},  0 , 19 )  ||  'W00000000' group by bdcdyh"
+            }
+        ],
+        "gzmc": "【抵押3】验证所在宗地不动产单元是否存在抵押",
+        "pzr": "管理员",
+        "jydm": "package cn.gtmap.realestate.engine.service.impl;\n\nimport java.util.ArrayList;\nimport java.util.List;\nimport java.util.Map;\n\n/**\n * 不动产子规则动态编码验证类 注意：包名、类名、方法签名请不要改动！\n *\n * @version 1.0, GTMAP\n */\npublic class RuleCheck {\n\n  /**\n   * 对数据流执行结果进行判断，获取对应的提示信息\n   *\n   * @param checkResult 数据流执行结果集合\n   * @return { List } 子规则提示信息\n   */\n  public <T> List<String> getTsxxList(Map<String, T> checkResult) {\n    if (null == checkResult) {\n      return null;\n    }\n    List<String> tsxxList = new ArrayList();\n\n    // ---------------------\n    List<Map<String, Object>> dyaxxList = (List<Map<String, Object>>) checkResult.get(\"dyaxx\");\n    if (dyaxxList.size() > 0) {\n      String bdcdyh =\n          (String) ((List<Map<String, Object>>) checkResult.get(\"dyaxx\")).get(0).get(\"BDCDYH\");\n      tsxxList.add(\"该不动产单元所在宗地\" + bdcdyh + \"存在抵押ZDDYH\");\n    }\n\n    // ---------------------\n    return tsxxList;\n  }\n}\n",
+        "yxj": 3,
+        "pzrq": 1602810204000,
+        "ytsm": " 【固定规则V3.0】抵押验证——验证所在宗地不动产单元是否存在抵押---提示宗地单元号",
+        "gzid": "49acbfc3d75b427590012331b70f3bb2"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "cc11ee03f42e414c995542de1347f161",
+                "tsxx": "项目#{xmid}存在权利人义务人重复",
+                "gzbds": "qlrxx 不为空 并且  qlrxx[0].NUM > 0",
+                "gzid": "d9587ba35f21422abb7efbc5cbfd7fc9"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "qlrxx",
+                "sjlid": "96e3ee11b473459d8843de2faa04b65f",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "xmid",
+                        "sjlid": "96e3ee11b473459d8843de2faa04b65f",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "38074cf85a1d4f2fa524e4b1894b291a"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "查询权利人表",
+                "gzid": "d9587ba35f21422abb7efbc5cbfd7fc9",
+                "sjnr": "select qlrmc, zjh, qlrlb, count(*) as num from bdc_qlr where  xmid =  #{1}   group by qlrmc, zjh  ,qlrlb having count(*) > 1"
+            }
+        ],
+        "gzmc": "【其他2】验证权利人义务人是否重复",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1584091852000,
+        "ytsm": "【固定规则V3.0】其他验证——验证权利人义务人是否重复",
+        "gzid": "d9587ba35f21422abb7efbc5cbfd7fc9"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "f3f7caabf1334ee68554a0d8656077be",
+                "tsxx": "项目#{xmid}不动产单元号格式错误",
+                "gzbds": "xmxx 不为空  并且   xmxx[0].NUM  > 0",
+                "gzid": "3ad95e95b6304bffa01cc3140639a1e1"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "xmxx",
+                "sjlid": "8682e773bff64279ac2bed5b27e842a1",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "xmid",
+                        "sjlid": "8682e773bff64279ac2bed5b27e842a1",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "cebd60dd69a2429cb155bdd08d1dc92b"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "查询项目表",
+                "gzid": "3ad95e95b6304bffa01cc3140639a1e1",
+                "sjnr": "select count(*)  as  num   from bdc_xm where   (  length(bdcdyh) < 28  or    length(bdcdyh)  >  28 )  and xmid  = #{1}"
+            }
+        ],
+        "gzmc": "【其他10】验证不动产单元号是否为28位",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1584092229000,
+        "ytsm": "【固定规则V3.0】其他验证——查看当前项目的bdcdyh长度是否不等于28",
+        "gzid": "3ad95e95b6304bffa01cc3140639a1e1"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "0282455b5acf4d4b90677008cfcea2a1",
+                "tsxx": "该不动产单元#{bdcdyh}存在现势产权",
+                "gzbds": "qlxx   不为空  并且   qlxx[0].NUM  > 0",
+                "gzid": "6d6f4db591864fa3a706961c500d9706"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "qlxx",
+                "sjlid": "b4264baf167d41bfba658189bd8502d8",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "b4264baf167d41bfba658189bd8502d8",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "528aa6cefba443059158b3cdc8a9248b"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "b4264baf167d41bfba658189bd8502d8",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "3",
+                        "sjlcsid": "758aa956d1114ac08cc31511e4849953"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "b4264baf167d41bfba658189bd8502d8",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "1488329936cb4e94b281e31a80a607fb"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "b4264baf167d41bfba658189bd8502d8",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "4",
+                        "sjlcsid": "f0af966b10d042228cbb6815a2abe59b"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "b4264baf167d41bfba658189bd8502d8",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "5",
+                        "sjlcsid": "e54e457d80034b93960f23ae3d11fc2a"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "b4264baf167d41bfba658189bd8502d8",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "6",
+                        "sjlcsid": "026753386b3142bd823ad87a4dcb16d2"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "b4264baf167d41bfba658189bd8502d8",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "7",
+                        "sjlcsid": "be4edbd295a6477689d9bc5cd0f10467"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "b4264baf167d41bfba658189bd8502d8",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "8",
+                        "sjlcsid": "bd42b13623994506afd31fb49cb76f97"
+                    },
+                    {
+                        "sjlcsmc": "gzlslid",
+                        "sjlid": "b4264baf167d41bfba658189bd8502d8",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "9",
+                        "sjlcsid": "dedbdb02dbcc4cc290c403ec92d2e888"
+                    },
+                    {
+                        "sjlcsmc": "gzlslid",
+                        "sjlid": "b4264baf167d41bfba658189bd8502d8",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "10",
+                        "sjlcsid": "94eb86476ecc4fc89b97adacfb6dbf8e"
+                    },
+                    {
+                        "sjlcsmc": "gzlslid",
+                        "sjlid": "b4264baf167d41bfba658189bd8502d8",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "11",
+                        "sjlcsid": "0692ead0b24a4665a5ad83233c1bf32f"
+                    },
+                    {
+                        "sjlcsmc": "gzlslid",
+                        "sjlid": "b4264baf167d41bfba658189bd8502d8",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "12",
+                        "sjlcsid": "e13dcfe95f9e4cf3918cec4ab600c077"
+                    },
+                    {
+                        "sjlcsmc": "gzlslid",
+                        "sjlid": "b4264baf167d41bfba658189bd8502d8",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "13",
+                        "sjlcsid": "6095add6cbdb46df9de38c9889caad19"
+                    },
+                    {
+                        "sjlcsmc": "gzlslid",
+                        "sjlid": "b4264baf167d41bfba658189bd8502d8",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "14",
+                        "sjlcsid": "9af1efe72a684bb2abb2499de06ee9e8"
+                    },
+                    {
+                        "sjlcsmc": "gzlslid",
+                        "sjlid": "b4264baf167d41bfba658189bd8502d8",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "15",
+                        "sjlcsid": "ef6c2421f4dd4735bdf98d5b3b216a86"
+                    },
+                    {
+                        "sjlcsmc": "gzlslid",
+                        "sjlid": "b4264baf167d41bfba658189bd8502d8",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "16",
+                        "sjlcsid": "d00fed05f87346daae26cb71d0804b23"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "查询现势产权",
+                "gzid": "6d6f4db591864fa3a706961c500d9706",
+                "sjnr": "select count(*) as num\n  from (select qlid\n          from BDC_TDSYQ\n         where bdcdyh = #{1}\n           and qszt = 1 and xmid not in (select xmid from bdc_xm where gzlslid = #{9})\n        union\n        select qlid\n          from BDC_JSYDSYQ\n         where bdcdyh = #{2}\n           and qszt = 1 and xmid not in (select xmid from bdc_xm where gzlslid = #{10})\n        union\n        select qlid\n          from BDC_FDCQ\n         where bdcdyh = #{3}\n           and qszt = 1 and xmid not in (select xmid from bdc_xm where gzlslid = #{11})\n        union\n        select qlid\n          from BDC_GJZWSYQ\n         where bdcdyh = #{4}\n           and qszt = 1 and xmid not in (select xmid from bdc_xm where gzlslid = #{12})\n        union\n        select qlid\n          from BDC_HYSYQ\n         where bdcdyh = #{5}\n           and qszt = 1 and xmid not in (select xmid from bdc_xm where gzlslid = #{13})\n        union\n        select qlid\n          from BDC_TDCBNYDSYQ\n         where bdcdyh = #{6}\n           and qszt = 1 and xmid not in (select xmid from bdc_xm where gzlslid = #{14})\n        union\n        select qlid\n          from BDC_LQ\n         where bdcdyh = #{7}\n           and qszt = 1 and xmid not in (select xmid from bdc_xm where gzlslid = #{15}) \n      union\n        select qlid\n          from BDC_NYDJYQ\n         where bdcdyh = #{8}\n           and qszt = 1 and xmid not in (select xmid from bdc_xm where gzlslid = #{16})) "
+            }
+        ],
+        "gzmc": "【其他7】验证不动产单元是否存在现势产权",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1606378683000,
+        "ytsm": " 【固定规则V3.0】其他验证——验证不动产单元是否存在现势产权1",
+        "gzid": "6d6f4db591864fa3a706961c500d9706"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "046cdefdb82d48919f51c0f17bdbd4b0",
+                "tsxx": "该不动产单元#{bdcdyh}存在预查封",
+                "gzbds": "cfxx 不为空  并且   cfxx[0].NUM  > 0",
+                "gzid": "fe3f3b2cff6a46559ffab3d13b6f2e6c"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "cfxx",
+                "sjlid": "f514d672d2874dfa8f6ec45f21ca2e26",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "f514d672d2874dfa8f6ec45f21ca2e26",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "231bfa365c254fa1b26bca16dd3cbd89"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "查询查封表",
+                "gzid": "fe3f3b2cff6a46559ffab3d13b6f2e6c",
+                "sjnr": "select count(*)  as  num   from bdc_cf  where   bdcdyh = #{1}  and  cflx in (3,  4)    and  qszt = 1"
+            }
+        ],
+        "gzmc": "【预查封1】验证查封不动产单元号是否预查封",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1584091209000,
+        "ytsm": "【固定规则V3.0】预查封验证——根据bdcdyh在bdc_cf表获取查封类型为3或者4且当前权利人名称与被执行人一致的数据是否存在",
+        "gzid": "fe3f3b2cff6a46559ffab3d13b6f2e6c"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "0b76ba06b9c34e1caec69beaf9183682",
+                "tsxx": "已创建项目，不可取消！",
+                "gzbds": "xnbdcdyhgx 不为空 并且 xnbdcdyhgx[0].NUM > 0 并且 xmlsgx 不为空 并且 xmlsgx[0].XMNUM > 0",
+                "gzid": "47ca2ba803a74e03bcbd91cfc15d64d7"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "xmlsgx",
+                "sjlid": "350c0d5c4adf4daea5a4d2bc8aa3dbb1",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "xnxmid",
+                        "sjlid": "350c0d5c4adf4daea5a4d2bc8aa3dbb1",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "870632b768e14007907b313f166161fc"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "查询项目历史表",
+                "gzid": "47ca2ba803a74e03bcbd91cfc15d64d7",
+                "sjnr": "select count(*)  as  xmnum   from bdc_xm_lsgx where yxmid=#{1}"
+            },
+            {
+                "sjly": "1",
+                "jgblbs": "xnbdcdyhgx",
+                "sjlid": "387350adfdee4c83a6eb08095c8a3ddf",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "xnxmid",
+                        "sjlid": "387350adfdee4c83a6eb08095c8a3ddf",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "25b31caf644f46469651aec56d1f50bc"
+                    }
+                ],
+                "sjlsx": 1,
+                "sjlmc": "查询存在匹配且生成项目",
+                "gzid": "47ca2ba803a74e03bcbd91cfc15d64d7",
+                "sjnr": "select count(*)  as  num   from bdc_xnbdcdyh_gx  where xnbdcdyhxmid =#{1}"
+            }
+        ],
+        "gzmc": "【匹配验证7】房产证已匹配单元号并且已创建项目，验证能否取消匹配单元号",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1584092606000,
+        "ytsm": "【固定规则V3.0】房产证已匹配单元号并且已创建项目，验证能否取消匹配单元号",
+        "gzid": "47ca2ba803a74e03bcbd91cfc15d64d7"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "c716b97263c54753bee2f571f3f138b5",
+                "tsxx": "存在承包经营权未被外联，请先外联再创建！",
+                "gzbds": "res 不为空 并且 res == false",
+                "gzid": "9d235b0a7900444586f9c7395ca7c9e0"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "fwff": "1",
+                "sjly": "2",
+                "jgblbs": "res",
+                "qqyy": "accept-app",
+                "sjlid": "6f2c1b832bc548bc8e5a275addcf106f",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "jbxxid",
+                        "sjlid": "6f2c1b832bc548bc8e5a275addcf106f",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "e4558375c3ef4b248cb672b68998604d"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "验证是否存在承包经营权没有被外联",
+                "gzid": "9d235b0a7900444586f9c7395ca7c9e0",
+                "sjnr": "/realestate-accept/rest/v1.0/gzyz/cbjyqbwl/#{1}"
+            }
+        ],
+        "gzmc": "【承包6】验证是否需要外联承包经营权证书；",
+        "yxj": 3,
+        "pzrq": 1604565555000,
+        "ytsm": "验证存在其他承包经营权是否被外联-验证逻辑为： 创建时验证，传入jbxxid，找到受理项目表所有作为外联证书的历史关系，根据受理项目表记录的权籍id，在权籍找到承包方的名称和证件号，根据名称证件号找到权利人的xmid，关联项目表查找qllx=9 qszt=1 的数据，与外联证书比对，判断是否都被外联了，否则提示规则",
+        "gzid": "9d235b0a7900444586f9c7395ca7c9e0"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "be228a2774784d2183c8112df2aee3e1",
+                "tsxx": "当前选择的#{bdcdyh}承包经营权证书存在锁定",
+                "gzbds": "res 不为空 并且 res[0].NUM > 0",
+                "gzid": "3ade6c4308224f2ba131cdcd9fb8bc1e"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "res",
+                "sjlid": "beffebcce5d34b2fbbf8747972fe7959",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "qlrzjh",
+                        "sjlid": "beffebcce5d34b2fbbf8747972fe7959",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "b36d8ac60c2b4fc69ddddf0098839ca1"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "beffebcce5d34b2fbbf8747972fe7959",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "6958d7009e9040159a14902783af3c51"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "当前选择的承包经营权证书是否被锁定",
+                "gzid": "3ade6c4308224f2ba131cdcd9fb8bc1e",
+                "sjnr": "select count(*)  as  num,max(xmid) as xmid from bdc_qlr q where  q.zjh =#{1} and q.qlrlb='2' and q.xmid in \n(select x.xmid from bdc_xm x \nleft join bdc_xm_zs_gx g on g.xmid=x.xmid \nleft join bdc_zssd m on m.zsid = g.zsid\n where x.bdcdyh=#{2} and m.sdzt=1 and x.qszt=1 )"
+            }
+        ],
+        "gzmc": "【承包4】验证承包经营权证是否存在锁定；",
+        "yxj": 3,
+        "pzrq": 1604903390000,
+        "ytsm": "验证当前选择的承包经营权证书是否被锁定",
+        "gzid": "3ade6c4308224f2ba131cdcd9fb8bc1e"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "34d08e495e4840c886d174ad05ab3795",
+                "tsxx": "GLTDZ 存在相关联的土地证，是否自动带入？",
+                "gzbds": "bdclx 不为空 并且 bdclx[0].COUNT == 0 并且 xmxx 不为空 并且 xmxx[0].XMID 不为空",
+                "gzid": "f2239bd6c5224aee8e41915148843ed7"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "xmxx",
+                "sjlid": "652d7d8d658d46d58589594490250761",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "652d7d8d658d46d58589594490250761",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "756c63329ec140879f1631f78fdfa0b0"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "查询土地证",
+                "gzid": "f2239bd6c5224aee8e41915148843ed7",
+                "sjnr": "select xmid from bdc_xm where bdcdyh=#{1}  and bdclx='1' and qszt='1'"
+            },
+            {
+                "sjly": "1",
+                "jgblbs": "bdclx",
+                "sjlid": "ed150b16e5344f5c8b2eb52d528c4a3e",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "yxmid",
+                        "sjlid": "ed150b16e5344f5c8b2eb52d528c4a3e",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "0c109c33b295456cb2d536186fa7e498"
+                    }
+                ],
+                "sjlsx": 1,
+                "sjlmc": "验证房屋类型",
+                "gzid": "f2239bd6c5224aee8e41915148843ed7",
+                "sjnr": "select count(*) as count from bdc_xm where xmid = #{1} and bdclx = 1"
+            }
+        ],
+        "gzmc": "【其他13】验证房产证是否存在相同单元号的土地证",
+        "pzr": "管理员",
+        "jydm": "package cn.gtmap.realestate.engine.service.impl;\n\nimport java.util.ArrayList;\nimport java.util.List;\nimport java.util.Map;\n\n/**\n * 不动产子规则动态编码验证类 注意：包名、类名、方法签名请不要改动！\n *\n * @version 1.0, GTMAP\n */\npublic class RuleCheck {\n\n  /**\n   * 对数据流执行结果进行判断，获取对应的提示信息\n   *\n   * @param checkResult 数据流执行结果集合\n   * @return { List } 子规则提示信息\n   */\n  public <T> List<String> getTsxxList(Map<String, T> checkResult) {\n    if (null == checkResult) {\n      return null;\n    }\n    List<String> tsxxList = new ArrayList();\n\n    // TODO 输入具体验证内容\n    // ---------------------\n\n    // ---------------------\n    return tsxxList;\n  }\n}\n",
+        "yxj": 1,
+        "pzrq": 1606186081000,
+        "ytsm": "【固定规则V3.0】查询出与房产证相同单元号的土地证，从而让用户判断是否带入",
+        "gzid": "f2239bd6c5224aee8e41915148843ed7"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "658e719e501f466aac2321072bbb24dd",
+                "tsxx": "当前节点不允许点击更新证书按钮",
+                "gzbds": "res 不为空 并且 res[0].QSZT == 1",
+                "gzid": "2528f47dbd154bf59021217781ead1b8"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "res",
+                "sjlid": "cc1e01133dac4aac9f56ed8dc4dc4b89",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "gzlslid",
+                        "sjlid": "cc1e01133dac4aac9f56ed8dc4dc4b89",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "365e7aebeddf48cc9cb6334c4b474175"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "查询项目的权属状态",
+                "gzid": "2528f47dbd154bf59021217781ead1b8",
+                "sjnr": "select * from bdc_xm where gzlslid=#{1}"
+            }
+        ],
+        "gzmc": "【受理页面】登簿后不允许点击更新证书按钮",
+        "yxj": 3,
+        "pzrq": 1594193874000,
+        "ytsm": "【固定规则V3.0】登簿后不允许点击更新证书按钮",
+        "gzid": "2528f47dbd154bf59021217781ead1b8"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "604a55237a8d44ae805a3b510ac30377",
+                "tsxx": "土地证已匹配单元号，请核实",
+                "gzbds": "xnbdcdyhgx 不为空 并且 xnbdcdyhgx[0].NUM > 0",
+                "gzid": "1ab7796160de4a12a20459e9cd0f5cbc"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "xnbdcdyhgx",
+                "sjlid": "2a4e8e4237db4f1fa8ed08b2f96414fb",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "tdxmid",
+                        "sjlid": "2a4e8e4237db4f1fa8ed08b2f96414fb",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "55a22b81c6454ece9569bf93b41a4225"
+                    },
+                    {
+                        "sjlcsmc": "xnxmid",
+                        "sjlid": "2a4e8e4237db4f1fa8ed08b2f96414fb",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "5c34ed0c17e3409c860458fc38afb046"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "查询单元号匹配关系表",
+                "gzid": "1ab7796160de4a12a20459e9cd0f5cbc",
+                "sjnr": "select count(*)  as  num   from bdc_xnbdcdyh_gx t  where  t.xnbdcdyhxmid =#{1} \nand t.bdcdyh <>(select s.bdcdyh from (\nselect g.bdcdyh from bdc_xm g where g.xmid =#{2}\n) s)"
+            }
+        ],
+        "gzmc": "【匹配验证4】验证已存在匹配关系的土地证（匹配了单元号）能否再次被房产匹配",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1591703086000,
+        "ytsm": "【固定规则V3.0】验证已存在匹配关系的土地证（匹配了单元号）能否再次被房产匹配",
+        "gzid": "1ab7796160de4a12a20459e9cd0f5cbc"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "b740ef66c2a146c0b158b43ef2dcc6a5",
+                "tsxx": "该不动产单元#{bdcdyh}存在查封",
+                "gzbds": "cfxx2  不为空  并且   cfxx2[0].NUM  > 0",
+                "gzid": "09fb40b1d3514c8894118a6f4f1ff20c"
+            },
+            {
+                "bdsid": "5d845dc69c2c434fb7549cc0d5ce6364",
+                "tsxx": "该不动产单元#{bdcdyh}存在查封",
+                "gzbds": "cfxx1  不为空  并且   cfxx1[0].NUM  > 0",
+                "gzid": "09fb40b1d3514c8894118a6f4f1ff20c"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "cfxx1",
+                "sjlid": "587cd3f20635436d87d7d09b1646cce7",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "587cd3f20635436d87d7d09b1646cce7",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "66ed94a8baa944ea9786b3153b4f9e74"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "根据不动产单元号验证查封",
+                "gzid": "09fb40b1d3514c8894118a6f4f1ff20c",
+                "sjnr": "select  count(*)  as  num   from bdc_cf  where qszt  in  (0,  1)  and   bdcdyh  = #{1}"
+            },
+            {
+                "sjly": "1",
+                "jgblbs": "cfxx2",
+                "sjlid": "52676a6002994c5abd75cd48ec8992f4",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "52676a6002994c5abd75cd48ec8992f4",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "f984e0ae30ef4af092cf65241a2b3806"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "52676a6002994c5abd75cd48ec8992f4",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "f37cda37437b4e648b54c91b295865fa"
+                    }
+                ],
+                "sjlsx": 1,
+                "sjlmc": "根据不动产单元唯一编号号查询查封信息",
+                "gzid": "09fb40b1d3514c8894118a6f4f1ff20c",
+                "sjnr": "select count(*)  as  num   from bdc_cf  where qszt  in  (0,  1)   and   BDCDYWYBH in (   select  BDCDYWYBH   from  bdc_xm     where  bdcdyh  =  #{1}    UNION     select  BDCDYWYBH   from  bdc_cf     where  bdcdyh  =  #{2})"
+            }
+        ],
+        "gzmc": "【查封1】验证不动产单元是否存在查封",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1584091121000,
+        "ytsm": "【固定规则V3.0】查封验证——验证不动产单元是否存在查封",
+        "gzid": "09fb40b1d3514c8894118a6f4f1ff20c"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "7c14f1b7d77c40ad98b2f38fac28f033",
+                "tsxx": "该不动产单元#{bdcdyh}产权证存在预告抵押",
+                "gzbds": "ygxx 不为空  并且   ygxx[0].NUM  > 0",
+                "gzid": "42f125f71ad141e5a63368c27a4e9af1"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "ygxx",
+                "sjlid": "cb9e582a4ed746f5aa4b7b98a2f6838c",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "cb9e582a4ed746f5aa4b7b98a2f6838c",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "f53dea51344446fba5fc4f9c70ecc66e"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "查询预告表",
+                "gzid": "42f125f71ad141e5a63368c27a4e9af1",
+                "sjnr": "select count(*)  as num  from bdc_yg  where  ygdjzl  in (3, 4)  and qszt=1 and bdcdyh  =  #{1} "
+            }
+        ],
+        "gzmc": "【预抵押3】验证不动产单元是否存在预告抵押权",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1589350303000,
+        "ytsm": "【固定规则V3.0】预抵押验证——验证选择的不动产单元是否存在预告抵押权——用于选择不动产单元验证",
+        "gzid": "42f125f71ad141e5a63368c27a4e9af1"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "652d7bf39bbf4dcbb98c55481ff8df73",
+                "tsxx": "当前项目权利人权利比例之和不为1",
+                "gzbds": "res  ==  false  ",
+                "gzid": "5dd30803b37545609172545445a9d4f9"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "fwff": "1",
+                "sjly": "2",
+                "jgblbs": "res",
+                "qqyy": "register-app",
+                "sjlid": "60b1392f555b4a63b70421e406d10a0e",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "xmid",
+                        "sjlid": "60b1392f555b4a63b70421e406d10a0e",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "3fff694211ee43f1b7fc7548673ff9af"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "验证服务",
+                "gzid": "5dd30803b37545609172545445a9d4f9",
+                "sjnr": "/realestate-register/rest/v1.0/bdcdy/xmxx/qlr/#{1}"
+            }
+        ],
+        "gzmc": "【其他3】验证权利人共有比例之和是否为1",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1584091905000,
+        "ytsm": "【固定规则V3.0】其他验证——验证权利人共有比例之和是否为1",
+        "gzid": "5dd30803b37545609172545445a9d4f9"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "5814c6d7b4f74a34a095c08f0f8c0752",
+                "tsxx": "该不动产单元#{bdcdyh}正在办理其他登记",
+                "gzbds": "xmxx     不为空  并且  xmxx[0].NUM > 0 ",
+                "gzid": "105fac8b51384c66a9a7b57e9482e446"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "xmxx",
+                "sjlid": "d0372206346a404c826a9b5f5b150523",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "d0372206346a404c826a9b5f5b150523",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "b81b251d4731429e883ca127df3ae995"
+                    },
+                    {
+                        "sjlcsmc": "gzlslid",
+                        "sjlid": "d0372206346a404c826a9b5f5b150523",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "126ea07636694eb080f318d1c536f97e"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "查询项目表",
+                "gzid": "105fac8b51384c66a9a7b57e9482e446",
+                "sjnr": "select count(*)  as  num，max(xmid) as xmid  from bdc_xm where bdcdyh = #{1}  and ajzt = 1  and xmid not in ( select xmid from bdc_xm where gzlslid = #{2}  )"
+            }
+        ],
+        "gzmc": "【其他6】验证不动产单元是否正在办理其他登记",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1584092007000,
+        "ytsm": "【固定规则V3.0】其他验证——验证不动产单元是否正在办理其他登记",
+        "gzid": "105fac8b51384c66a9a7b57e9482e446"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "37cacde3f6244c50b99ee17c50fdf111",
+                "tsxx": "YGWLZS该不动产单元存在预告信息，将进行关联",
+                "gzbds": "xmxx  不为空  并且  xmxx[0].XMID  不为空",
+                "gzid": "46GF4121F41J6002"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "xmxx",
+                "sjlid": "bab2db9b202847a9a84e84b2808fa4c4",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "bab2db9b202847a9a84e84b2808fa4c4",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "b5e8d00fa2fd4da2adfee9601e2ad4b2"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "获取预告不动产项目信息",
+                "gzid": "46GF4121F41J6002",
+                "sjnr": "select  xmid,bdcdyh as wlbdcdyh,ygdjzl from  BDC_YG where bdcdyh = #{1}  and  qszt=1 and ygdjzl in (1,2) "
+            }
+        ],
+        "gzmc": "【其他14】验证不动产单元是否存在预告并带入",
+        "pzr": "管理员",
+        "jydm": "package cn.gtmap.realestate.engine.service.impl;\n\nimport java.util.ArrayList;\nimport java.util.List;\nimport java.util.Map;\n\n/**\n * 不动产子规则动态编码验证类 注意：包名、类名、方法签名请不要改动！\n *\n * @version 1.0, GTMAP\n */\npublic class RuleCheck {\n\n  /**\n   * 对数据流执行结果进行判断，获取对应的提示信息\n   *\n   * @param checkResult 数据流执行结果集合\n   * @return { List } 子规则提示信息\n   */\n  public <T> List<String> getTsxxList(Map<String, T> checkResult) {\n    if (null == checkResult) {\n      return null;\n    }\n    List<String> tsxxList = new ArrayList();\n\n    // TODO 输入具体验证内容\n    // ---------------------\n\n    // ---------------------\n    return tsxxList;\n  }\n}\n",
+        "yxj": 3,
+        "pzrq": 1592551920000,
+        "ytsm": "【固定规则V3.0】在办理转移业务时，若存在预告信息，给予提示并带入原不动产历史关系，登簿后注销预告信息",
+        "gzid": "46GF4121F41J6002"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "80ca5bdb78d94c6caa9a5aed896222aa",
+                "gzbds": "xmxx  不为空  并且  xmxx[0].XMID  不为空",
+                "gzid": "753be5744e844782bdde1e52adb67591",
+                "tsxx": "YGWLZS该不动产单元存在预抵押信息，将进行关联"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsid": "3e7edd8ca10b4017a6d18a0ebec4ac15",
+                        "sjlcsmc": "bdcdyh",
+                        "sjlcsxh": "1",
+                        "sjlcszl": "2",
+                        "sjlid": "ffdbbcb6cebe44b49044d2d094ee8214"
+                    }
+                ],
+                "gzid": "753be5744e844782bdde1e52adb67591",
+                "jgblbs": "xmxx",
+                "sjlid": "ffdbbcb6cebe44b49044d2d094ee8214",
+                "sjlmc": "获取预抵押不动产项目信息",
+                "sjlsx": 0,
+                "sjly": "1",
+                "sjnr": "select  xmid,bdcdyh as wlbdcdyh,ygdjzl from  BDC_YG where bdcdyh = #{1}  and  qszt=1 and ygdjzl in (3,4) "
+            }
+        ],
+        "gzid": "753be5744e844782bdde1e52adb67591",
+        "gzmc": "【其他19】验证不动产单元是否存在预抵押并带入",
+        "jydm": "package cn.gtmap.realestate.engine.service.impl;\n\nimport java.util.ArrayList;\nimport java.util.List;\nimport java.util.Map;\n\n/**\n * 不动产子规则动态编码验证类 注意：包名、类名、方法签名请不要改动！\n *\n * @version 1.0, GTMAP\n */\npublic class RuleCheck {\n\n  /**\n   * 对数据流执行结果进行判断，获取对应的提示信息\n   *\n   * @param checkResult 数据流执行结果集合\n   * @return { List } 子规则提示信息\n   */\n  public <T> List<String> getTsxxList(Map<String, T> checkResult) {\n    if (null == checkResult) {\n      return null;\n    }\n    List<String> tsxxList = new ArrayList();\n\n    // TODO 输入具体验证内容\n    // ---------------------\n\n    // ---------------------\n    return tsxxList;\n  }\n}\n",
+        "pzr": "管理员",
+        "pzrq": 1628650068000,
+        "ytsm": "【固定规则V3.0】在办理抵押业务时，若存在预抵押信息，给予提示并带入原不动产历史关系，登簿后注销预抵押信息",
+        "yxj": 3
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "e8909ca8440c46cd925508b51d09b708",
+                "tsxx": "该不动产单元#{bdcdyh}所在宗地存在地役！",
+                "gzbds": "dyiqxx1  不为空  并且    dyiqxx1[0].NUM  > 0",
+                "gzid": "56d25908f4594e1297944d20ff082e69"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "dyiqxx1",
+                "sjlid": "6375c43fe27c4acc81b2fa2d83b39349",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "6375c43fe27c4acc81b2fa2d83b39349",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "5e5d559b1252402787504c5560511ac0"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "6375c43fe27c4acc81b2fa2d83b39349",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "3",
+                        "sjlcsid": "a14257dfd9b2424a92cef85dde7ed68d"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "6375c43fe27c4acc81b2fa2d83b39349",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "a4ea6b1bfa194de98f3a613335254a00"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "根据宗地的不动产单元号存在地役",
+                "gzid": "56d25908f4594e1297944d20ff082e69",
+                "sjnr": "select count(*)  as  num   from bdc_dyiq  where qszt  in  (0,  1)  and   gydbdcdyh = (   select case when length( #{1} ) > 19 then substr( #{2} ,0, 19) || 'W00000000' else  #{3}  end   as bdcdyh from dual)"
+            }
+        ],
+        "gzmc": "【地役2】不动产单元所在宗地是否存在地役",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1584091715000,
+        "ytsm": "【固定规则V3.0】地役验证——不动产单元所在宗地是否存在地役",
+        "gzid": "56d25908f4594e1297944d20ff082e69"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "1723773b4b6d4408b8fe6a1779159d1f",
+                "tsxx": "当前房产证或土地证已匹配单元号",
+                "gzbds": "xnbdcdyhgx 不为空 并且 xnbdcdyhgx[0].NUM > 0",
+                "gzid": "fc9387b766014b9abefce8a01ee622d2"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "xnbdcdyhgx",
+                "sjlid": "c3a001c0fb5347e3964088f5695e3339",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "xnxmid",
+                        "sjlid": "c3a001c0fb5347e3964088f5695e3339",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "d38ff0d819154084906e49869210b100"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "查询匹配关系表",
+                "gzid": "fc9387b766014b9abefce8a01ee622d2",
+                "sjnr": "select count(*)  as  num   from bdc_xnbdcdyh_gx  where xnbdcdyhxmid =#{1}"
+            }
+        ],
+        "gzmc": "【匹配验证2】验证房产证或者土地证是否匹配了不动产单元号",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1584092560000,
+        "ytsm": "【固定规则V3.0】验证房产证或者土地证是否匹配了不动产单元号",
+        "gzid": "fc9387b766014b9abefce8a01ee622d2"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "94d7b7dd7724413aa5c80d700548ea88",
+                "tsxx": "XF不动产单元号#{bdcdyh}存在续封，是否一并解封",
+                "gzbds": "cfxx 不为空 并且 cfxx[0].XMID 不为空",
+                "gzid": "44JI5605CS1J0006"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "cfxx",
+                "sjlid": "85dd48038296487680d81d16a3137695",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "yxmid",
+                        "sjlid": "85dd48038296487680d81d16a3137695",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "e88b75f17eeb43218f349c542534966b"
+                    },
+                    {
+                        "sjlcsmc": "yxmid",
+                        "sjlid": "85dd48038296487680d81d16a3137695",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "3",
+                        "sjlcsid": "ce528a81792b42a68634bc662d9409c2"
+                    },
+                    {
+                        "sjlcsmc": "yxmid",
+                        "sjlid": "85dd48038296487680d81d16a3137695",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "4",
+                        "sjlcsid": "711aab26231b4b5186557788716e290a"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "85dd48038296487680d81d16a3137695",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "25571d20d1534688a8e4c459e17b12b4"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "85dd48038296487680d81d16a3137695",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "5",
+                        "sjlcsid": "ad508365b2484b5287707d6c55704438"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "选择查封，存在续封",
+                "gzid": "44JI5605CS1J0006",
+                "sjnr": "select  xmid  from  bdc_cf where cflx='5' and qszt in (0, 1)  and xmid in\n(select xmid from bdc_xm_lsgx start with  yxmid =nvl((select xmid  from  bdc_cf where cflx in('1','2') and qszt in (0, 1)  and xmid in\n(select yxmid from bdc_xm_lsgx start with xmid=#{1} connect by NOCYCLE prior yxmid=xmid ) and rownum=1 and bdcdyh=#{2}),#{3})  connect by NOCYCLE prior xmid=yxmid) and xmid!=#{4}  and  bdcdyh=#{5}"
+            }
+        ],
+        "gzmc": "【续封验证1】验证当前查封是否存在续封",
+        "pzr": "管理员",
+        "yxj": 1,
+        "pzrq": 1587949199000,
+        "ytsm": "【固定规则V3.0】选择不动产单元判断当前查封是否存在续封",
+        "gzid": "44JI5605CS1J0006"
+    },
+    {
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "fcxm",
+                "sjlid": "afc274f530fd438b9baf607b4dcace9a",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "xnxmid",
+                        "sjlid": "afc274f530fd438b9baf607b4dcace9a",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "de00b82ba52b4e80b63add8ba248f99b"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "查询房产证限制权利类型",
+                "gzid": "176c13a6be734272b73ea60cca9efa12",
+                "sjnr": "select qllx from bdc_xm where xmid =#{1} and qllx in(95,96,97,98,19,37)"
+            },
+            {
+                "sjly": "1",
+                "jgblbs": "tdxm",
+                "sjlid": "6d6a880b87394212b528ba5f078431e0",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "tdxmid",
+                        "sjlid": "6d6a880b87394212b528ba5f078431e0",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "84483ba7c5294ef1afe92f38e772dfde"
+                    }
+                ],
+                "sjlsx": 1,
+                "sjlmc": "查询土地限制权利类型",
+                "gzid": "176c13a6be734272b73ea60cca9efa12",
+                "sjnr": "select qllx from bdc_xm where xmid=#{1} and qllx in(95,96,97,98,19,37)"
+            }
+        ],
+        "gzmc": "【匹配验证9】验证权利类型不一致的权利是否能匹配",
+        "pzr": "管理员",
+        "jydm": "package cn.gtmap.realestate.engine.service.impl;\n\nimport java.util.ArrayList;\nimport java.util.List;\nimport java.util.Map;\n\n/**\n * 不动产子规则动态编码验证类 注意：包名、类名、方法签名请不要改动！\n *\n * @version 1.0, GTMAP\n */\npublic class RuleCheck {\n\n  /**\n   * 对数据流执行结果进行判断，获取对应的提示信息\n   *\n   * @param checkResult 数据流执行结果集合\n   * @return { List } 子规则提示信息\n   */\n  public <T> List<String> getTsxxList(Map<String, T> checkResult) {\n    if (null == checkResult) {\n      return null;\n    }\n    List<String> tsxxList = new ArrayList();\n\n    // TODO 输入具体验证内容\n    // ---------------------\n    // 房产项目信息\n    List<Map<String, Object>> fcxm = (List<Map<String, Object>>) checkResult.get(\"fcxm\");\n    // 土地项目信息\n    List<Map<String, Object>> tdxm = (List<Map<String, Object>>) checkResult.get(\"tdxm\");\n    String tsxx = \"权利类型不一致，请核实！\";\n    if (fcxm != null && fcxm.size() > 0 && (tdxm == null || tdxm.size() == 0)) {\n      tsxxList.add(tsxx);\n      return tsxxList;\n    }\n\n    if ((fcxm == null || fcxm.size() == 0) && tdxm != null && tdxm.size() > 0) {\n      tsxxList.add(tsxx);\n      return tsxxList;\n    }\n    if (fcxm != null && tdxm != null && fcxm.size() > 0 && tdxm.size() > 0) {\n      Map<String, Object> object1 = fcxm.get(0);\n      Map<String, Object> object2 = tdxm.get(0);\n      int fcqllx = Integer.parseInt(object1.get(\"QLLX\").toString());\n      int tdqllx = Integer.parseInt(object2.get(\"QLLX\").toString());\n      if (fcqllx != tdqllx) {\n        tsxxList.add(tsxx);\n        return tsxxList;\n      }\n    }\n    return tsxxList;\n  }\n}",
+        "yxj": 3,
+        "pzrq": 1591862493000,
+        "ytsm": "【固定规则V3.0】验证权利类型不一致的权利是否能匹配",
+        "gzid": "176c13a6be734272b73ea60cca9efa12"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "9445e586e930462dadc912efc2b1d517",
+                "tsxx": "该不动产单元#{bdcdyh}正在办理解封登记",
+                "gzbds": "( xmxx 不为空 并且 xmxx[0].NUM > 0 ) 并且 ( cfxx 为空 或 cfxx[0].NUM == 0 )",
+                "gzid": "43DH45269U1J1002"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "xmxx",
+                "sjlid": "07ab837abe9e4d86942908e15183f9d1",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "07ab837abe9e4d86942908e15183f9d1",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "0c131172974a4603b262fc41af2cd9ec"
+                    },
+                    {
+                        "sjlcsmc": "yxmid",
+                        "sjlid": "07ab837abe9e4d86942908e15183f9d1",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "132d34ccffcf46fb97fc9940f8585e3f"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "查询项目表",
+                "gzid": "43DH45269U1J1002",
+                "sjnr": "select count(*) as num, max(xmid) as xmid  from bdc_xm \nwhere   bdcdyh = #{1}  and  ajzt = 1  and qllx = 98    and xmid in (  select xmid from bdc_xm_lsgx where yxmid = #{2}  )"
+            },
+            {
+                "sjly": "1",
+                "jgblbs": "cfxx",
+                "sjlid": "5a5f4c8c068b466182495b7ec51d75b4",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "5a5f4c8c068b466182495b7ec51d75b4",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "094d7e6ee4dc439c89f4a63c1db61c9e"
+                    },
+                    {
+                        "sjlcsmc": "yxmid",
+                        "sjlid": "5a5f4c8c068b466182495b7ec51d75b4",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "84c7fab68b6f424ca7e49f6ba058cf58"
+                    }
+                ],
+                "sjlsx": 1,
+                "sjlmc": "查询查封表",
+                "gzid": "43DH45269U1J1002",
+                "sjnr": "select  count(*)  as  num  from  bdc_cf  where  xmid   in  ( select xmid  from bdc_xm  where   bdcdyh = #{1}  and  ajzt = 1  and qllx = 98    and xmid in (  select xmid from bdc_xm_lsgx where yxmid = #{2}  ) )"
+            }
+        ],
+        "gzmc": "【解封1】验证不动产单元是否正在办理解封登记",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1584092730000,
+        "ytsm": "【固定规则V3.0】验证不动产单元是否正在办理解封登记",
+        "gzid": "43DH45269U1J1002"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "c4ad00a1cb8b4b14b25f7fc2e1e27e49",
+                "tsxx": "当前项目收件材料份数为空",
+                "gzbds": "result ==  false",
+                "gzid": "b09401fdc09f48dfabf573c63fde26c2"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "fwff": "1",
+                "sjly": "2",
+                "jgblbs": "result",
+                "qqyy": "accept-app",
+                "sjlid": "82d02c334d7e47298b4d44072aee2f35",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "gzlslid",
+                        "sjlid": "82d02c334d7e47298b4d44072aee2f35",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "545b0a4bb8634e75a4d9ba9c7fbc9b1b"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "调用受理服务",
+                "gzid": "b09401fdc09f48dfabf573c63fde26c2",
+                "sjnr": "/realestate-accept/rest/v1.0/sjcl/gzyz/ysfs/#{1}"
+            }
+        ],
+        "gzmc": "【其他9】验证收件材料份数是否为空",
+        "pzr": "管理员",
+        "yxj": 1,
+        "pzrq": 1584092210000,
+        "ytsm": "【固定规则V3.0】其他验证——根据当前xmid获取所有的收件材料，看收件材料的分数、页数是否为0或者空",
+        "gzid": "b09401fdc09f48dfabf573c63fde26c2"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "1b974842d2c8440f829fdebdf20270d3",
+                "tsxx": "该不动产单元#{bdcdyh}存在在建工程抵押",
+                "gzbds": "dyaxx   不为空  并且   dyaxx[0].NUM  > 0",
+                "gzid": "e31a8e669a9b43429feb05f542d48b3a"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "dyaxx",
+                "sjlid": "7828580763b84738bbcc22a6ae4f4578",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "7828580763b84738bbcc22a6ae4f4578",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "4b32d0cae9454d7f8e9d37231d1f0693"
+                    },
+                    {
+                        "sjlcsmc": "xmid",
+                        "sjlid": "7828580763b84738bbcc22a6ae4f4578",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "3305c46d17434597b0f0f09212e2472b"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "验证抵押",
+                "gzid": "e31a8e669a9b43429feb05f542d48b3a",
+                "sjnr": "select count(*)  as  num   from bdc_dyaq  where qszt =  1   and   bdcdyh  =  #{1}  and   DYBDCLX   =  4  and xmid !=#{2}"
+            }
+        ],
+        "gzmc": "【抵押2】验证不动产单元是否存在在建工程抵押",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1584091304000,
+        "ytsm": "【固定规则V3.0】抵押验证——验证不动产单元是否存在在建工程抵押",
+        "gzid": "e31a8e669a9b43429feb05f542d48b3a"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "27b364b4650c4de5a0f7699bc011fdb6",
+                "tsxx": "该不动产单元号#{bdcdyh}  存在禁止或限制转让抵押不动产的约定",
+                "gzbds": "ydya 不为空  并且 ydya[0].COU > 0",
+                "gzid": "40dc7a01a847404f84db3ba4f757e20e"
+            },
+            {
+                "bdsid": "36d9b15d20a343f699ec4fbeb744318a",
+                "tsxx": "该不动产单元号#{bdcdyh}  存在禁止或限制转让抵押不动产的约定",
+                "gzbds": "res 不为空  并且 res[0].COU > 0",
+                "gzid": "40dc7a01a847404f84db3ba4f757e20e"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "res",
+                "sjlid": "5026a92199c548a097c9214de69ca812",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "5026a92199c548a097c9214de69ca812",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "36a41840178a4a6f804e38369fccbb1c"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "验证是否禁止转让",
+                "gzid": "40dc7a01a847404f84db3ba4f757e20e",
+                "sjnr": "select count(*) cou  from bdc_dyaq t  where t.bdcdyh= #{1} and  nvl(t.jzzr, 1) = 1 and t.qszt = 1"
+            },
+            {
+                "sjly": "1",
+                "jgblbs": "ydya",
+                "sjlid": "28ffddba8e2043e0b5d91fe0f0284bcd",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "28ffddba8e2043e0b5d91fe0f0284bcd",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "011f6b638ac747bf83afad6d9ea5e04d"
+                    }
+                ],
+                "sjlsx": 1,
+                "sjlmc": "验证预抵押是否禁止转让",
+                "gzid": "40dc7a01a847404f84db3ba4f757e20e",
+                "sjnr": "select count(*) cou  from bdc_yg t where t.bdcdyh= #{1} and  nvl(t.jzzr, 1) = 1 and t.qszt = 1 and t.ygdjzl in (3,4)"
+            }
+        ],
+        "gzmc": "【其他17】是否存在禁止或限制转让抵押不动产的约定(警告)",
+        "yxj": 3,
+        "pzrq": 1618219864000,
+        "ytsm": "【固定规则V3.0】是否存在禁止或限制转让抵押不动产的约定，如果禁止，给出警告",
+        "gzid": "40dc7a01a847404f84db3ba4f757e20e"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "8dbf51668cd04bed991b579cae0a0276",
+                "tsxx": "该不动产单元#{bdcdyh}存在现势居住权",
+                "gzbds": "qlxx 不为空 并且 qlxx[0].NUM > 0",
+                "gzid": "3420330f8e734e9a9c47e63bd789150c"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "qlxx",
+                "sjlid": "7c3089940d68413b9ed3e95af36d73cd",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "7c3089940d68413b9ed3e95af36d73cd",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "9c25f326edb342d2bbb049a36f75a9d8"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "查询现势居住权",
+                "gzid": "3420330f8e734e9a9c47e63bd789150c",
+                "sjnr": "select count(*)  as  num   from \n(\n\tselect qlid from BDC_JZQ \t\t\twhere bdcdyh = #{1} and qszt = 1 \n)"
+            }
+        ],
+        "gzmc": "【居住权1】验证不动产单元是否存在现势的居住权",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1610501304000,
+        "ytsm": "【固定规则V3.0】验证不动产单元是否存在现势的居住权",
+        "gzid": "3420330f8e734e9a9c47e63bd789150c"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "fd1a049dc73e4321a481ff315d4d17ec",
+                "tsxx": "当前选择的#{bdcdyh}承包经营权证书存在抵押",
+                "gzbds": "res 不为空 并且 res[0].NUM > 0",
+                "gzid": "8ba89fc34a5f483ab08fe15837514be3"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "res",
+                "sjlid": "db92a0ff7fc548f6a3da6ac3e46113f0",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "qlrzjh",
+                        "sjlid": "db92a0ff7fc548f6a3da6ac3e46113f0",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "71e19c72955743729d4568ae71149a86"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "db92a0ff7fc548f6a3da6ac3e46113f0",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "f4c435be1db6489b9f0a4ffe7078551a"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "当前选择的承包经营权证书是否被抵押",
+                "gzid": "8ba89fc34a5f483ab08fe15837514be3",
+                "sjnr": "select count(*)  as  num,max(xmid) as xmid from bdc_qlr q where  q.zjh =#{1} and q.qlrlb='2' and q.xmid in ( select xmid from bdc_dyaq d where d.bdcdyh=#{2} and d.qszt=1)"
+            }
+        ],
+        "gzmc": "【承包3】验证选择的承包经营权证是否处于抵押状态；",
+        "yxj": 3,
+        "pzrq": 1604903286000,
+        "ytsm": "验证当前选择的承包经营权证书是否被抵押",
+        "gzid": "8ba89fc34a5f483ab08fe15837514be3"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "86aee056402f4373b26802c0e4f88010",
+                "tsxx": "该不动产单元#{bdcdyh}所在宗地存在抵押",
+                "gzbds": "dyaxx   不为空  并且   dyaxx[0].NUM  > 0",
+                "gzid": "00b9b8f6df164298b049ca55c4b7aa4b"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "dyaxx",
+                "sjlid": "c5d687ccee8d4f3aba2e76eb2af7d71e",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "c5d687ccee8d4f3aba2e76eb2af7d71e",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "CSIDd53290ab425ebdb812c7630c877f"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "验证抵押",
+                "gzid": "00b9b8f6df164298b049ca55c4b7aa4b",
+                "sjnr": "select count(*)  as  num   from bdc_dyaq  where qszt =  1   and   bdcdyh  =  substr(#{1},  0 , 19 )  ||  'W00000000' "
+            }
+        ],
+        "gzmc": "【抵押3】验证所在宗地不动产单元是否存在抵押",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1584091351000,
+        "ytsm": " 【固定规则V3.0】抵押验证——验证所在宗地不动产单元是否存在抵押",
+        "gzid": "00b9b8f6df164298b049ca55c4b7aa4b"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "a92cb6b216c84fe2bccb0de6174820a0",
+                "tsxx": "当前无可用印制号",
+                "gzbds": "yzhxx  为空   或   yzhxx[0].NUM  ==   0",
+                "gzid": "c007e901dcf843b7897075c9c88a2ff5"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "yzhxx",
+                "sjlid": "40a7cce5903b46e0b7d55543417fd932",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "nf",
+                        "sjlid": "40a7cce5903b46e0b7d55543417fd932",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "7032d8a7879146128a1cd870ca3eb816"
+                    },
+                    {
+                        "sjlcsmc": "qxdm",
+                        "sjlid": "40a7cce5903b46e0b7d55543417fd932",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "f0dc304bb02742bf8479d112fc2f52f2"
+                    },
+                    {
+                        "sjlcsmc": "zslx",
+                        "sjlid": "40a7cce5903b46e0b7d55543417fd932",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "3",
+                        "sjlcsid": "65486faf5f514ed596887b4d04146062"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "查询印制号",
+                "gzid": "c007e901dcf843b7897075c9c88a2ff5",
+                "sjnr": "select   count(*)   from  bdc_yzh   where  nf =  #{1}   and   qxdm  = #{2}  and  zslx  =  #{3}"
+            }
+        ],
+        "gzmc": "【其他1】验证印制号是否可用",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1584091798000,
+        "ytsm": "【固定规则V3.0】其他验证——验证印制号是否可用",
+        "gzid": "c007e901dcf843b7897075c9c88a2ff5"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "c47736135bab47ffa7fc24701e933ea7",
+                "tsxx": "数据修改正在审核中",
+                "gzbds": "res 不为空  并且   res[0].NUM  >  0",
+                "gzid": "ee1e54ed758a43d7be101641fed4e39b"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "res",
+                "sjlid": "f825154977fd4bf9a38b348c0a925a1b",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "f825154977fd4bf9a38b348c0a925a1b",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "b38fd8497c504cbd8bc30501d646003f"
+                    },
+                    {
+                        "sjlcsmc": "djh",
+                        "sjlid": "f825154977fd4bf9a38b348c0a925a1b",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "f59ed685dba045ee8ba9d3a2a5f66b66"
+                    },
+                    {
+                        "sjlcsmc": "djh",
+                        "sjlid": "f825154977fd4bf9a38b348c0a925a1b",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "3",
+                        "sjlcsid": "a6f48d52278a482daf3f0e1e74fffcfd"
+                    },
+                    {
+                        "sjlcsmc": "djh",
+                        "sjlid": "f825154977fd4bf9a38b348c0a925a1b",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "4",
+                        "sjlcsid": "39e4cc2d558e474eba2474134281a7ba"
+                     }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "验证信息补录状态",
+                "gzid": "ee1e54ed758a43d7be101641fed4e39b",
+                "sjnr": "select  count(*) as num from bdc_bl_shxx where xmid in (\nselect  xmid  from bdc_xm where bdcdyh= #{1}  and qllx not in \n ( \n  select case when #{2} = 'ZHCX' then 95 else 0 end  from dual \n  union \n  select case when #{3} = 'ZHCX' then 98 else 0 end  from dual\n union \n  select case when #{4} = 'ZHCX' then 37 else 0 end  from dual\n)\n) and blzt <> 1"
+            }
+        ],
+        "gzmc": "【其他11】验证数据补录是否正在审核中",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1586505071000,
+        "ytsm": "【固定规则V3.0】验证数据补录是否正在审核中",
+        "gzid": "ee1e54ed758a43d7be101641fed4e39b"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "34406a34ded0451b89bac04915b376df",
+                "tsxx": "当前选择的#{bdcdyh}承包经营权证书存在查封",
+                "gzbds": "res 不为空 并且 res[0].NUM > 0",
+                "gzid": "ee35fcafa9a948b1a40e6cd5947b8430"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "res",
+                "sjlid": "3521257fb1a7423c9c61995dc6fd085f",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "qlrzjh",
+                        "sjlid": "3521257fb1a7423c9c61995dc6fd085f",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "1c1ab4cf159a44629b0dd4c2387fa174"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "3521257fb1a7423c9c61995dc6fd085f",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "581b132945b641dbbafbfc658523fcb7"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "当前选择的承包经营权证书是否被查封",
+                "gzid": "ee35fcafa9a948b1a40e6cd5947b8430",
+                "sjnr": "select count(*)  as  num,max(xmid) as xmid from bdc_qlr q where  q.zjh =#{1} and q.qlrlb='2' and q.xmid in(select xmid from bdc_cf d where d.bdcdyh=#{2} and d.qszt=1)"
+            }
+        ],
+        "gzmc": "【承包7】验证选择的承包经营权证是否处于查封状态；",
+        "yxj": 3,
+        "pzrq": 1604903566000,
+        "ytsm": "当前选择的承包经营权证书是否被查封",
+        "gzid": "ee35fcafa9a948b1a40e6cd5947b8430"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "ed9c210aa04345a789b863e45a8841c5",
+                "tsxx": "XF不动产单元号#{bdcdyh}存在查封，是否一并解封",
+                "gzbds": "cfxx 不为空 并且 cfxx[0].XMID 不为空",
+                "gzid": "44JI5547R71J0005"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "cfxx",
+                "sjlid": "c3da2cd95baa4eef943c2677cc9d8e4f",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "yxmid",
+                        "sjlid": "c3da2cd95baa4eef943c2677cc9d8e4f",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "22ff83d046394eb89cbed701e4cdc861"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "c3da2cd95baa4eef943c2677cc9d8e4f",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "251677c244584f1db6fd27e600c1f654"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "选择续封，存在查封",
+                "gzid": "44JI5547R71J0005",
+                "sjnr": "select xmid  from  bdc_cf where cflx in('1','2')  and qszt in (0, 1)  and xmid in\n(select yxmid from bdc_xm_lsgx start with xmid=#{1} connect by NOCYCLE prior yxmid=xmid ) and bdcdyh=#{2}"
+            }
+        ],
+        "gzmc": "【续封验证2】验证当前续封是否存在查封",
+        "pzr": "管理员",
+        "yxj": 1,
+        "pzrq": 1587948169000,
+        "ytsm": "【固定规则V3.0】选择不动产单元判断当前续封是否存在查封",
+        "gzid": "44JI5547R71J0005"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "e3b567b94f854d86a90ede325223bb37",
+                "tsxx": "当前选择的#{bdcdyh}承包经营权证书存在异议",
+                "gzbds": "res 不为空 并且 res[0].NUM > 0",
+                "gzid": "91b9f70068a248deb78f0e9a0af4858a"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "res",
+                "sjlid": "0400d979dbf54d71be2263fca62f7662",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "qlrzjh",
+                        "sjlid": "0400d979dbf54d71be2263fca62f7662",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "6ade148aabec420398a029f45ee2bb0a"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "0400d979dbf54d71be2263fca62f7662",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "3dd0192f710d47af87b62d15d89bf3a1"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "当前选择的承包经营权证书是否被异议",
+                "gzid": "91b9f70068a248deb78f0e9a0af4858a",
+                "sjnr": " select count(*)  as  num,max(xmid) as xmid from bdc_qlr q where  q.zjh =#{1} and q.qlrlb='2' and q.xmid in(select xmid from bdc_yy d where d.bdcdyh=#{2} and d.qszt=1)"
+            }
+        ],
+        "gzmc": "【承包5】验证承包经营权证是否存在异议",
+        "yxj": 3,
+        "pzrq": 1604903476000,
+        "ytsm": "验证当前选择的承包经营权证书是否被异议",
+        "gzid": "91b9f70068a248deb78f0e9a0af4858a"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "3c0441bf9b814991ae50a4f932502d47",
+                "tsxx": "该不动产单元#{bdcdyh}产权证存在抵押",
+                "gzbds": "dyaxx   不为空  并且   dyaxx[0].NUM  > 0",
+                "gzid": "dd693c9ce9434aef87260b7eaf6053ae"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "dyaxx",
+                "sjlid": "00eeaa814511420daffd097bc9e2a2aa",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "00eeaa814511420daffd097bc9e2a2aa",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "62d2a514499344bab4140280ccd452b2"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "00eeaa814511420daffd097bc9e2a2aa",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "0c45f585d804488896b25e6ebe97e6b0"
+                    },
+                    {
+                        "sjlcsmc": "gzid",
+                        "sjlid": "00eeaa814511420daffd097bc9e2a2aa",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "3",
+                        "sjlcsid": "8ed3bdbb3fe7423d83aed9759a18dbd8"
+                    },
+                    {
+                        "sjlcsmc": "slbh",
+                        "sjlid": "00eeaa814511420daffd097bc9e2a2aa",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "4",
+                        "sjlcsid": "6ff0b9c08c9b468ab577e4f1a99d0f87"
+                    },
+                    {
+                        "sjlcsmc": "xmid",
+                        "sjlid": "00eeaa814511420daffd097bc9e2a2aa",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "5",
+                        "sjlcsid": "bbf340c687924e68b171bef14f02451f"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "验证抵押信息",
+                "gzid": "dd693c9ce9434aef87260b7eaf6053ae",
+                "sjnr": "select count(*)  as  num , max(xmid)  as  xmid  from bdc_dyaq  where qszt =  1   and bdcdyh  =  #{1}\nand xmid not in (select  xmid from BDC_GZLW_SH where shzt = 1 and  bdcdyh =  #{2}  and  gzid = #{3}  and \n(slbh = #{4} or slbh = '***###' )) and xmid<>#{5}\n"
+            }
+        ],
+        "gzmc": "【抵押1】验证选择的不动产单元是否处于抵押状态",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1587525872000,
+        "ytsm": "【固定规则V3.0】抵押验证——验证选择的不动产单元是否处于抵押状态",
+        "gzid": "dd693c9ce9434aef87260b7eaf6053ae"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "ee67b5b329ad457fbcb33fdefc756606",
+                "tsxx": "权利人联系人电话为空！",
+                "gzbds": "dh[0].NUM > 0",
+                "gzid": "cd9e40d5de294c49a360735223509b02"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "dh",
+                "sjlid": "b0b58f47ea8c49b5921f2a93ded2f1d5",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "xmid",
+                        "sjlid": "b0b58f47ea8c49b5921f2a93ded2f1d5",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "8103ec0f6472468b88a580d5cf2019a9"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "申请人联系电话验证",
+                "gzid": "cd9e40d5de294c49a360735223509b02",
+                "sjnr": "select count(*)  as  num  from (select wm_concat(dh) dh from bdc_qlr where xmid=#{1}  AND QLRLB='1'  and qlrlx='1' group by xmid) where dh is null"
+            }
+        ],
+        "gzmc": "【其他5】验证申请人联系电话是否为空",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1584091987000,
+        "ytsm": "【固定规则V3.0】其他验证——验证申请人联系电话是否为空",
+        "gzid": "cd9e40d5de294c49a360735223509b02"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "7806edb9727f42f684d8c68fac4b4b01",
+                "tsxx": "该不动产单元#{bdcdyh}存在异议",
+                "gzbds": "yyxx2  不为空  并且   yyxx2[0].NUM  > 0",
+                "gzid": "82509c69b1ce4dceb9b5ae528758e8c2"
+            },
+            {
+                "bdsid": "dd462dbc4dad4cf390e331e2594a43c4",
+                "tsxx": "该不动产单元#{bdcdyh}存在异议",
+                "gzbds": "yyxx1  不为空  并且   yyxx1[0].NUM  > 0",
+                "gzid": "82509c69b1ce4dceb9b5ae528758e8c2"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "yyxx1",
+                "sjlid": "17f2feccb6b3467683628da0aded213a",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "17f2feccb6b3467683628da0aded213a",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "cd936fef65c94875bb17bbc6c5b61284"
+                    },
+                    {
+                        "sjlcsmc": "xmid",
+                        "sjlid": "17f2feccb6b3467683628da0aded213a",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "bcc10eb943364143ac095d53fe6f87f6"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "根据不动产单元号验证异议",
+                "gzid": "82509c69b1ce4dceb9b5ae528758e8c2",
+                "sjnr": "select  count(*)  as  num   from bdc_yy  where qszt  in  (0,  1)  and  bdcdyh  = #{1} and xmid <> #{2}"
+            },
+            {
+                "sjly": "1",
+                "jgblbs": "yyxx2",
+                "sjlid": "9756ea5a832749e7beecca91d249a319",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "9756ea5a832749e7beecca91d249a319",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "6616de58ffe145eabbca78100423cb4e"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "9756ea5a832749e7beecca91d249a319",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "f3f0b863322c4adc9079de2a0383e71d"
+                    },
+                    {
+                        "sjlcsmc": "xmid",
+                        "sjlid": "9756ea5a832749e7beecca91d249a319",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "3",
+                        "sjlcsid": "5f7337d4e8bd4fba985d7b61b2d9e12c"
+                    }
+                ],
+                "sjlsx": 1,
+                "sjlmc": "根据不动产单元唯一编号号查询异议信息",
+                "gzid": "82509c69b1ce4dceb9b5ae528758e8c2",
+                "sjnr": "select count(*)  as  num   from bdc_yy  where qszt  in  (0,  1)   and    BDCDYWYBH in (    select  BDCDYWYBH   from  bdc_xm     where  bdcdyh  =  #{1}    UNION     select  BDCDYWYBH   from  bdc_yy    where  bdcdyh  =  #{2}) and xmid <> #{3}"
+            }
+        ],
+        "gzmc": "【异议1】验证不动产单元是否存在异议",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1587609484000,
+        "ytsm": "【固定规则V3.0】异议验证——验证不动产单元是否存在异议",
+        "gzid": "82509c69b1ce4dceb9b5ae528758e8c2"
+    },
+    {
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "sdxx1",
+                "sjlid": "e99b16d13138436f8c4de8a090083a5a",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "e99b16d13138436f8c4de8a090083a5a",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "7fbc89d1bf6b42338760ca51f7d2e6da"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "根据不动产单元号验证锁定数据",
+                "gzid": "dc7b0ad1d0fd42369b3ee1e76c3ad1ad",
+                "sjnr": "select  sdyy  from bdc_dysd  where   sdzt = 1  and   bdcdyh  =    #{1}"
+            },
+            {
+                "sjly": "1",
+                "jgblbs": "sdxx2",
+                "sjlid": "26d98fe41ae04bbab96f8ee2fa9b8dfc",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "26d98fe41ae04bbab96f8ee2fa9b8dfc",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "ad58c1174b444914824ad555a202a662"
+                    }
+                ],
+                "sjlsx": 1,
+                "sjlmc": "根据不动产唯一编号验证锁定",
+                "gzid": "dc7b0ad1d0fd42369b3ee1e76c3ad1ad",
+                "sjnr": "select  sdyy  from bdc_dysd  where   sdzt = 1  and   bdcdywybh    in(  select  bdcdywybh   from  bdc_xm  where   bdcdyh = #{1}  )"
+            },
+            {
+                "sjlsx": 2,
+                "sjly": "1",
+                "jgblbs": "res",
+                "sjlid": "93abb92df28a491fa7b83409f5942737",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsid": "55SF0834BQJ89001",
+                        "sjlid": "93abb92df28a491fa7b83409f5942737",
+                        "sjlcsmc": "bdcdyh",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1"
+                    }
+                ],
+                "sjlmc": "获取不动产单元号",
+                "gzid": "dc7b0ad1d0fd42369b3ee1e76c3ad1ad",
+                "sjnr": "select #{1} as  bdcdyh from dual"
+            }
+        ],
+        "gzmc": "【锁定3】验证不动产单元存在锁定",
+        "pzr": "管理员",
+        "jydm": "package cn.gtmap.realestate.engine.service.impl;\n\nimport java.util.ArrayList;\nimport java.util.List;\nimport java.util.Map;\n\n/**\n * 不动产子规则动态编码验证类 注意：包名、类名、方法签名请不要改动！\n *\n * @version 1.0, GTMAP\n */\npublic class RuleCheck {\n\n  /**\n   * 对数据流执行结果进行判断，获取对应的提示信息\n   *\n   * @param checkResult 数据流执行结果集合\n   * @return { List } 子规则提示信息\n   */\n  public <T> List<String> getTsxxList(Map<String, T> checkResult) {\n    if (null == checkResult) {\n      return null;\n    }\n    List<String> tsxxList = new ArrayList();\n\n    // ---------------------\n    String bdcdyh =\n        (String) ((List<Map<String, Object>>) checkResult.get(\"res\")).get(0).get(\"BDCDYH\");\n    List<Map<String, Object>> sdxx1List = (List<Map<String, Object>>) checkResult.get(\"sdxx1\");\n    if (sdxx1List.size() > 0) {\n      String sdyy1 = (String) sdxx1List.get(0).get(\"SDYY\");\n      tsxxList.add(\"该不动产单元\" + bdcdyh + \"存在锁定，锁定原因：\" + sdyy1 + \"，请核实无误后解锁办理\");\n    }\n    List<Map<String, Object>> sdxx2List = (List<Map<String, Object>>) checkResult.get(\"sdxx2\");\n    if (sdxx2List.size() > 0) {\n      String sdyy2 = (String) sdxx2List.get(0).get(\"SDYY\");\n      tsxxList.add(\"该不动产单元\" + bdcdyh + \"存在锁定，锁定原因：\" + sdyy2 + \"，请核实无误后解锁办理\");\n    }\n\n    // ---------------------\n    return tsxxList;\n  }\n}\n",
+        "yxj": 3,
+        "pzrq": 1622166325000,
+        "ytsm": "【固定规则V3.0】锁定验证——验证不动产单元存在锁定",
+        "gzid": "dc7b0ad1d0fd42369b3ee1e76c3ad1ad"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "39f4c76f2c5f42cb999bd2ec6f8258d9",
+                "tsxx": "该户主存在现势承包经营权，请核查！",
+                "gzbds": "res 不为空 并且 res[0].NUM > 0",
+                "gzid": "2cb540febcbf464fb332f6906ea9bdbb"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "res",
+                "sjlid": "7e8aa384d0fb494a9f5401754e34df00",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "qlrzjh",
+                        "sjlid": "7e8aa384d0fb494a9f5401754e34df00",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "f7439e06fef6498185189751cd224468"
+                    },
+                    {
+                        "sjlcsmc": "gzlslid",
+                        "sjlid": "7e8aa384d0fb494a9f5401754e34df00",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "b44faed1650842a687a576a99ae9ad30"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "当前登记的户主在库中是否有现势的承包经营权",
+                "gzid": "2cb540febcbf464fb332f6906ea9bdbb",
+                "sjnr": "select count(*)  as  num,max(xmid) as xmid from bdc_xm x where x.xmid in (select xmid from bdc_qlr q where q.zjh=#{1}  and q.qlrlb='1') and x.qllx=9 and x.qszt=1 and x.xmid not in(select xmid from bdc_xm where gzlslid =#{2} )"
+            }
+        ],
+        "gzmc": "【承包2】验证该户是否存在承包经营权现势产权；",
+        "yxj": 3,
+        "pzrq": 1604902033000,
+        "ytsm": "验证当前登记的户主在库中是否有现势的承包经营权",
+        "gzid": "2cb540febcbf464fb332f6906ea9bdbb"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "1438e05d3c8448bb89caab0c75bf5283",
+                "tsxx": "请检查数据！",
+                "gzbds": "xnbdcdyhgx 不为空 并且 xnbdcdyhgx[0].NUM > 1",
+                "gzid": "5df64872bd9748089e917d1e8a765318"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "xnbdcdyhgx",
+                "sjlid": "0d809c232152472a9035048af2c481c9",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "xnxmid",
+                        "sjlid": "0d809c232152472a9035048af2c481c9",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "9667e9d57b1f4ae4a908754e34ed02aa"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "查询匹配关系表",
+                "gzid": "5df64872bd9748089e917d1e8a765318",
+                "sjnr": "select count(*)  as  num   from bdc_xnbdcdyh_gx  where xnbdcdyhxmid =#{1}"
+            }
+        ],
+        "gzmc": "【匹配验证1】验证房产证或者土地证是否匹配了多个单元号",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1584092540000,
+        "ytsm": "【固定规则V3.0】验证房产证或者土地证是否匹配了多个单元号",
+        "gzid": "5df64872bd9748089e917d1e8a765318"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "018149f1cdc645d3948132244607a0d4",
+                "tsxx": "土地证已匹配房产证，请核实！",
+                "gzbds": "fctdppgx 不为空 并且 fctdppgx[0].NUM  > 0",
+                "gzid": "e2cbda83d28840b794d09cc16ed2f03a"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "fctdppgx",
+                "sjlid": "20569b325fbd4fba88b927176779741d",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "tdxmid",
+                        "sjlid": "20569b325fbd4fba88b927176779741d",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "9b5859dd4af04590a213ca3cbc936e1e"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "查询房地匹配关系",
+                "gzid": "e2cbda83d28840b794d09cc16ed2f03a",
+                "sjnr": "select  count(*)  as  num   from bdc_fctd_ppgx  where tdcqxmid=#{1}"
+            }
+        ],
+        "gzmc": "【匹配验证5】验证已存在匹配关系的土地证（匹配了房产证）能否再次被房产证匹配",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1584092585000,
+        "ytsm": "【固定规则V3.0】验证已存在匹配关系的土地证（匹配了房产证）能否再次被房产证匹配",
+        "gzid": "e2cbda83d28840b794d09cc16ed2f03a"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "09c5813861294cad94ae3a8e15bafb6d",
+                "tsxx": "SFPP未匹配土地证号，是否匹配？",
+                "gzbds": "res 不为空 并且 res.sflz == \"true\" 并且 res.sfpp == \"false\"",
+                "gzid": "906fe67754b043869d4d76b718e48737"
+            },
+            {
+                "bdsid": "93ae6fdf00994ada839de9b02b58c914",
+                "tsxx": "MULLZ项目存在多条匹配关系，是否重新匹配？",
+                "gzbds": "res 不为空 并且 res.mullz 不为空",
+                "gzid": "906fe67754b043869d4d76b718e48737"
+            },
+            {
+                "bdsid": "022a18f1adfe4954b8c0cef138bb6fc1",
+                "tsxx": "SFLZ存在虚拟单元号是否匹配再创建？",
+                "gzbds": "res 不为空 并且 res.sflz == \"false\"",
+                "gzid": "906fe67754b043869d4d76b718e48737"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "fwff": "1",
+                "sjly": "2",
+                "jgblbs": "res",
+                "qqyy": "accept-app",
+                "sjlid": "1053e18004db48519727b63a994360f9",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "xztzlx",
+                        "sjlid": "1053e18004db48519727b63a994360f9",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "5deeb76201354f658c541335eec9055f"
+                    },
+                    {
+                        "sjlcsmc": "jbxxid",
+                        "sjlid": "1053e18004db48519727b63a994360f9",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "1c2f00e5253e4ab5bac3e4dcc5799e2c"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "验证匹配落宗状态",
+                "gzid": "906fe67754b043869d4d76b718e48737",
+                "sjnr": "/realestate-accept/rest/v1.0/gzyz/pplzzt/#{1}?xztzlx=#{2}"
+            }
+        ],
+        "gzmc": "【其他12】验证匹配落宗状态",
+        "pzr": "管理员",
+        "jydm": "package cn.gtmap.realestate.engine.service.impl;\n\nimport java.util.ArrayList;\nimport java.util.List;\nimport java.util.Map;\n\n/**\n * 不动产子规则动态编码验证类 注意：包名、类名、方法签名请不要改动！\n *\n * @version 1.0, GTMAP\n */\npublic class RuleCheck {\n\n  /**\n   * 对数据流执行结果进行判断，获取对应的提示信息\n   *\n   * @param checkResult 数据流执行结果集合\n   * @return { List } 子规则提示信息\n   */\n  public <T> List<String> getTsxxList(Map<String, T> checkResult) {\n    if (null == checkResult) {\n      return null;\n    }\n    List<String> tsxxList = new ArrayList();\n\n    // TODO 输入具体验证内容\n    // ---------------------\n\n    // ---------------------\n    return tsxxList;\n  }\n}\n",
+        "yxj": 1,
+        "pzrq": 1585807253000,
+        "ytsm": "【固定规则V3.0】验证房产证（土地证）是否是虚拟单元号，是否匹配土地证，是否存在多条匹配关系",
+        "gzid": "906fe67754b043869d4d76b718e48737"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "6040c7b06d89499092cc3f408fd66454",
+                "tsxx": "该不动产单元#{bdcdyh}存在预告！",
+                "gzbds": "ygzt 不为空 并且 ygzt[0].NUM > 0 ",
+                "gzid": "45M85324MY2B400D"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "ygzt",
+                "sjlid": "b02bfe45591f449f902a3250b21ed52c",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "b02bfe45591f449f902a3250b21ed52c",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "ef3973a165674c259e65e41e4fc11c2a"
+                    },
+                    {
+                        "sjlcsmc": "gzlslid",
+                        "sjlid": "b02bfe45591f449f902a3250b21ed52c",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "1fbb5ee9e1044916b551d26bb4dac61e"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "查询预告表",
+                "gzid": "45M85324MY2B400D",
+                "sjnr": "select  count(*)  as num from bdc_yg where  qszt = 1    and    ygdjzl   in   (1  ,  2 )   and  bdcdyh = #{1}  and xmid  not in (select y.xmid from bdc_yg y left join bdc_xm x on y.xmid=x.xmid where x.gzlslid=#{2}  and y.ygdjzl in(1,2))"
+            }
+        ],
+        "gzmc": "【预告1】验证不动产单元是否存在预告",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1590109627000,
+        "ytsm": "【固定规则V3.0】验证不动产单元——验证该不动产单元是否存在预告——用于转发验证",
+        "gzid": "45M85324MY2B400D"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "c8bd70c0957f4435871347d5a70efd30",
+                "tsxx": "该不动产单元#{bdcdyh}所在宗地存在异议",
+                "gzbds": "yyxx2  不为空  并且   yyxx2[0].NUM  > 0",
+                "gzid": "c1450559c81c41ba804eef3b92f60e95"
+            },
+            {
+                "bdsid": "ae820167f5cb480384c2234b72e16600",
+                "tsxx": "该不动产单元#{bdcdyh}所在宗地存在异议",
+                "gzbds": "yyxx1  不为空  并且   yyxx1[0].NUM  > 0",
+                "gzid": "c1450559c81c41ba804eef3b92f60e95"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "yyxx1",
+                "sjlid": "ba48fae09990474e9a18feb17c2c7bae",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "ba48fae09990474e9a18feb17c2c7bae",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "3",
+                        "sjlcsid": "a631fdf65923439b995fb7b961f1ba02"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "ba48fae09990474e9a18feb17c2c7bae",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "f7254ba2d01344418acbc1274b5b7451"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "ba48fae09990474e9a18feb17c2c7bae",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "a0af56510141490e89a9dbf7e4b8afc9"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "根据宗地的不动产单元号查询异议信息",
+                "gzid": "c1450559c81c41ba804eef3b92f60e95",
+                "sjnr": "select count(*)  as  num   from bdc_yy  where qszt  in  (0,  1)  and   bdcdyh = (   select case when length( #{1} ) > 19 then substr( #{2} ,0, 19) || 'W00000000' else  #{3}  end   as bdcdyh from dual)"
+            },
+            {
+                "sjly": "1",
+                "jgblbs": "yyxx2",
+                "sjlid": "569a66464eca49eda07604b546789594",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "569a66464eca49eda07604b546789594",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "6e1386fdf9564d9b9f68bae4531b7f3b"
+                    }
+                ],
+                "sjlsx": 1,
+                "sjlmc": "根据宗地的不动产单元唯一编码验证异议",
+                "gzid": "c1450559c81c41ba804eef3b92f60e95",
+                "sjnr": "select count(*)  as  num   from bdc_yy  where qszt  in  (0,  1)   and   bdcdywybh   in(       select  distinct  bdcdywybh  from  bdc_xm  where  bdcdyh  =   substr( #{1} ,0, 19)  || 'W00000000' )"
+            }
+        ],
+        "gzmc": "【异议2】验证所在宗地是否存在异议",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1584091580000,
+        "ytsm": "【固定规则V3.0】异议验证——验证所在宗地是否存在异议",
+        "gzid": "c1450559c81c41ba804eef3b92f60e95"
+    },
+    {
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "cfxx1",
+                "sjlid": "41770f19f210461c9d2bb6c9453ff0ef",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "41770f19f210461c9d2bb6c9453ff0ef",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "122ad9f5017a48ae889a61bc1ddf2500"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "41770f19f210461c9d2bb6c9453ff0ef",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "9b530976239a410e938bb740e2980b82"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "41770f19f210461c9d2bb6c9453ff0ef",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "3",
+                        "sjlcsid": "f15d9dd19e0d4372b99ef5a01496ea74"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "根据宗地的不动产单元号查询查封信息",
+                "gzid": "2ae7e61f522549e0bc39d32c4ba510eb",
+                "sjnr": "select count(*)  as  num, bdcdyh   from bdc_cf  where qszt  in  (0,  1)  and   bdcdyh = (   select case when length( #{1} ) > 19 then substr( #{2} ,0, 19) || 'W00000000' else  #{3}  end   as bdcdyh from dual)  group by bdcdyh"
+            },
+            {
+                "sjly": "1",
+                "jgblbs": "cfxx2",
+                "sjlid": "756befab5f2f44d0aeb5a7b693ae0515",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "756befab5f2f44d0aeb5a7b693ae0515",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "f121fe293bbf49a3a6fc8a35219d7d5e"
+                    }
+                ],
+                "sjlsx": 1,
+                "sjlmc": "根据宗地的不动产单元唯一编码验证查封",
+                "gzid": "2ae7e61f522549e0bc39d32c4ba510eb",
+                "sjnr": "select count(*)  as  num,bdcdyh   from bdc_cf  where qszt  in  (0,  1)   and   bdcdywybh   in(       select  bdcdywybh  from  bdc_xm  where  bdcdyh  =    substr( #{1} ,0, 19)  ||  'W00000000' ) group by bdcdyh"
+            }
+        ],
+        "gzmc": "【查封2】验证所在宗地是否存在查封",
+        "pzr": "管理员",
+        "jydm": "package cn.gtmap.realestate.engine.service.impl;\n\nimport java.util.ArrayList;\nimport java.util.List;\nimport java.util.Map;\n\n/**\n * 不动产子规则动态编码验证类 注意：包名、类名、方法签名请不要改动！\n *\n * @version 1.0, GTMAP\n */\npublic class RuleCheck {\n\n  /**\n   * 对数据流执行结果进行判断，获取对应的提示信息\n   *\n   * @param checkResult 数据流执行结果集合\n   * @return { List } 子规则提示信息\n   */\n  public <T> List<String> getTsxxList(Map<String, T> checkResult) {\n    if (null == checkResult) {\n      return null;\n    }\n    List<String> tsxxList = new ArrayList();\n\n    // ---------------------\n    List<Map<String, Object>> cfxxList1 = (List<Map<String, Object>>) checkResult.get(\"cfxx1\");\nList<Map<String, Object>> cfxxList2 = (List<Map<String, Object>>) checkResult.get(\"cfxx2\");\n    if (cfxxList1 .size() > 0) {\n      String bdcdyh =\n          (String) ((List<Map<String, Object>>) checkResult.get(\"cfxx1\")).get(0).get(\"BDCDYH\");\n      tsxxList.add(\"该不动产单元所在宗地\" + bdcdyh + \"存在查封ZDDYH\");\n    }\n    if (cfxxList2 .size() > 0) {\n      String bdcdyh =\n          (String) ((List<Map<String, Object>>) checkResult.get(\"cfxx2\")).get(0).get(\"BDCDYH\");\n      tsxxList.add(\"该不动产单元所在宗地\" + bdcdyh + \"存在查封ZDDYH\");\n    }\n\n    // ---------------------\n    return tsxxList;\n  }\n}\n",
+        "yxj": 3,
+        "pzrq": 1602810877000,
+        "ytsm": "【固定规则V3.0】查封验证——验证所在宗地是否存在查封---提示宗地单元号",
+        "gzid": "2ae7e61f522549e0bc39d32c4ba510eb"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "ac1b06a15cfa455aad18e7f96c6aafaf",
+                "tsxx": "该不动产单元#{bdcdyh}存在地役",
+                "gzbds": "res  不为空  并且   res[0].NUM  > 0",
+                "gzid": "3ff389a872bb43c986972797f8047e09"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "res",
+                "sjlid": "a12ec4e176eb41058f5fb0dc2bb7526e",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "a12ec4e176eb41058f5fb0dc2bb7526e",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "7c5001732d0b49ffbb36c523b30065e6"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "验证地役",
+                "gzid": "3ff389a872bb43c986972797f8047e09",
+                "sjnr": "select count(*)  as  num   from   BDC_DYIQ   where qszt =  1   and   gydbdcdyh  =  #{1}  "
+            }
+        ],
+        "gzmc": "【地役1】不动产单元是否存在地役",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1584091694000,
+        "ytsm": "【固定规则V3.0】地役验证——不动产单元是否存在地役",
+        "gzid": "3ff389a872bb43c986972797f8047e09"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "d0ba937847bd40c2a47b656f0ff1d77d",
+                "tsxx": "单元号存在匹配关系，请核实！",
+                "gzbds": "xnbdcdyhgx 不为空 并且 xnbdcdyhgx[0].NUM > 0",
+                "gzid": "b7377c8114a147a2824cff2229f74137"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "xnbdcdyhgx",
+                "sjlid": "45cf8bbc8c7945e8ba29bae31f1ea3e0",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "45cf8bbc8c7945e8ba29bae31f1ea3e0",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "4b1372f78a7048cf9119e3983fb1dd18"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "查询单元匹配关系表",
+                "gzid": "b7377c8114a147a2824cff2229f74137",
+                "sjnr": "select count(*)  as  num   from bdc_xnbdcdyh_gx  where bdcdyh=#{1}"
+            }
+        ],
+        "gzmc": "【匹配验证6】验证已经存在匹配关系的不动产单元号能否再次被土地证匹配",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1584092596000,
+        "ytsm": "【固定规则V3.0】验证已经存在匹配关系的不动产单元号能否再次被土地证匹配",
+        "gzid": "b7377c8114a147a2824cff2229f74137"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "65fdac4409fe4c5b8cf5560a558d5f5f",
+                "tsxx": "该不动产单元#{bdcdyh}是虚拟不动产单元",
+                "gzbds": "res  不为空  并且   res[0].NUM  > 0",
+                "gzid": "da593fe5f96046d0aeae652ea830019d"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "res",
+                "sjlid": "41eb4f73c30c46ce9a319b5b0200dd4b",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "41eb4f73c30c46ce9a319b5b0200dd4b",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "d87d42577f7a4ea49cc6d66e989f8912"
+                    },
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "41eb4f73c30c46ce9a319b5b0200dd4b",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "fa717332a6a8487fabb8fc4ba1546128"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "验证不动产单元号",
+                "gzid": "da593fe5f96046d0aeae652ea830019d",
+                "sjnr": "select  count(*)  as num  from  dual   where   substr( #{1} ,  15,  5  )   =   '00000' and   not    EXISTS (select bdcdyh from bdc_hysyq where bdcdyh = #{2}  )"
+            }
+        ],
+        "gzmc": "【其他8】验证不动产单元是否是虚拟不动产单元",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1584092125000,
+        "ytsm": "【固定规则V3.0】其他验证——验证不动产单元是否是虚拟不动产单元",
+        "gzid": "da593fe5f96046d0aeae652ea830019d"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "d2672850010449fbbcaa13dcb3a46856",
+                "tsxx": "WLZS 该不动产单元号#{bdcdyh}存在n条查封，是否一并注销？",
+                "gzbds": "cfxx 不为空 并且 cfxx[0].XMID 不为空",
+                "gzid": "3224096b636a42ad93296eb6692bf994"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "cfxx",
+                "sjlid": "b8e5a7b664004f96a93dc84b26f13064",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "b8e5a7b664004f96a93dc84b26f13064",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "6d76e25053d74185891ae3119d452f81"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "根据不动产单元号查询查封",
+                "gzid": "3224096b636a42ad93296eb6692bf994",
+                "sjnr": "select  xmid,bdcdyh as wlbdcdyh   from bdc_cf  where qszt  in  (0,  1)  and   bdcdyh  = #{1}"
+            }
+        ],
+        "gzmc": "【司法裁定1】验证不动产单元是否查封并注销查封",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1584092252000,
+        "ytsm": "【固定规则V3.0】验证司法裁定转移",
+        "gzid": "3224096b636a42ad93296eb6692bf994"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "b9a660b030374db59c3586993869c418",
+                "tsxx": "该不动产单元号#{bdcdyh}  同意转让抵押不动产的约定",
+                "gzbds": "res 不为空  并且 res[0].COU > 0",
+                "gzid": "194695cd712b46e5b41e81ae28b6d00c"
+            },
+            {
+                "bdsid": "95f437f7f1eb46fca398cacb666fa566",
+                "tsxx": "该不动产单元号#{bdcdyh} 同意转让抵押不动产的约定",
+                "gzbds": "ydya 不为空  并且 ydya[0].COU > 0",
+                "gzid": "194695cd712b46e5b41e81ae28b6d00c"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "res",
+                "sjlid": "23d780de3c4445198463f45a406725bc",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "23d780de3c4445198463f45a406725bc",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "ca3f47ebaeb949fba666fa503852fac6"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "验证是否禁止转让",
+                "gzid": "194695cd712b46e5b41e81ae28b6d00c",
+                "sjnr": "select count(*) cou  from bdc_dyaq t  where t.bdcdyh= #{1} and  t.jzzr=0 and t.qszt = 1"
+            },
+            {
+                "sjly": "1",
+                "jgblbs": "ydya",
+                "sjlid": "b86f7975d5eb4ffd9ec0906bff90c8ce",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "b86f7975d5eb4ffd9ec0906bff90c8ce",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "3941e1473173485ea7b0b7f41dcb3314"
+                    }
+                ],
+                "sjlsx": 1,
+                "sjlmc": "验证预抵押是否禁止转让",
+                "gzid": "194695cd712b46e5b41e81ae28b6d00c",
+                "sjnr": "select count(*) cou  from bdc_yg t  where t.bdcdyh= #{1} and  t.jzzr=0 and t.qszt = 1 and t.ygdjzl in (3,4)"
+            }
+        ],
+        "gzmc": "【其他18】是否存在禁止或限制转让抵押不动产的约定(可忽略)",
+        "yxj": 1,
+        "pzrq": 1618220605000,
+        "ytsm": "【固定规则V3.0】验证是否存在禁止或限制转让抵押不动产的约定，如果同意，仅给出提示，可以忽略",
+        "gzid": "194695cd712b46e5b41e81ae28b6d00c"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "fb87a3e2ea5243769c705f12fa39be1b",
+                "tsxx": "该不动产单元#{bdcdyh}产权证存在预告抵押",
+                "gzbds": "ygxx 不为空  并且   ygxx[0].NUM  > 0",
+                "gzid": "57d5784ec0e142e5ad9f562a558b50a8"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "sjly": "1",
+                "jgblbs": "ygxx",
+                "sjlid": "d208adf89b0348d3be7639c2e14d4207",
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsmc": "bdcdyh",
+                        "sjlid": "d208adf89b0348d3be7639c2e14d4207",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "1",
+                        "sjlcsid": "2bc59a2046694d0dbb6b605ca3e157c9"
+                    },
+                    {
+                        "sjlcsmc": "gzlslid",
+                        "sjlid": "d208adf89b0348d3be7639c2e14d4207",
+                        "sjlcszl": "2",
+                        "sjlcsxh": "2",
+                        "sjlcsid": "310d56cfffe74feba2fdb5257595dec1"
+                    }
+                ],
+                "sjlsx": 0,
+                "sjlmc": "查询预告表",
+                "gzid": "57d5784ec0e142e5ad9f562a558b50a8",
+                "sjnr": "select count(*)  as num  from bdc_yg  where  ygdjzl  in (3, 4)  and bdcdyh  =  #{1} and qszt = 1 and xmid not in (select y.xmid from bdc_yg y left join bdc_xm x on y.xmid=x.xmid where x.gzlslid=#{2} and y.ygdjzl in(3,4))"
+            }
+        ],
+        "gzmc": "【预抵押1】验证不动产单元是否存在预告抵押权",
+        "pzr": "管理员",
+        "yxj": 3,
+        "pzrq": 1587977265000,
+        "ytsm": "【固定规则V3.0】预抵押验证——验证选择的不动产单元是否存在预告抵押权——用于转发验证",
+        "gzid": "57d5784ec0e142e5ad9f562a558b50a8"
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "3bfe2826301b429f9d6ce96e07684191",
+                "gzbds": "xmxx     不为空  并且  xmxx[0].NUM > 0",
+                "gzid": "56GH12464LY65002",
+                "tsxx": "该证“&{xmxx>>bdcqzh}”正在办理其他登记"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsid": "4739786daab44bd1956fe399e106a83d",
+                        "sjlcsmc": "gzlslid",
+                        "sjlcsxh": "1",
+                        "sjlcszl": "2",
+                        "sjlid": "14259761ad764e55af87eff4583b4e97"
+                    },
+                    {
+                        "sjlcsid": "d57b425fff5d4a0786284d51eae339ae",
+                        "sjlcsmc": "gzlslid",
+                        "sjlcsxh": "2",
+                        "sjlcszl": "2",
+                        "sjlid": "14259761ad764e55af87eff4583b4e97"
+                    }
+                ],
+                "gzid": "56GH12464LY65002",
+                "jgblbs": "xmxx",
+                "sjlid": "14259761ad764e55af87eff4583b4e97",
+                "sjlmc": "查询原项目",
+                "sjlsx": 0,
+                "sjly": "1",
+                "sjnr": "select count(*) as num, max(xmid) as xmid, max(bdcqzh) as bdcqzh from bdc_xm where xmid in (
+                             select xmid from bdc_xm_lsgx where yxmid in
+                             (
+                                 select l.yxmid from bdc_xm t inner join bdc_xm_lsgx l  on t.xmid = l.xmid where t.gzlslid = #{1}
+                             )
+                         ) and ajzt = 1 and xmid not in (select xmid from bdc_xm where gzlslid = #{2})"
+            }
+        ],
+        "gzid": "56GH12464LY65002",
+        "gzmc": "【其他99】验证不动产权证书（证明）是否正在办理其他登记",
+        "pzrq": 1623918646000,
+        "ytsm": "【固定规则V3.0】创建验证不动产权证书（证明）是否正在办理其他登记——用于转发",
+        "yxj": 3
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "6e6efdf6d180401aa2e2ae3b1cd65235",
+                "gzbds": "xmxx     不为空  并且  xmxx[0].NUM > 0",
+                "gzid": "56GH1246PUY65003",
+                "tsxx": "该证“&{yxm>>bdcqzh}”正在办理其他业务"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsid": "ff29055204ef46d49c2b34cc7661942c",
+                        "sjlcsmc": "yxmid",
+                        "sjlcsxh": "1",
+                        "sjlcszl": "2",
+                        "sjlid": "cedc0b1a8629447b843c14e93a756e49"
+                    }
+                ],
+                "gzid": "56GH1246PUY65003",
+                "jgblbs": "xmxx",
+                "sjlid": "cedc0b1a8629447b843c14e93a756e49",
+                "sjlmc": "查询项目",
+                "sjlsx": 0,
+                "sjly": "1",
+                "sjnr": "select count（*）as num，max(xmid) as xmid  from bdc_xm t where t.xmid in (\nselect l.xmid from bdc_xm_lsgx l where l.yxmid=#{1}) and t.ajzt=1"
+            },
+            {
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsid": "14d9804af85d4abcaefe330fba903ed1",
+                        "sjlcsmc": "yxmid",
+                        "sjlcsxh": "1",
+                        "sjlcszl": "2",
+                        "sjlid": "cf0a40bc56c3472aba4622dcf20f220d"
+                    }
+                ],
+                "gzid": "56GH1246PUY65003",
+                "jgblbs": "yxm",
+                "sjlid": "cf0a40bc56c3472aba4622dcf20f220d",
+                "sjlmc": "查询原项目产权证号",
+                "sjlsx": 1,
+                "sjly": "1",
+                "sjnr": "select  bdcqzh  from bdc_xm where xmid = #{1}"
+            }
+        ],
+        "gzid": "56GH1246PUY65003",
+        "gzmc": "【其他99】验证不动产权证书（证明）是否正在办理其他登记",
+        "pzrq": 1623917025000,
+        "ytsm": "【固定规则V3.0】创建验证不动产权证书（证明）是否正在办理其他登记——用于创建",
+        "yxj": 3
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "327b7adf8fe6456092d1cbc1ce465908",
+                "gzbds": "tdxx 不为空 并且 tdxx[0].NUM > 1",
+                "gzid": "eff950fa76224609af85f724dada9f7c",
+                "tsxx": "土地证不动产单元号存在多条现势产权！"
+            },
+            {
+                "bdsid": "b6016712309f482f90a7b1b9b5df4cc7",
+                "gzbds": "fwxx 不为空 并且 fwxx[0].NUM > 1",
+                "gzid": "eff950fa76224609af85f724dada9f7c",
+                "tsxx": "房产证不动产单元号存在多条现势产权！"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsid": "db170369366340ecaf4f12844f403fdc",
+                        "sjlcsmc": "xnxmid",
+                        "sjlcsxh": "1",
+                        "sjlcszl": "2",
+                        "sjlid": "a65db00b197d4759b65c9ae3be2a2b3e"
+                    }
+                ],
+                "gzid": "eff950fa76224609af85f724dada9f7c",
+                "jgblbs": "fwxx",
+                "sjlid": "a65db00b197d4759b65c9ae3be2a2b3e",
+                "sjlmc": "查询现势房屋产权",
+                "sjlsx": 0,
+                "sjly": "1",
+                "sjnr": "select count(*) as num from bdc_fdcq where  bdcdyh =(select bdcdyh from bdc_xm where xmid=#{1}) and qszt=1"
+            },
+            {
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsid": "ebc9041eb4354e389caca309629871aa",
+                        "sjlcsmc": "tdxmid",
+                        "sjlcsxh": "1",
+                        "sjlcszl": "2",
+                        "sjlid": "2a6b6dd384d44f00ba914da446b15cb3"
+                    }
+                ],
+                "gzid": "eff950fa76224609af85f724dada9f7c",
+                "jgblbs": "tdxx",
+                "sjlid": "2a6b6dd384d44f00ba914da446b15cb3",
+                "sjlmc": "查询现势土地产权",
+                "sjlsx": 1,
+                "sjly": "1",
+                "sjnr": "select count(*) as num from bdc_jsydsyq where  bdcdyh =(select bdcdyh from bdc_xm where xmid=#{1}) and qszt=1"
+            }
+        ],
+        "gzid": "eff950fa76224609af85f724dada9f7c",
+        "gzmc": "【匹配验证】房屋匹配土地证，验证房产证或土地证单元号存在多个现势产权",
+        "jydm": "package cn.gtmap.realestate.engine.service.impl;\n\nimport java.util.ArrayList;\nimport java.util.List;\nimport java.util.Map;\n\n/**\n * 不动产子规则动态编码验证类 注意：包名、类名、方法签名请不要改动！\n *\n * @version 1.0, GTMAP\n */\npublic class RuleCheck {\n\n  /**\n   * 对数据流执行结果进行判断，获取对应的提示信息\n   *\n   * @param checkResult 数据流执行结果集合\n   * @return { List } 子规则提示信息\n   */\n  public <T> List<String> getTsxxList(Map<String, T> checkResult) {\n    if (null == checkResult) {\n      return null;\n    }\n    List<String> tsxxList = new ArrayList();\n\n    // TODO 输入具体验证内容\n    // ---------------------\n\n    // ---------------------\n    return tsxxList;\n  }\n}\n",
+        "pzr": "管理员",
+        "pzrq": 1663661837000,
+        "ytsm": "【固定规则V3.0】房产证匹配土地证时，验证房产证或者土地证对应的单元号是否存在多个现势产权",
+        "yxj": 3
+    },
+    {
+        "bdcGzBdsTsxxDOList": [
+            {
+                "bdsid": "e2204500ace048dd9cb9ea8b1df42792",
+                "gzbds": "fwxx 不为空 并且 fwxx[0].NUM > 1",
+                "gzid": "a4f468975edb4212a9ae0554f3ecf1be",
+                "tsxx": "房产证不动产单元号存在多条现势产权！"
+            },
+            {
+                "bdsid": "977d24a07efc476ca28a814c56215a98",
+                "gzbds": "tdxx 不为空 并且 tdxx[0].NUM > 1",
+                "gzid": "a4f468975edb4212a9ae0554f3ecf1be",
+                "tsxx": "土地证不动产单元号存在多条现势产权！"
+            }
+        ],
+        "bdcGzSjlDTOList": [
+            {
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsid": "0d328b95422d431d9c89ec5e2adb1991",
+                        "sjlcsmc": "xnxmid",
+                        "sjlcsxh": "1",
+                        "sjlcszl": "2",
+                        "sjlid": "cf2a3e0c4eac483480bcd6ad5bb9beec"
+                    }
+                ],
+                "gzid": "a4f468975edb4212a9ae0554f3ecf1be",
+                "jgblbs": "fwxx",
+                "sjlid": "cf2a3e0c4eac483480bcd6ad5bb9beec",
+                "sjlmc": "查询现势房屋产权",
+                "sjlsx": 0,
+                "sjly": "1",
+                "sjnr": "select count(*) as num from bdc_fdcq where  bdcdyh =(select bdcdyh from bdc_xm where xmid=#{1}) and qszt=1"
+            },
+            {
+                "bdcGzSjlCsDOList": [
+                    {
+                        "sjlcsid": "ba855172c2794fc79cd4807a2390cdab",
+                        "sjlcsmc": "xnxmid",
+                        "sjlcsxh": "1",
+                        "sjlcszl": "2",
+                        "sjlid": "d041a31d4d3a4c4195f5a8a04745fa1f"
+                    }
+                ],
+                "gzid": "a4f468975edb4212a9ae0554f3ecf1be",
+                "jgblbs": "tdxx",
+                "sjlid": "d041a31d4d3a4c4195f5a8a04745fa1f",
+                "sjlmc": "查询现势土地产权",
+                "sjlsx": 1,
+                "sjly": "1",
+                "sjnr": "select count(*) as num from bdc_jsydsyq where  bdcdyh =(select bdcdyh from bdc_xm where xmid=#{1}) and qszt=1"
+            }
+        ],
+        "gzid": "a4f468975edb4212a9ae0554f3ecf1be",
+        "gzmc": "【匹配验证】匹配单元号，验证房产证或土地证单元号存在多个现势产权",
+        "jydm": "package cn.gtmap.realestate.engine.service.impl;\n\nimport java.util.ArrayList;\nimport java.util.List;\nimport java.util.Map;\n\n/**\n * 不动产子规则动态编码验证类 注意：包名、类名、方法签名请不要改动！\n *\n * @version 1.0, GTMAP\n */\npublic class RuleCheck {\n\n  /**\n   * 对数据流执行结果进行判断，获取对应的提示信息\n   *\n   * @param checkResult 数据流执行结果集合\n   * @return { List } 子规则提示信息\n   */\n  public <T> List<String> getTsxxList(Map<String, T> checkResult) {\n    if (null == checkResult) {\n      return null;\n    }\n    List<String> tsxxList = new ArrayList();\n\n    // TODO 输入具体验证内容\n    // ---------------------\n\n    // ---------------------\n    return tsxxList;\n  }\n}\n",
+        "pzr": "管理员",
+        "pzrq": 1663661846000,
+        "ytsm": "【固定规则V3.0】房产证或土地证匹配单元号时，验证房产证或者土地证对应的单元号是否存在多个现势产权",
+        "yxj": 3
+    }
+]

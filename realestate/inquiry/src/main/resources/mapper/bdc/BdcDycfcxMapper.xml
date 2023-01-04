@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcDycfcxMapper">
+    <select id="listCqCx" resultType="cn.gtmap.realestate.common.core.dto.inquiry.rugao.BdcCqxxDTO"
+            parameterType="map">
+        SELECT distinct
+        t1.zsid as zsid,
+        t1.bdcqzh AS bdcqzh,
+        t3.xmid as xmid,
+        t3.bdcdyh as bdcdyh,
+        t3.qszt as qszt,
+        t3.zl as zl
+        FROM
+        bdc_zs t1
+        JOIN bdc_xm_zs_gx t2 ON t2.zsid = t1.zsid
+        join bdc_xm t3 on t3.xmid = t2.xmid
+        join bdc_qlr t5 on t5.xmid = t3.xmid
+        where t3.qszt = 1
+        and t3.qllx not in ('95','96','97','98','19','92','37')
+        <if test="cxlx != null and cxlx !='' ">
+            <if test="cxlx == '0'.toString()">
+                <if test="qlrzjh != null  and qlrzjh.size() > 0 ">
+                    and t5.zjh in
+                    <foreach collection="qlrzjh" item="item" separator="," open="(" close=")">
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+                <if test="qlrmc != null  and qlrmc.size() > 0">
+                    and t5.qlrmc in
+                    <foreach collection="qlrmc" item="item" separator="," open="(" close=")">
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+            </if>
+            <if test="cxlx == '1'.toString()">
+                <if test="qlrzjh != null  and qlrzjh.size() > 0 ">
+                    and
+                    <foreach collection="qlrzjh" item="item" separator="or" open="(" close=")">
+                        t5.zjh like #{item,jdbcType=VARCHAR} || '%'
+                    </foreach>
+                </if>
+                <if test="qlrmc != null  and qlrmc.size() > 0">
+                    and
+                    <foreach collection="qlrmc" item="item" separator="or" open="(" close=")">
+                        t5.qlrmc like #{item,jdbcType=VARCHAR} || '%'
+                    </foreach>
+                </if>
+            </if>
+        </if>
+
+        <choose>
+            <when test="qszt != null and qszt !=''">
+                and t3.bdcdyh in
+                <if test="qszt == '1'.toString()">
+                    (select t6.bdcdyh from bdc_cf t6 where t6.qszt = 1)
+                </if>
+                <if test="qszt == '0'.toString()">
+                    (select t7.bdcdyh from bdc_dyaq t7 where t7.qszt = 1)
+                </if>
+            </when>
+            <otherwise>
+                and t3.bdcdyh not in
+                (select t6.bdcdyh from bdc_cf t6 where t6.qszt = 1
+                union
+                select t7.bdcdyh from bdc_dyaq t7 where t7.qszt = 1)
+            </otherwise>
+        </choose>
+
+        <choose>
+            <when test="sortParameter != null and sortParameter != ''">
+                order by ${sortParameter}
+            </when>
+            <otherwise>
+                order by t1.zsid desc NULLS last
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="listCqxxByBdchyhList" resultType="cn.gtmap.realestate.common.core.dto.inquiry.rugao.BdcCqxxDTO">
+        SELECT distinct
+        t1.zsid as zsid,
+        t1.bdcqzh AS bdcqzh,
+        t3.xmid as xmid,
+        t3.bdcdyh as bdcdyh,
+        t3.qszt as qszt,
+        t3.zl as zl
+        FROM
+        bdc_zs t1
+        JOIN bdc_xm_zs_gx t2 ON t2.zsid = t1.zsid
+        join bdc_xm t3 on t3.xmid = t2.xmid
+        join bdc_qlr t5 on t5.xmid = t3.xmid
+        where t3.qszt = 1
+        and t3.qllx not in ('95','96','97','98','19','92','37')
+        <if test="bdcdyhList !=null and bdcdyhList.size() > 0">
+            and t3.bdcdyh in
+            <foreach collection="bdcdyhList" item="item" open="(" close=")" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+</mapper>

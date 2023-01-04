@@ -1,0 +1,198 @@
+<!--/**-->
+<!--* author: 前端组-->
+<!--* date: 2019-01-28-->
+<!--* version 3.0.0-->
+<!--* describe: 筛选弹窗的常用尺寸有宽度440px和宽度900px。
+                宽度440px用于单行文本框，适用于查询条件不多的情况；
+                宽度900px用于有筛选项和文本框较多，一行两个或者三个，input较长时独占一行-->
+<!--*/-->
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>弹出层</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../../layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../form-select/formSelects-v4.css">
+    <link rel="stylesheet" href="../css/popup.css" />
+</head>
+<body>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;引用内部div，按钮通过btn: ['提交', '取消']显示:</p>
+    <br>
+    <button class="layui-btn bdc-major-btn bdc-show-textarea">单行输入内容弹出层</button>
+    <button class="layui-btn bdc-major-btn bdc-show-small">小弹出层</button>
+    <button class="layui-btn bdc-major-btn bdc-show-checkbox">复选框弹出层</button>
+    <button class="layui-btn bdc-major-btn bdc-show-large">大弹出层</button>
+    <button class="layui-btn bdc-major-btn bdc-show-radio">单选框弹出层</button>
+
+    <p>------------------------------------------------------------------------------------</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;引用外部iframe，按钮在iframe内部:</p>
+    <br>
+    <button class="layui-btn bdc-major-btn bdc-show-frame-small">iframe小弹出层</button>
+    <button class="layui-btn bdc-major-btn bdc-show-frame-large">iframe大弹出层</button>
+    <button class="layui-btn bdc-major-btn bdc-show-frame-filter">iframe筛选条件大弹出层</button>
+
+    <div id="bdc-popup-textarea" class="bdc-layer-textarea bdc-hide">
+        <form class="layui-form" action="">
+            <div class="layui-form-item pf-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>组合说明</label>
+                    <div class="layui-input-inline bdc-end-time-box">
+                        <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="bdc-popup-small" class="bdc-hide">
+        <form class="layui-form" action="">
+            <div class="layui-form-item pf-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline"><span class="required-span"><sub>*</sub></span>规则组合名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline xzq-sele">
+                    <label class="layui-form-label">行政区</label>
+                    <div class="layui-input-inline bdc-radio">
+                        <select name="city" xm-select="select01" xm-select-radio xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">权利人</label>
+                    <div class="layui-input-inline">
+                        <input type="text" lay-verify="title" autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">查询方式</label>
+                    <div class="layui-input-inline">
+                        <input type="radio" name="zjh" value="nan" title="证件号精确查">
+                        <input type="radio" name="zjh" value="nv" title="证件号模糊查" checked>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>组合说明</label>
+                    <div class="layui-input-inline bdc-end-time-box">
+                        <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="bdc-popup-large" class="bdc-hide bdc-big-layer-css">
+        <form class="layui-form" action="">
+            <div class="layui-form-item pf-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>规则组合名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>规则面积</label>
+                    <div class="layui-input-inline bdc-two-icon">
+                        <input type="text" autocomplete="off" placeholder="请输入" class="layui-input" disabled="off">
+                        <span>m²</span>
+                        <img src="../images/lock.png" alt="">
+                    </div>
+                </div>
+                <div class="layui-inline xzq-sele">
+                    <label class="layui-form-label">行政区</label>
+                    <div class="layui-input-inline bdc-radio">
+                        <select name="city" xm-select="selectPage" disabled="disabled" xm-select-radio xm-select-search="" xm-select-height="34px" xm-select-search-type="dl">
+                            <option value="">请选择</option>
+                            <option value="111" selected>上海浦发开发区有限公司南京分行</option>
+                            <option value="2">上海</option>
+                            <option value="3">广州</option>
+                            <option value="4">深圳</option>
+                            <option value="5">天津</option>
+                            <option value="6">杭州</option>
+                            <option value="7">郑州</option>
+                            <option value="8">南京</option>
+                            <option value="9">苏州</option>
+                            <option value="10">常州</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline">规则组合类型名称</label>
+                    <div class="layui-input-inline bdc-one-icon">
+                        <input type="text" autocomplete="off" placeholder="请输入" class="layui-input" disabled="off">
+                        <img src="../images/lock.png" alt="">
+                    </div>
+                </div>
+                <div class="layui-inline bdc-two-line">
+                    <label class="layui-form-label">查询方式</label>
+                    <div class="layui-input-inline">
+                        <input type="radio" name="zjh" value="nan" title="证件号精确查">
+                        <input type="radio" name="zjh" value="nv" title="证件号模糊查" checked>
+                    </div>
+                </div>
+                <div class="layui-inline bdc-complete-line">
+                    <label class="layui-form-label">开关</label>
+                    <div class="layui-input-inline">
+                        <input type="checkbox" name="switch" lay-skin="switch">
+                    </div>
+                </div>
+                <div class="layui-inline bdc-complete-line">
+                    <label class="layui-form-label"><span class="required-span"><sub>*</sub></span>组合说明</label>
+                    <div class="layui-input-inline bdc-end-time-box">
+                        <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="bdc-popup-radio" class="bdc-hide">
+        <form class="layui-form" action="">
+            <div class="layui-form-item pf-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label bdc-label-newline"><span class="required-span"><sub>*</sub></span>选择文件</label>
+                    <div class="layui-input-inline">
+                        <button type="button" class="layui-btn bdc-major-btn layui-btn-sm" id="test1">上传图片</button>
+                    </div>
+                </div>
+                <div class="layui-inline xzq-sele">
+                    <label class="layui-form-label">查询方式</label>
+                    <div class="layui-input-inline">
+                        <input type="radio" name="zjh" value="nan" title="证件号精确查">
+                        <input type="radio" name="zjh" value="nv" title="证件号模糊查" checked>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">是否有房</label>
+                    <div class="layui-input-inline">
+                        <input type="radio" name="house" value="nan" title="有房">
+                        <input type="radio" name="house" value="nv" title="无房">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="bdcPopupCheckbox" class="bdc-hide bdc-layer-small">
+        <form class="layui-form" action="">
+            <div class="bdc-default-list">
+                <p class="bdc-tips-title">温馨提示：登记库数据与权籍库不符。</p>
+                <div class="bdc-one-tips">
+                    <p class="bdc-bdcdyh">不动产单元号：123456789</p>
+                    <input type="checkbox" name="update[zl]" lay-skin="primary" title="a坐落（登记库数据）更新为b坐落（权籍库数据）a坐落（登记库数据）更新为b坐落（权籍库数据）a坐落（登记库数据）更新为b坐落（权籍库数据）a坐落（登记库数据）更新为b坐落（权籍库数据）">
+                    <input type="checkbox" name="update[mj]" lay-skin="primary" title="a面积（登记库数据）更新为b面积（权籍库数据）" checked>
+                </div>
+                <div class="bdc-one-tips">
+                    <p class="bdc-bdcdyh">不动产单元号：123456789</p>
+                    <input type="checkbox" name="update[zl]" lay-skin="primary" title="a坐落（登记库数据）更新为b坐落（权籍库数据）a坐落（登记库数据）更新为b坐落（权籍库数据）">
+                    <input type="checkbox" name="update[mj]" lay-skin="primary" title="a面积（登记库数据）更新为b面积（权籍库数据）" checked>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</body>
+<script src="../../../layui/layui.js"></script>
+<script src="../js/popup.js"></script>
+</html>

@@ -1,0 +1,196 @@
+certificate:
+  url:
+    # 归档系统地址
+    archive: http://127.0.0.1:8082/archive/gateway.action
+    # 不动产档案地址
+    bdcDaUrl: FCM://127.0.0.1:8082/archive;daid;damx;1;1;1
+    340104: http://127.0.0.1:8080/archive/gateway!view.action?modelName=Wsda&id=@id
+    gdFileDownloadUrl: http://192.168.2.98:8030/storage/rest/files/download/%s
+  #电子证照主体代码配置对应表（港澳台不需要配置，代码自行控制）
+  eZzztdm:
+    1: 111,公民身份号码
+    6: 001,统一社会信用代码
+    7: 001,统一社会信用代码
+    8: 001,统一社会信用代码
+    99: 099,其他法人或其他组织有效证件代码
+  version: changzhou
+# 是否显示真正的领证人信息，合肥：false,南通：true
+showRealLzrFlag: false
+# 发证记录列表需要展示的项目的权属状态（0：临时，1：现势，2：历史），多个用英文逗号相隔如：1,2
+fzjlListQszt: 0,1
+# 归档信息台账展示方式
+# 0：按流程展示，一条流程一条数据，批量组合流程展示任意一条存在现势产权的数据。
+# 1：按项目展示，一个项目一条数据.
+showGdxxType: 0
+# 移交单清册管理员（逗号隔开）：管理员可以查看所有区域的移交清册。
+yjdqcGly:
+
+# 电子证照配置开始
+eCertificate:
+  sfyb: true
+  tbscgzl: 
+  urlPath: http://192.168.0.18:8087/realestate-e-certificate
+  # 证照版本（v1.0，v2.0）
+  version: v2.0
+  # 电子证照获取token的应用名称
+  tokenYymc: bdcdj
+  # 公钥
+  publicKey: BP5e5jF73LDwfDrdRR3BguaPU9w4CSLulzpSW32nGJCBavwpNUFV9rAm/31Ru7iezHmFdEi7WIIfVOry0cyN6oE=
+  # 私钥
+  privateKey: PjI0PXgGOQriHjmiKeHF/7Yg0Uz3WNOBMUXUN80S3nw=
+  # 证照颁发机构及代码、单位代码 (按照区县代码配置取值）
+#  zzbfjg_qxdm: "{'340104':'D不动产登记中心', '340111':'E不动产登记中心', '340101': 'F不动产登记中心'}"
+#  zzbfjgdm_qxdm: "{'340104':'DM_DDD', '340111':'DM_EEE', '340101': 'DM_FFF'}"
+#  dwdm_qxdm: "{'340104':'DWDM_DDD', '340111':'DWDM_EEE', '340101': 'DWDM_FFF'}"
+  # 证照颁发机构及代码 (按照登记部门代码配置取值）
+  zzbfjg: "{'1':'A不动产登记中心', '29798':'B不动产登记中心', '06': 'C不动产登记中心'}"
+  zzbfjgdm: "{'1':'DM_AAA', '29798':'DM_BBB', '06': 'DM_CCC'}"
+  #  default:
+  #    zzbfjg: '不动产登记交易中心'
+  #    zzbfjgdm: '320400'
+  # 登记系统中港澳台的证件种类
+  H-M-T-zjzldm: 2
+  # 上传的根目录【1：clientId（以流程附件形式存储） 2：eCertificateId（以单独路径存储，独立于流程）】
+  uploadStorageRoot: clientId
+  # 是否开启定时电子证照的任务（当日办件信息，生成电子证照，注销流程注销上一手电子证照）(true:为开启，false为关闭。默认为false)
+  sync.create: true
+  # 是否开始定时任务，用于同步市级中有pdf数据，登记中没有pdf的数据
+  sync.dzzz: true
+  # 同步市级电子证照信息，定时任务时间设置，0 0 22 * * ? 为每晚22点开始执行
+  sync.dzzz.cron: 0 0 22 * * ?
+  # 定时任务开启的时间，不配置，默认为晚上8点
+  cron: 0 05,10 11 * * ?
+  # 交接单状态修改定时任务
+  jjdstatemodify.cron: 0 0 19 * * ?
+  # 单位代码取bdcdyh前6位
+  dwdm.bdcdyhqlw: true
+
+  ###-----------以下配置为合肥版本大数据局电子证照配置-------------###
+  # 印章id,分证书和证明
+  contentCode:
+    zs: "{'340101': '111', '340111': '222', '340104': '333','340102': '444','340103': '5555'}"
+    zm: "{'340101': '111', '340111': '222', '340104': '333','340102': '444','340103': '5555'}"
+  # 电子证照文件类型，png和ofd
+  format: png
+  # 制证补偿事件
+  hfbcsj:
+    # 制证
+    zz:
+      # 制证开关 false:关闭，true:开启
+      flag: false
+      # 制证补偿事件事件
+      cron: 0 0 20 * * ?
+    zx:
+      # 注销开关 false:关闭，true:开启
+      flag: false
+      # 注销补偿事件事件
+      cron: 0 0 20 * * ?
+  # 是否启用新版电子证照（江苏省2022年7月升级）
+  newVersion: true
+
+
+# 是否将证号赋值到二维码内容中 true/false 不配置默认false
+ewmnrReadBdczh: false
+
+# 南通版本需要回写缮证人到大云
+version:
+  hx: yancheng
+  # 交接单版本 默认南通
+  #南通 jjd
+  #海门 hmjjd
+  jjdDylx: jjd
+
+# 海门档案移交地址
+haimen:
+  daurl: http://127.0.0.1:8080/gateway!materialIn.action
+
+# 交接单状态修改定时任务开关
+jjd:
+  state:
+    modify: true
+
+# 签章页码
+cz:
+  zzqz:
+    foldName: 签章证书
+    position:
+      page: 1
+      x: 410
+      y: 500
+    seal:
+      keysn: T001
+      sealName: 测试章
+      sealPwd: 123456
+#    zz:
+      # 配置会读取配置，否则读取 项目表中的 djjg 字段
+#      zzbfjg: 登记中心
+#      zzbfjgdm: 0001
+url:
+  register-ui: http://127.0.0.1/realestate-register-ui
+  certificate: http://127.0.0.1/realestate-certificate
+
+# 证号是否需要按照登记部门区分
+# 合肥   需要，即按照  年份、区划、登记部门代码、证书类型 区分编号，可以不配置或者配置 1
+# 南通 不需要，即按照  年份、区划、证书类型 区分编号，需要配置 0
+## 证号区分部门： 0 不区分、1 区分（如果没有配置默认1即区分）
+zhqfbm: 1
+# 证号是否区分区县代码（0 不区分-大市统一编号 1； 区分-不同区县分别编号）
+zhqfqxdm: 1
+# 生成证号是否采用锁方案，默认true采用
+bdcqzh.needlock: false
+# 指定几个区划共用一个流水号（示例表示区划340100,340102,340103共用一个流水号、340104,340111共用一个流水号，证号中区县全称还是按照模板配置来）
+zhgylsh: 340101,340102,340103;340104,340111
+
+
+print.path: /Users/fox/Downloads/
+
+hst.url: http://61.177.250.210:8200/realestate-register-ui/rest/v1.0/zs/print/hst/jm?bdcdyh=
+# 电子证照存量数据补偿服务
+dzzzbc:
+  clsj:
+    # 多线程配置
+    thread:
+      # 线程池核心数
+      corePoolSize: 6
+      # 最大线程数
+      maxPoolSize: 12
+      # 空闲线程存活时间
+      keepAliveSeconds: 60
+      # 阻塞队列长度
+      queueCapacity: 500
+    # 业务信息配置
+    ywxx:
+      # 配置需要的证书类型
+      zslx: 1,2
+      # 配置不签发流程 gzldyid
+      lwgzldyid:
+      # 配置增量签发开始时间，即存量数据截止时间
+      endtime:
+      # 定时任务处理业务数目「签发/下载数目」
+      performSize: 20
+    # 证照签发配置
+    zzqf:
+      enable: true
+      cron: '0 55 14 19 * ? '
+    # 证照 pdf 下载
+    pdf:
+      enable: false
+      cron: '* * * * * ? '
+
+# 配置去除 "等" 字样的工作流定义ID，多个使用“,”分隔
+qcjd.gzldyids: jsEKwceZQswjPAyx,TDpCMQxerjDPnp6Y
+
+# 证号跳号回收处理
+## 跳号获取定时任务，默认每天9点
+quartz.bdcqzhthhs.cron: 0 0 21 * * ?
+## 证号跳号回收初始号：具体从哪个号开始回收跳号，例如库中号 1 2 5 6 8 10，那么从3号开始回收，则回收的号依次是 3 4 7 9
+quartz.bdcqzhthhs.csh: 1
+## 是否启用证号跳号回收功能，true 开启 ，false 不开启
+quartz.bdcqzhthhs.enable: false
+print:
+  path: E:\GTIS\print\
+
+#证书二维码外网地址+bdcdyh
+zsewm.wwurl: https://www.baidu.com/{bdcdyh}?bdcdyh={bdcdyh}
+#证书二维码外网地址+zsid
+zsewm.wwurl2: https://www.baidu.com/{zsid}?zsid={zsid}

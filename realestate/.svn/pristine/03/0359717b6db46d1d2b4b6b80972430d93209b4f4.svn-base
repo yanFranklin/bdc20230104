@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>资金监管</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form-tab.css"/>
+    <link rel="stylesheet" href="../../static/lib/slick-master/slick/slick.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form.css"/>
+    <link rel="stylesheet" href="../../static/css/slymzh.css"/>
+    <style>
+        .bdc-form-div {
+            padding: 10px;
+            padding-top: 68px;
+            height: 100%;
+        }
+        .content-title p {
+            line-height: 38px;
+        }
+        .content-title {
+            line-height: 38px;
+        }
+    </style>
+
+</head>
+<body>
+<div class="bdc-form-div bdc-not-full-bg layui-form" id="zjjgView"></div>
+</body>
+<script type="text/html" id="zjjgTpl">
+    <div class="bdc-content-fix">
+        <div class="content-title layui-clear">
+            <p>资金监管</p>
+            <div class="title-btn-area">
+                <button class="layui-btn bdc-major-btn print-btn" lay-filter="saveZjjg" type="button"
+                        lay-submit="" id="saveZjjg">保存
+                </button>
+            </div>
+        </div>
+    </div>
+    <form class="layui-form setOverflow bdc-form-table" action="">
+        <div class="form-margin-area">
+            <div class="basic-info">
+                {{# var jbxx=d.jbxx }}
+                <div class="title-sign"><p><a id="jbxx" href="javascript:;">基本信息</a></p></div>
+                <input type="text" name="jbxxid" id="jbxxid" value="{{jbxx.jbxxid || ''}}" class="bdc-hide jbxx">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label change-label-width">收件编号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="slbh"
+                                   value="{{jbxx.slbh || ''}}" title="{{jbxx.slbh || ''}}" disabled="off">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label change-label-width">承诺期限(天)</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="cnqx"
+                                   value="{{jbxx.cnqx || ''}}" title="{{jbxx.cnqx || ''}}" disabled="off">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label change-label-width">收件人</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="slr"
+                                   value="{{jbxx.slr || ''}}" title="{{jbxx.slr || ''}}" disabled="off">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label change-label-width">收件时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="slsj" disabled="off" class="layui-input test-item"
+                                   value="{{jbxx.slsj || ''}}" title="{{jbxx.slsj || ''}}" disabled="off">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label change-label-width">业务类型</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="lcmc"
+                                   value="{{jbxx.lcmc || ''}}" title="{{jbxx.lcmc || ''}}" disabled="off">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item change-textarea-margin">
+                    <label class="layui-form-label change-label-width">备注</label>
+                    <div class="layui-input-inline">
+                        <textarea placeholder="请输入内容" class="layui-textarea change-textarea-width jbxx" id="bz"
+                                  name="bz" title="{{jbxx.bz || ''}}">{{jbxx.bz || ''}}</textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="basic-info">
+                {{# var zjjg = d.zjjg }}
+                <div class="title-sign bdc-title-sign-btn"><p><a id="" href="javascript:;">资金监管信息</a></p></div>
+                <input type="text" name="zjjgid" value="{{zjjg.zjjgid || ''}}" class="zjjg bdc-hide">
+                <div class="layui-form-item">
+                    <div class="layui-inline bdc-two-column">
+                        <label class="layui-form-label change-label-width">产权证号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input zjjg" id="cqzh"
+                                   value="{{zjjg.cqzh || ''}}" title="{{zjjg.cqzh || ''}}" disabled="off">
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-two-column">
+                        <label class="layui-form-label change-label-width">房屋坐落</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input zjjg" id="fwzl"
+                                   value="{{zjjg.fwzl || ''}}" title="{{zjjg.fwzl || ''}}" disabled="off">
+                        </div>
+                    </div>
+                    <div class="layui-inline xzq-sele bdc-two-column">
+                        <label class="layui-form-label change-label-width">行政区</label>
+                        <div class="layui-input-inline">
+                            <select name="xzqdm" lay-search="" lay-filter="xzqdm" id="xzqdm"
+                                    class="zjjg">
+                                <option value="">  </option>
+                                {{# layui.each(d.zd.qx, function(index, item){ }}
+                                <option value="{{item.DM || '0'}}" {{# if(zjjg.xzqdm==item.DM ){ }} selected="selected"
+                                        {{#
+                                        } }} title="{{item.MC || ''}}">{{item.MC || ''}}
+                                </option>
+                                {{# }); }}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline xzq-sele bdc-two-column">
+                        <label class="layui-form-label change-label-width">监管确认信息</label>
+                        <div class="layui-input-inline select-height">
+                            <select lay-search="" lay-filter="jgqrxx" id="zjjgqrxx" class="zjjg" name="zjjgqrxx" title="{{zjjg.zjjgqrxx || ''}}">
+                                <option value="">请选择</option>
+                                <option value="资金监管（有贷款）" title="资金监管（有贷款）" {{# if(zjjg.zjjgqrxx=='资金监管（有贷款）') { }} selected="selected" {{# } }}>资金监管（有贷款）</option>
+                                <option value="资金监管（无贷款）" title="资金监管（无贷款）" {{# if(zjjg.zjjgqrxx=='资金监管（无贷款）') { }} selected="selected" {{# } }}>资金监管（无贷款）</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline bdc-two-column">
+                        <label class="layui-form-label change-label-width">撤销原因</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input zjjg" id="cxyy" name="cxyy" value="{{zjjg.cxyy || ''}}" title="{{zjjg.cxyy || ''}}">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="basic-info sjcl" id="sjcl">
+                {{# var sjcl=d.sjcl }}
+                <div class="title-sign bdc-title-sign-btn">
+                    <p>收件材料</p>
+                    <div class="bdc-title-sign-btn-box">
+                        <button type="button" class="layui-btn layui-btn-sm bdc-secondary-btn" onclick="addSjcl(this)"
+                                id="addsjcl">新增
+                        </button>
+                        <button type="button" class="layui-btn layui-btn-sm sjclscbtn bdc-secondary-btn"
+                                onclick="uploadSjcl('')"
+                                id="clsc">材料上传
+                        </button>
+                        <button type="button" class="layui-btn layui-btn-sm sjclscbtn bdc-secondary-btn"
+                                onclick="bcYclxx()"
+                                id="sysclbc" style="display:none;">上一手材料补充
+                        </button>
+                        {{# if(sjcl.length !=0) { }}
+                        <button type="button" class="layui-btn layui-btn-sm bdc-secondary-btn" onclick="copySjcl('{{sjcl[0].djxl || \'\'}}')"
+                                id="clfz">材料复制
+                        </button>
+                        {{# }else{ }}
+                        <button type="button" class="layui-btn layui-btn-sm bdc-secondary-btn" onclick="copySjcl()"
+                                id="clfz">材料复制
+                        </button>
+                        {{# } }}
+                        <button type="button" class="layui-btn layui-btn-sm sjclscbtn bdc-secondary-btn"
+                                onclick="checksjcl()"
+                                id="clck">材料查看
+                        </button>
+                        <button type="button" class="layui-btn layui-btn-sm bdc-secondary-btn" onclick="deleteSjclPl()"
+                                id="plsc">批量删除
+                        </button>
+                    </div>
+                </div>
+                <input type="hidden" name="xmid" value="{{d.xmid || ''}}">
+                <form class="common-form sl-from layui-form bdc-form-table" name="sjclForm">
+                    <div class="layui-form-item">
+                        <div class="sjclForm" id="sjclForm">
+                            <table class="slym layui-table bdc-jt-table" border="1" name="addsjcl" id="addSjclTable">
+                                <thead>
+                                <tr class="gray-tr">
+                                    <td width="30px">
+                                        <input type="checkbox" lay-filter="qxCheckbox" name="qxTable" style="width: 50px;" title=""
+                                               lay-skin="primary">
+                                    </td>
+                                    <td width="50px">序号</td>
+                                    <td style="min-width: 200px">材料名称</td>
+                                    <td>份数</td>
+                                    <td>页数</td>
+                                    <td>类型</td>
+                                    <td>收取部门</td>
+                                    <td width="200px">操作</td>
+                                </tr>
+                                </thead>
+                                {{# if(sjcl && sjcl.length==0) { }}
+                                <tr class="bdc-table-none">
+                                    <td colspan="8">
+                                        <div class="layui-none"><img src="../../static/lib/bdcui/images/table-none.png" alt="">无数据</div>
+                                    </td>
+                                </tr>
+                                {{# } else { }}
+                                {{# layui.each(sjcl, function(i, bdcSlSjcl){ }}
+                                <tr>
+                                    <input type="hidden" name="xmid" value="{{bdcSlSjcl.xmid || ''}}" class="sjcl">
+                                    <input type="hidden" name="gzlslid" value="{{bdcSlSjcl.gzlslid || ''}}"
+                                           class="sjcl{{d.index || ''}}">
+                                    <input type="hidden" name="sjclid" value="{{bdcSlSjcl.sjclid || ''}}" class="sjcl">
+                                    <input type="hidden" name="wjzxid" value="{{bdcSlSjcl.wjzxid || ''}}" class="sjcl">
+                                    <input type="hidden" name="xh" value="{{bdcSlSjcl.xh || ''}}" class="sjcl">
+                                    <td>
+                                        <input type="checkbox" lay-filter="yxCheckbox" class="yx" name="yxTable"
+                                               value="{{bdcSlSjcl.sjclid || ''}}" title="" lay-skin="primary">
+                                    </td>
+                                    <td>{{i+1}}</td>
+                                    <td>
+                                        <div class="bdc-td-box">
+                                            <input type="text" lay-verify="" id="clmc" name="clmc" value="{{bdcSlSjcl.clmc || ''}}"
+                                                   class="layui-input sjcl{{d.index || ''}}" title="{{bdcSlSjcl.clmc || ''}}">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="bdc-td-box">
+                                            <input type="text" lay-verify="" id="fs" name="fs" value="{{bdcSlSjcl.fs || ''}}"
+                                                   class="layui-input sjcl">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="bdc-td-box">
+                                            <input type="text" lay-verify="" id="ys" name="ys" value="{{bdcSlSjcl.ys || ''}}"
+                                                   class="layui-input sjcl">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="bdc-td-box">
+                                            <select name="sjlx" lay-search="" lay-filter="sjlx" class="sjcl" id="sjlx">
+                                                <option value="">请选择</option>
+                                                {{# layui.each(d.zd.sjlx, function(index, item){ }}
+                                                <option value="{{item.DM || '0'}}" {{# if(bdcSlSjcl.sjlx==item.DM ){ }}
+                                                        selected="selected"
+                                                        {{#
+                                                        } }}>{{item.MC || ''}}
+                                                </option>
+                                                {{# }); }}
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="bdc-td-box">
+                                            <select name="sqbm" lay-search="" lay-filter="sqbm" class="sjcl" id="sqbm">
+                                                <option value="">请选择</option>
+                                                {{# layui.each(d.zd.sqbm, function(index, item){ }}
+                                                <option value="{{item.MC || ''}}" {{# if(bdcSlSjcl.sqbm==item.MC ){ }}
+                                                        selected="selected"
+                                                        {{#
+                                                        } }}>{{item.MC || ''}}
+                                                </option>
+                                                {{# }); }}
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td align="center">
+                                        <button type="button" class="layui-btn layui-btn-xs bdc-major-btn" onclick="scfj(this)"
+                                                id="sjclsc" name="sjclsc">上传
+                                        </button>
+                                        <button type="button" class="layui-btn layui-btn-danger layui-btn-xs bdc-delete-btn"
+                                                onclick="deleteSjcl('{{bdcSlSjcl.sjclid || \'\'}}',this)" id="sjcldelete"
+                                                name="sjcldelete">
+                                            删除
+                                        </button>
+                                        <button type="button" class="layui-btn layui-btn-xs layui-btn-primary"
+                                                onclick="changeSjclSxh('{{bdcSlSjcl.sjclid || \'\'}}', 'up')" id="sjclup" name="sjclup">
+                                            ↑
+                                        </button>
+                                        <button type="button" class="layui-btn layui-btn-xs layui-btn-primary"
+                                                onclick="changeSjclSxh('{{bdcSlSjcl.sjclid || \'\'}}', 'down')" id="sjcldown"
+                                                name="sjcldown">↓
+                                        </button>
+                                    </td>
+                                </tr>
+                                {{# }); }}
+                                {{# } }}
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </form>
+</script>
+<!--新增收件材料模板-->
+<script type="text/html" id="addSjclTpl">
+    <tr>
+        <input type="hidden" name="xmid" value="" class="sjcl">
+        <input type="hidden" name="gzlslid" value="{{d.gzlslid || ''}}" class="sjcl">
+        <input type="hidden" name="sjclid" value="" class="sjcl">
+        <input type="hidden" name="wjzxid" value="" class="sjcl">
+        <input type="hidden" name="xh" value="{{d.sjclNumber || ''}}" class="sjcl">
+        <input type="hidden" name="djxl" value="{{d.djxl || ''}}" class="sjcl">
+        <td>
+            <input type="checkbox"  name="checkbox{{d.sjclNumber || ''}}"  class='sjcl' lay-skin="primary">
+        </td>
+        <td>
+            {{d.sjclNumber || ''}}
+        </td>
+        <td>
+            <input type="text" name="clmc" lay-verify="" class="sjcl">
+        <td>
+            <input type="text" name="fs" lay-verify="" class="sjcl">
+        </td>
+        <td>
+            <input type="text" name="ys" lay-verify="" class="sjcl">
+        </td>
+        <td>
+            <select  name="sjlx" class="sjcl">
+                <option value="">请选择</option>
+                {{# layui.each(d.zd.sjlx, function(index, item){ }}
+                <option value="{{item.DM || '0'}}" selected="selected">{{item.MC || ''}}
+                </option>
+                {{# }); }}
+            </select>
+        </td>
+        <td>
+            <select  name="sqbm" class="sjcl">
+                <option value="">请选择</option>
+                {{# layui.each(d.zd.sqbm, function(index, item){ }}
+                <option value="{{item.MC || ''}}">{{item.MC || ''}}</option>
+                {{# }); }}
+            </select>
+        </td>
+        <td align="center">
+            <span class="layui-btn layui-btn-xs bdc-major-btn" onclick="scfj(this)">上传</span>
+            <span class="layui-btn layui-btn-xs layui-btn-danger bdc-delete-btn" onclick="deleteSjcl('',this)">删除</span>
+            <span class="layui-btn layui-btn-xs layui-btn-primary" onclick="changeSjclSxh('', 'up')">↑</span>
+            <span class="layui-btn layui-btn-xs layui-btn-primary" onclick="changeSjclSxh('', 'down')">↓</span>
+        </td>
+    </tr>
+</script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/slymCommon.js"></script>
+<script src="../../static/js/formCenter.js"></script>
+<script src='../../static/js/slym/sjclCommon.js'></script>
+<script src="../../static/js/changzhou/slym/zjjg.js"></script>
+</html>

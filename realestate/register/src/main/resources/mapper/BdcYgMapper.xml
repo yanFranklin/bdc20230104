@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.register.core.mapper.BdcYgMapper">
+
+    <!--分页查询-->
+    <select id="listYgByPage" parameterType="map" resultType="cn.gtmap.realestate.common.core.domain.BdcYgDO">
+        SELECT t.* FROM(
+        SELECT DJJG, QLID, YGDJZL, YGDJZLMC, TDSYQR
+        , GHYT, GHYTMC, FWXZ, FWXZMC, JZMJ
+        , QDJG, MJDW, SLBH, DJLX, DJYY
+        , XMID, GYQK, DJSJ, DBR, FJ
+        , QSZT, ZWLXQSSJ, ZWLXJSSJ, SZC, ZCS
+        , JYJE, SZMYC, FTTDMJ, BZ, TDSYQSSJ
+        , TDSYJSSJ, DYFS, ZXYGYWH, ZXYGYY, ZXYGDBR
+        , ZXYGDJSJ, WLC, BDCDYH, BDCDYWYBH, ZL,FJH,ZH,DBFW,JZZR
+        FROM BDC_YG t
+        <where>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                <!--工作流实例ID不为空时不动产单元号可模糊查询-->
+                <choose>
+                    <when test="gzlslid != null and gzlslid != ''">
+                        AND instr(t.bdcdyh,#{bdcdyh})>0
+                    </when>
+                    <otherwise>
+                        AND t.bdcdyh = #{bdcdyh}
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="qsztList != null and qsztList.size>0">
+                AND t.qszt IN
+                <foreach collection="qsztList" item="qszt" open="(" close=")" separator=",">
+                    #{qszt}
+                </foreach>
+            </if>
+            <if test="gzlslid != null and gzlslid != ''">
+                <!--sfyql为true查询原权利-->
+                <choose>
+                    <when test="sfyql == true">
+                        AND EXISTS (
+                        SELECT r.yxmid
+                        FROM bdc_xm x
+                        INNER JOIN bdc_xm_lsgx r ON x.xmid = r.xmid
+                        WHERE t.xmid = r.yxmid
+                        AND x.gzlslid = #{gzlslid}
+                        <if test="xmid != null and xmid != ''">
+                            AND x.xmid = #{xmid}
+                        </if>
+                        )
+                    </when>
+                    <otherwise>
+                        AND EXISTS (
+                        SELECT x.xmid
+                        FROM bdc_xm x
+                        WHERE t.xmid = x.xmid
+                        AND x.gzlslid = #{gzlslid}
+                        <if test="xmid != null and xmid != ''">
+                            AND x.xmid = #{xmid}
+                        </if>
+                        )
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="zl != null and zl != ''">
+                AND instr(t.zl,#{zl})>0
+            </if>
+        </where>
+
+        <if test="sfcxzx == true and bdcdyh != null and bdcdyh != ''">
+            UNION ALL
+            SELECT xm.DJJG,
+            yg.QLID,
+            yg.YGDJZL,
+            yg.YGDJZLMC,
+            yg.TDSYQR,
+            yg.GHYT,
+            yg.GHYTMC,
+            yg.FWXZ,
+            yg.FWXZMC,
+            yg.JZMJ,
+            yg.QDJG,
+            xm.MJDW,
+            xm.SLBH,
+            xm.DJLX,
+            xm.DJYY,
+            xm.XMID,
+            yg.GYQK,
+            xm.DJSJ,
+            xm.DBR,
+            '' as FJ,
+            xm.QSZT,
+            yg.ZWLXQSSJ,
+            yg.ZWLXJSSJ,
+            yg.SZC,
+            yg.ZCS,
+            yg.JYJE,
+            yg.SZMYC,
+            yg.FTTDMJ,
+            xm.BZ,
+            yg.TDSYQSSJ,
+            yg.TDSYJSSJ,
+            yg.DYFS,
+            yg.ZXYGYWH,
+            yg.ZXYGYY,
+            yg.ZXYGDBR,
+            yg.ZXYGDJSJ,
+            yg.WLC,
+            xm.BDCDYH,
+            xm.BDCDYWYBH,
+            xm.ZL,
+            yg.FJH,
+            yg.ZH,
+            yg.DBFW,
+            yg.JZZR
+            from bdc_xm xm
+            Inner Join BDC_CSH_FWKG_SL BCF on xm.XMID = BCF.ID
+            Inner JOIN BDC_XM_LSGX lsgs on xm.XMID = lsgs.XMID AND lsgs.wlxm = 0
+            Inner JOIN BDC_YG yg on lsgs.YXMID = yg.XMID
+            where BCF.SFSCQL = '0' and BCF.SFZXYQL = '1'
+            <if test="qsztList != null and qsztList.size>0">
+                AND xm.qszt IN
+                <foreach collection="qsztList" item="qszt" open="(" close=")" separator=",">
+                    #{qszt}
+                </foreach>
+
+            </if>
+            AND xm.bdcdyh = #{bdcdyh}
+        </if>
+        ) t
+        LEFT JOIN BDC_XM x ON x.xmid =t.xmid
+        <choose>
+            <when test="orderbyFirst != null and orderbyFirst != ''">
+                ORDER BY ${orderbyFirst} ASC NULLS LAST , ${orderbySecond} ASC  NULLS LAST
+            </when>
+            <otherwise>
+                <choose>
+                    <when test="sortParameter != null and sortParameter != ''">
+                        ORDER BY ${sortParameter}
+                    </when>
+                    <otherwise>
+                        ORDER BY t.djsj ASC
+                    </otherwise>
+                </choose>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="listBdcZxYg" parameterType="String" resultType="cn.gtmap.realestate.common.core.domain.BdcYgDO">
+        SELECT xm.DJJG,
+               yg.QLID,
+               yg.YGDJZL,
+               yg.YGDJZLMC,
+               yg.TDSYQR,
+               yg.GHYT,
+               yg.GHYTMC,
+               yg.FWXZ,
+               yg.FWXZMC,
+               yg.JZMJ,
+               yg.QDJG,
+               xm.MJDW,
+               xm.SLBH,
+               xm.DJLX,
+               xm.DJYY,
+               xm.XMID,
+               yg.GYQK,
+               xm.DJSJ,
+               xm.DBR,
+               '' as FJ,
+               xm.QSZT,
+               yg.ZWLXQSSJ,
+               yg.ZWLXJSSJ,
+               yg.SZC,
+               yg.ZCS,
+               yg.JYJE,
+               yg.SZMYC,
+               yg.FTTDMJ,
+               xm.BZ,
+               yg.TDSYQSSJ,
+               yg.TDSYJSSJ,
+               yg.DYFS,
+               yg.ZXYGYWH,
+               yg.ZXYGYY,
+               yg.ZXYGDBR,
+               yg.ZXYGDJSJ,
+               yg.WLC,
+               xm.BDCDYH,
+               xm.BDCDYWYBH,
+               xm.ZL,
+               yg.FJH,
+               yg.ZH,
+               yg.DBFW,
+               yg.JZZR
+        from bdc_xm xm
+                 Inner Join BDC_CSH_FWKG_SL BCF on xm.XMID = BCF.ID
+                 Inner JOIN BDC_XM_LSGX lsgs on xm.XMID = lsgs.XMID AND lsgs.wlxm = 0
+                 Inner JOIN BDC_YG yg on lsgs.YXMID = yg.XMID
+        where BCF.SFSCQL = '0'
+          and BCF.SFZXYQL = '1'
+          AND xm.qszt = '2'
+          AND xm.bdcdyh = #{bdcdyh}
+    </select>
+
+    <update id="updateQlGyqkPl" parameterType="cn.gtmap.realestate.register.core.dto.BdcGyqkDTO">
+        <if test="gzlslid != null and gzlslid != ''">
+            UPDATE bdc_yg t
+            <set>
+                t.gyqk = #{qlGyqk,jdbcType=VARCHAR}
+            </set>
+            WHERE EXISTS (
+            SELECT x.xmid
+            FROM bdc_xm x
+            WHERE (t.xmid = x.xmid
+            AND x.gzlslid = #{gzlslid}
+            )
+            )
+        </if>
+        <if test="xmidList != null and xmidList.size>0">
+            UPDATE bdc_yg t
+            <set>
+                t.gyqk = #{qlGyqk,jdbcType=VARCHAR}
+            </set>
+            <where>
+                AND t.xmid IN
+                <foreach collection="xmidList" item="xmid" open="(" close=")" separator=",">
+                    #{xmid}
+                </foreach>
+            </where>
+        </if>
+    </update>
+
+    <update id="udpateBdcQlDbxxAndQsztPl" parameterType="cn.gtmap.realestate.register.core.qo.DbxxQO">
+        <if test="gzlslid != null and gzlslid != ''">
+            UPDATE bdc_yg t
+            <set>
+                t.dbr = #{dbr,jdbcType=VARCHAR},
+                t.djsj = #{djsj,jdbcType=TIMESTAMP},
+                t.djjg = #{djjg,jdbcType=VARCHAR},
+                t.qszt = #{qszt,jdbcType=INTEGER}
+            </set>
+            WHERE EXISTS (
+            SELECT x.xmid
+            FROM bdc_xm x
+            WHERE (t.xmid = x.xmid
+            AND x.gzlslid = #{gzlslid}
+            )
+            )
+        </if>
+    </update>
+    <!--更新预抵押的登簿信息和权属状态-->
+    <update id="updateYdyaQlDbxxAndQsztPl" parameterType="cn.gtmap.realestate.register.core.qo.DbxxQO">
+        <if test="gzlslid != null and gzlslid != ''">
+            UPDATE bdc_yg t
+            <set>
+                t.dbr = #{dbr,jdbcType=VARCHAR},
+                t.djsj = #{djsj,jdbcType=TIMESTAMP},
+                t.djjg = #{djjg,jdbcType=VARCHAR},
+                t.qszt = #{qszt,jdbcType=INTEGER}
+            </set>
+            WHERE EXISTS (
+            SELECT x.xmid
+            FROM bdc_xm x
+            WHERE (t.xmid = x.xmid
+            AND x.gzlslid = #{gzlslid}
+            )
+            )AND t.ygdjzl in ('3','4')
+        </if>
+    </update>
+
+    <update id="udpateBdcQlZxDbxxAndQsztPl" parameterType="cn.gtmap.realestate.register.core.qo.DbxxQO">
+        <if test="gzlslid != null and gzlslid != ''">
+            UPDATE bdc_yg t
+            <set>
+                t.zxygdbr = #{dbr,jdbcType=VARCHAR},
+                t.zxygdjsj = #{djsj,jdbcType=TIMESTAMP},
+                t.qszt = #{zxQszt,jdbcType=INTEGER},
+                t.zxygywh = #{slbh,jdbcType=VARCHAR},
+                t.zxygyy = #{djyy,jdbcType=VARCHAR}
+            </set>
+            WHERE EXISTS (
+            SELECT r.yxmid
+            FROM bdc_xm x
+            INNER JOIN bdc_xm_lsgx r ON x.xmid = r.xmid
+            WHERE t.xmid = r.yxmid
+            AND r.zxyql = 1
+            AND x.gzlslid = #{gzlslid}
+            )
+        </if>
+    </update>
+
+    <update id="udpateYgYdyYqlZxDbxxAndQsztPl" parameterType="cn.gtmap.realestate.register.core.qo.DbxxQO">
+        <if test="gzlslid != null and gzlslid != ''">
+            UPDATE bdc_yg t
+            <set>
+                t.zxygdbr = #{dbr,jdbcType=VARCHAR},
+                t.zxygdjsj = #{djsj,jdbcType=TIMESTAMP},
+                t.qszt = #{zxQszt,jdbcType=INTEGER},
+                t.zxygywh = #{slbh,jdbcType=VARCHAR},
+                t.zxygyy = #{djyy,jdbcType=VARCHAR}
+            </set>
+            WHERE EXISTS (
+            SELECT r.yxmid
+            FROM bdc_xm x
+            INNER JOIN bdc_xm_lsgx r ON x.xmid = r.xmid
+            WHERE t.xmid = r.yxmid
+            AND r.zxyql = 1
+            AND x.gzlslid = #{gzlslid}
+            )
+            <if test="ygdjzl != null and ygdjzl.size() > 0">
+                AND nvl(t.ygdjzl,1) IN
+                <foreach collection="ygdjzl" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </if>
+    </update>
+
+    <!--批量更新预告的权属状态-->
+    <update id="udpateBdcYgQsztPl" parameterType="cn.gtmap.realestate.register.core.qo.DbxxQO">
+        <if test="gzlslid != null and gzlslid != ''">
+            UPDATE bdc_yg t
+            <set>
+                t.qszt = #{qszt,jdbcType=INTEGER}
+            </set>
+            WHERE EXISTS (
+            SELECT x.xmid
+            FROM bdc_xm x
+            WHERE (t.xmid = x.xmid
+            AND x.gzlslid = #{gzlslid}
+            )
+            )
+        </if>
+    </update>
+
+    <select id="listBdcYgByXmid" resultType="map">
+        select * from bdc_yg where 1 = 1
+        <if test="xmid != null and xmid != ''">
+            and xmid = #{xmid,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <update id="updateBdcQlDbrPl" parameterType="cn.gtmap.realestate.register.core.qo.DbxxQO">
+        <if test="gzlslid != null and gzlslid != ''">
+            UPDATE bdc_yg t
+            <set>
+                t.dbr = #{dbr,jdbcType=VARCHAR},
+                t.djjg = #{djjg,jdbcType=VARCHAR}
+            </set>
+            WHERE EXISTS (
+            SELECT x.xmid
+            FROM bdc_xm x
+            WHERE (t.xmid = x.xmid
+            AND x.gzlslid = #{gzlslid}
+            )
+            )
+        </if>
+    </update>
+
+    <update id="updateZxQlDbrPl" parameterType="cn.gtmap.realestate.register.core.qo.DbxxQO">
+        <if test="gzlslid != null and gzlslid != ''">
+            UPDATE bdc_yg t
+            <set>
+                t.zxygdbr = #{dbr,jdbcType=VARCHAR}
+            </set>
+            WHERE EXISTS (
+            SELECT r.yxmid
+            FROM bdc_xm x
+            INNER JOIN bdc_xm_lsgx r ON x.xmid = r.xmid
+            WHERE t.xmid = r.yxmid
+            AND r.zxyql = 1
+            AND x.gzlslid = #{gzlslid}
+            )
+        </if>
+    </update>
+</mapper>

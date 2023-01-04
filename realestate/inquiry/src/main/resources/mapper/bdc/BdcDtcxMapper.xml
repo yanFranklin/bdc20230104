@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcDtcxMapper">
+
+    <select id="testSql" resultType="java.util.Map" parameterType="string">
+        ${sql}
+    </select>
+
+    <select id="getViewList" resultType="map" parameterType="map">
+        ${sql}
+    </select>
+
+    <select id="listDtcxByPage" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcDtcxQO"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcDtcxDTO">
+        SELECT cxid, cxmc, cxdh, cxsql, cjr, cjsj, nvl(bgr,cjr) as bgr, nvl(bgsj,cjsj) as bgsj, bz, sfsc, sfyxsc, cxfs, url, dqzt, ymgj, hgj
+        FROM dtcx_cx t WHERE 1=1
+        <if test="cxmc!=null and cxmc!=''">
+            AND instr(t.cxmc,#{cxmc}) > 0
+        </if>
+        <if test="cxdh!=null and cxdh!=''">
+            AND instr(t.cxdh,#{cxdh}) > 0
+        </if>
+        <if test="cjr!=null and cjr!=''">
+            AND instr(t.cjr,#{cjr}) > 0
+        </if>
+        <if test="bgr!=null and bgr!=''">
+            AND instr(t.bgr,#{bgr}) > 0
+        </if>
+        <if test="url !=null and url !=''">
+            AND instr(t.url,#{url}) > 0
+        </if>
+        <if test="cjqssj !=null and cjqssj !=''">
+            AND to_char(t.cjsj,'yyyy-MM-dd') &gt;= #{cjqssj}
+        </if>
+        <if test="cjjssj !=null and cjjssj !=''">
+            AND to_char(t.cjsj,'yyyy-MM-dd') &lt;= #{cjjssj}
+        </if>
+        <choose>
+            <when test="sfjkcx ==null or sfjkcx ==0">
+                AND (t.sfjkcx is null or t.sfjkcx = 0)
+            </when>
+            <otherwise>
+                AND t.sfjkcx = 1
+            </otherwise>
+        </choose>
+        order by bgsj desc nulls last
+    </select>
+    <!--
+    通过cxdh获取对应的查询信息
+    -->
+    <select id="getDtcxByCxdh" parameterType="string"
+            resultType="cn.gtmap.realestate.common.core.dto.inquiry.BdcDtcxDTO">
+        SELECT cxid,
+               cxmc,
+               cxdh,
+               pzjs,
+               cxsql,
+               cjr,
+               cjsj,
+               bgr,
+               bgsj,
+               bz,
+               dqzt,
+               sfyxsc,
+               cxfs,
+               url,
+               ymgj,
+               hgj,
+               sfsc,
+               canmhcx,
+               js,
+               zdyymgj,
+               fxkys,
+               jkff,
+               sfjkcx,
+               jk,
+               fhzkey,
+               rzmc,
+               rzlx
+        FROM dtcx_cx t
+        WHERE t.cxdh = #{cxdh}
+    </select>
+    <select id="getCxtjConfig" parameterType="string"
+            resultType="cn.gtmap.realestate.common.core.domain.inquiry.DtcxCxtjDO">
+        select tjid,
+               cxid,
+               cxdh,
+               tjzdid,
+               tjzdname,
+               mrxs,
+               tjtype,
+               tjusage,
+               zdid,
+               zddyfs,
+               priority,
+               canmhcx,
+               mrmhlx,
+               zdly,
+               drcxbl,
+               encrypt,
+               mrz,
+               dkqsjzj
+        from dtcx_cxtj t
+        where t.cxdh = #{cxdh}
+        order by priority ASC
+    </select>
+    <select id="getCxjgConfig" parameterType="string"
+            resultType="cn.gtmap.realestate.common.core.domain.inquiry.DtcxCxjgDO">
+        select jgid,
+               cxid,
+               cxdh,
+               jgzdid,
+               jgzdname,
+               mrxs,
+               jgtype,
+               zdid,
+               url,
+               lk,
+               dclk,
+               js,
+               dqfs,
+               dw,
+               priority,
+               qxdm,
+               nvl(sortable, 0) sortable,
+               fxkpd,
+               slhwz,
+               decrypt
+        from dtcx_cxjg t
+        where t.cxdh = #{cxdh}
+        order by priority ASC
+    </select>
+
+    <select id="listResultByPage" parameterType="java.util.Map" resultType="java.util.Map">
+        ${sql}
+    </select>
+
+    <select id="getSqlBycxid" parameterType="String" resultType="String">
+        select cxsql
+        from dtcx_cx
+        where cxdh = #{cxid}
+
+    </select>
+
+    <select id="getResultList" resultType="String" parameterType="map">
+        ${sql}
+    </select>
+</mapper>

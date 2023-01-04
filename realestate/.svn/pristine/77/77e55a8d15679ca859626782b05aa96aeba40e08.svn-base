@@ -1,0 +1,96 @@
+<!--/**-->
+<!--* author: 前端组-->
+<!--* date: 2018-12-14-->
+<!--* version 3.0.0-->
+<!--* describe: 三个以内表格内按钮的表格页面，引入相应的css，js即可出现示例效果-->
+<!--*/-->
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>抵押物清单</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+</head>
+<body>
+<div class="bdc-percentage-container bdc-percentage-container-title-2">
+    <!--头部清单-->
+    <div class="bdc-search-content">
+        <div class="bdc-table-title-box">
+            <h3>抵押物清单</h3>
+            <table class="layui-table">
+                <colgroup>
+                    <col width="150">
+                    <col>
+                    <col width="150">
+                    <col>
+                </colgroup>
+                <tbody>
+                <tr>
+                    <td>受理编号：</td>
+                    <td colspan="3" id="slbh"></td>
+                </tr>
+                <tr>
+                    <td>抵押权人：</td>
+                    <td colspan="3" id="dyaqr"></td>
+                </tr>
+                <tr>
+                    <td>抵押人：</td>
+                    <td colspan="3" id="dyar"></td>
+                </tr>
+                <tr>
+                    <td>抵押物情况汇总：</td>
+                    <td colspan="3" id="dyawqkhz"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="bdc-table-box">
+        <table id="pageTable" lay-filter="pageTable"></table>
+    </div>
+</div>
+</body>
+<!--表格上面功能按钮-->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="print" name="printBtn">打印</button>
+        <!--<button class="layui-btn layui-btn-sm bdc-delete-btn">删除</button>-->
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="export">导出Excel</button>
+    </div>
+    <div class="layui-btn-container bdc-export-tools">
+    </div>
+</script>
+
+<script type="text/html" id="toolbarDemo2">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="export">导出Excel</button>
+    </div>
+    <div class="layui-btn-container bdc-export-tools">
+    </div>
+</script>
+
+<!--隐藏form，为了Excel导出缓存数据使用-->
+<form style="display: none" action="/realestate-register-ui/excel/export" method="POST" id="form">
+    <input type="hidden" id="fileName" name="fileName"/>
+    <input type="hidden" id="sheetName" name="sheetName"/>
+    <input type="hidden" id="summaryContent" name="summaryContent"/>
+    <input type="hidden" id="cellTitle" name="cellTitle"/>
+    <input type="hidden" id="cellWidth" name="cellWidth"/>
+    <input type="hidden" id="cellKey" name="cellKey"/>
+    <input type="hidden" id="data" name="data"/>
+</form>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/js/formCenter.js"></script>
+<script src="../../static/js/nantong/bdcdy/dyawqd.js"></script>
+</html>

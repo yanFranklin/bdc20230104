@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>信息补录日志查询</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css"/>
+    <link rel="stylesheet" href="../../static/css/bjjk/bjjk.css"/>
+</head>
+<body>
+<div class="bdc-percentage-container">
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <form class="layui-form" action="">
+                <div class="layui-form-item pf-form-item">
+
+                    <div class="layui-inline">
+                        <label id="rzlxLabel"  class="layui-form-label">日志类型</label>
+                        <div id="rzlxDiv" class="layui-input-inline">
+                            <select id ="eventName" name="eventName" lay-filter="eventName" lay-search placeholder="请选择日志类型">
+                                <option value="">请选择</option>
+                                <option class='source' value="XXBL_CX">信息补录-查询</option>
+                                <option class='source' value="XXBL_XZ">信息补录-新增</option>
+                                <option class='source' value="XXBL">信息补录-编辑</option>
+                                <option class='source' value="XXBL_SC">信息补录-删除</option>
+                                <option class='source' value="XXBL_CK">信息补录-查看</option>
+                                <option class='source' value="XXBL_GL">信息补录-关联</option>
+                            </select>
+                            <i class="layui-icon layui-icon-close bdc-hide reseticon" style="right: 29px!important;"></i>
+                        </div>
+                    </div>
+
+                    <div id="xxbl-search-content">
+                    </div>
+
+                    <div class="layui-inline bdc-button-box">
+                        <a href="javascript:" id="search" lay-filter="search" lay-submit="" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                        <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+                        <a href="javascript:" class="layui-btn layui-btn-normal bdc-secondary-btn" id="seniorSearch" style="display:none;">高级查询</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="bdc-table-box">
+        <table id="logTable" lay-filter="logTable"></table>
+    </div>
+
+    <!--表格上面功能按钮-->
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="exportExcel">导出Excel</button>
+            <button class="layui-btn layui-btn-sm bdc-secondary-btn" lay-event="exportAllExcel">导出全部</button>
+        </div>
+    </script>
+
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="xq">详情</a>
+    </script>
+
+</div>
+
+<!--隐藏form，为了Excel导出缓存数据使用-->
+<form style="display: none" action="/realestate-inquiry-ui/excel/export" method="POST" id="form">
+    <input type="hidden" id="fileName"   name="fileName"/>
+    <input type="hidden" id="sheetName"  name="sheetName"/>
+    <input type="hidden" id="cellTitle"  name="cellTitle"/>
+    <input type="hidden" id="cellWidth"  name="cellWidth"/>
+    <input type="hidden" id="cellKey"    name="cellKey"/>
+    <input type="hidden" id="data"       name="data"/>
+</form>
+</body>
+<script type="text/html" id="xxblSearchTpl">
+    <div class="layui-inline">
+        <label class="layui-form-label">开始时间</label>
+        <div class="layui-input-inline">
+            <input type="text" id="begin" name="beginTime" class="layui-input test-item" placeholder="请选择">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">结束时间</label>
+        <div class="layui-input-inline">
+            <input type="text" id="end" name="endTime" class="layui-input test-item" placeholder="请选择">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">用户名</label>
+        <div class="layui-input-inline">
+            <input type="text" name="alias" class="layui-input" placeholder="请输入">
+            <i class="layui-icon layui-icon-close bdc-hide"></i>
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">内容搜索</label>
+        <div class="layui-input-inline bdc-third-column-select">
+            <select class="" lay-search="" lay-filter="conditionKey" name="conditionKey">
+                <option value="">请选择</option>
+                {{# if(d && isNotBlank(d.zdList) && isNotBlank(d.cols)){ }}
+                {{# layui.each(d.zdList.eszdmc, function(index, item){ }}
+                {{# if(d.cols.indexOf(item.DM) > -1){ }}
+                <option value="{{item.DM || '0'}}">{{item.MC || ''}}</option>
+                {{# } }}
+                {{# }); }}
+                {{# }   }}
+            </select>
+        </div>
+        <div class="layui-input-inline bdc-third-column-input">
+            <input type="text" name="conditionValue" placeholder="请输入" autocomplete="off" class="layui-input">
+            <i class="layui-icon layui-icon-close bdc-hide"></i>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="xxblDetailsSearchTpl">
+    <div class="layui-inline">
+        <label class="layui-form-label">受理编号</label>
+        <div class="layui-input-inline">
+            <input type="text" id="slbh" name="slbh" class="layui-input" placeholder="请输入">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">坐落</label>
+        <div class="layui-input-inline">
+            <input type="text" id="zl" name="zl" class="layui-input" placeholder="请输入">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">不动产单元号</label>
+        <div class="layui-input-inline">
+            <input type="text" id="bdcdyh" name="bdcdyh" class="layui-input" placeholder="请输入">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">登记小类</label>
+        <div class="layui-input-inline">
+            <select class="" lay-search="" id="djxl" lay-filter="djxl" name="djxl">
+                <option value="">请选择</option>
+                {{# if(d && isNotBlank(d.zdList)){ }}
+                    {{# layui.each(d.zdList.djxl, function(index, item){ }}
+                    <option value="{{item.DM || '0'}}">{{item.MC || ''}}</option>
+                    {{# }); }}
+                {{# }   }}
+            </select>
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">开始时间</label>
+        <div class="layui-input-inline">
+            <input type="text" id="begin" name="beginTime" class="layui-input test-item" placeholder="请选择">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">结束时间</label>
+        <div class="layui-input-inline">
+            <input type="text" id="end" name="endTime" class="layui-input test-item" placeholder="请选择">
+        </div>
+    </div>
+
+    <div class="pf-senior-show bdc-hide">
+        <div class="layui-inline">
+            <label class="layui-form-label">权属状态</label>
+            <div class="layui-input-inline">
+                <select class="" lay-search="" id="qszt" lay-filter="qszt" name="qszt">
+                    <option value="">请选择</option>
+                    {{# if(d && isNotBlank(d.zdList)){ }}
+                    {{# layui.each(d.zdList.qszt, function(index, item){ }}
+                    <option value="{{item.DM || '0'}}">{{item.MC || ''}}</option>
+                    {{# }); }}
+                    {{# }   }}
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">工作流实例ID</label>
+            <div class="layui-input-inline">
+                <input type="text" id="gzlslid" name="gzlslid" class="layui-input" placeholder="请输入">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label id="principalNameLabel" class="layui-form-label">用户名</label>
+            <div id="principalNameDiv" class="layui-input-inline">
+                <input type="text" id="alias" name="alias" class="layui-input" placeholder="请输入">
+                <i class="layui-icon layui-icon-close bdc-hide"></i>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">不动产类型</label>
+            <div class="layui-input-inline">
+                <select class="" lay-search="" id="bdclx" lay-filter="bdclx" name="bdclx">
+                    <option value="">请选择</option>
+                    {{# if(d && isNotBlank(d.zdList)){ }}
+                    {{# layui.each(d.zdList.bdclx, function(index, item){ }}
+                    <option value="{{item.DM || '0'}}">{{item.MC || ''}}</option>
+                    {{# }); }}
+                    {{# }   }}
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">项目来源</label>
+            <div class="layui-input-inline">
+                <select class="" lay-search="" id="xmly" lay-filter="xmly" name="xmly">
+                    <option value="">请选择</option>
+                    {{# if(d && isNotBlank(d.zdList)){ }}
+                    {{# layui.each(d.zdList.xmly, function(index, item){ }}
+                    <option value="{{item.DM || '0'}}">{{item.MC || ''}}</option>
+                    {{# }); }}
+                    {{# }   }}
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">内容搜索</label>
+            <div class="layui-input-inline bdc-third-column-select">
+                <select class="" lay-search="" lay-filter="conditionKey" name="conditionKey">
+                    <option value="">请选择</option>
+                    {{# if(d && isNotBlank(d.zdList) && isNotBlank(d.cols)){ }}
+                        {{# layui.each(d.zdList.eszdmc, function(index, item){ }}
+                        {{# if(d.cols.indexOf(item.DM) > -1){ }}
+                        <option value="{{item.DM || '0'}}">{{item.MC || ''}}</option>
+                        {{# } }}
+                        {{# }); }}
+                    {{# }   }}
+                </select>
+            </div>
+            <div class="layui-input-inline bdc-third-column-input">
+                <input type="text" name="conditionValue" placeholder="请输入" autocomplete="off" class="layui-input">
+                <i class="layui-icon layui-icon-close bdc-hide"></i>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<!--base64加密-->
+<script src="../../static/js/bjjk/base64.js"></script>
+<script src="../../static/js/commonSearch.js"></script>
+<script src="../../static/js/formCenter.js"></script>
+<script src="../../static/js/log/logList_common.js"></script>
+<script src="../../static/js/log/logList_xxbl.js"></script>
+</html>

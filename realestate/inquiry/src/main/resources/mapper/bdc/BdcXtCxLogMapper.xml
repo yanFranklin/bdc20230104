@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcXtCxLogMapper">
+
+    <select id="listBdcXtcxByPageOrder" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcXtCxLogDO">
+        select id,yhm,yhzh,dlip,cxtj,excel,cxjg,czsj,yhid,szbm,szbmid,qlrmc,qlrzjh,zl,bdcdyh,bdcqzh,rzlx
+        from BDC_XT_CX_LOG
+        <where>
+            <if test="yhm != null and yhm !=''">
+                and yhm like '%'|| #{yhm} || '%'
+            </if>
+            <if test="yhzh != null and yhzh != ''">
+                and yhzh like '%'|| #{yhzh} || '%'
+            </if>
+            <if test="dlip != null and dlip != ''">
+                and dlip = #{dlip}
+            </if>
+            <if test="qlrmc != null and qlrmc != ''">
+                and qlrmc like '%'|| #{qlrmc} || '%'
+            </if>
+            <if test="qlrzjh != null and qlrzjh != ''">
+                and qlrzjh = #{qlrzjh}
+            </if>
+            <if test="zl != null and zl != ''">
+                and zl like '%'|| #{zl} || '%'
+            </if>
+            <if test="startTime != null and startTime != ''">
+                and czsj <![CDATA[ >= ]]> to_date(#{beginTime},'yyyy-MM-dd HH24:mi:ss')
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and czsj <![CDATA[ <= ]]> to_date(#{endTime},'yyyy-MM-dd HH24:mi:ss')
+            </if>
+        </where>
+        order by czsj DESC
+
+    </select>
+</mapper>

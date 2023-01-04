@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>刷新某个iframe代理</title>
+    <script src="../static/js/common.js"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            try {
+                top.changeIframeUrl(getQueryString("oldUrl"),getQueryString("newUrl"));
+            }catch(e) {
+                if(getQueryString("errorTime") == null){
+                    location.href = iframeIp() + "/iframe-change.html?errorTime=1&url="+encodeURIComponent(getQueryString("url"));
+                }else if(getQueryString("errorTime") === 1){
+                    location.href = iframeIp() + "/iframe-change.html?errorTime=2&url="+encodeURIComponent(getQueryString("url"));
+                }
+            }
+
+            function getQueryString(name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)","i");
+                var r = window.location.search.substr(1).match(reg);
+                if(r != null){
+                    return decodeURIComponent(r[2]);
+                }else {
+                    return null;
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+</body>
+</html>

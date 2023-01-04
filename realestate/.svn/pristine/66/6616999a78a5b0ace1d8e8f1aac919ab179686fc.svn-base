@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>查封信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css"/>
+
+</head>
+<body>
+<div class="bdc-percentage-container">
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <form class="layui-form" action="">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">不动产单元号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="bdcdyh" name="bdcdyh" class="layui-input"
+                                   placeholder="请输入">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">原产权证号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="bdcqzh" name="bdcqzh" class="layui-input"
+                                   placeholder="请输入">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">被执行人</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="bzxr" name="bzxr" class="layui-input"
+                                   placeholder="请输入">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline xzq-sele">
+                        <label class="layui-form-label">查封类型</label>
+                        <div class="layui-input-inline">
+                            <select name="cflx" lay-filter="cflx" placeholder="请选择查封类型">
+                                <option value="">请选择</option>
+                                <option value="1">查封</option>
+                                <option value="2">轮候查封</option>
+                                <option value="3">预查封</option>
+                                <option value="4">轮候预查封</option>
+                            </select>
+                            <i class="layui-icon layui-icon-close bdc-hide reseticon" style="right: 29px!important;"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline xzq-sele">
+                        <label class="layui-form-label">权属状态</label>
+                        <div class="layui-input-inline">
+                            <select name="qszt" lay-filter="qszt" placeholder="请选择权属状态">
+                                <option value="">请选择</option>
+                                <option value="0">临时</option>
+                                <option value="1">现势</option>
+                                <option value="2">历史</option>
+                                <option value="3">终止</option>
+                            </select>
+                            <i class="layui-icon layui-icon-close bdc-hide reseticon" style="right: 29px!important;"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">查封文号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="cfwh" name="cfwh" class="layui-input"
+                                   placeholder="请输入">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline xzq-sele">
+                        <label class="layui-form-label">是否到期</label>
+                        <div class="layui-input-inline">
+                            <select id= "isBeyondDeadLine" name="isBeyondDeadLine" lay-filter="isBeyondDeadLine"
+                                    placeholder="请选择">
+                                <option value="">请选择</option>
+                                <option value="0">到期</option>
+                                <option value="1">未到期</option>
+                            </select>
+                            <i class="layui-icon layui-icon-close bdc-hide reseticon" style="right: 29px!important;"></i>
+                        </div>
+                    </div>
+
+                    <div class="pf-senior-show bdc-hide">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">登记起始时间</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="cfqssj" name="cfqssj" class="layui-input" placeholder="请选择">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">登记结束时间</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="cfjssj" name="cfjssj" class="layui-input" placeholder="请选择">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline bdc-button-box">
+                        <a href="javascript:;" id="search" lay-submit="" lay-filter="search"
+                           class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                        <button type="reset" class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset">重置</button>
+                        <a href="javascript:" class="layui-btn layui-btn-normal bdc-secondary-btn"
+                             id="seniorSearch">高级查询</a>
+                    </div>
+                </div>
+
+        </div>
+        </form>
+    </div>
+    <div class="bdc-table-box">
+        <table id="cfTable" lay-filter="cfTable"></table>
+    </div>
+</div>
+
+
+<!--表格上面功能按钮-->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <!--<button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="replayLog">日志重现</button>-->
+        <button class="layui-btn layui-btn-sm bdc-major-btn" lay-event="exportExcel">导出Excel</button>
+    </div>
+</script>
+
+</div>
+
+<!--隐藏form，为了Excel导出缓存数据使用-->
+<form style="display: none" action="/realestate-inquiry-ui/excel/export" method="POST" id="form">
+    <input type="hidden" id="fileName" name="fileName"/>
+    <input type="hidden" id="sheetName" name="sheetName"/>
+    <input type="hidden" id="cellTitle" name="cellTitle"/>
+    <input type="hidden" id="cellWidth" name="cellWidth"/>
+    <input type="hidden" id="cellKey" name="cellKey"/>
+    <input type="hidden" id="data" name="data"/>
+</form>
+</body>
+
+<script type="text/html" id="barDemo">
+    {{#  if(d.cfjssj != d.ycfjssj){ }}
+    <a href="javascript:;" class="bdc-show-btn" lay-event="show"><i class="layui-icon layui-icon-down"></i></a>
+    {{# } else{ }}
+    <span>无</span>
+    {{#  } }}
+    <a href="javascript:;" class="bdc-show-btn bdc-hide" lay-event="hide"><i class="layui-icon layui-icon-up"></i></a>
+</script>
+
+<!--表格内部操作按钮-->
+<script type="text/html" id="barDemoOp">
+    <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="cfxq">查封详情</a>
+</script>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/cfxx/cfxx.js"></script>
+</html>

@@ -1,0 +1,83 @@
+info:
+  name: ${spring.application.name}
+  component: e-certificate application
+
+app:
+  center: http://192.168.2.99:8000/eureka/
+  oauth: http://192.168.2.99:8002/account
+  storage: http://192.168.2.70:8019/storage
+  province:
+    realestate-e-certificate: http://192.168.0.18:8081/realestate-e-certificate
+  security:
+    # 模块鉴权地址，用于hasUrlAuthority、 hasModuleAuthority表达式鉴权
+    moduleAuthPath: http://account/account
+    # 配置不需要权限控制的资源,一般为静态资源
+    ignores:   /image/**,/css/**,/js/**,/webjars/**,/realestate-e-certificate/rest/**
+    authorities:
+      # 不需要权限控制的访问资源，策略如下
+      # permitAll:  /rest/**,/feign/**
+      # 限定拥有可读的模块操作才能访问
+      # hasUrlAuthority('read'): /auth/users,/auth/orgs
+      # 限定对模块编码 yhgl 拥有新增操作的用户可以访问
+      # hasModuleAuthority('yhgl:add'): /auth/user/create
+      # 限定 ROLE_USER 角色的用户才能访问的资源
+      # hasAnyAuthority('ROLE_USER'): /resource1/**,/catalog1/**
+      # 对未作配置的路径是否需要登陆认证后才能访问
+      authenticated: true
+    # 配置资源访问范围， 该配置下的资源路径页面无法直接访
+    resources:
+      authenticated: /realestate-e-certificate/feign/**
+
+
+spring:
+  rabbitmq:
+    host: 192.168.0.60
+    port: 5672
+    username: guest
+    password: guest
+  redis:
+    port: 6379
+    host: 192.168.0.60
+  elasticsearch:
+    jest:
+      uris: http://192.168.2.71:9200
+      connection-timeout: 80000
+      read-timeout: 80000
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@192.168.2.111:1521:orcl
+    username: bdcdj_dzzz
+    password: e/lWYHJj7d9rXmgsItIxLw2oWP4XasfqoDXA0AKNYHgeSJQK8IKgU8/+ia1ax4mr9ki4QZbrQrCW9WMkHDOPAA==
+    publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK8ev+xi3qANIZpQGhndeKtc2EOlsPd48VIhphnl3OoOKqynJuQo7qZrJekk8iqXHgvze3bnFrFyTtf3vxGIamsCAwEAAQ==
+  profiles:
+    include: config
+  messages:
+      basename: conf/message/messages
+
+#最大连接数
+http:
+  maxTotal :  500
+#并发数
+  defaultMaxPerRoute :  200
+#创建连接的最长时间
+  connectTimeout:  10000
+#从连接池中获取到连接的最长时间
+  connectionRequestTimeout:  500
+#数据传输的最长时间
+  socketTimeout:  100000000
+
+#线程池创建时候初始化的线程数
+executor:
+  corePoolSize : 10
+  #线程池最大的线程数
+  maxPoolSize : 20
+  #用来缓冲执行任务的队列
+  queueCapacity : 250
+  #允许线程的空闲时间(秒)：当超过了核心线程出之外的线程在空闲时间到达之后会被销毁
+  keepAliveSeconds : 60
+  #每条线程执行的最大数据量
+  perform:
+    number : 100
+
+server:
+  port: ${port:8082}

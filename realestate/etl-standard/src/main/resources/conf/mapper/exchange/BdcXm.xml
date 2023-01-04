@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.etl.core.mapper.exchange.BdcXmMapper">
+
+    <select id="listCfxx" resultType="cn.gtmap.realestate.common.core.dto.etl.CfxxDTO">
+        SELECT distinct
+        cf.SLBH AS cfdjbh,
+        cf.BDCDYH,
+        zd.MC AS cflx,
+        cf.CFJG AS cfdw,
+        cf.CFWH AS cfwj,
+        cf.CFFW AS cfbw,
+        to_char( cf.CFQSSJ, 'yyyy-MM-dd' ) || '到' || to_char( cf.CFJSSJ, 'yyyy-MM-dd' ) AS cfqx,
+        to_char( CASE WHEN cf.CFSJ IS NULL THEN cf.DJSJ ELSE cf.CFSJ END, 'yyyy-MM-dd hh24:mi:ss' ) AS cfsj,
+        cf.BZ,
+        q.BDCQZH as cqzh,
+        q.qlrmc as cqr
+        FROM
+        BDC_CF cf
+        LEFT JOIN BDC_XM xm ON xm.bdcdyh = cf.bdcdyh and cf.qszt = 1
+        LEFT JOIN BDC_XM_ZS_GX gx ON gx.xmid = xm.xmid
+        LEFT JOIN BDC_ZS zs ON zs.zsid = gx.zsid
+        LEFT JOIN BDC_QLR q ON q.xmid = xm.xmid AND q.qlrlb = 1
+        LEFT JOIN BDC_ZD_CFLX zd on zd.dm=cf.cflx
+        <where>
+            <if test="cqdjbh != null and cqdjbh != ''">
+                AND xm.SLBH = #{cqdjbh,jdbcType=VARCHAR}
+            </if>
+            <if test="bdcqzh != null and bdcqzh != ''">
+                AND zs.BDCQZH = #{bdcqzh,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryCfmj" parameterType="java.util.Map" resultType="cn.gtmap.realestate.common.core.dto.etl.CfmjDTO">
+        SELECT DISTINCT fdcq.JZMJ,xm.BDCDYH,js.SYQMJ FROM bdc_xm xm
+        LEFT JOIN BDC_FDCQ fdcq ON fdcq.bdcdyh = xm.bdcdyh AND fdcq.QSZT = 1
+        LEFT JOIN BDC_JSYDSYQ js ON js.bdcdyh = xm.bdcdyh AND js.QSZT = 1
+        <where>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND xm.BDCDYH = #{bdcdyh,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="listDyxx" resultType="cn.gtmap.realestate.common.core.dto.etl.DyxxDTO">
+        SELECT
+        yzs.BDCQZH AS dyqbdcdjzmh,
+        yxm.slbh AS dydjbh,
+        xm.BDCDYH,
+        qlr.QLRMC as dyqr,
+        ywr.YWRMC as dyr,
+        dy.zl as fwzl,
+        to_char(dy.dyfs) AS dylx,
+        to_char( dy.ZWLXQSSJ, 'yyyy-MM-dd' ) || '到' || to_char( dy.ZWLXJSSJ, 'yyyy-MM-dd' ) AS dyqx,
+        to_char( yxm.DJSJ, 'yyyy-MM-dd hh24:mi:ss' ) AS dydbsj,
+        dy.fj AS bz,
+        dy.bdbzzqse||'' AS dyje,
+        nvl(dy.FWDYMJ,dy.TDDYMJ)||'' as dymj,
+        to_char( dy.ZXDYDJSJ, 'yyyy-MM-dd hh24:mi:ss' ) AS dyzxsj
+        FROM
+        BDC_DYAQ dy
+        LEFT JOIN BDC_XM xm ON xm.bdcdyh = dy.bdcdyh and dy.qszt = 1
+        LEFT JOIN (
+        SELECT
+        d.xmid,
+        TO_CHAR(WMSYS.WM_CONCAT ( q.QLRMC ) )AS qlrmc
+        FROM
+        BDC_QLR q
+        LEFT JOIN BDC_DYAQ d ON d.XMID = q.XMID
+        LEFT JOIN BDC_XM x ON x.bdcdyh = d.bdcdyh and d.qszt = 1
+        LEFT JOIN BDC_XM_ZS_GX g ON g.XMID = x.XMID
+        LEFT JOIN BDC_ZS z ON z.ZSID = g.ZSID
+        WHERE
+        q.QLRLB = 1
+        <if test="cqdjbh != null and cqdjbh != ''">
+            AND x.SLBH = #{cqdjbh,jdbcType=VARCHAR}
+        </if>
+        <if test="bdcqzh != null and bdcqzh != ''">
+            AND z.BDCQZH = #{bdcqzh,jdbcType=VARCHAR}
+        </if>
+        GROUP BY
+        d.XMID
+        ) qlr ON dy.XMID = qlr.XMID
+        LEFT JOIN (
+        SELECT
+        yd.xmid,
+        TO_CHAR(WMSYS.WM_CONCAT ( yq.QLRMC ) )AS ywrmc
+        FROM
+        BDC_QLR yq
+        LEFT JOIN BDC_DYAQ yd ON yd.XMID = yq.XMID
+        LEFT JOIN BDC_XM yx ON yx.bdcdyh = yd.bdcdyh and yd.qszt = 1
+        LEFT JOIN BDC_XM_ZS_GX yg ON yg.XMID = yx.XMID
+        LEFT JOIN BDC_ZS yz ON yz.ZSID = yg.ZSID
+        WHERE
+        yq.QLRLB = 2
+        <if test="cqdjbh != null and cqdjbh != ''">
+            AND yx.SLBH = #{cqdjbh,jdbcType=VARCHAR}
+        </if>
+        <if test="bdcqzh != null and bdcqzh != ''">
+            AND yz.BDCQZH = #{bdcqzh,jdbcType=VARCHAR}
+        </if>
+        GROUP BY
+        yd.XMID
+        ) ywr ON dy.XMID = ywr.XMID
+        LEFT JOIN BDC_XM_ZS_GX gx ON gx.XMID = xm.XMID
+        LEFT JOIN BDC_ZS zs ON zs.ZSID = gx.ZSID
+        LEFT JOIN BDC_XM yxm ON yxm.XMID = dy.XMID
+        LEFT JOIN BDC_XM_ZS_GX ygx ON ygx.XMID = yxm.XMID
+        LEFT JOIN BDC_ZS yzs ON yzs.ZSID = ygx.ZSID
+        <where>
+            <if test="cqdjbh != null and cqdjbh != ''">
+                AND xm.SLBH = #{cqdjbh,jdbcType=VARCHAR}
+            </if>
+            <if test="bdcqzh != null and bdcqzh != ''">
+                AND zs.BDCQZH = #{bdcqzh,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="listXscq" resultType="cn.gtmap.realestate.common.core.dto.etl.XscqDTO">
+        select distinct(t3.qlrmc) as xm,
+        t1.xmid as xmid,
+        t1.slbh as cqdjbh,
+        t1.bdcdyh as fwbm,
+        t1.bdcdyh as bdcdyh,
+        t3.bdcqzh AS cqzh,
+        t3.zjh as zjhm,
+        t1.zl as fwzl,
+        t2.myzcs as zcs,
+        t2.szmyc as szcs,
+        t2.fwjg as jg,
+        t1.dzwyt as yt,
+        t2.fwxz as fwxz,
+        t3.gyfs as gyfs,
+        t3.qlbl as gyfe,
+        t2.jzmj as jm,
+        t2.jyjg as sbgz,
+        to_char(t2.djsj,'yy-mm-dd hh24:mi:ss') as fwcqrq,
+        t2.zh as zh,
+        t2.fjh as fh,
+        t2.fwlx as yt2,
+        t1.qxdm as szqx,
+        t1.qlxz as tdxz,
+        t1.qlxz as tdjyfs,
+        s.dm as qszt,
+        '' as jznd,
+        '' as jzqh
+        from bdc_xm t1
+        join bdc_fdcq t2
+        on t2.xmid = t1.xmid
+        join bdc_xm_zs_gx t4
+        on t4.xmid = t1.xmid
+        join bdc_zs t5
+        on t5.zsid = t4.zsid
+        join bdc_qlr t3
+        on t3.xmid = t1.xmid
+        left join bdc_zd_qszt s on s.dm = t2.qszt
+        WHERE 1 = 1
+        AND t1.gzlslid in
+        (select x.gzlslid
+        FROM bdc_qlr q
+        LEFT JOIN bdc_xm x
+        ON x.xmid = q.xmid
+        LEFT JOIN bdc_zs z
+        ON z.zsid = q.zsid
+        WHERE 1 = 1 and q.qlrlb = 1
+        <if test="xm != null and xm != ''">
+            and q.qlrmc = #{xm,jdbcType=VARCHAR}
+        </if>
+        <if test="zjhm != null and zjhm != ''">
+            and q.zjh = #{zjhm,jdbcType=VARCHAR}
+        </if>
+        <if test="cqzh != null and cqzh != ''">
+            and z.bdcqzh = #{cqzh,jdbcType=VARCHAR}
+        </if>
+
+        )
+        <if test="cqzh != null and cqzh != ''">
+            AND t5.bdcqzh = #{cqzh,jdbcType=VARCHAR}
+        </if>
+        and t3.qlrlb = 1
+    </select>
+
+    <select id="listXscqWithTd" resultType="cn.gtmap.realestate.common.core.dto.etl.XscqDTO">
+        select distinct(t3.qlrmc) as xm,
+        t1.xmid as xmid,
+        t1.slbh as cqdjbh,
+        t1.bdcdyh as fwbm,
+        t1.bdcdyh as bdcdyh,
+        t3.bdcqzh AS cqzh,
+        t3.zjh as zjhm,
+        t1.zl as fwzl,
+--         t2.myzcs as zcs,
+--         t2.szmyc as szcs,
+--         t2.fwjg as jg,
+        t1.dzwyt as yt,
+--         t2.fwxz as fwxz,
+        t3.gyfs as gyfs,
+        t3.qlbl as gyfe,
+        t2.syqmj as jm,
+--         t2.jyjg as sbgz,
+        to_char(t1.djsj,'yy-mm-dd hh24:mi:ss') as fwcqrq,
+--         t2.zh as zh,
+--         t2.fjh as fh,
+--         t2.fwlx as yt2,
+        t1.qxdm as szqx,
+        t1.qlxz as tdxz,
+        t1.qlxz as tdjyfs,
+        s.dm as qszt,
+        '' as jznd,
+        '' as jzqh
+        from bdc_xm t1
+        join bdc_jsydsyq t2 on t2.xmid = t1.xmid
+        join bdc_xm_zs_gx t4
+        on t4.xmid = t1.xmid
+        join bdc_zs t5
+        on t5.zsid = t4.zsid
+        join bdc_qlr t3
+        on t3.xmid = t1.xmid
+        left join bdc_zd_qszt s on s.dm = t1.qszt
+        WHERE 1 = 1
+        AND t1.gzlslid in
+        (select x.gzlslid
+        FROM bdc_qlr q
+        LEFT JOIN bdc_xm x
+        ON x.xmid = q.xmid
+        LEFT JOIN bdc_zs z
+        ON z.zsid = q.zsid
+        WHERE 1 = 1 and q.qlrlb = 1
+        <if test="xm != null and xm != ''">
+            and q.qlrmc = #{xm,jdbcType=VARCHAR}
+        </if>
+        <if test="zjhm != null and zjhm != ''">
+            and q.zjh = #{zjhm,jdbcType=VARCHAR}
+        </if>
+        <if test="cqzh != null and cqzh != ''">
+            and z.bdcqzh = #{cqzh,jdbcType=VARCHAR}
+        </if>
+
+        )
+        <if test="cqzh != null and cqzh != ''">
+            AND t5.bdcqzh = #{cqzh,jdbcType=VARCHAR}
+        </if>
+        and t3.qlrlb = 1
+    </select>
+
+    <select id="listBzjd" resultType="cn.gtmap.realestate.common.core.dto.etl.BzjdDTO">
+        select
+        t1.xmid as xmid,
+        t1.slbh as cqdjbh,
+        t1.bdcdyh as fwbm,
+        t3.bdcqzh as cqzh,
+        t3.qlrmc as xm,
+        t3.zjh as zjhm,
+        t1.zl as fwzl,
+        t2.myzcs as zcs,
+        t2.szmyc as szcs,
+        t2.fwjg as jg,
+        t1.dzwyt as yt,
+        t2.fwxz as fwxz,
+        t3.gyfs as gyfs,
+        case t3.gyfs
+        when 0 then ''
+        when 1 then ''
+        when 2 then t3.qlbl
+        when 3 then t3.qlbl
+        else '' end as gyfe,
+        t2.jzmj as jm,
+        t2.jyjg as sbgz,
+        to_char(t2.djsj,'yy-mm-dd hh24:mi:ss') as fwcqrq,
+        t3.qlrlb as qlrxz,
+        t1.qszt as cqbj,
+        a.mc as jd ,
+        t1.qxdm as xzqy
+        from
+        bdc_xm t1
+        join bdc_fdcq t2 on t2.xmid = t1.xmid
+        join bdc_qlr t3 on t3.xmid = t1.xmid
+        left join bdc_zd_ajzt a on a.dm = t1.ajzt
+        where 1 = 1
+        <!-- <if test="xm != null and xm != ''">
+             and t3.qlrmc = #{xm,jdbcType=VARCHAR}
+         </if>
+         <if test="zjhm != null and zjhm != ''">
+             and t3.zjh = #{zjhm,jdbcType=VARCHAR}
+         </if>-->
+        <if test="htbh != null and htbh != ''">
+            and t1.jyhth = #{htbh,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="listBzjdWithTd" resultType="cn.gtmap.realestate.common.core.dto.etl.BzjdDTO">
+        select
+        t1.xmid as xmid,
+        t1.slbh as cqdjbh,
+        t1.bdcdyh as fwbm,
+        t3.bdcqzh as cqzh,
+        t3.qlrmc as xm,
+        t3.zjh as zjhm,
+        t1.zl as fwzl,
+        t1.dzwyt as yt,
+        t3.gyfs as gyfs,
+        case t3.gyfs
+        when 0 then ''
+        when 1 then ''
+        when 2 then t3.qlbl
+        when 3 then t3.qlbl
+        else '' end as gyfe,
+        t3.qlrlb as qlrxz,
+        t1.qszt as cqbj,
+        a.mc as jd ,
+        t1.qxdm as xzqy
+        from
+        bdc_xm t1
+        join bdc_jsydsyq t2 on t2.xmid = t1.xmid
+        join bdc_qlr t3 on t3.xmid = t1.xmid
+        left join bdc_zd_ajzt a on a.dm = t1.ajzt
+        where 1 = 1
+        <!-- <if test="xm != null and xm != ''">
+             and t3.qlrmc = #{xm,jdbcType=VARCHAR}
+         </if>
+         <if test="zjhm != null and zjhm != ''">
+             and t3.zjh = #{zjhm,jdbcType=VARCHAR}
+         </if>-->
+        <if test="htbh != null and htbh != ''">
+            and t1.jyhth = #{htbh,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+
+    <select id="getBdcGdxxByGzlslid" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.domain.certificate.BdcGdxxDO">
+        select
+        daid,damx
+        from
+        bdc_gdxx gd
+        left join
+        bdc_xm xm
+        on
+        gd.xmid = xm.xmid
+        where
+        xm.gzlslid = #{gzlslid, jdbcType=VARCHAR}
+
+        <if test="damx != null and damx != ''" >
+            and gd.damx = #{damx, jdbcType=VARCHAR}
+        </if>
+
+        and rownum = 1
+    </select>
+
+    <!-- 查询公告项目-->
+    <select id="ggxm" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        select * from bdc_xm x where ajzt = 2 and  qszt = 0
+
+        <if test="null != bdcdyh and bdcdyh != ''">
+            and x.bdcdyh = #{bdcdyh,jdbcType=VARCHAR}
+        </if>
+
+        <if test="null != djxlList and djxlList.size > 0 ">
+            and x.djxl in
+            <foreach collection="djxlList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+    </select>
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.TsbbMapper">
+
+    <select id="getDjsl" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT substr(t.ywdm,0,3) nationalywdm
+        FROM (
+        --区分抵押权和地役权，地役权仍为9000102，抵押权9000101用0000101代替
+        SELECT CASE a.ywdm
+        WHEN '9000101' THEN
+        '0000101'
+        ELSE
+        a.ywdm
+        END ywdm
+        FROM ${logTable} a
+        WHERE a.cgbs in (0,1,2)
+        <if test="qxdm != '' and qxdm != null">
+            AND substr(a.bdcdyh,0,6)=#{qxdm}
+        </if>
+        <if test="accessDate != null">
+            AND trunc(a.sjjrrq) = trunc(#{accessDate})
+        </if>
+        ) t
+    </select>
+
+    <select id="getAccessSl" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT COUNT(t.ywdm) num, l.djlx
+        FROM (
+        --区分抵押权和地役权，地役权仍为9000102，抵押权9000101用0000101代替
+        SELECT CASE a.ywdm
+        WHEN '9000101' THEN
+        '0000101'
+        ELSE
+        a.ywdm
+        END ywdm
+        FROM ${logTable} a
+        WHERE a.cgbs in (0,1,2)
+        <if test="qxdm != '' and qxdm != null">
+            AND substr(a.bdcdyh,0,6)=#{qxdm}
+        </if>
+        <if test="accessDate != null">
+            AND trunc(a.sjjrrq) = trunc(#{accessDate})
+        </if>
+        ) t
+        RIGHT JOIN (<![CDATA[ SELECT (LEVEL-1)||'00' djlx FROM dual CONNECT BY  LEVEL < 11  ]]>) l ON l.djlx =
+        substr(t.ywdm,0,3)
+        GROUP BY l.djlx ORDER BY l.djlx
+    </select>
+
+
+</mapper>

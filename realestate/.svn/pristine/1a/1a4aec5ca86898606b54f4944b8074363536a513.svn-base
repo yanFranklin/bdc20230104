@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.engine.core.mapper.BdcLwMapper">
+
+    <select id="listXzYzLwByPage" parameterType="java.util.Map" resultType="cn.gtmap.realestate.common.core.vo.engine.ui.BdcGzLwVO">
+        select
+            t.CZRYID,to_char(t.czsj,'yyyy-mm-dd hh24:mi:ss') as CZSJ,t.GZLSLID,t.CZJQIP,t.LWID,t.GZID,t.LWYY,t.LWWH,b.czry, z.gzmc
+        from BDC_GZ_LW t
+        left join BDC_GZ_BMD b on b.czryid = t.czryid
+        left join BDC_GZ_ZGZ z on t.gzid = z.gzid
+        where 1=1
+        <if test="czry != null and czry !=''">
+            and instr(b.czry,#{czry})>0
+        </if>
+        <if test="lwwh != null and lwwh !=''">
+              and instr(t.lwwh,#{lwwh})>0
+        </if>
+        <if test="czjqip != null and czjqip !=''">
+            and instr(t.czjqip,#{czjqip})>0
+        </if>
+        order by t.czsj desc
+    </select>
+</mapper>

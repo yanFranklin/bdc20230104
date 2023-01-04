@@ -1,0 +1,1351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.register.core.mapper.BdcBdcdyMapper">
+
+    <!--分页查询不动产单元号对应的项目登记历史关系-->
+    <select id="listBdcdyLsgxByPageOrder" parameterType="cn.gtmap.realestate.common.core.qo.register.BdcLsgxQO"
+            resultType="cn.gtmap.realestate.common.core.dto.register.BdcLsgxXmDTO">
+        SELECT * FROM
+        (
+            SELECT
+                T.XMID, T.SLBH, T.QLLX, T.DJLX, T.SLSJ, T.SLR, T.DJXL, T.BDCLX, T.GZLSLID, T.BDCDYH, T.BDCQZH, T.ZL,
+                T.QLXZ, T.DJSJ, T.GZLDYMC, T.QLR, T.YWR, T.XMLY, T.DJYY, T.YTDZH, T.YBDCDYH, T.AJZT, T.QSZT,
+                Y.MC AS DYFS, D.BDBZZQSE, D.ZXDYYWH, D.ZXDYDJSJ, C.JFYWH, C.JFDJSJ, FB.QJGLDM, FB.ZSXT
+            FROM
+                BDC_XM T
+            LEFT JOIN
+                BDC_DYAQ    D  ON  T.XMID = D.XMID
+            LEFT JOIN
+                BDC_CF      C  ON  C.XMID = T.XMID
+            LEFT JOIN
+                BDC_ZD_DYFS Y  ON  D.DYFS = Y.DM
+            LEFT JOIN
+                BDC_XMFB    FB ON  T.XMID = FB.XMID
+            <where>
+                <!--将当前和上一手不动产单元对应的登记历史都查询出来-->
+                <if test="(bdcdyh != null and bdcdyh != '') or (gzlslid != null and gzlslid != '')">
+                    <choose>
+                        <!--不需要查询历史上下手-->
+                        <when test="sfcxls != null and sfcxls != '' and sfcxls == '2'.toString()">
+                            T.BDCDYH in  ( <include refid="getBdcdyh" /> )
+                            <if test="xzql != null and xzql != ''">
+                                and T.QLLX in
+                                <foreach collection="xzql.split(',')" item="item" index="index" open="(" separator="," close=")">
+                                    #{item,jdbcType=VARCHAR}
+                                </foreach>
+                            </if>
+                        </when>
+
+                        <!--查询当前这一手以及外联的上一手-->
+                        <when test="sfcxls != null and sfcxls != '' and sfcxls == '3'.toString()">
+                            T.BDCDYH in
+                            (
+                                select bdcdyh from bdc_xm where xmid in
+                                (
+                                    select yxmid from bdc_xm_lsgx where xmid in
+                                    (
+                                        select xmid from bdc_xm where bdcdyh in ( <include refid="getBdcdyh" /> ) <include refid="bcxlsgzl"/>
+                                    )
+                                    and wlxm = 1
+                                )
+                                union
+                                <include refid="getBdcdyh" />
+                            )
+                            <if test="xzql != null and xzql != ''">
+                                and T.QLLX  not in
+                                <foreach collection="xzql.split(',')" item="item" index="index" open="(" separator="," close=")">
+                                    #{item,jdbcType=VARCHAR}
+                                </foreach>
+                            </if>
+                        </when>
+
+                        <!--需要查询历史上下手-->
+                        <otherwise>
+                            T.XMID IN (
+                                SELECT xmid FROM bdc_xm WHERE bdcdyh in ( <include refid="getBdcdyh"/> )
+                                UNION
+                                <include refid="getLsXmids"/>
+                            )
+                            <if test="xzql != null and xzql != ''">
+                                and T.QLLX not in
+                                <foreach collection="xzql.split(',')" item="item" index="index" open="(" separator="," close=")">
+                                    #{item,jdbcType=VARCHAR}
+                                </foreach>
+                            </if>
+                        </otherwise>
+                    </choose>
+                </if>
+
+                <if test="slbh != null and slbh != ''">
+                    AND T.SLBH like '%' || #{slbh} || '%'
+                </if>
+                <if test="djyy != null and djyy != ''">
+                    AND T.DJYY like '%' || #{djyy} || '%'
+                </if>
+                <if test="bdcqzh != null and bdcqzh != ''">
+                    AND T.BDCQZH like '%' || #{bdcqzh} || '%'
+                </if>
+                <if test="qszt == 0 || qszt != null and qszt != ''">
+                    AND T.QSZT = #{qszt,jdbcType=INTEGER}
+                </if>
+                <if test="qsztlist != null and qsztlist != ''">
+                    AND T.QSZT not in
+                    <foreach collection="qsztlist.split(',')" open="(" close=")" item="item" separator=",">
+                        #{item, jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+                <if test="qllx == 0 || qllx != null and qllx != ''">
+                    AND T.QLLX = #{qllx,jdbcType=INTEGER}
+                </if>
+                <if test="qllxlist != null and qllxlist != ''">
+                    AND T.QLLX in
+                    <foreach collection="qllxlist.split(',')" open="(" close=")" item="item" separator=",">
+                        #{item, jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+
+                <if test="djxlc != null and djxlc != ''">
+                    AND T.DJXL = #{djxlc,jdbcType=INTEGER}
+                </if>
+
+                <!--这里需要排除对应的登记小类，目的是像合肥有些流程需要合并展示，而不是为了排除不展示指定流程，在下面 union 的内容就是指定登记小类合并展示-->
+                <if test="djxl != null and djxl != ''">
+                    AND
+                    (
+                        T.DJXL IS NULL OR T.DJXL NOT IN
+                        <foreach collection="djxl.split(',')" open="(" close=")" item="item" separator=",">
+                            #{item, jdbcType=VARCHAR}
+                        </foreach>
+                    )
+                </if>
+                <if test="ajzt != null and ajzt != ''">
+                    AND T.AJZT IN
+                    <foreach collection="ajzt.split(',')" open="(" close=")" item="item" separator=",">
+                        #{item, jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+                <if test="gzldyid != null and gzldyid != ''">
+                    AND NVL(T.GZLDYID, 'a') NOT IN
+                    <foreach collection="gzldyid.split(',')" open="(" close=")" item="item" separator=",">
+                        #{item, jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+            </where>
+
+            <!--这里需要指定对应的登记小类-->
+            <if test="djxl != null and djxl != ''">
+                union
+                SELECT
+                    MAX(T.XMID) AS XMID,
+                    MAX(T.SLBH) AS SLBH,
+                    MAX(T.QLLX) AS QLLX,
+                    MAX(T.DJLX) AS DJLX,
+                    MAX(T.SLSJ) AS SLSJ,
+                    MAX(T.SLR) AS SLR,
+                    MAX(T.DJXL) AS DJXL,
+                    MAX(T.BDCLX) AS BDCLX,
+                    MAX(T.GZLSLID) AS GZLSLID,
+
+                    CASE
+                    WHEN COUNT(DISTINCT T.BDCDYH) = 1 THEN MAX(T.BDCDYH)
+                    WHEN COUNT(DISTINCT T.BDCDYH) > 1 THEN MAX(T.BDCDYH) || '等'
+                    END AS BDCDYH,
+
+                    CASE
+                    WHEN COUNT(DISTINCT T.BDCQZH) = 1 THEN MAX(T.BDCQZH)
+                    WHEN COUNT(DISTINCT T.BDCQZH) > 1 THEN MAX(T.BDCQZH) || '等'
+                    END AS BDCQZH,
+
+                    CASE
+                    WHEN COUNT(DISTINCT T.ZL) = 1 THEN MAX(T.ZL)
+                    WHEN COUNT(DISTINCT T.ZL) > 1 THEN MAX(T.ZL) || '等'
+                    END AS ZL,
+
+                    MAX(T.QLXZ) AS QLXZ,
+                    MAX(T.DJSJ) AS DJSJ,
+                    MAX(T.GZLDYMC) AS GZLDYMC,
+
+                    CASE
+                    WHEN COUNT(DISTINCT T.QLR) = 1 THEN MAX(T.QLR)
+                    WHEN COUNT(DISTINCT T.QLR) > 1 THEN MAX(T.QLR) || '等'
+                    END AS QLR,
+
+                    CASE
+                    WHEN COUNT(DISTINCT T.YWR) = 1 THEN MAX(T.YWR)
+                    WHEN COUNT(DISTINCT T.YWR) > 1 THEN MAX(T.YWR) || '等'
+                    END AS YWR,
+
+                    MAX(T.XMLY) AS XMLY,
+                    MAX(T.DJYY) AS DJYY,
+                    MAX(T.YTDZH) AS YTDZH,
+                    MAX(T.YBDCDYH) AS YBDCDYH,
+                    MAX(T.AJZT) AS AJZT,
+                    MAX(T.QSZT) AS QSZT,
+                    MAX(Y.MC) AS DYFS,
+                    MAX(D.BDBZZQSE) AS BDBZZQSE,
+                    MAX(D.ZXDYYWH) AS ZXDYYWH,
+                    MAX(D.ZXDYDJSJ) AS ZXDYDJSJ,
+                    MAX(C.JFYWH) AS JFYWH,
+                    MAX(C.JFDJSJ) AS JFDJSJ,
+                    MAX(FB.QJGLDM) AS QJGLDM,
+                    MAX(FB.ZSXT) AS ZSXT
+                FROM
+                    BDC_XM T
+                LEFT JOIN
+                    BDC_DYAQ D
+                ON
+                    T.XMID = D.XMID
+                LEFT JOIN
+                    BDC_CF C
+                ON
+                    C.XMID = T.XMID
+                LEFT JOIN
+                    BDC_ZD_DYFS Y
+                ON
+                    D.DYFS = Y.DM
+                LEFT JOIN
+                    BDC_XMFB FB
+                ON
+                    FB.XMID =T.XMID
+                where
+                    T.DJXL IN
+                    <foreach collection="djxl.split(',')" open="(" close=")" item="item" separator=",">
+                        #{item, jdbcType=VARCHAR}
+                    </foreach>
+
+                    <!--将当前和上一手不动产单元对应的登记历史都查询出来-->
+                    <if test="(bdcdyh != null and bdcdyh != '') or (gzlslid != null and gzlslid != '')">
+                        AND
+
+                        <choose>
+                            <!--不需要查询历史上下手-->
+                            <when test="sfcxls != null and sfcxls != '' and sfcxls == '2'.toString()">
+                                T.BDCDYH in ( <include refid="getBdcdyh" /> )
+                            </when>
+
+                            <!--查询当前这一手以及外联的上一手-->
+                            <when test="sfcxls != null and sfcxls != '' and sfcxls == '3'.toString()">
+                                T.BDCDYH in
+                                (
+                                    select bdcdyh from bdc_xm where xmid in
+                                    (
+                                        select yxmid from bdc_xm_lsgx where xmid in
+                                        (
+                                            select xmid from bdc_xm where bdcdyh in ( <include refid="getBdcdyh" /> ) <include refid="bcxlsgzl"/>
+                                        )
+                                        and wlxm = 1
+                                    )
+                                    union
+                                    <include refid="getBdcdyh" />
+                                )
+                            </when>
+
+                            <!--需要查询历史上下手-->
+                            <otherwise>
+                                T.XMID IN (
+                                    SELECT xmid FROM bdc_xm WHERE bdcdyh in ( <include refid="getBdcdyh"/> )
+                                    UNION
+                                    <include refid="getLsXmids"/>
+                                )
+                            </otherwise>
+                        </choose>
+                    </if>
+                    <if test="slbh != null and slbh != ''">
+                        AND T.SLBH like '%' || #{slbh} || '%'
+                    </if>
+                    <if test="djyy != null and djyy != ''">
+                        AND T.DJYY like '%' || #{djyy} || '%'
+                    </if>
+                    <if test="bdcqzh != null and bdcqzh != ''">
+                        AND T.BDCQZH like '%' || #{bdcqzh} || '%'
+                    </if>
+                    <if test="qszt == 0 || qszt != null and qszt != ''">
+                        AND T.QSZT = #{qszt,jdbcType=INTEGER}
+                    </if>
+                    <if test="qsztlist != null and qsztlist != ''">
+                        AND T.QSZT not in
+                        <foreach collection="qsztlist.split(',')" open="(" close=")" item="item" separator=",">
+                            #{item, jdbcType=VARCHAR}
+                        </foreach>
+                    </if>
+                    <if test="qllx == 0 || qllx != null and qllx != ''">
+                        AND T.QLLX = #{qllx,jdbcType=INTEGER}
+                    </if>
+                    <if test="qllxlist != null and qllxlist != ''">
+                        AND T.QLLX in
+                        <foreach collection="qllxlist.split(',')" open="(" close=")" item="item" separator=",">
+                            #{item, jdbcType=VARCHAR}
+                        </foreach>
+                    </if>
+                    <if test="ajzt != null and ajzt != ''">
+                        AND T.AJZT IN
+                        <foreach collection="ajzt.split(',')" open="(" close=")" item="item" separator=",">
+                            #{item, jdbcType=VARCHAR}
+                        </foreach>
+                    </if>
+                    <if test="gzldyid != null and gzldyid != ''">
+                        AND NVL(T.GZLDYID, 'a') NOT IN
+                        <foreach collection="gzldyid.split(',')" open="(" close=")" item="item" separator=",">
+                            #{item, jdbcType=VARCHAR}
+                        </foreach>
+                    </if>
+                GROUP BY DJXL
+            </if>
+
+            <!--常州需求，在登记历史-抵押表单 查看 所有权属状态的 外联证书抵押信息-->
+            <if test = "wlzsdy != null and wlzsdy != ''">
+            union
+            SELECT
+                T.XMID, T.SLBH, T.QLLX, T.DJLX, T.SLSJ, T.SLR, T.DJXL, T.BDCLX, T.GZLSLID, T.BDCDYH, T.BDCQZH, T.ZL,
+                T.QLXZ, T.DJSJ, T.GZLDYMC, T.QLR, T.YWR, T.XMLY, T.DJYY, T.YTDZH, T.YBDCDYH, T.AJZT, T.QSZT,
+                Y.MC AS DYFS, D.BDBZZQSE, D.ZXDYYWH, D.ZXDYDJSJ, null as JFYWH ,null as JFDJSJ, FB.QJGLDM, FB.ZSXT
+            FROM
+            BDC_XM T
+            JOIN
+            BDC_DYAQ    D  ON  T.XMID = D.XMID
+            LEFT JOIN
+            BDC_ZD_DYFS Y  ON  D.DYFS = Y.DM
+            LEFT JOIN
+            BDC_XMFB    FB ON  T.XMID = FB.XMID
+            where
+            T.xmid in
+            (
+                SELECT xmid FROM bdc_xm WHERE bdcdyh in (<include refid="getWlzsBdcdyh"/>)
+            )
+        </if>
+    )
+    ORDER BY
+    <!--避免$注入，直接判断值-->
+        <if test="field != null and field != '' and order != null and order != ''">
+            <if test="field == 'djsj'.toString()">
+                DJSJ
+            </if>
+            <if test="field == 'slsj'.toString()">
+                SLSJ
+            </if>
+
+            <if test="order == 'desc'.toString()">
+                DESC ,
+            </if>
+            <if test="order == 'asc'.toString()">
+                ASC ,
+            </if>
+        </if>
+
+        <!--默认按照受理时间倒序排序-->
+        SLSJ DESC NULLS LAST,
+        SLBH DESC NULLS LAST
+    </select>
+
+    <sql id="getBdcdyh">
+        <if test="bdcdyh != null and bdcdyh != ''">
+            select #{bdcdyh} as bdcdyh from dual
+        </if>
+        <if test="bdcdyh != null and bdcdyh != '' and gzlslid != null and gzlslid != ''">
+            union
+        </if>
+        <if test="gzlslid != null and gzlslid != ''">
+            select bdcdyh from bdc_xm where gzlslid = #{gzlslid}
+        </if>
+    </sql>
+
+    <!-- 递归获取所有历史单元（有可能前后几手单元号都不一样）-->
+    <sql id="getLsXmids">
+        <!-- 往前查 -->
+        SELECT t.yxmid  FROM bdc_xm_lsgx t START WITH xmid in
+        (
+            select xmid from bdc_xm where bdcdyh in ( <include refid="getBdcdyh"/> ) <include refid="bcxlsgzl"/>
+        )
+        CONNECT BY PRIOR yxmid = xmid
+
+        <if test="sfcxhs != null and sfcxhs != '' and sfcxhs == '1'.toString()">
+            <!-- 往后查 -->
+            UNION
+            SELECT t.xmid  FROM bdc_xm_lsgx t START WITH yxmid in
+            (
+                select xmid from bdc_xm where bdcdyh in ( <include refid="getBdcdyh"/> ) <include refid="bcxlsgzl"/>
+            )
+            CONNECT BY PRIOR xmid = yxmid
+        </if>
+    </sql>
+
+    <!--获取外联证书的不动产单元号-->
+    <sql id="getWlzsBdcdyh">
+        select bdcdyh from bdc_xm where xmid in
+        (
+            select yxmid from bdc_xm_lsgx where xmid in
+            (
+                select xmid from bdc_xm where bdcdyh in ( <include refid="getBdcdyh"/>)
+            )
+            and wlxm = 1
+        )
+    </sql>
+
+    <!--指定工作流不查询历史上下手-->
+    <sql id="bcxlsgzl">
+        <if test="bcxlsgxgzl != null and bcxlsgxgzl != ''">
+            and nvl(gzldyid, 'a') not in
+            <foreach collection="bcxlsgxgzl.split(',')" item="item" index="index" open="(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </sql>
+
+    <!--查询不动产单元号对应的上手产权集合-->
+    <select id="listBdcdyLsgxLastCq" parameterType="cn.gtmap.realestate.common.core.qo.register.BdcLsgxQO"
+            resultType="cn.gtmap.realestate.common.core.dto.register.BdcLsgxXmDTO">
+        SELECT
+        T.XMID,
+        T.SLBH,
+        T.QLLX,
+        T.DJLX,
+        T.SLSJ,
+        T.SLR,
+        T.DJXL,
+        T.BDCLX,
+        T.GZLSLID,
+        T.BDCDYH,
+        T.BDCQZH,
+        T.ZL,
+        T.QLXZ,
+        T.DJSJ,
+        T.GZLDYMC,
+        T.QLR,
+        T.YWR,
+        T.XMLY,
+        T.DJYY,
+        T.YTDZH,
+        T.YBDCDYH,
+        T.QSZT
+        FROM
+        BDC_XM T
+        LEFT JOIN BDC_XM_LSGX L ON L.yxmid = T.xmid
+        <where>
+            <!-- 忽略外联证书的项目 -->
+            NVL(L.WLXM, 0) = 0 AND
+            <!--排除限制类权利 -->
+            T.QLLX NOT IN (98, 97, 96, 95, 19,37)
+            <!--将当前和上一手不动产单元对应的登记历史都查询出来-->
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND T.BDCDYH in
+                (
+                select bdcdyh from bdc_xm where xmid in
+                (
+                select yxmid from bdc_xm_lsgx where xmid in ( select xmid from bdc_xm where bdcdyh = #{bdcdyh} )
+                )
+                union
+                select #{bdcdyh} as bdcdyh from dual
+                )
+            </if>
+            <if test="slbh != null and slbh != ''">
+                <!-- 过滤掉当前的项目 -->
+                AND T.SLBH != #{slbh}
+            </if>
+        </where>
+        ORDER BY
+        <!--默认按照受理时间倒序排序-->
+        T.SLSJ DESC NULLS LAST,
+        T.SLBH DESC NULLS LAST
+    </select>
+
+    <!--查询出已被查封的义务人信息-->
+    <select id="listBdcCfYwr" resultType="java.lang.Integer">
+        select
+        count(*)
+        from
+        bdc_qlr
+        where
+        xmid in
+        (
+        select xmid from bdc_cf where qszt in (0, 1)
+        )
+        and
+        qlrlb = 2
+        and
+        qlrmc in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item.qlrmc,jdbcType=VARCHAR}
+        </foreach>
+        and
+        zjh in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item.zjh,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
+    <!--查询出已被异议的义务人信息-->
+    <select id="listBdcYyYwr" resultType="java.lang.Integer">
+        select
+        count(*)
+        from
+        bdc_qlr
+        where
+        xmid in
+        (
+        select xmid from bdc_yy where qszt in (0, 1)
+        )
+        and
+        qlrlb = 2
+        and
+        qlrmc in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item.qlrmc,jdbcType=VARCHAR}
+        </foreach>
+        and
+        zjh in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item.zjh,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
+    <!--分页查询当前流程的不动产单元清单-->
+    <select id="listBdcdyByPage" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.vo.register.ui.BdcBdcdyVO">
+        SELECT DISTINCT t.bdcdyh, t.gzlslid, t.xmid, t.qlr AS qlrmc, t.zl, t.bdcdywybh, t.zdzhmj,
+        t.zdzhyt,t.zdzhyt2,t.zdzhyt3,t.bdcqzh,t1.fwxz,
+        t.qllx,t.qlxz,
+        t1.szc,t1.szmyc,t.bdcdyfwlx,t.ycqzh,x.ZDSYLX,(to_number(nvl(t1.dytdmj,0))+to_number(nvl(t1.fttdmj,0))) AS
+        tdqlmj,t3.sfzf as sfzf,t.yxtcqzh
+        ,t.ysfwbm,t.djyy,t.jyhth, t.gzldyid, t1.fjh,
+        t1.tdsyqssj,t1.tdsyjssj,t1.tdsyqssj2,t1.tdsyjssj2,t1.tdsyqssj3,t1.tdsyjssj3, CASE
+        WHEN t2.fzid IS NULL THEN t1.zh
+        ELSE t2.zh
+        END AS zh
+        ,CASE
+        WHEN t2.fzid IS NULL THEN t.dzwmj
+        ELSE t2.jzmj
+        END AS dzwmj
+        , CASE
+        WHEN t2.fzid IS NULL THEN t.dzwyt
+        ELSE t2.ghyt
+        END AS dzwyt
+        , CASE
+        WHEN t2.fzid IS NULL THEN t1.jgsj
+        ELSE t2.jgsj
+        END AS jgsj
+        , CASE
+        WHEN t2.fzid IS NULL THEN t1.zcs
+        ELSE t2.zcs
+        END AS zcs
+        , CASE
+        WHEN t2.fzid IS NULL THEN t1.fwjg
+        ELSE t2.fwjg
+        END AS fwjg
+        <!--关联宗地基本信息-->
+        <if test="glzdjbxx != null and glzdjbxx == true">
+            ,zd.ZDSZD,zd.ZDSZN,zd.ZDSZX,zd.ZDSZB
+        </if>
+        FROM bdc_xm t
+        LEFT JOIN BDC_XMFB x on x.XMID = t.XMID
+        LEFT JOIN bdc_fdcq t1 ON t.xmid = t1.xmid
+        LEFT JOIN bdc_fdcq_fdcqxm t2 ON t1.qlid = t2.qlid
+        LEFT JOIN BDC_CSH_FWKG_SL t3 ON t.xmid = t3.id
+        <!--抵押权关联抵押权表-->
+        <if test="qllx != null and qllx != '' and (qllx == '95' or qllx =='37')">
+        LEFT JOIN BDC_DYAQ t4 ON t4.xmid=t.xmid
+        </if>
+        <!--关联宗地基本信息-->
+        <if test="glzdjbxx != null and glzdjbxx == true">
+            LEFT JOIN BDC_BDCDJB_ZDJBXX zd on substr(t.BDCDYH,0,19) = zd.zddm
+        </if>
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND t.gzlslid = #{gzlslid}
+            </if>
+            <if test="xmid != null and xmid != ''">
+                AND t.xmid = #{xmid}
+            </if>
+            <if test="slbh != null and slbh != ''">
+                AND t.slbh = #{slbh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND instr(t.bdcdyh ,#{bdcdyh} )>0
+            </if>
+            <if test="zl != null and zl !=''">
+                AND t.zl like '%' || #{zl} || '%'
+            </if>
+            <if test="djxl != null and djxl !=''">
+                AND t.djxl = #{djxl}
+            </if>
+            <if test="dzwyt != null and dzwyt !=''">
+                AND t.dzwyt = #{dzwyt}
+            </if>
+            <if test="qllx == null or qllx=='' ">
+            <if test="fjh != null and fjh !=''">
+                t1.fjh = #{fjh}
+            </if>
+            </if>
+            <if test="qllx != null and qllx !='' ">
+            <if test="fjh != null and fjh !='' and (qllx != '95' and qllx != '37')">
+                AND t1.fjh = #{fjh}
+            </if>
+                <if test="fjh != null and fjh !='' and (qllx == '95' or qllx =='37')">
+                    AND t4.fjh = #{fjh}
+                </if>
+            </if>
+            <if test="xmidList != null and xmidList.size>0">
+                AND t.xmid IN
+                <foreach collection="xmidList" item="xmid" open="(" close=")" separator=",">
+                    #{xmid}
+                </foreach>
+            </if>
+            <if test="xmidPartList != null and xmidPartList.size>0">
+                and
+                <foreach collection="xmidPartList" item="xmidPart" open="(" separator="or" close=")">
+                    t.xmid in
+                    <foreach collection="xmidPart" item="xmid" open="(" separator="," close=")">
+                        #{xmid}
+                    </foreach>
+                </foreach>
+            </if>
+            <if test="qllxList != null and qllxList.size>0">
+                AND t1.qllx IN
+                <foreach collection="qllxList" item="qllx" open="(" close=")" separator=",">
+                    #{qllx}
+                </foreach>
+            </if>
+            <if test="qszt != null and qszt != ''">
+                and t1.qszt = #{qszt}
+            </if>
+            <if test="sfxzql != null and sfxzql == false">
+                and t.qllx not in(95,96,97,98,19,92,37)
+            </if>
+        </where>
+        <choose>
+            <when test="sortParameter != null and sortParameter != ''">
+                ORDER BY ${sortParameter}
+            </when>
+            <otherwise>
+                ORDER BY t.bdcdyh ASC,zh ASC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!--分页查询当前流程的不动产单元（去重） -->
+    <select id="listDistinctBdcdyByPage" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.vo.register.ui.BdcBdcdyVO">
+        SELECT t.bdcdyh, MAX(t.zl) zl, MAX(t.xmid) xmid, MAX(t.ycqzh) ycqzh FROM bdc_xm t
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND t.gzlslid = #{gzlslid}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND instr(t.bdcdyh ,#{bdcdyh} )>0
+            </if>
+            <if test="zl != null and zl !=''">
+                AND instr(t.zl ,#{zl} )>0
+            </if>
+        </where>
+        group by t.bdcdyh
+        <choose>
+            <when test="sortParameter != null and sortParameter != ''">
+                ORDER BY ${sortParameter}
+            </when>
+            <otherwise>
+                ORDER BY t.bdcdyh ASC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!--分页查询当前流程的抵押物清单-->
+    <select id="listDyawqdByPage" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.vo.register.ui.BdcDyawqdVO">
+        SELECT * FROM (
+        SELECT distinct
+        t.gzlslid gzlslid,
+        t.gzldyid,
+        t.bdcdyh,
+        t.xmid,
+        t.ywr AS dyar,
+        t.zl,
+        t.zdzhmj,
+        t.zdzhyt,
+        t.qlxz,
+        t.dzwyt,
+        t.dzwmj,
+        to_char(t.ycqzh) AS ybdcqzh,
+        t1.tddymj,
+        t1.fwdymj,
+        t1.zh,
+        t1.fjh,
+        t1.bdbzzqse as dyje,
+        f.SZC,
+        b.zdsylx,
+        row_number() over ( partition BY t.bdcdyh ORDER BY t.xmid ASC ) rn
+        FROM BDC_DYAQ t1
+        LEFT JOIN bdc_xm t ON t1.xmid = t.xmid
+        left join bdc_xm_lsgx l on t1.xmid=l.xmid
+        left join bdc_fdcq f on f.xmid=l.yxmid
+        left join bdc_xmfb b on t.xmid = b.xmid
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND t.gzlslid = #{gzlslid}
+            </if>
+            <if test="xmid != null and xmid != ''">
+                AND t.xmid = #{xmid}
+            </if>
+            <if test="slbh != null and slbh != ''">
+                AND t.slbh = #{slbh}
+            </if>
+        </where>
+        <choose>
+            <when test="sortParameter != null and sortParameter != ''">
+                ORDER BY ${sortParameter}
+            </when>
+            <when test="bdcdyxssx != null and bdcdyxssx == true">
+                ORDER BY t.xmid asc
+            </when>
+            <when test="dzwtzm != null and dzwtzm != '' and dzwtzm == 'W'.toString() ">
+                ORDER BY t.zl asc
+            </when>
+            <when test="dzwtzm != null and dzwtzm != '' and dzwtzm == 'F'.toString() ">
+                ORDER BY to_number(regexp_substr(t1.zh,'^\d+',1)) asc, t.zl asc ,f.szc asc,t1.fjh asc
+            </when>
+            <otherwise>
+                ORDER BY t.bdcdyh asc
+            </otherwise>
+        </choose>
+        ) WHERE rn = 1
+    </select>
+
+    <!--分页查询当前流程的解封清单-->
+    <select id="listJfqdByPage" parameterType="string"
+            resultType="cn.gtmap.realestate.common.core.vo.register.ui.BdcJfVO">
+        SELECT c.bdcdyh, c.zl, c.cfwh, c.cfjg, c.cflx, c.cfwj, c.cfqssj,c.cfjssj,c.CFFW
+        FROM BDC_CF c
+        LEFT JOIN BDC_XM_LSGX l ON l.yxmid = c.xmid
+        LEFT JOIN BDC_XM t ON l.xmid = t.xmid
+        <!-- 原查限制c.qszt= 1 ，会出现办结之后，解封清单无数据情况，bug25668中去除  WHERE c.QSZT = 1-->
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND t.gzlslid = #{gzlslid}
+            </if>
+        </where>
+    </select>
+
+    <!--分页查询当前流程的抵押物清单(预告) cyc -->
+    <select id="listYgDyawqdByPage" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.vo.register.ui.BdcDyawqdVO">
+        SELECT * FROM (
+        SELECT distinct
+        t.gzlslid gzlslid,
+        t.gzldyid,
+        t.bdcdyh,
+        t.ywr AS dyar,
+        t.zl,
+        t.zdzhmj,
+        t.zdzhyt,
+        t.qlxz,
+        t.dzwyt,
+        t.dzwmj,
+        to_char(t.ycqzh || ' ' || t.yfczh || ' ' || t.ytdzh) AS ybdcqzh,
+        '' as tddymj,
+        '' as fwdymj,
+        t1.zh,
+        t1.fjh,
+        t1.qdjg as dyje,
+        b.zdsylx,
+        row_number() over ( partition BY t.bdcdyh ORDER BY t.xmid ASC ) rn
+        FROM BDC_YG t1
+        LEFT JOIN bdc_xm t ON t1.xmid = t.xmid
+        LEFT JOIN bdc_xmfb b on b.xmid = t.xmid
+
+
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND t.gzlslid = #{gzlslid}
+            </if>
+            <if test="xmid != null and xmid != ''">
+                AND t.xmid = #{xmid}
+            </if>
+            <if test="slbh != null and slbh != ''">
+                AND t.slbh = #{slbh}
+            </if>
+            AND (t1.YGDJZL=3 OR t1.YGDJZL=4)
+        </where>
+        <choose>
+            <when test="sortParameter != null and sortParameter != ''">
+                ORDER BY ${sortParameter}
+            </when>
+            <otherwise>
+                ORDER BY t.bdcdyh asc
+            </otherwise>
+        </choose>
+        )WHERE rn = 1
+    </select>
+
+    <!--分页查询当前流程原项目的抵押物清单-->
+    <select id="listYxmDyawqdByPage" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.vo.register.ui.BdcDyawqdVO">
+        SELECT distinct
+        yxm.gzlslid gzlslid,
+        yxm.gzldyid,
+        yxm.bdcdyh,
+        yxm.ywr AS dyar,
+        yxm.zl,
+        yxm.zdzhmj,
+        yxm.zdzhyt,
+        yxm.qlxz,
+        yxm.dzwyt,
+        yxm.dzwmj,
+        to_char(yxm.ycqzh) AS ybdcqzh,
+        t3.tddymj,
+        t3.fwdymj,
+        t3.zh,
+        t3.fjh,
+        t3.bdbzzqse as dyje,
+        t.xmid,
+        b.zdsylx
+        FROM bdc_xm t
+        LEFT JOIN bdc_xm_lsgx t2 ON t.xmid = t2.xmid
+        LEFT JOIN bdc_dyaq t3 ON t2.yxmid = t3.xmid
+        LEFT JOIN bdc_xm yxm ON t2.yxmid = yxm.xmid
+        LEFT JOIN bdc_xmfb b on b.xmid = yxm.xmid
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND t.gzlslid = #{gzlslid}
+            </if>
+            <if test="xmid != null and xmid != ''">
+                AND t.xmid = #{xmid}
+            </if>
+            <if test="slbh != null and slbh != ''">
+                AND t.slbh = #{slbh}
+            </if>
+            <if test="YXM_QSZT != null and YXM_QSZT != ''">
+                AND yxm.qszt = #{YXM_QSZT}
+            </if>
+            AND (yxm.qllx = 95 or yxm.qllx =37)
+            AND t2.zxyql = 1
+        </where>
+        <choose>
+            <when test="sortParameter != null and sortParameter != ''">
+                ORDER BY ${sortParameter}
+            </when>
+            <when test="bdcdyxssx != null and bdcdyxssx == true">
+                ORDER BY t.xmid asc
+            </when>
+            <otherwise>
+                ORDER BY yxm.bdcdyh asc
+            </otherwise>
+        </choose>
+    </select>
+
+    <!--分页查询抵押变更（部分注销流程）的抵押物清单-->
+    <select id="queryBgYxmDyawqdByPage" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.vo.register.ui.BdcDyawqdVO">
+        SELECT DISTINCT yxm.gzlslid gzlslid,t3.qlid,
+        yxm.bdcdyh,
+        yxm.gzldyid,
+        yxm.ywr AS dyar,
+        yxm.zl,
+        yxm.zdzhmj,
+        yxm.zdzhyt,
+        yxm.qlxz,
+        yxm.dzwyt,
+        yxm.dzwmj,
+        to_char(yxm.ycqzh) AS ybdcqzh,
+        t3.tddymj,
+        t3.fwdymj,
+        t3.zh,
+        t3.fjh,
+        t3.bdbzzqse as dyje,
+        b.zdsylx
+        from bdc_xm yxm
+        LEFT JOIN bdc_dyaq t3 ON yxm.xmid = t3.xmid
+        LEFT JOIN bdc_xmfb b on b.xmid = yxm.xmid
+        <where>
+            EXISTS (
+            SELECT x1.xmid FROM bdc_xm x1
+            left join bdc_xm_lsgx t1 on x1.xmid = t1.yxmid
+            left join bdc_xm t2 on t1.xmid = t2.xmid
+            <where>
+                <if test="gzlslid != null and gzlslid != ''">
+                    AND t2.gzlslid = #{gzlslid}
+                </if>
+                AND yxm.gzlslid = x1.gzlslid
+            </where>
+            )
+
+            <if test="YXM_QSZT != null and YXM_QSZT != ''">
+                AND yxm.qszt = #{YXM_QSZT}
+            </if>
+        </where>
+        <choose>
+            <when test="sortParameter != null and sortParameter != ''">
+                ORDER BY ${sortParameter}
+            </when>
+            <otherwise>
+                ORDER BY yxm.bdcdyh asc
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <!--分页查询当前流程原项目的抵押物清单(预抵押的原抵押物清单)-->
+    <select id="listYgYdyawqdByPage" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.vo.register.ui.BdcDyawqdVO">
+        SELECT distinct
+        yxm.gzlslid gzlslid,
+        yxm.bdcdyh,
+        yxm.ywr AS dyar,
+        yxm.zl,
+        yxm.zdzhmj,
+        yxm.zdzhyt,
+        yxm.qlxz,
+        yxm.dzwyt,
+        yxm.dzwmj,
+        yxm.gzldyid,
+        to_char(yxm.ycqzh || ' ' || yxm.yfczh || ' ' || yxm.ytdzh) AS ybdcqzh,
+        '' as tddymj,
+        '' as fwdymj,
+        t3.zh,
+        t3.fjh,
+        t3.qdjg as dyje,
+        b.zdsylx
+        FROM bdc_xm t
+        LEFT JOIN bdc_xm_lsgx t2 ON t.xmid = t2.xmid
+        LEFT JOIN bdc_yg t3 ON t2.yxmid = t3.xmid
+        LEFT JOIN bdc_xm yxm ON t2.yxmid = yxm.xmid
+        LEFT JOIN bdc_xmfb b on b.xmid = yxm.xmid
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND t.gzlslid = #{gzlslid}
+            </if>
+            <if test="xmid != null and xmid != ''">
+                AND t.xmid = #{xmid}
+            </if>
+            <if test="slbh != null and slbh != ''">
+                AND t.slbh = #{slbh}
+            </if>
+            AND (t3.YGDJZL=3 OR t3.YGDJZL=4)
+            AND yxm.qllx = 96
+            AND t2.zxyql = 1
+        </where>
+        <choose>
+            <when test="sortParameter != null and sortParameter != ''">
+                ORDER BY ${sortParameter}
+            </when>
+            <otherwise>
+                ORDER BY yxm.bdcdyh asc
+            </otherwise>
+        </choose>
+    </select>
+
+    <!--分页查询当前流程的抵押注销证明信息-->
+    <select id="listDyaZxByPage" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT yxm.xmid, yxm.zl, yxm.bdcqzh, yxm.qlr, yxm.ywr
+        FROM bdc_xm t
+        LEFT JOIN bdc_xm_lsgx t2 ON t.xmid = t2.xmid
+        LEFT JOIN bdc_xm yxm ON t2.yxmid = yxm.xmid
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                AND t.gzlslid = #{gzlslid}
+            </if>
+            <if test="xmid != null and xmid != ''">
+                AND t.xmid = #{xmid}
+            </if>
+            <if test="slbh != null and slbh != ''">
+                AND t.slbh = #{slbh}
+            </if>
+            AND t2.zxyql = 1
+        </where>
+        <choose>
+            <when test="sortParameter != null and sortParameter != ''">
+                ORDER BY ${sortParameter}
+            </when>
+            <otherwise>
+                ORDER BY t.xmid asc
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <select id="queryXmly" parameterType="map"
+            resultType="map">
+        select xmly from bdc_xm xm inner join bdc_jsydsyq js on xm.xmid = js.xmid
+        where 1=1
+        <if test="xmid != null and xmid != ''">
+            and xm.xmid =#{xmid}
+        </if>
+    </select>
+
+
+    <select id="queryCqdz" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.dto.register.BdcLsgxXmDTO">
+        WITH OLDXM AS (
+        SELECT * FROM (
+        SELECT ROWNUM AS NUM, X.* FROM BDC_XM X WHERE BDCDYH IN
+        (SELECT BDCDYH FROM BDC_XM
+        <if test="xmid != null and xmid != ''">
+            WHERE XMID = #{xmid}
+        </if>
+        )  AND QLLX in (3,4)
+        ORDER BY DJSJ ASC NULLS LAST) WHERE NUM = 1
+        )
+        SELECT XMID,GZLSLID,XMLY FROM BDC_XM WHERE  XMID IN
+        (
+        SELECT YXMID FROM BDC_XM_LSGX WHERE XMID IN
+        (
+        SELECT XMID FROM OLDXM
+        )
+        )
+        AND BDCDYH &lt;&gt; (SELECT BDCDYH FROM OLDXM)
+
+
+    </select>
+
+    <!-- 获取抵押权对应上一手项目的房地产权信息  -->
+    <select id="listBdcFdcqByDya" parameterType="cn.gtmap.realestate.common.core.qo.init.BdcXmQO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcFdcqDO">
+        SELECT
+        DISTINCT
+        F.BDCDYH,
+        NVL(F.FTTDMJ, 0) AS FTTDMJ,
+        NVL(F.DYTDMJ, 0) AS DYTDMJ
+        FROM
+        BDC_FDCQ F
+        join
+        BDC_XM_LSGX L
+        ON
+        F.XMID = L.YXMID
+        JOIN
+        BDC_XM DM
+        ON
+        L.XMID = DM.XMID
+
+        <where>
+            <if test="gzlslid != null and gzlslid != ''">
+                DM.GZLSLID = #{gzlslid, jdbcType=VARCHAR}
+            </if>
+        </where>
+        <!-- WHERE 1=1
+         <if test="gzlslid == null or gzlslid == ''">
+             AND 1=2
+         </if>
+         <if test="gzlslid != null and gzlslid != ''">
+             AND F.XMID IN(SELECT XMID FROM BDC_XM WHERE GZLSLID = #{gzlslid, jdbcType=VARCHAR})
+         </if>-->
+    </select>
+
+
+    <!-- 更据xmid集合查询cfwh  -->
+    <select id="listCfwhByXmids" parameterType="map" resultType="map">
+        SELECT
+          CFWH,XMID
+        FROM
+          BDC_CF
+        WHERE XMID IN
+        <foreach collection="xmidList" item="xmid" open="(" close=")" separator=",">
+            #{xmid}
+        </foreach>
+    </select>
+
+    <!--查询待合并房地产权不动产单元信息-->
+    <select id="queryDhbBdcdyXxByPageOrder" parameterType="cn.gtmap.realestate.common.core.qo.register.BdcHbBdcdyQO"
+            resultType="cn.gtmap.realestate.common.core.dto.register.BdcHbBdcdyDTO">
+        SELECT
+            DISTINCT
+            T.XMID,
+            T.SLBH,
+            T.BDCDYH,
+            T.ZL,
+            T.BDCQZH,
+            T.QSZT,
+            T.QLR,
+            T.QLRZJH,
+            T.DJSJ,
+            B.QLCFBS,
+            F.QLID,
+            F.GHYT,
+            F.FWXZ,
+            F.SZC,
+            F.ZCS,
+            F.DJLX,
+            F.QLLX,
+            F.DJYY,
+            F.ZH,
+            F.FJH
+        FROM
+            BDC_XM  T
+        JOIN
+            BDC_FDCQ F
+        ON
+            T.XMID = F.XMID
+        JOIN
+            BDC_XMFB B
+        ON
+            T.XMID = B.XMID
+        LEFT JOIN
+            BDC_XM_ZS_GX G
+        ON
+            T.XMID = G.XMID
+        LEFT JOIN
+            BDC_ZS Z
+        ON
+            G.ZSID = Z.ZSID
+        LEFT JOIN
+            BDC_QLR Q
+        ON
+            T.XMID = Q.XMID
+
+        <where>
+            <if test="qszt == 0 || qszt != null and qszt != ''">
+                AND T.QSZT = #{qszt,jdbcType=INTEGER}
+            </if>
+            <if test="bdcqzh != null and bdcqzh != ''">
+                AND Z.BDCQZH like '%' || #{bdcqzh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="qlr != null and qlr != ''">
+                AND Q.QLRMC like '%' || #{qlr,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="qlrzjh != null and qlrzjh != ''">
+                AND Q.ZJH like '%' || #{qlrzjh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND T.BDCDYH like '%' || #{bdcdyh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="zl != null and zl != ''">
+                AND T.ZL like '%' || #{zl,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="zh != null and zh != ''">
+                AND F.ZH like '%' || #{zh,jdbcType=INTEGER} || '%'
+            </if>
+            <if test="fjh != null and fjh != ''">
+                AND F.FJH like '%' || #{fjh,jdbcType=INTEGER} || '%'
+            </if>
+            <if test="qlcfbs != null and qlcfbs != ''">
+                AND B.QLCFBS = #{qlcfbs,jdbcType=INTEGER}
+            </if>
+        </where>
+
+        ORDER BY
+            <!--默认按照受理时间倒序排序-->
+            T.DJSJ DESC NULLS LAST
+    </select>
+
+    <!--查询指定房地产权项目是否有合并成的下一手新记录-->
+    <select id="queryBdcdyHbjl" parameterType="map" resultType="cn.gtmap.realestate.common.core.dto.register.BdcBdcdyHbjlDTO">
+        SELECT
+            YXM.XMID   AS YXMID,
+            YXM.QLCFBS AS YQLCFBS,
+            XM.XMID    AS XMID,
+            XM.QLCFBS  AS QLCFBS
+        FROM
+            BDC_XMFB YXM
+        JOIN
+            BDC_XM_LSGX L
+        ON
+            YXM.XMID = L.YXMID
+        JOIN
+            BDC_XMFB XM
+        ON
+            XM.XMID = L.XMID
+        <where>
+            XM.QLCFBS = 'BDCDYHBJL'
+
+            <if test="xmidList != null and xmidList.size > 0">
+                AND YXM.XMID IN
+                <foreach collection="xmidList" item="xmid" open="(" close=")" separator=",">
+                    #{xmid}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询预告表现势数据-->
+    <select id="listBdcYgBybdcdyh" resultType="map">
+        select * from bdc_yg y where qszt =1
+        <if test="bdcdyh != null and bdcdyh != ''">
+            and y.bdcdyh = #{bdcdyh}
+        </if>
+
+
+    </select>
+
+    <!--查询房屋信息-->
+    <select id="listBdcDyawqdFwxx" parameterType="java.util.List" resultType="cn.gtmap.realestate.common.core.vo.register.ui.BdcDyawqdVO">
+        select
+            f.bdcdyh,
+            f.fwxz,
+            z.mc as fwxzmc
+        from
+            bdc_fdcq f
+        left join
+            bdc_zd_fwxz z
+        on
+            f.fwxz = z.dm
+
+        <where>
+            f.bdcdyh in
+            <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            and f.qszt = 1
+        </where>
+        order by djsj desc
+
+    </select>
+
+    <!--查询房地产权以及项目信息-->
+    <select id="listBdcFdcqXmxx" parameterType="cn.gtmap.realestate.common.core.qo.register.BdcCqQO" resultType="map">
+        <if test="bdcdyhList != null and bdcdyhList.size() > 0 ">
+            select * from (
+            SELECT f.*,t.zdzhmj,t.zdzhyt,t.qlxz,t.dzwyt,t.bdcqzh,fb.syqx,fb.clsjsyqx,row_number ( ) over ( partition BY
+            f.bdcdyh
+            ORDER BY f.djsj DESC ) AS cn
+            FROM BDC_FDCQ f
+            LEFT JOIN BDC_XM t ON t.xmid =f.xmid
+            LEFT join bdc_xmfb fb on fb.xmid=t.xmid
+            <where>
+                <if test="qszt != null and qszt !=''">
+                    AND f.qszt=#{qszt}
+                </if>
+                <if test="qsztList != null and qsztList.size() > 1 ">
+                    AND f.qszt IN
+                    <foreach collection="qsztList" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="bdcdyhList != null and bdcdyhList.size() == 1 ">
+                    AND f.bdcdyh=#{bdcdyhList[0]}
+                </if>
+                <if test="bdcdyhList != null and bdcdyhList.size() > 1 ">
+                    AND f.bdcdyh IN
+                    <foreach collection="bdcdyhList" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+        )
+        WHERE cn = 1
+        </if>
+    </select>
+
+    <!--查询建设用地使用权以及项目信息-->
+    <select id="listBdcJsydsyqXmxx" parameterType="cn.gtmap.realestate.common.core.qo.register.BdcCqQO"
+            resultType="map">
+        <if test="bdcdyhList != null and bdcdyhList.size() > 0 ">
+            select * from (
+            SELECT j.*,t.zdzhmj,t.zdzhyt,t.dzwyt,t.bdcqzh,f.syqx,f.clsjsyqx, row_number ( ) over ( partition BY j.bdcdyh
+            ORDER BY j.djsj DESC ) AS cn
+            FROM BDC_JSYDSYQ j
+            LEFT JOIN BDC_XM t ON t.xmid =j.xmid
+            LEFT JOIN BDC_XMFB f ON f.xmid =t.xmid
+            <where>
+                    <if test="qszt != null and qszt !=''">
+                        AND j.qszt=#{qszt}
+                    </if>
+                    <if test="qsztList != null and qsztList.size() > 1 ">
+                        AND j.qszt IN
+                        <foreach collection="qsztList" item="item" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                    <if test="bdcdyhList != null and bdcdyhList.size() == 1 ">
+                        AND j.bdcdyh=#{bdcdyhList[0]}
+                    </if>
+                    <if test="bdcdyhList != null and bdcdyhList.size() > 1 ">
+                        AND j.bdcdyh IN
+                        <foreach collection="bdcdyhList" item="item" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </where>
+            )
+            WHERE cn = 1
+        </if>
+    </select>
+
+    <!-- 查询查封登记历史-->
+    <select id="listBdccfdjls" parameterType="cn.gtmap.realestate.common.core.qo.register.BdcLsgxQO"
+            resultType="cn.gtmap.realestate.common.core.dto.register.BdcLsgxXmDTO">
+        SELECT
+                T.XMID,
+                T.SLBH,
+                T.QLLX,
+                T.DJLX,
+                T.SLSJ,
+                T.SLR,
+                T.DJXL,
+                T.BDCLX,
+                T.GZLSLID,
+                T.BDCDYH,
+                T.BDCQZH,
+                T.ZL,
+                T.QLXZ,
+                T.DJSJ,
+                T.GZLDYMC,
+                T.QLR,
+                T.YWR,
+                T.XMLY,
+                T.DJYY,
+                T.YTDZH,
+                T.YBDCDYH,
+                T.AJZT,
+                T.QSZT,
+                Y.MC AS DYFS,
+                D.BDBZZQSE,
+                FB.QJGLDM
+            FROM
+            BDC_CF cf
+            left join
+                BDC_XM T
+                on cf.xmid=t.xmid
+            LEFT JOIN
+                BDC_DYAQ D
+            ON
+                T.XMID = D.XMID
+            LEFT JOIN
+                BDC_ZD_DYFS Y
+            ON
+                D.DYFS = Y.DM
+            LEFT JOIN
+                BDC_XMFB FB
+            ON
+                T.XMID =FB.XMID
+        where t.qszt <![CDATA[ <> ]]> 3
+        AND cf.cflx in ('1','2','5')
+        <if test="bdcdyh != null and bdcdyh !=''">
+            AND cf.bdcdyh=#{bdcdyh}
+        </if>
+        <if test="djxl != null and djxl != ''">
+            AND T.DJXL = #{djxl}
+        </if>
+        <if test="qllx == 0 || qllx != null and qllx != ''">
+            AND T.QLLX = #{qllx,jdbcType=INTEGER}
+        </if>
+        <if test="slbh != null and slbh != ''">
+            AND T.slbh = #{slbh}
+        </if>
+        <if test="djyy != null and djyy != ''">
+            AND T.djyy = like '%' || #{djyy} || '%'
+        </if>
+        <if test="bdcqzh != null and bdcqzh != ''">
+            AND T.BDCQZH like '%' || #{bdcqzh} || '%'
+        </if>
+    </select>
+
+
+    <!--查询是否注销-->
+    <select id="listBdcSfzxByXmid" parameterType="java.util.Map" resultType="cn.gtmap.realestate.common.core.domain.BdcXmLsgxDO">
+        select
+        g.yxmid,
+        g.zxyql
+        from
+        BDC_XM_LSGX g
+        left join
+        BDC_XM x
+        on
+        g.xmid = x.xmid
+
+        <where>
+            <if test="xmid != null and xmid !=''">
+                AND g.yxmid=#{xmid}
+            </if>
+        </where>
+        order by x.slsj desc nulls last
+
+    </select>
+</mapper>

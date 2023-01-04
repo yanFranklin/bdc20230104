@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--用海、用岛坐标-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.KtfZhYhYdzbMapper">
+
+    <select id="queryKtfZhYhYdzbList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.KtfZhYhydzbDO">
+        <!--业务库新建视图djsj_zh_JZBSB(获取H_ZH_JZBSB数据)，-->
+        SELECT DISTINCT t.zhhddm zhdm,
+        t.xh,
+        t.bw,
+        t.dj,
+        SUBSTR(d.BDCDYH,0,6) qxdm,
+        '1' as mbs
+        FROM bdc_bdcdjb_zhjbxx_yhydzb t
+        LEFT JOIN bdc_bdcdjb_zhjbxx b ON t.zhhddm=b.zhdm
+        LEFT JOIN bdc_xm d ON substr(d.bdcdyh,0,19) = b.zhdm
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND d.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND d.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryKtfZhYhYdzbListOld" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.yancheng.yth.old.KtfZhYhydzbOldDO">
+        <!--业务库新建视图djsj_zh_JZBSB(获取H_ZH_JZBSB数据)，-->
+        SELECT DISTINCT t.zhhddm,
+        t.xh,
+        t.bw,
+        t.dj,
+        substr(d.bdcdyh,0,6) as qxdm
+        FROM bdc_bdcdjb_zhjbxx_yhydzb t
+        LEFT JOIN bdc_bdcdjb_zhjbxx b ON t.zhhddm=b.zhdm
+        LEFT JOIN bdc_xm d ON b.bdcdyh=d.bdcdyh
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND d.xmid = #{ywh}
+            </if>
+            <if test="bdcdyh != null and bdcdyh !=''">
+                AND d.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
+    </select>
+</mapper>

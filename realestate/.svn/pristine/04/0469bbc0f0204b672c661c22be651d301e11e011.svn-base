@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>一张网推送状态查询</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../static/lib/bdcui/css/search.css">
+    <link rel="stylesheet" href="../static/lib/bdcui/css/table.css">
+    <link rel="stylesheet" href="../static/lib/bdcui/css/mask.css"/>
+    <link rel="stylesheet" href="../static/lib/registerui/css/percentage-layout.css"/>
+    <link rel="stylesheet" href="../static/lib/bdcui/css/popup.css"/>
+    <link rel="stylesheet" href="../static/css/yzwts.css"/>
+</head>
+<body>
+
+<div class="bdc-percentage-container three-percentage-container">
+    <!--查询条件-->
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <form class="layui-form" action="">
+                <!--IP地址-->
+                <input type="hidden" id="ipaddress"  name="ipaddress"/>
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">一张网编号</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input search" name="yzwbh" id="yzwbh" placeholder="请输入" type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">受理编号</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input search" name="ywslbh" id="ywslbh" placeholder="请输入" type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">推送状态</label>
+                        <div class="layui-input-inline">
+                            <select class="search" name="tszt" lay-search="" lay-filter=" tszt">
+                                <option value="">请选择</option>
+                                <option value="0">失败</option>
+                                <option value="1">成功</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label change-label-width bdc-label-newline">是否包含<br>结果数据</label>
+                        <div class="layui-input-inline">
+                            <select class="search" name="sfbhjgsj" lay-search="" lay-filter="sfbhjgsj">
+                                <option value="">请选择</option>
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">推送开始时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" placeholder="请选择" id="tskssj" name="tskssj" autocomplete="off" class="layui-input search">
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">推送结束时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" placeholder="请选择" id="tsjssj" name="tsjssj" autocomplete="off" class="layui-input search">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">失败类型</label>
+                        <div class="layui-input-inline">
+                            <select class="search" name="tssblx" lay-search="" lay-filter="tssblx">
+                                <option value="">请选择</option>
+                                <option value="1">异常</option>
+                                <option value="2">验证失败</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">即将超期时间</label>
+                        <div class="layui-input-inline">
+                            <input autocomplete="off" class="layui-input search" name="jjcqsj" id="jjcqsj" placeholder="单位:小时" type="text"/>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box-four">
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                        <button type="reset" id="reset" class="layui-btn bdc-secondary-btn reset-btn">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--表格-->
+    <div class="bdc-table-box">
+        <!--表格统计-->
+        <div class="table-zj">
+            <div class="bdc-table-zj">
+                <span><img src="../static/images/plzj.png" alt="">推送状态统计</span>
+                <div><span>失败： <i id="sb"></i></span></div>
+                <div><span>成功： <i id="cg"></i></span></div>
+                <div><span>未推送： <i id="wts"></i></span></div>
+            </div>
+        </div>
+        <table id="yzwTsztTable" lay-filter="yzwTsztTable"></table>
+    </div>
+
+<!--指标明细弹窗-->
+    <div class="bdc-hide" id="zbmxShow">
+        <div class="bdc-right-tips-box" id="bottomTips">
+            <p class="p-error">
+                <img src="../static/lib/bdcui/images/error.png" alt="">指标1:超时24小时收件
+<!--                <a href="javascrit:;" class="layui-btn layui-btn-xs bdc-secondary-btn" id="xgslsj">修改受理时间</a>-->
+            </p>
+            <p class="p-success">
+                <img src="../static/lib/bdcui/images/success.png" alt="">指标2:项目办结超期
+                <!--                <a href="javascrit:;" id="xgslsj">修改受理时间</a>-->
+            </p>
+            <p class="p-error">
+                <img src="../static/lib/bdcui/images/error.png" alt="">指标3:项目超期未办结
+<!--                <a href="javascrit:;" class="layui-btn layui-btn-xs bdc-secondary-btn" id="scjgsj">生成结果数据</a>-->
+            </p>
+            <p class="p-error">
+                <img src="../static/lib/bdcui/images/error.png" alt="">指标4:退件未推送退件结果
+<!--                <a href="javascrit:;" class="layui-btn layui-btn-xs bdc-secondary-btn" id="scscsj">生成删除数据</a>-->
+            </p>
+            <p class="p-success">
+                <img src="../static/lib/bdcui/images/success.png" alt="">指标5:缺少过程信息收件
+                <!--                <a href="javascrit:;" id="xgslsj">修改受理时间</a>-->
+            </p>
+            <p class="p-success">
+                <img src="../static/lib/bdcui/images/success.png" alt="">指标6:证件号码不规范办件
+                <!--                <a href="javascrit:;" id="xgslsj">修改受理时间</a>-->
+            </p>
+        </div>
+    </div>
+</div>
+<!--隐藏form，为了Excel导出缓存数据使用-->
+<form style="display: none" action="/excel/export" method="POST" id="form">
+    <input type="hidden" id="fileName" name="fileName"/>
+    <input type="hidden" id="sheetName" name="sheetName"/>
+    <input type="hidden" id="cellTitle" name="cellTitle"/>
+    <input type="hidden" id="cellWidth" name="cellWidth"/>
+    <input type="hidden" id="cellKey" name="cellKey"/>
+    <input type="hidden" id="data" name="data"/>
+</form>
+
+<!--表格顶部栏操作-->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm bdc-major-btn bdc-more-btn moreYzButton">
+            验证
+        </button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn bdc-more-btn moreTsButton">
+            推送
+        </button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="tjTszt">
+            统计
+        </button>
+        <button class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="export">
+            导出
+        </button>
+        <div class="bdc-table-btn-more" id="moreyz">
+            <a id="plyz" lay-event="plyz">批量验证</a>
+            <a id="qbyz" lay-event="qbyz">全部验证</a>
+        </div>
+        <div class="bdc-table-btn-more" id="morets">
+            <a id="plts" lay-event="plts">批量推送</a>
+            <a id="qbts" lay-event="qbts">全部推送</a>
+            <a id="jrts" lay-event="jrts">今日推送</a>
+        </div>
+    </div>
+</script>
+<!--表格内部操作按钮-->
+<script type="text/html" id="czTpl">
+    <a href="javascript:;" class="layui-btn layui-btn-xs bdc-major-btn" lay-event="yz">验证</a>
+    <a class="layui-btn layui-btn-xs bdc-secondary-btn" lay-event="ts">推送</a>
+</script>
+
+<script src="../static/lib/jquery/jquery.min.js"></script>
+<script src="../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../static/js/common.js"></script>
+<script src="../static/js/mask.js"></script>
+<script src="../static/js/yancheng/yzwtsCx.js"></script>
+</body>
+</html>

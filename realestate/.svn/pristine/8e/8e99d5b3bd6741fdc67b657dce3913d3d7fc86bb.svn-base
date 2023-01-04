@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!-- 房产土地匹配服务 -->
+    <ex:bean id="sfpp">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="gxWwSqxxServiceImpl"/>
+            <ex:property name="methodName" value="fctdSfpp"/>
+
+        </ex:service-info>
+
+        <ex:request >
+<!--            <ex:element dozerXml="conf/dozer/wwsq/init/dydj/request/gltdzxx.xml"/>-->
+        </ex:request>
+    </ex:bean>
+
+    <!-- 4.4.12 抵押首次创建流程接口 -->
+    <ex:bean id="dydj">
+        <ex:request>
+            <ex:element name="acceptCjParam" sourceService="dydj_acceptCjParam_initRequestData"/>
+            <ex:element name="fjclList" dozerXml="conf/dozer/wwsq/init/zy/request/fjcl.xml"/>
+            <ex:element dozerXml="conf/dozer/wwsq/init/dydj/request/spxtywh.xml" listToObject="true"/>
+            <!-- 是否自动转发 -->
+            <ex:element dozerXml="conf/dozer/wwsq/init/dydj/request/autoturn.xml" listToObject="true"/>
+        </ex:request>
+        <ex:response resultKey="result" extendRequestBody="true">
+            <ex:element name="cjResponse" sourceService="acceptCjService"/>
+            <ex:element name="result" sourceService="acceptCjService_response"/>
+            <!-- 异步处理附件 -->
+            <!--<ex:element sourceService="init_fjcl"
+            ignoreException="true"/>-->
+        </ex:response>
+        <ex:log dsfFlag="WWSQ" logEventName="抵押首次创建流程接口" requester="WWSQ" responser="BDC"/>
+    </ex:bean>
+    <ex:bean id="dydj_acceptCjParam_initRequestData">
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/wwsq/init/dydj/request/initRequestData.xml"/>
+        </ex:request>
+        <ex:response resultKey="result" extendRequestBody="true">
+<!--            <ex:element sourceService="sfpp"/>-->
+            <ex:element sourceService="dydj_acceptCjParam"/>
+        </ex:response>
+    </ex:bean>
+    <ex:bean id="dydj_acceptCjParam">
+        <ex:request dozerXml="conf/dozer/wwsq/init/zy/request/bdcSlxxDTO.xml">
+            <ex:element name="bdcSlJbxx" dozerXml="conf/dozer/wwsq/init/dydj/request/bdcSlJbxx.xml"
+                        listToObject="true"/>
+            <ex:element name="bdcSlXmList" dozerXml="conf/dozer/wwsq/init/dydj/request/bdcSlXm.xml"/>
+            <!-- 判断是否需要规则验证  gzyz  sfss -->
+            <ex:element dozerXml="conf/dozer/wwsq/init/dydj/request/cjyz.xml" listToObject="true"/>
+
+        </ex:request>
+    </ex:bean>
+
+    <ex:bean id="initWwsqxxZhlc">
+        <ex:request>
+            <ex:element name="acceptCjParam" sourceService="initWwsqxxZhlc_acceptCjParam"/>
+            <ex:element name="fjclList" dozerXml="conf/dozer/wwsq/init/zy/request/fjcl.xml"/>
+            <ex:element dozerXml="conf/dozer/wwsq/init/zydy/request/spxtywh.xml"/>
+            <!-- 是否自动转发 -->
+            <ex:element dozerXml="conf/dozer/wwsq/init/zydy/request/autoturn.xml" listToObject="true"/>
+        </ex:request>
+        <ex:response resultKey="result" extendRequestBody="true">
+            <ex:element name="cjResponse" sourceService="acceptCjService"/>
+            <ex:element name="result" sourceService="acceptCjService_response_zhlc" appendRequestBody="true"/>
+        </ex:response>
+        <ex:log dsfFlag="WWSQ" logEventName="转移抵押合并办理流程" requester="WWSQ" responser="BDC"/>
+    </ex:bean>
+    <ex:bean id="initWwsqxxZhlc_acceptCjParam">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="gxWwSqxxServiceImpl"/>
+            <ex:property name="methodName" value="initZhlcRevertDTO"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 4.4.13 抵押注销创建流程接口 -->
+    <ex:bean id="dyzx">
+        <ex:request>
+            <ex:element name="acceptCjParam" sourceService="dyzx_acceptCjParam_initRequestData"/>
+            <ex:element name="fjclList" dozerXml="conf/dozer/wwsq/init/zy/request/fjcl.xml"/>
+            <ex:element dozerXml="conf/dozer/wwsq/init/dyzx/request/spxtywh.xml" listToObject="true"/>
+        </ex:request>
+        <ex:response resultKey="result" extendRequestBody="true">
+            <ex:element name="cjResponse" sourceService="acceptCjService"/>
+            <ex:element name="hx" sourceService="acceptCjService_response_hx"/>
+            <ex:element name="result" sourceService="acceptCjService_response"/>
+            <!-- 异步处理附件 -->
+            <!--<ex:element sourceService="init_fjcl" />-->
+            <!-- 自动办结 -->
+            <ex:element sourceService="dyzx_zdbj"/>
+        </ex:response>
+        <ex:log dsfFlag="WWSQ" logEventName="抵押注销创建流程接口" requester="WWSQ" responser="BDC"/>
+    </ex:bean>
+    <ex:bean id="dyzx_acceptCjParam_initRequestData">
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/wwsq/init/dyzx/request/initRequestData.xml"/>
+        </ex:request>
+        <ex:response resultKey="result" extendRequestBody="true">
+            <ex:element sourceService="dyzx_acceptCjParam"/>
+        </ex:response>
+    </ex:bean>
+    <ex:bean id="dyzx_acceptCjParam">
+        <ex:request dozerXml="conf/dozer/wwsq/init/zy/request/bdcSlxxDTO.xml">
+            <ex:element name="bdcSlJbxx" dozerXml="conf/dozer/wwsq/init/dyzx/request/bdcSlJbxx.xml"
+                        listToObject="true"/>
+            <ex:element name="bdcSlXmList" dozerXml="conf/dozer/wwsq/init/dyzx/request/bdcSlXm.xml"/>
+            <!-- 判断是否需要规则验证  gzyz-->
+            <ex:element dozerXml="conf/dozer/wwsq/init/dyzx/request/cjyz.xml" listToObject="true"/>
+        </ex:request>
+    </ex:bean>
+    <ex:bean id="dyzx_zdbj">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="gxWwSqxxServiceImpl"/>
+            <ex:property name="methodName" value="zdbj"/>
+            <ex:property name="params" value="cjResponse,slr"/>
+        </ex:service-info>
+    </ex:bean>
+
+
+    <!-- 创建接口 共用受理子系统接口 -->
+    <ex:bean id="acceptCjService">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName"
+                         value="cn.gtmap.realestate.common.core.service.feign.accept.BdcSlFeignService"/>
+            <ex:property name="methodName" value="wwsqCjBdcXm"/>
+            <ex:property name="params" value="acceptCjParam"/>
+        </ex:service-info>
+    </ex:bean>
+<!--    <ex:bean id="acceptCjService_response">-->
+<!--        <ex:service-info request-type="beanReq">-->
+<!--            <ex:property name="beanName" value="gxWwSqxxServiceImpl"/>-->
+<!--            <ex:property name="methodName" value="revertCjResponse"/>-->
+<!--            <ex:property name="params" value="spxtywh,cjResponse,fjclList,acceptCjParam,zdzf"/>-->
+<!--        </ex:service-info>-->
+<!--    </ex:bean>-->
+    <!-- 回写字段相关操作 -->
+        <ex:bean id="acceptCjService_response_hx">
+            <ex:service-info request-type="beanReq">
+                <ex:property name="beanName" value="gxWwSqxxServiceImpl"/>
+                <ex:property name="methodName" value="writebackDyzx"/>
+                <ex:property name="params" value="spxtywh,cjResponse,fjclList,acceptCjParam,zdzf"/>
+            </ex:service-info>
+        </ex:bean>
+
+    <!--组合流程，主要针对附件进行处理 -->
+    <ex:bean id="acceptCjService_response_zhlc">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="gxWwSqxxServiceImpl"/>
+            <ex:property name="methodName" value="revertCzCjResponseForZhlc"/>
+            <ex:property name="params" value="spxtywh,cjResponse,fjclList,acceptCjParam,zdzf"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 档案公司单独更新附件信息 -->
+    <ex:bean id="updateFjxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="gxWwSqxxServiceImpl"/>
+            <ex:property name="methodName" value="dagsUpdatafjxx"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 外部系统定时任务生成系统公告 -->
+    <ex:bean id="generateXtgg">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="bdcXtggServiceImpl"/>
+            <ex:property name="methodName" value="generateXtgg"/>
+        </ex:service-info>
+        <ex:log dsfFlag="WWSQ" logEventName="定时任务生成系统公告接口" requester="WWSQ" responser="BDC"/>
+    </ex:bean>
+    <!-- 外部系统插入生成的公告信息 -->
+    <ex:bean id="insertBatchBdcGg">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="cn.gtmap.realestate.common.core.service.feign.config.BdcXtGgFeignService"/>
+            <ex:property name="methodName" value="insertBatchBdcGg"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 盐城_公积金注销抵押回调接口 -->
+    <ex:bean id="zcdyGjjCallback">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="盐城_公积金注销抵押回调接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GJJ"/>
+            <ex:property name="dsfFlag" value="GJJ"/>
+            <ex:property name="url" value="${gjj.zx.dy.url}"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 盐城_公积金双预告抵押回调接口 -->
+    <ex:bean id="sygdyGjjCallback">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="盐城_公积金双预告抵押回调接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GJJ"/>
+            <ex:property name="dsfFlag" value="GJJ"/>
+            <ex:property name="url" value="${gjj.syg.dy.url}"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 盐城_公积金首次抵押回调接口 -->
+    <ex:bean id="scdyGjjCallback">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="盐城_公积金首次抵押回调接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="GJJ"/>
+            <ex:property name="dsfFlag" value="GJJ"/>
+            <ex:property name="url" value="${gjj.sc.dy.url}"/>
+        </ex:service-info>
+    </ex:bean>
+
+</beans>

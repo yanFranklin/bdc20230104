@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.register.core.mapper.BdcBdcZxQdMapper">
+    <select id="listZxQdByPage" resultType="cn.gtmap.realestate.common.core.dto.register.BdcZxDTO">
+        select
+        t1.slbh,
+        t4.bdcdyh,
+        t4.zl,
+        q.tdmj,
+        q.fwmj,
+        t4.dzwyt,
+        t4.qlr,
+        t1.ycqzh as bdcqzh
+        from bdc_xm t1 join bdc_xm_lsgx t2 on t2.xmid = t1.xmid
+        join bdc_xm t4 on t4.xmid = t2.yxmid
+        join (
+        <!-- 土地使用权注销登记 qllx=? 土地面积:BDC_TDSYQ表nydmj、jsydmj、wlydmj,也可以参考BDC_XM表zdzhmj -->
+        select
+        td.xmid,
+        nvl(td.nydmj,0) + nvl(td.jsydmj,0) + nvl(td.wlydmj,0) as tdmj,
+        0 as fwmj
+        from bdc_tdsyq td
+        union all
+        <!-- 房屋所有权注销登记 qllx=3 房屋面积 -->
+        <!-- 房屋所有权注销登记-高 qllx=4 房屋面积:BDC_XM表dzwmj-->
+        select
+        f.xmid,
+        case when nvl(f.tdsyqmj,0) = 0
+            then ( select nvl(td.syqmj,0) as tdmj from BDC_FCTD_PPGX ppgx left join BDC_JSYDSYQ td  on ppgx.tdcqxmid = td.xmid where fwcqxmid= f.xmid )
+        else nvl(f.tdsyqmj,0) END as tdmj,
+        nvl(f.jzmj,0) as fwmj
+        from bdc_fdcq f
+        union all
+        <!-- 在建建筑物抵押权注销登记、房屋抵押权注销登记  qllx=95 房屋面积:BDC_DYAQ表fwdymj、BDC_DYAQ表TDDYMJ-->
+        select
+        dya.xmid,
+        nvl(dya.tddymj,0) as tdmj,
+        nvl(dya.fwdymj,0) as fwmj
+        from bdc_dyaq dya
+        union all
+        <!-- 林权注销登记  qllx=？ 土地面积:BDC_LQ表syqmj,也可以参考BDC_XM表zdzhmj-->
+        select
+        l.xmid,
+        nvl(l.syqmj,0) as tdmj,
+        0 as fwmj
+        from bdc_lq l
+        union all
+        <!-- 建设用地使用权  qllx=3 土地面积:BDC_JSYDSYQ表SYQMJ,也可以参考BDC_XM表zdzhmj-->
+        select
+        jsyd.xmid,
+        nvl(jsyd.syqmj,0) as tdmj,
+        0 as fwmj
+        from BDC_JSYDSYQ jsyd
+        ) q on q.xmid = t2.yxmid
+        where  t2.wlxm != 1 and t1.gzlslid = #{gzlslid,jdbcType=VARCHAR}
+    </select>
+</mapper>

@@ -1,0 +1,86 @@
+info:
+  name: ${spring.application.name}
+  component: inquiry-ui application
+
+app:
+  center: http://192.168.2.99:8000/eureka/
+  oauth: http://192.168.2.99:8002/account
+  security:
+    moduleAuthPath: http://account/account
+    # 开放权限：静态资源、打印接口、工作量统计接口、发票号
+    ignores: /image/**,/css/**,/js/**,/webjars/**,/static/print/**,/static/printModel/**,/rest/v1.0/print/**,/gzltj/**,/log/openFr3/**,/realestate-register/rest/v1.0/print/**,/rest/v1.0/fph/dy/xml,/rest/v1.0/changzhou/fph/dy/xml/**
+    authorities:
+      permitAll: /index2
+      hasUrlAuthority('read'): /auth/users,/auth/orgs
+      hasModuleAuthority('yhgl:add'): /auth/user/create
+      hasAnyAuthority('ROLE_USER'): /resource1/**,/catalog1/**,/index
+      hasAnyAuthority('ROLE_ADMIN_2'): /call
+      authenticated: true
+    resources:
+      authenticated: /realestate-inquiry-ui/**
+#  services:
+#    accept-app: accept-app3
+#    inquiry-app: inquiry-app3
+#    init-app: init-app3
+#    register-app: register-app3
+
+spring:
+  rabbitmq:
+    host: 192.168.0.60
+    port: 5672
+    username: guest
+    password: guest
+  redis:
+    port: 6379
+    host: 192.168.0.60
+  profiles:
+    include: config
+  messages:
+    basename: conf/message/messages, conf/message/errors
+  mvc:
+    static-path-pattern: /**
+  thymeleaf:
+    prefix: classpath:/view/
+    mode: LEGACYHTML5
+  http:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 1000MB
+
+# 运行时日志配置
+log:
+  es:
+    esHosts: 192.168.0.60:9200
+    # ES7.* 版本已经去除了索引type字段，所以如果是es7不用配置这个，7.*以下版本不配置这个会报错
+    indexType: plumelog
+
+management:
+  security:
+    enabled: true
+  context-path:
+
+endpoints:
+  enabled: true
+  shutdown:
+    enabled: true
+
+server:
+  port: ${port:8598}
+  context-path: /realestate-inquiry-ui
+  max-http-header-size: 10485760
+
+logging:
+  level:
+    org.springframework: info
+    cn.gtmap.gtc.plugins: DEBUG
+
+# 打印fr3文件保存服务器路径
+print:
+  path: C:\GTIS\print\
+# 综合小屏展示
+zhxp:
+  dqzxmc: 包河区不动产登记中心
+# 前端页面子系统切换
+html:
+  #  version: hefei
+  version: yancheng

@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.certificate.core.mapper.BdcYjdMapper">
+
+    <select id="listBdcYjdGdxxByPage" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.dto.certificate.BdcYjdGdxxDTO">
+        select gx.sxh, gx.gxid, gx.xmid, gx.yjdid, xm.bdcdyh,
+        case
+        when xm.qllx=95 or xm.qllx=37 then decode(xm.bdcqzh,'',xm.ycqzh,xm.bdcqzh)
+          else xm.bdcqzh
+        end
+        bdcqzh,
+        xm.slbh, xm.zl,xm.qlr
+          from bdc_xm_yjd_gx gx
+         inner join bdc_xm xm
+            on xm.xmid = gx.xmid
+         where 1=1
+        <if test="yjdid != null and yjdid != ''">
+           and gx.yjdid = #{yjdid,jdbcType=VARCHAR}
+        </if>
+        <if test="yjdceSlbh != null and yjdceSlbh != ''">
+            AND instr(xm.slbh,#{yjdceSlbh})>0
+        </if>
+        <if test="zl != null and zl != ''">
+            AND instr(xm.zl,#{zl})>0
+        </if>
+        <if test="qlr != null and qlr != ''">
+            AND instr(xm.qlr,#{qlr})>0
+        </if>
+        order by gx.sxh, xm.slbh
+    </select>
+
+    <select id="listBdcYjdByPage" parameterType="map"
+            resultType="cn.gtmap.realestate.common.core.dto.certificate.BdcYjdDTO">
+        SELECT a.yjdid, a.yjdbh, a.yjsj, a.yjr, a.jsr, a.yjzt
+        FROM bdc_yjd a
+        WHERE EXISTS (
+        SELECT t1.yjdid
+        FROM bdc_xm_yjd_gx t1
+        <choose>
+            <when test="gdcxsl != null and gdcxsl">
+                left JOIN bdc_xm x ON t1.xmid = x.xmid
+                left join bdc_qlr q on t1.xmid = q.xmid
+            </when>
+            <otherwise>
+                inner JOIN bdc_xm x ON t1.xmid = x.xmid
+                inner join bdc_qlr q on t1.xmid = q.xmid
+            </otherwise>
+        </choose>
+        WHERE a.yjdid = t1.yjdid
+
+        <choose>
+            <when test="gdcxsl != null and gdcxsl">
+
+            </when>
+            <otherwise>
+                and q.qlrlb=1
+            </otherwise>
+        </choose>
+        <if test="qxdm != null and qxdm != ''">
+            AND x.qxdm = #{qxdm}
+        </if>
+        <if test="slbh != null and slbh != ''">
+            AND x.slbh = #{slbh}
+        </if>
+        <if test="xmidList != null and xmidList.size > 0">
+            AND t1.xmid in <foreach collection="xmidList"
+                                    item="xmid"
+                                    open="("
+                                    close=")"
+                                    separator=",">
+            #{xmid}
+        </foreach>
+        </if>
+        <if test="qlr != null and qlr != ''">
+            AND q.qlrmc like '%' || #{qlr, jdbcType = VARCHAR} || '%'
+        </if>
+        <if test="bdcqzh != null and bdcqzh != ''">
+            AND X.XMID IN
+            (
+                SELECT XMID FROM BDC_XM_ZS_GX WHERE ZSID IN
+                (
+                    SELECT ZSID FROM BDC_ZS Z WHERE z.bdcqzh like '%' || #{bdcqzh,jdbcType=VARCHAR} || '%'
+                )
+            )
+        </if>
+        <if test="yjdbh != null and yjdbh != ''">
+            AND instr(a.yjdbh, #{yjdbh})>0
+        </if>
+        <if test="yjr != null and yjr != ''">
+            AND instr(a.yjr,#{yjr})>0
+        </if>
+        <if test="yjzt == 0 || yjzt != null and yjzt != ''">
+            AND a.yjzt = #{yjzt,jdbcType=INTEGER}
+        </if>
+        <if test="qssj != null and qssj != ''">
+            <![CDATA[ AND a.yjsj >= to_date(#{qssj,jdbcType=DATE},'yyyy-MM-dd')]]>
+        </if>
+        <if test="jzsj != null and jzsj != ''">
+            <![CDATA[ AND a.yjsj <= to_date(#{jzsj,jdbcType=DATE},'yyyy-MM-dd')]]>
+        </if>
+        <if test="yjsj != null and yjsj !=''">
+            AND to_char(a.yjsj,'yyyy-MM-dd') = #{yjsj}
+        </if>
+        )
+
+        <choose>
+            <when test="version != null and version != '' and version == 'haimen'">
+                order by a.yjsj desc
+            </when>
+            <otherwise>
+                ORDER BY a.yjdbh asc
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="listYjd" resultType="cn.gtmap.realestate.common.core.domain.BdcYjdDO"
+            parameterType="cn.gtmap.realestate.common.core.qo.certificate.BdcYjdQO">
+        SELECT DISTINCT t.yjdid AS yjdid, t.yjdbh, t.yjsj, t.yjr, t.jsr
+        FROM bdc_yjd t
+        LEFT JOIN bdc_xm_yjd_gx t1 ON t.yjdid = t1.yjdid
+        <where>
+            <if test="xmid != null and xmid != '' ">
+                AND t1.xmid = #{xmid}
+            </if>
+        </where>
+    </select>
+    <select id="listXmOwnYjd" resultType="cn.gtmap.realestate.common.core.dto.certificate.BdcXmYjdDTO"
+            parameterType="cn.gtmap.realestate.common.core.qo.certificate.BdcYjdQO">
+        SELECT DISTINCT t.xmid AS xmid, t.slbh
+        FROM bdc_xm t
+        INNER JOIN bdc_xm_yjd_gx t1 ON t.xmid = t1.xmid
+        <where>
+            <if test="listXmid != null and listXmid.size>0">
+                AND t1.xmid IN
+                <foreach collection="listXmid" item="xmid" open="(" close=")" separator=",">
+                    #{xmid}
+                </foreach>
+
+            </if>
+        </where>
+    </select>
+    <select id="countYjdbh" resultType="int" parameterType="String">
+        <if test="_parameter !=null and _parameter !=''">
+            SELECT COUNT(t.yjdbh) AS result
+            FROM bdc_yjd t
+            WHERE substr(t.yjdbh, 0, 8) = #{_parameter}
+        </if>
+    </select>
+
+    <!--查询流程项目信息-->
+    <select id="listBdcYjdXmxxByPageOrder" parameterType="cn.gtmap.realestate.common.core.qo.certificate.BdcYjdQO"
+            resultType="cn.gtmap.realestate.common.core.dto.certificate.yjd.BdcYjdXmxxDTO">
+        SELECT
+            MAX(X.GZLSLID)  AS GZLSLID,
+            MAX(X.SLBH)     AS SLBH,
+            MAX(X.GZLDYMC)  AS GZLDYMC,
+            MAX(X.AJZT)     AS AJZT,
+            MAX(X.QSZT)     AS QSZT,
+            MAX(X.DJSJ)     AS DJSJ,
+            MAX(X.DJLX)     AS DJLX,
+
+            CASE
+            WHEN COUNT(DISTINCT X.QLR) = 1 THEN MAX(X.QLR)
+            WHEN COUNT(DISTINCT X.QLR) > 1 THEN MAX(X.QLR) || '等'
+            END AS QLR,
+
+            CASE
+            WHEN COUNT(DISTINCT X.BDCDYH) = 1 THEN MAX(X.BDCDYH)
+            WHEN COUNT(DISTINCT X.BDCDYH) > 1 THEN MAX(X.BDCDYH) || '等'
+            END AS BDCDYH,
+
+            CASE
+            WHEN COUNT(DISTINCT X.ZL) = 1 THEN MAX(X.ZL)
+            WHEN COUNT(DISTINCT X.ZL) > 1 THEN MAX(X.ZL) || '等'
+            END AS ZL,
+
+            CASE
+            WHEN COUNT(DISTINCT X.BDCQZH) = 1 THEN MAX(X.BDCQZH)
+            WHEN COUNT(DISTINCT X.BDCQZH) > 1 THEN MAX(X.BDCQZH) || '等'
+            END AS BDCQZH
+        FROM
+            BDC_XM  X
+        <where>
+            <choose>
+                <when test="sfcz == 1">
+                    AND (( X.AJZT = 2 AND X.QSZT != 0 ) OR ( X.AJZT = 1 AND X.QSZT = 1 ))
+                </when>
+                <when test="sfcz == 0">
+                    AND X.AJZT = 2
+                </when>
+                <when test="sfcz == 2">
+                    AND ( (X.AJZT = 2) OR ( X.AJZT = 2 AND X.QSZT != 0 ) OR ( X.AJZT = 1 AND X.QSZT = 1 ))
+                </when>
+                <otherwise>
+                    AND X.AJZT = 2 AND X.QSZT != 0
+                </otherwise>
+            </choose>
+            <if test="slbh != null and slbh != ''">
+                AND X.SLBH = #{slbh,jdbcType=VARCHAR}
+            </if>
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND X.BDCDYH like '%' ||  #{bdcdyh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="zl != null and zl != ''">
+                AND X.ZL like '%' ||  #{zl,jdbcType=VARCHAR} || '%'
+            </if>
+
+            <!--动态关联证书表子查询-->
+            <if test="bdcqzh != null and bdcqzh != ''">
+                AND X.XMID IN
+                (
+                    SELECT XMID FROM BDC_XM_ZS_GX WHERE ZSID IN
+                    (
+                        SELECT ZSID FROM BDC_ZS Z WHERE z.bdcqzh like '%' || #{bdcqzh,jdbcType=VARCHAR} || '%'
+                    )
+                )
+            </if>
+
+            <if test="yjdid != null and yjdid != ''">
+                AND X.XMID IN
+                (
+                    SELECT XMID FROM BDC_XM_YJD_GX WHERE YJDID = #{yjdid,jdbcType=VARCHAR}
+                )
+            </if>
+
+            <if test="listSlbh != null and listSlbh.size>0">
+                AND x.slbh IN
+                <foreach collection="listSlbh" item="slbh" open="(" close=")" separator=",">
+                    #{slbh}
+                </foreach>
+
+            </if>
+        </where>
+        GROUP BY
+            GZLSLID
+        ORDER BY
+            MAX(X.DJSJ)
+    </select>
+
+    <select id="listBdcYjd" parameterType="java.lang.String" resultType="cn.gtmap.realestate.common.core.domain.BdcYjdDO">
+        SELECT
+            YJDID,
+            YJDBH
+        FROM
+            BDC_YJD
+        WHERE
+            YJDID IN
+            (
+                SELECT
+                    YJDID
+                FROM
+                    BDC_XM_YJD_GX
+                WHERE
+                    XMID IN
+                    (
+                        SELECT XMID FROM BDC_XM WHERE SLBH = #{slbh,jdbcType=VARCHAR}
+                    )
+            )
+    </select>
+
+    <!--  查询受理编号对应的所有项目信息ID  -->
+    <select id="listBdcXmid" parameterType="java.util.List" resultType="java.lang.String">
+        SELECT
+            DISTINCT XMID
+        FROM
+            BDC_XM
+        WHERE
+            SLBH IN
+            <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+                 #{item,jdbcType=VARCHAR}
+            </foreach>
+    </select>
+
+    <!--  查询受理编号对应的所有项目信息 -->
+    <select id="listBdcXm" parameterType="java.util.List" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT
+            xmid, slbh
+        FROM
+            BDC_XM
+        WHERE
+            SLBH IN
+            <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+                 #{item,jdbcType=VARCHAR}
+            </foreach>
+    </select>
+
+    <!--根据受理编号获取上一手项目信息-->
+    <select id="listPreXmxx" parameterType="java.lang.String" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT
+            DISTINCT YXM.SLBH
+        FROM
+            BDC_XM YXM
+        JOIN
+            BDC_XM_LSGX L
+        ON
+            YXM.XMID = L.YXMID
+        JOIN
+            BDC_XM  X
+        ON
+            X.XMID = L.XMID
+        <where>
+            <if test="slbh != null and slbh != ''">
+                    X.SLBH = #{slbh, jdbcType=VARCHAR}
+                AND
+                    YXM.AJZT = 2
+                AND
+                    YXM.QLLX NOT IN (95, 98,37)
+            </if>
+        </where>
+    </select>
+
+    <!--根据受理编号获取下一手项目信息-->
+    <select id="listNextXmxx" parameterType="java.lang.String" resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT
+            DISTINCT NXM.SLBH
+        FROM
+            BDC_XM NXM
+        JOIN
+            BDC_XM_LSGX L
+        ON
+            NXM.XMID = L.XMID
+        JOIN
+            BDC_XM  X
+        ON
+            X.XMID = L.YXMID
+        <where>
+            <if test="slbh != null and slbh != ''">
+                    X.SLBH = #{slbh, jdbcType=VARCHAR}
+                AND
+                    NXM.AJZT = 2
+                AND
+                    NXM.QLLX NOT IN (95, 98,37)
+            </if>
+        </where>
+    </select>
+
+    <update id="updateYjdDyztByTaskid">
+        update BDC_YJD_TASK_GX g set g.dyzt=1 where g.taskid in
+        <if test="taskids != null and taskids.size>0">
+            <foreach collection="taskids" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </update>
+
+    <select id="getYjdTaskGx" parameterType="java.util.Map" resultType="cn.gtmap.realestate.common.core.domain.BdcYjdTaskGxDO">
+        select * from BDC_YJD_TASK_GX g
+        <where>
+            <if test="taskid != null and taskid != ''">
+                and g.taskid = #{taskid}
+            </if>
+            <if test="yjdh != null and yjdh != ''">
+                and g.yjdh = #{yjdh}
+            </if>
+        </where>
+        order by g.yjdh desc
+    </select>
+</mapper>

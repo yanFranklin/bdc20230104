@@ -1,0 +1,314 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>婚姻比对信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/popup.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <style type="text/css">
+        .content-div{
+            padding: 0;
+        }
+        .layui-table tr.set-center,
+        .layui-table tr.set-center input{
+            text-align: center;
+        }
+        .qlxx-tips {
+            line-height: 30px;
+            padding: 0 8px;
+            box-sizing: border-box;
+            margin: 15px 0;
+        }
+        .fail-tips{
+            background-color: #fff2f1;
+            border: 1px solid #ffa39e;
+        }
+        .success-tips{
+            background-color: #f6ffed;
+            border: 1px solid #b7eb8f;
+        }
+        .bdc-title-sign-btn{
+            margin-bottom: 10px;
+        }
+
+        .bdc-title-sign-btn .bdc-title-sign-btn-box {
+            position: absolute;
+            top: 0;
+            right: 10px;
+        }
+    </style>
+</head>
+<body id="hybdjgBody">
+<div class="content-div">
+    <div class="bdc-content-box">
+        <form class="layui-form setOverflow" action="">
+            <div class="content-main">
+            </div>
+        </form>
+    </div>
+</div>
+<div id="bdc-popup-small-shot" class="bdc-hide">
+    <img id="screenshot" src="" alt="">
+</div>
+</body>
+
+<script type="text/html" id="hybdTpl">
+    {{# var hyxx=d.hyxx }}
+    {{# if(hyxx.code=='0000'){ }}
+    <div class="qlxx-tips success-tips">
+        提示信息：<span>婚姻状况比对成功</span>
+    </div>
+    {{# }else{ }}
+    <div class="qlxx-tips fail-tips">
+        提示信息：<span>{{ hyxx.msg || ''}}</span>
+    </div>
+    {{# } }}
+    <div class="title-sign bdc-title-sign-btn">
+        <p>婚姻比对信息</p>
+        <div class="bdc-title-sign-btn-box">
+            <button type="button" class="layui-btn layui-btn-sm bdc-major-btn" name="import" id="import" onclick="daoruHybdxx()">导入</button>
+            <button type="button" class="layui-btn layui-btn-sm bdc-secondary-btn" name="htmlShot" id="htmlShot" onclick="shotScreen();">截图</button>
+        </div>
+    </div>
+    <div class="bdc-table-box">
+        <table class="layui-table" border="1">
+            <colgroup>
+                <col width="150">
+                <col width="220">
+                <col width="150">
+                <col width="100">
+                <col width="150">
+            </colgroup>
+            <tbody>
+            <input type="hidden" name="resultcode" value="{{ hyxx.code || ''}}">
+            <tr>
+                <td class="set-back-color">姓名</td>
+                <td colspan="4">
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-table-edit" value="{{ hyxx.sqrDTO.sqrmc || ''}}" disabled="off">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="set-back-color">证件类型</td>
+                <td>
+                    <div class="bdc-td-box">
+                        <select lay-search="" lay-filter="zjzl" disabled="off">
+                            <option value=""></option>
+                            {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                            <option value="{{item.DM || '0'}}" {{# if(hyxx.sqrDTO.sqrzjzl==item.DM ){ }} selected="selected" {{#
+                                    }
+                                    }} title="{{item.MC || ''}}">{{item.MC || ''}}
+                            </option>
+                            {{# }); }}
+                        </select>
+                    </div>
+                </td>
+                <td class="set-back-color">证件号码</td>
+                <td colspan="2">
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-table-edit" value="{{ hyxx.sqrDTO.sqrzjh || ''}}" disabled="off">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5" class="quarantine"></td>
+            </tr>
+
+            <tr>
+                <td class="set-back-color set-center"></td>
+                <td colspan="2" class="set-back-color set-center">申报婚姻信息</td>
+                <td colspan="2" class="set-back-color set-center">民政婚姻信息</td>
+            </tr>
+
+            <tr class="set-center">
+                <td class="set-back-color set-center">婚姻状态</td>
+                <td colspan="2">
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-table-edit" value="{{ hyxx.sbhyxxDTO.sbhyzt || ''}}" disabled="off">
+                    </div>
+                </td>
+                <td colspan="2">
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-table-edit" value="{{ hyxx.mzhyxxDTO.hyzt || ''}}" disabled="off">
+                    </div>
+                </td>
+            </tr>
+            <tr class="set-center">
+                <td class="set-back-color set-center">配偶姓名</td>
+                <td colspan="2">
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-table-edit" value="{{ hyxx.sbhyxxDTO.poxm || ''}}" disabled="off">
+                    </div>
+                </td>
+                <td colspan="2">
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-table-edit" value="{{ hyxx.mzhyxxDTO.poxm || ''}}"  disabled="off">
+                    </div>
+                </td>
+            </tr>
+            <tr class="set-center">
+                <td class="set-back-color set-center">配偶证件类型</td>
+                <td colspan="2">
+                    <div class="bdc-td-box">
+                        <select lay-search="" lay-filter="zjzl" disabled="off">
+                            <option value=""></option>
+                            {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                            <option value="{{item.DM || '0'}}" {{# if(hyxx.sbhyxxDTO.pozjzl==item.DM ){ }} selected="selected" {{#
+                                    }
+                                    }} title="{{item.MC || ''}}">{{item.MC || ''}}
+                            </option>
+                            {{# }); }}
+                        </select>
+                    </div>
+                </td>
+                <td colspan="2">
+                    <div class="bdc-td-box">
+                        <select lay-search="" lay-filter="zjzl" disabled="off">
+                            <option value=""></option>
+                            {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                            <option value="{{item.DM || '0'}}" {{# if(hyxx.mzhyxxDTO.pozjzl==item.DM ){ }} selected="selected" {{#
+                                    }
+                                    }} title="{{item.MC || ''}}">{{item.MC || ''}}
+                            </option>
+                            {{# }); }}
+                        </select>
+                    </div>
+                </td>
+            </tr>
+            <tr class="set-center">
+                <td class="set-back-color set-center">证件号码</td>
+                <td colspan="2">
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-table-edit" value="{{ hyxx.sbhyxxDTO.pozjh || ''}}" disabled="off">
+                    </div>
+                </td>
+                <td colspan="2">
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-table-edit" value="{{ hyxx.mzhyxxDTO.pozjh || ''}}" disabled="off">
+                    </div>
+                </td>
+            </tr>
+            <tr class="set-center">
+                <td class="set-back-color set-center">婚姻登记机关</td>
+                <td colspan="2" class="set-center">— —</td>
+                <td colspan="2">
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-table-edit" value="{{ hyxx.mzhyxxDTO.hydjjg || ''}}" disabled="off">
+                    </div>
+                </td>
+            </tr>
+            <tr class="set-center">
+                <td class="set-back-color set-center">登记日期</td>
+                <td colspan="2" class="set-center">— —</td>
+                <td colspan="2">
+                    <div class="bdc-td-box">
+                        <input type="text" class="layui-table-edit" value="{{ hyxx.mzhyxxDTO.djrq || ''}}" disabled="off">
+                    </div>
+                </td>
+            </tr>
+            {{# if(d.znlength >0){ }}
+            {{# for(var i = 0, len = d.znlength; i < len; i++){ }}
+            <tr class="set-center">
+                <td class="set-back-color set-center">子女姓名</td>
+                <td colspan="2">
+                    <div class="bdc-td-box">
+                        {{# if(hyxx.sbhyxxDTO.znJtcyList &&hyxx.sbhyxxDTO.znJtcyList.length >i){ }}
+                        <input type="text" class="layui-table-edit" value="{{ hyxx.sbhyxxDTO.znJtcyList[i].jtcymc || ''}}" disabled="off">
+                        {{# }else{ }}
+                        <input type="text" class="layui-table-edit" value="" disabled="off">
+                        {{# } }}
+                    </div>
+                </td>
+                <td colspan="2">
+                    <div class="bdc-td-box">
+                        {{# if(hyxx.mzhyxxDTO.znJtcyList &&hyxx.mzhyxxDTO.znJtcyList.length >i){ }}
+                        <input type="text" class="layui-table-edit" value="{{ hyxx.mzhyxxDTO.znJtcyList[i].jtcymc || ''}}" disabled="off">
+                        {{# }else{ }}
+                        <input type="text" class="layui-table-edit" value="" disabled="off">
+                        {{# } }}
+                    </div>
+                </td>
+            </tr>
+            <tr class="set-center">
+                <td class="set-back-color set-center">子女证件类型</td>
+                <td colspan="2">
+                    <div class="bdc-td-box">
+                        {{# if(hyxx.sbhyxxDTO.znJtcyList &&hyxx.sbhyxxDTO.znJtcyList.length >i){ }}
+                        <select lay-search="" lay-filter="zjzl" disabled="off">
+                            <option value=""></option>
+                            {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                            <option value="{{item.DM || '0'}}" {{# if(hyxx.sbhyxxDTO.znJtcyList[i].zjzl==item.DM ){ }} selected="selected" {{#
+                                    }
+                                    }} title="{{item.MC || ''}}">{{item.MC || ''}}
+                            </option>
+                            {{# }); }}
+                        </select>
+                        {{# }else{ }}
+                        <input type="text" class="layui-table-edit" value="" disabled="off">
+                        {{# } }}
+                    </div>
+                </td>
+                <td colspan="2">
+
+                    <div class="bdc-td-box">
+                        {{# if(hyxx.mzhyxxDTO.znJtcyList &&hyxx.mzhyxxDTO.znJtcyList.length >i){ }}
+                        <select lay-search="" lay-filter="zjzl" disabled="off">
+                            <option value=""></option>
+                            {{# layui.each(d.zd.zjzl, function(index, item){ }}
+                            <option value="{{item.DM || '0'}}" {{# if(hyxx.mzhyxxDTO.znJtcyList[i].zjzl==item.DM ){ }} selected="selected" {{#
+                                    }
+                                    }} title="{{item.MC || ''}}">{{item.MC || ''}}
+                            </option>
+                            {{# }); }}
+                        </select>
+                        {{# }else{ }}
+                        <input type="text" class="layui-table-edit" value="" disabled="off">
+                        {{# } }}
+                    </div>
+                </td>
+            </tr>
+            <tr class="set-center">
+                <td class="set-back-color set-center">子女证件号码</td>
+                <td colspan="2">
+                    <div class="bdc-td-box">
+                        {{# if(hyxx.sbhyxxDTO.znJtcyList &&hyxx.sbhyxxDTO.znJtcyList.length >i){ }}
+                        <input type="text" class="layui-table-edit" value="{{ hyxx.sbhyxxDTO.znJtcyList[i].zjh || ''}}" disabled="off">
+                        {{# }else{ }}
+                        <input type="text" class="layui-table-edit" value="" disabled="off">
+                        {{# } }}
+                    </div>
+                </td>
+                <td colspan="2">
+                    <div class="bdc-td-box">
+                        {{# if(hyxx.mzhyxxDTO.znJtcyList &&hyxx.mzhyxxDTO.znJtcyList.length >i){ }}
+                        <input type="text" class="layui-table-edit" value="{{ hyxx.mzhyxxDTO.znJtcyList[i].zjh || ''}}" disabled="off">
+                        {{# }else{ }}
+                        <input type="text" class="layui-table-edit" value="" disabled="off">
+                        {{# } }}
+                    </div>
+                </td>
+            </tr>
+            {{# } }}
+            {{# } }}
+            </tbody>
+        </table>
+    </div>
+</script>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.all.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src='../../static/js/bluebird.min.js'></script>
+<script src='../../static/js/html2canvas.js'></script>
+<script src="../../static/js/nantong/ycsl/hybdjg.js"></script>
+
+</html>

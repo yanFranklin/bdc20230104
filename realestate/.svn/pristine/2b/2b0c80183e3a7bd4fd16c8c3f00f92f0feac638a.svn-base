@@ -1,0 +1,405 @@
+accept-ui:
+##数据匹配界面土地证权利类型配置
+   dataPicTdzQllxs:
+     1,2,3,5,7,9,11,13,15,17,23
+  #预抵押登记小类（用于判断权利人是否显示银行下拉列表,多个用英文逗号隔开）
+   ydydjxl: 7000402,7000802,7000404,7000804,7000408,7000410
+   zxdjxl: 4000402
+
+#根据登记小类配置打印类型
+sjddylx:
+#   出证，明收件单，显示联系电话
+   czsjd: 1000301,9990301
+   czsjdpl:
+# 不出证   收件单，不显示联系电话，不显示到窗口领证
+   sjd: 4000301,4000701,4000501,4002301,4000302
+   sjdpl:
+#   裁定过户登记小类(测试数据,逗号隔开)
+   cdgh: 2000405
+#   不需要打印收件单
+   nosjd:
+#   产权类流程(测试数据)
+   cqsjd: 7000401,2000402,7000403
+  #   抵押类流程
+   dyasjd: 7000402,9990402,7000404,9990401
+  #  不出证类流程
+   noczsjd: 8000301
+
+  #   只需要打印一份收件单的流程
+   oneSjdDyid: tbpYyyRfnQyZyr5C
+
+  #  特殊流程的特殊打印类型fgzjcsjd
+   zdylcdylx: '{"jsEKwceZQswjPAyx": "fgzjcsjd","AXSwxcCC6Y3t3Aer": "fgzjcsjd1","wrAHxwHMAicwmMMe":"zxsjd"}'
+# 某些流程存在虚拟号无需匹配直接创建流程，如查封等（以下数据为测试）
+noPpCj:
+  gzldyid: jsEKwceZQswjPAyx
+
+# 换证流程计算工本费与其他流程不同，只按照最后出证数量减一即可（以下数据为测试）
+hzlc:
+  gzldyid: bbZcnNZM4NNHG42C,yHEkm6R3rmGi7zZ4
+
+  # 遗失补证流程计算工本费与其他流程不同，第一本开始收费（以下数据为测试）
+ysbz:
+  gzldyid: BPCeDrQ7Pb8e2MFQ,kCyhmJRj45XrsKEW
+
+# 房地转移登记，房地抵押登记，房地转移抵押登记,需要同步qlrmc到fdcq的tdsyqr(以下为测试数据)
+tbqlrtofdcq:
+  gzldyid: BPCeDrQ7Pb8e2MFQ,zK2XnRRxFtPY8MaJ,hfQ236Q2XSQZtRjS
+
+# 查封到期解封工作流定义id
+cfdqJfGzldyid:
+  gzldyid: myF2BmaX2HR7Czt5
+
+# 常州三调查询流程gzldyid
+czsd:
+  gzldyid:
+
+lyg:
+  tdjyfwf: 320400
+sjcl:
+  exe: false
+# 评价器调用接口地址
+pjq:
+  url: http://ip:port/evaluate/startEvaluate
+  # 根据区县代码分类评价器的调用接口地址
+  qxdmUrlMap:
+    340100: ip:port/evaluate/startEvaluate1
+    340101: ip:port/evaluate/startEvaluate2
+    340104: exchange
+
+#默认配置
+default:
+# 需要高亮显示修改字段的登记小类（多个用英文逗号隔开）
+  xgnrglxs: 2000402,9990401
+#登记原因权限控制组合(多个对照组合，前面为登记原因，后面为对应可编辑字段元素的name,多个用英文逗号隔开)
+  djyyAuthority: '{"地址更正": "zl", "面积变更": "dzwmj,jzmj", "用途更正": "dzwyt","地址变更": "zl,fj"}'
+  # 裁定过户登记小类
+  cdghDjxl: 8000604,8000804,8000404,8000408,2000405
+  # 共有方式默认共同共有登记小类
+  gtgyDjxl: 1000603,1000602
+  # 共有方式单个验证：是否开启单个权利人的共有情况只能为单独所有。默认为：true（开启） false（不开启）
+  gyfsdgyz: true
+#房屋抵押权首次登记登记小类（多个用英文逗号隔开）合肥特殊流程收费
+fwdyqsc:
+  djxl: 9990401,9990405
+
+#存量房买卖转移登记登记小类（多个用英文逗号隔开）合肥特殊流程收费
+clfmmzy:
+  djxl: 2000402
+
+#查询产权证现势状态 是否抵押、查封、预告、异议也查询全部产权状态
+bdcdyzt:
+  qbxs: false
+#受理页面 原产权证号 最多多少个不加"等"
+slym:
+  authority:
+    idMap:
+      zjzl:
+        6: '{"frmc":"3","frzjzl":"3"}'
+        7: '{"frmc":"3","frzjzl":"3"}'
+      qlrlx:
+        1: '{"frmc":"3","frzjzl":"3"}'
+        2: '{"frmc":"3","frzjzl":"3"}'
+  ycqzh:
+    maxcount: 3
+  #    打印种类pdf、fr3
+  #  dyzl: pdf
+  # 打印模式1-标准版，合肥其他版本，2-南通版本，3-常州， 4 -扩展版本
+  print:
+    mode: 1
+    pldylx: sjd
+    xzqhdylx: '{"340104": "bdcdjbcxfcztdz,bdcdjbcxbdcqz,stfzm"}'
+    zhlcsplit: true
+    zhlcbtn:
+      aHjazkjriDsreaRt:
+        2000404: '{"sjd":"收件单(转移)","sqs":"申请书(转移)"}'
+        9990401: '{"sjd":"收件单(抵押)","sqs":"申请书(抵押)"}'
+      FtE2swQGKKi3cekC:
+        7000401: '{"sjd":"收件单(预告)","sqs":"申请书(转移)"}'
+        7000402: '{"sjd":"收件单(预抵押)","sqs":"申请书(预抵押)"}'
+    zhajlcdyid: aHjazkjriDsreaRt
+  dysw: 1,2,3,4,5
+  #  需要房屋用途统计的流程定义ID,多个用英文逗号隔开
+  fwyttj: jsEKwceZQswjPAyx
+  noyztdsyjssj: 10
+  #  受理页面打开文件管理器自动创建文件夹名称
+  sjclmc: 人像采集,材料采集
+  #改变基本信息和权利tab页的位置
+  changeqljbxx.gzldyid: zAks8CDshxeYNpdF,iyBbGP2f2HDNABjD,hfQ236Q2XSQZtRjS
+  #是否需要同步权利人到领证人
+  syncQlrToLzrFlag: true
+  #  组合收件材料
+  zhsjcl: true
+  #指定登记小类下填写户号数据
+  sdqgh:
+    djxl: 2000402
+    #指定流程不可以新增义务人 AXSwxcCC6Y3t3Aer,zK2XnRRxFtPY8MaJ
+  bxzywr.gzldyids:
+  # 受理页面的打印按钮自定义配置
+  printBtn: '{"zxpz": "注销凭证", "test": "测试数据"}'
+  #  权利人页面保存后是否自动关闭当前页面
+  qlr.autoclose: false
+  #  权利人页面交易份额默认值设置
+  qlr.jyfemrz: 2000401,2000402
+  sjcl.djyypz: true
+  wxjj:
+    #70环境的存量房买卖转移登记，变更（带抵押）合并登记
+    gzldyid: EtX2466KHN7YhfsR,jaZZftBZEAQTzt68
+  splyList: 1
+  sfyzbt: false
+  # 受理页面是否二次确认的按钮id
+  sfecqrids:
+#收费信息页面 住宅类房屋用途代码(多个用英文逗号隔开)
+sfxx:
+  # {6: 'AXSwxcCC6Y3t3Aer,r5wJBF4dZbPFXbzf'}
+  #  nosfxm: {1: 'a,b'}
+  sfxm:
+    #    金额为0 是否删除
+    delete0je: false
+    tdsyqzrczmc: 土地使用权转让,土地使用权出租
+    tdsyqdyamc: 土地使用权抵押
+    tdsyqsfxmdm: 320400
+    #    是否过滤土地收益金
+    sfgltdsyj: false
+  updateSfzt: false
+
+#南通注销流程可进行土地匹配房屋的不动产单元号
+# 工作流定义id，多个以英文逗号（,）分隔
+tdppfw:
+  gzldyid: YQE3yeMak6tyzhN4
+
+#承诺期限可编辑流程配置工作流定义id,多个以英文逗号（,）分隔
+changelcqx:
+  gzldyid: jsEKwceZQswjPAyx,hfQ236Q2XSQZtRjS
+
+ycsl:
+  # 南通一体化 交税页面地址
+  taxurl: http://32.128.74.106:7001/biz/fcjy/fcjy_zlf/fcjyzlf.jsp
+
+##电子证照调用接口配置参数
+#dzzz:
+##：默认1查询全部材料类型，2只查询对应了电子证照的类型的材料类型。
+#  querytype:
+##：默认1优先使用电子证照，无证照查询材料；2仅使用电子证照；3仅使用电子材料
+#  userform:
+##材料级别（B，C，D），B表示查询B级材料，C表示查询C、B级材料，D表示查询所有材料。默认是C查询C、B级材料。
+#  lvl:
+##返回材料数量，默认3条，最大20条
+#  maxnum:
+##默认证照（1证照，2材料）
+#  type:
+##(true，false)二维码出示平台，是否由皖事通出示
+#  isApp:
+##文件格式(证照ofd、png)
+#  format:
+
+yzt:
+  #南通CAS验证地址
+  casUrl: http://ip:port/cas/custom?user_card=Admin&url=
+  #南通一张图合同链接地址
+  yzthtUrl: http://ip:port/buildland/landsource/gdxm-info.action?remiseType=1&htbh=
+
+ysgg:
+  gzldyid: btMihJeNc5fHQ2RS
+
+
+## 页面逻辑版本,主要用于页面逻辑改动大,新老版本同时保留，默认为新版本，值为bak为老版本
+ymVersion:
+
+## 选择台账是否展示重新关联按钮
+#xztz:
+#  sfcxgl: false
+#xztz:
+#  sfxzcx: false
+
+#转移换证流程配置工作流定义id和登记小类
+zyhz:
+  gzldyid:
+  djxlList:
+
+
+# 选择台账查询数据的方式
+# 0：查询本登记系统库
+# 1：查询原登记库 常州地市，不配置默认为0
+queryType: 0
+
+# 月结缴费台账，下单数量控制
+yjsfdd:
+  max: 2
+
+# 摩科评价器人证对比页面地址
+mk.rzdburl: http://ip:port/man_identity/data/show?serviceId=
+
+# djyy控制字段必填的配置
+djyyControlColConfig:
+  colIdAndDjyyValMap:
+    # 必填字段的id：djyy的值
+    jyjg: 存量房买卖,已购公有住房买卖
+    jgsj: 存量房买卖,已购公有住房买卖
+
+# 查档流程权利人查询工作流定义id
+cdlc.qlrcx.gzldyid: mMGbh58mNCMDdfW4
+#层高配置值
+cg: 1,2,3,4,5
+
+# 组合流程，不展示领证人信息的djxl （多个用英文逗号隔开）
+lzrxx.bzsdjxl: 9990404
+#更新领证人是否更新证书信息
+lzrxx:
+  sfgxzs: true
+
+# 非税开票的url直接配置
+fskp.printDzfp.url: http://200.1.1.168:8030/realestate-accept/rest/v1.0/print/fskp/
+# 同步机构领证开关
+tbjglzr: true
+
+#权利人是否持证人
+qlr.sfczr: 1
+#新增权利人是否持证人顺序号大于1默认为否，特殊流程去除该逻辑
+qlr.sfczr.sxh: true
+#qlr.sfczr.notsxh.djxl: 2000402,2000401
+
+#是否查询预告状态
+sfcxyg: true
+
+#是否同步抵押权人到第三权利人
+sftbdsqlr: true
+
+# 拥有填报表单数据修改审核权限的角色
+sjxgsh.rolename: sjxgsh
+#抵押权附记根据是否禁止转让带入内容
+dyaq.fj.sfjzzr:
+  0: 抵押双方约定,抵押期间禁止抵押物转让
+  1: 抵押双方约定,抵押期间同意抵押物转让
+
+#查询企业或事业单位的法定代表人的接口benid key值为qlrlx 2:企业 3:事业单位
+gxcxinterface.qlrlx:
+  beanid:
+    2: xgbmcx_qyxx
+    3: xgbmcx_sydw
+  #需要查询法定代表人的权利人类别 qlr:1 ywr:2  当都需要的时候1,2
+  qlrlb: 1
+
+
+# 指定流程房地产权的土地权利面积为空时，则取匹配土地证的独用和分摊之和
+xstdqlmj.gzldyids:
+
+#必填项标志大小
+btxbz.size:
+# 常州控制创建项目后，是否进行涉税同步，多个工作流实例ID,采用英文逗号分隔","
+swtb.gzldyids: jsEKwceZQswjPAyx
+
+# 非税月结银行名称
+fs:
+  yjyhmc: 盐城市住房公积金管理中心,江苏常熟农村商业银行股份有限公司盐城分行,上海银行股份有限公司盐城分行
+
+#司法裁决工作流定义id
+sfcj.gzldyid: iTEz3K8KS226khn4
+sfcjzy.gzldyid: EdNed5GdbDspXYCj
+
+#选择台账展现资金监管信息
+xztz.showZjjg.gzldyids: 57MG1430IEY6302Q,jsEKwceZQswjPAyx
+#产权证选择台账过滤只展示资金监管的产权数据配置
+xztz.filterZjjg.gzldyids: Q5sABnEc5xFwHsh5
+#自定义增量初始化选择台账
+zdyzlcsh.xztzpz:
+  fJpChN4ZBskPnZMZ: '{"xztzlx": "1,2" , "qllx": "4"}'
+  tTkhiyP3XAkfJETj: '{"xztzlx": "1" , "qllx": "4"}'
+#  '{"fJpChN4ZBskPnZMZ": "{xztzlx: "1,2" , qllx: "4"}", "123123123": "{xztzlx: "3,4" , qllx: "6"}"}'
+xzlc:
+  gzldyid: iyBbGP2f2HDNABjD
+#  配置需要填写意见的节点名称
+  jdmc: 档案管理科,权籍管理科,信息管理科
+
+url:
+  sign:
+    image: http://192.168.2.99:8030/storage/rest/files/download/
+
+# 查档页面 查询申请类别默认值
+cdym.sqlb: 申请类别
+
+# 南通获取税票接口
+swsp:
+  # 存放文件的文件夹名称
+  wjjmc: 南通契税
+  # 根据区县代码配置调用接口的beanName
+  qxdmBeanNameMap:
+    340111: nt_hqwsxx
+    340102: nt_xx
+  # 根据区县代码配置数据归属地
+  qxdmSjgsdMap:
+    340111: 111222
+# 南通获取房产交易信息
+fcjyxx:
+  # 存放住建pdf的文件夹名称
+  wjjmc: 南通存量房交易
+  # 根据区县代码配置调用接口的beanName,例如海门
+  qxdmBeanNameMap:
+    320614: nt_clfzjjyxx_zh
+
+#批量创建流程的工作量定义id
+query.plcjlc.gzldyids: r5wJBF4dZbPFXbzf
+query.tempqszt.gzldyids: PW6J5fD8NfZHXN4e
+#需要验证身份证是否为18位的工作流定义id集合
+sfzyz:
+  gzldyid: btMihJeNc5fHQ2RS,iyBbGP2f2HDNABjD,jsEKwceZQswjPAyx
+#交易电子合同材料名称对照
+jydzht:
+  clmcdz: '{"1":"交易电子合同1","2":"交易电子合同2"}'
+
+#规则验证相同子规则同时忽略
+gzyz.hlxtzgz: true
+# 水电气配置项
+# sdq.gsdwxx.区县代码.单位代码.dwmc = 单位名称
+# sdq.gsdwxx.区县代码.单位代码.pushStyle = 推送模式
+# sdq.gsdwxx.区县代码.单位代码.sfhy = 是否核验
+sdq:
+  # 供水单位信息
+  gsdwxx:
+    # 区县代码
+    340104:
+      # 单位代码
+      111:
+        # 单位名称
+        dwmc: 供水单位1
+        # 推送模式
+        #  1、权利人义务人不管是单独还是多个：权利人、义务人均推送
+        #  2、权利人义务人不管是单独还是多个：权利人只推送户主，义务人都推送
+        #  3、只推送权利人，权利人不管是单独的还是多个，均推送
+        #  4、只推送权利人，只推送户主
+        pushStyle: 1
+        # 是否核验
+        sfhy: true
+      222:
+        dwmc: 供水单位2
+        pushStyle: 2
+        sfhy: false
+  # 供气单位信息
+  gqdwxx:
+    340104:
+      333:
+        dwmc: 供气单位1
+        pushStyle: 3
+        sfhy: true
+      444:
+        dwmc: 供气单位2
+        pushStyle: 4
+        sfhy: false
+
+mrlzfs:
+  lzfsQldmMap:
+    2: 1,2,3,4,5,6,7,8,9,95,96,97
+    4: 37,38,39
+wlzsnr:
+  showqszt: false
+
+config:
+  jsdz:
+    qfym: false
+  qxdmfilter: false
+
+zdjbdb.gzldyid: iQZE2z7BSGi3CGkQ
+cxdj.gzldyid: kQD4FJw6JBfew8Hi
+
+#受理页面二次确认按钮id值
+slym.sfecqrids: synchLpbData

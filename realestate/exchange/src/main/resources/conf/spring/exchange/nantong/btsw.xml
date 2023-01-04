@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+    <!-- 南通 百通APP推送存量房房产交易相关的交易信息和资料信息 -->
+
+    <!-- 1 保存不动产存量房交易申请信息 -->
+    <ex:bean id="btsw_clfjyxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="保存不动产存量房交易申请信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="BTSW"/>
+            <ex:property name="dsfFlag" value="BTSW"/>
+            <ex:property name="url" value="${btsw.clfjyxx.url}"/>
+            <ex:property name="contentType" value="json"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element sourceService="btsw_clfjyxx_param"/>
+        </ex:request>
+        <ex:log dsfFlag="BTSW" logEventName="保存不动产存量房交易申请信息" requester="BDC" responser="BTSW"/>
+    </ex:bean>
+
+    <ex:bean id="btsw_clfjyxx_param">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="nantongBtswServiceImpl"/>
+            <ex:property name="methodName" value="getClfjyxxParam"/>
+        </ex:service-info>
+        <ex:log dsfFlag="BTSW" logEventName="保存不动产存量房交易申请信息" requester="BDC" responser="BTSW"/>
+    </ex:bean>
+
+    <!-- 2 不动产增量房交易申请信息 -->
+    <ex:bean id="btsw_zlfjyxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="保存不动产增量房交易申请信息"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="BTSW"/>
+            <ex:property name="dsfFlag" value="BTSW"/>
+            <ex:property name="url" value="${btsw.zlfjyxx.url}"/>
+            <ex:property name="contentType" value="json"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element sourceService="btsw_zlfjyxx_param"/>
+        </ex:request>
+        <ex:log dsfFlag="BTSW" logEventName="保存不动产增量房交易申请信息" requester="BDC" responser="BTSW"/>
+    </ex:bean>
+
+    <ex:bean id="btsw_zlfjyxx_param">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="nantongBtswServiceImpl"/>
+            <ex:property name="methodName" value="getzlfjyxxParam"/>
+        </ex:service-info>
+        <ex:log dsfFlag="BTSW" logEventName="保存不动产增量房交易申请信息" requester="BDC" responser="BTSW"/>
+    </ex:bean>
+
+    <!-- 3 推送房产交易审核状态信息 -->
+    <ex:bean id="btsw_sendshztxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="nantongBtswServiceImpl"/>
+            <ex:property name="methodName" value="swkkzt"/>
+        </ex:service-info>
+        <ex:log dsfFlag="BTSW" logEventName="开具电子税票接口" requester="BDC" responser="BTSW"/>
+    </ex:bean>
+
+    <!-- 4 推送税务事项证明单pdf、申报确认单pdf -->
+    <ex:bean id="btsw_sendhsxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="推送税务事项证明单"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="BTSW"/>
+            <ex:property name="dsfFlag" value="BTSW"/>
+            <ex:property name="url" value="${btsw.sendhsxx.url}"/>
+            <ex:property name="contentType" value="json"/>
+        </ex:service-info>
+        <ex:log dsfFlag="BTSW" logEventName="推送税务事项证明单" requester="BDC" responser="BTSW"/>
+    </ex:bean>
+
+
+    <!-- 5 税务事项证明单pdf、申报确认单pdf纳税人确认-->
+    <ex:bean id="btsw_sendHsxxqr">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="事项证明单纳税人确认"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="BTSW"/>
+            <ex:property name="dsfFlag" value="BTSW"/>
+            <ex:property name="url" value="${btsw.sendHsxxqr.url}"/>
+            <ex:property name="contentType" value="json"/>
+        </ex:service-info>
+        <ex:log dsfFlag="BTSW" logEventName="事项证明单纳税人确认" requester="BDC" responser="BTSW"/>
+    </ex:bean>
+
+    <!-- 6 推送税务端扣款状态 -->
+    <ex:bean id="btsw_swkkzt">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="nantongBtswServiceImpl"/>
+            <ex:property name="methodName" value="sendShztxx"/>
+        </ex:service-info>
+        <ex:log dsfFlag="BTSW" logEventName="查询银行端扣款数据接口" requester="BDC" responser="BTSW"/>
+    </ex:bean>
+
+
+    <!-- 7 开具电子税票接口 -->
+    <ex:bean id="btsw_kjDzspxx">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="开具电子税票接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="BTSW"/>
+            <ex:property name="dsfFlag" value="BTSW"/>
+            <ex:property name="url" value="${btsw.kjdzspxx.url}"/>
+            <ex:property name="contentType" value="json"/>
+        </ex:service-info>
+        <ex:log dsfFlag="BTSW" logEventName="开具电子税票接口" requester="BDC" responser="BTSW"/>
+    </ex:bean>
+
+    <!-- 10 查询银行端扣款数据接口(一键缴费）-->
+    <ex:bean id="btsw_yhyjjf">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="logEventName" value="查询银行端扣款数据接口"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="BTSW"/>
+            <ex:property name="dsfFlag" value="BTSW"/>
+            <ex:property name="url" value="${btsw.yhyjjf.url}"/>
+            <ex:property name="contentType" value="json"/>
+        </ex:service-info>
+        <ex:log dsfFlag="BTSW" logEventName="查询银行端扣款数据接口" requester="BDC" responser="BTSW"/>
+    </ex:bean>
+
+</beans>

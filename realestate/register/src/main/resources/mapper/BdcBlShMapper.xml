@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.register.core.mapper.BdcBlShMapper">
+
+    <!-- 分页查询补录审核信息 -->
+    <select id="listBlShByPage" resultType="cn.gtmap.realestate.common.core.dto.register.BlShPageResponseDTO"
+        parameterType="java.util.Map">
+        SELECT t.blshid,t.xmid,t.GZLSLID, t.SXH, t.SLRID, t.SHRYID,t.SHRYXM,t.BLSHLX,t.BLLX, t.BLZT,x.BDCQZH,x.BDCDYH,
+        x.ZL,x.QLR,x.GZLDYMC FROM bdc_bl_shxx t
+        LEFT JOIN bdc_xm x ON t.xmid = x.xmid
+        <if test="cfwh != null and cfwh != ''">
+            LEFT JOIN bdc_cf cf ON t.xmid = cf.xmid
+        </if>
+        WHERE
+            (t.shryid = #{shryid} OR t.slrid = #{slrid})
+            <if test="bdcdyh != null and bdcdyh != ''">
+                AND x.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="bdcqzh != null and bdcqzh != ''">
+                AND x.bdcqzh LIKE '%' || #{bdcqzh} || '%'
+            </if>
+            <if test="qlr != null and qlr != ''">
+                AND instr(x.qlr,#{qlr})>0
+            </if>
+
+            <if test="blzt != null and blzt != ''">
+                AND t.blzt = #{blzt}
+            </if>
+
+            <if test="blshlx != null and blshlx != ''">
+                AND t.blshlx = #{blshlx}
+            </if>
+            <if test="qxdmList != null and qxdmList.size() == 1 ">
+                AND x.qxdm=#{qxdmList[0]}
+            </if>
+            <if test="qxdmList != null and qxdmList.size() > 1 ">
+                AND x.qxdm IN
+            <foreach collection="qxdmList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            </if>
+            <if test="zl != null and zl != ''">
+                AND x.zl = #{zl}
+            </if>
+            <if test="cfwh != null and cfwh != ''">
+                AND cf.cfwh = #{cfwh}
+            </if>
+        <choose>
+            <when test="sortParameter != null and sortParameter != ''">
+                ORDER BY ${sortParameter}
+            </when>
+            <otherwise>
+                ORDER BY t.shkssj asc
+            </otherwise>
+        </choose>
+    </select>
+
+</mapper>

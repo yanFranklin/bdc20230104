@@ -1,0 +1,84 @@
+info:
+  name: ${spring.application.name}
+  component: Certificate Application
+
+app:
+  # 南京
+  center: http://192.168.2.99:8000/eureka/
+  oauth: http://192.168.2.99:8002/account
+  # 南通
+  #  center: http://192.168.188.132:8000/eureka/
+  #  oauth: http://192.168.188.132:8002/account
+  security:
+    moduleAuthPath: http://account/account
+    # 权限开放： 静态资源、打印接口、移交单、发证记录打印
+    ignores: /image/**,/css/**,/js/**,/webjars/**,/realestate-certificate/rest/v1.0/zs/print/**,/realestate-certificate/rest/v1.0/yjd/print/**,/realestate-certificate/rest/v1.0/fzjl/print/**
+    authorities:
+      permitAll: /index2
+      hasUrlAuthority('read'): /auth/users,/auth/orgs,/abc/index
+      hasModuleAuthority('yhgl:add'): /auth/user/create
+      hasAnyAuthority('ROLE_USER'): /resource1/**,/catalog1/**,/index
+      hasAnyAuthority('ROLE_ADMIN_2'): /call
+      authenticated: true
+    resources:
+      authenticated: /realestate-certificate/rest/v1.0/**
+#      hasScope('get_certificate_info'): /realestate-certificate/**
+
+spring:
+  rabbitmq:
+    host: 192.168.0.60
+    port: 5672
+    username: guest
+    password: guest
+  redis:
+    port: 6379
+    host: 192.168.0.60
+  datasource:
+    url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+    username: bdcdj_hefei
+    password: e/lWYHJj7d9rXmgsItIxLw2oWP4XasfqoDXA0AKNYHgeSJQK8IKgU8/+ia1ax4mr9ki4QZbrQrCW9WMkHDOPAA==
+    publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK8ev+xi3qANIZpQGhndeKtc2EOlsPd48VIhphnl3OoOKqynJuQo7qZrJekk8iqXHgvze3bnFrFyTtf3vxGIamsCAwEAAQ==
+  #--------- 大云版本V2.X新增或变动配置 ---------------#
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 1000MB
+  zipkin:
+    #    base-url: http://localhost:8003
+    sender:
+      type: rabbit
+    service:
+      name: ${spring.application.name}
+  main:
+    allow-bean-definition-overriding: true
+
+  profiles:
+    include: config  #引入配置文件 application-config.yml
+
+#--------- 大云版本V2.X新增或变动配置 ---------------#
+management:
+  endpoint:
+    health:
+      show-details: always
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+server:
+  port: ${port:8669}
+
+logging:
+  security:
+    collection:
+      authorizationSuccess: false
+      authenticationSuccess: false
+  level:
+    org.springframework: WARN
+    cn.gtmap.gtc.plugins: DEBUG
+#    cn.gtmap.realestate.certificate.core.mapper: DEBUG

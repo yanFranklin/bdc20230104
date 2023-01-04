@@ -1,0 +1,400 @@
+﻿<!--
+ * @Description: 
+ * @Version: 1.0
+ * @Autor: Surbye
+ * @Date: 2022-04-12 17:10:03
+ * @LastEditors: Surbye
+ * @LastEditTime: 2022-04-19 17:52:24
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no"/>
+    <title>不动产数据监管系统</title>
+    <link rel="stylesheet" href="../static/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../static/css/bdcDp/common.css"/>
+    <link rel="stylesheet" href="../static/css/bdcDp/fhNav.css"/>
+</head>
+<body>
+<div class="loading">
+    <div class="loadbox"><img src="../static/image/bdcDp/loading.gif"/> 加载中...</div>
+</div>
+<div class="head">
+    <i class="layui-icon layui-icon-home home" onclick="toDjHome()"></i>
+    <i class="layui-icon layui-icon-search searchbtn" onclick="search()"></i>
+    <h1 id="dpTitle">不动产数据监管系统</h1>
+    <div class="layui-inline bdc-complete-line bdc-time-select">
+        <div class="layui-input-inline">
+            <input class="layui-input" id="startTime" type="text" placeholder="请选择"/>
+        </div>
+        <span style="color: white">-</span>
+        <div class="layui-input-inline">
+            <input class="layui-input" id="endTime" type="text" placeholder="请选择"/>
+        </div>
+    </div>
+</div>
+<div class="mainbox">
+    <ul class="clearfix">
+        <li>
+            <div class="boxall" style="height: 3rem">
+                <div class="alltitle">
+                    <img src="../static/image/bdcDp/itemTitle.png"/>
+                    <!--                    <text class="today">今日</text>-->
+                    <span  style="color: #fff" id="djlx">登记量</span>
+                    <span style="color: #43f9fb; font-size: 0.25rem" id="djsum">0</span> 次
+                    <span class="goback" onclick="goback()">返回</span>
+                    <span class="more" onclick="toDjlx()">更多>></span>
+                </div>
+                <div class="allnav" id="echart1"></div>
+                <div class="allnav" id="echart1_ct" style="display: none"></div>
+                <div class="boxfoot"></div>
+            </div>
+            <div class="boxall" style="height: 3rem">
+                <div class="alltitle">
+                    <img src="../static/image/bdcDp/itemTitle.png"/> 发证量
+                    <span style="color: #43f9fb; font-size: 0.25rem" id="fzzs">0</span>
+                    本
+
+                    <!--                    <span class="more tab-menu eightrow" style="right: 60px">-->
+                    <!--                        <ul class="nav clearfix" id="timelist">-->
+                    <!--                            <li  class="active" value="4">今日</li>-->
+                    <!--                            <li value="3">近一周</li>-->
+                    <!--                            <li value="2">近一月</li>-->
+                    <!--                            <li value="1">近一年</li>-->
+                    <!--                        </ul>-->
+                    <!--                    </span>-->
+                    <span class="more" onclick="toFzl()">更多>></span>
+                </div>
+                <div class="allnav" id="echart2"></div>
+                <div class="boxfoot"></div>
+            </div>
+            <div class="boxall" style="height: 3.6rem">
+                <div class="alltitle">
+
+                    <img src="../static/image/bdcDp/itemTitle.png"/>
+                    <text class="today">2022</text>
+                    抵押融资
+                    <span class="more tab-menu eightrow" style="right: 60px">
+<!--                    <select id="dyrzsj" style="border-radius:18px;border:0;outline:none" onchange="loadDyrz()">-->
+                        <!--                    </select>-->
+                    </span>
+                    <span class="more" onclick="toDyrz()">更多>></span>
+                </div>
+                <div class="allnav">
+                    <div class="statistic-financ">
+                        <div class="statistic-items">
+                            <img src="../static/image/bdcDp/chundidiya.png"/>
+                            <div class="statistic-item">
+                                纯地抵押总额<br/>
+                                <span id="tddyzje">0</span>
+                                亿元
+                            </div>
+                        </div>
+                        <div class="statistic-items">
+                            <img src="../static/image/bdcDp/zhuzhaidiya.png"/>
+                            <div class="statistic-item">
+                                住宅抵押总额<br/>
+                                <span id="zzdyzje">0</span>
+                                亿元
+                            </div>
+                        </div>
+                        <div class="statistic-trend">住宅抵押趋势分析</div>
+                    </div>
+                    <div class="chart-wrapper" id="echart3"></div>
+                </div>
+                <div class="boxfoot"></div>
+            </div>
+        </li>
+        <li>
+            <div class="bar">
+                <div class="bar-items">
+                    <div>
+                        <span style="font-size: 0.25rem; color: #43f9fb" id="zzzts">0</span>
+                        万套
+                    </div>
+                    <div>住宅总套数</div>
+                </div>
+                <div class="bar-items">
+                    <div>
+                        <span style="font-size: 0.25rem; color: #43f9fb" id="zzzmj">0</span>
+                        万m²
+                    </div>
+                    <div>住宅总面积</div>
+                </div>
+                <div class="bar-items">
+                    <div>
+                        <span style="font-size: 0.25rem; color: #43f9fb" id="zzjtmj">0</span>
+                        m²
+                    </div>
+                    <div>住宅总套均面积</div>
+                </div>
+                <div class="bar-items">
+                    <div>
+                        <span style="font-size: 0.25rem; color: #43f9fb" id="dyzje">0</span>
+                        亿元
+                    </div>
+                    <div>抵押总金额</div>
+                </div>
+                <i class="gobackMap layui-icon layui-icon-return" onclick="gobackMap()"
+                   style=" color: #43f9fb"></i></span>
+
+
+            </div>
+            <div class="map" id="map"></div>
+            <div class="map" id="map_ct" style="display: none"></div>
+            <div class="boxall" style="height: 2.6rem; margin: 0 0.5rem">
+                <div class="alltitle">
+                    <img src="../static/image/bdcDp/itemTitle.png"/> 共享
+                    <span style="color: #43f9fb; font-size: 0.25rem" id="gxzcs">0</span> 次
+                    <span class="more" style="" onclick="toGxxq()">更多>></span>
+                </div>
+                <div style="width: 100%;height: calc(100% - 0.4rem);padding: 0.1rem 0.2rem;" class="allnav">
+                    <div class="m3-item">
+                        <img src="../static/image/bdcDp/gongan.png"/>
+                        <div class="m3-item-div">
+                            <!--<div  id="gazs">0次</div>
+                            <div>公安总次数</div>-->
+                        </div>
+                    </div>
+                    <div class="m3-item">
+                        <img src="../static/image/bdcDp/minzheng.png"/>
+                        <div class="m3-item-div">
+                            <!--<div id="mzzs">0次</div>
+                            <div>民政总次数</div>-->
+                        </div>
+                    </div>
+                    <div class="m3-item">
+                        <img src="../static/image/bdcDp/fayuan.png"/>
+                        <div class="m3-item-div">
+                            <!--<div id="fyzs">0次</div>
+                            <div>法院总次数</div>-->
+                        </div>
+                    </div>
+                    <div class="m3-item">
+                        <img src="../static/image/bdcDp/zuigaoyuan.png"/>
+                        <div class="m3-item-div">
+                            <!-- <div id="zgyzs">0次</div>
+                             <div>最高院总次数</div>-->
+                        </div>
+                    </div>
+                </div>
+                <div class="boxfoot"></div>
+            </div>
+        </li>
+        <li>
+
+            <div class="boxall" style="height: 2.2rem">
+                <div class="alltitle">
+                    <img src="../static/image/bdcDp/itemTitle.png"/>
+                    <text class="today">今日</text>
+                    接入/上报概况
+                    <span class="more" style="" onclick="toJrsb()">更多>></span>
+                </div>
+                <div class="allnav">
+                    <div class="today-survey">
+                        <div class="survey-items">
+                            <img src="../static/image/bdcDp/rijieru.png"/>
+                            <div class="survey-item">
+                                <div>
+                                    <text class="today">今日</text>
+                                    接入
+                                </div>
+                                <div><span id="jr">0</span>个</div>
+                                <div>接入失败</div>
+                                <div><span id="jrsb">0</span>个</div>
+                            </div>
+                        </div>
+                        <div class="survey-items">
+                            <img src="../static/image/bdcDp/rishangbao.png"/>
+                            <div class="survey-item">
+                                <div>
+                                    <text class="today">今日</text>
+                                    上报
+                                </div>
+                                <div><span id="sb">0</span>个</div>
+                                <div>上报失败</div>
+                                <div><span id="sbsb">0</span>个</div>
+                            </div>
+                        </div>
+                        <div class="survey-items">
+                            <img src="../static/image/bdcDp/yixiangying.png"/>
+                            <div class="survey-item">
+                                <div>已响应</div>
+                                <div><span id="yxy">0</span>个</div>
+                                <div>未响应</div>
+                                <div><span id="wxy">0</span>个</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="boxfoot"></div>
+            </div>
+            <div class="boxall" style="height: 5.3rem">
+                <div class="alltitle">
+                    <img src="../static/image/bdcDp/itemTitle.png"/> 本期得分情况
+                    <span class="more tab-menu eightrow" style="right: 60px">
+<!--                    <select id="dfqksj" style="border-radius:18px;border:0;outline:none" onchange="loadBqdfqk()">-->
+                        <!--                    </select>-->
+                    </span>
+                    <span class="more" style="" onclick="toScore()">更多>></span>
+
+                </div>
+                <div class="allnav1">
+                    <div class="province-score">
+                        <div class="access-quality">
+                            <div style="display: none">接入质量</div>
+                            <div class="score-item">
+                                <!--<div>98</div>-->
+                                <div>
+                                    <div style="font-size: 0.19rem;padding-bottom: 0.1rem">
+                                        <!--                                        第一名-->
+                                        <div><span style="color: white; font-weight: bold" id="jrzlmc0">武进</span>
+                                            ,分数:<span style="color: white; font-weight: bold" id="jrzldf0">0</span>
+                                            分
+                                        </div>
+                                        <!--                                        第四-->
+                                        <div style="position: absolute;right: 0.1rem;bottom: 0.6rem"><span
+                                                style="color: white; font-weight: bold;" id="jrzlmc3">新北</span>
+                                            ,分数:<span style="color: white; font-weight: bold" id="jrzldf3">0</span>分
+                                        </div>
+
+                                    </div>
+                                    <div style="font-size: 0.19rem;padding-bottom: 0.1rem">
+                                        <!--                                        第二名-->
+                                        <div><span style="color: white; font-weight: bold" id="jrzlmc1">金坛</span>
+                                            ,分数:<span style="color: white; font-weight: bold" id="jrzldf1">0</span>
+                                            分
+                                        </div>
+                                        <!--                                        第五-->
+                                        <div style="position: absolute;right: 0.1rem;bottom:0.3rem"><span
+                                                style="color: white; font-weight: bold" id="jrzlmc4">钟楼</span>
+                                            ,分数:<span style="color: white; font-weight: bold" id="jrzldf4">0</span>分
+                                        </div>
+                                    </div>
+                                    <div style="font-size: 0.19rem;padding-bottom: 0.1rem">
+                                        <!--                                        第三名-->
+                                        <div><span style="color: white; font-weight: bold" id="jrzlmc2">溧阳</span>
+                                            ,分数:<span style="color: white; font-weight: bold" id="jrzldf2">0</span>
+                                            分
+                                        </div>
+                                        <!--                                        第六-->
+                                        <div style="position: absolute;right: 0.1rem;bottom: 0rem"><span
+                                                style="color: white; font-weight: bold" id="jrzlmc5">天宁</span>
+                                            ,分数:<span style="color: white; font-weight: bold" id="jrzldf5">0</span>分
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="registration-quality">
+                            <div>登簿质量</div>
+                            <div class="score-item">
+                                <div>98</div>
+                                <div>
+                                    <div>
+                                        第一名
+                                        <span style="color: white; font-weight: bold">金坛</span>
+                                        市
+                                    </div>
+                                    <div>
+                                        第二名
+                                        <span style="color: white; font-weight: bold">武进</span>
+                                        市
+                                    </div>
+                                    <div>
+                                        第三名
+                                        <span style="color: white; font-weight: bold">溧阳</span>
+                                        市
+                                    </div>
+                                </div>
+                            </div>
+                        </div>-->
+                    </div>
+                </div>
+                <div class="boxfoot"></div>
+                <!--<div class="alltitle">
+                    <img src="../static/image/bdcDp/itemTitle.png"/> 接入
+                    <span style="color: #43f9fb; font-size: 0.25rem" id="jrzl">66666</span>
+                    条成功率
+                    <span style="color: #43f9fb; font-size: 0.25rem" id="jrzcgl">38</span> %
+                </div>-->
+                <div class="allnav2" id="echart4"></div>
+                <div class="boxfoot"></div>
+            </div>
+            <!--<div class="boxall" style="height: 3.05rem">
+                <div class="alltitle">
+                    <img src="../static/image/bdcDp/itemTitle.png"/> 接入
+                    <span style="color: #43f9fb; font-size: 0.25rem" id="jrzl">66666</span>
+                    条成功率
+                    <span style="color: #43f9fb; font-size: 0.25rem" id="jrzcgl">38</span> %
+                </div>
+                <div class="allnav" id="echart4"></div>
+                <div class="boxfoot"></div>
+            </div>-->
+            <div class="boxall" style="height: 2.1rem">
+                <div class="alltitle">
+                    <img src="../static/image/bdcDp/itemTitle.png"/> 规则检查概况
+                    <span class="more" style="" onclick="toGzjcgk()">更多>></span>
+                </div>
+                <div class="allnav">
+                    <div class="provice">
+                        <div class="provice-items">
+                            <div style="background: #091f5d; display: inline-block">
+                                <img src="../static/image/bdcDp/baowenzongliang.png"/>
+                            </div>
+                            <div>检查总数</div>
+                            <div id="jczs">0</div>
+                        </div>
+                        <div class="provice-items">
+                            <!-- <div style="background: #091f5d; display: inline-block">
+                                 <img src="../static/image/bdcDp/yewuzongliang.png"/>
+                             </div>
+                             <div>总接入业务量</div>
+                             <div>240</div>-->
+                        </div>
+                        <div class="provice-items">
+                            <div style="background: #091f5d; display: inline-block">
+                                <img src="../static/image/bdcDp/rijunzongliang.png"/>
+                            </div>
+                            <div>致命错误数</div>
+                            <div id="zmcws">0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="boxfoot"></div>
+            </div>
+        </li>
+    </ul>
+</div>
+<div class="back"></div>
+<script src="../static/lib/jquery/jquery.min.js"></script>
+
+
+<script>
+    $(window).load(function () {
+        $('.loading').fadeOut()
+    })
+    $(document).ready(function () {
+        var whei = $(window).width()
+        $('html').css({
+            fontSize: whei / 20,
+        })
+        $(window).resize(function () {
+            var whei = $(window).width()
+            $('html').css({
+                fontSize: whei / 20,
+            })
+        })
+    })
+</script>
+<script src="../static/js/bdcDp/echarts.min.js"></script>
+<script src="../static/lib/layui/layui.all.js"></script>
+<script src="../static/js/common.js"></script>
+<script src="../static/js/bdcDp/slide.js"></script>
+<!--中文转拼音js-->
+<script src="../static/js/bdcdp/pinyin4js.js"></script>
+<script src="../static/js/bdcDp/js_compiled.js"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--自然撞信息-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.exchange.ShareDataMapper">
+
+    <select id="queryKttFwZrzList" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.KttFwZrzDO">
+        SELECT t.bsm,
+        t.ysdm,
+        t.bdcdyh,
+        t.zddm,
+        t.zrzh,
+        t.xmmc,
+        t.jzwmc,
+        t.jgrq,
+        t.jzwgd,
+        t.zzdmj,
+        t.zydmj,
+        t.ycjzmj,
+        t.scjzmj,
+        t.zcs,
+        t.dscs,
+        t.dxcs,
+        t.dxsd,
+        t.ghyt,
+        t.fwjg,
+        t.zts,
+        t.jzwjbyt,
+        t.dah,
+        t.bz,
+        t.zt,
+        t.qxdm
+        FROM ktt_fw_zrz t
+        <where>
+            <if test="YWH != null and YWH !=''">
+                and t.ywh = #{YWH}
+            </if>
+            <if test="BDCDYH != null and BDCDYH !=''">
+                and t.bdcdyh=#{BDCDYH}
+            </if>
+        </where>
+    </select>
+</mapper>

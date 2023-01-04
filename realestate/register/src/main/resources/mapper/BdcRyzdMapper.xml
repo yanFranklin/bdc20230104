@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.register.core.mapper.BdcRyzdMapper">
+
+    <!--更新权利人证号信息冗余字段-->
+    <update id="updateBdcQlrBdcqzh" parameterType="String">
+        <if test="gzlslid != null and gzlslid != ''">
+            UPDATE
+            (
+                SELECT
+                    Q.BDCQZH AS ZH1, Z.BDCQZH AS ZH2
+                FROM
+                    BDC_QLR Q
+                JOIN
+                    BDC_ZS Z
+                ON
+                    Q.ZSID = Z.ZSID
+                JOIN
+                    BDC_XM X
+                ON
+                    Q.XMID = X.XMID
+                WHERE
+                    X.GZLSLID = #{gzlslid,jdbcType=VARCHAR}
+            ) T
+            SET T.ZH1 = T.ZH2
+        </if>
+    </update>
+</mapper>

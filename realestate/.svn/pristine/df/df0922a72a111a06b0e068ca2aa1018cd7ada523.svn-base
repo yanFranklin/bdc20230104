@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.building.core.mapper.ZrzMapper">
+
+    <!-- 分页查询自然幢 -->
+    <select id="listZrzByPageOrder" parameterType="map" resultType="map">
+        SELECT t.OBJECTID, t.BSM, t.YSDM, t.ZRZH, t.LSZD, t.FWBH, t.FWMC,
+        t.ZLDZ, t.FWJG, t.FWCS, t.JZMJ, t.ZDMJ, t.YCJZMJ, t.SCJZMJ,
+        t.GHYT, t.DSCS, t.DXCS, t.JZWGD, t.DXSD, t.JZWJBYT, t.JGRQ,
+        t.XMID, t.XMMC, t.ZTS, t.BZ, t.FLDM, t.SSQY
+        FROM ${fwk} t
+        <where>
+            AND t.zrzh IS NOT NULL
+            <if test="lszd != null and lszd !=''">
+                AND t.LSZD = #{lszd}
+            </if>
+            <if test="zrzh != null and zrzh != ''">
+                AND t.zrzh = #{zrzh}
+            </if>
+            <if test="zldz != null and zldz != ''">
+                AND t.ZLDZ LIKE '%'|| #{zldz}||'%'
+            </if>
+        </where>
+    </select>
+
+    <select id="listZrzhByDjh" parameterType="string" resultType="string">
+        SELECT DISTINCT ZRZH FROM FW_LJZ A WHERE A.ZRZH IS NOT NULL AND A.LSZD=#{djh}
+        order by to_number(zrzh) asc
+    </select>
+
+</mapper>

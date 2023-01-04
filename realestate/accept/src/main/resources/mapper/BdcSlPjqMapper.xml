@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.accept.core.mapper.BdcSlPjqMapper">
+
+    <sql id="wherecase">
+        <if test="djbmdm !=null and djbmdm !=''">
+            AND djbmdm = #{djbmdm}
+        </if>
+        <if test="djbmmc !=null and djbmmc !=''">
+            AND djbmmc = #{djbmmc}
+        </if>
+        <if test="blry !=null and blry !=''">
+            AND blry = #{blry}
+        </if>
+        <if test="kssj !=null and kssj !=''">
+            AND to_char(ywblsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[>=]]> #{kssj}
+        </if>
+        <if test="jzsj !=null and jzsj !=''">
+            AND to_char(ywblsj,'yyyy-MM-dd hh24:mi:ss') <![CDATA[<=]]> #{jzsj}
+        </if>
+        <if test="ywmc !=null and ywmc !=''">
+            AND ywmc = #{ywmc}
+        </if>
+        <if test="ywbh !=null and ywbh !=''">
+            AND ywbh = #{ywbh}
+        </if>
+        <if test="jdmc !=null and jdmc !=''">
+            AND jdmc = #{jdmc}
+        </if>
+    </sql>
+    <sql id="tjwdcolumn">
+        <if test="tjwd=='user'">blry</if>
+        <if test="tjwd=='dept'">djbmmc</if>
+        <if test="tjwd=='process'">ywmc</if>
+        <if test="tjwd=='node'">jdmc</if>
+        <if test="tjwd=='userAndProcess'">blry,ywmc</if>
+    </sql>
+
+    <select id="listGroupBdcSlPjTj" parameterType="map" resultType="cn.gtmap.realestate.common.core.dto.accept.BdcSlPjqDTO">
+        select <include refid="tjwdcolumn"></include>,
+                total as pjrc, hp, zp, cp, wp, pjf, zdf,
+                concat(zdf,'%') as myl,
+                concat(ROUND((1-wp/total)*100,2),'%') as pjl,
+                rownum as pm
+        from (
+            select <include refid="tjwdcolumn"></include>,
+            count(*) as total,
+            SUM(case myd when 1 then 1 else 0 end) as hp,
+            SUM(case myd when 2 then 1 else 0 end) as zp,
+            SUM(case myd when 3 then 1 else 0 end) as cp,
+            SUM(case when myd = 5 then 1 when myd is null then 1 else 0 end) as wp,
+            NVL(ROUND(AVG(df), 2), 0) as pjf,
+            NVL(ROUND(SUM(case myd when 1 then 1 else 0 end)/count(*)*100, 2), 0) as zdf
+            from BDC_SL_PJQ
+            <where>
+                <include refid="wherecase"></include>
+            </where>
+            group by <include refid="tjwdcolumn"></include>
+            order by
+            <if test="tjwd == 'userAndProcess' "> blry ASC, zdf DESC</if>
+            <if test="tjwd !='userAndProcess' "> zdf DESC</if>)
+    </select>
+
+    <select id="listBdcSlPjTjByPage" parameterType="map" resultType="cn.gtmap.realestate.common.core.domain.accept.BdcSlPjqDO">
+        select
+            pjjlid,ywbh,ywmc,ywblsj,jdmc,myd,bmyyy,pjsj,blry,sqrxm,sqrlxfs,
+            dlrmc,dlrlxfs,djbmdm,blryid,djbmmc,df
+        from BDC_SL_PJQ
+        <where>
+            <include refid="wherecase"></include>
+        </where>
+        order by pjsj desc
+    </select>
+</mapper>

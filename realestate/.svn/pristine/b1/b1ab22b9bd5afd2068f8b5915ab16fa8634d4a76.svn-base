@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title class="bdc_subsystem"></title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
+    <meta content="IE=Edge,no-cache" http-equiv="X-UA-Compatible"/>
+    <meta content="no-cache" http-equiv="Pragma"/>
+    <meta content="no-cache" http-equiv="Cache-Control"/>
+    <meta content="0" http-equiv="Expires"/>
+    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0"
+          name="viewport"/>
+    <link href="../static/lib/layui/css/layui.css" media="all" rel="stylesheet"/>
+    <link href="../static/lib/bdcui/css/search.css" media="all" rel="stylesheet"/>
+    <link href="../static/lib/bdcui/css/table.css" media="all" rel="stylesheet"/>
+    <link href="../static/lib/bdcui/css/mask.css" media="all" rel="stylesheet"/>
+    <link href="../static/lib/bdcui/css/popup.css" rel="stylesheet"/>
+    <link href="../static/css/home-page.css" media="all" rel="stylesheet"/>
+    <script src="../static/lib/jquery/jquery.min.js"></script>
+</head>
+<body>
+<div class="bdc-percentage-container" style="padding: 10px 10px 10px">
+
+    <div class="bdc-search-content">
+        <!--查询条件-->
+        <div class="bdc-search-box" >
+            <form action="" class="layui-form">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline xzq-sele">
+                        <label class="layui-form-label">单元号查询类型</label>
+                        <div class="layui-input-inline">
+                            <select name="dyhcxlx" id="dyhcxlx" lay-filter="dyhcxlx">
+                                <option value="1" selected>房屋及土地</option>
+                                <option value="2">海域</option>
+                                <option value="3">构筑物</option>
+                            </select>
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">不动产单元号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" name="bdcdyh" placeholder="(模糊)请输入">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">坐落</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" name="zl" placeholder="(模糊)请输入">
+                            <i class="layui-icon layui-icon-close bdc-hide"></i>
+                        </div>
+                    </div>
+                    <div class="layui-inline bdc-button-box">
+                        <a class="layui-btn layui-btn-normal bdc-major-btn searchBtn" href="javascript:" id="dbSearch">查询</a>
+                        <button class="layui-btn layui-btn-normal bdc-secondary-btn" id="reset" type="reset">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!--表格-->
+    <div class="bdc-table-box" style="padding: 10px 10px">
+        <table id="waitTable" lay-filter="waitTableFilter"></table>
+    </div>
+
+    <div class="layui-hide">
+        <div lay-filter="tsxx" id="tsxx"></div>
+    </div>
+</div>
+
+<!--表格相关模板-->
+<!--不动产单元号分层展示-->
+<script id="bdcdyhTpl" type="text/html">
+    {{#  if(d.bdcdyh){ }}
+    <span class="bdc-bdcdyh-click" style="color:#1d87d1; cursor:pointer" title="{{d.bdcdyh}}" data-json='{{JSON.stringify(d)}}'>{{ queryBdcdyh(d.bdcdyh) }}</span>
+    {{#  } else { }}
+    <span></span>
+    {{# } }}
+</script>
+
+<script src="../static/lib/layui/layui.js"></script>
+<!--添加水印-->
+<script src="../static/lib/bdcui/js/common.js"></script>
+<script src="../static/js/common.js"></script>
+<script src="../static/js/sdPpbdcdyh.js"></script>
+<script>
+    layui.config({
+        base: '../static/' //静态资源所在路径
+    }).extend({
+        index: '/lib/index' //主入口模块
+    }).use('index').extend({response:'lib/bdcui/js/response'}).use('response');
+</script>
+</body>
+</html>

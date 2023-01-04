@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--一张网验证-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.exchange.YzwCheckMapper">
+
+    <!--超期无结果数据-->
+    <select id="getCqWjgxx" parameterType="java.util.Map"
+            resultType="java.util.Map">
+        SELECT a.caseno
+        FROM t_bm_casebaseinfo a
+        WHERE NOT EXISTS (SELECT r.caseno FROM t_bm_caseresult r WHERE r.caseno = a.caseno)
+        AND (a.casepromisedate - to_date(#{checkDate}, 'yyyy-mm-dd')) <![CDATA[<]]> #{ylts}
+        AND a.caseno = #{caseno}
+    </select>
+
+    <!--未推送结果-->
+    <select id="listWtsjgYzwbh" resultType="String">
+        SELECT a.caseno
+        FROM t_bm_casebaseinfo a
+        WHERE nvl(a.jgyts,0) =0
+    </select>
+    <select id="getInfApply" parameterType="String"
+            resultType="cn.gtmap.realestate.common.core.domain.exchange.yzw.InfApplyDO">
+        select * from inf_apply t
+        <where>
+            <if test="zfxzspbh != null and zfxzspbh !=''">
+                AND t.internal_no = #{zfxzspbh}
+            </if>
+        </where>
+    </select>
+
+    <!--获取推送记录-->
+    <select id="listTsjl" resultType="cn.gtmap.realestate.exchange.core.domain.yzw.GxYzwTsjlDO">
+        SELECT * FROM GX_YZW_TSJL t
+        <where>
+            <if test="tszts != null and tszts.size() > 0 ">
+                AND
+                <foreach collection="tszts" item="tszt" open="(" separator=" or " close=")">
+                    nvl(t.tszt,0) = #{tszt}
+                </foreach>
+            </if>
+            <if test="yzzts != null and yzzts.size() > 0 ">
+                AND
+                <foreach collection="yzzts" item="yzzt" open="(" separator=" or " close=")">
+                    nvl(t.yzzt,0) = #{yzzt}
+                </foreach>
+            </if>
+
+        </where>
+    </select>
+
+
+
+</mapper>

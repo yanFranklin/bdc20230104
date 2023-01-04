@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.server.BdcYthyrcfMapper">
+
+    <select id="getBdcXmByBdcYthYrcfQO" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.yancheng.BdcYthYrcfQO"
+            resultType="cn.gtmap.realestate.common.core.domain.BdcXmDO">
+        SELECT DISTINCT X.BDCDYH,X.qllx
+        FROM
+        BDC_QLR Q
+        JOIN
+        BDC_XM X
+        ON
+        Q.XMID = X.XMID
+        <if test="null != bdcqzh and bdcqzh != ''">
+            LEFT JOIN BDC_XM_ZS_GX gx on x.xmid = gx.xmid
+            LEFT JOIN bdc_zs z on z.zsid = gx.zsid
+        </if>
+        <where>
+            X.QSZT = 1 and Q.QLRLB = 1
+            <if test="qlrmc != null and qlrmc != '' and zjh!='null'">
+                AND Q.QLRMC = #{qlrmc, jdbcType=VARCHAR}
+            </if>
+            <if test="zjh != null and zjh != '' and zjh!='null'">
+                AND Q.zjh IN
+                <foreach item="item" index="index" collection="zjh.split(',')" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="bdcdyh!=null and bdcdyh !='' and bdcdyh!='null'">
+                AND X.BDCDYH = #{bdcdyh, jdbcType=VARCHAR}
+            </if>
+            <!-- <if test="bdcqzh!=null and bdcqzh !='' and bdcqzh!='null'">
+                 AND Q.BDCQZH like '%' || #{bdcqzh, jdbcType=VARCHAR} || '%'
+             </if>-->
+            <if test="bdcqzh!=null and bdcqzh !='' and bdcqzh!='null'">
+                AND z.BDCQZH = #{bdcqzh, jdbcType=VARCHAR}
+            </if>
+            <if test="zl!=null and zl !='' and zl!='null'">
+                AND X.ZL =  #{zl, jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="filterBdcdyh" resultType="java.lang.String">
+        select distinct BDCDYH from (
+        SELECT f.bdcdyh as BDCDYH from BDC_FDCQ f
+        WHERE f.BDCDYH IN
+        <foreach collection="bdcdyhList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        UNION
+        SELECT d.bdcdyh as BDCDYH from BDC_DYAQ d
+        WHERE d.BDCDYH IN
+        <foreach collection="bdcdyhList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        UNION
+        SELECT yg.bdcdyh as BDCDYH from BDC_YG yg
+        WHERE yg.BDCDYH IN
+        <foreach collection="bdcdyhList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        UNION
+        SELECT yy.bdcdyh as BDCDYH from BDC_YY yy
+        WHERE yy.BDCDYH IN
+        <foreach collection="bdcdyhList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        UNION
+        SELECT c.bdcdyh as BDCDYH from BDC_CF c
+        WHERE c.BDCDYH IN
+        <foreach collection="bdcdyhList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        )
+    </select>
+
+    <select id="filterTdBdcdyh" resultType="java.lang.String">
+        select distinct BDCDYH from (
+        SELECT f.bdcdyh as BDCDYH from BDC_JSYDSYQ f
+        WHERE f.BDCDYH IN
+        <foreach collection="bdcdyhList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        UNION
+        SELECT d.bdcdyh as BDCDYH from BDC_DYAQ d
+        WHERE d.BDCDYH IN
+        <foreach collection="bdcdyhList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        UNION
+        SELECT yg.bdcdyh as BDCDYH from BDC_YG yg
+        WHERE yg.BDCDYH IN
+        <foreach collection="bdcdyhList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        UNION
+        SELECT yy.bdcdyh as BDCDYH from BDC_YY yy
+        WHERE yy.BDCDYH IN
+        <foreach collection="bdcdyhList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        UNION
+        SELECT c.bdcdyh as BDCDYH from BDC_CF c
+        WHERE c.BDCDYH IN
+        <foreach collection="bdcdyhList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        )
+    </select>
+
+    <select id="getBdcQlrByBdcdyh" resultType="cn.gtmap.realestate.common.core.domain.BdcQlrDO">
+        SELECT Q.* FROM BDC_QLR Q JOIN BDC_XM X ON Q.XMID = X.XMID WHERE X.BDCDYH = #{bdcdyh}
+    </select>
+
+    <select id="getBdcQlrByBdcdyhAndXmid" resultType="cn.gtmap.realestate.common.core.domain.BdcQlrDO">
+        SELECT Q.* FROM BDC_QLR Q JOIN BDC_XM X ON Q.XMID = X.XMID WHERE X.BDCDYH = #{bdcdyh} and X.XMID = #{xmid}
+    </select>
+
+    <select id="getBdcQlrByBdcdyhList" resultType="cn.gtmap.realestate.common.core.domain.BdcQlrDO">
+        SELECT Q.* FROM BDC_QLR Q JOIN BDC_XM X ON Q.XMID = X.XMID WHERE X.QSZT = '1' and X.BDCDYH IN
+        <if test="bdcdyhList != null">
+            <foreach collection="bdcdyhList" item="bdcdyh" index="index" open="(" close=")" separator=",">
+                #{bdcdyh}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="queryZttGyQlrListForYcYth" parameterType="java.util.Map"
+            resultType="cn.gtmap.realestate.exchange.core.dto.yancheng.yth.ZttGyQlrDTO">
+        SELECT
+        c.bdcdyh,
+        t.sxh,
+        t.qlrmc,
+        NVL(t.bdcqzh,t1.bdcqzh) bdcqzh,
+        z.qzysxlh,
+        t.sfczr,
+        t.zjzl,
+        t.zjh,
+        c.djjg fzjg,
+        t.sshy,
+        '142' gj,
+        '' hjszss,
+        t.xb,
+        t.dh,
+        t.txdz dz,
+        t.yb,
+        '' gzdw,
+        '' dzyj,
+        t.qlrlx,
+        t.qlbl,
+        t.gyfs,
+        t.gyfs gyqk,
+        t.bz,
+        c.xmid ywh,
+        substr(c.bdcdyh,0,6) as qxdm,
+        t.qlrlb
+        FROM bdc_qlr t
+        LEFT JOIN bdc_xm c ON c.xmid = t.xmid
+        LEFT JOIN bdc_zs z ON z.bdcqzh = t.zsid
+        LEFT JOIN BDC_XM_LSGX L ON C.XMID = L.XMID and nvl(l.WLXM,0) = 0
+        LEFT JOIN BDC_XM C1 ON L.YXMID = C1.XMID
+        LEFT JOIN BDC_qlr t1 on c1.xmid = t1.xmid and (t.qlrmc = t1.qlrmc or t.zjh = t1.zjh)
+        <where>
+            <if test="ywh != null and ywh !=''">
+                AND t.xmid = #{ywh}
+            </if>
+        </where>
+    </select>
+    <select id="getBdcDsQlrByXmid" resultType="cn.gtmap.realestate.common.core.domain.BdcQlrDO">
+        select  * from BDC_DSQLR d
+        <where>
+        <if test="null != xmid and xmid !=''">
+            AND d.xmid = #{xmid}
+        </if>
+        </where>
+    </select>
+</mapper>

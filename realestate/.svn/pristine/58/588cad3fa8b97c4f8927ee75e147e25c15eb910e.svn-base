@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!-- bdcdj 数据源 -->
+    <bean id="serverDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close"
+          primary="true">
+        <!-- 基本属性 url、user、password -->
+        <property name="url" value="${spring.datasource.server.url}"/>
+        <property name="username" value="${spring.datasource.server.username}"/>
+        <property name="password" value="${spring.datasource.server.password}"/>
+        <property name="defaultAutoCommit" value="false"/>
+        <property name="defaultTransactionIsolation" value="2"/>
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="${spring.datasource.initialSize:10}"/>
+        <property name="minIdle" value="${spring.datasource.minIdle:10}"/>
+        <property name="maxActive" value="${spring.datasource.maxActive:200}"/>
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="10000"/>
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+        <!-- 配置一个连接在池中最大生存的时间，单位是毫秒 -->
+        <property name="maxEvictableIdleTimeMillis" value="900000"/>
+        <property name="keepAlive" value="true"/>
+
+        <property name="validationQuery" value="SELECT SYSDATE FROM DUAL"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="true"/>
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="20"/>
+        <property name="removeAbandoned" value="true"/>
+        <property name="removeAbandonedTimeout" value="1800"/>
+        <property name="logAbandoned" value="true"/>
+        <!-- 配置监控统计拦截的filters，去掉后监控界面sql无法统计 -->
+        <property name="filters" value="config"/>
+        <property name="connectionProperties" value="config.decrypt=true;config.decrypt.key=${spring.datasource.server.publickey}" />
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
+          p:dataSource-ref="serverDataSource"
+          p:configLocation="classpath:conf/mapper/mybatis-configuration.xml">
+        <property name="mapperLocations">
+            <list>
+                <value>classpath:conf/mapper/server/${access.version:standard}/*.xml</value>
+                <value>classpath:conf/mapper/server/access/${access.version:standard}/*.xml</value>
+                <value>classpath:conf/mapper/server/*.xml</value>
+                <value>classpath:conf/mapper/accessLog/*.xml</value>
+                <value>classpath:conf/mapper/bdcdsflog/*.xml</value>
+            </list>
+        </property>
+        <property name="plugins">
+            <list>
+                <ref bean="mybatisPaginationInterceptor"/>
+                <ref bean="mybatisPaginationOrderInterceptor"/>
+                <ref bean="mybatisLogInterceptor"/>
+                <ref bean="enAndDecryptInterceptor"/>
+                <ref bean="parseEnAndDecryptInterceptor"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean name="serverScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="cn.gtmap.realestate.exchange.core.mapper.server"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg ref="sqlSessionFactory"/>
+    </bean>
+
+    <bean id="commonMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="cn.gtmap.realestate.common.core.support.mybatis.mapper.CommonMapper"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+    <bean id="entityMapper" class="cn.gtmap.realestate.common.core.support.mybatis.mapper.EntityMapper">
+        <property name="commonMapper" ref="commonMapper"/>
+    </bean>
+    <!--支持分页 -->
+    <bean id="repository" class="cn.gtmap.realestate.common.core.support.mybatis.page.repository.Repository">
+        <property name="sqlSessionTemplate" ref="sqlSessionTemplate"/>
+    </bean>
+
+
+    <!-- gx 数据源 -->
+    <bean id="gxDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <!-- 基本属性 url、user、password -->
+        <property name="url" value="${spring.datasource.gx.url}"/>
+        <property name="username" value="${spring.datasource.gx.username}"/>
+        <property name="password" value="${spring.datasource.gx.password}"/>
+        <property name="defaultAutoCommit" value="false"/>
+        <property name="defaultTransactionIsolation" value="2"/>
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="${spring.datasource.gx.initialSize:10}"/>
+        <property name="minIdle" value="${spring.datasource.gx.minIdle:10}"/>
+        <property name="maxActive" value="${spring.datasource.gx.maxActive:100}"/>
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="10000"/>
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+        <!-- 配置一个连接在池中最大生存的时间，单位是毫秒 -->
+        <property name="maxEvictableIdleTimeMillis" value="900000"/>
+        <property name="keepAlive" value="true"/>
+        <property name="validationQuery" value="SELECT SYSDATE FROM DUAL"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="true"/>
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="20"/>
+        <property name="removeAbandoned" value="true"/>
+        <property name="removeAbandonedTimeout" value="1800"/>
+        <property name="logAbandoned" value="true"/>
+        <!-- 配置监控统计拦截的filters，去掉后监控界面sql无法统计 -->
+        <property name="filters" value="config"/>
+        <property name="connectionProperties" value="config.decrypt=true;config.decrypt.key=${spring.datasource.gx.publickey}" />
+    </bean>
+
+    <bean id="gxSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
+          p:dataSource-ref="gxDataSource"
+          p:configLocation="classpath:conf/mapper/mybatis-configuration.xml">
+        <property name="mapperLocations">
+            <list>
+                <value>classpath:conf/mapper/exchange/*.xml</value>
+                <value>classpath:conf/mapper/exchange/${yzw.version:standard}/*.xml</value>
+            </list>
+        </property>
+        <property name="plugins">
+            <list>
+                <ref bean="mybatisPaginationInterceptor"/>
+                <ref bean="mybatisPaginationOrderInterceptor"/>
+                <ref bean="mybatisLogInterceptor"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="gxSqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg ref="gxSqlSessionFactory"/>
+    </bean>
+
+    <bean name="gxScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="cn.gtmap.realestate.exchange.core.mapper.exchange"/>
+        <property name="sqlSessionFactoryBeanName" value="gxSqlSessionFactory"/>
+    </bean>
+
+    <bean id="gxCommonMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="cn.gtmap.realestate.common.core.support.mybatis.mapper.CommonMapper"/>
+        <property name="sqlSessionFactory" ref="gxSqlSessionFactory"/>
+    </bean>
+
+    <bean id="gxEntityMapper" class="cn.gtmap.realestate.common.core.support.mybatis.mapper.EntityMapper">
+        <property name="commonMapper" ref="gxCommonMapper"/>
+    </bean>
+
+    <bean id="gxRepository" class="cn.gtmap.realestate.common.core.support.mybatis.page.repository.Repository">
+        <property name="sqlSessionTemplate" ref="gxSqlSessionTemplate"/>
+    </bean>
+
+
+    <!-- 省级平台 数据源 -->
+    <bean id="sjptDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <!-- 基本属性 url、user、password -->
+        <property name="url" value="${spring.datasource.sjpt.url}"/>
+        <property name="username" value="${spring.datasource.sjpt.username}"/>
+        <property name="password" value="${spring.datasource.sjpt.password}"/>
+        <property name="defaultAutoCommit" value="false"/>
+        <property name="defaultTransactionIsolation" value="2"/>
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="${spring.datasource.sjpt.initialSize:10}"/>
+        <property name="minIdle" value="${spring.datasource.sjpt.minIdle:10}"/>
+        <property name="maxActive" value="${spring.datasource.sjpt.maxActive:100}"/>
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="10000"/>
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+        <!-- 配置一个连接在池中最大生存的时间，单位是毫秒 -->
+        <property name="maxEvictableIdleTimeMillis" value="900000"/>
+        <property name="keepAlive" value="true"/>
+        <property name="validationQuery" value="SELECT SYSDATE FROM DUAL"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="true"/>
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="20"/>
+        <property name="removeAbandoned" value="true"/>
+        <property name="removeAbandonedTimeout" value="1800"/>
+        <property name="logAbandoned" value="true"/>
+        <!-- 配置监控统计拦截的filters，去掉后监控界面sql无法统计 -->
+        <property name="filters" value="config"/>
+        <property name="connectionProperties" value="config.decrypt=true;config.decrypt.key=${spring.datasource.sjpt.publickey}" />
+    </bean>
+
+    <bean id="sjptSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
+          p:dataSource-ref="sjptDataSource"
+          p:configLocation="classpath:conf/mapper/mybatis-configuration.xml">
+        <property name="mapperLocations">
+            <list>
+                <value>classpath:conf/mapper/sjpt/*.xml</value>
+            </list>
+        </property>
+        <property name="plugins">
+            <list>
+                <ref bean="mybatisPaginationInterceptor"/>
+                <ref bean="mybatisPaginationOrderInterceptor"/>
+                <ref bean="mybatisLogInterceptor"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="sjptSqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg ref="sjptSqlSessionFactory"/>
+    </bean>
+
+    <bean name="sjptScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="cn.gtmap.realestate.exchange.core.mapper.sjpt"/>
+        <property name="sqlSessionFactoryBeanName" value="sjptSqlSessionFactory"/>
+    </bean>
+
+    <bean id="sjptCommonMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="cn.gtmap.realestate.common.core.support.mybatis.mapper.CommonMapper"/>
+        <property name="sqlSessionFactory" ref="sjptSqlSessionFactory"/>
+    </bean>
+
+    <bean id="sjptEntityMapper" class="cn.gtmap.realestate.common.core.support.mybatis.mapper.EntityMapper">
+        <property name="commonMapper" ref="sjptCommonMapper"/>
+    </bean>
+
+    <bean id="sjptRepository" class="cn.gtmap.realestate.common.core.support.mybatis.page.repository.Repository">
+        <property name="sqlSessionTemplate" ref="sjptSqlSessionTemplate"/>
+    </bean>
+
+    <bean id="mybatisPaginationInterceptor"
+          class="cn.gtmap.realestate.common.core.support.mybatis.page.PaginationInterceptor">
+        <property name="properties">
+            <props>
+                <prop key="dialect">oracle</prop>
+                <prop key="stmtIdRegex">*.*ByPage</prop>
+            </props>
+        </property>
+        <property name="pageSqlLimitStr" value="${page.sql.limit:}"/>
+        <property name="notLimitSqlSetStr" value="${page.sql.nolimit:}"/>
+    </bean>
+
+    <bean id="mybatisPaginationOrderInterceptor"
+          class="cn.gtmap.realestate.common.core.support.mybatis.page.PaginationInterceptor">
+        <property name="properties">
+            <props>
+                <prop key="dialect">oracleorder</prop>
+                <prop key="stmtIdRegex">*.*ByPageOrder</prop>
+            </props>
+        </property>
+        <property name="pageSqlLimitStr" value="${page.sql.limit:}"/>
+        <property name="notLimitSqlSetStr" value="${page.sql.nolimit:}"/>
+    </bean>
+
+    <!-- 一张网 数据源 -->
+    <bean id="yzwDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <!-- 基本属性 url、user、password -->
+        <property name="url" value="${spring.datasource.yzw.url}"/>
+        <property name="username" value="${spring.datasource.yzw.username}"/>
+        <property name="password" value="${spring.datasource.yzw.password}"/>
+        <property name="defaultAutoCommit" value="false"/>
+        <property name="defaultTransactionIsolation" value="2"/>
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="${spring.datasource.yzw.initialSize:10}"/>
+        <property name="minIdle" value="${spring.datasource.yzw.minIdle:10}"/>
+        <property name="maxActive" value="${spring.datasource.yzw.maxActive:50}"/>
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="10000"/>
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+        <!-- 配置一个连接在池中最大生存的时间，单位是毫秒 -->
+        <property name="maxEvictableIdleTimeMillis" value="900000"/>
+        <property name="keepAlive" value="true"/>
+        <property name="validationQuery" value="SELECT SYSDATE FROM DUAL"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="true"/>
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="20"/>
+        <property name="removeAbandoned" value="true"/>
+        <property name="removeAbandonedTimeout" value="1800"/>
+        <property name="logAbandoned" value="true"/>
+        <!-- 配置监控统计拦截的filters，去掉后监控界面sql无法统计 -->
+        <property name="filters" value="config"/>
+        <property name="connectionProperties"
+                  value="config.decrypt=true;config.decrypt.key=${spring.datasource.yzw.publickey}"/>
+    </bean>
+
+    <bean id="yzwSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
+          p:dataSource-ref="yzwDataSource"
+          p:configLocation="classpath:conf/mapper/mybatis-configuration.xml">
+        <property name="mapperLocations">
+            <list>
+                <value>classpath:conf/mapper/yzw/*.xml</value>
+            </list>
+        </property>
+        <property name="plugins">
+            <list>
+                <ref bean="mybatisPaginationInterceptor"/>
+                <ref bean="mybatisPaginationOrderInterceptor"/>
+                <ref bean="mybatisLogInterceptor"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="yzwSqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg ref="sjptSqlSessionFactory"/>
+    </bean>
+
+    <bean name="yzwScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="cn.gtmap.realestate.exchange.core.mapper.yzw"/>
+        <property name="sqlSessionFactoryBeanName" value="yzwSqlSessionFactory"/>
+    </bean>
+
+    <bean id="yzwCommonMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="cn.gtmap.realestate.common.core.support.mybatis.mapper.CommonMapper"/>
+        <property name="sqlSessionFactory" ref="yzwSqlSessionFactory"/>
+    </bean>
+
+    <bean id="yzwEntityMapper" class="cn.gtmap.realestate.common.core.support.mybatis.mapper.EntityMapper">
+        <property name="commonMapper" ref="yzwCommonMapper"/>
+    </bean>
+
+    <bean id="yzwRepository" class="cn.gtmap.realestate.common.core.support.mybatis.page.repository.Repository">
+        <property name="sqlSessionTemplate" ref="yzwSqlSessionTemplate"/>
+    </bean>
+
+    <bean id="mybatisLogInterceptor" class="cn.gtmap.realestate.common.config.interceptor.MybatisLogInterceptor">
+        <property name="appName" value="exchange" />
+    </bean>
+
+
+    <bean id="enAndDecryptInterceptor" class="cn.gtmap.sdk.mybatis.plugin.EnAndDecryptInterceptor">
+        <property name="cryptEnable" value="${encrypt.cryptEnable:false}" />
+        <property name="encryptWithAnnotation" value="true" />
+        <property name="decryptWithAnnotation" value="true" />
+        <property name="cryptType" value="${encrypt.cryptType:SM4}" />
+        <property name="systemVersion" value="${encrypt.version:standard}" />
+    </bean>
+
+    <bean id="parseEnAndDecryptInterceptor" class="cn.gtmap.sdk.mybatis.plugin.ParseEnAndDecryptInterceptor">
+        <property name="cryptEnable" value="${encrypt.cryptEnable:false}" />
+        <property name="encryptWithAnnotation" value="true" />
+        <property name="decryptWithAnnotation" value="true" />
+        <property name="cryptType" value="${encrypt.cryptType:SM4}" />
+        <property name="systemVersion" value="${encrypt.version:standard}" />
+    </bean>
+
+    <!--事务-->
+    <import resource="config-trans.xml"/>
+</beans>

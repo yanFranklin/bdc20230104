@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <title>静态文件在线更新</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../bdcui/css/form.css" />
+    <link rel="stylesheet" href="../bdcui/css/mask.css" />
+    <link rel="stylesheet" href="../registerui/css/percentage-layout.css" />
+    <link rel="stylesheet" href="./iconfont/iconfont.css">
+    <link rel="stylesheet" href="./css/updateStaticFile.css">
+    <style type="text/css">
+        .layui-inline .layui-form-label {
+            width: 194px;
+            padding: 7px 6px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="bdc-form-div bdc-not-full-bg bdc-form-not-full">
+    <form class="layui-form setOverflow bdc-form-table" action="">
+        <div class="bdc-content-fix">
+            <div class="content-title layui-clear">
+                <p>静态文件在线更新页面导航</p>
+            </div>
+        </div>
+        <div class="form-margin-area">
+            <div class="basic-info">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">选择UI子系统：</label>
+                        <div class="layui-input-inline">
+                            <select id="uiSystemName" lay-filter="uiSystemName" lay-search>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">选择实例：</label>
+                        <div class="layui-input-inline">
+                            <select id="instanceName" lay-filter="instanceName" lay-search>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="../jquery/jquery.min.js"></script>
+<script src="../layui/layui.all.js"></script>
+<!--添加水印-->
+<script src="../bdcui/js/common.js"></script>
+<script src="./iconfont/iconfont.js"></script>
+<script src="./js/updateNavigateFile.js"></script>
+
+<!--IE获取IP地址-->
+<object classid="CLSID:76A64158-CB41-11D1-8B02-00600806D9B6" id="locator" style="display:none;visibility:hidden"></object>
+<object classid="CLSID:75718C9A-F029-11d1-A1AC-00C04FB6C223" id="foo" style="display:none;visibility:hidden"></object>
+<script language="javascript">
+    try {
+        var service = locator.ConnectServer();
+        service.Security_.ImpersonationLevel = 3;
+        service.InstancesOfAsync(foo, 'Win32_NetworkAdapterConfiguration');
+    } catch (err) {
+        // do nothing
+    }
+</script>
+<script FOR="foo" EVENT="OnObjectReady(objObject,objAsyncContext)" LANGUAGE="JScript">
+    try {
+        if (objObject.IPEnabled != null && objObject.IPEnabled != "undefined" && objObject.IPEnabled == true) {
+            if (objObject.IPEnabled && objObject.IPAddress(0) != null && objObject.IPAddress(0) != "undefined")
+                $("#ipaddress").val(objObject.IPAddress(0));
+        }
+    } catch (err) {
+        // do nothing
+    }
+</script>
+</body>
+
+</html>

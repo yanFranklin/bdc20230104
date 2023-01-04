@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.register.core.mapper.BdcFdcq3Mapper">
+    <update id="updateQlGyqkPl" parameterType="cn.gtmap.realestate.register.core.dto.BdcGyqkDTO">
+        <if test="gzlslid != null and gzlslid != ''">
+            UPDATE bdc_fdcq3 t
+            <set>
+                t.gyqk = #{qlGyqk,jdbcType=VARCHAR}
+            </set>
+            WHERE EXISTS (
+            SELECT x.xmid
+            FROM bdc_xm x
+            WHERE (t.xmid = x.xmid
+            AND x.gzlslid = #{gzlslid}
+            )
+            )
+        </if>
+        <if test="xmidList != null and xmidList.size>0">
+            UPDATE bdc_fdcq3 t
+            <set>
+                t.gyqk = #{qlGyqk,jdbcType=VARCHAR}
+            </set>
+            <where>
+                AND t.xmid IN
+                <foreach collection="xmidList" item="xmid" open="(" close=")" separator=",">
+                    #{xmid}
+                </foreach>
+            </where>
+        </if>
+    </update>
+
+    <update id="udpateBdcQlDbxxAndQsztPl" parameterType="cn.gtmap.realestate.register.core.qo.DbxxQO">
+        <if test="gzlslid != null and gzlslid != ''">
+            UPDATE bdc_fdcq3 t
+            <set>
+                t.dbr = #{dbr,jdbcType=VARCHAR},
+                t.djsj = #{djsj,jdbcType=TIMESTAMP},
+                t.djjg = #{djjg,jdbcType=VARCHAR},
+                t.qszt = #{qszt,jdbcType=INTEGER}
+            </set>
+            WHERE EXISTS (
+            SELECT x.xmid
+            FROM bdc_xm x
+            WHERE (t.xmid = x.xmid
+            AND x.gzlslid = #{gzlslid}
+            )
+            )
+        </if>
+    </update>
+    <update id="udpateBdcQlZxDbxxAndQsztPl" parameterType="cn.gtmap.realestate.register.core.qo.DbxxQO">
+        <if test="gzlslid != null and gzlslid != ''">
+            UPDATE bdc_fdcq3 t
+            <set>
+                t.qszt = #{zxQszt,jdbcType=INTEGER},
+                t.zxdbr = #{dbr,jdbcType=VARCHAR},
+                t.zxdjsj = #{djsj,jdbcType=TIMESTAMP},
+                t.zxywh = #{slbh,jdbcType=VARCHAR},
+                t.zxyy = #{djyy,jdbcType=VARCHAR}
+            </set>
+            WHERE EXISTS (
+            SELECT r.yxmid
+            FROM bdc_xm x
+            INNER JOIN bdc_xm_lsgx r ON x.xmid = r.xmid
+            WHERE t.xmid = r.yxmid
+            AND r.zxyql = 1
+            AND x.gzlslid = #{gzlslid}
+            )
+        </if>
+    </update>
+
+
+    <!--更新共有信息权利人字段-->
+    <update id="updateFdcq3Qlr" parameterType="cn.gtmap.realestate.common.core.qo.register.BdcFdcq3QO">
+        <if test="gzlslid != null and gzlslid != ''">
+            UPDATE BDC_FDCQ3 t
+            <set>
+                t.qlr = #{qlr,jdbcType=VARCHAR}
+            </set>
+            WHERE t.xmid in (
+            select x.xmid from bdc_xm x where x.gzlslid=#{gzlslid}
+            )
+        </if>
+    </update>
+
+    <!--批量更新房地产权3的权属状态-->
+    <update id="udpateBdcFdcq3QsztPl" parameterType="cn.gtmap.realestate.register.core.qo.DbxxQO">
+        <if test="gzlslid != null and gzlslid != ''">
+            UPDATE BDC_FDCQ3 t
+            <set>
+                t.qszt = #{qszt,jdbcType=INTEGER}
+            </set>
+            WHERE EXISTS (
+            SELECT x.xmid
+            FROM bdc_xm x
+            WHERE (t.xmid = x.xmid
+            AND x.gzlslid = #{gzlslid}
+            )
+            )
+        </if>
+    </update>
+
+    <update id="updateBdcQlDbrPl" parameterType="cn.gtmap.realestate.register.core.qo.DbxxQO">
+        <if test="gzlslid != null and gzlslid != ''">
+            UPDATE BDC_FDCQ3 t
+            <set>
+                t.dbr = #{dbr,jdbcType=VARCHAR},
+                t.djjg = #{djjg,jdbcType=VARCHAR}
+            </set>
+            WHERE EXISTS (
+            SELECT x.xmid
+            FROM bdc_xm x
+            WHERE (t.xmid = x.xmid
+            AND x.gzlslid = #{gzlslid}
+            )
+            )
+        </if>
+    </update>
+
+    <update id="updateZxQlDbrPl" parameterType="cn.gtmap.realestate.register.core.qo.DbxxQO">
+        <if test="gzlslid != null and gzlslid != ''">
+            UPDATE BDC_FDCQ3 t
+            <set>
+                t.zxdbr = #{dbr,jdbcType=VARCHAR}
+
+            </set>
+            WHERE EXISTS (
+            SELECT r.yxmid
+            FROM bdc_xm x
+            INNER JOIN bdc_xm_lsgx r ON x.xmid = r.xmid
+            WHERE t.xmid = r.yxmid
+            AND r.zxyql = 1
+            AND x.gzlslid = #{gzlslid}
+            )
+        </if>
+    </update>
+
+    <select id="listBdcZxFdcq3" parameterType="String" resultType="cn.gtmap.realestate.common.core.domain.BdcFdcq3DO">
+        SELECT xm.DJJG,
+               fdcq.QLID,
+               fdcq.QLLX,
+               xm.SLBH,
+               xm.XMID,
+               xm.DJSJ,
+               xm.DBR,
+               '' as FJ,
+               xm.QSZT,
+               xm.BZ,
+               xm.BDCDYH,
+               fdcq.GYQK,
+               fdcq.DJH,
+               fdcq.ZXYWH,
+               fdcq.ZXYY,
+               fdcq.ZXDBR,
+               fdcq.ZXDJSJ
+        from bdc_xm xm
+                 Inner Join BDC_CSH_FWKG_SL BCF on xm.XMID = BCF.ID
+                 Inner JOIN BDC_XM_LSGX lsgs on xm.XMID = lsgs.XMID AND lsgs.wlxm = 0
+                 Inner JOIN BDC_FDCQ3 fdcq on lsgs.YXMID = fdcq.XMID
+        where BCF.SFSCQL = '0'
+          and BCF.SFZXYQL = '1'
+          AND xm.qszt = '2'
+          AND xm.bdcdyh = #{bdcdyh}
+    </select>
+</mapper>

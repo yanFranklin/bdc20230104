@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.inquiry.core.mapper.BdcYyXxMapper">
+
+    <select id="listBdcYyXxByPage" parameterType="cn.gtmap.realestate.common.core.vo.inquiry.BdcYyVO"
+            resultType="cn.gtmap.realestate.common.core.vo.inquiry.BdcYyVO">
+        SELECT
+        y.qlid,
+        y.yysx,
+        y.zxyyywh,
+        y.zxyyyy,
+        y.zxyydjsj,
+        y.zxyydbr,
+        y.slbh,
+        y.xmid,
+        y.gyqk,
+        y.djsj,
+        y.dbr,
+        y.djjg,
+        y.fj,
+        y.qszt,
+        y.bz,
+        y.bdcdyh,
+        y.bdcdywybh,
+        y.zl,
+        x.qlr,
+        x.qlrzjh as zjh,
+        x.bdcqzh,
+        x.yxtcqzh
+        FROM bdc_yy y
+        LEFT JOIN bdc_xm x ON y.xmid=x.xmid
+        <if test="(qlr != null and qlr !='') or (qlrzjh != null and qlrzjh.size > 0)">
+            LEFT JOIN bdc_qlr q ON y.xmid=q.xmid
+        </if>
+
+        <if test="bdcqzh != null and bdcqzh !=''">
+            INNER JOIN (SELECT DISTINCT g.xmid FROM bdc_zs z LEFT JOIN bdc_xm_zs_gx g ON z.zsid=g.zsid WHERE z.bdcqzh
+            like '%' || #{bdcqzh} || '%' ) n ON n.xmid=x.xmid
+        </if>
+        <where>
+            <if test="(qlr != null and qlr !='') or (qlrzjh != null and qlrzjh.size > 0)">
+                AND q.qlrlb = 1
+            </if>
+            <if test="qlr != null and qlr !=''">
+                AND q.qlrmc LIKE #{qlr} || '%'
+            </if>
+            <!--根据权利人证件号查询：为了匹配字母不同形式，全部转成大写查询-->
+            <if test="qlrzjh != null and qlrzjh.size > 0">
+                AND
+                <foreach collection="qlrzjh" item="item" index="index" open="(" separator=" or " close=")">
+                    q.zjh = #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="slbh!=null and slbh !=''">
+                AND y.slbh = #{slbh}
+            </if>
+            <if test="bdcdyh!=null and bdcdyh !=''">
+                AND y.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="qszt == 0 || qszt != null and qszt != ''">
+                AND y.qszt = #{qszt,jdbcType=INTEGER}
+            </if>
+            <if test="dbr!=null and dbr !=''">
+                AND y.dbr=#{dbr}
+            </if>
+            <if test="xmid!=null and xmid !=''">
+                AND y.xmid=#{xmid}
+            </if>
+            <if test="zxyyywh!=null and zxyyywh !=''">
+                AND y.zxyyywh=#{zxyyywh}
+            </if>
+            <if test="zxyydbr!=null and zxyydbr !=''">
+                AND y.zxyydbr=#{zxyydbr}
+            </if>
+            <if test="bdcdywybh!=null and bdcdywybh !=''">
+                AND y.bdcdywybh=#{bdcdywybh}
+            </if>
+            <if test="zl!=null and zl !=''">
+                AND y.zl like '%' || #{zl} || '%'
+            </if>
+            <if test="yxtcqzh!=null and yxtcqzh !=''">
+                AND x.yxtcqzh like '%' || #{yxtcqzh} || '%'
+            </if>
+            <if test="qxdmList != null and qxdmList.size() == 1 ">
+                AND x.qxdm=#{qxdmList[0]}
+            </if>
+            <if test="qxdmList != null and qxdmList.size() > 1 ">
+                AND x.qxdm IN
+                <foreach collection="qxdmList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="listBdcYyXxByPageCz" parameterType="cn.gtmap.realestate.common.core.qo.inquiry.BdcYyQO"
+            resultType="cn.gtmap.realestate.common.core.vo.inquiry.BdcYyVO">
+        SELECT  y.qlid, y.yysx, y.zxyyywh, y.zxyyyy, y.zxyydjsj, y.zxyydbr, y.slbh, y.xmid, y.gyqk, y.djsj, y.dbr, y.djjg,
+                y.fj, y.qszt, y.bz, y.bdcdyh, y.bdcdywybh, y.zl, x.qlr, x.qlrzjh as zjh, x.bdcqzh, x.yxtcqzh
+        FROM bdc_yy y
+        LEFT JOIN bdc_xm x ON y.xmid=x.xmid
+        WHERE 1=1
+        <if test="slbh != null and slbh != ''">
+            AND
+            <if test="slbhmhlx == null || slbhmhlx == 0">
+                y.slbh = #{slbh,jdbcType=VARCHAR}
+            </if>
+            <if test="slbhmhlx == 1">
+                y.slbh like #{slbh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="slbhmhlx == 2">
+                y.slbh like '%' || #{slbh,jdbcType=VARCHAR}
+            </if>
+            <if test="slbhmhlx == 3">
+                y.slbh like '%' || #{slbh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="bdcdyh != null and bdcdyh != ''">
+            AND
+            <if test="bdcdyhmhlx == null || bdcdyhmhlx == 0">
+                y.bdcdyh = #{bdcdyh,jdbcType=VARCHAR}
+            </if>
+            <if test="bdcdyhmhlx == 1">
+                y.bdcdyh like #{bdcdyh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="bdcdyhmhlx == 2">
+                y.bdcdyh like '%' || #{bdcdyh,jdbcType=VARCHAR}
+            </if>
+            <if test="bdcdyhmhlx == 3">
+                y.bdcdyh like '%' || #{bdcdyh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="qszt == 0 || qszt != null and qszt != ''">
+            AND y.qszt = #{qszt,jdbcType=INTEGER}
+        </if>
+
+        <if test="qsztList != null and qsztList.size() > 0">
+            AND y.qszt in
+            <foreach collection="qsztList" item="item" index="index" open="(" separator="," close=")">
+                #{item,jdbcType=INTEGER}
+            </foreach>
+        </if>
+
+        <if test="dbr != null and dbr != ''">
+            AND
+            <if test="dbrmhlx == null || dbrmhlx == 0">
+                y.dbr = #{dbr,jdbcType=VARCHAR}
+            </if>
+            <if test="dbrmhlx == 1">
+                y.dbr like #{dbr,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="dbrmhlx == 2">
+                y.dbr like '%' || #{dbr,jdbcType=VARCHAR}
+            </if>
+            <if test="dbrmhlx == 3">
+                y.dbr like '%' || #{dbr,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="zxyyywh != null and zxyyywh != ''">
+            AND
+            <if test="zxyyywhmhlx == null || zxyyywhmhlx == 0">
+                y.zxyyywh = #{zxyyywh,jdbcType=VARCHAR}
+            </if>
+            <if test="zxyyywhmhlx == 1">
+                y.zxyyywh like #{zxyyywh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="zxyyywhmhlx == 2">
+                y.zxyyywh like '%' || #{zxyyywh,jdbcType=VARCHAR}
+            </if>
+            <if test="zxyyywhmhlx == 3">
+                y.zxyyywh like '%' || #{zxyyywh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="zxyydbr != null and zxyydbr != ''">
+            AND
+            <if test="zxyydbrmhlx == null || zxyydbrmhlx == 0">
+                y.zxyydbr = #{zxyydbr,jdbcType=VARCHAR}
+            </if>
+            <if test="zxyydbrmhlx == 1">
+                y.zxyydbr like #{zxyydbr,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="zxyydbrmhlx == 2">
+                y.zxyydbr like '%' || #{zxyydbr,jdbcType=VARCHAR}
+            </if>
+            <if test="zxyydbrmhlx == 3">
+                y.zxyydbr like '%' || #{zxyydbr,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="bdcdywybh != null and bdcdywybh != ''">
+            AND
+            <if test="bdcdywybhmhlx == null || bdcdywybhmhlx == 0">
+                y.bdcdywybh = #{bdcdywybh,jdbcType=VARCHAR}
+            </if>
+            <if test="bdcdywybhmhlx == 1">
+                y.bdcdywybh like #{bdcdywybh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="bdcdywybhmhlx == 2">
+                y.bdcdywybh like '%' || #{bdcdywybh,jdbcType=VARCHAR}
+            </if>
+            <if test="bdcdywybhmhlx == 3">
+                y.bdcdywybh like '%' || #{bdcdywybh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="zl != null and zl != ''">
+            AND
+            <if test="zlmhlx == null || zlmhlx == 0">
+                y.zl = #{zl,jdbcType=VARCHAR}
+            </if>
+            <if test="zlmhlx == 1">
+                y.zl like #{zl,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="zlmhlx == 2">
+                y.zl like '%' || #{zl,jdbcType=VARCHAR}
+            </if>
+            <if test="zlmhlx == 3">
+                y.zl like '%' || #{zl,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="yxtcqzh != null and yxtcqzh != ''">
+            AND
+            <if test="yxtcqzhmhlx == null || yxtcqzhmhlx == 0">
+                x.yxtcqzh = #{yxtcqzh,jdbcType=VARCHAR}
+            </if>
+            <if test="yxtcqzhmhlx == 1">
+                x.yxtcqzh like #{yxtcqzh,jdbcType=VARCHAR} || '%'
+            </if>
+            <if test="yxtcqzhmhlx == 2">
+                x.yxtcqzh like '%' || #{yxtcqzh,jdbcType=VARCHAR}
+            </if>
+            <if test="yxtcqzhmhlx == 3">
+                x.yxtcqzh like '%' || #{yxtcqzh,jdbcType=VARCHAR} || '%'
+            </if>
+        </if>
+
+        <if test="qxdmList != null and qxdmList.size() == 1 ">
+            AND x.qxdm=#{qxdmList[0]}
+        </if>
+        <if test="qxdmList != null and qxdmList.size() > 1 ">
+            AND x.qxdm IN
+            <foreach collection="qxdmList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <!--动态关联证书表子查询-->
+        <if test="(bdcqzh != null and bdcqzh != '') or (zhlsh != null and zhlsh != '')
+                or (zslx != null and zslx != '') or (zsyzh != null and zsyzh != '') ">
+            AND x.XMID IN (
+                SELECT XMID FROM BDC_XM_ZS_GX WHERE ZSID IN
+                (
+                    SELECT ZSID FROM BDC_ZS z WHERE 1 = 1
+                    <if test="zslx != null and zslx != ''">
+                        AND z.zslx = #{zslx,jdbcType=INTEGER}
+                    </if>
+                    <if test="bdcqzh != null and bdcqzh != ''">
+                        AND
+                        <if test="bdcqzhmhlx == null || bdcqzhmhlx == 0">
+                            z.bdcqzh = #{bdcqzh,jdbcType=VARCHAR}
+                        </if>
+                        <if test="bdcqzhmhlx == 1">
+                            z.bdcqzh like #{bdcqzh,jdbcType=VARCHAR} || '%'
+                        </if>
+                        <if test="bdcqzhmhlx == 2">
+                            z.bdcqzh like '%' || #{bdcqzh,jdbcType=VARCHAR}
+                        </if>
+                        <if test="bdcqzhmhlx == 3">
+                            z.bdcqzh like '%' || #{bdcqzh,jdbcType=VARCHAR} || '%'
+                        </if>
+                    </if>
+                    <if test="zsyzh != null and zsyzh != ''">
+                        AND
+                        <if test="zsyzhmhlx == null || zsyzhmhlx == 0">
+                            z.QZYSXLH = #{zsyzh,jdbcType=VARCHAR}
+                        </if>
+                        <if test="zsyzhmhlx == 1">
+                            z.QZYSXLH like #{zsyzh,jdbcType=VARCHAR} || '%'
+                        </if>
+                        <if test="zsyzhmhlx == 2">
+                            z.QZYSXLH like '%' || #{zsyzh,jdbcType=VARCHAR}
+                        </if>
+                        <if test="zsyzhmhlx == 3">
+                            z.QZYSXLH like '%' || #{zsyzh,jdbcType=VARCHAR} || '%'
+                        </if>
+                    </if>
+                    <if test="zhlsh != null and zhlsh != ''">
+                        AND
+                        <if test="zhlshmhlx == null || zhlshmhlx == 0">
+                            z.ZHLSH = #{zhlsh,jdbcType=VARCHAR}
+                        </if>
+                        <if test="zhlshmhlx == 1">
+                            z.ZHLSH like #{zhlsh,jdbcType=VARCHAR} || '%'
+                        </if>
+                        <if test="zhlshmhlx == 2">
+                            z.ZHLSH like '%' || #{zhlsh,jdbcType=VARCHAR}
+                        </if>
+                        <if test="zhlshmhlx == 3">
+                            z.ZHLSH like '%' || #{zhlsh,jdbcType=VARCHAR} || '%'
+                        </if>
+                    </if>
+                )
+            )
+        </if>
+
+        <!--动态关联权利人表查询-->
+        <if test="(qlrmc != null and qlrmc.size > 0) or (qlrzjh != null and qlrzjh.size > 0)">
+            AND X.XMID IN
+            (
+            SELECT XMID FROM BDC_QLR Q WHERE QLRLB = '1'
+            <if test="qlrmc != null and qlrmc.size > 0">
+                AND
+                <foreach collection="qlrmc" item="item" index="index" open="(" separator=" or " close=")">
+                    <if test="qlrmcmhlx == null || qlrmcmhlx == 0">
+                        q.qlrmc = #{item,jdbcType=VARCHAR}
+                    </if>
+                    <if test="qlrmcmhlx == 1">
+                        q.qlrmc like #{item,jdbcType=VARCHAR} || '%'
+                    </if>
+                    <if test="qlrmcmhlx == 2">
+                        q.qlrmc like '%' || #{item,jdbcType=VARCHAR}
+                    </if>
+                    <if test="qlrmcmhlx == 3">
+                        q.qlrmc like '%' || #{item,jdbcType=VARCHAR} || '%'
+                    </if>
+                </foreach>
+            </if>
+            <!--根据权利人证件号查询：为了匹配字母不同形式，全部转成大写查询-->
+            <if test="qlrzjh != null and qlrzjh.size > 0">
+                AND
+                <foreach collection="qlrzjh" item="item" index="index" open="(" separator=" or " close=")">
+                    <if test="qlrzjhmhlx == null || qlrzjhmhlx == 0">
+                        q.zjh = #{item,jdbcType=VARCHAR}
+                    </if>
+                    <if test="qlrzjhmhlx == 1">
+                        q.zjh like #{item,jdbcType=VARCHAR} || '%'
+                    </if>
+                    <if test="qlrzjhmhlx == 2">
+                        q.zjh like '%' || #{item,jdbcType=VARCHAR}
+                    </if>
+                    <if test="qlrzjhmhlx == 3">
+                        q.zjh like '%' || #{item,jdbcType=VARCHAR} || '%'
+                    </if>
+                </foreach>
+            </if>
+            )
+        </if>
+        <if test="(ywrmc != null and ywrmc.size > 0) or (ywrzjh != null and ywrzjh.size > 0)">
+            AND x.XMID IN
+            (
+            SELECT XMID FROM BDC_QLR Y WHERE QLRLB = '2'
+            <if test="ywrmc != null and ywrmc.size > 0">
+                AND
+                <foreach collection="ywrmc" item="item" index="index" open="(" separator=" or " close=")">
+                    <if test="ywrmcmhlx == null || ywrmcmhlx == 0">
+                        y.qlrmc = #{item,jdbcType=VARCHAR}
+                    </if>
+                    <if test="ywrmcmhlx == 1">
+                        y.qlrmc like #{item,jdbcType=VARCHAR} || '%'
+                    </if>
+                    <if test="ywrmcmhlx == 2">
+                        y.qlrmc like '%' || #{item,jdbcType=VARCHAR}
+                    </if>
+                    <if test="ywrmcmhlx == 3">
+                        y.qlrmc like '%' || #{item,jdbcType=VARCHAR} || '%'
+                    </if>
+                </foreach>
+            </if>
+            <if test="ywrzjh != null and ywrzjh.size > 0">
+                AND
+                <foreach collection="ywrzjh" item="item" index="index" open="(" separator=" or " close=")">
+                    <if test="ywrzjhmhlx == null || ywrzjhmhlx == 0">
+                        y.zjh = #{item,jdbcType=VARCHAR}
+                    </if>
+                    <if test="ywrzjhmhlx == 1">
+                        y.zjh like #{item,jdbcType=VARCHAR} || '%'
+                    </if>
+                    <if test="ywrzjhmhlx == 2">
+                        y.zjh like '%' || #{item,jdbcType=VARCHAR}
+                    </if>
+                    <if test="ywrzjhmhlx == 3">
+                        x.ywrzjh like '%' || #{item,jdbcType=VARCHAR} || '%'
+                    </if>
+                </foreach>
+            </if>
+            )
+        </if>
+    </select>
+
+    <select id="listBdcYyXx" parameterType="cn.gtmap.realestate.common.core.vo.inquiry.BdcYyVO"
+            resultType="cn.gtmap.realestate.common.core.vo.inquiry.BdcYyVO">
+        SELECT
+        y.qlid,
+        y.yysx,
+        y.zxyyywh,
+        y.zxyyyy,
+        y.zxyydjsj,
+        y.zxyydbr,
+        y.slbh,
+        y.xmid,
+        y.gyqk,
+        y.djsj,
+        y.dbr,
+        y.djjg,
+        y.fj,
+        y.qszt,
+        y.bz,
+        y.bdcdyh,
+        y.bdcdywybh,
+        y.zl,
+        x.qlr,
+        x.qlrzjh as zjh,
+        x.bdcqzh,
+        x.yxtcqzh
+        FROM bdc_yy y
+        LEFT JOIN bdc_xm x ON y.xmid=x.xmid
+        <if test="(qlr != null and qlr !='') or (qlrzjh != null and qlrzjh.length > 0)">
+            LEFT JOIN bdc_qlr q ON y.xmid=q.xmid
+        </if>
+
+        <if test="bdcqzh != null and bdcqzh !=''">
+            INNER JOIN (SELECT DISTINCT g.xmid FROM bdc_zs z LEFT JOIN bdc_xm_zs_gx g ON z.zsid=g.zsid WHERE z.bdcqzh
+            like '%' || #{bdcqzh} || '%' ) n ON n.xmid=x.xmid
+        </if>
+        <where>
+            <if test="(qlr != null and qlr !='') or (qlrzjh != null and qlrzjh.length > 0)">
+                AND q.qlrlb = 1
+            </if>
+            <if test="qlr != null and qlr !=''">
+                AND q.qlrmc LIKE #{qlr} || '%'
+            </if>
+            <!--根据权利人证件号查询：为了匹配字母不同形式，全部转成大写查询-->
+            <if test="qlrzjh != null and qlrzjh.length > 0">
+                AND
+                <foreach collection="qlrzjh" item="item" index="index" open="(" separator=" or " close=")">
+                    q.zjh = #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="slbh!=null and slbh !=''">
+                AND y.slbh = #{slbh}
+            </if>
+            <if test="bdcdyh!=null and bdcdyh !=''">
+                AND y.bdcdyh = #{bdcdyh}
+            </if>
+            <if test="qszt == 0 || qszt != null and qszt != ''">
+                AND y.qszt = #{qszt,jdbcType=INTEGER}
+            </if>
+            <if test="dbr!=null and dbr !=''">
+                AND y.dbr=#{dbr}
+            </if>
+            <if test="xmid!=null and xmid !=''">
+                AND y.xmid=#{xmid}
+            </if>
+            <if test="zxyyywh!=null and zxyyywh !=''">
+                AND y.zxyyywh=#{zxyyywh}
+            </if>
+            <if test="zxyydbr!=null and zxyydbr !=''">
+                AND y.zxyydbr=#{zxyydbr}
+            </if>
+            <if test="bdcdywybh!=null and bdcdywybh !=''">
+                AND y.bdcdywybh=#{bdcdywybh}
+            </if>
+            <if test="zl!=null and zl !=''">
+                AND y.zl like '%' || #{zl} || '%'
+            </if>
+            <if test="yxtcqzh!=null and yxtcqzh !=''">
+                AND x.yxtcqzh like '%' || #{yxtcqzh} || '%'
+            </if>
+        </where>
+    </select>
+
+    <select id="listBdcYyByXmid" resultType="map">
+        select * from bdc_yy where 1 = 1
+        <if test="xmid != null and xmid != ''">
+            and xmid = #{xmid,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="listBdcYyByBdcdyh" resultType="map">
+        select * from bdc_yy where qszt != 2
+        <if test="bdcdyh != null and bdcdyh != ''">
+            and bdcdyh = #{bdcdyh,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="listBdcYyByBdcdyhs" resultType="cn.gtmap.realestate.common.core.domain.BdcYyDO">
+        select * from bdc_yy where 1 = 1
+        <if test="list != null and list.size() > 0 ">
+            and bdcdyh in
+            <foreach collection="list" item="item" separator="," open="(" close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+</mapper>

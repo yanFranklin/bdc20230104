@@ -1,0 +1,65 @@
+info:
+  name: ${spring.application.name}
+  component: Check Application
+
+app:
+  center: http://192.168.2.99:8000/eureka/
+  oauth: http://192.168.2.99:8002/account
+  security:
+    moduleAuthPath: http://account/account
+    ignores: /image/**,/css/**,/js/**,/webjars/**
+    authorities:
+      permitAll:
+      hasUrlAuthority('read'): /auth/users,/auth/orgs
+      hasModuleAuthority('yhgl:add'): /auth/user/create
+      hasAnyAuthority('ROLE_USER'): /resource1/**,/catalog1/**
+      hasAnyAuthority('ROLE_ADMIN_2'): /call
+      authenticated: true
+    resources:
+      authenticated: /realestate-check/rest/v1.0/**
+
+spring:
+  rabbitmq:
+    host: 192.168.0.60
+    port: 5672
+    username: guest
+    password: guest
+  redis:
+    port: 6379
+    host: 192.168.0.60
+  datasource:
+    url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
+    username: bdcdj_hefei
+    password: e/lWYHJj7d9rXmgsItIxLw2oWP4XasfqoDXA0AKNYHgeSJQK8IKgU8/+ia1ax4mr9ki4QZbrQrCW9WMkHDOPAA==
+    publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK8ev+xi3qANIZpQGhndeKtc2EOlsPd48VIhphnl3OoOKqynJuQo7qZrJekk8iqXHgvze3bnFrFyTtf3vxGIamsCAwEAAQ==
+  profiles:
+    include: params
+  messages:
+    basename: messages
+  http:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 1000MB
+
+server:
+  port: ${port:8123}
+  context-path: /realestate-check
+  session:
+    timeout: 3600
+
+logging:
+  classify:
+    # 表示除path之外的路径下默认的日志分类为platform
+    defaulted: platform
+
+html:
+  version: hefei
+
+management:
+  security:
+    enabled: true
+
+endpoints:
+  enabled: true
+  shutdown:
+    enabled: true

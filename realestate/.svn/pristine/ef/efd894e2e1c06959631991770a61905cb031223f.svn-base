@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--一张网验证-->
+<mapper namespace="cn.gtmap.realestate.exchange.core.mapper.exchange.YzwMapper">
+
+    <!--超期无结果数据-->
+    <sql id="listYzwTsxx">
+        SELECT * FROM (SELECT t.yzwbh,t.ywslbh,t.tssj,t.tszt, a.casepromisedate, b.caseenddatetime,Row_Number()
+        OVER(PARTITION BY t.yzwbh ORDER
+        BY t.tssj DESC) AS num,b.onlymark,t.sblx,t.tsxxid,t.sbycxx FROM GX_YZW_TSJL t
+        LEFT JOIN T_BM_CASEBASEINFO a on a.caseno = t.yzwbh
+        LEFT JOIN t_bm_caseresult b on b.caseno = t.yzwbh
+        ) t
+        <where>
+            AND t.num = 1
+            <if test="yzwbh != null and yzwbh !=''">
+                AND t.yzwbh =#{yzwbh}
+            </if>
+            <if test="ywslbh != null and ywslbh !=''">
+                AND t.ywslbh =#{ywslbh}
+            </if>
+            <if test="tszt != null">
+                AND t.tszt =#{tszt}
+            </if>
+            <if test="tskssj!=null and tskssj!=''">
+                AND to_char(t.tssj,'yyyy-MM-dd') <![CDATA[>=]]> #{tskssj}
+            </if>
+            <if test="tsjssj!=null and tsjssj!=''">
+                AND to_char(t.tssj,'yyyy-MM-dd') <![CDATA[<=]]> #{tsjssj}
+            </if>
+            <if test="sfbhjgsj!=null and sfbhjgsj == 1 ">
+                AND t.onlymark IS NOT NULL
+            </if>
+            <if test="sfbhjgsj!=null and sfbhjgsj == 0 ">
+                AND t.onlymark IS NULL
+            </if>
+            <if test="jjcqsj!=null and jjcqsj!='' ">
+                and t.casepromisedate - TO_NUMBER(#{jjcqsj})/24 <![CDATA[<=]]> to_date(#{nowTime},'yyyy-mm-dd HH24:mi:ss' )
+            </if>
+            <if test="tssblx!=null">
+                AND t.sblx=#{tssblx}
+            </if>
+        </where>
+    </sql>
+    <select id="listYzwTsxxByPage" parameterType="cn.gtmap.realestate.exchange.core.qo.GxYzwQO"
+            resultType="java.util.Map">
+        <include refid="listYzwTsxx"/>
+
+    </select>
+
+    <select id="listYzwTsxxCount" resultType="java.lang.Integer"
+            parameterType="cn.gtmap.realestate.exchange.core.qo.GxYzwQO">
+        SELECT count(tsxxid)
+        FROM (<include refid="listYzwTsxx"/>)
+    </select>
+
+
+    <!--统计推送状态-->
+    <select id="tjTszt" parameterType="cn.gtmap.realestate.exchange.core.qo.GxYzwQO"
+            resultType="java.util.Map">
+        select
+          tszt, count
+        from
+          (select tszt, count(*) as count
+            from GX_YZW_TSJL
+            where 1=1
+            <if test="tskssj!=null and tskssj!=''">
+                AND to_char(tssj,'yyyy-MM-dd') <![CDATA[>=]]> #{tskssj}
+            </if>
+            <if test="tsjssj!=null and tsjssj!=''">
+                AND to_char(tssj,'yyyy-MM-dd') <![CDATA[<=]]> #{tsjssj}
+            </if>
+          group by tszt),
+
+         (select count(*) as total
+            from GX_YZW_TSJL
+            where 1=1
+            <if test="tskssj!=null and tskssj!=''">
+                AND to_char(tssj,'yyyy-MM-dd') <![CDATA[>=]]> #{tskssj}
+            </if>
+            <if test="tsjssj!=null and tsjssj!=''">
+                AND to_char(tssj,'yyyy-MM-dd') <![CDATA[<=]]> #{tsjssj}
+            </if>
+          )
+    </select>
+
+    <!--查询一张网验证明细信息-->
+    <select id="listGxYzwYzmxxxByTsxxid" parameterType="String"
+            resultType="java.util.Map">
+       SELECT z.mc,y.yzxxid FROM GX_ZD_YZW_YZLX z
+       LEFT  JOIN GX_YZW_YZXX y ON y.yzlx=z.dm AND y.tsxxid =#{tsxxid}
+       ORDER BY z.dm
+    </select>
+
+    <select id="listGxYzwZdZjzl" resultType="java.util.Map">
+        SELECT DM,MC FROM INF_ZD_ZJLX
+    </select>
+
+    <select id="listGxYzwZdZjzlDm" resultType="String">
+        SELECT DM FROM INF_ZD_ZJLX
+    </select>
+
+
+
+
+</mapper>

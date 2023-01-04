@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>小屏</title>
+    <link rel="stylesheet" href="../../public/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="../../public/css/small-screen.css">
+</head>
+<body>
+<!--头部开始-->
+<div class="bdc-header">
+    <h1><img src="../../public/images/logo.png" alt=""><span id="smallTitle"></span></h1>
+    <!--时间-->
+    <div class="bdc-time">
+        <div class="bdc-time-word">排队信息综合屏</div>
+        <div class="bdc-time-details"><span class="bdc-time-date">2019-06-04</span><span
+                class="bdc-time-hour">10:30</span><span class="bdc-time-week">星期二</span></div>
+    </div>
+</div>
+<!--头部结束-->
+
+<!--主内容开始-->
+<div class="bdc-container">
+    <div class="bdc-content">
+        <!--上面的 当前呼叫开始-->
+        <div class="bdc-top">
+            <div class="bdc-top-title">
+                <p>窗口</p>
+                <p>当前呼叫</p>
+            </div>
+            <div class="layui-carousel" id="topCarousel">
+                <div carousel-item id="zhxpdqhj">
+                </div>
+            </div>
+        </div>
+        <!--上面的 当前呼叫结束-->
+
+        <!--中间的业务类型开始-->
+        <div class="bdc-center">
+            <div class="bdc-center-title">
+                <p>业务类型</p>
+                <p><span>等待呼叫</span></p>
+            </div>
+            <div class="layui-carousel" id="centerCarousel">
+                <div carousel-item id="zhxpddhj">
+                </div>
+            </div>
+        </div>
+        <!--中间的业务类型结束-->
+
+    </div>
+</div>
+<!--主内容结束-->
+<script id="zhxpdqhjmb" type="text/html">
+    {{# for(var i = 0;(i*7) < zhxpdqhj.length;i++){ }}
+    <div>
+        <p>
+        {{# for(var j = (i*7);j < (i*7)+7 && j < zhxpdqhj.length ;j++){ }}
+            <span>{{ zhxpdqhj[j].CKH }}</span>
+        {{# } }}
+        </p>
+        <p>
+        {{# for(var j = (i*7);j < (i*7)+7 && j < zhxpdqhj.length ;j++){ }}
+            <span>{{ zhxpdqhj[j].HJH }}</span>
+        {{# } }}
+        </p>
+    </div>
+    {{# } }}
+    {{# if(zhxpdqhj.length === 0){ }}
+    无数据
+    {{# } }}
+</script>
+<script id="zhxpddhjmb" type="text/html">
+    {{# for(var i = 0;(i*4) < zhxpddhj.length;i++){ }}
+    <div>
+        <p>
+            {{# for(var j = (i*4);j < (i*4)+4 && j < zhxpddhj.length ;j++){ }}
+            <span>{{ zhxpddhj[j].YWMC }}</span>
+            {{# } }}
+        </p>
+        <div class="bdc-center-content clear">
+            {{# for(var j = (i*4);j < (i*4)+4 && j < zhxpddhj.length ;j++){ }}
+            <div class="bdc-center-item">
+                <div class="layui-carousel">
+                    <div>
+                        <div>
+                            {{# for(var k = 0;k < 8 && k < zhxpddhj[j].DATA.length ;k++){ }}
+                            <p class="bdc-content-p">{{ zhxpddhj[j].DATA[k] }}<span>请准备</span></p>
+                            {{# } }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{# } }}
+        </div>
+    </div>
+    {{# } }}
+    {{# if(zhxpddhj.length === 0){ }}
+    无数据
+    {{# } }}
+</script>
+<script type="text/javascript">
+    var zhxpdqhj;
+    var zhxpddhj;
+</script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../public/lib/layui/layui.js"></script>
+<script src="../../public/js/common.js"></script>
+<script src="../../public/js/small-screen.js"></script>
+</body>
+</html>

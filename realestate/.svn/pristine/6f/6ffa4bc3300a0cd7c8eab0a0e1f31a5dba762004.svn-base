@@ -1,0 +1,153 @@
+<!--
+    (南通)户籍查询台账接口页面
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>(南通)过户结果查询台账接口页面</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/search.css" />
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/table.css" />
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css" />
+    <link rel="stylesheet" href="../../static/lib/registerui/css/percentage-layout.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css">
+    <link rel="stylesheet" href="../../static/css/common.css"/>
+    <link rel="stylesheet" href="../../static/css/bjjk/bjjk.css"/>
+</head>
+<body>
+<div class="content-div gxjklc-div">
+    <!--查询条件-->
+    <div class="bdc-search-content">
+        <div class="bdc-search-box">
+            <!--默认两行的-->
+            <form class="layui-form" action="" lay-filter="searchform">
+                <div class="layui-form-item pf-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">受理编号</label>
+                        <div class="layui-input-inline">
+                            <input id="contractId" name="contractId" type="text" autocomplete="off" placeholder="请输入" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-inline bdc-button-box">
+                        <a href="javascript:;" class="layui-btn layui-btn-normal bdc-major-btn" id="search">查询</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="bdc-content-box">
+        <div class="content-main">
+            <div class="table-name"></div>
+            <div class="bdc-table-box">
+                <table class="layui-table" border="1">
+                    <colgroup>
+                        <col width="100">
+                        <col width="150">
+                        <col width="100">
+                        <col width="150">
+                    </colgroup>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/html" id="cxywcsTpl">
+        {{# if(d.cxywcs){ }}
+        {{# layui.each(d.cxywcs,function(index,item){  }}
+        <tr>
+            <td class="set-back-color">电费户号</td>
+            <td><input type="text" class="layui-table-edit" value="{{ item.electricFeeNum || ''}}"></td>
+            <td class="set-back-color">电费户名</td>
+            <td><input type="text" class="layui-table-edit" value="{{ item.electricFeeName || ''}}"></td>
+        </tr>
+        <tr>
+            <td class="set-back-color">电力过户结果申请状态</td>
+            <td colspan="3"><input type="text" class="layui-table-edit" value="{{ fmtsqzt(item.electricFeeResult) }}"></td>
+        </tr>
+        <tr>
+            <td class="set-back-color">电费用户住址</td>
+            <td colspan="3"><input type="text" class="layui-table-edit" value="{{ item.electricFeeAddr || ''}}"></td>
+        </tr>
+        <tr>
+            <td colspan="4" class="quarantine"></td>
+        </tr>
+        {{# }); }}
+        {{# }else{ }}
+        <tr>
+            <td class="set-back-color">电费户号</td>
+            <td><input type="text" class="layui-table-edit" value=""></td>
+            <td class="set-back-color">电费户名</td>
+            <td><input type="text" class="layui-table-edit" value=""></td>
+        </tr>
+        <tr>
+            <td class="set-back-color">电力过户结果申请状态</td>
+            <td colspan="3"><input type="text" class="layui-table-edit" value=""></td>
+        </tr>
+        <tr>
+            <td class="set-back-color">电费用户住址</td>
+            <td colspan="3"><input type="text" class="layui-table-edit" value=""></td>
+        </tr>
+        <tr>
+            <td colspan="5" class="quarantine"></td>
+        </tr>
+        {{# } }}
+    </script>
+
+    <script type="text/html" id="tableTpl">
+        {{# if(d){ }}
+        {{# layui.each(d,function(index,item){  }}
+        <tr>
+            <td class="set-back-color">电费户号</td>
+            <td><input type="text" class="layui-table-edit" value="{{ item.electricFeeNum || ''}}"></td>
+            <td class="set-back-color">电费户名</td>
+            <td><input type="text" class="layui-table-edit" value="{{ item.electricFeeName || ''}}"></td>
+        </tr>
+        <tr>
+            <td class="set-back-color">电力过户结果申请状态</td>
+            <td colspan="3"><input type="text" class="layui-table-edit" value="{{ fmtsqzt(item.electricFeeResult) }}"></td>
+        </tr>
+        <tr>
+            <td class="set-back-color">电费用户住址</td>
+            <td colspan="3"><input type="text" class="layui-table-edit" value="{{ item.electricFeeAddr || ''}}"></td>
+        </tr>
+        <tr>
+            <td colspan="5" class="quarantine"></td>
+        </tr>
+        {{# }); }}
+        {{# }else{ }}
+        <tr>
+            <td class="set-back-color">电费户号</td>
+            <td><input type="text" class="layui-table-edit" value=""></td>
+            <td class="set-back-color">电费户名</td>
+            <td><input type="text" class="layui-table-edit" value=""></td>
+        </tr>
+        <tr>
+            <td class="set-back-color">电力过户结果申请状态</td>
+            <td colspan="3"><input type="text" class="layui-table-edit" value=""></td>
+        </tr>
+        <tr>
+            <td class="set-back-color">电费用户住址</td>
+            <td colspan="3"><input type="text" class="layui-table-edit" value=""></td>
+        </tr>
+        <tr>
+            <td colspan="5" class="quarantine"></td>
+        </tr>
+        {{# } }}
+    </script>
+
+    <script src="../../static/lib/jquery/jquery.min.js"></script>
+    <script src="../../static/lib/layui/layui.js"></script>
+    <script src="../../static/js/common.js"></script>
+    <script src="../../static/js/jkym/ghcx.js"></script>
+    <script src="../../static/lib/bdcui/js/common.js"></script>
+</div>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ex="http://www.gtmap.cn/schema/exchange-bean"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
+
+    <!-- 内部使用 -->
+    <ex:bean id="getWwsqCqzxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="standardGrdacx"/>
+            <ex:property name="methodName" value="grdacx"/>
+            <ex:property name="params" value="param"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element name="param" dozerXml="conf/dozer/nantong/wwsq/getWwsqCqzxx/request/param.xml" notEmpty="true"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/wwsq/getWwsqCqzxx/response/data_std.xml"
+                        saveNull="cn.gtmap.realestate.exchange.core.dto.wwsq.getWwsqCqzxx.response.GetWwsqCqzxxResponseDTO"/>
+        </ex:response>
+    </ex:bean>
+
+
+    <!-- 外网申请 更新受理状态 -->
+    <ex:bean id="wwsqupdateslzt">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="slztServiceImpl"/>
+            <ex:property name="methodName" value="updateSlztNt"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 外网申请 转发流程或删除流程 -->
+    <ex:bean id="wwsq_ForwardOrDelete">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="slztServiceImpl"/>
+            <ex:property name="methodName" value="forwardOrDelete"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 外网申请 获取缴费二维码地址 -->
+    <ex:bean id="wwsq_getJfewmUrl">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="slztServiceImpl"/>
+            <ex:property name="methodName" value="queryJfewmUrl"/>
+        </ex:service-info>
+    </ex:bean>
+
+
+    <!-- 外网申请 更新缴费状态 -->
+    <ex:bean id="wwsqupdatejfzt_hlw">
+        <ex:service-info request-type="httpPostJson">
+            <ex:property name="url" value="${wwsq.updatejfzt.url}"/>
+            <ex:property name="logEventName" value="外网申请更新缴费状态"/>
+            <ex:property name="requester" value="BDC"/>
+            <ex:property name="responser" value="WWSQ"/>
+            <ex:property name="dsfFlag" value="WWSQ"/>
+            <ex:property name="paramClass" value="cn.gtmap.realestate.common.core.dto.exchange.wwsq.jsxxzt.JfxxDTO"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 外网申请 审核状态推送 -->
+    <ex:bean id="wwsqshztts">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="slztServiceImpl"/>
+            <ex:property name="methodName" value="shztTs"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!-- 公积金-房屋信息查询-->
+   <ex:bean id="gjj_fwxx">
+       <ex:service-info request-type="beanReq">
+           <ex:property name="beanName" value="nantongGjjService"/>
+           <ex:property name="methodName" value="queryFwxx"/>
+       </ex:service-info>
+   </ex:bean>
+
+    <!-- 公积金-产证信息查询-->
+    <ex:bean id="gjj_czxx">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="nantongGjjService"/>
+            <ex:property name="methodName" value="queryCzxx"/>
+        </ex:service-info>
+    </ex:bean>
+
+    <!--启动-档案状态信息保存-->
+    <ex:bean id="da_saveDaztBySlbh">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="logEventName" value="启动-档案状态保存信息接口"/>
+            <ex:property name="requester" value="DA"/>
+            <ex:property name="responser" value="BDC"/>
+            <ex:property name="dsfFlag" value="DA"/>
+            <ex:property name="beanName" value="nanTongDaxxServiceImpl"/>
+            <ex:property name="methodName" value="saveOrUpdateDaxx"/>
+        </ex:service-info>
+        <ex:log dsfFlag="DA" logEventName="启动-档案状态保存信息接口" requester="DA" responser="BDC"/>
+
+    </ex:bean>
+
+    <!-- &lt;!&ndash; 外网申请查询办件状态  入参 bdczmh&ndash;&gt;
+     <ex:bean id="jfztByBdczmh">
+         <ex:service-info request-type="beanReq">
+             <ex:property name="logEventName" value="外网申请查询办件状态"/>
+             <ex:property name="requester" value="WWSQ"/>
+             <ex:property name="responser" value="BDC"/>
+             <ex:property name="dsfFlag" value="WWSQ"/>
+             <ex:property name="beanName" value="slztServiceImpl"/>
+             <ex:property name="methodName" value="queryBjztByBdczmh"/>
+         </ex:service-info>
+         <ex:request>
+             <ex:element dozerXml="conf/dozer/nantong/wwsq/wwsq_queryBjzt/request/param.xml"/>
+         </ex:request>
+     </ex:bean>-->
+</beans>

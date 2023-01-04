@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.accept.core.mapper.BdcSlSfxmMapper">
+    <!--查询收费信息-->
+    <select id="listBdcSlSfxm" parameterType="String"
+            resultType="cn.gtmap.realestate.common.core.vo.accept.ui.BdcSlSfxmVO">
+
+        SELECT S.SFXMID,S.SFXXID,S.SFXMMC,S.SFXMDM,S.XH,S.SL,S.JMJE,S.YSJE,S.SSJE,
+          S.SFBL,S.BZ,S.JEDW,S.JSFF,S.JFFS,S.JFZD,S.SFLX,S.SFXMBZ,S.QLRLB,F.SFXMDJ
+
+        FROM BDC_SL_SFXM S
+        LEFT JOIN BDC_SL_SFXM_SFBZ F ON S.SFXMDM=F.SFXMDM
+              AND S.SFXMBZ = F.SFXMBZ
+        <where>
+            AND S.SFXXID=#{sfxxid}
+            AND S.SSJE != 0
+        </where>
+        order by s.xh
+    </select>
+
+    <select id="listBdcSlSfxmBysfxxidList" parameterType="String" resultType="cn.gtmap.realestate.common.core.vo.accept.ui.BdcSlSfxmVO">
+        SELECT S.SFXMID,S.SFXXID,S.SFXMMC,S.SFXMDM,S.XH,S.SL,S.JMJE,S.YSJE,S.SSJE,
+            S.SFBL,S.BZ,S.JEDW,S.JSFF,S.JFFS,S.JFZD,S.SFLX,S.SFXMBZ,S.QLRLB,F.SFXMDJ
+        FROM BDC_SL_SFXM S
+        LEFT JOIN BDC_SL_SFXM_SFBZ F ON S.SFXMDM=F.SFXMDM
+        AND S.SFXMBZ = F.SFXMBZ
+        <where>
+            <if test="sfxxidList != null and sfxxidList.size() > 0">
+                AND S.SFXXID IN
+                <foreach collection="sfxxidList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            AND S.SSJE != 0
+        </where>
+        order by s.xh
+    </select>
+    
+    <select id="listSfxmBySfxmdm" parameterType="cn.gtmap.realestate.common.core.qo.accept.BdcSlSfxmQO" resultType="cn.gtmap.realestate.common.core.domain.accept.BdcSlSfxmDO">
+        SELECT S.SFXMID, S.SFXXID, S.SFXMMC, S.SFXMDM, S.XH, S.SL, S.JMJE, S.YSJE, S.SSJE,
+        S.SFBL, S.BZ, S.JEDW, S.JSFF, S.JFFS, S.JFZD, S.SFLX, S.QLRLB, S.YH, S.DJYY, S.SFZT, S.JFSEWMURL, S.JFSBM,
+        S.JKMSJ, S.TKDH, S.FPH, S.HQFPHSJ, S.DDJB, S.SFXMDJ
+        FROM BDC_SL_SFXM S
+        <where>
+            <if test="sfxxid != null and sfxxid != ''">
+                and s.sfxxid =#{sfxxid}
+            </if>
+            <if test="sfxmdm != null and sfxmdm != ''">
+                and s.sfxmdm in
+                <foreach collection="sfxmdm.split(',')" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="sfxxidList != null and sfxxidList.size() > 0">
+                and s.sfxxid IN
+                <foreach collection="sfxxidList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="gzlslid != null and gzlslid != ''">
+                and s.sfxxid in (
+                    select sfxx.sfxxid from BDC_SL_SFXX sfxx where sfxx.gzlslid = #{gzlslid}
+                )
+            </if>
+            <if test="xmid != null and xmid != ''">
+                and s.sfxxid in (
+                    select sfxx.sfxxid from BDC_SL_SFXX sfxx where sfxx.xmid = #{xmid}
+                )
+            </if>
+        </where>
+    </select>
+
+    <select id="listBdcSlSfxmSfbzDOAll"  resultType="cn.gtmap.realestate.common.core.domain.accept.BdcSlSfxmSfbzDO">
+        select * from bdc_sl_sfxm_sfbz
+    </select>
+
+    <select id="listNoSfxxYsjeData" resultType="java.lang.String">
+        SELECT  sfxx.gzlslid
+        from bdc_sl_sfxx sfxx INNER JOIN bdc_sl_sfxm sfxm on sfxx.sfxxid = sfxm.sfxxid
+        where
+            sfxx.slsj <![CDATA[ >= ]]> #{sfsjks}
+          and sfxx.slsj <![CDATA[ <= ]]> #{sfsjjs}
+          and sfxm.ysje is null
+    </select>
+
+    <update id="plModifySfxmSfzt">
+        <if test="sfxxidList != null and sfxxidList.size() > 0 and sfzt != null">
+            UPDATE BDC_SL_SFXM T SET T.SFZT = #{sfzt}
+            WHERE T.SFXXID IN
+            <foreach collection="sfxxidList" item="item" open="(" close=")" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </update>
+
+    <select id="listBdcSlSfxmByGzlslid" resultType="cn.gtmap.realestate.common.core.domain.accept.BdcSlSfxmDO"
+            parameterType="cn.gtmap.realestate.common.core.qo.accept.BdcSlSfxmQO">
+        SELECT S.SFXMID,S.SFXXID,S.SFXMMC,S.SFXMDM,S.XH,S.SL,S.JMJE,S.YSJE,S.SSJE,
+        S.SFBL,S.BZ,S.JEDW,S.JSFF,S.JFFS,S.JFZD,S.SFLX,S.SFXMBZ,S.QLRLB, S.JFSBM
+        FROM BDC_SL_SFXM S
+        left join bdc_sl_sfxx t on t.sfxxid=s.SFXXID
+        <where>
+            <if test="sfxxid != null and sfxxid != ''">
+                and t.sfxxid =#{sfxxid}
+            </if>
+            <if test="gzlslid != null and gzlslid != ''">
+                and t.gzlslid =#{gzlslid}
+            </if>
+            <if test="qlrlb != null and qlrlb != ''">
+                and t.qlrlb =#{qlrlb}
+            </if>
+            <if test="xmid != null and xmid != ''">
+                and t.xmid =#{xmid}
+            </if>
+        </where>
+    </select>
+
+    <update id="plxgDjfSfxmSsje">
+        <if test="sfxxidList != null and sfxxidList.size() > 0">
+            UPDATE BDC_SL_SFXM T SET T.SSJE = #{ssje}
+            WHERE instr(T.SFXMMC , '登记费')>0  and T.SFXXID IN
+            <foreach collection="sfxxidList" item="item" open="(" close=")" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </update>
+
+    <select id="queryYjSfxmxxGroupBySfxmbz" resultType="cn.gtmap.realestate.common.core.domain.accept.BdcSlSfxmDO">
+        <if test="sfxxidList != null and sfxxidList.size() > 0 or (xmid != null and xmid !='')">
+            SELECT sfxm.sfxmbz as sfxmbz, sum (nvl(sfxm.sl, 0)) as sl, sum(nvl(sfxm.ssje,0)) as ssje
+            FROM BDC_SL_SFXX sfxx left join BDC_SL_SFXM sfxm on sfxx.sfxxid = sfxm.sfxxid
+            <where>
+                <if test="xmid != null and xmid !=''">
+                    AND sfxx.xmid=#{xmid}
+                </if>
+                <if test="qlrlb != null and qlrlb !=''">
+                    AND sfxx.qlrlb=#{qlrlb}
+                </if>
+                <if test="sfyj != null">
+                    AND nvl(sfxx.sfyj,0)=#{sfyj}
+                </if>
+                <if test="sfxxidList != null and sfxxidList.size() > 0">
+                    AND sfxx.sfxxid IN
+                    <foreach collection="sfxxidList" item="item" open="(" close=")" separator=",">
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+                <if test="hjfk == true">
+                    AND sfxx.hj IS NOT NULL
+                    AND sfxx.hj != 0
+                </if>
+            </where>
+            group by sfxm.sfxmbz
+        </if>
+    </select>
+</mapper>

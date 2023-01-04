@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.accept.core.mapper.BdcYjdhSfxxGxMapper">
+    <select id="queryYjSfxxidList" parameterType="java.lang.String"
+            resultType="java.lang.String">
+        SELECT t.sfxxid FROM BDC_YJDH_SFXX_GX t
+        WHERE t.yjdh =#{yjdh}
+    </select>
+
+    <select id="queryYjSfxxGxBySfxxidList" resultType="cn.gtmap.realestate.common.core.domain.accept.BdcYjdhSfxxGxDO">
+        SELECT t.sfxxid, t.yjdh, t.slbh, t.gzlslid, t.gxid
+        FROM BDC_YJDH_SFXX_GX t left join  BDC_YJSF_DDXX d on t.yjdh = d.yjdh
+        where
+            d.DDZT = 1
+        <if test="sfxxidList != null and sfxxidList.size() > 0">
+            AND sfxxid IN
+            <foreach collection="sfxxidList" item="item" open="(" close=")" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="queryYjdhxxBySfxxid" parameterType="java.lang.String"  resultType="java.lang.String">
+        SELECT t.yjdh
+        FROM BDC_YJDH_SFXX_GX t left join BDC_YJSF_DDXX d on t.yjdh = d.yjdh
+        WHERE  d.ddzt!=-1
+        <if test="sfxxid != null and sfxxid!='' ">
+            and t.sfxxid = #{sfxxid}
+        </if>
+    </select>
+
+    <select id="queryYjfYjdh" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT d.YJDH FROM BDC_YJDH_SFXX_GX t left join BDC_YJSF_DDXX d on t.yjdh = d.yjdh
+        WHERE
+            d.ddzt = 2 and sfxxid = #{sfxxid}
+    </select>
+
+</mapper>

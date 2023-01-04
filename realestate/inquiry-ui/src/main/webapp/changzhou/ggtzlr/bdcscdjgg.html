@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/common.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/form.css"/>
+    <link rel="stylesheet" href="../../static/css/bdcgg.css"/>
+    <title>不动产首次登记公告</title>
+</head>
+<body>
+<div class="header">
+    <h1 class="gg">不动产首次登记公告</h1>
+</div>
+<div id="ggxx"></div>
+<script type="text/html" id="ggxxTpl">
+    <div class="main">
+        {{# var ggnr = d.ggxx.bdcGgVO }}
+        {{# var bdcGg = d.ggxx}}
+        <p>
+            <input name="ggid" class="bdcgg" type="hidden" id="ggid" value="{{bdcGg.ggid || ''}}">
+            <input name="xmid" class="bdcgg" type="hidden" id="xmid" value="{{bdcGg.xmid || ''}}">
+            <span style="float: right">编号：<span contenteditable="true"
+                                                id="ggbh"
+                                                class="input-underline bdcgg">{{ggnr.ggbh || ''}}</span></span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;经初步审定，我机构拟对下列不动产权利予以首次登记，根据《江苏省不动产登记条例》第二十八条、《不动产登记暂行条例实施细则》第十七条的规定，现予公告。如有异议，请自本公告之日起十五个工作日内（
+            <span contenteditable="true" id="ggjssjn" class="input-underline bdcgg">{{ggnr.ggjssjn || ''}}</span>年<span
+                contenteditable="true" id="ggjssjy" class="input-underline bdcgg">{{ggnr.ggjssjy || ''}}</span>月<span
+                contenteditable="true" id="ggjssjr" class="input-underline bdcgg">{{ggnr.ggjssjr || ''}}</span>日之前）将异议书面材料送达我机构。逾期无人提出异议或者异议不成立的，我机构将予以登记。<br>
+            <span style="float: right">异议书面材料送达地址：<span contenteditable="true" id="yyclsddz"
+                                                        class="input-underline bdcgg">{{ggnr.yyclsddz || bdcGg.yysmclsddz || ''}}</span></span><br>
+            <span style="float: right">联系方式：<span contenteditable="true" id="lxdh" class="input-underline bdcgg">{{ggnr.lxdh || bdcGg.lxfs  || ''}}</span></span><br>
+        <div class="layui-form-item">
+             <table id="ggywsj" lay-filter="ggywsj"></table>
+        </div>
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;特此公告。
+        </p>
+    </div>
+
+    <div class="footer">
+        <div class="footer-right">
+            <span style="float: right">常州市自然资源和规划局</span>
+            <span style="float: right"><p class="date"><span contenteditable="true" id="ggkssjn"
+                                                             class="input-underline bdcgg">{{ggnr.ggkssjn || ''}}</span>年<span
+                    contenteditable="true" id="ggkssjy" class="input-underline bdcgg">{{ggnr.ggkssjy ||''}}</span>月<span
+                    contenteditable="true"
+                    id="ggkssjr"
+                    class="input-underline bdcgg">{{ggnr.ggkssjr ||''}}</span>日
+        </p></span>
+        </div>
+        <br>
+        <div class="footer-btn">
+            <button type="button" class="layui-btn bdc-major-btn" id="save" onclick="saveGg()">保存</button>
+            <!--<button type="button" class="layui-btn bdc-secondary-btn" id="glyw" onclick="linkProcess('')">关联业务</button>-->
+        </div>
+    </div>
+</script>
+<div id="bdc-popup-small" class="bdc-hide">
+    <form class="layui-form" action="">
+        <div class="layui-form-item pf-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">受理编号：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="slbh" autocomplete="off" placeholder="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">产权证号：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="cqzh" autocomplete="off" placeholder="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">权利人：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="qlr" autocomplete="off" placeholder="" class="layui-input">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--表格上面功能按钮-->
+<script type="text/html" id="ggywsjBtn">
+    <button type="button" class="layui-btn layui-btn-sm bdc-major-btn" lay-event="add">新增</button>
+    <button type="button" class="layui-btn layui-btn-sm bdc-delete-btn" lay-event="del">删除</button>
+    <button type="button" class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="edit">编辑</button>
+    <button type="button" class="layui-btn layui-btn-sm bdc-table-second-btn" lay-event="glyw">关联业务</button>
+
+</script>
+
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/changzhou/ggtz/bdcscdjgg.js"></script>
+</body>
+</html>
