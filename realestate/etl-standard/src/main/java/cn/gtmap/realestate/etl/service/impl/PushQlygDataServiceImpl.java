@@ -7,10 +7,12 @@ package cn.gtmap.realestate.etl.service.impl;
 
 
 import cn.gtmap.realestate.common.core.domain.BdcLzrDO;
+import cn.gtmap.realestate.common.core.domain.BdcXmDO;
 import cn.gtmap.realestate.common.core.domain.BdcXtQtdjYwDO;
 import cn.gtmap.realestate.common.core.domain.BdcZdDsfzdgxDO;
 import cn.gtmap.realestate.common.core.domain.exchange.yzw.*;
 import cn.gtmap.realestate.common.core.qo.init.BdcLzrQO;
+import cn.gtmap.realestate.common.core.qo.init.BdcXmQO;
 import cn.gtmap.realestate.common.core.service.feign.init.BdcLzrFeignService;
 import cn.gtmap.realestate.common.core.service.feign.init.BdcXmFeignService;
 import cn.gtmap.realestate.common.core.service.feign.inquiry.BdcCommonFeignService;
@@ -99,6 +101,9 @@ public class PushQlygDataServiceImpl implements PushQlygDataService {
             BnInfApply bnInfApply = dozerMapper.map(infApply, BnInfApply.class);
             if (StringUtils.isNotBlank(bnInfSpare.getGzlslid())) {
                 BdcXtQtdjYwDO getxtpz = bdcCommonFeignService.getxtpz(bnInfSpare.getGzlslid());
+                BdcXmQO bdcXmQO = new BdcXmQO();
+                bdcXmQO.setGzlslid(bnInfSpare.getGzlslid());
+                List<BdcXmDO> bdcXmDOS = bdcXmFeignService.listBdcXm(bdcXmQO);
                 if (Objects.nonNull(getxtpz)) {
                     if (StringUtils.isNotBlank(getxtpz.getApplytype())) {
                         bnInfApply.setApplyType(getxtpz.getApplytype());
@@ -121,6 +126,21 @@ public class PushQlygDataServiceImpl implements PushQlygDataService {
                         bnInfApply.setAnticipateDayType(getxtpz.getFdbjsxlx());
                     }
                 }
+                bnInfApply.setState("1");
+                if (CollectionUtils.isEmpty(bdcXmDOS)) {
+                    bnInfApply.setSqWay("0");
+                }else {
+                    Integer sply = bdcXmDOS.get(0).getSply();
+                    if(Objects.isNull(sply)){
+                        bnInfApply.setSqWay("0");
+                    }else {
+                        if (sply == 0){
+                            bnInfApply.setSqWay("0");
+                        }else {
+                            bnInfApply.setSqWay("1");
+                        }
+                    }
+                }
             }
             //参数处理 -- 联系电话为空直接传空值
             if (StringUtils.isNotBlank(bnInfApply.getLinkmanPhone()) && CommonConstantUtils.YZW_DHMRZ.equals(bnInfApply.getLinkmanPhone())) {
@@ -133,7 +153,13 @@ public class PushQlygDataServiceImpl implements PushQlygDataService {
             if (StringUtils.isNotBlank(bnInfApply.getAreaNo()) && (bnInfApply.getAreaNo().length() < AREA_LENGTH)) {
                 bnInfApply.setAreaNo(StringUtils.rightPad(bnInfApply.getAreaNo(),12,"0"));
             }
-
+            if (StringUtils.isBlank(bnInfApply.getAreaName())) {
+                bnInfApply.setAreaName("");
+            }
+            bnInfApply.setCatalogCode(infApply.getCatalogCode());
+            if (StringUtils.isBlank(bnInfApply.getCatalogCode())) {
+                bnInfApply.setCatalogCode("");
+            }
             //转换证件种类
             Map<String, String> dsfZjlxMap = queryDsfZdMap(ZJLX_ZDBS,DSFXTBS);
             if (StringUtils.isNotBlank(bnInfApply.getLinkmanPaperType())

@@ -541,6 +541,88 @@ layui.use(['jquery', 'element', 'form', 'laytpl', 'layer', 'table','workflow', '
 
         });
 
+
+        // 点击分屏
+        var fpShow = false ;
+        $('.bdc-fj-title .bdc-show-two').on('click', function (){
+            fpShow = !fpShow;
+            if (fpShow) {
+                //如果已经展开附件了先收起附件再去分屏 判断点开附件
+                if(isShow){
+                    //此处是收起附件的方法
+                    $('.bdc-fj-show img').css('transform', 'rotate(0)');
+                    $('.bdc-fj-content').addClass('bdc-hide');
+                    $('.layui-layout-admin .layui-body .layadmin-tabsbody-item').css('padding-bottom', '0');
+                    $('.layui-side-menu .layui-side-scroll').css('padding-bottom', '35px');
+                    $('.bdc-fj-list').addClass('bdc-hide');
+                    $('.bdc-fj-default-content').removeClass('bdc-hide');
+                }
+                //隐藏收缩附件图片
+                $(".bdc-fj-show img").hide()
+                $(".bdc-aside-close").click();
+                //左移分屏
+                $("#LAY_app_body").addClass("bdc-fp-left")
+                //隐藏默认附件框
+                $('.bdc-fj-default-content').addClass('bdc-hide');
+                //展示附件
+                $('.bdc-fj-list').removeClass('bdc-hide');
+                //去除初始默认高度
+                $(".bdc-fj-list").removeAttr("style");
+                //右移分屏
+                $(".bdc-fj-list").addClass("bdc-fp-right")
+                //拷贝左侧高度 防止拖拽过形成内置高度
+                $(".bdc-fp-right").height( $(".bdc-fp-left"))
+                //展开附件实际内容
+                $('.bdc-fj-content').removeClass('bdc-hide');
+                //设置附件内容高度
+                $(".bdc-fj-content").height($(".layadmin-tabsbody-item").height() - 38-61)
+
+                //图标旋转
+                $('.bdc-fj-title .bdc-show-two').addClass('bdc-normal');
+                //判断是否显示原权利附件，如果配置显示则隐藏原权利附件
+                if(xsyqlfj){
+                    $(".bdc-yqlfj-default-content").hide()
+                }
+            } else {
+                //展示收缩附件图片
+                $(".bdc-fj-show img").show()
+                //旋转90度
+                $('.bdc-fj-title .bdc-show-two').removeClass('bdc-normal');
+                //展开左侧收缩栏
+                $(".bdc-aside-open").click();
+                // 去除分屏样式
+                $("#LAY_app_body").removeClass("bdc-fp-left")
+                //恢复默认附件样式
+                $('.bdc-fj-default-content').removeClass('bdc-hide');
+                //隐藏附件实际内容
+                $('.bdc-fj-list').addClass('bdc-hide');
+                //右移分屏
+                $(".bdc-fj-list").removeClass("bdc-fp-right")
+
+                //还原附件内容高度
+                $(".bdc-fj-content").removeAttr("style");
+
+                //    恢复主窗口宽度大小
+                $("#LAY_app_body").removeAttr("style");
+                //恢复附件大小
+                $(".bdc-fj-list").removeAttr("style");
+                //展示原权利附件
+                if(xsyqlfj){
+                    $(".bdc-yqlfj-default-content").show()
+                }
+                //判断是否展开附件
+                if(isShow){
+                    $(".bdc-fj-show img").click();
+                }
+                //判断是否设置了图片分屏样式，恢复附件初始样式
+                if(document.querySelector("fp-img")){
+                        $("#seeImgView img").removeClass('fp-img')
+                }
+
+            }
+        });
+
+
         // 点击以窗口或者最大化展示附件弹窗
         var popupLayer;
         $('.bdc-fj-title .bdc-show-popup').on('click', function () {
@@ -623,7 +705,6 @@ layui.use(['jquery', 'element', 'form', 'laytpl', 'layer', 'table','workflow', '
                 }
             });
         });
-
         $(document).on('mousedown', '.bdc-fj-title .bdc-show-bottom', function () {
             layer.close(popupLayer);
             $('.bdc-fj-list').removeClass('bdc-hide');
@@ -821,6 +902,21 @@ layui.use(['jquery', 'element', 'form', 'laytpl', 'layer', 'table','workflow', '
                     }
                 });
                 viewer.show();
+                // 定时器判断获取到img dom
+                var timer = setInterval(function(){
+
+                    if(document.querySelector("#seeImgView img")){
+                        //判断是否分屏 分屏 则调整图片位置
+                        if(fpShow){
+                            $("#seeImgView img").addClass('fp-img')
+                        }else{
+                            $("#seeImgView img").removeClass('fp-img')
+                        }
+                        //关闭定时器
+                        clearInterval(timer);
+                    }
+                },200);
+
             }
         }
 

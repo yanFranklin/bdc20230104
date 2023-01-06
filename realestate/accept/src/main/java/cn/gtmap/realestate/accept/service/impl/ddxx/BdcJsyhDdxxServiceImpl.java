@@ -97,6 +97,10 @@ public class BdcJsyhDdxxServiceImpl implements BdcDdxxAbstractService {
             zrScddDTO.setFqsj(DateUtils.formateTime(new Date(), DateUtils.DATE_FORMATYMDHMSF));
             // 类型 1:扫码下单,2:pos下单
             zrScddDTO.setFqly(lx);
+            //  lx=2-线下支付(pos，现金)时，操作员号必填
+            if ("2".equals(lx)) {
+                zrScddDTO.setCzyh(lx);
+            }
             zrScddDTO.setSlbh(bdcXmDTO.getSlbh());
             // 客户订单号
             String ddbh = UUIDGenerator.generate16();

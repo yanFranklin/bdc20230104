@@ -123,12 +123,36 @@ layui.use(['form', 'jquery', 'laydate', 'element', 'layer', 'laytpl'], function(
         return false;
     })
 
-    //打印申请表
-    $("#print").on('click',function(item){
-        var modelUrl = getIP() + "/realestate-inquiry-ui/static/printModel/sdqsqb.fr3";
-        var dataUrl=  getIP() + "/realestate-inquiry-ui/sdqgh/print/" + processInsId +"/"+isOneWebSource;
-        print(modelUrl, dataUrl, false);
-    })
+    //保存水电气信息
+    // 保存
+    $("#saveSdq").click(function () {
+        addModel();
+        var sdqxx = [];
+        $('.basic-info tr').each(function (index, item) {
+            if (!$(this).hasClass("gray-tr")) {
+                var sdq = {};
+                $($(this).find("input,select")).each(function (index, item) {
+                    sdq[item.name] = item.value;
+                })
+                if (isNotBlank(sdq.ywlx)) {
+                    sdqxx.push(sdq);
+                }
+            }
+        });
+        if (sdqxx.length === 0) {
+            removeModal();
+            layer.alert("没有需要保存的数据");
+            return false;
+        }
+        getReturnData("/sdqgh/saveSdq/" + processInsId + "?needHz=false", JSON.stringify(sdqxx), "POST", function () {
+            removeModal();
+            ityzl_SHOW_SUCCESS_LAYER("保存成功");
+
+        }, function (error) {
+            delAjaxErrorMsg(error);
+        });
+
+    });
 
     // 查询大云文件中心的地址
     querySlymUrl();
@@ -393,6 +417,7 @@ function controlBtnStatus(item,data){
         $(item).find('.xhzmc').val(data.xhzmc);
         $(item).find('.hzzl').val(data.hzzl);
         $(item).find('.consno').attr({"sdqghid":data.id})
+        $(item).find('.id').val(data.id);
         // 核验成功
         if (data.hyjg=="1"){
             $(item).find('.result').val("可以正常受理");

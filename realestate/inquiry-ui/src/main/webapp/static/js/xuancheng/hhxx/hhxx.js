@@ -15,20 +15,20 @@ layui.use(['table', 'layer', 'jquery', 'response'], function () {
     var BASE_URL = '/realestate-inquiry-ui/rest/v1.0/sjxxgx';
 
     cols = [
-        {field: 'sZXM', title: '逝者姓名'},
-        {field: 'sZZJH', title: '逝者证件号'},
-        {field: 'sZXB', title: '逝者性别'},
-        {field: 'sZHJDZ', title: '逝者户籍地址'},
+        {field: 'SZXM', title: '逝者姓名'},
+        {field: 'SZZJH', title: '逝者证件号'},
+        {field: 'SZXB', title: '逝者性别'},
+        {field: 'SZHJDZ', title: '逝者户籍地址'},
         {
-            field: 'sWRQ', width: 180, title: '死亡日期',
+            field: 'SWRQ', width: 180, title: '死亡日期',
             templet: function (d) {
-                return formatRq(d.sWRQ);
+                return formatRq(d.SWRQ);
             }
         },
         {
-            field: 'hHKSSJ', width: 180, title: '火化日期',
+            field: 'HHKSSJ', width: 180, title: '火化日期',
             templet: function (d) {
-                return format(d.hHKSSJ);
+                return format(d.HHKSSJ);
             }
         }
     ];

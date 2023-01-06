@@ -9,6 +9,7 @@ import cn.gtmap.realestate.common.core.dto.exchange.sjxxgx.*;
 import cn.gtmap.realestate.common.core.dto.exchange.xuancheng.hhxx.HhxxRequestBody;
 import cn.gtmap.realestate.common.core.dto.exchange.xuancheng.hhxx.HhxxRequestCondition;
 import cn.gtmap.realestate.common.core.dto.exchange.xuancheng.hhxx.HhxxResponseBody;
+import cn.gtmap.realestate.common.core.dto.exchange.xuancheng.hhxx.HhxxResponseData;
 import cn.gtmap.realestate.common.core.ex.AppException;
 import cn.gtmap.realestate.common.core.dto.inquiry.BdcJgysbaRequestDTO;
 import cn.gtmap.realestate.common.core.dto.inquiry.BdcJgysbaResponseDTO;
@@ -29,6 +30,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.dom4j.io.SAXReader;
@@ -475,15 +477,23 @@ public class BdcSjxxgxController extends BaseController {
      * @author <a href="mailto:zhuyong@gtmap.cn">zhuyong</a>
      */
     @GetMapping("/fyxx/{jkmc}")
-    public Object qyxxcx(@LayuiPageable Pageable pageable, BdcFyxxQO bdcLsdclQO, @PathVariable("jkmc") String jkmc) {
+    public Object fycx(@LayuiPageable Pageable pageable, BdcFyxxQO bdcLsdclQO, @PathVariable("jkmc") String jkmc) {
         if(!CheckParameter.checkAnyParameter(bdcLsdclQO) || StringUtils.isBlank(jkmc)) {
             throw new MissingArgumentException("缺失查询参数");
         }
 
+        // 律师调查令查询结果字段
+        String lsdclcxjg = "lsxm,lsxb,lszyjg,lszyzh,lsdclbh,dcsx,dclyxjzrq,fymc";
+        // 立案文书查询结果字段
+        String lawscxjg = "ah,slfy,ay,dsr,cbbm,cbr,sjy,larq,sar,labd,sycx,ajly";
+
         try {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("requestBody", URLEncoder.encode(JSON.toJSONString(bdcLsdclQO), "UTF-8"));
-            LOGGER.info("宣城查询法院查询接口{}信息入参：{}", jkmc, JSON.toJSONString(bdcLsdclQO));
+            JSONObject param = new JSONObject();
+            param.put("condition", bdcLsdclQO);
+            param.put("requiredItems", "xclsdcl".equals(jkmc)? lsdclcxjg : lawscxjg);
+            jsonObject.put("requestBody", URLEncoder.encode(JSON.toJSONString(param), "UTF-8"));
+            LOGGER.info("宣城查询法院查询接口{}信息入参：{}", jkmc, JSON.toJSONString(jsonObject));
 
             Object response = exchangeInterfaceFeignService.requestInterface(jkmc, jsonObject);
             if (null == response) {
@@ -596,7 +606,17 @@ public class BdcSjxxgxController extends BaseController {
         HhxxResponseBody hhxxResponseBody = new HhxxResponseBody();
 
         try {
-            hhxxResponseBody = hhxxFeignService.hhxx(reqJsonStr);
+            String res = hhxxFeignService.hhxx(reqJsonStr);
+            res = StringEscapeUtils.unescapeJava(res);
+
+            if (res.endsWith("\"")) {
+                res = res.substring(0,res.length()-1);
+            }
+            if (res.startsWith("\"")) {
+                res = res.substring(1);
+            }
+
+            hhxxResponseBody = JSONObject.parseObject(res, HhxxResponseBody.class);
 
             LOGGER.info("宣城火化信息查询, 响应结果: {}", JSON.toJSONString(hhxxResponseBody));
         } catch (Exception e) {
@@ -608,7 +628,7 @@ public class BdcSjxxgxController extends BaseController {
 //        hhxxResponseBody = JSONObject.parseObject(test1, HhxxResponseBody.class);
 
         String resultCode = hhxxResponseBody.getResultCode();
-        List<HhxxResponseBody.HhxxResponseData> responseDataList = new ArrayList<>();
+        List<HhxxResponseData> responseDataList = new ArrayList<>();
         if (StringUtils.isNotBlank(resultCode)) {
             if ("00".equals(resultCode)) {
                 LOGGER.info("宣城火化信息查询,请求成功 resultCode: {}", resultCode);

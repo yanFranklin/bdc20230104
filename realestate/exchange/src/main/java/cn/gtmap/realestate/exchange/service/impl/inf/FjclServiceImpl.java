@@ -375,7 +375,14 @@ public class FjclServiceImpl implements FjclService {
         } else if (!move && fjclmxDTO != null
                 && StringUtils.isNotBlank(fjclmxDTO.getFjnr())) {
             // 有图片内容(base64code)的上传
-            MultipartFile file = Base64Utils.base64ToMultipart("data:image/jpeg;base64," + fjclmxDTO.getFjnr());
+            MultipartFile file = null;
+            if (fjclmxDTO.getFjnr().contains("data:")) {
+                LOGGER.info("包含文件data格式说明：{}", fjclmxDTO.getFjmc());
+                file = Base64Utils.base64ToMultipart(fjclmxDTO.getFjnr());
+            } else {
+                LOGGER.info("不包含文件data格式说明：{}", fjclmxDTO.getFjmc());
+                file = Base64Utils.base64ToMultipart("data:image/jpeg;base64," + fjclmxDTO.getFjnr());
+            }
             if (file != null) {
                 try {
                     MultipartDto multipartDto = getUploadParamDto(storageDto, file.getBytes(), fjclmxDTO.getFjmc());

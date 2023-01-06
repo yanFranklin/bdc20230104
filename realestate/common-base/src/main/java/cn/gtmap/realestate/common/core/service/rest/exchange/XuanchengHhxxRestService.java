@@ -18,6 +18,6 @@ public interface XuanchengHhxxRestService {
      * @description 宣城火化信息
      */
     @PostMapping("/realestate-exchange/rest/v1.0/xuancheng/zyzygh/hhxx")
-    HhxxResponseBody hhxx(@RequestBody String jsonStr);
+    String hhxx(@RequestBody String jsonStr);
 
 }

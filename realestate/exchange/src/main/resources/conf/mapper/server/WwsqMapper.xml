@@ -1041,17 +1041,40 @@
         select MAX(T.qxdm) QXDM ,bdcdyh, max(fjh) FJH,
         max(zl) ZL ,max(zh) ZH from (
         SELECT substr(a.bdcdyh,0,6) qxdm, a.bdcdyh,a.fjh,a.zh,a.zl from BDC_FDCQ A
-        WHERE substr(a.bdcdyh,0,6) = #{qxdm} and a.zl = #{zl}
-        <if test="null != bdcdyh and bdcdyh != ''">
-            and a.bdcdyh = #{bdcdyh}
-        </if>
+        <where>
+
+            <if test="null != qxdm and qxdm != ''">
+                and substr(a.bdcdyh,0,6) = #{qxdm}
+            </if>
+            <if test="null != zl and zl != ''">
+                and a.zl = #{zl}
+            </if>
+            <if test="null != zlmh and zlmh != ''">
+                and a.zl LIKE '%' || #{zlmh} || '%'
+            </if>
+            <if test="null != bdcdyh and bdcdyh != ''">
+                and a.bdcdyh = #{bdcdyh}
+            </if>
+        </where>
         union all
-        SELECT substr(a.bdcdyh,0,6) qxdm, a.bdcdyh,a.fjh,a.zh,a.zl from BDC_YG A
-        WHERE substr(a.bdcdyh,0,6) = #{qxdm} and a.zl = #{zl}
-        <if test="null != bdcdyh and bdcdyh != ''">
-            and a.bdcdyh = #{bdcdyh}
-        </if>
-        ) t group by t.bdcdyh
+        SELECT substr(y.bdcdyh,0,6) qxdm, y.bdcdyh,y.fjh,y.zh,y.zl from BDC_YG Y
+        <where>
+            <if test="null != qxdm and qxdm != ''">
+                and substr(y.bdcdyh,0,6) = #{qxdm}
+            </if>
+            <if test="null != zl and zl != ''">
+                and y.zl = #{zl}
+            </if>
+            <if test="null != zlmh and zlmh != ''">
+                and y.zl LIKE '%' || #{zlmh} || '%'
+            </if>
+            <if test="null != bdcdyh and bdcdyh != ''">
+                and y.bdcdyh = #{bdcdyh}
+            </if>
+
+        </where>
+        ) t
+        group by t.bdcdyh
     </select>
 
     <select id="listRygfqk" parameterType="cn.gtmap.realestate.exchange.core.dto.wwsq.rygfqk.request.RygfqkRequestDTO"

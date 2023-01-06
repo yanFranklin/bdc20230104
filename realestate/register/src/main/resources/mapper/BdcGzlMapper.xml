@@ -5,7 +5,7 @@
     <!--分页查询工作流事件接口-->
     <select id="listBdcGzlsjByPage" resultType="cn.gtmap.realestate.common.core.domain.register.BdcGzlSjDO"
             parameterType="cn.gtmap.realestate.common.core.qo.register.BdcGzlQO">
-        select t.sjid,t.SJMC,t.SJBS,t.JDMC,t.CJR,t.CJSJ from BDC_GZLSJ t
+        select t.sjid,t.SJMC,t.SJBS,t.JDMC,t.CJR,t.CJSJ,t.GZLDYID from BDC_GZLSJ t
         <where>
             <if test="sjmc != null and sjmc != ''">
                 and t.sjmc LIKE '%' || #{sjmc} || '%'
@@ -15,6 +15,15 @@
             </if>
             <if test="jdmc != null and jdmc != ''">
                 and t.jdmc = #{jdmc}
+            </if>
+            <if test="gzldyid != null and gzldyid != ''">
+                and t.gzldyid = #{gzldyid}
+            </if>
+            <if test="jdmcList != null and jdmcList.size() > 0">
+                and t.jdmc in
+                <foreach collection="jdmcList" item="item" separator="," open="(" close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
             </if>
         </where>
         order by t.sjbs
@@ -80,4 +89,14 @@
         from bdc_gzlsj_gx t
         where t.sjid = #{sjid}
     </select>
+
+    <select id="listNullDyid" resultType="cn.gtmap.realestate.common.core.domain.register.BdcGzlSjDO">
+        select t.sjid,t.SJMC,t.SJBS,t.JDMC,t.CJR,t.CJSJ,t.GZLDYID from BDC_GZLSJ t where t.gzldyid is null
+    </select>
+
+    <update id="updateGzlsjLcdyid" parameterType="String" >
+        <if test="sjid != null and sjid != ''">
+            update bdc_gzlsj set gzldyid =#{gzldyid,jdbcType=VARCHAR} where sjid=#{sjid}
+        </if>
+    </update>
 </mapper>

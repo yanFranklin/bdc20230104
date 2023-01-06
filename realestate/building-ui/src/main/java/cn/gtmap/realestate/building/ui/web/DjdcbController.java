@@ -5,6 +5,7 @@ import cn.gtmap.realestate.building.ui.web.main.BaseController;
 import cn.gtmap.realestate.common.core.annotations.LayuiPageable;
 import cn.gtmap.realestate.common.core.domain.accept.BdcSlQjdcsqDO;
 import cn.gtmap.realestate.common.core.domain.building.*;
+import cn.gtmap.realestate.common.core.dto.accept.JypjqDTO;
 import cn.gtmap.realestate.common.core.dto.building.*;
 import cn.gtmap.realestate.common.core.ex.AppException;
 import cn.gtmap.realestate.common.core.ex.MissingArgumentException;
@@ -23,10 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -433,5 +431,16 @@ public class DjdcbController extends BaseController {
         return exchangeInterfaceFeignService.requestInterface("hfDaFjxx", param);
     }
 
+    /**
+     * @param
+     * @author <a href="mailto:duwei@gtmap.cn">duwei</a>
+     * @description 下载分层分户图至ftp
+     * @date : 2023/1/3
+     */
+    @ResponseBody
+    @PostMapping("/fcfht/download")
+    public void downloadFcfht(@RequestBody FhtDTO fhtDTO) throws IOException {
+        fwHstFeignService.downloadFcfhtHefei(fhtDTO);
+    }
 
 }

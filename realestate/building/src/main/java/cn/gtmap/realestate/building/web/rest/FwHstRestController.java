@@ -13,12 +13,15 @@ import cn.gtmap.realestate.building.service.impl.ReadHstFromDbAndFtpServiveImpl;
 import cn.gtmap.realestate.building.util.BuildingUtils;
 import cn.gtmap.realestate.building.util.Constants;
 import cn.gtmap.realestate.building.web.main.BaseController;
+import cn.gtmap.realestate.common.core.annotations.LogNote;
 import cn.gtmap.realestate.common.core.domain.building.*;
 import cn.gtmap.realestate.common.core.dto.building.BdcdyResponseDTO;
+import cn.gtmap.realestate.common.core.dto.building.FhtDTO;
 import cn.gtmap.realestate.common.core.dto.building.FwHstRequestDTO;
 import cn.gtmap.realestate.common.core.service.rest.building.FwHstRestService;
 import cn.gtmap.realestate.common.core.support.mybatis.mapper.EntityMapper;
 import cn.gtmap.realestate.common.core.support.mybatis.mapper.Example;
+import cn.gtmap.realestate.common.util.LogActionConstans;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -31,7 +34,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -298,7 +303,7 @@ public class FwHstRestController extends BaseController implements FwHstRestServ
                 }
             }else{
                 // 户室图合并方式不是上下的时候，直接去户室图表中查询
-                FwHstDO fwHstDO = entityMapper.selectByPrimaryKey(FwHstDO.class, fwHsDO.getFwHstIndex());;
+                FwHstDO fwHstDO = entityMapper.selectByPrimaryKey(FwHstDO.class, fwHsDO.getFwHstIndex());
                 if(fwHstDO != null){
                     result.add(BuildingUtils.blobToStr(fwHstDO.getHst()));
                 }else{
@@ -307,5 +312,43 @@ public class FwHstRestController extends BaseController implements FwHstRestServ
             }
         }
         return result;
+    }
+
+    /**
+     * @param
+     * @param
+     * @author <a href="mailto:duwei@gtmap.cn">duwei</a>
+     * @description 下载分层分户图至ftp
+     * @date : 2023/1/3
+     */
+    @Override
+    @ResponseStatus(code = HttpStatus.OK)
+    @LogNote(value = "下载上传至ftp", action = LogActionConstans.OTHER)
+            public void downloadFcfhtHefei(@RequestBody FhtDTO fhtDTO) throws IOException {
+        fwHsService.downloadFcfhtHefei(fhtDTO);
+
+    }
+
+    /**
+     * @param bdcdyh
+     * @return java.util.List
+     * @author <a href="mailto:sunyuzhuang@gtmap.cn">sunyuzhuang</a>
+     * @description 查询房屋户室图（合肥）
+     */
+    @Override
+    public List<String> queryFwHstBase64ByBdcdyhHefei(@PathVariable(name = "bdcdyh") String bdcdyh, @RequestParam(name = "qjgldm", required = false) String qjgldm,
+                                                @RequestParam(name = "slbh", required = false) String slbh, @RequestParam(name = "bdcqzh", required = false) String bdcqzh) throws IOException {
+        String fcfhtStr = queryHstBase64ForHsAndDz(bdcdyh, qjgldm);
+        if(StringUtils.isBlank(fcfhtStr)){
+            //从FTP获取下载的分层分户图
+            List<String> fcfhtList = fwHsService.getFcfhtFromFTP(bdcdyh);
+            if(CollectionUtils.isNotEmpty(fcfhtList)){
+                return fcfhtList;
+            }
+            List<String> fxfhtFromDaxx = fwHsService.getFxfhtFromDaxx(bdcdyh,slbh,bdcqzh,qjgldm);
+            //获取不到调用接口获取
+            return fxfhtFromDaxx;
+        }
+        return Arrays.asList(fcfhtStr);
     }
 }

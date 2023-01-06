@@ -3,6 +3,7 @@ package cn.gtmap.realestate.register.web.rest.workflow;
 import cn.gtmap.realestate.common.core.domain.register.BdcGzlJkDO;
 import cn.gtmap.realestate.common.core.domain.register.BdcGzlSjDO;
 import cn.gtmap.realestate.common.core.domain.register.BdcGzlsjJkGxDO;
+import cn.gtmap.realestate.common.core.dto.register.BdcGzlsjFzDTO;
 import cn.gtmap.realestate.common.core.dto.register.BdcGzlsjPlDTO;
 import cn.gtmap.realestate.common.core.dto.register.BdcWorkFlowDTO;
 import cn.gtmap.realestate.common.core.qo.register.BdcGzlQO;
@@ -228,6 +229,16 @@ public class BdcGzlsjRestController extends BaseController implements BdcGzlsjRe
     @Override
     public void batchSaveGzlsj(@RequestBody BdcGzlsjPlDTO bdcGzlsjPlDTO) {
         bdcWorkFlowService.batchSaveGzlsj(bdcGzlsjPlDTO);
+    }
+
+    /**
+     * @param bdcGzlsjFzDTO@author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
+     * @description 复制工作流事件
+     * @date : 2023/1/4 11:11
+     */
+    @Override
+    public void copyGzlsj(@RequestBody BdcGzlsjFzDTO bdcGzlsjFzDTO) {
+        bdcWorkFlowService.copyGzlsj(bdcGzlsjFzDTO);
     }
 
 

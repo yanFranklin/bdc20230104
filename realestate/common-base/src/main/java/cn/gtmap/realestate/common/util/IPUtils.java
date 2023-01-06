@@ -135,6 +135,7 @@ public class IPUtils {
         byte[] mac = new byte[0];
         try {
             InetAddress ipAddress = InetAddress.getLocalHost();
+            LOGGER.info("本机ip：{}", ipAddress);
             mac = NetworkInterface.getByInetAddress(ipAddress).getHardwareAddress();
         } catch (UnknownHostException e) {
             e.printStackTrace();

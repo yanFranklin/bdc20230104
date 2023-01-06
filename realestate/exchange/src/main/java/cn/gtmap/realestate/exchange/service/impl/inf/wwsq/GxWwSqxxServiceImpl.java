@@ -2984,9 +2984,7 @@ public class GxWwSqxxServiceImpl implements GxWwSqxxService {
      */
     @Override
     public Page<Map> queryFwxxWithZlByPage(Pageable pageable, FwxxwithqxdmzlRequestDTO fwxxwithqxdmzlRequestDTO) {
-        if (fwxxwithqxdmzlRequestDTO == null
-                || StringUtils.isBlank(fwxxwithqxdmzlRequestDTO.getZl())
-                || StringUtils.isBlank(fwxxwithqxdmzlRequestDTO.getQxdm())) {
+        if (fwxxwithqxdmzlRequestDTO == null) {
             throw new MissingArgumentException("");
         }
         return repository.selectPaging("queryFwxxWithZlByPageOrder", fwxxwithqxdmzlRequestDTO, pageable);

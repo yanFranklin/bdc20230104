@@ -35,33 +35,33 @@ public class TYwblAttachment {
     /**
      * 38386 【南通】一张网推送逻辑修改需求 新增以下字段
      */
-    private String updateSign;
-    private Date updateDate;
-    private String updateErrorDesc;
+//    private String updateSign;
+//    private Date updateDate;
+//    private String updateErrorDesc;
 
-    public String getUpdateSign() {
-        return updateSign;
-    }
-
-    public void setUpdateSign(String updateSign) {
-        this.updateSign = updateSign;
-    }
-
-    public Date getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
-    }
-
-    public String getUpdateErrorDesc() {
-        return updateErrorDesc;
-    }
-
-    public void setUpdateErrorDesc(String updateErrorDesc) {
-        this.updateErrorDesc = updateErrorDesc;
-    }
+//    public String getUpdateSign() {
+//        return updateSign;
+//    }
+//
+//    public void setUpdateSign(String updateSign) {
+//        this.updateSign = updateSign;
+//    }
+//
+//    public Date getUpdateDate() {
+//        return updateDate;
+//    }
+//
+//    public void setUpdateDate(Date updateDate) {
+//        this.updateDate = updateDate;
+//    }
+//
+//    public String getUpdateErrorDesc() {
+//        return updateErrorDesc;
+//    }
+//
+//    public void setUpdateErrorDesc(String updateErrorDesc) {
+//        this.updateErrorDesc = updateErrorDesc;
+//    }
 
     public String getNo() {
         return no;

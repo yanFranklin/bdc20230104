@@ -16,6 +16,21 @@ layui.use(['form', 'jquery', 'element', 'table', 'laydate', 'upload'], function 
                 isSubmit = false;
                 verifyMsg = "必填项不能为空";
             }
+        },
+        urlencode: function (value, item) {
+            if (value !== '') {
+                if (value.indexOf('http:/') === -1) {
+                    value = "http:/" + value.replace(/\s*/g, "");
+                }
+                // var match = /^((ht|f)tps?):\/\/[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&:\/~\+#]*[\w\-\@?^=%&\/~\+#])?$/;
+                var reg = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/;
+                // var reg = new RegExp(/^((ht|f)tps?):\/\/[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&:\/~\+#]*[\w\-\@?^=%&\/~\+#])?$/);
+                if (!reg.test(value)) {
+                    $(item).addClass('layui-form-danger');
+                    isSubmit = false;
+                    verifyMsg = "url地址不符合要求";
+                }
+            }
         }
     });
     addModel();

@@ -23,6 +23,7 @@ import java.util.*;
  */
 @Intercepts({
         @Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class})
+//        ,@Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class})
 })
 public class MybatisLogInterceptor implements Interceptor {
     private String appName;
@@ -36,6 +37,7 @@ public class MybatisLogInterceptor implements Interceptor {
         this.appName = appName;
     }
 
+    @Override
     public Object intercept(Invocation invocation) throws Throwable {
         if(!LogSwitchConfig.getInstance().isMybatisSwitch()){
             return invocation.proceed();
@@ -66,10 +68,12 @@ public class MybatisLogInterceptor implements Interceptor {
         return null;
     }
 
+    @Override
     public Object plugin(Object target) {
         return Plugin.wrap(target, this);
     }
 
+    @Override
     public void setProperties(Properties properties) {
         this.appName = properties.getProperty("appName");
     }

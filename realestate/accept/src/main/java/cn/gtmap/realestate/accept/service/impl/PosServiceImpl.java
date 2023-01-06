@@ -1,11 +1,14 @@
 package cn.gtmap.realestate.accept.service.impl;
 
 import cn.gtmap.realestate.accept.core.service.BdcSlHsxxService;
+import cn.gtmap.realestate.accept.core.service.BdcSlSfssDdxxService;
 import cn.gtmap.realestate.accept.service.BdcYczfService;
 import cn.gtmap.realestate.accept.service.PosService;
 import cn.gtmap.realestate.common.core.domain.accept.BdcSlHsxxDO;
+import cn.gtmap.realestate.common.core.domain.accept.BdcSlSfssDdxxDO;
 import cn.gtmap.realestate.common.core.dto.accept.PosInputDTO;
 import cn.gtmap.realestate.common.core.dto.accept.PosOutputDTO;
+import cn.gtmap.realestate.common.core.qo.accept.BdcSlSfssDdxxQO;
 import cn.gtmap.realestate.common.core.service.feign.init.BdcXmFeignService;
 import cn.gtmap.realestate.common.core.support.mybatis.mapper.EntityMapper;
 import cn.hutool.core.date.DateUtil;
@@ -46,6 +49,9 @@ public class PosServiceImpl implements PosService {
 
     @Autowired
     BdcYczfService bdcYczfService;
+
+    @Autowired
+    BdcSlSfssDdxxService bdcSlSfssDdxxService;
 
     @Override
     public Object getXfjyxx(String gzlslid, String qlrlb) {
@@ -201,16 +207,17 @@ public class PosServiceImpl implements PosService {
      * @description 获取金额
      **/
     private String getZje(String gzlslid, String qlrlb) {
-        List<BdcSlHsxxDO> bdcSlHsxxDOList = bdcSlHsxxService.listBdcSlHsxxByGzlslidAndSqrlb(gzlslid, qlrlb);
-        if (CollectionUtils.isNotEmpty(bdcSlHsxxDOList)) {
-            BigDecimal swje = new BigDecimal("0.00");
-            if (CollectionUtils.isNotEmpty(bdcSlHsxxDOList)) {
-                for (BdcSlHsxxDO bdcSlHsxxDO : bdcSlHsxxDOList) {
-                    BigDecimal hj = BigDecimal.valueOf(Optional.ofNullable(bdcSlHsxxDO.getSjyzhj()).orElse(0.00));
-                    swje = swje.add(hj);
-                }
+        BdcSlSfssDdxxQO bdcSlSfssDdxxQO = new BdcSlSfssDdxxQO();
+        bdcSlSfssDdxxQO.setGzlslid(gzlslid);
+        bdcSlSfssDdxxQO.setQlrlb(qlrlb);
+        List<BdcSlSfssDdxxDO> bdcSlSfssDdxxDOList = bdcSlSfssDdxxService.listBdcSlSfssDdxx(bdcSlSfssDdxxQO);
+        if (CollectionUtils.isNotEmpty(bdcSlSfssDdxxDOList)) {
+            BigDecimal zje = new BigDecimal("0.00");
+            for (BdcSlSfssDdxxDO bdcSlSfssDdxxDO : bdcSlSfssDdxxDOList) {
+                BigDecimal hj = BigDecimal.valueOf(Optional.ofNullable(bdcSlSfssDdxxDO.getZe()).orElse(0.00));
+                zje = zje.add(hj);
             }
-            return toTransAmount(swje);
+            return toTransAmount(zje);
         }
         return null;
     }
@@ -225,9 +232,12 @@ public class PosServiceImpl implements PosService {
      * @description 获取支付单单号
      **/
     private String getZfddh(String gzlslid, String qlrlb) {
-        List<BdcSlHsxxDO> bdcSlHsxxDOList = bdcSlHsxxService.listBdcSlHsxxByGzlslidAndSqrlb(gzlslid, qlrlb);
-        if (CollectionUtils.isNotEmpty(bdcSlHsxxDOList)) {
-            return bdcSlHsxxDOList.get(0).getSphm();
+        BdcSlSfssDdxxQO bdcSlSfssDdxxQO = new BdcSlSfssDdxxQO();
+        bdcSlSfssDdxxQO.setGzlslid(gzlslid);
+        bdcSlSfssDdxxQO.setQlrlb(qlrlb);
+        List<BdcSlSfssDdxxDO> bdcSlSfssDdxxDOList = bdcSlSfssDdxxService.listBdcSlSfssDdxx(bdcSlSfssDdxxQO);
+        if (CollectionUtils.isNotEmpty(bdcSlSfssDdxxDOList)) {
+            return bdcSlSfssDdxxDOList.get(0).getDdbh();
         }
         return null;
     }

@@ -12,7 +12,7 @@ layui.use(['jquery', 'layer', 'element', 'form', 'table', 'laytpl'], function ()
  */
 function ts(obj, data) {
     debugger;
-    var url = "/realestate-inquiry-ui/sdqgh/nantong/sdq?gzlslid="+data.GZLSLID+"&ywlx=1";
+    var url = "/realestate-inquiry-ui/sdqgh/nantong/sdq?gzlslid="+data.GZLSLID+"&ywlx="+data.YWLX;
     $.ajax({
         url: url,
         type: "GET",
@@ -53,8 +53,8 @@ function xgdy(obj,blzt,shyj) {
     debugger;
     var blztDom = $("tr > th[data-field=\"BLZT\"]");
     var blztWidth = blztDom.width();
-    // var shyjDom = $("tr > th[data-field=\"SDQSHYJ\"]");
-    // var shyjWidth = shyjDom.width();
+    var shyjDom = $("tr > th[data-field=\"SDQSHYJ\"]");
+    var shyjWidth = shyjDom.width();
     var selector = obj.tr.selector;
     if (isNotBlank(blzt)) {
     // .layui-table-body tr[data-index="3"] td[data-field="BLZT"]
@@ -64,12 +64,12 @@ function xgdy(obj,blzt,shyj) {
         blztHtml[0].innerText = blzt;
         blztHtml.width(blztWidth);
     }
-    // if (isNotBlank(shyj)) {
-    //     var selectorShyj = selector + " td[data-field=\"SDQSHYJ\"]";
-    //     var shyjHtml = $(selectorShyj);
-    //     shyjHtml[0].innerText = shyj;
-    //     shyjHtml.width(shyjWidth);
-    // }
+    if (isNotBlank(shyj)) {
+        var selectorShyj = selector + " td[data-field=\"SDQSHYJ\"]";
+        var shyjHtml = $(selectorShyj);
+        shyjHtml[0].innerText = shyj;
+        shyjHtml.width(shyjWidth);
+    }
 
 }
 

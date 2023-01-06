@@ -3965,5 +3965,6 @@ public class CommonConstantUtils {
      * 海域使用权不动产类型
      * */
     public static final Integer[] BDCLX_HYSYQ = {5, 6, 10, 11, 12, 13};
+
 }
 

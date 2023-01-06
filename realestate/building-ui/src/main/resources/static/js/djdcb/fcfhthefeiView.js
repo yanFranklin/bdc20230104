@@ -3,6 +3,7 @@ layui.config({
 }).extend({response: 'lib/bdcui/js/response'});
 // 户室图图片数组
 var hstList = [];
+var base64 = "";
 $('#fcfhthefei').click(function () {
     layui.use(["tree", "jquery", "response"], function () {
         var tree = layui.tree,
@@ -54,6 +55,7 @@ $('#fcfhthefei').click(function () {
                                     $('.bdc-total-page').html(totalPage);
                                     $('.bdc-current-page').html(nowPage);
                                     hstList = data;
+                                    base64 = hstList[0];
                                     $("#prev1").removeClass("layui-hide");
                                     $("#next1").removeClass("layui-hide");
                                     $("#img").removeClass("layui-hide");
@@ -136,6 +138,7 @@ $('#fcfhthefei').click(function () {
                     nowPage--;
                     $('.bdc-current-page').html(nowPage);
                     $("#img").attr("src","data:image/jpeg;base64," + hstList[nowPage-1]);
+                    base64 = hstList[nowPage-1];
                 }
             });
             //单击下一页
@@ -144,6 +147,7 @@ $('#fcfhthefei').click(function () {
                     nowPage++;
                     $('.bdc-current-page').html(nowPage);
                     $("#img").attr("src","data:image/jpeg;base64," + hstList[nowPage-1]);
+                    base64 = hstList[nowPage-1];
                 }
             });
 
@@ -186,6 +190,7 @@ $('#fcfhthefei').click(function () {
                             if (viewer) {
                                 viewer.destroy();
                             }
+                            base64 = data.data;
                             renderImg("data:image/jpeg;base64," + data.data);
                         }
                         removeModel();
@@ -201,6 +206,10 @@ $('#fcfhthefei').click(function () {
                 printDaxxImage(daid,nowPage);
             });
 
+            $('#download').click(function (){
+                download(nowPage)
+            })
+
             function printDaxxImage(daid,page) {
                 var user=queryCurrentUser();
                 if(user==undefined || user==null){
@@ -215,3 +224,19 @@ $('#fcfhthefei').click(function () {
 
     });
 });
+
+
+function download(nowPage){
+    var obj = {base64: base64, bdcdyh: bdcdyh, nowPage: nowPage};
+    $.ajax({
+        type: "POST",
+        data : JSON.stringify(obj),
+        contentType:"application/json;charset=UTF-8",
+        url: "/building-ui/djdcb/fcfht/download",
+        success: function (data) {
+            removeModel();
+        }, error: function (e) {
+            removeModel();
+        }
+    });
+}

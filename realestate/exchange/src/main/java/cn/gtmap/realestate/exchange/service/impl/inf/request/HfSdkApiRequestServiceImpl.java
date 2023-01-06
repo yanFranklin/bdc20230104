@@ -59,11 +59,11 @@ public class HfSdkApiRequestServiceImpl extends InterfaceRequestService<HfSdkApi
                 Object requestApp = appClass.newInstance();
                 if (requestApp != null) {
 
-                    LOGGER.info("电子证照请求版本1：{}", dataversion);
-                    LOGGER.info("电子证照请求版本sdk名1：{}", propBO.getSdkAppClassName());
+                    LOGGER.info("电子证照请求地区版本1：{}，sdk名1：{}", dataversion, propBO.getSdkAppClassName());
                     SdkApiAbstractApp abstractApp = (SdkApiAbstractApp) requestApp;
                     abstractApp.setHost(propBO.getHost());
                     abstractApp.setHttpPort(Integer.parseInt(propBO.getPort()));
+                    LOGGER.info("安徽地区电子证照请求参数:{}", requestParamMap.toString());
                     ApiResponse apiResponse = abstractApp.getApiResponse(requestParamMap);
                     LOGGER.info("电子证照response1:{}", apiResponse.toString());
 

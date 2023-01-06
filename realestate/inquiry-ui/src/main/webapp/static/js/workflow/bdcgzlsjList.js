@@ -3,12 +3,12 @@
  * @description 工作流事件配置查询页面
  * @date : 2022/4/8 14:19
  */
-var form;
+var form, table;
 layui.use(['table', 'laytpl', 'laydate', 'layer', 'form', 'upload'], function () {
     var $ = layui.jquery,
-        table = layui.table,
         layer = layui.layer,
         upload = layui.upload;
+    table = layui.table;
     form = layui.form;
 
     var BASE_URL = '/realestate-inquiry-ui/rest/v1.0';
@@ -191,6 +191,8 @@ layui.use(['table', 'laytpl', 'laydate', 'layer', 'form', 'upload'], function ()
             case 'delete':
                 deleteGzlsj(checkStatus.data);
                 break;
+            case 'copy':
+                copyGzlsj(checkStatus.data);
         }
     });
 
@@ -321,6 +323,31 @@ layui.use(['table', 'laytpl', 'laydate', 'layer', 'form', 'upload'], function ()
 
     }
 });
+
+function copyGzlsj(gzlsjData) {
+    layer.open({
+        title: '复制流程事件',
+        type: 2,
+        area: ['430px', '500px'],
+        content: 'fzgzlsj.html'
+        , cancel: function () {
+            //右上角关闭回调
+            //return false 开启该代码可禁止点击该按钮关闭
+            //加载表格
+            var BASE_URL = '/realestate-inquiry-ui/rest/v1.0';
+            var url = BASE_URL + "/gzl/sj/page";
+            table.reload("sjTable", {
+                url: url,
+                page: {
+                    curr: 1  //重新从第 1 页开始
+                }
+            });
+        }
+        , success: function () {
+
+        }
+    });
+}
 
 function renderYymc() {
     $.ajax({

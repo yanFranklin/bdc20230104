@@ -89,3 +89,5 @@ COMMENT ON COLUMN BDC_SL_SFSS_DDXX.DDLX IS '订单类型';
 --changeset BDC_SL_SFSS_DDXX:11 failOnError:false runOnChange:true runAlways:false
 ALTER TABLE BDC_SL_SFSS_DDXX ADD(HYZFJFTJ NUMBER(2));
 COMMENT ON COLUMN BDC_SL_SFSS_DDXX.HYZFJFTJ IS '合一支付缴费途径：1.商业银行 2. 合一支付';
+--changeset BDC_SL_SFSS_DDXX:12 failOnError:false runOnChange:true runAlways:false
+Alter table BDC_SL_SFSS_DDXX Modify DDBH null;

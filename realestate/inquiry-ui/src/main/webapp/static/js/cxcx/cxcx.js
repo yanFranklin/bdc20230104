@@ -57,13 +57,13 @@ function qrcx(cxdata) {
         return;
     }).done(function(){
         // 执行撤销流程
-        cxlc();
+        cxlc(gzlslid);
     });
 
 }
 
 // 撤销流程
-function cxlc() {
+function cxlc(gzlslid) {
     layer.open({
         type: 1,
         title: ['撤销'],
@@ -73,7 +73,7 @@ function cxlc() {
             "        <form action=\"\" class=\"layui-form\">\n" +
             "            <div class=\"layui-form-item pf-form-item\">\n" +
             "                <div class=\"layui-inline\">\n" +
-            "                    <label class=\"layui-form-label\"><span class=\"required-span\"><sub>*</sub></span>撤消原因</label>\n" +
+            "                    <label class=\"layui-form-label\"><span class=\"required-span\"><sub>*</sub></span>撤销原因</label>\n" +
             "                    <div class=\"layui-input-inline bdc-end-time-box\">\n" +
             "                        <textarea class=\"layui-textarea\" id=\"abandonreason\" name=\"desc\" placeholder=\"请输入内容\"></textarea>\n" +
             "                    </div>\n" +

@@ -10308,10 +10308,22 @@
         </sql>
     </changeSet>
 
-    <changeSet id="2022-12-28-02-init" author="wangyinghao" dbms="oracle" runOnChange="true" failOnError="false" runAlways="false">
+    <changeSet id="2022-12-28-02-init" author="wangyinghao" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
         <sql>
-            alter table BDC_DSF_RZ add qxdm VARCHAR2(50);
+            alter table BDC_DSF_RZ
+                add qxdm VARCHAR2(50);
             comment on column BDC_DSF_RZ.qxdm is '区县代码';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2022-12-28-03-init" author="gaolining" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            alter table BDC_GZLSJ
+                add gzldyid VARCHAR2(50);
+            comment on column BDC_GZLSJ.gzldyid is '工作流定义id';
+            create index IDX_BDC_GZLSJ_Gzldyid on BDC_GZLSJ (GZLDYID);
         </sql>
     </changeSet>
 </databaseChangeLog>

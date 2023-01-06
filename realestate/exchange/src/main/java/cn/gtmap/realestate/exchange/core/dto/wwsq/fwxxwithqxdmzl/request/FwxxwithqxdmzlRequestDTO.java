@@ -1,7 +1,6 @@
 package cn.gtmap.realestate.exchange.core.dto.wwsq.fwxxwithqxdmzl.request;
 
 import cn.gtmap.realestate.exchange.core.bo.anno.IgnoreCast;
-import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * @author <a href="mailto:liyinqiao@gtmap.cn">liyinqiao</a>
@@ -11,11 +10,11 @@ import org.hibernate.validator.constraints.NotBlank;
 @IgnoreCast(ignoreNum = 6)
 public class FwxxwithqxdmzlRequestDTO {
 
-    @NotBlank(message = "区县代码参数不能为空")
     private String qxdm;
 
-    @NotBlank(message = "坐落参数不能为空")
     private String zl;
+
+    private String zlmh;
 
     private String zh;
 
@@ -24,6 +23,14 @@ public class FwxxwithqxdmzlRequestDTO {
     private String fjh;
 
     private String xmmc;
+
+    public String getZlmh() {
+        return zlmh;
+    }
+
+    public void setZlmh(String zlmh) {
+        this.zlmh = zlmh;
+    }
 
     public String getBdcdyh() {
         return bdcdyh;

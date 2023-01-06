@@ -172,14 +172,18 @@ public class AccessLogImpl implements AccessLogService {
             String conditionTime = StringUtils.isNotBlank(sbType) ? sbType : "dbsj";
             if (CollectionUtils.isNotEmpty(qxdmlist)) {
                 for (Map<String, String> map : qxdmlist) {
-                    if (StringUtils.isNotBlank(xzdm)) {
-                        while (StringUtils.equals(MapUtils.getString(map, "DM"), xzdm)) {
-                            accessLogsByQxdm(xzdm, MapUtils.getString(map, "MC"), conditionTime, accessDate, true);
-                            break;
+                    try {
+                        if (StringUtils.isNotBlank(xzdm)) {
+                            while (StringUtils.equals(MapUtils.getString(map, "DM"), xzdm)) {
+                                accessLogsByQxdm(xzdm, MapUtils.getString(map, "MC"), conditionTime, accessDate, true);
+                                break;
+                            }
+                        } else {
+                            String qxdm = String.valueOf(map.get("DM"));
+                            accessLogsByQxdm(qxdm, MapUtils.getString(map, "MC"), conditionTime, accessDate, true);
                         }
-                    } else {
-                        String qxdm = String.valueOf(map.get("DM"));
-                        accessLogsByQxdm(qxdm, MapUtils.getString(map, "MC"), conditionTime, accessDate, true);
+                    } catch (Exception e) {
+                        LOGGER.error("当前区县{}登簿日志上报异常", map.get("DM"), e);
                     }
                 }
             } else {
@@ -496,7 +500,7 @@ public class AccessLogImpl implements AccessLogService {
             msgNoticeDTO.setSbsj(DateUtil.formateTime(accessDate));
             accessLogTypeService.sendMsgByMsgType(msgNoticeDTO);
         } finally {
-            LOGGER.info("执行登簿日志数据插入开始: {}", JSONObject.toJSONString(bdcJrDbrzjlDO));
+            LOGGER.info("区县:{}执行登簿日志数据插入开始: {}", qxmc, JSONObject.toJSONString(bdcJrDbrzjlDO));
             if (insertJrdbrzFlag) {
                 //更改为sql语句更新，不修改do对象,特殊字段不用添加在do对象中
                 bdcJrDbrzjlDO = getBdcJrDbrzjlDO(bdcJrDbrzjlDO, xml, accessDate, qxdm);
@@ -554,7 +558,7 @@ public class AccessLogImpl implements AccessLogService {
                 }
                 return false;
             }
-            LOGGER.info("执行登簿日志数据插入结束: {}", JSONObject.toJSONString(bdcJrDbrzjlDO));
+            LOGGER.info("区县{}执行登簿日志数据插入结束", qxmc);
             return true;
         }
     }

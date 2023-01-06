@@ -1016,14 +1016,42 @@ function deleteEwm(sfxxid, qlrlb, sfzt) {
 
 //生成二维码
 function generateEwm(elem, sfxxid) {
-    // 按钮禁用
-    $(elem).attr("disabled", true).css("cursor", "not-allowed");
     // 是否区县代码转换，【常州】区县代码为320499时，土地使用权收费信息生成二维码时，按照320402的逻辑推送
     var sfqxdmzh = true;
     var qxdm = $("select[id='qxdm']").val();
     if(isNotBlank(qxdm) && qxdm == "320499" && sfqxdmzh){
         qxdm = "320402";
     }
+    addModel();
+    getReturnData("/rest/v1.0/cz/sfxx/sfddjh/" + processInsId, {}, "GET", function (data) {
+        removeModal();
+        if (isNotBlank(data) && data === true) {
+            // 如果业务中有多个不同的地籍号，页面提示信息
+            layer.confirm('1.多宗土地，请分别判断收费标准<br>2.请判断是否符合“抵押双方不变，同一宗地再次或多次抵押，减按25%收费”', {
+                title: '多地籍号提示信息',
+                btn: ['继续生成', '取消'],
+                btnAlign: 'c',
+            }, function (index, layero) {
+                // 查询推送登记费信息
+                cxtsdjfxx(elem, sfxxid, qxdm);
+                layer.close(index);
+            }, function (index) {
+                layer.close(index);
+            });
+        } else {
+            // 查询推送登记费信息
+            cxtsdjfxx(elem, sfxxid, qxdm);
+        }
+    }, function (xhr) {
+        removeModal();
+        delAjaxErrorMsg(xhr);
+    });
+}
+
+// 查询推送待缴信息
+function cxtsdjfxx(elem, sfxxid, qxdm) {
+    // 按钮禁用
+    $(elem).attr("disabled", true).css("cursor", "not-allowed");
     addModel();
     getReturnData("/rest/v1.0/cz/sfxx/cxtsdjfxx?sfxxid=" + sfxxid + "&tsly=1&pjdm=320301&&sftdsyj=true&qxdm=" + qxdm, {}, "POST", function (data) {
         removeModal();

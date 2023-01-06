@@ -317,6 +317,9 @@ public class YzwServiceImpl implements YzwService {
                 List<SDmXzdmDO> listXzdm = buildingZdConvertFeignService.listXzdm(sDmXzdmDO);
                 if (CollectionUtils.isNotEmpty(listXzdm)) {
                     infApply.setAreaName(listXzdm.get(0).getXzmc());
+                } else {
+                    //如果没有
+                    infApply.setAreaName(MapUtils.getString(orgData, "areaname"));
                 }
             }
             infApply.setDepartment(MapUtils.getString(orgData, "name"));
@@ -416,7 +419,8 @@ public class YzwServiceImpl implements YzwService {
                 UserDto userDto = getDepartment(taskData.getTaskAssigin());
                 if (userDto != null) {
                     infApplyProcess.setUserName(userDto.getAlias());
-
+                    infApplyProcess.setStartUserName(userDto.getAlias());
+                    infApplyProcess.setEndUserName(userDto.getAlias());
                     infApplyProcess.setUserStaffCode(userDto.getJobNumber());
                 }
                 if (CommonConstantUtils.TASK_THZT_BTH.equals(taskData.getBackStatus())) {

@@ -49,9 +49,9 @@ public class BnInfApplyProcess {
     /**
      * 38386 【南通】一张网推送逻辑修改需求 新增以下字段
      */
-    private String updateSign;
-    private Date updateDate;
-    private String updateErrorDesc;
+//    private String updateSign;
+//    private Date updateDate;
+//    private String updateErrorDesc;
 
     /**
      * V3.1 淮安 56643 【淮安市】3.0版本_新增政务一张网接口需求
@@ -59,29 +59,29 @@ public class BnInfApplyProcess {
     @ApiModelProperty(value = "业务推送时间")
     private Date jhptUpdateTime;
 
-    public String getUpdateSign() {
-        return updateSign;
-    }
-
-    public void setUpdateSign(String updateSign) {
-        this.updateSign = updateSign;
-    }
-
-    public Date getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
-    }
-
-    public String getUpdateErrorDesc() {
-        return updateErrorDesc;
-    }
-
-    public void setUpdateErrorDesc(String updateErrorDesc) {
-        this.updateErrorDesc = updateErrorDesc;
-    }
+//    public String getUpdateSign() {
+//        return updateSign;
+//    }
+//
+//    public void setUpdateSign(String updateSign) {
+//        this.updateSign = updateSign;
+//    }
+//
+//    public Date getUpdateDate() {
+//        return updateDate;
+//    }
+//
+//    public void setUpdateDate(Date updateDate) {
+//        this.updateDate = updateDate;
+//    }
+//
+//    public String getUpdateErrorDesc() {
+//        return updateErrorDesc;
+//    }
+//
+//    public void setUpdateErrorDesc(String updateErrorDesc) {
+//        this.updateErrorDesc = updateErrorDesc;
+//    }
 
     public Date getSyncDate() {
         return syncDate;

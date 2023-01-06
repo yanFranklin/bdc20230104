@@ -2,6 +2,7 @@ package cn.gtmap.realestate.accept.ui.web.rest.changzhou;
 
 
 import cn.gtmap.realestate.accept.ui.web.main.BaseController;
+import cn.gtmap.realestate.common.core.domain.BdcXmDO;
 import cn.gtmap.realestate.common.core.domain.accept.BdcLcTsjfGxDO;
 import cn.gtmap.realestate.common.core.domain.accept.BdcSlCxcsDO;
 import cn.gtmap.realestate.common.core.domain.accept.BdcSlSfxmDO;
@@ -13,7 +14,9 @@ import cn.gtmap.realestate.common.core.ex.AppException;
 import cn.gtmap.realestate.common.core.ex.ErrorCode;
 import cn.gtmap.realestate.common.core.qo.accept.BdcSfxxCzQO;
 import cn.gtmap.realestate.common.core.qo.accept.BdcSlSfxxQO;
+import cn.gtmap.realestate.common.core.qo.init.BdcXmQO;
 import cn.gtmap.realestate.common.core.service.feign.accept.*;
+import cn.gtmap.realestate.common.core.service.feign.init.BdcXmFeignService;
 import cn.gtmap.realestate.common.core.support.spring.Container;
 import cn.gtmap.realestate.common.util.CommonConstantUtils;
 import cn.gtmap.realestate.common.util.configuration.BdcConfigUtils;
@@ -27,6 +30,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author <a href="mailto:yaoyi@gtmap.cn">yaoyi</a>
@@ -49,6 +53,8 @@ public class BdcSfxxCzController  extends BaseController {
     BdcSlCxcsFeignService bdcSlCxcsFeignService;
     @Autowired
     BdcLcTsjfGxFeignService bdcLcTsjfGxFeignService;
+    @Autowired
+    BdcXmFeignService bdcXmFeignService;
 
     /**
      * 废除二维码信息
@@ -438,5 +444,32 @@ public class BdcSfxxCzController  extends BaseController {
             throw new AppException("缺失工作流实例ID或减免原因");
         }
         this.bdcSfxxFeignService.modifySfxxJmyyAndSfsdjf(bdcSfxxCzQO);
+    }
+
+    /**
+     * @description 判断当前项目是否存在多个不同的地籍号
+     * @author <a href="mailto:jinfei@gtmap.cn">jinfei</a>
+     * @date 2023/1/5 11:26
+     * @param gzlslid
+     * @return boolean
+     */
+    @ResponseBody
+    @GetMapping("/sfddjh/{gzlslid}")
+    public boolean sfddjh(@PathVariable(value="gzlslid") String gzlslid) {
+        if(StringUtils.isBlank(gzlslid)){
+            throw new AppException(ErrorCode.MISSING_ARG, "未获取到工作流实例ID");
+        }
+        boolean sfddjh = false;
+        BdcXmQO bdcXmQO = new BdcXmQO();
+        bdcXmQO.setGzlslid(gzlslid);
+        List<BdcXmDO> bdcXmDOList = bdcXmFeignService.listBdcXm(bdcXmQO);
+        if(CollectionUtils.isNotEmpty(bdcXmDOList)){
+            List<String> djhList = bdcXmDOList.stream().filter(bdcXmDO -> StringUtils.isNotBlank(bdcXmDO.getBdcdyh()))
+                    .map(bdcXmDO -> StringUtils.substring(bdcXmDO.getBdcdyh(), 0, 19)).distinct().collect(Collectors.toList());
+            if (CollectionUtils.isNotEmpty(djhList) && CollectionUtils.size(djhList) > 1) {
+                sfddjh = true;
+            }
+        }
+        return sfddjh;
     }
 }

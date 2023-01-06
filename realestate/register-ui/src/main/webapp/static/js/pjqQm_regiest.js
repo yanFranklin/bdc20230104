@@ -1088,7 +1088,6 @@ function queryPjqQmnr() {
         data: JSON.stringify(bdcQzxx),
         success: function (data) {
             if (data) {
-                // $('.pjq-qm').attr('src', 'data:image/png;base64,' + data.qznr);
                 $('.pjq-qm').attr('src', data);
             }
         }

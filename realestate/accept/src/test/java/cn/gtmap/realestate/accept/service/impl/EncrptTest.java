@@ -140,11 +140,11 @@ public class EncrptTest {
 //                "              and JSSJ > TO_DATE('2022-02-02')\n" +
 //                "              and to_char(BDC_XM.BDCDYH) like '%123%'\n" +
 //                ";";
-//        List<SQLStatement> statementList = SQLUtils
-//                .parseStatements(statement, JdbcConstantsEnum.ORACLE.getType());
-//        for (SQLStatement sqlStatement : statementList) {
-//            System.out.println(sqlStatement);
-//        }
+        List<SQLStatement> statementList = SQLUtils
+                .parseStatements(statement, "ORACLE");
+        for (SQLStatement sqlStatement : statementList) {
+            System.out.println(sqlStatement);
+        }
 
     }
 

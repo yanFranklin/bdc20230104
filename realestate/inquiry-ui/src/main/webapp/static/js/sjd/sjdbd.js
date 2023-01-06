@@ -502,7 +502,6 @@ function bdPrintChoice(dylx, appName, dataUrl, modelUrl, hiddeMode, sessionKey, 
 }
 
 function fjsc(){
-    debugger;
     if (isNullOrEmpty(checkeddata)) {
         warnMsg('请选择数据');
         return;
@@ -516,34 +515,41 @@ function fjsc(){
             return;
         }
     }
-    openWjsc(gzlslid,"扫描件");
-
+    openWjsc(gzlslid);
 }
 
 
 //打开附件上传页面
-function openWjsc(id, wjjmc){
-    getReturnData("/rest/v1.0/fjcl/folder", {gzlslid: id, wjjmc: wjjmc}, 'GET', function (data) {
-        if (isNotBlank(data)) {
-            var wjglCs = getWjglCs(id,"clientId", data.id, 2);
-            if(isNullOrEmpty(wjglCs.token) ||isNullOrEmpty(wjglCs.spaceId)){
-                layer.alert("缺失附件参数");
-                return false;
+function openWjsc(id){
+    var sNodeFileCountSet;
+    var bdcdjlx;
+    var bdcSlWjscDTO = queryBdcSlWjscDTO('', bdcdjlx, id);
+    var spaceId = id;
+
+    bdcSlWjscDTO.sNodeFileCountSet = JSON.stringify(sNodeFileCountSet);
+    bdcSlWjscDTO.spaceId = spaceId;
+    bdcSlWjscDTO.storageUrl = document.location.protocol + "//" + document.location.host + "/storage";
+    // bdcSlWjscDTO.storageUrl = "http://192.168.2.99:8030/storage";
+    var url = "/realestate-inquiry-ui/view/sjdbd/sjd.html?paramJson=" + encodeURI(JSON.stringify(bdcSlWjscDTO));
+    openSjcl(url, "附件上传");
+
+}
+
+//查询收件材料所需参数（打开附件上传使用）
+function queryBdcSlWjscDTO(clmc, djxl, processInsId) {
+    var bdcSlWjscDTO = {};
+    $.ajax({
+        url: getContextPath() +'/dtcx/bdcSlWjscDTO',
+        type: 'GET',
+        async: false,
+        data: {processInsId: processInsId, clmc: clmc, djxl: djxl},
+        success: function (data) {
+            if (isNotBlank(data)) {
+                bdcSlWjscDTO = data;
             }
-            var width = $(window).width() + "px";
-            var height = $(window).height() + "px";
-            var url = "/realestate-accept-ui/view/slym/sjd.html?paramJson=" + encodeURI(JSON.stringify(wjglCs));
-            var index = parent.layer.open({
-                title: "上传附件",
-                type: 2,
-                area: [width, height],
-                content: url
-            });
-            parent.layer.full(index);
-        }else{
-            layer.msg(clmc+ "文件夹生成失败");
+        }, error: function (xhr, status, error) {
+            delAjaxErrorMsg(xhr)
         }
-    }, function (err) {
-        delAjaxErrorMsg(err)
-    }, false);
+    });
+    return bdcSlWjscDTO;
 }

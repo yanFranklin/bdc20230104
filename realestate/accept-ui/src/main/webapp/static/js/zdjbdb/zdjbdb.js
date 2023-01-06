@@ -245,6 +245,51 @@ layui.use(['jquery', 'layer', 'element', 'form', 'table', 'laytpl'], function ()
 
     // 权利信息区域，重新生成按钮初始化事件绑定
     qlxxModel.initEvent();
+
+    // 点击房屋结构，房屋结构名称做出改变
+    form.on('select(fwjg)', function (data) {
+        var selected_value = data.value;
+        var selected_text = $(data.elem).parents('div.layui-inline').find('dd[lay-value=' + selected_value + ']').text().trim();
+        var $this_fwjg_outer_dom = $(data.elem).parents('div.layui-inline');
+        var $this_fwjgmc_outer_dom = $this_fwjg_outer_dom.parent().find('[name="fwjgmc"]').parents('div.layui-inline');
+
+        if (selected_value == 6) {
+            $this_fwjgmc_outer_dom.css({
+                'display': 'block'
+            });
+            $this_fwjgmc_outer_dom.find('[name="fwjgmc"]').val('');
+            $this_fwjgmc_outer_dom.find('[name="fwjgmc"]').attr('value', '')
+        } else {
+            $this_fwjgmc_outer_dom.css({
+                'display': 'none'
+            });
+            $this_fwjgmc_outer_dom.find('[name="fwjgmc"]').val(selected_text);
+            $this_fwjgmc_outer_dom.find('[name="fwjgmc"]').attr('value', selected_text);
+        }
+    });
+
+    // 点击规划用途，用途名称做出改变
+    form.on('select(fwyt)', function (data) {
+        var selected_value = data.value;
+        var selected_text = $(data.elem).parents('div.layui-inline').find('dd[lay-value=' + selected_value + ']').text().trim();
+        var $this_ghyt_outer_dom = $(data.elem).parents('div.layui-inline');
+        var $this_ytmc_outer_dom = $this_ghyt_outer_dom.parent().find('[name="ytmc"]').parents('div.layui-inline');
+
+        if (selected_value == 80) {
+            $this_ytmc_outer_dom.css({
+                'display': 'block'
+            });
+            $this_ytmc_outer_dom.find('[name="ytmc"]').val('')
+            $this_ytmc_outer_dom.find('[name="ytmc"]').attr('value', '')
+        } else {
+            $this_ytmc_outer_dom.css({
+                'display': 'none'
+            });
+            $this_ytmc_outer_dom.find('[name="ytmc"]').val(selected_text);
+            $this_ytmc_outer_dom.find('[name="ytmc"]').attr('value', selected_text);
+        }
+
+    });
 });
 
 // 按钮加载

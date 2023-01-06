@@ -256,13 +256,13 @@ public class BdcSlSfssDdxxServiceImpl implements BdcSlSfssDdxxService {
         }
         //新增新生成的订单数据
         if (CollectionUtils.isNotEmpty(qlrDdxxDOList)) {
-            this.insertBatchBdcSlSfssDdxx(qlrDdxxDOList);
+            this.entityMapper.batchSaveSelective(qlrDdxxDOList);
         }
         if (CollectionUtils.isNotEmpty(ywrDdxxDOList)) {
-            this.insertBatchBdcSlSfssDdxx(ywrDdxxDOList);
+            this.entityMapper.batchSaveSelective(ywrDdxxDOList);
         }
         if (CollectionUtils.isNotEmpty(hbDdxxList)) {
-            this.insertBatchBdcSlSfssDdxx(hbDdxxList);
+            this.entityMapper.batchSaveSelective(hbDdxxList);
         }
         return list;
     }
@@ -320,6 +320,9 @@ public class BdcSlSfssDdxxServiceImpl implements BdcSlSfssDdxxService {
 
     // 合一支付拆单创建订单
     private List<BdcSlSfssDdxxDO> createHyzfSplitOrder(List<BdcSlSfssDdxxDO> bdcSlSfssDdxxDOList, String slbh,String qlrlb, String xmid, String sfyj) {
+        // 合一支付生成订单时，先生成订单信息，后续进行更新
+        this.entityMapper.insertBatchSelective(bdcSlSfssDdxxDOList);
+
         Map<String, Object> param = new HashMap<>(6);
         param.put("slbh", slbh + qlrlb);
         param.put("xmid", xmid);

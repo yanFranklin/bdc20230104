@@ -1163,7 +1163,6 @@ public class BdcSdqghServiceImpl  extends InterfaceCodeBeanFactory  implements B
             }
             if (StringUtils.isBlank(bdcSdqghDO.getId())) {
                 BdcSdqywQO bdcSdqywQO =new BdcSdqywQO();
-                bdcSdqywQO.setConsno(bdcSdqghDO.getConsno());
                 bdcSdqywQO.setGzlslid(gzlslid);
                 bdcSdqywQO.setYwlx(bdcSdqghDO.getYwlx());
                 List<BdcSdqghDO> bdcSdqghDOList = bdcSdqghMapper.listBdcSdqghIn(bdcSdqywQO);

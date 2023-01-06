@@ -67,4 +67,9 @@ public class Constants {
      */
     public static final String QUARTZ_DELETE_EXPIRE_RUNNING_LOG_JOB_NAME = "DeleteExpireRunningLogQuartzJob";
 
+    /**
+     * 文件中心clientId
+     */
+    public static final String WJZX_CLIENTID = "clientId";
+
 }

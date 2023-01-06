@@ -34,38 +34,47 @@ public class BnInfApplyResult {
    /* private String syncSign;//信息同步标志
     private String syncErrorDesc;//信息同步错误原因
     private Date jhptUpdateTime;//数据推送时间*/
+    private Date jhptUpdateTime;
+
+    public Date getJhptUpdateTime() {
+        return jhptUpdateTime;
+    }
+
+    public void setJhptUpdateTime(Date jhptUpdateTime) {
+        this.jhptUpdateTime = jhptUpdateTime;
+    }
 
     /**
      * 38386 【南通】一张网推送逻辑修改需求 新增以下字段
      */
-    private String updateSign;
-    private Date updateDate;
-    private String updateErrorDesc;
+//    private String updateSign;
+//    private Date updateDate;
+//    private String updateErrorDesc;
 
 
-    public String getUpdateSign() {
-        return updateSign;
-    }
-
-    public void setUpdateSign(String updateSign) {
-        this.updateSign = updateSign;
-    }
-
-    public Date getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
-    }
-
-    public String getUpdateErrorDesc() {
-        return updateErrorDesc;
-    }
-
-    public void setUpdateErrorDesc(String updateErrorDesc) {
-        this.updateErrorDesc = updateErrorDesc;
-    }
+//    public String getUpdateSign() {
+//        return updateSign;
+//    }
+//
+//    public void setUpdateSign(String updateSign) {
+//        this.updateSign = updateSign;
+//    }
+//
+//    public Date getUpdateDate() {
+//        return updateDate;
+//    }
+//
+//    public void setUpdateDate(Date updateDate) {
+//        this.updateDate = updateDate;
+//    }
+//
+//    public String getUpdateErrorDesc() {
+//        return updateErrorDesc;
+//    }
+//
+//    public void setUpdateErrorDesc(String updateErrorDesc) {
+//        this.updateErrorDesc = updateErrorDesc;
+//    }
 
     public String getResultcetrname() {
         return resultcetrname;

@@ -1,27 +1,34 @@
 package cn.gtmap.realestate.building.core.service.impl;
 
+import cn.gtmap.realestate.building.config.ftp.FcfhtFtpConfig;
 import cn.gtmap.realestate.building.core.bo.FwbmBO;
 import cn.gtmap.realestate.building.core.mapper.FwHsMapper;
 import cn.gtmap.realestate.building.core.service.*;
 import cn.gtmap.realestate.building.service.bg.CxBgService;
 import cn.gtmap.realestate.building.util.BuildingUtils;
 import cn.gtmap.realestate.building.util.Constants;
+import cn.gtmap.realestate.building.util.FtpUtil;
 import cn.gtmap.realestate.common.core.domain.building.*;
-import cn.gtmap.realestate.common.core.dto.building.DjdcbFwhsResponseDTO;
-import cn.gtmap.realestate.common.core.dto.building.FwHsHbZhsRequestDTO;
-import cn.gtmap.realestate.common.core.dto.building.FwHsHouseIdDTO;
-import cn.gtmap.realestate.common.core.dto.building.FwhsQlrDTO;
+import cn.gtmap.realestate.common.core.dto.building.*;
+import cn.gtmap.realestate.common.core.ex.MissingArgumentException;
 import cn.gtmap.realestate.common.core.qo.building.BdcTddysfxxQO;
+import cn.gtmap.realestate.common.core.service.feign.exchange.ExchangeInterfaceFeignService;
 import cn.gtmap.realestate.common.core.support.mybatis.mapper.EntityMapper;
 import cn.gtmap.realestate.common.core.support.mybatis.mapper.Example;
 import cn.gtmap.realestate.common.core.support.mybatis.page.repository.Repository;
 import cn.gtmap.realestate.common.core.vo.building.BatchUpdateFwhsVO;
-import cn.gtmap.realestate.common.util.CheckEntityUtils;
-import cn.gtmap.realestate.common.util.InterfaceCodeBeanFactory;
-import cn.gtmap.realestate.common.util.UUIDGenerator;
+import cn.gtmap.realestate.common.util.*;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
+import org.apache.commons.net.ftp.FTPReply;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +38,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -55,6 +68,12 @@ public class FwHsServiceImpl extends InterfaceCodeBeanFactory implements FwHsSer
      */
     @Autowired
     private EntityMapper entityMapper;
+
+    @Autowired
+    UserManagerUtils userManagerUtils;
+
+    @Autowired
+    private ExchangeInterfaceFeignService exchangeInterfaceFeignService;
 
     @Autowired
     private FwZhsService fwZhsService;
@@ -82,12 +101,17 @@ public class FwHsServiceImpl extends InterfaceCodeBeanFactory implements FwHsSer
     private FwHsService fwHsService;
 
 
-
     @Autowired
     private FwXmxxService fwXmxxService;
 
     @Autowired
     private CxBgService cxBgService;
+
+    /**
+     * 分层分户图ftp配置
+     */
+    @Autowired
+    FcfhtFtpConfig fcfhtFtpConfig;
 
     /**
      * @param fwDcbIndex
@@ -98,8 +122,8 @@ public class FwHsServiceImpl extends InterfaceCodeBeanFactory implements FwHsSer
     @Override
     public List<FwHsDO> listFwHsListByFwDcbIndex(String fwDcbIndex) {
         if (StringUtils.isNotBlank(fwDcbIndex)) {
-            Map<String,String> paramMap = new HashMap<>();
-            paramMap.put("fwDcbIndex",fwDcbIndex);
+            Map<String, String> paramMap = new HashMap<>();
+            paramMap.put("fwDcbIndex", fwDcbIndex);
             return fwHsMapper.listFwHs(paramMap);
         }
         return new ArrayList<>(0);
@@ -133,8 +157,8 @@ public class FwHsServiceImpl extends InterfaceCodeBeanFactory implements FwHsSer
     @Override
     public List<FwhsQlrDTO> listFwhsWithQlr(String fwDcbIndex) {
         if (StringUtils.isNotBlank(fwDcbIndex)) {
-            Map<String,String> paramMap = new HashMap<>();
-            paramMap.put("fwDcbIndex",fwDcbIndex);
+            Map<String, String> paramMap = new HashMap<>();
+            paramMap.put("fwDcbIndex", fwDcbIndex);
             return fwHsMapper.listFwHsWithQlr(paramMap);
         }
         return new ArrayList<>(0);
@@ -360,7 +384,7 @@ public class FwHsServiceImpl extends InterfaceCodeBeanFactory implements FwHsSer
     @Override
     public FwHsHouseIdDTO queryFwhsHouseIdByBdcdyh(String bdcdyh) {
         if (StringUtils.isNotBlank(bdcdyh)) {
-            Map<String,String> paramMap = new HashMap<>();
+            Map<String, String> paramMap = new HashMap<>();
             paramMap.put("bdcdyh", bdcdyh);
             List<FwHsHouseIdDTO> fwHsHouseIdDTOList = fwHsMapper.listFwhsHouseIdByBdcdyh(paramMap);
             if (CollectionUtils.isNotEmpty(fwHsHouseIdDTOList)) {
@@ -380,7 +404,7 @@ public class FwHsServiceImpl extends InterfaceCodeBeanFactory implements FwHsSer
     public Map<String, List<String>> queryLcztByBdcdyh(List<String> bdcdyhList) {
         Map<String, List<String>> res = new HashMap<>();
         if (CollectionUtils.isNotEmpty(bdcdyhList)) {
-            LOGGER.info("------根据bdcdyh查权籍的lczt,bdcdyh为{}",bdcdyhList);
+            LOGGER.info("------根据bdcdyh查权籍的lczt,bdcdyh为{}", bdcdyhList);
 
             List<List<String>> bdcdyhListPartition = Lists.partition(bdcdyhList, 500);
             for (List<String> bdcdyhs : bdcdyhListPartition) {
@@ -405,10 +429,10 @@ public class FwHsServiceImpl extends InterfaceCodeBeanFactory implements FwHsSer
                 //3.1截取bdcdyh获取地籍号
                 List<String> djhList = new ArrayList<>(bdcdyhs.size());
                 for (String bdcdyh : bdcdyhs) {
-                    String djh = bdcdyh.substring(0,19);
+                    String djh = bdcdyh.substring(0, 19);
                     djhList.add(djh);
                 }
-                LOGGER.info("------根据djh查宗地的lczt,djh为{}",djhList);
+                LOGGER.info("------根据djh查宗地的lczt,djh为{}", djhList);
 
                 //3.2zd_djdcb/zd_k_xxxx的lczt=0的地籍号
                 List<String> resDjh = zdService.queryZdLcztByBdcdyh(djhList);
@@ -418,7 +442,7 @@ public class FwHsServiceImpl extends InterfaceCodeBeanFactory implements FwHsSer
                 //根据地籍号取对应单元号单元号
                 if (CollectionUtils.isNotEmpty(resDjh)) {
                     for (String bdcdyh : bdcdyhs) {
-                        String djh = bdcdyh.substring(0,19);
+                        String djh = bdcdyh.substring(0, 19);
                         if (resDjh.contains(djh)) {
                             resTd.add(bdcdyh);
                         }
@@ -522,9 +546,9 @@ public class FwHsServiceImpl extends InterfaceCodeBeanFactory implements FwHsSer
     }
 
     /**
-     * @author <a href="mailto:yaoyi@gtmap.cn">yaoyi</a>
-     * @param fwbm  房屋编码
+     * @param fwbm 房屋编码
      * @return java.util.List<cn.gtmap.realestate.common.core.domain.building.FwHsDO>
+     * @author <a href="mailto:yaoyi@gtmap.cn">yaoyi</a>
      * @description 只根据房屋编码参数查询房屋户室信息
      */
     @Override
@@ -626,7 +650,7 @@ public class FwHsServiceImpl extends InterfaceCodeBeanFactory implements FwHsSer
                 //处理bdcdyh，fwbm
                 if (StringUtils.isBlank(curFwHs.getBdcdyh())) {
                     curFwHs.setBdcdyh(bdcdyhService.creatFwBdcdyhByFwDcbIndex(curFwHs.getFwDcbIndex()));
-                    if(StringUtils.isNotBlank(curFwHs.getBdcdyh())){
+                    if (StringUtils.isNotBlank(curFwHs.getBdcdyh())) {
                         curFwHs.setBdczt(Constants.BDCZT_KY);
                     }
                 }
@@ -800,7 +824,7 @@ public class FwHsServiceImpl extends InterfaceCodeBeanFactory implements FwHsSer
     @Override
     public List<String> listValidBdcdyhByJson(String jsonData) {
         List<String> bdcdyhList = new ArrayList<>();
-        if(StringUtils.isNotBlank(jsonData)){
+        if (StringUtils.isNotBlank(jsonData)) {
             bdcdyhList.addAll(listValidBdcdyhByFwHsDO((FwHsDO) BuildingUtils.gnqyzGetDO(jsonData)));
         }
         return bdcdyhList;
@@ -815,8 +839,8 @@ public class FwHsServiceImpl extends InterfaceCodeBeanFactory implements FwHsSer
     @Override
     public List<String> listValidBdcdyhByBatchUpdateFwhsVO(BatchUpdateFwhsVO batchUpdateFwhsVO) {
         List<String> bdcdyhList = new ArrayList<>();
-        if(batchUpdateFwhsVO!=null&&CollectionUtils.isNotEmpty(batchUpdateFwhsVO.getFwHsIndexList())){
-            bdcdyhList=listValidBdcdyhByFwHsIndexList(batchUpdateFwhsVO.getFwHsIndexList());
+        if (batchUpdateFwhsVO != null && CollectionUtils.isNotEmpty(batchUpdateFwhsVO.getFwHsIndexList())) {
+            bdcdyhList = listValidBdcdyhByFwHsIndexList(batchUpdateFwhsVO.getFwHsIndexList());
         }
         return bdcdyhList;
     }
@@ -871,7 +895,7 @@ public class FwHsServiceImpl extends InterfaceCodeBeanFactory implements FwHsSer
      * @description 根据zl查询户室基本信息
      */
     @Override
-    public FwHsDO queryFwhsByZlAndBdcdyh(String zl,String bdcdyh) {
+    public FwHsDO queryFwhsByZlAndBdcdyh(String zl, String bdcdyh) {
         Example example = new Example(FwHsDO.class);
         if (StringUtils.isNotBlank(zl)) {
             example.createCriteria().andEqualTo("zl", zl);
@@ -903,12 +927,150 @@ public class FwHsServiceImpl extends InterfaceCodeBeanFactory implements FwHsSer
     }
 
     @Override
-    public void updateFwhsTddysfxx(BdcTddysfxxQO bdcTddysfxxQO){
-        if(CollectionUtils.isNotEmpty(bdcTddysfxxQO.getBdcdyhList())){
+    public void updateFwhsTddysfxx(BdcTddysfxxQO bdcTddysfxxQO) {
+        if (CollectionUtils.isNotEmpty(bdcTddysfxxQO.getBdcdyhList())) {
             fwHsMapper.updateFwhsTddysfxx(bdcTddysfxxQO);
 
         }
 
     }
 
+
+    @Override
+    public void downloadFcfhtHefei(FhtDTO fhtDTO) throws IOException {
+        String base64 = "";
+        String bdcdyh = "";
+        Integer page = 0;
+
+        if (Objects.nonNull(fhtDTO)){
+            base64 = fhtDTO.getBase64();
+            bdcdyh = fhtDTO.getBdcdyh();
+            page = fhtDTO.getNowPage();
+        }
+
+        //FTP上传操作
+        LOGGER.info("FTP上传开始,bdcdyh:{}", bdcdyh);
+        FTPClient ftpClient = null;
+        boolean flag = false;
+        if (StringUtils.isNotBlank(base64)) {
+            String localCharset = StringToolUtils.ENCODING_GBK;
+            ftpClient = FtpUtil.getFtpClient(fcfhtFtpConfig);
+            if (FTPReply.isPositiveCompletion(ftpClient.sendCommand("OPTS UTF8", "ON"))) {
+                localCharset = StringToolUtils.ENCODING_UTF8;
+                StringBuilder ftp = new StringBuilder();
+                String path = fcfhtFtpConfig.getPath();
+                String uploadFileNameNoTmp = bdcdyh + page + CommonConstantUtils.WJHZ_JPG;
+                ftp.append(StringUtils.defaultString(path, "")).append("/").append(bdcdyh);
+                LOGGER.info("上传地址:{}",ftp + "/" + uploadFileNameNoTmp);
+                ftpClient.setControlEncoding(localCharset);
+                ftpClient.enterLocalPassiveMode();// 设置被动模式
+                ftpClient.setFileType(FTP.BINARY_FILE_TYPE);//设置传输格式，FTP传输二进制
+                FtpUtil.createDirs(ftpClient, new String(ftp.toString().getBytes(localCharset), FTP.DEFAULT_CONTROL_ENCODING));
+                flag = ftpClient.storeFile(new String(uploadFileNameNoTmp.getBytes(localCharset), FTP
+                        .DEFAULT_CONTROL_ENCODING), new ByteArrayInputStream(Base64Utils.decodeBase64StrToByte(base64)));
+            }
+        }
+        if (flag) {
+            LOGGER.info("FTP上传结束,bdcdyh:{}", bdcdyh);
+        } else {
+            LOGGER.error("FTP上传失败，bdcdyh:{}", bdcdyh);
+        }
+    }
+
+    @Override
+    public List<String> getFcfhtFromFTP(String bdcdyh) throws IOException {
+        List<String> baseCodeList = new ArrayList<>();
+        if(StringUtils.isBlank(bdcdyh)){
+            throw new MissingArgumentException("查询参数bdcdyh缺失");
+        }
+        //根据获取分层分户图
+        FTPClient ftpClient = null;
+        ftpClient = FtpUtil.getFtpClient(fcfhtFtpConfig);
+        String pathName = new StringBuilder(CommonConstantUtils.ZF_YW_XG).append(bdcdyh).toString();
+        boolean isOpen = ftpClient.changeWorkingDirectory(pathName);
+        if(isOpen){
+            FTPFile[] ftpFiles = ftpClient.listFiles();
+            for (FTPFile file : ftpFiles) {
+                if(file.isFile() && file.getName().endsWith(".jpg")){
+                    InputStream in = FtpUtil.downloadFtpFile(ftpClient, pathName, file.getName());
+                    if (in != null) {
+                        String baseCode = BuildingUtils.getBase64FromInputStream(in);
+                        baseCodeList.add(baseCode);
+                        in.close();
+                        ftpClient.completePendingCommand();
+                    }
+                }
+            }
+        }
+        return baseCodeList;
+    }
+
+    @Override
+    public List<String> getFxfhtFromDaxx(String bdcdyh, String slbh, String bdcqzh,String qjgldm) throws IOException {
+       List<String> hstBase64CodeList = new ArrayList<>();
+        //获取档案信息
+        Map param = new HashMap();
+        if (StringUtils.isNotBlank(slbh)) {
+            param.put("docId", slbh);
+        }
+        param.put("type","1");
+        if (StringUtils.isNotBlank(bdcqzh)) {
+            try {
+                param.put("zqzh", URLDecoder.decode(bdcqzh, "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                LOGGER.error("", e);
+            }
+        } else {
+            param.put("zqzh", "");
+
+        }
+        if (MapUtils.isEmpty(param)) {
+            throw new MissingArgumentException("查询参数缺失！");
+        }
+        Object hfDaJbxx = exchangeInterfaceFeignService.requestInterface("hfDaJbxx", param);
+        JSONObject jsonObject = (JSONObject) JSON.toJSON(hfDaJbxx);
+        LOGGER.info("bdcdyh：{} 获取的档案基本信息 ：{}",bdcdyh,jsonObject);
+        if(jsonObject != null){
+            String imgid = jsonObject.get("IMGID").toString();
+            if(StringUtils.isNotBlank(imgid)) {
+                //获取目录
+                Map fcfhtMlxxParamMap = new HashMap();
+                fcfhtMlxxParamMap.put("archid", imgid);
+                Object hfFcfhtMlxx = exchangeInterfaceFeignService.requestInterface("hfFcfhtMlxx", fcfhtMlxxParamMap);
+                JSONArray objects = JSONArray.parseArray((String) JSON.toJSON(hfFcfhtMlxx));
+
+                LOGGER.info("bdcdyh：{} 获取的档案目录 ：{}",bdcdyh,objects);
+                if(objects != null){
+                    for (Object object : objects) {
+                        JSONObject daml = (JSONObject) JSON.toJSON(object);
+                        String frompage = daml.get("FROMPAGE").toString();
+                        if(StringUtils.isNotBlank(frompage)){
+                            Map fjxxParamMap = new HashMap();
+                            fjxxParamMap.put("username", userManagerUtils.getCurrentUserName());
+                            fjxxParamMap.put("archid", imgid);
+                            fjxxParamMap.put("currentpage", frompage);
+                            fjxxParamMap.put("type", "1");
+                            Object hfDaFjxx = exchangeInterfaceFeignService.requestInterface("hfDaFjxx", fjxxParamMap);
+                            JSONObject daFjxxJsonObject = (JSONObject) JSON.toJSON(hfDaFjxx);
+                            LOGGER.info("bdcdyh：{} ,archid：{}, 获取的附件信息 ：{}",bdcdyh,imgid,daFjxxJsonObject);
+                            if(daFjxxJsonObject != null ){
+                                Object data = daFjxxJsonObject.get("data");
+                                if(data != null){
+                                    hstBase64CodeList.add(data.toString());
+                                    FhtDTO fhtDTO = new FhtDTO();
+                                    fhtDTO.setBase64(data.toString());
+                                    fhtDTO.setBdcdyh(bdcdyh);
+                                    fhtDTO.setNowPage(Integer.parseInt(frompage));
+                                    downloadFcfhtHefei(fhtDTO);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return hstBase64CodeList;
+    }
 }
+
+

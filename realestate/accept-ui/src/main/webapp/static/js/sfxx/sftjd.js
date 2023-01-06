@@ -673,7 +673,7 @@ function fkmzf(qlrlb) {
                         if (isNotBlank(output)) {
                             layer.alert('收费成功！', {title: '提示'},function() {
                                 console.log('确认');
-                                posPaySuccess(processInsId);
+                                poszfcg(qlrlb);
                             });
                         }
                     }

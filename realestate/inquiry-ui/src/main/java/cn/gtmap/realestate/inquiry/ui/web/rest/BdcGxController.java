@@ -671,7 +671,7 @@ public class BdcGxController extends BaseController {
         JSONObject headJsonObject = jsonObject.getJSONObject("head");
 
         if(!"0".equals(headJsonObject.getString("status"))){
-            throw new AppException(headJsonObject.getString("msg"));
+            throw new AppException("死亡医学证明接口返回信息:"+headJsonObject.getString("msg"));
         }
 
         if(dataJsonObject.get("cxjg") instanceof  String){
@@ -1046,7 +1046,7 @@ public class BdcGxController extends BaseController {
         LOGGER.info("---中编办-事业单位信息查询接口:{}",jsonObject);
 
         if(!"查询成功".equals(jsonObject.getString("msg"))){
-            throw new AppException(jsonObject.getString("msg"));
+            throw new AppException("省级接口返回信息:"+jsonObject.getString("msg"));
         }
 
         JSONArray dataJsonArray = jsonObject.getJSONArray("data");

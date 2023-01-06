@@ -10,7 +10,7 @@ layui.use(['jquery', 'layer', 'element', 'form', 'table', 'laytpl'], function ()
         {type: 'checkbox', fixed: 'left'},
         {type: 'numbers', fixed: 'left', title: '序号', width: 40},
         {field: 'jkid', title: '接口id', hide: true},
-        {field: 'jkmc', sort: true, title: '接口名称', align: 'center', width: 400, style: 'text-align:left'},
+        {field: 'jkmc', sort: true, title: '接口地址', align: 'center', width: 400, style: 'text-align:left'},
         {
             field: 'jklx', title: '接口类型', align: 'center', width: 120,
             templet: function (d) {

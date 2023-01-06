@@ -4,6 +4,7 @@ import cn.gtmap.realestate.common.core.domain.register.BdcGzlJkDO;
 import cn.gtmap.realestate.common.core.domain.register.BdcGzlSjDO;
 import cn.gtmap.realestate.common.core.domain.register.BdcGzlsjJkGxDO;
 import cn.gtmap.realestate.common.core.dto.register.BdcGzlSjJkDTO;
+import cn.gtmap.realestate.common.core.dto.register.BdcGzlsjFzDTO;
 import cn.gtmap.realestate.common.core.dto.register.BdcGzlsjPlDTO;
 import cn.gtmap.realestate.common.core.dto.register.BdcWorkFlowDTO;
 import cn.gtmap.realestate.common.core.qo.register.BdcGzlQO;
@@ -150,4 +151,12 @@ public interface BdcWorkFlowService {
      * @date : 2022/4/21 15:21
      */
     void batchSaveGzlsj(BdcGzlsjPlDTO bdcGzlsjPlDTO);
+
+    /**
+     * @param
+     * @author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
+     * @description 复制工作流事件
+     * @date : 2023/1/4 11:12
+     */
+    void copyGzlsj(BdcGzlsjFzDTO bdcGzlsjFzDTO);
 }

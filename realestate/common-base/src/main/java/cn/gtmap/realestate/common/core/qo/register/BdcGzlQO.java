@@ -30,6 +30,10 @@ public class BdcGzlQO {
 
     private String sjmc;
 
+    private String gzldyid;
+
+    private List<String> jdmcList;
+
     public String getSjid() {
         return sjid;
     }
@@ -110,6 +114,22 @@ public class BdcGzlQO {
         this.sjmc = sjmc;
     }
 
+    public String getGzldyid() {
+        return gzldyid;
+    }
+
+    public void setGzldyid(String gzldyid) {
+        this.gzldyid = gzldyid;
+    }
+
+    public List<String> getJdmcList() {
+        return jdmcList;
+    }
+
+    public void setJdmcList(List<String> jdmcList) {
+        this.jdmcList = jdmcList;
+    }
+
     @Override
     public String toString() {
         return "BdcGzlQO{" +
@@ -123,6 +143,8 @@ public class BdcGzlQO {
                 ", gljk='" + gljk + '\'' +
                 ", jkidList=" + jkidList +
                 ", sjmc='" + sjmc + '\'' +
+                ", gzldyid='" + gzldyid + '\'' +
+                ", jdmcList=" + jdmcList +
                 '}';
     }
 }

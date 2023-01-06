@@ -9,6 +9,11 @@ layui.use(['table', 'layer', 'jquery'], function () {
         layer = layui.layer;
 
     var processInsId = $.getUrlParam('processInsId');
+    if(isNullOrEmpty(processInsId)) {
+        processInsId = $.getUrlParam('gzlslid');
+    }
+
+    var jkname = $.getUrlParam("jkname");
 
     /**
      * 加载Table数据列表
@@ -91,6 +96,7 @@ layui.use(['table', 'layer', 'jquery'], function () {
             }
             , done: function (res, curr, count) {
                 setHeight();
+                dealCxjgxx(res && res === "error" ? "fail" : "success", jkname);
             }
         });
     });

@@ -15,6 +15,16 @@ public class InitFjxxClnr {
 
     private String csfs;
 
+    private String fjnr;
+
+    public String getFjnr() {
+        return fjnr;
+    }
+
+    public void setFjnr(String fjnr) {
+        this.fjnr = fjnr;
+    }
+
     public String getFjurl() {
         return fjurl;
     }
@@ -45,5 +55,16 @@ public class InitFjxxClnr {
 
     public void setCsfs(String csfs) {
         this.csfs = csfs;
+    }
+
+    @Override
+    public String toString() {
+        return "InitFjxxClnr{" +
+                "fjurl='" + fjurl + '\'' +
+                ", fjmc='" + fjmc + '\'' +
+                ", fjid='" + fjid + '\'' +
+                ", csfs='" + csfs + '\'' +
+                ", fjnr='" + fjnr + '\'' +
+                '}';
     }
 }

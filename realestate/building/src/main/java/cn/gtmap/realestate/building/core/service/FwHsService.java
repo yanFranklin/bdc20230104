@@ -1,15 +1,14 @@
 package cn.gtmap.realestate.building.core.service;
 
 import cn.gtmap.realestate.common.core.domain.building.FwHsDO;
-import cn.gtmap.realestate.common.core.dto.building.DjdcbFwhsResponseDTO;
-import cn.gtmap.realestate.common.core.dto.building.FwHsHbZhsRequestDTO;
-import cn.gtmap.realestate.common.core.dto.building.FwHsHouseIdDTO;
-import cn.gtmap.realestate.common.core.dto.building.FwhsQlrDTO;
+import cn.gtmap.realestate.common.core.dto.building.*;
 import cn.gtmap.realestate.common.core.qo.building.BdcTddysfxxQO;
 import cn.gtmap.realestate.common.core.vo.building.BatchUpdateFwhsVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -354,4 +353,20 @@ public interface FwHsService {
      * @description 批量更新土地抵押释放信息
      */
     void updateFwhsTddysfxx(BdcTddysfxxQO bdcTddysfxxQO);
+
+    /**
+     * @author <a href="mailto:duwei@gtmap.cn">duwei</a>
+     * @description 上传ftp
+     */
+    void downloadFcfhtHefei(FhtDTO fhtDTO) throws IOException;
+    /**
+     * @author <a href="mailto:sunyuzhuang@gtmap.cn">sunyuzhuang</a>
+     * @description 根据bdcdyh从FTP下载户室图
+     */
+    List<String> getFcfhtFromFTP(String bdcdyh) throws IOException;
+    /**
+     * @author <a href="mailto:sunyuzhuang@gtmap.cn">sunyuzhuang</a>
+     * @description 从档案接口获取户室图上传到FTP并返回户室图base64字符串List
+     */
+    List<String> getFxfhtFromDaxx(String bdcdyh,String slbh,String bdcqzh,String qjgldm) throws IOException;
 }

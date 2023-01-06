@@ -77,11 +77,29 @@ layui.use(['jquery', 'layer', 'element', 'form', 'table', 'laytpl'], function ()
         autoSort: false,
         page: true,
         parseData: function (res) {
-            return {
-                code: res.code, //解析接口状态
-                msg: res.msg, //解析提示文本
-                count: res.totalElements, //解析数据长度
-                data: res.content //解析数据列表
+            var result;
+            if (isNullOrEmpty(res)) {
+                return {
+                    code: 0, //解析接口状态
+                    msg: '<img src="../../static/lib/registerui/image/table-none.png" alt="">无数据',
+                    count: 0, //解析数据长度
+                    data: [] //解析数据列表
+                }
+            } else {
+                if(this.page.curr){
+                    //若为第二页 则curr为2 页面显示的数据就是从res.data集合数组里的 （2-1）*limit（10）=10 到 limit（10）*2=20的数据
+                    result = res.content.slice(this.limit*(this.page.curr-1),this.limit*this.page.curr);
+                }
+                else{
+                    // 一开始就是第一页 则就是 显示的数据就是从res.data集合数组里的0到limit（10）中
+                    result=res.content.slice(0,this.limit);
+                }
+                return {
+                    code: res.code, //解析接口状态
+                    msg: res.msg, //解析提示文本
+                    count: res.totalElements, //解析数据长度
+                    data: result //解析数据列表
+                }
             }
         },
         done: function () {
@@ -135,19 +153,18 @@ layui.use(['jquery', 'layer', 'element', 'form', 'table', 'laytpl'], function ()
                     var name = $(this).attr('name');
                     obj[name] = $(this).val();
                 });
-
+                addModel();
                 table.reload("pageTable", {
                     url: getContextPath() + "/ggpt/ggxx",
                     contentType: 'application/json',
                     dataType: "json",
-                    where: {
-                        obj
-                    },
+                    where: {obj: obj},
                     method: 'post',
                     page: {
                         curr: 1  //重新从第 1 页开始
                     },
                     done: function (data) {
+                        removeModal();
                         currentPageData = data.data;
                     }
                 });

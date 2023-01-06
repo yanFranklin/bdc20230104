@@ -20,7 +20,7 @@ layui.use(['table', 'laytpl', 'laydate', 'layer', 'form', 'upload'], function ()
         {type: 'checkbox', fixed: 'left'},
         {type: 'numbers', fixed: 'left', title: '序号', width: 60},
         {field: 'jkid', title: '接口id', hide: true},
-        {field: 'jkmc', sort: true, title: '接口名称', align: 'center', width: 500, style: 'text-align:left'},
+        {field: 'jkmc', sort: true, title: '接口地址', align: 'center', width: 500, style: 'text-align:left'},
         {field: 'jksm', title: '接口说明', align: 'center', style: 'text-align:left', minWidth: 200},
         {
             field: 'jklx', title: '接口类型', align: 'center', width: 130,

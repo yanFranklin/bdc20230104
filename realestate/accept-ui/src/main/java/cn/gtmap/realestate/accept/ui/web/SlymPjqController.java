@@ -872,7 +872,7 @@ public class SlymPjqController extends BaseController {
     @GetMapping("/mkrzdb")
     @ResponseBody
     public Object mkrzdb(HttpServletRequest request, String qlrmc, String qlrzjh, String gzlslid) throws IOException {
-        String ip=IPPortUtils.getClientIp(request);
+        String ip=getPjqIp(request);
         return bdcSlPjqFeignService.mkrzdb(qlrmc,qlrzjh,gzlslid,ip);
 
     }
@@ -931,6 +931,7 @@ public class SlymPjqController extends BaseController {
         }
         if (StringUtils.isBlank(ip)) {
             ip = IPPortUtils.getClientIp(request);
+            LOGGER.info("客户端ip：{}", ip);
         }
         if ("true".equals(usemac)) {
             ip = IPUtils.getLocalMac();

@@ -994,7 +994,7 @@ function generateHtxxZh(xmxx, $nowTab) {
         laytpl(tpl).render(json, function (html) {
             view.innerHTML = html;
         });
-        form.render('select');
+        form.render();
         disabledAddFa();
     });
 }

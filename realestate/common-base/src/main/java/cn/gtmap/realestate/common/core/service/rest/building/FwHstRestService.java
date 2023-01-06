@@ -2,9 +2,11 @@ package cn.gtmap.realestate.common.core.service.rest.building;
 
 import cn.gtmap.realestate.common.core.domain.building.FwHsDO;
 import cn.gtmap.realestate.common.core.domain.building.FwHstDO;
+import cn.gtmap.realestate.common.core.dto.building.FhtDTO;
 import cn.gtmap.realestate.common.core.dto.building.FwHstRequestDTO;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -132,4 +134,23 @@ public interface FwHstRestService {
      */
     @GetMapping("/building/rest/v1.0/hst/base64/{bdcdyh}/hsthf")
     List<String> queryHstBase64Hefei(@PathVariable(name = "bdcdyh") String bdcdyh, @RequestParam(name = "qjgldm", required = false) String qjgldm);
+
+    /**
+     * @param
+     * @author <a href="mailto:duwei@gtmap.cn">duwei</a>
+     * @description 上传分层分户图至ftp(合肥)
+     * @date : 2021/10/12 9:01
+     */
+    @PostMapping("/building/rest/v1.0/fcfht/base64/ftp")
+    void downloadFcfhtHefei(@RequestBody FhtDTO fhtDTO) throws IOException;
+
+    /**
+     * @param bdcdyh
+     * @return java.util.List
+     * @author <a href="mailto:sunyuzhuang@gtmap.cn">sunyuzhuang</a>
+     * @description 查询房屋户室图（合肥）
+     */
+    @GetMapping("/building/rest/v1.0/hst/base64bybdcdyhHefei/{bdcdyh}")
+    List<String> queryFwHstBase64ByBdcdyhHefei(@PathVariable(name = "bdcdyh") String bdcdyh, @RequestParam(name = "qjgldm", required = false) String qjgldm,
+                                         @RequestParam(name = "slbh", required = false) String slbh, @RequestParam(name = "bdcqzh", required = false) String bdcqzh) throws IOException;
 }

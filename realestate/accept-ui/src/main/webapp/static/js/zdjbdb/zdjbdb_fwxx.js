@@ -479,6 +479,23 @@ function generateQlxx(ycslYmxxDTO, bdcSlXm, $nowTab, bdcqllxSlXm) {
                 // 添加权利信息页面表单监听事件，同步权利信息至交易与税收页面
                 qlxxModel.syncFwxxData();
             }
+
+            if (ycslYmxxDTO.bdcSlFwxxDO['fwyt'] === 80) {
+                var $this_ghytmc_outer_dom = $("#ytmc").parents('div.layui-inline');
+                $this_ghytmc_outer_dom.css({
+                    'display': 'block'
+                });
+                $("#ytmc").attr("placeholder", ycslYmxxDTO.bdcSlFwxxDO['ytmc']);
+                $("#ytmc").attr("title", ycslYmxxDTO.bdcSlFwxxDO['ytmc']);
+            }
+            if (ycslYmxxDTO.bdcSlFwxxDO['fwjg'] === 6) {
+                var $this_ghytmc_outer_dom = $("#fwjgmc").parents('div.layui-inline');
+                $this_ghytmc_outer_dom.css({
+                    'display': 'block'
+                });
+                $("#fwjgmc").attr("placeholder", ycslYmxxDTO.bdcSlFwxxDO['fwjgmc']);
+                $("#fwjgmc").attr("title", ycslYmxxDTO.bdcSlFwxxDO['fwjgmc']);
+            }
         }
     }
 }
@@ -654,6 +671,7 @@ function saveBdcSlJyxxTab($nowTab, className, isFirst, tabType) {
                 bdcSlJyxxData[key] = jyssData[key];
             }
         }
+        bdcSlJyxxData.xmid= $nowTab.data('xmid');
         $.ajax({
             url: getContextPath() + "/ycsl/htxx",
             type: 'PATCH',
@@ -1060,4 +1078,33 @@ function countSyqxByMonth() {
         }
     }
 }
+
+function getBatchAttr(data, attr) {
+    var str = "当前值:";
+    var existValue = [];
+    var changed = false;
+    var flag = false;
+    for (let i = 0; i < data.length; i++) {
+        if (!isNullOrEmpty(data[i][attr])) {
+            if (existValue.indexOf(data[i][attr]) < 0) {
+                str += data[i][attr] + ",";
+                existValue.push(data[i][attr]);
+                changed = true;
+            }
+        }else {
+            flag = true;
+        }
+    }
+    if (!changed) {
+        str = "当前无值"
+    }
+    if(changed && flag){
+        str = str + "空值";
+    }
+    if (str.lastIndexOf(",")===str.length-1) {
+        str = str.substring(0, str.length - 1);
+    }
+    return str;
+}
+
 

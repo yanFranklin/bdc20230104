@@ -3,6 +3,7 @@ package cn.gtmap.realestate.common.core.service.rest.register;
 import cn.gtmap.realestate.common.core.domain.register.BdcGzlJkDO;
 import cn.gtmap.realestate.common.core.domain.register.BdcGzlSjDO;
 import cn.gtmap.realestate.common.core.domain.register.BdcGzlsjJkGxDO;
+import cn.gtmap.realestate.common.core.dto.register.BdcGzlsjFzDTO;
 import cn.gtmap.realestate.common.core.dto.register.BdcGzlsjPlDTO;
 import cn.gtmap.realestate.common.core.dto.register.BdcWorkFlowDTO;
 import cn.gtmap.realestate.common.core.qo.register.BdcGzlQO;
@@ -172,6 +173,15 @@ public interface BdcGzlsjRestService {
      */
     @PostMapping("/realestate-register/rest/v1.0/workflow/gzlsj/pl")
     void batchSaveGzlsj(@RequestBody BdcGzlsjPlDTO bdcGzlsjPlDTO);
+
+    /**
+     * @param
+     * @author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
+     * @description 复制工作流事件
+     * @date : 2023/1/4 11:11
+     */
+    @PostMapping("/realestate-register/rest/v1.0/workflow/gzlsj/copy")
+    void copyGzlsj(@RequestBody BdcGzlsjFzDTO bdcGzlsjFzDTO);
 
 
 }

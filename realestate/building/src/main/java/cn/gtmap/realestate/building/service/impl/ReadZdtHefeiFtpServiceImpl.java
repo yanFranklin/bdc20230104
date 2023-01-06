@@ -96,7 +96,7 @@ public class ReadZdtHefeiFtpServiceImpl extends ReadZdtAbstractServiceImpl {
         }
        // LOGGER.info("合肥读取宗地图，最终使用FTP配置{},{}", qjgldm,JSON.toJSONString(ftpConfig));
         if (Constants.SYSVERSION_STANDARD.equals(version)) {
-            return getZdtByBdcdyhByFTP(param);
+            return getZdtByBdcdyhByFTP(param,qjgldm);
         } else {
             if (param.length() == 28) {
                 djh = param.substring(0, 19);
@@ -159,6 +159,9 @@ public class ReadZdtHefeiFtpServiceImpl extends ReadZdtAbstractServiceImpl {
 
     }
 
+    public String getZdtByBdcdyhByFTP(String param){
+        return getZdtByBdcdyhByFTP(param,"");
+    }
     /**
      * 3 7209 【常州】登记3.0新增读取宗地图接口
      * 地址、zdt/s_sj_zdt拼接
@@ -167,11 +170,19 @@ public class ReadZdtHefeiFtpServiceImpl extends ReadZdtAbstractServiceImpl {
      * @Date 2021/2/22
      * @description
      */
-    public String getZdtByBdcdyhByFTP(String param) {
+    public String getZdtByBdcdyhByFTP(String param,String qjgldm) {
         String ftpPath = "";
         String djh = "";
         String baseCode = "";
         String picName = "";
+
+        //常州-金坛等地区有可能需要走额外的ftp配置
+        FtpConfig ftpConfig = getBean(ftpConfigSet, qjgldm,zdtFtpMapConfig.getZdtFtpMap());
+        if(Objects.isNull(ftpConfig)){
+            //没有配置该区县的特定的ftp配置，则走默认的ftp配置
+            ftpConfig = zdtFtpConfig;
+        }
+
         if (param.length() == 28) {
             djh = param.substring(0, 19);
             //根据不动产单元号获取s_sj_zdt信息
@@ -187,7 +198,7 @@ public class ReadZdtHefeiFtpServiceImpl extends ReadZdtAbstractServiceImpl {
             FTPClient ftpClient = null;
             InputStream in = null;
             try {
-                ftpClient = FtpUtil.getFtpClient(zdtFtpConfig);
+                ftpClient = FtpUtil.getFtpClient(ftpConfig);
                 LOGGER.info("读取宗地图，param:{},ftpPath:{},picName:{}", param, ftpPath, picName);
                 in = FtpUtil.downloadFtpFile(ftpClient, ftpPath, picName);
 

@@ -49,4 +49,17 @@ public interface BdcGzlMapper {
      * @date : 2022/4/12 17:23
      */
     int queryMaxSxh(@Param("sjid") String sjid);
+
+    /**
+     * @param
+     * @author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
+     * @description 查询工作流事件表工作流定义id为空的数据
+     * @date : 2023/1/4 9:38
+     */
+    List<BdcGzlSjDO> listNullDyid();
+
+    /*
+     * 更新工作流事件流程定义id
+     * */
+    void updateGzlsjLcdyid(@Param(value = "sjid") String sjid, @Param(value = "gzldyid") String gzldyid);
 }

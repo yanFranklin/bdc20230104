@@ -1026,7 +1026,7 @@ function generateHtxxZh(xmxx, name, index, qlTableId) {
         laytpl(tpl).render(json, function (html) {
             view.innerHTML = html;
         });
-        form.render('select');
+        form.render();
         disabledAddFa();
     });
 }

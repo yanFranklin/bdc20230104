@@ -7,6 +7,7 @@ import cn.gtmap.realestate.common.core.domain.register.BdcGzlJkDO;
 import cn.gtmap.realestate.common.core.domain.register.BdcGzlSjDO;
 import cn.gtmap.realestate.common.core.domain.register.BdcGzlsjJkGxDO;
 import cn.gtmap.realestate.common.core.dto.register.BdcGzlSjJkDTO;
+import cn.gtmap.realestate.common.core.dto.register.BdcGzlsjFzDTO;
 import cn.gtmap.realestate.common.core.dto.register.BdcGzlsjPlDTO;
 import cn.gtmap.realestate.common.core.dto.register.BdcWorkFlowDTO;
 import cn.gtmap.realestate.common.core.ex.AppException;
@@ -25,7 +26,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +50,8 @@ import java.util.regex.Pattern;
  * @create: 2022-03-24 14:21
  **/
 @Service
-public class BdcWorkFlowServiceImpl implements BdcWorkFlowService {
+@Component
+public class BdcWorkFlowServiceImpl implements BdcWorkFlowService, ApplicationRunner {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BdcWorkFlowServiceImpl.class);
 
@@ -163,7 +168,7 @@ public class BdcWorkFlowServiceImpl implements BdcWorkFlowService {
     @Override
     public List<BdcGzlSjDO> listBdcGzlsj(BdcGzlQO bdcGzlQO) {
         List<BdcGzlSjDO> bdcGzlSjDOList = new ArrayList<>(1);
-        if (!CheckParameter.checkAnyParameter(bdcGzlQO, "sjid", "sjbs", "jdmc")) {
+        if (!CheckParameter.checkAnyParameter(bdcGzlQO, "sjid", "sjbs", "jdmc", "gzldyid")) {
             throw new AppException("查询工作流事件必须传入一个参数");
         }
         if (StringUtils.isNotBlank(bdcGzlQO.getSjid())) {
@@ -478,6 +483,74 @@ public class BdcWorkFlowServiceImpl implements BdcWorkFlowService {
     }
 
     /**
+     * @param bdcGzlsjFzDTO@author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
+     * @description 复制工作流事件
+     * @date : 2023/1/4 11:12
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void copyGzlsj(BdcGzlsjFzDTO bdcGzlsjFzDTO) {
+        if (StringUtils.isNotBlank(bdcGzlsjFzDTO.getFzlcdyid()) && CollectionUtils.isNotEmpty(bdcGzlsjFzDTO.getAddlcdyidList())) {
+            BdcGzlQO bdcGzlQO = new BdcGzlQO();
+            bdcGzlQO.setGzldyid(bdcGzlsjFzDTO.getFzlcdyid());
+            if (CollectionUtils.isNotEmpty(bdcGzlsjFzDTO.getJdmcList())) {
+                bdcGzlQO.setJdmcList(bdcGzlsjFzDTO.getJdmcList());
+            }
+            List<BdcGzlSjDO> bdcGzlSjDOList = bdcGzlMapper.listBdcGzlsjByPage(bdcGzlQO);
+            if (CollectionUtils.isNotEmpty(bdcGzlSjDOList)) {
+                List<Map> gzlsjlxMap = bdcZdFeignService.queryBdcZd("gzlsjlx");
+                for (String addlcdyid : bdcGzlsjFzDTO.getAddlcdyidList()) {
+                    //判断新增的工作流定义id是否已经存在接口,已存在的关联事件先删除
+                    BdcGzlQO addGzlQO = new BdcGzlQO();
+                    addGzlQO.setGzldyid(addlcdyid);
+                    List<BdcGzlSjDO> addGzlsjDOList = bdcGzlMapper.listBdcGzlsjByPage(addGzlQO);
+                    if (CollectionUtils.isNotEmpty(addGzlsjDOList)) {
+                        for (BdcGzlSjDO bdcGzlSjDO : addGzlsjDOList) {
+                            deleteBdcGzlsj(bdcGzlSjDO.getSjid());
+                        }
+                    }
+                    for (BdcGzlSjDO bdcGzlSjDO : bdcGzlSjDOList) {
+                        //复制数据到新的工作流定义id
+                        BdcGzlSjDO addBdcGzlSjDO = new BdcGzlSjDO();
+                        addBdcGzlSjDO.setSjid(UUIDGenerator.generate16());
+                        //如果是批量保存的时候事件名称默认为【流程名称】+节点名称+事件类型
+                        if (!LCMCMAP.containsKey(addlcdyid)) {
+                            ProcessDefData processDefData = processDefinitionClient.getProcessDefByProcessDefKey(addlcdyid);
+                            if (Objects.nonNull(processDefData)) {
+                                LCMCMAP.put(processDefData.getProcessDefKey(), processDefData.getName());
+                            }
+                        }
+                        String bs = bdcGzlSjDO.getSjbs().split("_")[1];
+                        String sjlxmc = "";
+                        for (Map map : gzlsjlxMap) {
+                            if (Objects.equals(map.get("SJBS"), bs)) {
+                                sjlxmc = MapUtils.getString(map, "MC", "");
+                                break;
+                            }
+                        }
+                        addBdcGzlSjDO.setSjmc("【" + MapUtils.getString(LCMCMAP, addlcdyid, "") + "】" + (StringUtils.isNotBlank(bdcGzlSjDO.getJdmc()) ? bdcGzlSjDO.getJdmc() : "") + sjlxmc);
+                        addBdcGzlSjDO.setSjbs(addlcdyid + "_" + bs);
+                        addBdcGzlSjDO.setJdmc(bdcGzlSjDO.getJdmc());
+                        addBdcGzlSjDO.setCjsj(new Date());
+                        addBdcGzlSjDO.setCjr(userManagerUtils.getUserAlias());
+                        addBdcGzlSjDO.setGzldyid(addlcdyid);
+                        entityMapper.insertSelective(addBdcGzlSjDO);
+                        //新增关联关系
+                        BdcGzlQO bdcGzlJkGxQO = new BdcGzlQO();
+                        bdcGzlJkGxQO.setSjid(bdcGzlSjDO.getSjid());
+                        List<BdcGzlsjJkGxDO> bdcGzlsjJkGxDOList = this.listBdcGzlSjJkGx(bdcGzlJkGxQO);
+                        if (CollectionUtils.isNotEmpty(bdcGzlsjJkGxDOList)) {
+                            for (BdcGzlsjJkGxDO bdcGzlsjJkGxDO : bdcGzlsjJkGxDOList) {
+                                saveGzlsjGx(addBdcGzlSjDO.getSjid(), bdcGzlsjJkGxDO.getJkid());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * @param bdcGzlSjJkDTOList 所有接口信息
      * @param paramMap          接口参数信息
      * @author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
@@ -599,11 +672,31 @@ public class BdcWorkFlowServiceImpl implements BdcWorkFlowService {
             bdcGzlSjDO.setJdmc(jdmc);
             bdcGzlSjDO.setCjsj(new Date());
             bdcGzlSjDO.setCjr(userManagerUtils.getUserAlias());
+            bdcGzlSjDO.setGzldyid(gzldyid);
             entityMapper.insertSelective(bdcGzlSjDO);
             //新增关联关系
             if (CollectionUtils.isNotEmpty(bdcGzlsjPlDTO.getJkidList())) {
                 for (String jkid : bdcGzlsjPlDTO.getJkidList()) {
                     saveGzlsjGx(bdcGzlSjDO.getSjid(), jkid);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param applicationArguments
+     * @throws Exception
+     */
+    @Override
+    public void run(ApplicationArguments applicationArguments) throws Exception {
+        List<BdcGzlSjDO> bdcGzlSjList = bdcGzlMapper.listNullDyid();
+        if (CollectionUtils.isNotEmpty(bdcGzlSjList)) {
+            for (BdcGzlSjDO bdcGzlSjDO : bdcGzlSjList) {
+                String sjbs = bdcGzlSjDO.getSjbs();
+                if (StringUtils.isNotBlank(sjbs)) {
+                    String gzldyid = sjbs.split("_")[0];
+                    bdcGzlSjDO.setGzldyid(gzldyid);
+                    entityMapper.updateByPrimaryKeySelective(bdcGzlSjDO);
                 }
             }
         }

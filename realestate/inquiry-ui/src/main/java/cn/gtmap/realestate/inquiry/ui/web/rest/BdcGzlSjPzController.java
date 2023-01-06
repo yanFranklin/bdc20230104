@@ -4,6 +4,7 @@ import cn.gtmap.realestate.common.core.annotations.LayuiPageable;
 import cn.gtmap.realestate.common.core.domain.register.BdcGzlJkDO;
 import cn.gtmap.realestate.common.core.domain.register.BdcGzlSjDO;
 import cn.gtmap.realestate.common.core.domain.register.BdcGzlsjJkGxDO;
+import cn.gtmap.realestate.common.core.dto.register.BdcGzlsjFzDTO;
 import cn.gtmap.realestate.common.core.dto.register.BdcGzlsjPlDTO;
 import cn.gtmap.realestate.common.core.ex.AppException;
 import cn.gtmap.realestate.common.core.qo.register.BdcGzlQO;
@@ -349,5 +350,46 @@ public class BdcGzlSjPzController extends BaseController {
             }
         }
     }
+
+
+    /**
+     * @param
+     * @author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
+     * @description 检查流程是否已存在关联的接口
+     * @date : 2023/1/4 11:09
+     */
+    @GetMapping("/fzlc/gzlsj")
+    public boolean checkGzlsj(String gzldyid) {
+        if (StringUtils.isNotBlank(gzldyid)) {
+            BdcGzlQO bdcGzlQO = new BdcGzlQO();
+            bdcGzlQO.setGzldyid(gzldyid);
+            List<BdcGzlSjDO> bdcGzlSjDOList = bdcGzlsjFeignService.listBdcGzlSj(bdcGzlQO);
+            if (CollectionUtils.isNotEmpty(bdcGzlSjDOList)) {
+                for (BdcGzlSjDO bdcGzlSjDO : bdcGzlSjDOList) {
+                    BdcGzlQO bdcGzlgxQO = new BdcGzlQO();
+                    bdcGzlgxQO.setSjid(bdcGzlSjDO.getSjid());
+                    List<BdcGzlsjJkGxDO> bdcGzlsjJkGxDOList = bdcGzlsjFeignService.listBdcGzlsjJkGx(bdcGzlgxQO);
+                    if (CollectionUtils.isNotEmpty(bdcGzlsjJkGxDOList)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param
+     * @author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
+     * @description 复制工作流事件
+     * @date : 2023/1/4 11:09
+     */
+    @PostMapping("/sj/copy")
+    public void copyGzlsj(@RequestBody BdcGzlsjFzDTO bdcGzlsjFzDTO) {
+        if (Objects.nonNull(bdcGzlsjFzDTO)) {
+            bdcGzlsjFeignService.copyGzlsj(bdcGzlsjFzDTO);
+        }
+    }
+
 
 }

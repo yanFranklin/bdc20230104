@@ -118,7 +118,7 @@ layui.use(['jquery', 'formSelects', 'layer', 'element', 'form', 'table', 'laytpl
         });
     }
 
-    // 加载子规则列表
+    // 加载关联接口列表
     function getSelJkList(data) {
         $.ajax({
             url: url + "?page=1&size=100000",
@@ -150,7 +150,7 @@ layui.use(['jquery', 'formSelects', 'layer', 'element', 'form', 'table', 'laytpl
         {type: 'checkbox', fixed: 'left'},
         {type: 'numbers', fixed: 'left', title: '序号', width: 60},
         {field: 'jkid', title: '接口id', hide: true},
-        {field: 'jkmc', sort: true, title: '接口名称', align: 'center', width: 520, style: 'text-align:left'},
+        {field: 'jkmc', sort: true, title: '接口地址', align: 'center', width: 520, style: 'text-align:left'},
         {field: 'jksm', title: '接口说明', align: 'center', style: 'text-align:left', minWidth: 200},
         {
             field: 'jklx', title: '接口类型', align: 'center', width: 130,
@@ -216,7 +216,7 @@ layui.use(['jquery', 'formSelects', 'layer', 'element', 'form', 'table', 'laytpl
                 type: 2,
                 area: ['960px', '500px'],
                 fixed: false, //不固定
-                title: "新增工作流接口",
+                title: "工作流接口详情",
                 content: getContextPath() + "/view/workflow/editGzljk.html?jkid=" + data.jkid,
                 btnAlign: "c"
             });
@@ -420,6 +420,8 @@ layui.use(['jquery', 'formSelects', 'layer', 'element', 'form', 'table', 'laytpl
                 var sjlxmc = sjlxSelectObj.options[index].text;
                 data.sjmc = "【" + lcmc[0] + "】" + (isNullOrEmpty(jdmc[0]) ? "" : jdmc[0]) + sjlxmc;
             }
+            var gzldyids = formSelects.value('lcmc', 'val');
+            data.gzldyid = gzldyids[0];
             doSubmit(data);
         }
         return false;

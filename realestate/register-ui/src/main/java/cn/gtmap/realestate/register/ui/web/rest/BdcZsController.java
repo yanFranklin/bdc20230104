@@ -639,7 +639,6 @@ public class BdcZsController extends BaseController {
                 // 转换共有方式
                 bdcZsVO.setGyfsmc(StringToolUtils.convertBeanPropertyValueOfZd(bdcZsDO.getGyfs(), zdMap.get(Constants.GYFS)));
             }
-
             // 转换权利类型
             bdcZsVO.setQllxmc(StringToolUtils.convertBeanPropertyValueOfZd(bdcZsDO.getQllx(), zdMap.get(Constants.QLLX)));
             // 截取证流水号
@@ -1251,7 +1250,6 @@ public class BdcZsController extends BaseController {
             BufferedImage image = null;
             ByteArrayInputStream bis = null;
             OutputStream os = null;
-            LOGGER.info("不动产单元号：{}", bdcdyh);
             try {
                 String imageStr = "";
                 if (StringUtils.equals(Constants.ZDT, dylx)) {

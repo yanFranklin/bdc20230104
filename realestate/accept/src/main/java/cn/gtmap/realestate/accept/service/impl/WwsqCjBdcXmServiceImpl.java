@@ -2153,22 +2153,31 @@ public class WwsqCjBdcXmServiceImpl implements WwsqCjBdcXmService {
      */
     private void dealWwSfxx(BdcSlxxDTO bdcSlxxDTO,String gzlslid,List<BdcXmDO> bdcXmDOList,String yhxzqdm) throws Exception{
         //判断外网推送收费信息,以外网推送为准
-        List<BdcSfxxDTO> bdcSfxxDTOS =bdcSlxxDTO.getBdcSlXmList().get(0).getBdcSfxxDTOList();
-        if(CollectionUtils.isNotEmpty(bdcSfxxDTOS) &&CollectionUtils.isNotEmpty(bdcSfxxDTOS.get(0).getBdcSlSfxmDOS())){
-            List<BdcSlSfxxDO> bdcSlSfxxDOList = new ArrayList<>();
-            List<BdcSlSfxmDO> bdcSlSfxmDOList = new ArrayList<>();
-            for(BdcSlXmDTO bdcSlXmDTO:bdcSlxxDTO.getBdcSlXmList()) {
-                if(CollectionUtils.isNotEmpty(bdcSlXmDTO.getBdcSfxxDTOList())) {
-                    for (BdcSfxxDTO bdcSfxxDTO : bdcSlXmDTO.getBdcSfxxDTOList()) {
-                        if (bdcSfxxDTO.getBdcSlSfxxDO() != null && CollectionUtils.isNotEmpty(bdcSfxxDTO.getBdcSlSfxmDOS())) {
-                            bdcSfxxDTO.getBdcSlSfxxDO().setGzlslid(gzlslid);
-                            bdcSlSfxxDOList.add(bdcSfxxDTO.getBdcSlSfxxDO());
-                            bdcSlSfxmDOList.addAll(bdcSfxxDTO.getBdcSlSfxmDOS());
-                        }
+        List<BdcSlSfxxDO> bdcSlSfxxDOList = new ArrayList<>();
+        List<BdcSlSfxmDO> bdcSlSfxmDOList = new ArrayList<>();
+        List<String> allxmidList =new ArrayList<>();
+        //获取外网推送收费的xmid集合
+        Set<String> xmidSet = new HashSet<>();
+        for(BdcSlXmDTO bdcSlXmDTO:bdcSlxxDTO.getBdcSlXmList()) {
+            allxmidList.add(bdcSlXmDTO.getBdcSlXm().getXmid());
+            if(CollectionUtils.isNotEmpty(bdcSlXmDTO.getBdcSfxxDTOList())){
+                for (BdcSfxxDTO bdcSfxxDTO : bdcSlXmDTO.getBdcSfxxDTOList()) {
+                    if (bdcSfxxDTO.getBdcSlSfxxDO() != null && CollectionUtils.isNotEmpty(bdcSfxxDTO.getBdcSlSfxmDOS())) {
+                        bdcSfxxDTO.getBdcSlSfxxDO().setGzlslid(gzlslid);
+                        bdcSlSfxxDOList.add(bdcSfxxDTO.getBdcSlSfxxDO());
+                        bdcSlSfxmDOList.addAll(bdcSfxxDTO.getBdcSlSfxmDOS());
+                        xmidSet.add(bdcSlXmDTO.getBdcSlXm().getXmid());
                     }
-                }else{
+                }
+            }
+        }
+        if(xmidSet.size() ==0){
+            cshWwSfxx(bdcSlxxDTO,bdcXmDOList,yhxzqdm,null);
+        }else{
+            for(String xmid:allxmidList){
+                if(!xmidSet.contains(xmid)){
                     //外网推送的收费信息为空，根据xmid初始化收费信息
-                    cshWwSfxx(bdcSlxxDTO,bdcXmDOList,yhxzqdm,bdcSlXmDTO.getBdcSlXmDO().getXmid());
+                    cshWwSfxx(bdcSlxxDTO,bdcXmDOList,yhxzqdm,xmid);
                 }
             }
             if(CollectionUtils.isNotEmpty(bdcSlSfxxDOList)) {
@@ -2177,10 +2186,7 @@ public class WwsqCjBdcXmServiceImpl implements WwsqCjBdcXmService {
             if(CollectionUtils.isNotEmpty(bdcSlSfxmDOList)) {
                 entityMapper.insertBatchSelective(bdcSlSfxmDOList);
             }
-        }else {
-            cshWwSfxx(bdcSlxxDTO,bdcXmDOList,yhxzqdm,null);
         }
-
     }
 
     /**

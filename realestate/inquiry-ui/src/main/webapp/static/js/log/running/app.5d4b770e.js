@@ -144,13 +144,13 @@
                 }, [e._v("WARN")]), a("Option", {
                     key: "DEBUG",
                     attrs: {value: "DEBUG"}
-                }, [e._v("DEBUG")])], 1)], 1)]), a("tr", [a("td", {staticClass: "key"}, [e._v("用户名")]), a("td", [a("Input", {
+                }, [e._v("DEBUG")])], 1)], 1)]), a("tr", [a("td", {staticClass: "key"}, [e._v("IP")]), a("td", [a("Input", {
                     staticClass: "txt",
-                    attrs: {name: "user", placeholder: "请输入", clearable: !0},
+                    attrs: {name: "serverName", placeholder: "请输入", clearable: !0},
                     model: {
-                        value: e.filter.user, callback: function (t) {
-                            e.$set(e.filter, "user", t)
-                        }, expression: "filter.user"
+                        value: e.filter.serverName, callback: function (t) {
+                            e.$set(e.filter, "serverName", t)
+                        }, expression: "filter.serverName"
                     }
                 })], 1)])])]), a("table", {staticClass: "tbl_filters"}, [a("tr", [a("td", {staticClass: "key"}, [e._v("类名")]), a("td", [a("Input", {
                     staticClass: "txt",
@@ -396,6 +396,18 @@
                             }) : e._e()]
                         }
                     }, {
+                        key: "serverName", fn: function (t) {
+                            var n = t.row;
+                            return [e._v(" " + e._s(n.serverName) + " "), n.serverName ? a("Icon", {
+                                attrs: {type: "ios-search"},
+                                on: {
+                                    click: function (t) {
+                                        return e.doSearch("serverName", n)
+                                    }
+                                }
+                            }) : e._e()]
+                        }
+                    }, {
                         key: "traceId", fn: function (t) {
                             var n = t.row;
                             return [a("a", {
@@ -573,10 +585,11 @@
                         jumpPageIndex: 1,
                         chartData: [],
                         searchOptions: [],
-                        showColumnTitles: ["logLevel", "user", "appName", "method","traceId", "className"],
+                        showColumnTitles: ["logLevel", "user", "appName", "serverName","method","traceId", "className"],
                         allColumns: [{label: "日志等级", value: "logLevel"},
-                            {label: "用户名", value: "user"},
+                            // {label: "用户名", value: "user"},
                             {label: "应用名称", value: "appName"},
+                            {label: "IP", value: "serverName"},
                             {label: "方法名", value: "method"},
                             // {label: "追踪码", value: "traceId"},
                             {label: "类名", value: "className"}
@@ -615,15 +628,6 @@
                             sortable: !0,
                             width: 120
                         }, {
-                            title: "用户名",
-                            align: "center",
-                            key: "user",
-                            slot: "user",
-                            className: "icon",
-                            sortable: !0,
-                            resizable: !0,
-                            width: 120
-                        }, {
                             title: "应用名称",
                             align: "center",
                             key: "appName",
@@ -632,6 +636,15 @@
                             sortable: !0,
                             resizable: !0,
                             width: 120
+                        }, {
+                            title: "IP",
+                            align: "center",
+                            key: "serverName",
+                            slot: "serverName",
+                            className: "icon",
+                            sortable: !0,
+                            resizable: !0,
+                            width: 130
                         }, {
                             title: "方法名",
                             align: "center",
@@ -705,8 +718,9 @@
                         var e = this;
                         this.allColumns = [
                             {label: "日志等级", value: "logLevel"},
-                            {label: "用户名", value: "user"},
+                            // {label: "用户名", value: "user"},
                             {label: "应用名称", value: "appName"},
+                            {label: "IP", value: "serverName"},
                             {label: "方法名", value: "method"},
                             // {label: "追踪码", value: "traceId"},
                             {label: "类名", value: "className"}],
@@ -815,12 +829,21 @@
                         var e = [];
                         for (var t in this.filter) if ((!this.isExclude || "appName" != t) && this.filter[t]) {
                             var a = this.filter[t], n = "";
-                            Array.isArray(a) ? (n = a.join(","), n && e.push({
-                                query_string: {
-                                    query: n,
-                                    default_field: t
-                                }
-                            })) : (n = a.replace(/,/g, " "), e.push({match_phrase: Object(p["a"])({}, t, {query: n})}))
+                            if(t == "logLevel"){
+                                Array.isArray(a) ? (n = a.join(" OR "), n && e.push({
+                                    query_string: {
+                                        query: n,
+                                        default_field: t
+                                    }
+                                })) : (n = a.replace(/,/g, " "), e.push({match_phrase: Object(p["a"])({}, t, {query: n})}))
+                            }else{
+                                Array.isArray(a) ? (n = a.join(","), n && e.push({
+                                    query_string: {
+                                        query: n,
+                                        default_field: t
+                                    }
+                                })) : (n = a.replace(/,/g, " "), e.push({match_phrase: Object(p["a"])({}, t, {query: n})}))
+                            }
                         }
                         var s, i = Object(g["a"])(this.extendOptions);
                         try {
@@ -874,6 +897,21 @@
                             }
                             o.query.bool["must_not"] = c
                         }
+                        // if(this.filter["logLevel"]){
+                        //     var l, c = [], u = Object(g["a"])(this.filter["logLevel"]);
+                        //     try {
+                        //         for (u.s(); !(l = u.n()).done;) {
+                        //             var d = l.value;
+                        //             c.push({query_string: {appName: {query: d.replace(/,/g, " ")}}})
+                        //         }
+                        //     } catch (b) {
+                        //         u.e(b)
+                        //     } finally {
+                        //         u.f()
+                        //     }
+                        //     o.query.bool["must_not"] = c
+                        // }
+
                         var h = Object(f["a"])(Object(f["a"])({}, o), {}, {
                             highlight: {fields: {content: {}}},
                             sort: this.sort
@@ -989,7 +1027,10 @@
                         this.from = (this.jumpPageIndex - 1) * this.size, this.from > 0 && this.doSearch()
                     }, init: function () {
                         var e = this, t = localStorage["cache_showColumnTitles"];
-                        if (t && (this.showColumnTitles = JSON.parse(t)), this.$route.query.appName && (this.filter["appName"] = this.$route.query.appName), this.$route.query.className && (this.filter["className"] = this.$route.query.className), this.$route.query.logLevel && (this.filter["logLevel"] = [this.$route.query.logLevel]), this.$route.query.time) {
+                        if (t && (this.showColumnTitles = JSON.parse(t)), this.$route.query.appName &&
+                        (this.filter["appName"] = this.$route.query.appName), this.$route.query.className
+                        && (this.filter["className"] = this.$route.query.className), this.$route.query.logLevel
+                        && (this.filter["logLevel"] = [this.$route.query.logLevel]), this.$route.query.time) {
                             var a = this.$route.query.time.split(",");
                             a.length > 1 && (this.dateTimeRange = [x()(parseInt(a[0])).format("YYYY-MM-DD HH:mm:ss"), x()(parseInt(a[1])).format("YYYY-MM-DD HH:mm:ss")], this.$refs.datePicker.internalValue = w.a.clone(this.dateTimeRange))
                         }

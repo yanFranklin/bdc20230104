@@ -2,6 +2,10 @@ package cn.gtmap.realestate.inquiry.ui.web.rest;
 
 import cn.gtmap.gtc.sso.domain.dto.UserDto;
 import cn.gtmap.realestate.common.core.domain.BdcXtJgDO;
+import cn.gtmap.realestate.common.core.domain.accept.BdcSlSjclDO;
+import cn.gtmap.realestate.common.core.dto.accept.BdcSlWjscDTO;
+import cn.gtmap.realestate.common.core.qo.accept.BdcSlSjclQO;
+import cn.gtmap.realestate.common.core.service.feign.accept.BdcSlSjclFeignService;
 import cn.gtmap.realestate.common.matcher.StorageClientMatcher;
 import cn.gtmap.gtc.storage.domain.dto.MultipartDto;
 import cn.gtmap.gtc.storage.domain.dto.StorageDto;
@@ -17,6 +21,7 @@ import cn.gtmap.realestate.common.core.qo.inquiry.BdcDtcxQO;
 import cn.gtmap.realestate.common.core.service.feign.inquiry.BdcDtcxFeignService;
 import cn.gtmap.realestate.common.util.*;
 import cn.gtmap.realestate.inquiry.ui.core.service.BdcDtcxDataFilterService;
+import cn.gtmap.realestate.inquiry.ui.util.Constants;
 import cn.gtmap.realestate.inquiry.ui.util.ExportExcelUtils;
 import cn.gtmap.realestate.inquiry.ui.web.main.BaseController;
 import com.alibaba.fastjson.JSONArray;
@@ -43,6 +48,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.Boolean;
 import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -65,6 +71,14 @@ public class BdcDtcxController extends BaseController{
 
     @Autowired
     private UserManagerUtils userManagerUtils;
+
+    @Autowired
+    private BdcSlSjclFeignService bdcSlSjclFeignService;
+
+    /**
+     * 文件管理器默认权限
+     */
+    private static final String defaultAuthority = "{\"CanRefresh\":1,\"CanCreateNewFolder\":0,\"CanAddFolder\":0,\"CanDeleteFolder\":0,\"CanRenameFolder\":0,\"CanAddFile\":1,\"CanDeleteFile\":0,\"CanRenameFile\":1,\"CanDelete\":0,\"CanRename\":1,\"CanPrint\":1,\"CanDownload\":1,\"CanUpload\":1,\"CanTakePhoto\":1,\"CanScan\":1,\"CanEdit\":-1}";
 
     /**
      * 获取配置台账分页数据
@@ -778,4 +792,38 @@ public class BdcDtcxController extends BaseController{
         LOGGER.info("新建附件文件夹: spaceid{}", storageDto.getSpaceId());
         return storageDto.getId();
     }
+
+    /**
+     * @param processInsId 工作流实例ID
+     * @param clmc         材料名称
+     * @param sjclxmid     收件材料项目ID
+     * @return 文件上传参数
+     * @author <a href="mailto:hejian@gtmap.cn">hejian</a>
+     * @description 组织文件上传参数
+     */
+    @ResponseBody
+    @GetMapping("/bdcSlWjscDTO")
+    public Object bdcSlWjscDTO(String processInsId, String sjclxmid, String clmc, String djxl) {
+        BdcSlWjscDTO bdcSlWjscDTO = new BdcSlWjscDTO();
+        bdcSlWjscDTO.setToken(queryToken());
+        bdcSlWjscDTO.setClientId(Constants.WJZX_CLIENTID);
+        if (StringUtils.isNotBlank(clmc)) {
+            BdcSlSjclQO bdcSlSjclQO = new BdcSlSjclQO();
+            bdcSlSjclQO.setGzlslid(processInsId);
+            bdcSlSjclQO.setClmc(clmc);
+            if (StringUtils.isNotBlank(djxl)) {
+                bdcSlSjclQO.setDjxl(djxl);
+            }
+            List<BdcSlSjclDO> bdcSlSjclDOList = bdcSlSjclFeignService.listBdcSlSjcl(bdcSlSjclQO);
+            if (CollectionUtils.isNotEmpty(bdcSlSjclDOList)) {
+                bdcSlWjscDTO.setNodeId(bdcSlSjclDOList.get(0).getWjzxid());
+            }
+        }
+
+        bdcSlWjscDTO.setsFrmOption(defaultAuthority);
+
+        return bdcSlWjscDTO;
+
+    }
+
 }

@@ -37,6 +37,9 @@ public class BdcGzlSjDO {
     @ApiModelProperty(value = "创建人")
     private String cjr;
 
+    @ApiModelProperty(value = "工作流定义id")
+    private String gzldyid;
+
     public String getSjid() {
         return sjid;
     }
@@ -83,6 +86,14 @@ public class BdcGzlSjDO {
 
     public void setCjr(String cjr) {
         this.cjr = cjr;
+    }
+
+    public String getGzldyid() {
+        return gzldyid;
+    }
+
+    public void setGzldyid(String gzldyid) {
+        this.gzldyid = gzldyid;
     }
 
     @Override

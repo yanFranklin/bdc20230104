@@ -60,7 +60,7 @@ public class ReadZdtFromDbAndFtpServiceImpl extends ReadZdtAbstractServiceImpl {
             return base64;
         }
         //2.没有数据查ftp
-        return readZdtHefeiFtpServiceImpl.getZdtByBdcdyhByFTP(bdcdyh);
+        return readZdtHefeiFtpServiceImpl.getZdtByBdcdyhByFTP(bdcdyh,qjgldm);
 
     }
 }

@@ -505,8 +505,8 @@ layui.use(['jquery','table','element','carousel','form','laytpl','response','lay
         function qrys(){
             var chk_value =[];//定义一个数组
             $('input[name="xzCheckbox"]:checked').each(function(){
-                if ($(this).next().text().indexOf(".jpg") != -1 || $(this).next().text().indexOf(".png") != -1 ||
-                    $(this).next().text().indexOf(".jpeg") != -1) {
+                if ($(this).next().text().toLowerCase().indexOf(".jpg") != -1 || $(this).next().text().toLowerCase().indexOf(".png") != -1 ||
+                    $(this).next().text().toLowerCase().indexOf(".jpeg") != -1) {
                     chk_value.push($(this).val().substring($(this).val().lastIndexOf("/")+1));
                 }else {
                     chk_value.push($(this).val());
@@ -647,8 +647,8 @@ layui.use(['jquery','table','element','carousel','form','laytpl','response','lay
         function qrxz(){
             var chk_value =[];//定义一个数组
             $('input[name="xzCheckbox"]:checked').each(function(){
-                if ($(this).next().text().indexOf(".jpg") != -1 || $(this).next().text().indexOf(".png") != -1 ||
-                    $(this).next().text().indexOf(".jpeg") != -1) {
+                if ($(this).next().text().toLowerCase().indexOf(".jpg") != -1 || $(this).next().text().toLowerCase().indexOf(".png") != -1 ||
+                    $(this).next().text().toLowerCase().indexOf(".jpeg") != -1) {
                     chk_value.push($(this).val().substring($(this).val().lastIndexOf("/")+1));
                 }else {
                     chk_value.push($(this).val());
@@ -734,8 +734,8 @@ layui.use(['jquery','table','element','carousel','form','laytpl','response','lay
             $(".xzCheckbox").prop("checked","checked");
             $('input[name="xzCheckbox"]:checked').each(function () {
                 console.log($(this).next().text());
-                if ($(this).next().text().indexOf(".jpg") === -1 && $(this).next().text().indexOf(".png") === -1 &&
-                    $(this).next().text().indexOf(".jpeg") === -1) {
+                if ($(this).next().text().toLowerCase().indexOf(".jpg") === -1 && $(this).next().text().toLowerCase().indexOf(".png") === -1 &&
+                    $(this).next().text().toLowerCase().indexOf(".jpeg") === -1) {
                     $(this).removeAttr("checked");
                 }
             });
@@ -762,7 +762,7 @@ layui.use(['jquery','table','element','carousel','form','laytpl','response','lay
                 return;
             }
             for (var i = 0; i < imagName.length; i++){
-                if (imagName[i].indexOf(".jpg") === -1 && imagName[i].indexOf(".png") === -1 && imagName[i].indexOf(".jpeg") === -1 ) {
+                if (imagName[i].toLowerCase().indexOf(".jpg") === -1 && imagName[i].toLowerCase().indexOf(".png") === -1 && imagName[i].toLowerCase().indexOf(".jpeg") === -1 ) {
                     layer.alert("请勿选择非图片格式打印");
                     return;
                 }

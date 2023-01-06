@@ -9,6 +9,10 @@ public class RequestHstData {
 
     private String qjgldm;
 
+    private String slbh;
+
+    private String bdcqzh;
+
     public String getBdcdyh() {
         return bdcdyh;
     }
@@ -33,12 +37,31 @@ public class RequestHstData {
         this.qjgldm = qjgldm;
     }
 
+    public String getSlbh() {
+        return slbh;
+    }
+
+    public void setSlbh(String slbh) {
+        this.slbh = slbh;
+    }
+
+    public String getBdcqzh() {
+        return bdcqzh;
+    }
+
+    public void setBdcqzh(String bdcqzh) {
+        this.bdcqzh = bdcqzh;
+    }
+
     @Override
     public String toString() {
         return "RequestHstData{" +
                 "bdcdyh='" + bdcdyh + '\'' +
                 ", fwbm='" + fwbm + '\'' +
                 ", qjgldm='" + qjgldm + '\'' +
+                ", slbh='" + slbh + '\'' +
+                ", bdcqzh='" + bdcqzh + '\'' +
+
                 '}';
     }
 }
