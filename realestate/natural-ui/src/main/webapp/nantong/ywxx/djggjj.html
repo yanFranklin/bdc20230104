@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>登记公告</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/common.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/application.css"/>
+    <link rel="stylesheet" href="../../static/lib/bdcui/css/mask.css">
+    <style>
+
+        .doubleheight{
+            height: 60px;
+        }
+
+        .fiveheight{
+            height: 150px;
+        }
+
+        .threeheight{
+            height: 90px;
+        }
+
+        .djgg_table tbody td {
+            height: 30px;
+        }
+
+        .djgg_table table tr td {
+            border:1px solid #0094ff;
+        }
+
+        .content {
+            margin-bottom: 20px;
+        }
+
+        .content-div form {
+            width: 1000px;
+            padding-top: 20px;
+        }
+
+        .content-title {
+            border: 0px;
+            padding-top: 10px;
+        }
+
+        .content-title p {
+            float: none;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .content-title input {
+            border: 0;
+            outline: 0;
+            max-width: 100px;
+            text-align: center;
+        }
+
+        .content-main-head, .content-foot {
+            font-size: 20px;
+        }
+
+        .content-main-head input {
+            border: 0px;
+            width: 40px;
+            text-align: center;
+        }
+
+        .content-main-head .ggksyear {
+            border: 0px;
+            width: 50px;
+            text-align: left;
+        }
+
+        .content-main-head .content {
+            text-indent: 40px;
+        }
+
+        .djgg_table td {
+            text-align: center;
+        }
+
+        .layui-table td{
+            border: 2px solid black;
+        }
+
+        .content-foot {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .content-foot input {
+            border: 0;
+            outline: 0;
+            width: 400px;
+        }
+
+        .content-foot p, .fj p {
+            /*text-indent: 40px;*/
+        }
+
+        .foot_sign {
+            float: right;
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .foot_sign input {
+            border: 0px;
+            width: 60px;
+            text-align: center;
+        }
+
+        .fj {
+            margin-top: 20px;
+        }
+
+        @media print {
+            .title-btn-area {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="content-div">
+    <div class="bdc-content-box">
+        <form class="layui-form setOverflow" action="" name="info" id="info" lay-filter="info">
+            <div class="bdc-content-fix">
+                <div class="content-title">
+                    <p><span id="djjg"></span>关于开展<span id="djdymc" class="djdymc"></span></br>
+                        自然资源确权登记的公告（首次登记）
+                    </p>
+                    <div class="title-btn-area .layui-layout-right">
+                        <button type="button" class="layui-btn bdc-secondary-btn" id="save">保存</button>
+                        <button type="button" class="layui-btn bdc-secondary-btn" id="download">下载</button>
+                        <!--                        <button type="button" class="layui-btn bdc-secondary-btn" id="printBtn" name="printBtn">打印</button>-->
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-main-head">
+                <div class="content" style="letter-spacing:1px">
+                    根据《自然资源统一确权登记暂行办法》的规定，经初步审核，拟以<span id="djdymc"  class="djdymc"></span>为自然资源登记单元
+                    予以登记，现予公告。公告期为
+                    <input type="text" class="ggksyear" id="ggksyear" name="ggksyear">年
+                    <input type="text" id="ggksmonth" name="ggksmonth">月
+                    <input type="text" id="ggksday" name="ggksday">日-
+                    <input type="text" id="ggjsyear" class="ggksyear" name="ggjsyear">年
+                    <input type="text" id="ggjsmonth" name="ggjsmonth">月
+                    <input type="text" id="ggjsday" name="ggjsday">日
+                </div>
+            </div>
+            <table class="djgg_table layui-table "  lay-filter="djggTable" align="center" style="text-align: center;border:2px solid black;">
+                <tbody>
+                <tr>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="content-foot" style="text-indent:40px">
+                <div style="float: left">
+                <p class="content">如有异议, 请在公告期内向受理登记机构递交书面异议材料及其证明材料。</p>
+<!--                <p>受理机构：<input type="text" id="sljg" name="sljg"></p>-->
+                <p>地&emsp;&emsp;址：<input type="text" id="dz" name="dz"></p>
+                <p>联系电话：<input type="text" id="dh" name="dh"></p>
+                    <p>附件：自然资源登记单元附图（扫描二维码查看）</p>
+                </div>
+                <div class="" style="float: right">
+                    <img width="130px"  height="130px" src="/realestate-natural-ui/rest/v1.0/ywxx/ewm?ewmnr=https://bdc.nantong.cn:8091/estateplat-olcommon/api/v2/applyModel/downFile?fjid=6CKE24158MR766P8">
+                </div>
+<!--                <div class="fj">-->
+<!--                    <img id="ewm" src="/realestate-accept/rest/v1.0/print/123/ewm?">-->
+<!--                </div>-->
+                <div class="fj">
+                    <div class="foot_sign">
+                        <div class="djjg" id="djjg_foot"> </div>
+                        <input type="text" class="ggsjyear" id="ggsjyear" name="ggsjyear">年
+                        <input type="text" id="ggsjmonth" name="ggsjmonth">月
+                        <input type="text" id="ggsjday" name="ggsjday">日
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/html" id="tableTpl">
+    {{# if(d){ var item = d;}}
+    <tr>
+        <td class="" style="font-weight:bold;font-size:15px">登记单元名称</td>
+        <td colspan="2">
+            {{ item.zrzyDjdy.djdymc || ''}}
+        </td>
+        <td class="" style="font-weight:bold;font-size:15px">登记单元号</td>
+        <td colspan="2">
+            {{ item.zrzyDjdy.zrzydjdyh || ''}}
+        </td>
+    </tr>
+    <tr>
+        <td class="doubleheight" style="height: 60px;font-weight:bold;font-size:15px">坐落</td>
+        <td colspan="2">
+            {{ item.zrzyDjdy.zl || ''}}
+        </td>
+        <td class="doubleheight" style="font-weight:bold;font-size:15px">空间范围</td>
+        <td colspan="2">
+            {{ item.zrzyDjdy.sz || ''}}
+        </td>
+    </tr>
+    <tr>
+        <td class="" style="font-weight:bold;font-size:15px">登记单元总面积</td>
+        <td colspan="2">
+            {{ item.zrzyDjdy.djdyzmj || '0'}}公顷
+        </td>
+        <td class="" style="font-weight:bold;font-size:15px">国有面积</td>
+        <td colspan="2">
+            {{ item.zrzyDjdy.gymj || '0'}}公顷
+        </td>
+    </tr>
+    <tr>
+        <td class="fiveheight" rowspan="3"  style="height: 150px;font-weight:bold;font-size:15px">
+            国家所有自然 </br>
+            资源权属状况
+        </td>
+        <td class="" style="font-weight:bold;font-size:15px">所有权人</td>
+        <td >
+            {{ item.zrzyDjdy.syqzt || ''}}
+        </td>
+        <td class="fiveheight" rowspan="3" style="font-weight:bold;font-size:15px">
+            自然状况
+        </td>
+        <td class="threeheight" rowspan="2"  style="height: 120px;font-weight:bold;font-size:15px" >
+            主要自然资源 </br>
+            类型及面积
+        </td>
+        <td class="" rowspan="2" >
+               {{ item.zrzyDjdy.zmjcontent || ''}}
+            </textarea>
+        </td>
+    </tr>
+
+    <tr>
+        <td class="doubleheight" style="height: 60px;font-weight:bold;font-size:15px">
+            所有权职责</br>
+            履行主体
+        </td>
+        <td class="doubleheight">
+            {{ item.zrzyDjdy.dbxszt || ''}}
+        </td>
+    </tr>
+
+    <tr>
+        <td class="doubleheight" style="font-weight:bold;font-size:15px">
+            所有权职责</br>
+            代理履行主体
+        </td>
+        <td >
+            {{ item.zrzyDjdy.dlxszt  || ''}}
+        </td>
+        <td class="doubleheight" style="font-weight:bold;font-size:15px" >
+            其他类型面积
+        </td>
+        <td>
+            {{ item.zrzyDjdy.qtmj || ''}}
+        </td>
+    </tr>
+    {{# } }}
+</script>
+<script src="../../static/lib/jquery/jquery.min.js"></script>
+<script src="../../static/lib/layui/layui.js"></script>
+<!--<script src="../../static/lib/bdcui/js/print/print-common.js"></script>-->
+<!--添加水印-->
+<script src="../../static/lib/bdcui/js/common.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/djgg.js"></script>
+</body>
+</html>
