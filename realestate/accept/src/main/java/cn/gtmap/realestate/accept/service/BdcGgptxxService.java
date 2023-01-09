@@ -15,6 +15,6 @@ public interface BdcGgptxxService {
     List<GgptxxDTO> queryGgptxx(String param);
 
 
-    Object downloadGgfj(String fjid, String gzlslid) throws IOException;
+    Object downloadGgfj(GgptxxDTO ggptxxDTO, String gzlslid) throws IOException;
 
 }

@@ -603,4 +603,28 @@ public class DateUtils {
         return days;
     }
 
+    /**
+     * @author <a href="mailto:hejian@gtmap.cn">hejian</a>
+     * @param date 指定日期
+     * @return Date
+     * @description 获取指定日期下个月的同一天,若下个月无该日期则取下个月的最后一天(如 2023-01-31 取 2023-02-28)
+     */
+    public static Date getSameDayOfNextMonth(Date date) throws Exception{
+        // 获取当前月份和天
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+
+        // 获取下个月的最后一天
+        c.set(Calendar.DAY_OF_MONTH,28);
+        c.set(Calendar.MONTH,month + 1);
+        int endDay = c.getActualMaximum(Calendar.DATE);
+
+        // 将指定日期与下个月的最后一天相较,取最小值
+        c.set(Calendar.DAY_OF_MONTH, Math.min(day, endDay));
+
+        date = c.getTime();
+        return date;
+    }
 }

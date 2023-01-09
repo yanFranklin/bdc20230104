@@ -8,6 +8,7 @@ import cn.gtmap.realestate.common.util.DateUtils;
 import cn.gtmap.realestate.common.util.RestRpcUtils;
 import cn.gtmap.realestate.exchange.core.mapper.server.accessLog.AccessLogMapper;
 import cn.gtmap.realestate.exchange.core.national.BdcAccessLog;
+import cn.gtmap.realestate.exchange.core.national.CityAccess;
 import cn.gtmap.realestate.exchange.core.national.NationalAccess;
 import cn.gtmap.realestate.exchange.core.national.ProvinceAccess;
 import cn.gtmap.realestate.exchange.core.qo.BdcJrrzQO;
@@ -136,7 +137,6 @@ public class AccessLogQuartzService {
      */
     @RedissonLock(lockKey = Constants.ACCESS_XYBW_TASK_JOB_NAME, description = "定时任务响应报文获取", waitTime = 1L, leaseTime = 300L)
     public void quartzGetAccessResponse() {
-        Map map = new HashMap();
         if (StringUtils.equals(quartz, "true")) {
             List<NationalAccessUpload> list = UploadServiceUtil.listNationalAccessUpload();
             //获取响应
@@ -147,7 +147,40 @@ public class AccessLogQuartzService {
                 } else {
                     example = new Example(ProvinceAccess.class);
                 }
-                Example.Criteria criteria =  example.createCriteria();
+                Example.Criteria criteria = example.createCriteria();
+                criteria.andGreaterThan("jrrq", getAccessResponseStartDate());
+                criteria.andEqualNvlTo("cgbs", "0", "-1");
+                example.setOrderByClause("updatetime asc");
+                List<BdcAccessLog> listLog = entityMapper.selectByExample(example);
+                LOGGER.info("定时批量获取响应报文{}条", CollectionUtils.size(listLog));
+                if (CollectionUtils.isNotEmpty(listLog)) {
+                    List<String> listId = new ArrayList<>();
+                    for (BdcAccessLog bdcAccessLog : listLog) {
+                        if (StringUtils.isNotBlank(bdcAccessLog.getYwbwid())) {
+                            listId.add(bdcAccessLog.getYwbwid());
+                        }
+                    }
+                    nationalAccessUpload.getReponse(StringUtils.join(listId, CommonConstantUtils.ZF_YW_DH));
+                }
+            }
+        }
+    }
+
+    /**
+     * @param
+     * @author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
+     * @description 定时任务获取市级接入响应消息
+     * @date : 2023/1/5 17:41
+     */
+    @Scheduled(cron = "${access.response.quartztime:0 0 20 * * ?}")
+    @RedissonLock(lockKey = Constants.ACCESS_SJXYBW_TASK_JOB_NAME, description = "获取市级接入响应消息", waitTime = 1L, leaseTime = 300L)
+    public void getCityAccessResponse() {
+        if (StringUtils.equals(quartz, "true")) {
+            List<NationalAccessUpload> list = UploadServiceUtil.listNationalAccessUploadByType(UploadServiceUtil.CITY_ACCESS);
+            //获取响应
+            for (NationalAccessUpload nationalAccessUpload : list) {
+                Example example = new Example(CityAccess.class);
+                Example.Criteria criteria = example.createCriteria();
                 criteria.andGreaterThan("jrrq", getAccessResponseStartDate());
                 criteria.andEqualNvlTo("cgbs", "0", "-1");
                 example.setOrderByClause("updatetime asc");

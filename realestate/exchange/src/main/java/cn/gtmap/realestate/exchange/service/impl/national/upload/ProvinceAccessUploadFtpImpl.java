@@ -4,7 +4,6 @@ import cn.gtmap.realestate.common.core.domain.exchange.MessageModel;
 import cn.gtmap.realestate.common.core.domain.exchange.uniformity.MessageModelBdc;
 import cn.gtmap.realestate.common.core.dto.exchange.access.MsgNoticeDTO;
 import cn.gtmap.realestate.common.core.enums.AccessWarningEnum;
-import cn.gtmap.realestate.exchange.core.dto.common.MessageModelOld;
 import cn.gtmap.realestate.exchange.core.national.ProvinceAccess;
 import cn.gtmap.realestate.exchange.service.national.NationalAccessUpload;
 import cn.gtmap.realestate.exchange.service.national.access.AccessLogTypeService;
@@ -17,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -78,12 +76,6 @@ public class ProvinceAccessUploadFtpImpl extends AbstractProvinceAccessUpload im
     @Override
     public Boolean upload(MessageModel messageModel) {
         return uploadFtp(ip, username, password, port, downResponseRetryTimes,
-                messageModel, xsdpath, path, respath, new ProvinceAccess());
-    }
-
-    @Override
-    public Boolean uploadOld(MessageModelOld messageModel) {
-        return uploadFtpOld(ip, username, password, port, downResponseRetryTimes,
                 messageModel, xsdpath, path, respath, new ProvinceAccess());
     }
 

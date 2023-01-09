@@ -1028,6 +1028,7 @@ public class SlymPjqController extends BaseController {
     @GetMapping("/mk/sign")
     public Object mkQm(HttpServletRequest request, BdcSlPrintDTO bdcSlPrintDTO) throws IOException {
         //生成对应附件材料，并获取pdf路径
+        Map<String,String> map = new HashMap();
         String path = "";
         String xml = "";
         String gzlslid = bdcSlPrintDTO.getGzlslid();
@@ -1038,10 +1039,11 @@ public class SlymPjqController extends BaseController {
         LOGGER.info("后台接收前端传参为:{}", bdcSlPrintDTO);
         //前端打印类型为空时,生成申请书，不为空则为其他附件材料
         if (StringUtils.isNotBlank(gzlslid) && StringUtils.isNotBlank(djxl)){
-            xml = bdcSlPrintFeignService.generateSlMkXml(gzlslid, djxl, zxlc);
+            map = bdcSlPrintFeignService.generateSlMkXml(gzlslid, djxl, zxlc);
         }
-
-        String modelPath = printPath + djxl + CommonConstantUtils.WJHZ_DOCX;
+        String dylx = map.get("dylx");
+        xml = map.get("xml");
+        String modelPath = printPath + dylx + CommonConstantUtils.WJHZ_DOCX;
 
         OfficeExportDTO officeExportDTO = new OfficeExportDTO();
         officeExportDTO.setModelName(modelPath);

@@ -11,6 +11,7 @@ import cn.gtmap.realestate.common.core.support.spring.Container;
 import cn.gtmap.realestate.common.util.CommonConstantUtils;
 import cn.gtmap.realestate.exchange.config.ConfigInit;
 import cn.gtmap.realestate.exchange.core.domain.BdcJrDbrzjlDO;
+import cn.gtmap.realestate.exchange.service.national.access.AccessLogCityHandlerService;
 import cn.gtmap.realestate.exchange.service.national.access.AccessLogNationalHandlerService;
 import cn.gtmap.realestate.exchange.service.national.access.AccessLogProvinceHandlerServise;
 import cn.gtmap.realestate.exchange.service.national.access.AccessLogTypeService;
@@ -52,6 +53,9 @@ public class AccessLogTypeServiceImpl implements AccessLogTypeService {
     EntityMapper entityMapper;
     @Autowired
     MessageUtils messageUtils;
+
+    @Autowired
+    AccessLogCityHandlerService accessLogCityHandlerService;
 
     /**
      * 异常信息提醒配置
@@ -165,6 +169,28 @@ public class AccessLogTypeServiceImpl implements AccessLogTypeService {
             logger.info("升级后省级接入日志失败，失败原因：{}", result);
         }
 
+    }
+
+    /**
+     * @param xml           xml文件
+     * @param bdcJrDbrzjlDO 日志接入表实体类
+     * @author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
+     * @description 市级登簿日志上报
+     * @date : 2023/1/6 9:23
+     */
+    @Override
+    public void cityAccessLogWeb(String xml, BdcJrDbrzjlDO bdcJrDbrzjlDO) {
+        String result = accessLogCityHandlerService.cityAccessLogWeb(xml, bdcJrDbrzjlDO);
+        if (StringUtils.equals(AccessLogStausEnum.STATUS_0.getCode(), result)) {
+            logger.info("市级登簿日志上报成功");
+            bdcJrDbrzjlDO.setShijcgbs(CommonConstantUtils.SF_S_DM);
+            bdcJrDbrzjlDO.setShijxyxx("上报成功");
+            bdcJrDbrzjlDO.setSjcgbs(CommonConstantUtils.SF_S_DM);
+            bdcJrDbrzjlDO.setSjxyxx("上报成功");
+        } else {
+            bdcJrDbrzjlDO.setShijxyxx(result);
+            logger.info("市级登簿日志上报失败，失败原因：{}", result);
+        }
     }
 
     private AccessLogProvinceHandlerServise getAccessServiceByDm(String dm) {

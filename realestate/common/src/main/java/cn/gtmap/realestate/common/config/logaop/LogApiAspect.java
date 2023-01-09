@@ -6,6 +6,7 @@ import cn.gtmap.realestate.common.core.enums.LogKeyEnum;
 import cn.gtmap.realestate.common.matcher.ZipkinAuditEventRepositoryMatcher;
 import cn.gtmap.realestate.common.util.CommonConstantUtils;
 import cn.gtmap.realestate.common.util.CommonUtil;
+import cn.gtmap.realestate.common.util.LogActionConstans;
 import cn.gtmap.realestate.common.util.UserManagerUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -119,7 +120,7 @@ public class LogApiAspect {
         }
 
         // 日志类型： 根据描述解析调用者的行为动作
-        String action = StringUtils.isEmpty(mkmc) ? "OTHER" : analysisEventAction(mkmc);
+        String action = StringUtils.isEmpty(mkmc) ? LogActionConstans.OTHER : analysisEventAction(mkmc);
 
         // 用户真实姓名
         String userName = userManagerUtils.getCurrentUserName();

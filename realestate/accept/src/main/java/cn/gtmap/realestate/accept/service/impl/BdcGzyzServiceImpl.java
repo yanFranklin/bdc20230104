@@ -489,8 +489,11 @@ public class BdcGzyzServiceImpl implements BdcGzyzService {
                     param.put("gzlslid", gzlslid);
                     paramList.add(param);
                 }
-                listBdcGzYzTsxx = bdcGzZhGzFeignService.listBdcGzYzTsxxOfAnyParam(bdcGzYzQO);
-
+                try {
+                    listBdcGzYzTsxx = bdcGzZhGzFeignService.listBdcGzYzTsxxOfAnyParam(bdcGzYzQO);
+                }catch(Exception ex){
+                    handlException(ex);
+                }
             }
         }
         return listBdcGzYzTsxx;

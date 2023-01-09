@@ -3330,8 +3330,9 @@ public class BdcSlPrintServiceImpl extends BaseController implements BdcSlPrintS
      * @date : 2022/12/13 9:54
      */
     @Override
-    public String generateSlMkXml(String gzlslid, String djxl, String zxlc) {
+    public Map generateSlMkXml(String gzlslid, String djxl, String zxlc) {
         String xml = "";
+        Map result = new HashMap();
         //该工作流实例Id下的项目集合
         List<BdcXmDO> list = new ArrayList<>();
         //申请书打印类型
@@ -3356,6 +3357,7 @@ public class BdcSlPrintServiceImpl extends BaseController implements BdcSlPrintS
             bdcDjxlPzDO = bdcDjxlPzService.queryBdcDjxlPzByGzldyidAndDjxl(bdcXmDO.getGzldyid(), bdcXmDO.getDjxl());
             if (Objects.nonNull(bdcDjxlPzDO) && StringUtils.isNotBlank(bdcDjxlPzDO.getSqsdylx())) {
                 sqsdylx = bdcDjxlPzDO.getSqsdylx();
+                result.put("dylx", sqsdylx);
                 LOGGER.info("工作流实例id,申请书打印类型:{},{}", gzlslid, sqsdylx);
 
                 if (StringUtils.isNotBlank(gzlslid) && StringUtils.isNotBlank(sqsdylx)) {
@@ -3372,12 +3374,13 @@ public class BdcSlPrintServiceImpl extends BaseController implements BdcSlPrintS
 
                     paramMap.put(sqsdylx, maps);
                     xml = bdcPrintFeignService.print(paramMap);
+                    result.put("xml", xml);
                 }
             }
         }
 
         LOGGER.info("工作流实例id,生成的数据源xml:{},{}",gzlslid, xml);
-        return xml;
+        return result;
     }
 }
 

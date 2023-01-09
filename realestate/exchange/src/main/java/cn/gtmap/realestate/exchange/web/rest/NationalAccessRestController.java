@@ -129,6 +129,27 @@ public class NationalAccessRestController implements NationalAccessRestService {
 
     /**
      * @param xmidList@author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
+     * @description 市级项目接入汇交
+     * @date : 2023/1/6 11:35
+     */
+    @Override
+    public void autoCityAccessByXmidList(@RequestBody List<String> xmidList) {
+        //存入一个redis数据表示正在进行汇交任务，存在时间3小时
+        redisUtils.addStringValue("SHIJIPLSB", "SHIJIPLSB", 3 * 3600);
+        try {
+            accesssModelHandlerService.autoAccessCityByXmidList(xmidList);
+//            accesssModelHandlerService.autoAccessWlxmByXmidList(xmidList);
+        } catch (Exception e) {
+            LOGGER.error("业务汇交存在异常" + e);
+            throw new AppException("业务汇交存在异常" + e.getMessage());
+        } finally {
+            //汇交结束后删除
+            redisUtils.deleteKey("SHIJIPLSB");
+        }
+    }
+
+    /**
+     * @param xmidList@author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
      * @description 外联项目的接入汇交
      * @date : 2022/12/6 14:32
      */
@@ -280,15 +301,33 @@ public class NationalAccessRestController implements NationalAccessRestService {
         accessLog.accessLog(accessDate,null);
         return true;
     }
-	
-	@Override
-	public boolean accessLogNt(String date, String qxdm) {
-		Date accessDate = new Date();
-		if(StringUtils.isNotBlank(date)){
-			Date paramDate = DateUtils.formatDate(date);
-			accessDate = DateUtils.dealDate(paramDate,"23:59:59");
-		}
-		accessLog.accessLog(accessDate, qxdm);
+
+    @Override
+    public boolean accessLogNt(String date, String qxdm) {
+        Date accessDate = new Date();
+        if (StringUtils.isNotBlank(date)) {
+            Date paramDate = DateUtils.formatDate(date);
+            accessDate = DateUtils.dealDate(paramDate, "23:59:59");
+        }
+        accessLog.accessLog(accessDate, qxdm);
+        return true;
+    }
+
+    /**
+     * @param date
+     * @param qxdm
+     * @author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
+     * @description 市级登簿日志手动上报
+     * @date : 2023/1/6 15:21
+     */
+    @Override
+    public boolean accessLogCity(String date, String qxdm) {
+        Date accessDate = new Date();
+        if (StringUtils.isNotBlank(date)) {
+            Date paramDate = DateUtils.formatDate(date);
+            accessDate = DateUtils.dealDate(paramDate, "23:59:59");
+        }
+        accessLog.cityAccessLog(accessDate, qxdm);
         return true;
     }
 
@@ -308,13 +347,13 @@ public class NationalAccessRestController implements NationalAccessRestService {
      * @date : 2022/10/13 9:16
      */
     @Override
-    public Map<String, Object> dbrzMxyl(String date, String qxdm) {
+    public Map<String, Object> dbrzMxyl(String date, String qxdm, String type) {
         Date accessDate = new Date();
         if (StringUtils.isNotBlank(date)) {
             Date paramDate = DateUtils.formatDate(date);
             accessDate = DateUtils.dealDate(paramDate, "23:59:59");
         }
-        return accessLog.dbrzmxyl(accessDate, qxdm);
+        return accessLog.dbrzmxyl(accessDate, qxdm, type);
     }
 
     /**

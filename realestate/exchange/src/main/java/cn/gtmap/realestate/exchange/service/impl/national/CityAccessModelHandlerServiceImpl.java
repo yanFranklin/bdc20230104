@@ -245,6 +245,7 @@ public class CityAccessModelHandlerServiceImpl implements CityAccesssModelHandle
         List<String> xmids = bdcXmList.stream().map(BdcXmDO::getXmid).filter(StringUtils::isNotBlank).collect(Collectors.toList());
         //处理注销原权利的外联项目
         Set<BdcXmForZxAccessDTO> bdcXmForZxAccessDTOSet = commonService.queryBdcXmForZxAccessListByXmidsAndWlxmAndZxyql(xmids);
+        LOGGER.warn("当前流程实例id{}查询到需要注销的外联项目信息{}", processInsId, JSON.toJSONString(bdcXmForZxAccessDTOSet));
         if (CollectionUtils.isNotEmpty(bdcXmForZxAccessDTOSet)) {
             accessWlxm(bdcXmForZxAccessDTOSet);
         }
@@ -301,20 +302,16 @@ public class CityAccessModelHandlerServiceImpl implements CityAccesssModelHandle
         //刚开始就记录数据到接入表中，cgbs为3，等待组织报文
         LOGGER.info("====================市级刚开始上报，存入数据库接入表一条======================:{}", bdcXmDO.getXmid());
         //数据接收，异步存入接入操作日志表，此时没有生成bwid
-        asyncDealUtils.saveJrCzrz(bdcXmDO.getXmid(), 1, "服务接收到需要上报的项目信息，下一步进行配置文件校验", "", new Date(), "1");
+        asyncDealUtils.saveJrCzrz(bdcXmDO.getXmid(), 1, "市级上报服务接收到需要上报的项目信息，下一步进行配置文件校验", "", new Date(), "1");
         saveBdcAccess(new CityAccess(), JrRzCgbsEnum.BEGIN_WSB.getBs(), bdcXmDO, "");
-
         //判断是否需要上报，不上报存入一条数据到接入表，且上报状态为-2 不需要上报
         if (!sfsb(bdcXmDO, "", true)) {
             LOGGER.info("当前项目不需要上报，结束上报服务,bdcXmDO.getXmid：{}", bdcXmDO.getXmid());
             return;
         }
-
         MessageModel messageModel = new MessageModel();
-        //旧版上报模型
-        MessageModelOld messageModelOld;
         try {
-            LOGGER.info("开始上报汇交,bdcXmDO.getXmid：{}", bdcXmDO.getXmid());
+            LOGGER.info("开始市级上报汇交,bdcXmDO.getXmid：{}", bdcXmDO.getXmid());
             if (CollectionUtils.isEmpty(bdcXmDOList)) {
                 bdcXmDOList = bdcXmMapper.queryBdcXmList(bdcXmDO.getGzlslid());
             }
@@ -552,37 +549,35 @@ public class CityAccessModelHandlerServiceImpl implements CityAccesssModelHandle
                     return;
                 }
                 try {
-                    if (newAccessModel) {
-                        MessageModel messageModel = new MessageModel();
-                        DataModel dataModel = nationalAccessXmlZxWlxmdj.getNationalAccessDataModel(zxTdInfo.getGxid() + CommonConstantUtils.ZF_YW_DH + zxTdInfo.getXmid());
-                        if (dataModel == null || CollectionUtils.isEmpty(dataModel.getQlfQlZxdjList())) {
-                            continue;
-                        }
-                        HeadModel headModel = nationalAccessHeadModelService.getAccessHeadModel(zxTdInfo.getYxmid(), true);
-                        headModel.setRecType(nationalAccessXmlZxWlxmdj.getRecType());
-                        headModel.setRecFlowID(dataModel.getQlfQlZxdjList().get(0).getYwh());
-                        headModel.setPreCertID(zxTdInfo.getBdcqzh());
-                        // 字典表和国标字典对照
-                        headModel = bdcExchangeZddzService.handleHeadZddz(headModel);
-                        dataModel = bdcExchangeZddzService.handleZddz(dataModel, dataModel.getQlfQlZxdjList().get(0).getYwh());
-                        messageModel.setDataModel(dataModel);
-                        messageModel.setHeadModel(headModel);
-                        // 读取默认值配置表  赋默认值
-                        accessDefaultValueService.setDefaultValueWithDefaultTable(nationalAccessXmlZxWlxmdj.getNationalAccessDataServiceSet(), messageModel, true);
-                        if (accessTurnOnYzx) {
-                            autoAccessByMessageModelForYzx(messageModel);
-                        } else {
-                            autoAccessByMessageModel(messageModel);
+                    MessageModel messageModel = new MessageModel();
+                    DataModel dataModel = nationalAccessXmlZxWlxmdj.getNationalAccessDataModel(zxTdInfo.getGxid() + CommonConstantUtils.ZF_YW_DH + zxTdInfo.getXmid());
+                    if (dataModel == null || CollectionUtils.isEmpty(dataModel.getQlfQlZxdjList())) {
+                        continue;
+                    }
+                    HeadModel headModel = nationalAccessHeadModelService.getAccessHeadModel(zxTdInfo.getYxmid(), true);
+                    headModel.setRecType(nationalAccessXmlZxWlxmdj.getRecType());
+                    headModel.setRecFlowID(dataModel.getQlfQlZxdjList().get(0).getYwh());
+                    headModel.setPreCertID(zxTdInfo.getBdcqzh());
+                    // 字典表和国标字典对照
+                    headModel = bdcExchangeZddzService.handleHeadZddz(headModel);
+                    dataModel = bdcExchangeZddzService.handleZddz(dataModel, dataModel.getQlfQlZxdjList().get(0).getYwh());
+                    messageModel.setDataModel(dataModel);
+                    messageModel.setHeadModel(headModel);
+                    // 读取默认值配置表  赋默认值
+                    accessDefaultValueService.setDefaultValueWithDefaultTable(nationalAccessXmlZxWlxmdj.getNationalAccessDataServiceSet(), messageModel, true);
+                    if (accessTurnOnYzx) {
+                        autoAccessByMessageModelForYzx(messageModel);
+                    } else {
+                        autoAccessByMessageModel(messageModel);
 
-                        }
-                        //成功后更新接入表的sjjrq 为当前介入项目的登记时间，根据messagemodel的bwid作为主键查询后更新
-                        String bwid = headModel.getBizMsgID();
-                        if (StringUtils.isNotBlank(bwid)) {
-                            BdcAccessLog bdcAccessLog = new CityAccess();
-                            bdcAccessLog.setSjjrrq(zxTdInfo.getXmDjsj());
-                            bdcAccessLog.setYwbwid(bwid);
-                            entityMapper.updateByPrimaryKeySelective(bdcAccessLog);
-                        }
+                    }
+                    //成功后更新接入表的sjjrq 为当前介入项目的登记时间，根据messagemodel的bwid作为主键查询后更新
+                    String bwid = headModel.getBizMsgID();
+                    if (StringUtils.isNotBlank(bwid)) {
+                        BdcAccessLog bdcAccessLog = new CityAccess();
+                        bdcAccessLog.setSjjrrq(zxTdInfo.getXmDjsj());
+                        bdcAccessLog.setYwbwid(bwid);
+                        entityMapper.updateByPrimaryKeySelective(bdcAccessLog);
                     }
                 } catch (Exception e) {
                     LOGGER.error("上报外联注销项目数据汇交失败：bdcXmDO.getXmid：{}", zxTdInfo.getYxmid(), e);
@@ -712,43 +707,6 @@ public class CityAccessModelHandlerServiceImpl implements CityAccesssModelHandle
         } catch (Exception e) {
             LOGGER.error("messageModel数据汇交失败", e);
             saveBdcAccessByMessageModel(new CityAccess(), JrRzCgbsEnum.ACCESS_FAIL.getBs(), messageModel, StringUtils.left(ExceptionUtils.getFeignErrorMsg(e), 1000));
-        }
-        return result;
-    }
-
-    public boolean autoAccessByMessageModelOld(MessageModelOld messageModel) {
-        boolean result = false;
-        try {
-            if (!ObjectUtils.isEmpty(messageModel)) {
-                List<NationalAccessUpload> list = UploadServiceUtil.listNationalAccessUploadByType(UploadServiceUtil.CITY_ACCESS);
-                // 上传
-                for (NationalAccessUpload nationalAccessUpload : list) {
-                    Boolean hjjg = nationalAccessUpload.uploadOld(messageModel);
-                    if (hjjg == null) {
-                        continue;
-                    } else if (!hjjg) {
-                        result = false;
-                        break;
-                    } else {
-                        result = true;
-                    }
-                }
-            }
-
-            String ywh = "";
-            if (messageModel != null && messageModel.getHeadModel() != null) {
-                ywh = messageModel.getHeadModel().getRecFlowID();
-            }
-            LOGGER.debug("汇交报文结束，ywh:{},result: {}", ywh, result);
-            String saveFlag = EnvironmentConfig.getEnvironment().getProperty("nationalAccessSaveGxDb");
-            if (StringUtils.isNotBlank(saveFlag) && StringUtils.equals(CommonConstantUtils.BOOL_TRUE, saveFlag)) {
-                // 不保存DJF_DJ_YWXX
-                gxService.saveGxDataModelOld(messageModel.getDataModel());
-                gxService.saveDjfDjYwxxDO(messageModel.getHeadModel().getRecFlowID());
-                LOGGER.info("old保存共享库结束，ywh:{}, result: {}", ywh, result);
-            }
-        } catch (Exception e) {
-            LOGGER.error("数据汇交失败", e);
         }
         return result;
     }
@@ -990,7 +948,7 @@ public class CityAccessModelHandlerServiceImpl implements CityAccesssModelHandle
                 bdcJrrzQO.setCgbsList(Arrays.asList(0, 1));
                 //实际接入时间是当天的不允许补报
                 bdcJrrzQO.setSjjrrq(new Date());
-                List<BdcAccessLog> bdcAccessLogList = accessLogMapper.listBdcJrrz(bdcJrrzQO);
+                List<BdcAccessLog> bdcAccessLogList = accessLogMapper.listBdcShijiJrrz(bdcJrrzQO);
                 LOGGER.warn("当前项目xmid{}接入表查询cgbs=0或者1的数据,不允许再次上报，查询入参{}，数据量{}", bdcXmDO.getXmid(), JSON.toJSONString(bdcJrrzQO), CollectionUtils.size(bdcAccessLogList));
                 if (CollectionUtils.isNotEmpty(bdcAccessLogList)) {
                     if (sfjlczrz) {

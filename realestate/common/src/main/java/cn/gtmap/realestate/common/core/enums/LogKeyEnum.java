@@ -22,6 +22,7 @@ public enum LogKeyEnum {
     METHOD_ARGS("methodArgs", "方法参数"),
     METHOD_RESPONSE("methodResponse","方法返回值"),
     IP("ip","客户端IP"),
+    USER_ID("userId", "用户id"),
     ;
 
 

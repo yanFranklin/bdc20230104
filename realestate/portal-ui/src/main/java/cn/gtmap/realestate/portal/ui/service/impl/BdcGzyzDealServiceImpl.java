@@ -1,5 +1,6 @@
 package cn.gtmap.realestate.portal.ui.service.impl;
 
+import cn.gtmap.gtc.feign.common.exception.GtFeignException;
 import cn.gtmap.gtc.sso.domain.dto.UserDto;
 import cn.gtmap.gtc.workflow.domain.common.BaseResult;
 import cn.gtmap.realestate.common.core.domain.BdcXmDO;
@@ -25,6 +26,7 @@ import cn.gtmap.realestate.portal.ui.service.BdcGzyzDealService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,7 +98,12 @@ public class BdcGzyzDealServiceImpl implements BdcGzyzDealService {
                 }
             }
             LOGGER.info("规则验证参数: {}", JSON.toJSONString(bdcGzYzQO));
-            listBdcGzYzTsxx = bdcGzZhGzFeignService.listBdcGzYzTsxxOfAnyParam(bdcGzYzQO);
+            try {
+                listBdcGzYzTsxx = bdcGzZhGzFeignService.listBdcGzYzTsxxOfAnyParam(bdcGzYzQO);
+            }catch (Exception ex) {
+                handlException(ex);
+            }
+
         } else {
             //查询受理项目的数据
             List<BdcSlXmDO> bdcSlXmDOList = bdcSlXmFeignService.listBdcSlXmByGzlslid(gzlslid);
@@ -128,10 +135,45 @@ public class BdcGzyzDealServiceImpl implements BdcGzyzDealService {
                     }
                 }
                 LOGGER.info("当前流程{}规则验证参数: {}", gzlslid, JSON.toJSONString(bdcGzYzQO));
-                listBdcGzYzTsxx = bdcGzZhGzFeignService.listBdcGzYzTsxxOfAnyParam(bdcGzYzQO);
+                try {
+                    listBdcGzYzTsxx = bdcGzZhGzFeignService.listBdcGzYzTsxxOfAnyParam(bdcGzYzQO);
+                }catch (Exception ex) {
+                    handlException(ex);
+                }
             }
         }
         return listBdcGzYzTsxx;
+    }
+    /**
+     * @description 规则验证异常处理
+     * @param e
+     * @return: java.lang.Object
+     * @author <a href="mailto:huanghui@gtmap.cn">huanghui</a>
+     * @date 2023/1/5 12:05
+     */
+    public Object handlException(Exception e) {
+        //获取规则的时候会抛出异常，当code为  时表示未配置验证项直接返回空集合
+        GtFeignException gte = null;
+        if (e.getCause() instanceof GtFeignException) {
+            gte = (GtFeignException) e.getCause();
+            if (gte != null) {
+                String responseBody = gte.getMsgBody();
+                Map bodyMap = JSONObject.parseObject(responseBody, Map.class);
+                if (MapUtils.getInteger(bodyMap, "code") != null && StringUtils.isNotBlank(MapUtils.getString(bodyMap, "msg"))) {
+                    Integer errorCode = MapUtils.getInteger(bodyMap, "code");
+                    if (errorCode == 101) {
+                        return Collections.emptyList();
+                    } else {
+                        LOGGER.error("规则验证异常{}", bodyMap.get("detail"));
+                        throw new AppException("规则验证异常，请联系管理员" + bodyMap.get("detail"));
+                    }
+                }
+            }
+        } else {
+            LOGGER.error("规则验证异常！", e);
+            throw new AppException("规则验证异常，请联系管理员");
+        }
+        return null;
     }
 
     @Override
@@ -207,7 +249,12 @@ public class BdcGzyzDealServiceImpl implements BdcGzyzDealService {
         bdcGzYzQO.setYzrzh(yzrzh);
 
         LOGGER.info("规则验证参数: {}", JSON.toJSONString(bdcGzYzQO));
-        List<BdcGzYzTsxxDTO> listBdcGzYzTsxx = bdcGzZhGzFeignService.listBdcGzYzTsxxOfAnyParam(bdcGzYzQO);
+        List<BdcGzYzTsxxDTO> listBdcGzYzTsxx = null;
+        try {
+            listBdcGzYzTsxx = bdcGzZhGzFeignService.listBdcGzYzTsxxOfAnyParam(bdcGzYzQO);
+        } catch (Exception ex) {
+            handlException(ex);
+        }
         LOGGER.info("规则验证结果: {}", JSON.toJSONString(listBdcGzYzTsxx));
         return checkTsxx(listBdcGzYzTsxx);
     }

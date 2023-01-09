@@ -575,7 +575,7 @@ layui.use(['jquery', 'element', 'form', 'laytpl', 'layer', 'table','workflow', '
                 //展开附件实际内容
                 $('.bdc-fj-content').removeClass('bdc-hide');
                 //设置附件内容高度
-                $(".bdc-fj-content").height($(".layadmin-tabsbody-item").height() - 38-61)
+                $(".bdc-fj-content").height($(".layadmin-tabsbody-item").height() - 119)
 
                 //图标旋转
                 $('.bdc-fj-title .bdc-show-two').addClass('bdc-normal');
@@ -583,6 +583,8 @@ layui.use(['jquery', 'element', 'form', 'laytpl', 'layer', 'table','workflow', '
                 if(xsyqlfj){
                     $(".bdc-yqlfj-default-content").hide()
                 }
+            //    附件标题长度增加
+            $(".bdc-fj-title-content .bdc-fj-title").css("width","100%")
             } else {
                 //展示收缩附件图片
                 $(".bdc-fj-show img").show()
@@ -601,7 +603,8 @@ layui.use(['jquery', 'element', 'form', 'laytpl', 'layer', 'table','workflow', '
 
                 //还原附件内容高度
                 $(".bdc-fj-content").removeAttr("style");
-
+                //还原附件标题宽度
+                $(".bdc-fj-title-content .bdc-fj-title").css("width","220px")
                 //    恢复主窗口宽度大小
                 $("#LAY_app_body").removeAttr("style");
                 //恢复附件大小

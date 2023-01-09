@@ -554,7 +554,7 @@ public class BdcSlPrintRestController extends BaseController implements BdcSlPri
     @Override
     @ResponseStatus(code = HttpStatus.OK)
     @LogNote(value = "组装打印参数，生成xml信息", action = LogActionConstans.OTHER)
-    public String generateSlMkXml(@RequestParam("gzlslid") String gzlslid,  @RequestParam(name = "djxl") String djxl, @RequestParam("zxlc") String zxlc) {
+    public Map generateSlMkXml(@RequestParam("gzlslid") String gzlslid,  @RequestParam(name = "djxl") String djxl, @RequestParam("zxlc") String zxlc) {
         return bdcSlPrintService.generateSlMkXml(gzlslid, djxl, zxlc);
     }
 }

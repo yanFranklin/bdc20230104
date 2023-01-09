@@ -1,19 +1,24 @@
 package cn.gtmap.realestate.init.service.zsxx.impl;
 
 import cn.gtmap.realestate.common.core.domain.*;
+import cn.gtmap.realestate.common.core.dto.init.BdcXmDTO;
 import cn.gtmap.realestate.common.util.CommonConstantUtils;
 import cn.gtmap.realestate.init.core.qo.InitServiceQO;
+import cn.gtmap.realestate.init.core.service.BdcXmService;
 import cn.gtmap.realestate.init.service.zsxx.InitBdcZsBaseAbstractService;
 import cn.gtmap.realestate.init.service.zsxx.InitBdcZslxAbstractService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 初始化证书信息
@@ -37,6 +42,15 @@ public class InitBdcZsxxServiceImpl extends InitBdcZslxAbstractService {
      */
     @Value("#{'${csh.mbfjqlfj.gzldyids:}'.split(',')}")
     private List<String> mbfjqlfj;
+
+    /**
+     * 批量流程一本证的工作流定义id
+     */
+    @Value("#{'${pllcybz.gzldyid:}'.split(',')}")
+    private List<String> pllcybzGzldyidList;
+
+    @Autowired
+    private BdcXmService bdcXmService;
 
     @Override
     public String getVal() {
@@ -74,6 +88,25 @@ public class InitBdcZsxxServiceImpl extends InitBdcZslxAbstractService {
             }
             dozerUtils.initBeanDateConvert(bdcQlr,bdcZs);
             dozerUtils.initBeanDateConvert(bdcXm,bdcZs);
+
+            // 批量生成一本证，如果权利类型不同，将权利类型设置为详见附记
+            if(CollectionUtils.isNotEmpty(pllcybzGzldyidList) && pllcybzGzldyidList.contains(bdcXm.getGzldyid())){
+                if(StringUtils.isNotBlank(bdcXm.getGzlslid())){
+                    List<BdcXmDTO> bdcXmDTOList = bdcXmService.listXmBfxx(bdcXm.getGzlslid(),null);
+                    if(CollectionUtils.isNotEmpty(bdcXmDTOList)){
+                        Set<Integer> qllxSet = new HashSet<>();
+                        for(BdcXmDTO bdcxm : bdcXmDTOList) {
+                            if(bdcxm.getQllx()!= null){
+                                qllxSet.add(bdcxm.getQllx());
+                            }
+                        }
+                        if(qllxSet.size() > 1){
+                            bdcZs.setQllx(CommonConstantUtils.QLLX_XJFJ);
+                        }
+                    }
+                }
+            }
+
             // 证书证明类型
             bdcZs.setZslx(CommonConstantUtils.ZSLX_ZS);
             //获取权利类型名称

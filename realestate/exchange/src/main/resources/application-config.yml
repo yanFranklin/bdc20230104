@@ -16,36 +16,45 @@ province-access-ftp:              # 省级 ftp 上报
   nationalQuartz: true
   version: hefei
   #ip: '11.48.6.4'              # ftp 主机 ip
-  ip: '192.168.10.84'
-  port: '21'                    # ftp 主机 端口
-  username: 'gt'
-  password: 'gtis'
+  ip: '192.168.2.114'
+  port: '22'                    # ftp 主机 端口
+  username: 'root'
+  password: 'Gtmap!@#123qw'
   #username: '340000'     # ftp 主机用户名
   #password: '123456'         # ftp 主机密码
-  path: ''                  # 上传路径
-  respath: ''          # 获取响应报文路径
-#  xsdpath: 'D:\xsd'     # 本地 xsd 校验文件路径
+  path: '/gtmap_client/client_source'                  # 上传路径
+  respath: '/gtmap_client/client_response'          # 获取响应报文路径
+  xsdpath: 'D:\xsd'     # 本地 xsd 校验文件路径
   #isConvert: true       #字典转换
   # 上报后获取响应报文的重试次数 默认0 -1为不获取
   downResponseRetryTimes: 0
 
 city-access-ftp:              # 市级 ftp 上报
   nationalQuartz: true
-  version: hefei
+  version:
   #ip: '11.48.6.4'              # ftp 主机 ip
-  ip: '192.168.2.125'
+  ip: '192.168.2.86'
   port: '22'                    # ftp 主机 端口
-  username: 'root'
-  password: 'abc123!@#'
+  username: 'FtpAdmin'
+  password: ' Gtmap123'
   #username: '340000'     # ftp 主机用户名
   #password: '123456'         # ftp 主机密码
-  path: ''                  # 上传路径
-  respath: ''          # 获取响应报文路径
+  path: '/response/'                  # 上传路径
+  respath: '/response/'          # 获取响应报文路径
   xsdpath: 'D:\xsd'     # 本地 xsd 校验文件路径
   #isConvert: true       #字典转换
   # 上报后获取响应报文的重试次数 默认0 -1为不获取
   downResponseRetryTimes: 0
-
+city-access-sftp:
+  ip: '192.168.2.114'         # sftp 主机 ip
+  port: '22'                    # sftp 主机 端口
+  username: 'root'              # sftp 主机用户名
+  password: 'Gtmap!@#123qwe'     # sftp 主机密码
+  connenttimes: 3               # 尝试连接次数
+  path: '/gtmap_client/client_source'             # 上传路径
+  respath: '/gtmap_client/client_response'          # 获取响应报文路径
+  xsdpath: 'D:\xsd'     # 本地 xsd 校验文件路径
+  reEditFileEnable: false       # 是否开启编辑文件（防止文件未传完被读）
 # 登簿日志上报配置
 accessLog:
   sqqxdmList: 340100,340111,340104
@@ -55,7 +64,6 @@ accessLog:
   turn-on-yzx: false   #是否开启一致性上报
   areacode-qxdm: { '340101': '340101-1','340102': '320102-1' }   #区县代码对应areacode
   turn-on-cheating: false   #是否开启作弊模式
-  turn-on-details: true     #是否开启登簿日志详情
   nationalEnble: false                    #判断是否开启国家上报日志
   provinceEnble: true                     #判断是否开启省级上报日志
   nationalUrl:                            #上报国家地址
@@ -68,16 +76,17 @@ accessLog:
   zszmhfgf: ;    #证书证明好分割符
   replacezf: 、  #拼接所用字符
   turn-on-replacezf: false  #是否开启拼接所用字符
-
+  cityEnable: true
+  cityDbrzsbUrl: http://192.168.2.104:8088/realestate-supervise-server/services/jrrzsb?wsdl
 provinceAccessSftp:             # 省级 sftp 上报
-  ip: '114.115.167.164'         # sftp 主机 ip
+  ip: '192.168.2.114'         # sftp 主机 ip
   port: '22'                    # sftp 主机 端口
   username: 'root'              # sftp 主机用户名
-  password: '123456a?'     # sftp 主机密码
+  password: 'Gtmap!@#123qwe'     # sftp 主机密码
   connenttimes: 3               # 尝试连接次数
   path: '/gtmap_client/client_source'             # 上传路径
-  respath: '/home/xml'          # 获取响应报文路径
-  xsdpath: '/usr/bwsb/xsd'     # 本地 xsd 校验文件路径
+  respath: '/gtmap_client/client_response'          # 获取响应报文路径
+  xsdpath: 'D:\xsd'     # 本地 xsd 校验文件路径
   reEditFileEnable: false       # 是否开启编辑文件（防止文件未传完被读）
 
 #nationalAccessFtp:              # 国家 ftp 上报
@@ -106,22 +115,29 @@ accessResponse.sjjr.cron: 0 0 9,11,13,15,17,19,21,23 * * ?
 accessResponse.sjjr.switch: false
 # 省级上报方式及开关配置
 provinceAccess:
-  type: ftp
+  type: sftp
   switch: true
 # 国家上报方式及开关配置
 nationalAccess:
   type: sftp
   switch: false
 cityAccess:
-  type: ftp
+  type: sftp
   switch: false
 
 
 
-
 access:
+  data:
+    part:
+      field: 2
+  headmodel:
+    ybdcdyh: true
   newbizbs: true
   sbxz:
+    clsj:
+      open: false
+      cron: 0 */1 * * * ?
     cron: 0 0 23 * * ?
   dyaGzldyidArr: smMwR2SaARTp8MYm      #抵押业务工作流定义id
   outTimeGzldyidArr: aHjazkjriDsreaRt    #上报超1个工作日不上报配置工作流定义id
@@ -130,7 +146,7 @@ access:
   version: standard   #上报版本（默认standard）
   response:
     enable: false   #是否启动定时获取响应报文：true /false  默认false #第二种模式：每次触发查询所有未获取响应的报文 执行获取响应报文请求
-    quartztime: 0 50 10 * * ? *     #定时获取响应报文的时间： 默认 0 0 20 * * ? *
+    quartztime: 0 50 10 * * ?     #定时获取响应报文的时间： 默认 0 0 20 * * ? *
   xnbdcdyh: false   #虚拟BDCDYH的项目是否上报 默认为 false
   filter:
     xzqdm: 340101   #上报需要过滤的XZQDM
@@ -148,13 +164,19 @@ access:
     dh: 17612160501
     checkstatus-msgtype: sbfwqcheck
   slsjfromdy: true  # 受理时间是否读取大云平台
+  bcsb:
+    enable: false #是否开启补偿上报
+    cron: 0 */1 * * * ? #补偿上报定时时间--一定要配置在当天登簿日志上报之前
+  xsdSfjrXz: true
+  qjsjjyXsdPath: 'D:\xsd'
 lastday:
   dbsfsb:
     cron: 0 0 8 * * ? #前一天登簿日志是否上报
-
-
+dbrzbcsb:
+  lxdh: 18112915161
+  msgtype: 123123
 #上报查询权籍数据开关
-switch.datasource.flag: true
+switch.datasource.flag: false
 
 #工作日超时天数配置，配置为double类型
 outWorkDay: 1.0

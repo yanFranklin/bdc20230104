@@ -43,13 +43,13 @@ public class BdcJrDbrzjlDO {
     private String jrbw;
     /**
      * @author <a href="mailto:liuyu@gtmap.cn">liuyu</a>
-     * @description 是否成功（成功标识 true成功false失败）
+     * @description 国家上报是否成功（成功标识 true成功false失败）
      */
     @Column(name = "cgbs")
     private Integer cgbs;
     /**
      * @author <a href="mailto:liuyu@gtmap.cn">liuyu</a>
-     * @description 响应信息
+     * @description 国家上报响应信息
      */
     @Column(name = "xyxx")
     private String xyxx;
@@ -67,6 +67,14 @@ public class BdcJrDbrzjlDO {
      */
     @Column(name = "sjxyxx")
     private String sjxyxx;
+
+    @ApiModelProperty(value = "市级上报响应消息")
+    @Column(name = "shijxyxx")
+    private String shijxyxx;
+
+    @ApiModelProperty(value = "市级上报是否成功")
+    @Column(name = "shijcgbs")
+    private Integer shijcgbs;
 
     /**
      * 上报日期 与报文的accessdate一致
@@ -148,19 +156,36 @@ public class BdcJrDbrzjlDO {
         this.accessdate = accessdate;
     }
 
+    public String getShijxyxx() {
+        return shijxyxx;
+    }
+
+    public void setShijxyxx(String shijxyxx) {
+        this.shijxyxx = shijxyxx;
+    }
+
+    public Integer getShijcgbs() {
+        return shijcgbs;
+    }
+
+    public void setShijcgbs(Integer shijcgbs) {
+        this.shijcgbs = shijcgbs;
+    }
+
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("BdcJrDbrzjlDO{");
-        sb.append("id='").append(id).append('\'');
-        sb.append(", jrrq=").append(jrrq);
-        sb.append(", xzqdm='").append(xzqdm).append('\'');
-        sb.append(", jrbw='").append(jrbw).append('\'');
-        sb.append(", cgbs=").append(cgbs);
-        sb.append(", xyxx='").append(xyxx).append('\'');
-        sb.append(", sjcgbs=").append(sjcgbs);
-        sb.append(", sjxyxx='").append(sjxyxx).append('\'');
-        sb.append(", accessdate=").append(accessdate);
-        sb.append('}');
-        return sb.toString();
+        return "BdcJrDbrzjlDO{" +
+                "id='" + id + '\'' +
+                ", jrrq=" + jrrq +
+                ", xzqdm='" + xzqdm + '\'' +
+                ", jrbw='" + jrbw + '\'' +
+                ", cgbs=" + cgbs +
+                ", xyxx='" + xyxx + '\'' +
+                ", sjcgbs=" + sjcgbs +
+                ", sjxyxx='" + sjxyxx + '\'' +
+                ", shijxyxx='" + shijxyxx + '\'' +
+                ", shijcgbs='" + shijcgbs + '\'' +
+                ", accessdate=" + accessdate +
+                '}';
     }
 }

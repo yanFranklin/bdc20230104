@@ -112,6 +112,14 @@ public interface AccesssModelHandlerService {
     /**
      * @param
      * @author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
+     * @description 市级业务数据根据xmid 接入
+     * @date : 2023/1/6 11:41
+     */
+    void autoAccessCityByXmidList(List<String> xmidList);
+
+    /**
+     * @param
+     * @author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
      * @description 上报销账台账上报并更新销账状态
      * @date : 2022/12/13 16:50
      */
@@ -146,9 +154,6 @@ public interface AccesssModelHandlerService {
      * @description 针对已有messageModel结构的场景  汇报上交
      */
     boolean autoAccessByMessageModel(MessageModel messageModel);
-
-    boolean autoAccessByMessageModelOld(MessageModelOld messageModel);
-
     /**
      * @param messageModel
      * @return void

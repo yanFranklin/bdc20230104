@@ -3,7 +3,6 @@ package cn.gtmap.realestate.exchange.service.national;
 import cn.gtmap.realestate.common.core.domain.CommonResponse;
 import cn.gtmap.realestate.common.core.domain.exchange.MessageModel;
 import cn.gtmap.realestate.common.core.domain.exchange.uniformity.MessageModelBdc;
-import cn.gtmap.realestate.exchange.core.dto.common.MessageModelOld;
 
 /**
  * @Auther xutao
@@ -19,8 +18,6 @@ public interface NationalAccessUpload {
      * @return 汇交结果  true 汇交成功  false汇交失败  null未配置或者ftp/sftp连接失败
      */
     Boolean upload(MessageModel messageModel);
-
-    Boolean uploadOld(MessageModelOld messageModel);
 
     /**
      * 一致性结构上报

@@ -26,6 +26,6 @@ public interface BdcGgptRestService {
      * @date : 2022/11/03
      */
     @PostMapping(value = "/realestate-accept/rest/v1.0/ggpt/download")
-    Object downloadGgfj(@RequestParam("fjid") String fjid, @RequestParam("gzlslid") String gzlslid) throws IOException;
+    Object downloadGgfj(@RequestBody GgptxxDTO ggptxxDTO, @RequestParam("gzlslid") String gzlslid) throws IOException;
 
 }

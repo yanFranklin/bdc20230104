@@ -4,7 +4,6 @@ import cn.gtmap.realestate.common.core.ex.AppException;
 import cn.gtmap.realestate.common.core.service.feign.exchange.NationalAccessFeignService;
 import cn.gtmap.realestate.common.util.RestRpcUtils;
 import cn.gtmap.realestate.inquiry.ui.web.main.BaseController;
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,14 +63,29 @@ public class BdcDbrzController extends BaseController {
 		}
 	}
 
-
-	@GetMapping("/dbmxyl")
+	/**
+	 * @param
+	 * @author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
+	 * @description 市级登簿日志上报
+	 * @date : 2023/1/6 15:19
+	 */
+	@GetMapping(value = "/cityAccess")
 	@ResponseStatus(HttpStatus.OK)
-	public Object dbrzmxyl(String date, String qxdm) {
+	public Object accessLogCity(String date, String qxdm) {
 		if (StringUtils.isAnyBlank(date, qxdm)) {
 			throw new AppException("缺失参数！");
 		}
-		return nationalAccessFeignService.dbrzMxyl(date, qxdm);
+		return nationalAccessFeignService.accessLogCity(date, qxdm);
+	}
+
+
+	@GetMapping("/dbmxyl")
+	@ResponseStatus(HttpStatus.OK)
+	public Object dbrzmxyl(String date, String qxdm, String type) {
+		if (StringUtils.isAnyBlank(date, qxdm)) {
+			throw new AppException("缺失参数！");
+		}
+		return nationalAccessFeignService.dbrzMxyl(date, qxdm, type);
 	}
 
 	@PostMapping("/dbwjr/plsb")

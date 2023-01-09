@@ -133,7 +133,9 @@ layui.use(['jquery', 'layer', 'element', 'form', 'table', 'laytpl'], function ()
                     type: "POST",
                     url: getContextPath() + "/ggpt/fjxz?gzlslid=" + gzlslid,
                     traditional: true,
-                    data: {fjid: data.fjid},
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    dataType: "json",
                     success: function (data) {
                         ityzl_SHOW_SUCCESS_LAYER("保存成功");
                     }, error: function (e) {

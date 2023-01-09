@@ -3,13 +3,20 @@ package cn.gtmap.realestate.exchange.service.impl.national.upload;
 
 import cn.gtmap.realestate.common.core.domain.exchange.MessageModel;
 import cn.gtmap.realestate.common.core.domain.exchange.uniformity.MessageModelBdc;
-import cn.gtmap.realestate.exchange.core.dto.common.MessageModelOld;
+import cn.gtmap.realestate.common.core.dto.exchange.access.MsgNoticeDTO;
+import cn.gtmap.realestate.common.core.enums.AccessWarningEnum;
 import cn.gtmap.realestate.exchange.core.national.CityAccess;
 import cn.gtmap.realestate.exchange.service.national.NationalAccessUpload;
+import cn.gtmap.realestate.exchange.service.national.access.AccessLogTypeService;
+import com.jcraft.jsch.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+
+import java.util.Date;
 
 /**
  * @Date 2022-05-17
@@ -74,6 +81,9 @@ public class CityAccessUploadSftpImpl extends AbstractCityAccessUpload implement
      */
     private String downResponseRetryTimes;
 
+    @Autowired
+    AccessLogTypeService accessLogTypeService;
+
     /**
      * 将 xml 上传前置机
      *
@@ -82,12 +92,6 @@ public class CityAccessUploadSftpImpl extends AbstractCityAccessUpload implement
     @Override
     public Boolean upload(MessageModel messageModel) {
         return uploadSftp(port, username, ip, password, downResponseRetryTimes, reEditFileEnable, connenttimes,
-                messageModel, xsdpath, path, respath, new CityAccess());
-    }
-
-    @Override
-    public Boolean uploadOld(MessageModelOld messageModel) {
-        return uploadSftpOld(port, username, ip, password, downResponseRetryTimes, reEditFileEnable, connenttimes,
                 messageModel, xsdpath, path, respath, new CityAccess());
     }
 
@@ -127,7 +131,18 @@ public class CityAccessUploadSftpImpl extends AbstractCityAccessUpload implement
      */
     @Override
     public void checkStatus() {
+        Session session = getSession(port, username, ip, password);
+        if (ObjectUtils.isEmpty(session)) {
+            //sftp连接失败
+            LOGGER.info("尝试获取前置机连接失败，日期：{}", new Date());
+            MsgNoticeDTO msgNoticeDTO = new MsgNoticeDTO();
+            msgNoticeDTO.setYjlx(AccessWarningEnum.STATUS_3.getYjlx());
+            accessLogTypeService.sendMsgByMsgType(msgNoticeDTO);
 
+        } else {
+            LOGGER.info("sftp尝试获取前置机连接成功，日期：{}", new Date());
+
+        }
     }
 
     public String getIp() {

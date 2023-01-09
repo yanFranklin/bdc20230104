@@ -60,6 +60,20 @@ public interface LpbRestService {
                                      @PathVariable("code") String code,
                                  @RequestParam(name = "qjgldm", required = false) String qjgldm);
 
+
+
+    /**
+     * @param fwDcbIndex
+     * @param code
+     * @return ResourceDTO
+     * @author <a href="mailto:liyinqiao@gtmap.cn">liyinqiao</a>
+     * @description 从户室基本信息实体查询预测信息
+     */
+    @GetMapping(value = "/building/rest/v1.0/{code}/fwychsinhs/{fwDcbIndex}", produces = "application/hal+json")
+    ResourceDTO queryFwYcHsByIndexInFwhs(@PathVariable("fwDcbIndex") String fwDcbIndex,
+                                 @PathVariable("code") String code,
+                                 @RequestParam(name = "qjgldm", required = false) String qjgldm);
+
     /**
      * @param importLpbRequestDTO
      * @description 导入楼盘表数据

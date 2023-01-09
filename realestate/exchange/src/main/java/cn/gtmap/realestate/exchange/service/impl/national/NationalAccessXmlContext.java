@@ -7,7 +7,6 @@ import cn.gtmap.realestate.exchange.service.national.NationalAccessXmlService;
 import cn.gtmap.realestate.exchange.util.CommonUtil;
 import com.google.common.collect.Maps;
 import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -44,12 +43,10 @@ public class NationalAccessXmlContext {
         if (!ObjectUtils.isEmpty(bdcXmDO.getBdclx())) {
             param.put("bdclx", bdcXmDO.getBdclx());
         }
-//        LOGGER.info("查找对应的服务（参数）：{}", param.toString());
         Map<String, Object> bdcexchangeZdSqlxMap = bdcXmMapper.getBdcSubmitZdSqlx(param);
         if (ObjectUtils.isEmpty(bdcexchangeZdSqlxMap)) {
             LOGGER.error("未找到对应的服务");
         } else {
-//            LOGGER.info("查找对应的服务（结果）：{}", bdcexchangeZdSqlxMap.toString());
             if (MapUtils.isNotEmpty(bdcexchangeZdSqlxMap)) {
                 nationalAccessXmlService = getNationNalServiceInstance(CommonUtil.formatEmptyValue(bdcexchangeZdSqlxMap.get("YWFWDM")));
             }

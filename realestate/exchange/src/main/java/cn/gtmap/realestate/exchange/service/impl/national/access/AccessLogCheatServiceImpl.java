@@ -265,6 +265,7 @@ public class AccessLogCheatServiceImpl implements AccessLogDataService {
         } catch (Exception e) {
             accessSlList = repository.selectList(BdcdjMapper.class.getName() + getAccessSlMapStr, map);
         }
+        LOGGER.warn("当前区县{}找平模式下查询入参{},查询数据{}", map.get("qxdm"), JSON.toJSONString(map), JSON.toJSONString(accessSlList));
         if (CollectionUtils.isNotEmpty(accessSlList) && accessSlList.size() == 10) {
             accessInfo.setFirstReg(Integer.valueOf(String.valueOf(accessSlList.get(1).get("NUM"))));
             accessInfo.setTransferReg(Integer.valueOf(String.valueOf(accessSlList.get(2).get("NUM"))));
@@ -320,7 +321,7 @@ public class AccessLogCheatServiceImpl implements AccessLogDataService {
         } catch (Exception e) {
             LOGGER.error("查询登簿量详情sql{}异常，查询入参{}", mapperType + getRegisterDetails, map, e);
         }
-        LOGGER.warn("当前区县{}查询的sqlid{}查询登簿详单数量{}", MapUtils.getString(map, "qxdm"), mapperType + getRegisterDetails, CollectionUtils.size(registerList));
+        LOGGER.warn("当前区县{}查询的sqlid{}查询入参{}查询登簿详单数量{}", MapUtils.getString(map, "qxdm"), mapperType + getRegisterDetails, JSON.toJSONString(map), CollectionUtils.size(registerList));
         if (CollectionUtils.isNotEmpty(registerList)) {
             HashMap zdmap = new HashMap();
             //权利类型
@@ -349,14 +350,12 @@ public class AccessLogCheatServiceImpl implements AccessLogDataService {
                         }
                         if (MapUtils.isNotEmpty(qllxMap) && StringUtils.isNotBlank(MapUtils.getString(qllxMap, register.getQLLX(), ""))) {
                             register.setQLLX(MapUtils.getString(qllxMap, register.getQLLX()));
-                            LOGGER.info("对照后登簿日志权利类型为：{}", register.getQLLX());
                         }
                     }
                     //申请类型对照
                     if (null != register.getDJLX()) {
                         if (MapUtils.isNotEmpty(djlxMap) && StringUtils.isNotBlank(MapUtils.getString(djlxMap, register.getDJLX(), ""))) {
                             register.setDJLX(MapUtils.getString(djlxMap, register.getDJLX()));
-                            LOGGER.info("对照后登簿日志权利类型为：{}", register.getDJLX());
                         }
                     }
                     ywidList.add(register.getYWH());
@@ -384,6 +383,7 @@ public class AccessLogCheatServiceImpl implements AccessLogDataService {
                 List<Register> registers = (List<Register>) subList;
                 HashMap param = new HashMap();
                 param.put("ywidList", ywidList);
+                param.put("logTable", map.get("logTable"));
                 List<BdcAccessLog> bdcAccessLogList = accessLogMapper.getProvinceAccessYwbwidByXmidList(param);
                 Map<String, BdcAccessLog> map1 = bdcAccessLogList.stream().collect((Collectors.toMap(BdcAccessLog::getYwlsh, Function.identity())));
                 if (CollectionUtils.isNotEmpty(bdcAccessLogList)) {
@@ -428,6 +428,7 @@ public class AccessLogCheatServiceImpl implements AccessLogDataService {
         } catch (Exception e) {
             accessList = repository.selectList(BdcdjMapper.class.getName() + getAccessDetailsMapStr, map);
         }
+        LOGGER.warn("当前区县{}找平模式查询接入详单入参{},数据量{}", map.get("qxdm"), JSON.toJSONString(map), CollectionUtils.size(accessList));
         return accessList;
     }
 }

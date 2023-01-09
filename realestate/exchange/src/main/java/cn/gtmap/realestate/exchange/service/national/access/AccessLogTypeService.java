@@ -35,6 +35,15 @@ public interface AccessLogTypeService {
     void provinceAccessLogWeb(String xml, BdcJrDbrzjlDO bdcJrDbrzjlDO);
 
     /**
+     * @param xml           xml文件
+     * @param bdcJrDbrzjlDO 日志接入表实体类
+     * @author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
+     * @description 市级登簿日志上报
+     * @date : 2023/1/6 9:23
+     */
+    void cityAccessLogWeb(String xml, BdcJrDbrzjlDO bdcJrDbrzjlDO);
+
+    /**
      * 上报相关消息通知接口-站内通知或短信通知，可通用
      *
      * @param msgNoticeDTO@return

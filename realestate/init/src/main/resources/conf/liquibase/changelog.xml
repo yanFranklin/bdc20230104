@@ -10326,4 +10326,16 @@
             create index IDX_BDC_GZLSJ_Gzldyid on BDC_GZLSJ (GZLDYID);
         </sql>
     </changeSet>
+
+    <changeSet id="2023-01-06-01-init" author="gaolining" dbms="oracle" runOnChange="true" failOnError="false"
+               runAlways="false">
+        <sql>
+            alter table BDC_JR_DBRZJL
+                add shijcgbs NUMBER(1);
+            comment on column BDC_JR_DBRZJL.shijcgbs is '市级上报成功标识';
+            alter table BDC_JR_DBRZJL
+                add shijxyxx VARCHAR2(1000);
+            comment on column BDC_JR_DBRZJL.shijxyxx is '市级上报响应消息';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

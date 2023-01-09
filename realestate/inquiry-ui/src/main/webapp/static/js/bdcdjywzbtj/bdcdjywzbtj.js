@@ -301,14 +301,14 @@ layui.use(['jquery', 'element', 'form', 'table', 'laydate', 'formSelects'], func
                 }else if(cols[index].minWidth > 0){
                     showColsWidth.push(parseInt(cols[index].minWidth / 100 * 15));
                 }else{
-                    showColsWidth.push(300 / 100 * 5);
+                    showColsWidth.push(1000 / 100 * 5);
                 }
             }
         }
 
         // 设置Excel基本信息
-        $("#fileName").val('不动产业务统计');
-        $("#sheetName").val('不动产业务统计表');
+        $("#fileName").val('互联网+不动产登记业务占比统计');
+        $("#sheetName").val('互联网+不动产登记业务占比统计表');
         $("#cellTitle").val(showColsTitle);
         $("#cellWidth").val(showColsWidth);
         $("#cellKey").val(showColsField);

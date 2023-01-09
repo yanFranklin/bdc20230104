@@ -6,6 +6,11 @@ package cn.gtmap.realestate.common.util;
  * @description 自定义日志查询实现方法常量
  */
 public class LogConstans {
+
+    /**
+     * 日志记录类型：默认日志记录实现
+     */
+    public static final String LOG_TYPE_DEFAULT = "DEFAULT_LOG";
     /**
      * 自定义日志记录类型： 选择台账
      */

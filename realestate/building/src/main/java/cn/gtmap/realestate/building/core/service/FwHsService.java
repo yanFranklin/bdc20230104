@@ -68,6 +68,14 @@ public interface FwHsService {
     FwHsDO queryFwHsByIndex(String fwHsIndex);
 
     /**
+     * @param fwDcbIndex
+     * @return cn.gtmap.realestate.common.core.domain.building.FwHsDO
+     * @author <a href="mailto:liyinqiao@gtmap.cn">liyinqiao</a>
+     * @description 从户室基本信息实体查询预测信息
+     */
+    public List<FwHsDO> queryFwycHsByIndexAndScmj(String fwDcbIndex);
+
+    /**
      * @param fwHsDO
      * @return
      * @author <a href="mailto:wangzijie@gtmap.cn">wangzijie</a>

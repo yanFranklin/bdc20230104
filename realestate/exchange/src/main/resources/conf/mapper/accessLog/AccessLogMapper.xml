@@ -249,10 +249,10 @@
         a.ywdm,
         a.bdcdyh,
         a.cgbs
-        from bdc_jr_sjjl a
+        from ${logTable} a
         where a.jrrq = (
         select max(b.jrrq)
-        from bdc_jr_sjjl b
+        from  ${logTable} b
         where b.ywlsh = a.ywlsh and b.ywdm is not null
         <if test="(ywidList != null and ywidList.size>0)">
             and b.ywlsh in
@@ -301,6 +301,28 @@
         where a.jrrq = (
             select max(b.jrrq)
             from bdc_jr_gjjl b
+            where b.ywlsh = a.ywlsh)
+          and a.ywlsh = #{xmid}
+    </select>
+
+    <select id="getCityAccessYwbwidByXmid" parameterType="java.lang.String" resultMap="bdcAccessLogMap">
+        select a.ywbwid,
+               a.ywlsh,
+               a.ywdm,
+               a.bdcdyh,
+               a.cgbs,
+               a.xybm,
+               a.xyxx,
+               a.fjxx,
+               a.fjxx1,
+               a.fwewm,
+               a.jrrq,
+               a.jrbw,
+               a.xybw
+        from bdc_jr_shijjl a
+        where a.jrrq = (
+            select max(b.jrrq)
+            from bdc_jr_shijjl b
             where b.ywlsh = a.ywlsh)
           and a.ywlsh = #{xmid}
     </select>
@@ -589,10 +611,46 @@
         t.xybm,
         t.xyxx,
         t.jrrq,
-        t.jrbw,
-        t.xybw,
         t.sjjrrq
         from BDC_JR_SJJL t
+        <where>
+            <if test="xmid != null and xmid != ''">
+                and t.ywlsh = #{xmid}
+            </if>
+            <if test="cgbs != null and cgbs != ''">
+                and t.cgbs = #{cgbs}
+            </if>
+            <if test="cgbsList != null and cgbsList.size() >0">
+                and t.cgbs in
+                <foreach collection="cgbsList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="sjjrrq != null">
+                and trunc(t.sjjrrq) = trunc(#{sjjrrq})
+            </if>
+
+            <if test="jrrq != null">
+                and trunc(t.jrrq) = trunc(#{jrrq})
+            </if>
+            <if test="bwid != null and bwid !=''">
+                and t.ywbwid=#{bwid}
+            </if>
+        </where>
+    </select>
+
+    <select id="listBdcShijiJrrz" resultType="cn.gtmap.realestate.exchange.core.national.BdcAccessLog"
+            parameterType="cn.gtmap.realestate.exchange.core.qo.BdcJrrzQO" >
+        select t.ywbwid,
+        t.ywlsh,
+        t.ywdm,
+        t.bdcdyh,
+        t.cgbs,
+        t.xybm,
+        t.xyxx,
+        t.jrrq,
+        t.sjjrrq
+        from BDC_JR_SHIJJL t
         <where>
             <if test="xmid != null and xmid != ''">
                 and t.ywlsh = #{xmid}

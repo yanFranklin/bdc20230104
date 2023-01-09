@@ -3390,12 +3390,14 @@ function loadYjxx(){
 //申请书评价器推送按钮
 function sqsMk(fjlx, dylx){
     var qlxxsl;
+    var djxl;
     if (isNotBlank(qlxxlist)){
         qlxxsl = qlxxlist.length;
+        djxl = qlxxlist[0].bdcXm.djxl;
     }
     //流程不是组合的时候不需要弹框
     if (isNotBlank(qlxxsl) && qlxxsl === 1){
-        signMk(fjlx, dylx);
+        signMk(fjlx, dylx, djxl);
         return;
     }
     //流程是组合的时候，弹框供选择需要推送的权利类型的申请书

@@ -5,7 +5,6 @@ import cn.gtmap.realestate.common.core.domain.exchange.MessageModel;
 import cn.gtmap.realestate.common.core.domain.exchange.uniformity.MessageModelBdc;
 import cn.gtmap.realestate.common.core.dto.exchange.access.MsgNoticeDTO;
 import cn.gtmap.realestate.common.core.enums.AccessWarningEnum;
-import cn.gtmap.realestate.exchange.core.dto.common.MessageModelOld;
 import cn.gtmap.realestate.exchange.core.national.ProvinceAccess;
 import cn.gtmap.realestate.exchange.service.national.NationalAccessUpload;
 import cn.gtmap.realestate.exchange.service.national.access.AccessLogTypeService;
@@ -93,12 +92,6 @@ public class ProvinceAccessUploadSftpImpl extends AbstractProvinceAccessUpload i
     public Boolean upload(MessageModel messageModel) {
         return uploadSftp(port, username, ip, password, downResponseRetryTimes, reEditFileEnable, connenttimes, messageModel, xsdpath, path, respath, new ProvinceAccess());
     }
-
-    @Override
-    public Boolean uploadOld(MessageModelOld messageModel) {
-        return uploadSftpOld(port, username, ip, password, downResponseRetryTimes, reEditFileEnable, connenttimes, messageModel, xsdpath, path, respath, new ProvinceAccess());
-    }
-
     /**
      * 一致性结构上报
      *

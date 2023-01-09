@@ -160,6 +160,9 @@ public class AccessModelHandlerServiceImpl implements AccesssModelHandlerService
     @Autowired
     NationalAccessRestController nationalAccessRestController;
 
+    @Autowired
+    CityAccesssModelHandlerService cityAccesssModelHandlerService;
+
     @Value("${access.pldy.single:false}")
     private boolean accessPldy;
     /**
@@ -1017,6 +1020,22 @@ public class AccessModelHandlerServiceImpl implements AccesssModelHandlerService
     }
 
     /**
+     * @param xmidList@author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
+     * @description 市级业务数据根据xmid 接入
+     * @date : 2023/1/6 11:41
+     */
+    @Override
+    public void autoAccessCityByXmidList(List<String> xmidList) {
+        for (String xmid : xmidList) {
+            BdcXmDO bdcXmDO = bdcXmMapper.queryBdcXm(xmid);
+            if (Objects.nonNull(bdcXmDO)) {
+                cityAccesssModelHandlerService.singleAccess(bdcXmDO, null);
+            }
+        }
+
+    }
+
+    /**
      * @param sbxzVOList@author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
      * @description 上报销账台账上报并更新销账状态
      * @date : 2022/12/13 16:50
@@ -1210,44 +1229,6 @@ public class AccessModelHandlerServiceImpl implements AccesssModelHandlerService
         return result;
     }
 
-    @Override
-    public boolean autoAccessByMessageModelOld(MessageModelOld messageModel) {
-        boolean result = false;
-        try {
-            if (!ObjectUtils.isEmpty(messageModel)) {
-                List<NationalAccessUpload> list = UploadServiceUtil.listNationalAccessUpload();
-                // 上传
-                for (NationalAccessUpload nationalAccessUpload : list) {
-                    Boolean hjjg = nationalAccessUpload.uploadOld(messageModel);
-                    if (hjjg == null) {
-                        continue;
-                    } else if (!hjjg) {
-                        result = false;
-                        break;
-                    } else {
-                        result = true;
-                    }
-                }
-            }
-
-            String ywh = "";
-            if (messageModel != null && messageModel.getHeadModel() != null) {
-                ywh = messageModel.getHeadModel().getRecFlowID();
-            }
-            LOGGER.debug("汇交报文结束，ywh:{},result: {}", ywh, result);
-            String saveFlag = EnvironmentConfig.getEnvironment().getProperty("nationalAccessSaveGxDb");
-            if (StringUtils.isNotBlank(saveFlag) && StringUtils.equals(CommonConstantUtils.BOOL_TRUE, saveFlag)) {
-                // 不保存DJF_DJ_YWXX
-                gxService.saveGxDataModelOld(messageModel.getDataModel());
-                gxService.saveDjfDjYwxxDO(messageModel.getHeadModel().getRecFlowID());
-                LOGGER.info("old保存共享库结束，ywh:{}, result: {}", ywh, result);
-            }
-        } catch (Exception e) {
-            LOGGER.error("数据汇交失败", e);
-        }
-        return result;
-    }
-
     /**
      * @param messageModel
      * @return void
@@ -1388,7 +1369,7 @@ public class AccessModelHandlerServiceImpl implements AccesssModelHandlerService
                     }
                 }
                 if (Objects.nonNull(bdcDjxlPzDO)) {
-                    if (Objects.equals(CommonConstantUtils.SF_F_DM, bdcDjxlPzDO.getSfsb())) {
+                    if (Objects.equals(CommonConstantUtils.SF_F_DM, bdcDjxlPzDO.getSfsb()) || Objects.isNull(bdcDjxlPzDO.getSfsb())) {
                         //配置了不上报，返回false
                         if (sfjlrz) {
                             asyncDealUtils.saveJrCzrz(bdcXmDO.getXmid(), 0, "流程配置中设置了不上报", "", new Date(), "0");
@@ -2708,7 +2689,7 @@ public class AccessModelHandlerServiceImpl implements AccesssModelHandlerService
             if (StringUtils.isNotBlank(bdcXmDO.getGzldyid())) {
                 BdcDjxlPzDO bdcDjxlPzDO = bdcDjxlPzFeignService.queryBdcDjxlPzByGzldyidAndDjxl(bdcXmDO.getGzldyid(), bdcXmDO.getDjxl());
                 if (Objects.nonNull(bdcDjxlPzDO)) {
-                    if (Objects.equals(CommonConstantUtils.SF_F_DM, bdcDjxlPzDO.getSfsb())) {
+                    if (Objects.equals(CommonConstantUtils.SF_F_DM, bdcDjxlPzDO.getSfsb()) || Objects.isNull(bdcDjxlPzDO.getSfsb())) {
                         //配置了不上报，返回false
                         if (sfjlrz) {
                             bdcWlxmJrCzrzDTO.setCznr("流程配置中设置了不上报");

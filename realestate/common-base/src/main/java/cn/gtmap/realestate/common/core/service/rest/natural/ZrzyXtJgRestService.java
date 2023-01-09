@@ -65,7 +65,6 @@ public interface ZrzyXtJgRestService {
     /**
      * 根据银行名称查询是否按月结算银行（模糊匹配）
      * <p>用于模糊匹配按月结算的银行名称。 由于有些地区页面查询时，下拉选择框只展示部分名称。
-     * 例如：南京银行，但需要查询到 南京银行某某支行这样的一些数据</p>
      * @param yhmc 银行名称
      * @return 月结银行
      * @author <a href ="mailto:hanyi@gtmap.cn">hanyi</a>

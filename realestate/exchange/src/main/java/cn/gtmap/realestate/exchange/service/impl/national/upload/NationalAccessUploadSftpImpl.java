@@ -2,8 +2,6 @@ package cn.gtmap.realestate.exchange.service.impl.national.upload;
 
 import cn.gtmap.realestate.common.core.domain.exchange.MessageModel;
 import cn.gtmap.realestate.common.core.domain.exchange.uniformity.MessageModelBdc;
-import cn.gtmap.realestate.exchange.core.dto.common.MessageModelOld;
-import cn.gtmap.realestate.exchange.core.national.CityAccess;
 import cn.gtmap.realestate.exchange.core.national.NationalAccess;
 import cn.gtmap.realestate.exchange.core.national.ProvinceAccess;
 import cn.gtmap.realestate.exchange.service.national.NationalAccessUpload;
@@ -85,11 +83,6 @@ public class NationalAccessUploadSftpImpl extends AbstractNationalAccessUpload i
     @Override
     public Boolean upload(MessageModel messageModel) {
         return uploadSftp(port, username, ip, password, downResponseRetryTimes, reEditFileEnable, connenttimes, messageModel, xsdpath, path, respath, new ProvinceAccess());
-    }
-
-    @Override
-    public Boolean uploadOld(MessageModelOld messageModel) {
-        return uploadSftpOld(port, username, ip, password, downResponseRetryTimes, reEditFileEnable, connenttimes, messageModel, xsdpath, path, respath, new ProvinceAccess());
     }
 
     /**

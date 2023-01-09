@@ -54,6 +54,15 @@ public interface NationalAccessRestService {
     @PostMapping("/realestate-exchange/rest/v1.0/access/xmidList/wlxm")
     void autoAccessWithWlxmByXmidList(@RequestBody List<String> xmidList);
 
+    /**
+     * @param
+     * @author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
+     * @description 市级项目接入汇交
+     * @date : 2023/1/6 11:35
+     */
+    @PostMapping("/realestate-exchange/rest/v1.0/access/xmidList/city")
+    void autoCityAccessByXmidList(@RequestBody List<String> xmidList);
+
 
     /**
      * @param
@@ -127,15 +136,25 @@ public interface NationalAccessRestService {
      */
     @GetMapping("/realestate-exchange/rest/v1.0/access/dbrz")
     boolean accessLog(@RequestParam(name = "date") String date);
-	
-	/**
-	 * @author <a href="mailto:hanyi@gtmap.cn">hanyi</a>
-	 * @param date yyyy-mm-dd格式日期
-	 * @return void
-	 * @description 手动触发上报登簿日志
-	 */
-	@GetMapping("/realestate-exchange/rest/v1.0/access/dbrz/nt")
+
+    /**
+     * @param date yyyy-mm-dd格式日期
+     * @return void
+     * @author <a href="mailto:hanyi@gtmap.cn">hanyi</a>
+     * @description 手动触发上报登簿日志
+     */
+    @GetMapping("/realestate-exchange/rest/v1.0/access/dbrz/nt")
     boolean accessLogNt(@RequestParam(name = "date") String date, @RequestParam("qxdm") String qxdm);
+
+
+    /**
+     * @param
+     * @author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
+     * @description 市级登簿日志手动上报
+     * @date : 2023/1/6 15:21
+     */
+    @GetMapping("/realestate-exchange/rest/v1.0/access/dbrz/city")
+    boolean accessLogCity(@RequestParam(name = "date") String date, @RequestParam("qxdm") String qxdm);
 
     /**
      * @param id
@@ -154,7 +173,7 @@ public interface NationalAccessRestService {
      * @date : 2022/10/13 9:16
      */
     @GetMapping("/realestate-exchange/rest/v1.0/access/dbrz/mxyl")
-    Map<String, Object> dbrzMxyl(@RequestParam(name = "date") String date, @RequestParam("qxdm") String qxdm);
+    Map<String, Object> dbrzMxyl(@RequestParam(name = "date") String date, @RequestParam("qxdm") String qxdm, @RequestParam(value = "type", required = false) String type);
 
 
     /**

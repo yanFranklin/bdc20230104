@@ -3814,8 +3814,10 @@ function loadYjxx(){
 //申请书评价器推送按钮
 function sqsMk(fjlx, dylx){
     var qlxxsl;
+    var djxl;
     if (isNotBlank(qlxx)){
         qlxxsl = qlxx.length;
+        djxl = qlxx[0].bdcXm.djxl;
     }
     //流程不是组合的时候不需要弹框
     if (isNotBlank(qlxxsl) && qlxxsl === 1){

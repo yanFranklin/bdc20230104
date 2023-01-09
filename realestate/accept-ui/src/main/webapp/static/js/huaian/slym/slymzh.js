@@ -1748,6 +1748,15 @@ function generateQlxx(bdcSlQlxxymDTOList) {
             var bdcdyfwlx = "";
             if (isNotBlank(bdcSlQlxxym.bdcQl.bdcdyfwlx) && bdcSlQlxxym.bdcQl.bdcdyfwlx === 1) {
                 bdcdyfwlx = bdcSlQlxxym.bdcQl.bdcdyfwlx;
+                //项目内多幢,定着物用途与规划用途不一致,取定着物用途
+                if(bdcSlQlxxym.bdcQl.ghyt !=bdcSlQlxxym.bdcXm.dzwyt){
+                    ghytArr[(i + 1)] =bdcSlQlxxym.bdcXm.dzwyt;
+                    if(bdcSlQlxxym.bdcXm.dzwyt ==80){
+                        ghytmcArr[(i + 1)] =bdcSlQlxxym.bdcXm.dzwytmc;
+                    }else {
+                        ghytmcArr[(i + 1)] = changeDmToMc(bdcSlQlxxym.bdcXm.dzwyt, zdList.fwyt);
+                    }
+                }
             }
             var qllxTpl = document.getElementById(bdcSlQlxxym.tableName + bdcdyfwlx);
             var tpl = qllxTpl.innerHTML, view = document.getElementById('qllx' + (i + 1));

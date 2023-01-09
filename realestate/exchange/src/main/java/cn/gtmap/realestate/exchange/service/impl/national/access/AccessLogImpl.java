@@ -187,7 +187,43 @@ public class AccessLogImpl implements AccessLogService {
                     }
                 }
             } else {
-                LOGGER.error("接入登簿日志失败，请检查djsj_zd_xzdm表数据");
+                LOGGER.error("接入登簿日志失败，请检查BDC_ZD_QX表数据");
+            }
+        } catch (Exception e) {
+            LOGGER.error("接入登簿日志失败", e);
+        }
+    }
+
+    /**
+     * @param accessDate
+     * @param qxdm
+     * @author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
+     * @description 市级手动上报
+     * @date : 2023/1/6 15:24
+     */
+    @Override
+    public void cityAccessLog(Date accessDate, String qxdm) {
+        try {
+            List<Map<String, String>> qxdmlist = bdcdjMapper.queryBdcZdQx();
+            LOGGER.info("开始市级登簿日志上报，上报日期{}、区划{},所有区划信息{}", accessDate, qxdm, qxdmlist);
+            if (CollectionUtils.isNotEmpty(qxdmlist)) {
+                for (Map<String, String> map : qxdmlist) {
+                    try {
+                        if (StringUtils.isNotBlank(qxdm)) {
+                            while (StringUtils.equals(MapUtils.getString(map, "DM"), qxdm)) {
+                                cityAccess(qxdm, MapUtils.getString(map, "MC"), accessDate);
+                                break;
+                            }
+                        } else {
+                            qxdm = String.valueOf(map.get("DM"));
+                            cityAccess(qxdm, MapUtils.getString(map, "MC"), accessDate);
+                        }
+                    } catch (Exception e) {
+                        LOGGER.error("当前区县{}登簿日志上报异常", map.get("DM"), e);
+                    }
+                }
+            } else {
+                LOGGER.error("接入登簿日志失败，请检查BDC_ZD_QX表数据");
             }
         } catch (Exception e) {
             LOGGER.error("接入登簿日志失败", e);
@@ -202,7 +238,7 @@ public class AccessLogImpl implements AccessLogService {
      * @date : 2022/10/13 9:19
      */
     @Override
-    public Map<String, Object> dbrzmxyl(Date accessDate, String qxdm) {
+    public Map<String, Object> dbrzmxyl(Date accessDate, String qxdm, String type) {
         String sbType = configInit.getConditionTime();
         String conditionTime = StringUtils.isNotBlank(sbType) ? sbType : "dbsj";
         List<Map<String, String>> qxdmlist = bdcdjMapper.queryBdcZdQx();
@@ -219,6 +255,9 @@ public class AccessLogImpl implements AccessLogService {
                     param.put("logTable", "bdc_jr_gjjl");
                 } else {
                     param.put("logTable", "bdc_jr_sjjl");
+                }
+                if (StringUtils.isNotBlank(type) && Constants.ACCESS_TYPE_CITY.equals(type)) {
+                    param.put("logTable", "bdc_jr_shijjl");
                 }
                 String xml = "";
                 AccessNewLogs accessNewLogs = new AccessNewLogs();
@@ -350,6 +389,8 @@ public class AccessLogImpl implements AccessLogService {
                 BdcAccessLog logDO = null;
                 if (StringUtils.equals(Constants.ACCESS_TYPE_NATIONAL, logType)) {
                     logDO = accessLogMapper.getNationalAccessYwbwidByXmid(xmid);
+                } else if (StringUtils.equals(Constants.ACCESS_TYPE_CITY, logType)) {
+                    logDO = accessLogMapper.getCityAccessYwbwidByXmid(xmid);
                 } else {
                     logDO = accessLogMapper.getProvinceAccessYwbwidByXmid(xmid);
                 }
@@ -485,6 +526,20 @@ public class AccessLogImpl implements AccessLogService {
                 accessLogSftpService.provinceAccessLogWeb(xml, bdcJrDbrzjlDO);
             }
 
+            //市级上报
+            if (configInit.getCityEnable()) {
+                LOGGER.warn("配置了市级上报,开始查询bdc_jr_shijjl");
+                param.put("logTable", "bdc_jr_shijjl");
+                accessNewLogs = accessService.getAccessNewLogs(param, accessDate, false);
+                if (null != accessNewLogs) {
+                    xml = xmlEntityConvertUtil.entityToXml(accessNewLogs);
+                }
+
+                xml = xml.replaceAll("\\s*xsi:nil=\"true\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
+                LOGGER.info("当前登簿日志上报已成功生成报文，准备上报市级，上报区县{}，报文内容：{}", qxdm, xml);
+                accessLogSftpService.cityAccessLogWeb(xml, bdcJrDbrzjlDO);
+            }
+
             //本地保存xml
             if (StringUtils.isNotBlank(configInit.getXmlPath())) {
                 StringBuilder stringBuilder = new StringBuilder();
@@ -563,6 +618,69 @@ public class AccessLogImpl implements AccessLogService {
         }
     }
 
+
+    public boolean cityAccess(String qxdm, String qxmc, Date accessDate) {
+        //获取上报的登薄日志
+        boolean result = true;
+        Map param = new HashMap();
+        param.put("qxdm", qxdm);
+        param.put("qxmc", qxmc);
+        param.put("accessDate", accessDate);
+        param.put("logTable", "bdc_jr_shijjl");
+        //日志对象
+        BdcJrDbrzjlDO bdcJrDbrzjlDO = new BdcJrDbrzjlDO();
+        //报文xml
+        String xml = "";
+        AccessNewLogs accessNewLogs = new AccessNewLogs();
+        LOGGER.warn("当前登簿日志市级上报时间{}，上报区县{}", accessDate, qxdm);
+        try {
+            AccessLogDataService accessService = this.getAccessLogService();
+            if (Objects.isNull(accessService)) {
+                LOGGER.error("未发现登簿日志上报服务");
+                return false;
+            }
+            //获取报文
+            accessNewLogs = accessService.getAccessNewLogs(param, accessDate, false);
+            if (null != accessNewLogs) {
+                xml = xmlEntityConvertUtil.entityToXml(accessNewLogs);
+            }
+
+            xml = xml.replaceAll("\\s*xsi:nil=\"true\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
+            LOGGER.info("当前登簿日志上报已成功生成报文，准备上报市级，上报区县{}，报文内容：{}", qxdm, xml);
+            accessLogSftpService.cityAccessLogWeb(xml, bdcJrDbrzjlDO);
+            //本地保存xml
+            if (StringUtils.isNotBlank(configInit.getXmlPath())) {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append(qxdm).append("-").append(DateUtil.formateTimeYmdhms(accessDate));
+                accessLogSftpService.generateXmlAndFtp(xml, stringBuilder.toString());
+            }
+        } catch (Exception e) {
+            result = false;
+            LOGGER.error("区县{}接入市级登簿日志失败", qxdm, e);
+            //发送通知
+            MsgNoticeDTO msgNoticeDTO = new MsgNoticeDTO();
+            msgNoticeDTO.setYjlx(AccessWarningEnum.STATUS_7.getYjlx());
+            msgNoticeDTO.setSbsj(DateUtil.formateTime(accessDate));
+            accessLogTypeService.sendMsgByMsgType(msgNoticeDTO);
+        } finally {
+            LOGGER.info("区县:{}执行市级登簿日志数据插入开始: {}", qxmc, JSONObject.toJSONString(bdcJrDbrzjlDO));
+            //更改为sql语句更新，不修改do对象,特殊字段不用添加在do对象中
+            bdcJrDbrzjlDO = getBdcJrDbrzjlDO(bdcJrDbrzjlDO, xml, accessDate, qxdm);
+            entityMapper.insertSelective(bdcJrDbrzjlDO);
+            //保存登簿日志详情数据
+            if (Objects.nonNull(accessNewLogs) && CollectionUtils.isNotEmpty(accessNewLogs.getAccessNewLogList()) && Objects.nonNull(accessNewLogs.getAccessNewLogList().get(0).getRegisterList())) {
+                if (CollectionUtils.isNotEmpty(accessNewLogs.getAccessNewLogList().get(0).getRegisterList().getRegister())) {
+                    /*
+                     * 改为异步处理
+                     * */
+                    asyncDealUtils.plbcDbrzXq(accessNewLogs.getAccessNewLogList().get(0).getRegisterList().getRegister(), bdcJrDbrzjlDO.getId());
+                }
+            }
+            LOGGER.info("区县{}执行市级登簿日志数据插入结束", qxmc);
+        }
+        return result;
+    }
+
     /**
      * @param
      * @return
@@ -579,6 +697,9 @@ public class AccessLogImpl implements AccessLogService {
         }
         if (bdcJrDbrzjlDO.getSjcgbs() == null) {
             bdcJrDbrzjlDO.setSjcgbs(CommonConstantUtils.SF_F_DM);
+        }
+        if (Objects.isNull(bdcJrDbrzjlDO.getShijcgbs())) {
+            bdcJrDbrzjlDO.setShijcgbs(CommonConstantUtils.SF_S_DM);
         }
         bdcJrDbrzjlDO.setId(UUIDGenerator.generate());
         return bdcJrDbrzjlDO;
@@ -871,9 +992,9 @@ public class AccessLogImpl implements AccessLogService {
         String cheat = EnvironmentConfig.getEnvironment().getProperty("accessLog.turn-on-cheating", "false");
         String service = "accessLogDataServiceImpl";
         if (StringUtils.isNotBlank(cheat) && StringUtils.equals(CommonConstantUtils.BOOL_TRUE, cheat)) {
-            // 如果没有配置 默认 走合肥实现
             service = "accessLogCheatServiceImpl";
         }
+        LOGGER.warn("当前系统配置的登簿日志实现服务为{}", service);
         Object accessLogDataService = Container.getBean(service);
         return (AccessLogDataService) accessLogDataService;
     }

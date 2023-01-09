@@ -6,5 +6,19 @@
        http://www.springframework.org/schema/beans/spring-beans.xsd
     http://www.gtmap.cn/schema/exchange-bean http://www.gtmap.cn/schema/exchange-bean.xsd">
 
-
+    <!--查询预测户室信息-连云港从hs表中查询scjzmj为0的数据 -->
+    <ex:bean id="wwsq_ychslist">
+        <ex:service-info request-type="beanReq">
+            <ex:property name="beanName" value="cn.gtmap.realestate.common.core.service.feign.building.LpbFeignService"/>
+            <ex:property name="methodName" value="queryFwYcHsByIndexInFwhs"/>
+            <ex:property name="params" value="fwDcbIndex,code,qjgldm"/>
+        </ex:service-info>
+        <ex:request>
+            <ex:element dozerXml="conf/dozer/wwsq/ychslist/request/param.xml"/>
+        </ex:request>
+        <ex:response>
+            <ex:element dozerXml="conf/dozer/wwsq/ychslist/response/data.xml"/>
+        </ex:response>
+        <ex:log dsfFlag="WWSQ" logEventName="根据幢主键查询预测户室列表" requester="WWSQ" responser="BDC"/>
+    </ex:bean>
 </beans>

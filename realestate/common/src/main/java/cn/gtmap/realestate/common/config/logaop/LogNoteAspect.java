@@ -20,7 +20,6 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -42,7 +41,7 @@ public class LogNoteAspect {
     /**
      * 需要记录为查询参数的值
      */
-    private static final String[] ADD_PARAM_NAME = {"gzlslid", "processInstanceId", "bdcdyh", "slbh", "taskId", "reason", "xmid"};
+    private static final String[] ADD_PARAM_NAME = {"gzlslid", "processInstanceId", "processInsId", "bdcdyh", "slbh", "taskId", "reason", "xmid"};
 
     @Autowired
     private ZipkinAuditEventRepositoryMatcher zipkinAuditEventRepository;
@@ -110,50 +109,48 @@ public class LogNoteAspect {
         try{
             // 包装AuditEvent需要的动作数据
             Map<String, Object> data = new HashMap<String, Object>(3);
+            // 记录日志类型
             data.put(LogKeyEnum.VIEW_TYPE_NAME.getKey(), logNote.value());
-            // 记录请求参数
-            data.put(LogKeyEnum.METHOD_ARGS.getKey(), JSON.toJSONString(point.getArgs()));
-            // 记录方法名
-            String methodName = point.getSignature().getDeclaringTypeName() + "." + point.getSignature().getName();
-            data.put(LogKeyEnum.METHOD_NAME.getKey(), methodName);
-            // 记录方法返回值
-            data.put(LogKeyEnum.METHOD_RESPONSE.getKey(), JSON.toJSONString(response));
             // 记录请求IP
             data.put(LogKeyEnum.IP.getKey(), ip);
             // 记录日志操作时间
             data.put(LogKeyEnum.TIME.getKey(), System.currentTimeMillis());
+            // 记录请求参数
+            String requestParams = StringUtils.left(JSON.toJSONString(point.getArgs()), 4000);
+            data.put(LogKeyEnum.METHOD_ARGS.getKey(), requestParams);
+            // 记录方法名
+            String methodName = point.getSignature().getDeclaringTypeName() + "." + point.getSignature().getName();
+            data.put(LogKeyEnum.METHOD_NAME.getKey(), methodName);
+            // 记录方法返回值
+            String responseVal = StringUtils.left(JSON.toJSONString(response), 4000);
+            data.put(LogKeyEnum.METHOD_RESPONSE.getKey(), responseVal);
             // 获取请求参数中的 gzlslid、bdcdyh、slbh 信息用于搜索
             Map<String,Object> paramMap = this.resolveRequestParam(point);
             if(null != paramMap && !paramMap.isEmpty()){
                 data.putAll(paramMap);
             }
-
             // 获取当前操作人名称
             UserDto userDto = userManagerUtils.getUserByName(userName);
             if (userDto != null) {
                 data.put(LogKeyEnum.ALIAS.getKey(), userDto.getAlias());
+                data.put(LogKeyEnum.PRINCIPAL.getKey(), userDto.getUsername());
             }
 
-            // 自定义日志记录，采用方式
-            if(StringUtils.isNotBlank(logNote.custom())){
-                LogRecordDTO logRecordDTO = new LogRecordDTO();
-                logRecordDTO.setLogType(logNote.custom());
-                logRecordDTO.setLogAction(logNote.action());
-                logRecordDTO.setUserName(userName);
-                logRecordDTO.setParamMap(data);
-                logRecordMsgSender.send(RabbitMqEnum.Exchange.CONTRACT_DIRECT.getCode(), RabbitMqEnum.QueueEnum.LOGRECORDQUEUE.getCode(), JSONObject.toJSONString(logRecordDTO));
-            }else{
-                // 记录ES日志
-                String logType = StringUtils.isEmpty(logNote.action())? "OTHER" : logNote.action();
-                zipkinAuditEventRepository.add(new AuditEvent(userName, logType, data));
-            }
+            // 发送日志记录至MQ队列中，有日志消费者进行处理
+            LogRecordDTO logRecordDTO = new LogRecordDTO();
+            logRecordDTO.setLogType(logNote.custom());
+            logRecordDTO.setLogAction(logNote.action());
+            logRecordDTO.setDbRecord(logNote.dbRecord());
+            logRecordDTO.setUserName(userName);
+            logRecordDTO.setParamMap(data);
+            logRecordMsgSender.send(RabbitMqEnum.Exchange.CONTRACT_DIRECT.getCode(), RabbitMqEnum.QueueEnum.LOGRECORDQUEUE.getCode(), JSONObject.toJSONString(logRecordDTO));
         }catch(Exception e){
             LOGGER.error("@LogNote切面记录日志信息出错，{}", e.getMessage());
         }
     }
 
     /**
-     * 获取入参解析入参内容，将入参中存在 gzlslid,bdcdyh,slbh 等信息，添加至AuditEvent 的dataMap中，用于支持后续日志查询条件
+     * 获取入参解析入参内容，将入参中存在 gzlslid,bdcdyh,slbh,xmid 等信息，添加至AuditEvent 的dataMap中，用于支持后续日志查询条件
      */
     private Map<String, Object> resolveRequestParam(JoinPoint point){
         Map<String, Object> paramMap = new HashMap<>();

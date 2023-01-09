@@ -706,6 +706,7 @@ function yhkcx(qlrlb) {
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             if (data) {
+                var input = data.input;
                 var output = "";
                 try {
                     output = callKeeperClient(input);
@@ -835,16 +836,8 @@ function saveJyxx(qlrlb, output, gzlslid) {
 
 // 调用pos机
 function callKeeperClient(input) {
-    var Client = document.getElementById("KeeperClient");
-    console.log('client', Client);
-    if (Client === undefined || Client == null) {
-        try {
-            $("body").append('<object id="KeeperClient" name="KeeperClient" classid="clsid:9BB1BFD1-D279-462B-BB7B-74AEF30A6BDA" style="height:18pt;width:120px;display:none" codebase=".\KeeperClient.CAB" #version="-1,-1,-1,-1"></object>');
-        } catch (e) {
-
-        }
-    }
-    return KeeperClient.misposTrans(input,"1,0,0,2");
+    var output = KeeperClient.misposTrans(input,"1,0,0,2");
+    return output;
 }
 
 function viewTableRender(swdata) {

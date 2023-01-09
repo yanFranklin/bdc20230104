@@ -170,7 +170,7 @@ layui.use(['jquery', 'layer', 'element', 'form', 'formSelects', 'table', 'laytpl
         };
 
         var citytableConfig = {
-            toolbar: "#toolbarSqxx",
+            toolbar: "#toolbarsj",
             limits: [10, 50, 100, 200, 500],
             cols: [[
                 {type: 'checkbox', width: 50, fixed: 'left'},
@@ -273,6 +273,13 @@ layui.use(['jquery', 'layer', 'element', 'form', 'formSelects', 'table', 'laytpl
                 if (obj.event === "access") {
                     if (data && data.length > 0) {
                         plsb(data);
+                    } else {
+                        layer.alert("请选择一条数据进行操作")
+                    }
+                }
+                if (obj.event === "shijiaccess") {
+                    if (data && data.length > 0) {
+                        plsjsb(data);
                     } else {
                         layer.alert("请选择一条数据进行操作")
                     }
@@ -381,7 +388,7 @@ layui.use(['jquery', 'layer', 'element', 'form', 'formSelects', 'table', 'laytpl
                 xmidList.push(data[i].xmid);
             }
             addModel();
-            var result = getRedisVal();
+            var result = getRedisVal('SJJRHJPLSB');
             if (!result) {
                 layer.msg("后台正在执行汇交任务请勿重复操作");
                 removeModal();
@@ -389,6 +396,37 @@ layui.use(['jquery', 'layer', 'element', 'form', 'formSelects', 'table', 'laytpl
             }
             $.ajax({
                 url: "../rest/v1.0/access/xmidList/wlxm",
+                contentType: 'application/json',
+                type: 'post',
+                data: JSON.stringify(xmidList),
+                success: function (data) {
+                    layer.msg("请求结束");
+                    removeModal();
+                    tableReload("accessTable", form.val('searchForm'));
+                },
+                error: function (xhr, status, error) {
+                    layer.msg("上报失败!");
+                    removeModal()
+                }
+            });
+        }
+
+
+        //批量市级上报
+        function plsjsb(data) {
+            var xmidList = [];
+            for (var i = 0; i < data.length; i++) {
+                xmidList.push(data[i].xmid);
+            }
+            addModel();
+            var result = getRedisVal('SHIJIPLSB');
+            if (!result) {
+                layer.msg("后台正在执行汇交任务请勿重复操作");
+                removeModal();
+                return false;
+            }
+            $.ajax({
+                url: "../rest/v1.0/access/xmidList/city",
                 contentType: 'application/json',
                 type: 'post',
                 data: JSON.stringify(xmidList),
@@ -462,11 +500,11 @@ layui.use(['jquery', 'layer', 'element', 'form', 'formSelects', 'table', 'laytpl
             });
         }
 
-        function getRedisVal() {
+        function getRedisVal(key) {
             var result = true;
             //先判断后台是否有正在执行上报事件，如果有不允许点击
             $.ajax({
-                url: "../rest/v1.0/access/redisval?redisKey=SJJRHJPLSB",
+                url: "../rest/v1.0/access/redisval?redisKey=" + key,
                 dataType: "json",
                 async: false,
                 success: function (data) {

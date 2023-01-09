@@ -285,12 +285,12 @@ public class Constants {
             "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:gxj=\"http://ruixin.net/services/GxjhWebService\">\n" +
                     "   <soapenv:Header/>\n" +
                     "   <soapenv:Body>\n" +
-                    "      <gxj:SFXZ_ZJXT_SJFW>\n" +
+                    "      <gxj:SFXZ_ZJXT_SJLZ>\n" +
                     "         <!--Optional:-->\n" +
                     "         <arg0>{0}</arg0>\n" +
                     "         <!--Optional:-->\n" +
                     "         <arg1>{1}</arg1>\n" +
-                    "      </gxj:SFXZ_ZJXT_SJFW>\n" +
+                    "      </gxj:SFXZ_ZJXT_SJLZ>\n" +
                     "   </soapenv:Body>\n" +
                     "</soapenv:Envelope>";
 

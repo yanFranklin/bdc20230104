@@ -2,11 +2,8 @@ package cn.gtmap.realestate.exchange.service.impl.national.upload;
 
 import cn.gtmap.realestate.common.core.domain.exchange.MessageModel;
 import cn.gtmap.realestate.common.core.domain.exchange.uniformity.MessageModelBdc;
-import cn.gtmap.realestate.exchange.core.dto.common.MessageModelOld;
-import cn.gtmap.realestate.exchange.core.national.CityAccess;
 import cn.gtmap.realestate.exchange.core.national.NationalAccess;
 import cn.gtmap.realestate.exchange.service.national.NationalAccessUpload;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -70,12 +67,6 @@ public class NationalAccessUploadFtpImpl extends AbstractNationalAccessUpload im
     @Override
     public Boolean upload(MessageModel messageModel) {
         return uploadFtp(ip, username, password, port, downResponseRetryTimes,
-                messageModel, xsdpath, path, respath, new NationalAccess());
-    }
-
-    @Override
-    public Boolean uploadOld(MessageModelOld messageModel) {
-        return uploadFtpOld(ip, username, password, port, downResponseRetryTimes,
                 messageModel, xsdpath, path, respath, new NationalAccess());
     }
 

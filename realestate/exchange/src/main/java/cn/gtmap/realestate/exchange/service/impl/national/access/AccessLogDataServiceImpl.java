@@ -207,15 +207,6 @@ public class AccessLogDataServiceImpl implements AccessLogDataService {
         if (virtualFlag) {
             getDjslMapStr = ".getXnDjsl";
         }
-        if (accessFilterHistoryDataFlag) {
-            map.put("historyFlag", true);
-        }
-        if (!accessFilterXnBdcdyhFlag) {
-            map.put("xnBdcdyhFlag", true);
-        }
-        if (StringUtils.isNotBlank(accessFilterGzldyIds)) {
-            map.put("filterGzldyIds", Arrays.asList(accessFilterGzldyIds.split(",")));
-        }
         /*
          * 处理逻辑 合肥下面区县在项目表没有数据，是etl 抽取的，所以djlx 的判断查接入表的ywdm前三位
          * */
@@ -234,7 +225,7 @@ public class AccessLogDataServiceImpl implements AccessLogDataService {
         } catch (Exception e) {
             list = repository.selectList(BdcdjMapper.class.getName() + getDjslMapStr, map);
         }
-        LOGGER.warn("当前区县{}查询当天的登簿量{}", MapUtils.getString(map, "qxdm"), CollectionUtils.size(list));
+        LOGGER.warn("当前区县{}查询入参{}查询当天的登簿量{}", MapUtils.getString(map, "qxdm"), JSON.toJSONString(map), CollectionUtils.size(list));
         if (CollectionUtils.isNotEmpty(wlzxXmList)) {
             list.addAll(wlzxXmList);
         }
@@ -318,6 +309,7 @@ public class AccessLogDataServiceImpl implements AccessLogDataService {
         } catch (Exception e) {
             accessSlList = repository.selectList(BdcdjMapper.class.getName() + getAccessSlMapStr, map);
         }
+        LOGGER.warn("当前区县{}查询当天的接入总量查询入参{},数据明细{}", map.get("qxdm"), JSON.toJSONString(map), JSON.toJSONString(accessSlList));
         if (CollectionUtils.isNotEmpty(accessSlList) && accessSlList.size() == 10) {
             accessInfo.setFirstReg(Integer.valueOf(String.valueOf(accessSlList.get(1).get("NUM"))));
             accessInfo.setTransferReg(Integer.valueOf(String.valueOf(accessSlList.get(2).get("NUM"))));
@@ -372,12 +364,6 @@ public class AccessLogDataServiceImpl implements AccessLogDataService {
          */
         mapperType = BdcdjMapper.class.getName();
         map.put("cgbsList", null);
-        if (!accessFilterXnBdcdyhFlag) {
-            map.put("xnBdcdyhFlag", true);
-        }
-        if (StringUtils.isNotBlank(accessFilterGzldyIds)) {
-            map.put("filterGzldyIds", Arrays.asList(accessFilterGzldyIds.split(",")));
-        }
         String getRegisterDetails = ".getRegisterDetails";
         if (Objects.equals(CommonConstantUtils.ACCESS_DATA_PART_FIELD_FROM_BDC_JR_SJJL, accessDataPartField)) {
             String qxdm = String.valueOf(map.get("qxdm"));
@@ -391,7 +377,7 @@ public class AccessLogDataServiceImpl implements AccessLogDataService {
         } catch (Exception e) {
             registerList = repository.selectList(BdcdjMapper.class.getName() + getRegisterDetails, map);
         }
-        LOGGER.warn("当前区县{}查询的sqlid{}查询登簿详单数量{}", MapUtils.getString(map, "qxdm"), mapperType, CollectionUtils.size(registerList));
+        LOGGER.warn("当前区县{}查询的sqlid{}sql入参{}查询登簿详单数量{}", MapUtils.getString(map, "qxdm"), mapperType, JSON.toJSONString(map), CollectionUtils.size(registerList));
         //查询外联项目详单
         List<Register> wlxmRegisterList = bdcdjMapper.listWlxmRegsiterDetails(map);
         LOGGER.warn("当前区县{}查询外联项目登簿详单数量{}", MapUtils.getString(map, "qxdm"), CollectionUtils.size(wlxmRegisterList));
@@ -426,14 +412,12 @@ public class AccessLogDataServiceImpl implements AccessLogDataService {
                         }
                         if (MapUtils.isNotEmpty(qllxMap) && StringUtils.isNotBlank(MapUtils.getString(qllxMap, register.getQLLX(), ""))) {
                             register.setQLLX(MapUtils.getString(qllxMap, register.getQLLX()));
-                            LOGGER.info("对照后登簿日志权利类型为：{}", register.getQLLX());
                         }
                     }
                     //申请类型对照
                     if (null != register.getDJLX()) {
                         if (MapUtils.isNotEmpty(djlxMap) && StringUtils.isNotBlank(MapUtils.getString(djlxMap, register.getDJLX(), ""))) {
                             register.setDJLX(MapUtils.getString(djlxMap, register.getDJLX()));
-                            LOGGER.info("对照后登簿日志权利类型为：{}", register.getDJLX());
                         }
                     }
                     ywidList.add(register.getYWH());
@@ -461,6 +445,7 @@ public class AccessLogDataServiceImpl implements AccessLogDataService {
                 List<Register> registers = (List<Register>) subList;
                 HashMap param = new HashMap();
                 param.put("ywidList", ywidList);
+                param.put("logTable", map.get("logTable"));
                 List<BdcAccessLog> bdcAccessLogList = accessLogMapper.getProvinceAccessYwbwidByXmidList(param);
                 Map<String, BdcAccessLog> map1 = bdcAccessLogList.stream().collect((Collectors.toMap(BdcAccessLog::getYwlsh, Function.identity())));
                 if (CollectionUtils.isNotEmpty(bdcAccessLogList)) {
@@ -490,7 +475,6 @@ public class AccessLogDataServiceImpl implements AccessLogDataService {
     public List<Access> getAccessList(Map map, boolean virtualFlag) {
         List<Access> accessList = new ArrayList<>();
         String mapperType = "";
-        //不作弊，如实上报模式
         mapperType = AccessNewLogMapper.class.getName();
         String getAccessDetailsMapStr = ".getAccessDetails";
         if (virtualFlag) {
@@ -509,6 +493,7 @@ public class AccessLogDataServiceImpl implements AccessLogDataService {
         } catch (Exception e) {
             accessList = repository.selectList(BdcdjMapper.class.getName() + getAccessDetailsMapStr, map);
         }
+        LOGGER.warn("当前区县{}查询接入详单入参{}数据量{}", map.get("qxdm"), JSON.toJSONString(map), CollectionUtils.size(accessList));
         return accessList;
     }
 

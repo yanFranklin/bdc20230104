@@ -32,9 +32,7 @@ import cn.gtmap.realestate.common.core.service.feign.init.BdcXmFeignService;
 import cn.gtmap.realestate.common.core.service.feign.register.BdcDjbxxFeignService;
 import cn.gtmap.realestate.common.matcher.ZipkinAuditEventRepositoryMatcher;
 import cn.gtmap.realestate.common.util.*;
-import cn.gtmap.realestate.common.util.groovy.XmlUtils;
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -133,6 +131,12 @@ public class SlymController extends BaseController {
     private List<String> sfcjGzldyidList;
 
     /**
+     * 批量流程一本证的工作流定义id
+     */
+    @Value("#{'${pllcybz.gzldyid:}'.split(',')}")
+    private List<String> pllcybzGzldyidList;
+
+    /**
      * 受理页面获取商品房交易信息时，合同编号默认值
      */
     @Value("${slym.spf.htbh:}")
@@ -196,6 +200,21 @@ public class SlymController extends BaseController {
             }
         }
         if (CommonConstantUtils.LCLX_PL.equals(xmlx)) {
+            //批量流程一本证，权利类型不同的话，跳转受理批量组合页面
+            if(CollectionUtils.isNotEmpty(pllcybzGzldyidList)){
+                List<BdcXmDTO> bdcXmDTOList = bdcXmFeignService.listBdcXmBfxxByGzlslid(processInsId);
+                if(CollectionUtils.isNotEmpty(bdcXmDTOList) && bdcXmDTOList.get(0) != null && pllcybzGzldyidList.contains(bdcXmDTOList.get(0).getGzldyid())){
+                    Set<Integer> qllxSet = new HashSet<>();
+                    for(BdcXmDTO bdcxm : bdcXmDTOList) {
+                        if(bdcxm.getQllx()!= null){
+                            qllxSet.add(bdcxm.getQllx());
+                        }
+                    }
+                    if(qllxSet.size() > 1){
+                        return SLYMPLZH_URL;
+                    }
+                }
+            }
             //批量流程
             return SLYMPL_URL;
         } else if (CommonConstantUtils.LCLX_PLZH.equals(xmlx)) {

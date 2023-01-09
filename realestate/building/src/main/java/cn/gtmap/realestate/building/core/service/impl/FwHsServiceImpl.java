@@ -210,6 +210,24 @@ public class FwHsServiceImpl extends InterfaceCodeBeanFactory implements FwHsSer
         return null;
     }
 
+
+    /**
+     * @param fwDcbIndex
+     * @return cn.gtmap.realestate.common.core.domain.building.FwHsDO
+     * @author <a href="mailto:liyinqiao@gtmap.cn">liyinqiao</a>
+     * @description 从户室基本信息实体查询预测信息
+     */
+    @Override
+    public List<FwHsDO> queryFwycHsByIndexAndScmj(String fwDcbIndex) {
+        if (StringUtils.isNotBlank(fwDcbIndex)) {
+            Example example = new Example(FwHsDO.class);
+            example.createCriteria().andEqualTo("fwDcbIndex", fwDcbIndex)
+                    .andEqualTo("scjzmj",0);
+            return entityMapper.selectByExample(example);
+        }
+        return null;
+    }
+
     /**
      * @param fwHsDO
      * @return

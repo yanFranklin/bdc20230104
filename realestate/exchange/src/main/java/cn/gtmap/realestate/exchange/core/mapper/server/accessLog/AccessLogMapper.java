@@ -44,11 +44,19 @@ public interface AccessLogMapper {
      */
     BdcAccessLog getNationalAccessYwbwidByXmid(String xmid);
 
+    /**
+     * @param
+     * @author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
+     * @description 根据xmid 查询最新的市级接入数据
+     * @date : 2023/1/6 11:08
+     */
+    BdcAccessLog getCityAccessYwbwidByXmid(String xmid);
+
 
     /**
-     * @author <a href="mailto:liyinqiao@gtmap.cn">liyinqiao</a>
      * @param paramMap
      * @return java.util.List<cn.gtmap.realestate.common.core.domain.exchange.ZttGyQlrDO>
+     * @author <a href="mailto:liyinqiao@gtmap.cn">liyinqiao</a>
      * @description 根据YWH 查询共有权利人
      */
     List<ZttGyQlrDO> listZttGyQlrByYwh(Map paramMap);
@@ -155,6 +163,14 @@ public interface AccessLogMapper {
      * @date : 2022/7/5 16:36
      */
     List<BdcAccessLog> listBdcJrrz(BdcJrrzQO bdcJrrzQO);
+
+    /**
+     * @param
+     * @author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
+     * @description 查询市级接入日志
+     * @date : 2023/1/5 17:26
+     */
+    List<BdcAccessLog> listBdcShijiJrrz(BdcJrrzQO bdcJrrzQO);
 
     /*
      * 查询登簿数据量

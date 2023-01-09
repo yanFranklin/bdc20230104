@@ -65,7 +65,7 @@ public class HfSdkApiRequestServiceImpl extends InterfaceRequestService<HfSdkApi
                     abstractApp.setHttpPort(Integer.parseInt(propBO.getPort()));
                     LOGGER.info("安徽地区电子证照请求参数:{}", requestParamMap.toString());
                     ApiResponse apiResponse = abstractApp.getApiResponse(requestParamMap);
-                    LOGGER.info("电子证照response1:{}", apiResponse.toString());
+                    LOGGER.info("电子证照responseCode:{}", apiResponse.getStatusCode());
 
                     // 处理执行结果
                     if (apiResponse != null

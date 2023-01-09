@@ -404,19 +404,7 @@ layui.use(['jquery', 'table', 'element', 'form', 'laytpl', 'response'], function
                     }
 
                 }, error: function (e) {
-                    var check =false;
-                    if (e.status == 500) {
-                        var responseText = JSON.parse(e.responseText);
-                        if (responseText.code == 101) {
-                            // 规则验证未找到要验证的规则错误 忽略
-                            check = true;
-                            zfcallback();
-                        }
-                    }
-                    if (!check) {
-                        response.fail(e, '');
-                    }
-
+                    response.fail(e, '');
                 }, complete: function () {
                     removeModal();
                 }

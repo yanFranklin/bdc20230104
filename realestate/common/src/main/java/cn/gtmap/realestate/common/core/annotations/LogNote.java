@@ -27,4 +27,10 @@ public @interface LogNote {
      * 自定义日志记录
      */
     String custom() default "";
+
+    /**
+     * 是否记录数据库日志
+     *    默认为：false 不记录， true 记录
+     */
+    boolean dbRecord() default false;
 }

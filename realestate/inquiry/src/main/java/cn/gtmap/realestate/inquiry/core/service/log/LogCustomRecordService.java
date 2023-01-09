@@ -33,6 +33,9 @@ public interface LogCustomRecordService {
             String request = (String) paramMap.get(LogKeyEnum.METHOD_ARGS.getKey());
             // 查询参数
             bdcCzrzDO.setCzcs(CommonUtil.subLongStr(request));
+            // 操作结果
+            String response = (String) paramMap.get(LogKeyEnum.METHOD_RESPONSE.getKey());
+            bdcCzrzDO.setCzjg(CommonUtil.subLongStr(response));
             // 查询人
             bdcCzrzDO.setCzr((String) paramMap.get(LogKeyEnum.ALIAS.getKey()));
             // 查询ip

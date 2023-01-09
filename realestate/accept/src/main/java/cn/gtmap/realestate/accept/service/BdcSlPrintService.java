@@ -271,5 +271,5 @@ public interface BdcSlPrintService {
      * @description 连云港组织打印数据源xml
      * @date : 2022/12/13 9:54
      */
-    String generateSlMkXml(String gzlslid, String djxl, String zxlc);
+    Map generateSlMkXml(String gzlslid, String djxl, String zxlc);
 }

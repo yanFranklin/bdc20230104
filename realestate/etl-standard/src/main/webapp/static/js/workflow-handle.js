@@ -1821,16 +1821,7 @@ layui.define(['jquery', 'element', 'form', 'response', 'layer', 'laytpl'], funct
             success: function (data) {
                 check = data.length == 0 ? true : data;
             }, error: function (e) {
-                if (e.status == 500) {
-                    var responseText = JSON.parse(e.responseText);
-                    if (responseText.code == 101) {
-                        // 规则验证未找到要验证的规则错误 忽略
-                        check = true;
-                    }
-                }
-                if (!check) {
-                    delAjaxErrorMsg(e);
-                }
+                delAjaxErrorMsg(e);
             }
         });
         return check;
@@ -2358,17 +2349,7 @@ layui.define(['jquery', 'element', 'form', 'response', 'layer', 'laytpl'], funct
             success: function (data) {
                 check = data.length == 0 ? true : data;
             }, error: function (e) {
-                if (e.status == 500) {
-                    var responseText = JSON.parse(e.responseText);
-                    if (responseText.code == 101) {
-                        // 规则验证未找到要验证的规则错误 忽略
-                        check = true;
-                    }
-                }
-                if (!check) {
-                    delAjaxErrorMsg(e);
-                    ;
-                }
+                delAjaxErrorMsg(e);
             }
         });
         return check;

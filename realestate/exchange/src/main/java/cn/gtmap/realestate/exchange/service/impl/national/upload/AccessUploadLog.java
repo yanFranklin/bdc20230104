@@ -15,7 +15,6 @@ import cn.gtmap.realestate.common.core.support.mybatis.mapper.EntityMapper;
 import cn.gtmap.realestate.common.core.support.mybatis.mapper.Example;
 import cn.gtmap.realestate.common.util.CommonConstantUtils;
 import cn.gtmap.realestate.common.util.StringToolUtils;
-import cn.gtmap.realestate.exchange.core.dto.common.MessageModelOld;
 import cn.gtmap.realestate.exchange.core.mapper.server.BdcdjMapper;
 import cn.gtmap.realestate.exchange.core.national.BdcAccessLog;
 import cn.gtmap.realestate.exchange.core.national.CityAccess;
@@ -631,90 +630,6 @@ public class AccessUploadLog {
         return flag;
     }
 
-    public Boolean uploadSftpOld(String port, String username,
-                                 String ip, String password,
-                                 String downResponseRetryTimes,
-                                 Boolean reEditFileEnable,
-                                 Integer connenttimes,
-                                 MessageModelOld messageModel,
-                                 String xsdpath, String path, String respath,
-                                 BdcAccessLog bdcAccessLog) {
-        if (StringUtils.isBlank(ip)) {
-            return null;
-        }
-
-        String ywh = "空";
-        String recType = "";
-        String bizMsgId = "";
-        if (messageModel != null && messageModel.getHeadModel() != null) {
-            ywh = messageModel.getHeadModel().getRecFlowID();
-            recType = messageModel.getHeadModel().getRecType();
-            bizMsgId = messageModel.getHeadModel().getBizMsgID();
-        }
-        boolean flag = false;
-        boolean xsdflag = true;
-        // 生成 xml
-        LOGGER.debug("开始生成XML报文,ywh :{}", ywh);
-        String xml = accesssModelHandlerService.getAccessXMLOld(messageModel);
-        LOGGER.info("请求上报报文：{}", xml);
-        //xsd验证 配置的话会走
-        if (StringUtils.isNotBlank(xsdpath)) {
-            StringBuffer xsdFilePath = new StringBuffer(xsdpath);
-            xsdFilePath.append("/");
-            xsdFilePath.append(recType);
-            xsdFilePath.append(".xsd");
-//            LOGGER.info("开始XSD验证,ywh :{}",ywh);
-            String valResult = vailXmlErrorHandlerService.vailXmlErrorHandlerService(xml, xsdFilePath.toString());
-            xsdflag = StringUtils.equals("验证通过", valResult) || StringUtils.isBlank(valResult);
-            LOGGER.debug("XSD验证结束并更新汇交日志,ywh :{},valresult :{}", ywh, valResult);
-            //验证失败的日志
-            if (!xsdflag) {
-                bdcAccessLog.setXyxx(StringUtils.left(valResult, 1999));
-                bdcAccessLog.setCgbs(JrRzCgbsEnum.ACCESS_FAIL.getBs());
-                saveAccessUploadLog(messageModel.getHeadModel(), xml, false, bdcAccessLog);
-            }
-        }
-        if (xsdflag && StringUtils.isNotBlank(bizMsgId)) {
-            String uploadFileName = null;
-            if (reEditFileEnable) {
-                uploadFileName = "Biz" + bizMsgId + ".xml.tmp";//上传汇交xml文件名,为了防止前置机把没有上传完的文件给提取走
-            } else {
-                uploadFileName = "Biz" + bizMsgId + ".xml";//上传汇交xml文件名
-            }
-            Session session = null;
-            for (int i = 0; i < connenttimes; i++) {
-                LOGGER.info("上传报文 - 获取前置机连接 ({}/{}) - - - - -", i + 1, connenttimes);
-                session = getSession(port, username, ip, password);
-                if (!ObjectUtils.isEmpty(session)) {
-                    break;
-                }
-            }
-            if (ObjectUtils.isEmpty(session)) {
-                bdcAccessLog.setXyxx("尝试获取前置机连接失败！");
-                LOGGER.info("尝试获取前置机连接失败,ywh :{},", ywh);
-            } else {
-                flag = sftp(session, uploadFileName, xml, path);
-                if (flag) {
-                    bdcAccessLog.setCgbs(JrRzCgbsEnum.WATING_RESP.getBs());
-                } else {
-                    bdcAccessLog.setCgbs(JrRzCgbsEnum.ACCESS_FAIL.getBs());
-                }
-                String loadFileName = "Rep" + bizMsgId + ".xml";
-                int times = StringUtils.isNotBlank(downResponseRetryTimes) ? Integer.parseInt(downResponseRetryTimes) : 0;
-                if (times >= 0) {
-                    sftpRep(session, loadFileName, bdcAccessLog, times, respath);
-                }
-                LOGGER.info("SFTP处理结束,ywh :{},", ywh);
-            }
-            //存入上报日志数据
-            saveAccessUploadLog(messageModel.getHeadModel(), xml, flag, bdcAccessLog);
-        }
-        //保存处理
-        saveBdcAccessLog(bdcAccessLog);
-        LOGGER.debug("保存汇交日志结束,ywh :{},", ywh);
-        return flag;
-    }
-
     /**
      * sftp 上报-一致性
      *
@@ -931,7 +846,7 @@ public class AccessUploadLog {
         String ywh = "空";
         String recType = "";
         String bizMsgId = "";
-        if (messageModel != null && messageModel.getHeadModel() != null) {
+        if (messageModel.getHeadModel() != null) {
             ywh = messageModel.getHeadModel().getRecFlowID();
             recType = messageModel.getHeadModel().getRecType();
             bizMsgId = messageModel.getHeadModel().getBizMsgID();
@@ -1002,7 +917,7 @@ public class AccessUploadLog {
             LOGGER.debug("XSD验证结束并更新汇交日志,ywh :{},valresult :{}", ywh, valResult);
         }
         //如果xsd校验不通过仍要上报，则根据配置判断，将不通过的xsdflag变为true,继续进行上报
-        if (xsdSfjrXz) {
+        if (xsdSfjrXz && !xsdflag) {
             asyncDealUtils.saveJrCzrz(ywh, 4, "xsd校验失败配置仍要上报，下一步连接ftp", bizMsgId, new Date(), "1");
             xsdflag = true;
         }
@@ -1102,93 +1017,6 @@ public class AccessUploadLog {
         }
 
         LOGGER.debug("保存汇交日志结束,ywh :{},", ywh);
-        return flag;
-    }
-
-    public Boolean uploadFtpOld(String ip, String username,
-                                String password, String port,
-                                String downResponseRetryTimes,
-                                MessageModelOld messageModel,
-                                String xsdpath, String path,
-                                String respath, BdcAccessLog bdcAccessLog) {
-        if (StringUtils.isBlank(ip)) {
-            return null;
-        }
-        boolean flag = false;
-        boolean xsdflag = true;
-        String ywh = "空";
-        String recType = "";
-        String bizMsgId = "";
-        if (messageModel != null && messageModel.getHeadModel() != null) {
-            ywh = messageModel.getHeadModel().getRecFlowID();
-            recType = messageModel.getHeadModel().getRecType();
-            bizMsgId = messageModel.getHeadModel().getBizMsgID();
-        }
-        LOGGER.info("old开始生成XML报文,ywh :{}", ywh);
-        // 生成 xml
-        String xml = accesssModelHandlerService.getAccessXMLOld(messageModel);
-
-        LOGGER.info("old请求上报报文：{}", xml);
-        //xsd验证 配置的话会走
-        if (StringUtils.isNotBlank(xsdpath) && StringUtils.isNotBlank(recType)) {
-            StringBuilder xsdFilePath = new StringBuilder(xsdpath);
-            xsdFilePath.append("/");
-            xsdFilePath.append(recType);
-            xsdFilePath.append(".xsd");
-//            LOGGER.info("开始XSD验证,ywh :{}",ywh);
-            String valResult = vailXmlErrorHandlerService.vailXmlErrorHandlerService(xml, xsdFilePath.toString());
-            xsdflag = StringUtils.equals("old验证通过", valResult) || StringUtils.isBlank(valResult);
-            //验证失败的日志
-            if (!xsdflag) {
-                bdcAccessLog.setXyxx(StringToolUtils.left(valResult, 1999));
-                bdcAccessLog.setCgbs(JrRzCgbsEnum.ACCESS_FAIL.getBs());
-                saveAccessUploadLog(messageModel.getHeadModel(), xml, false, bdcAccessLog);
-            }
-            LOGGER.debug("XSD验证结束并更新汇交日志,ywh :{},valresult :{}", ywh, valResult);
-        }
-
-        if (xsdflag && StringUtils.isNotBlank(bizMsgId)) {
-            String localCharset = StringToolUtils.ENCODING_GBK;
-            try {
-                LOGGER.info("old请求上报前置机地址：ip:{},用户：{}，密码：{}", ip, username, password);
-                FTPClient ftpClient = FtpUtil.getFTPClient(ip, username, password, Integer.parseInt(port));
-                if (FTPReply.isPositiveCompletion(ftpClient.sendCommand("OPTS UTF8", "ON"))) {
-                    // 开启服务器对UTF-8的支持，如果服务器支持就用UTF-8编码，否则就使用本地编码（GBK）.
-                    localCharset = StringToolUtils.ENCODING_UTF8;
-                }
-                ftpClient.setControlEncoding(localCharset);
-                ftpClient.enterLocalPassiveMode();// 设置被动模式
-                ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);// 设置传输的模式
-                //上报
-                flag = uploadFtpFile(ftpClient, localCharset, bizMsgId, xml, path);
-                if (flag) {
-                    bdcAccessLog.setCgbs(JrRzCgbsEnum.WATING_RESP.getBs());
-                } else {
-                    bdcAccessLog.setCgbs(JrRzCgbsEnum.ACCESS_FAIL.getBs());
-                }
-                if (StringUtils.equals(CommonConstantUtils.SYSTEM_VERSION_HF, logversion)) {
-                    bdcAccessLog.setSjjrrq(messageModel.getDataModel().getDjtDjSlsqList().get(0).getJssj());
-                }
-                //获取上报响应报文
-                int times = StringUtils.isNotBlank(downResponseRetryTimes) ?
-                        Integer.parseInt(downResponseRetryTimes) : 0;
-                if (times >= 0) {
-                    downloadFtpFile(ftpClient, bizMsgId, bdcAccessLog, times, respath);
-                }
-                LOGGER.info("oldFTP处理结束,ywh :{},", ywh);
-            } catch (IOException e) {
-                LOGGER.error("errorMsg:", e);
-                bdcAccessLog.setXyxx(StringUtils.left(e.getMessage(), 1999));
-            } finally {
-                //存入上报日志数据
-                saveAccessUploadLog(messageModel.getHeadModel(), xml, flag, bdcAccessLog);
-            }
-        } else {
-            LOGGER.debug("old上报报文验证失败：{}", bdcAccessLog.toString());
-        }
-        //保存处理
-        saveBdcAccessLog(bdcAccessLog);
-        LOGGER.debug("old保存汇交日志结束,ywh :{},", ywh);
         return flag;
     }
 

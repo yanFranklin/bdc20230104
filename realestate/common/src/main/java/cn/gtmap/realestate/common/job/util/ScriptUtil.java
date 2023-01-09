@@ -1,6 +1,8 @@
 package cn.gtmap.realestate.common.job.util;
 
-import com.xxl.job.core.context.XxlJobHelper;
+
+
+import cn.gtmap.realestate.common.job.context.XxlJobHelper;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

@@ -65,17 +65,10 @@ public class BdcWtsServiceImpl implements BdcWtsService {
             bdcWtsDTO.setWtksrq(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
         }
         Date nextDate = null;
-        List<Work> works = workDayClient.getWorks();
-        if (CollectionUtils.isNotEmpty(works)){
-            List<WorkDay> workDays = workDayClient.getWorkDays(works.get(0).getId(),"","");
-            WorkDayVO workDayVO = DateUtilForWorkDay.getCloudWorkDays(workDays);
-            try {
-                nextDate = DateUtilForWorkDay.getNextWorkDay(new SimpleDateFormat("yyyy-MM-dd").parse((bdcWtsDTO.getWtksrq())),
-                        15 , workDayVO.getHolidayList(), workDayVO.getWorkList());
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            nextDate = DateUtils.getSameDayOfNextMonth(new SimpleDateFormat("yyyy-MM-dd").parse((bdcWtsDTO.getWtksrq())));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         bdcWtsDTO.setId(UUIDGenerator.generate16());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");

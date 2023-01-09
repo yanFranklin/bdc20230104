@@ -79,37 +79,33 @@ layui.use(['jquery', 'element', 'form', 'table', 'laydate', 'formSelects'], func
             cols: [[
                 {type: 'checkbox', fixed: 'left',width:'3%'},
 
-                {field: 'djjg', title: '不动产登记机构', width:'8%'},
+                {field: 'djjg', title: '不动产登记机构', width:'11%'},
 
-                {field: 'dbzl', title: '登簿总量（件）',width:'8%', templet: function (d) {
+                {field: 'dbzl', title: '登簿量（件）',width:'8%', templet: function (d) {
                         return formatSl(d.dbzl);
                     }
                 },
-                {field: 'zszl', title: '证书总量（本）',width:'8%', templet: function (d) {
+                {field: 'zszl', title: '证书量（本）',width:'8%', templet: function (d) {
                         return formatSl(d.zszl);
                     }
                 },
-                {field: 'zmzl', title: '证明总量（份）',width:'8%', templet: function (d) {
+                {field: 'zmzl', title: '证明量（份）',width:'8%', templet: function (d) {
                         return formatSl(d.zmzl);
                     }
                 },
-                {field: 'dzzszl', title: '累计颁发不动产登记电子证书（本）', width:'14%', templet: function (d) {
+                {field: 'dzzszl', title: '颁发不动产登记电子证书（本）', width:'17%', templet: function (d) {
                         return formatSl(d.dzzszl);
                     }
                 },
-                {field: 'dzzmzl', title: '累计颁发不动产登记电子证明（份）', width:'14%', templet: function (d) {
+                {field: 'dzzmzl', title: '颁发不动产登记电子证明（份）', width:'17%', templet: function (d) {
                         return formatSl(d.dzzmzl);
                     }
                 },
-                {field: 'cdl', title: '大厅窗口查档量（件）', width:'9%', templet: function (d) {
+                {field: 'cdl', title: '大厅窗口查档量（件）', width:'11%', templet: function (d) {
                         return formatSl(d.cdl);
                     }
                 },
-                {field: 'wlhzzjcxl', title: '网络和自助机自助查询量（件）', width:'13%', templet: function (d) {
-                        return formatSl1(d.wlhzzjcxl);
-                    }
-                },
-                {field: 'ygdjzmzl', title: '预告登记颁发证明量（自不动产统一登记来累计量）', width:'15%', templet: function (d) {
+                {field: 'ygdjzmzl', title: '预告登记颁发证明量', width:'17%', templet: function (d) {
                         return formatSl(d.ygdjzmzl);
                     }
                 }
@@ -310,7 +306,7 @@ layui.use(['jquery', 'element', 'form', 'table', 'laydate', 'formSelects'], func
                 }else if(cols[index].minWidth > 0){
                     showColsWidth.push(parseInt(cols[index].minWidth / 100 * 15));
                 }else{
-                    showColsWidth.push(300 / 100 * 5);
+                    showColsWidth.push(600 / 100 * 5);
                 }
             }
         }

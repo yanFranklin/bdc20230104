@@ -63,8 +63,8 @@ public class BdcGgptController extends BaseController {
      */
     @ResponseBody
     @PostMapping("/fjxz")
-    public Object downloadFile(@RequestParam("fjid") String fjid, @RequestParam("gzlslid") String gzlslid) throws IOException {
-        return bdcGgptFeginService.downloadGgfj(fjid, gzlslid);
+    public Object downloadFile(@RequestBody GgptxxDTO ggptxxDTO, @RequestParam("gzlslid") String gzlslid) throws IOException {
+        return bdcGgptFeginService.downloadGgfj(ggptxxDTO, gzlslid);
     }
 }
 

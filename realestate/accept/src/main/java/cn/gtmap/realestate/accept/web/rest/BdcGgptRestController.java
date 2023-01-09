@@ -43,8 +43,8 @@ public class BdcGgptRestController implements BdcGgptRestService {
     @Override
     @ResponseStatus(HttpStatus.OK)
     @LogNote(value = "保存附件", action = LogActionConstans.OTHER )
-    public Object downloadGgfj(@RequestParam("fjid") String fjid, @RequestParam("gzlslid") String gzlslid) throws IOException {
-        return bdcGgptxxService.downloadGgfj(fjid, gzlslid);
+    public Object downloadGgfj(@RequestBody GgptxxDTO ggptxxDTO, @RequestParam("gzlslid") String gzlslid) throws IOException {
+        return bdcGgptxxService.downloadGgfj(ggptxxDTO, gzlslid);
     }
 }
 

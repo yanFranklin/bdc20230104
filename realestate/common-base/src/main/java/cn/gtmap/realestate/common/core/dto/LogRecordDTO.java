@@ -25,6 +25,10 @@ public class LogRecordDTO {
      * 用户名称
      */
     private String userName;
+    /**
+     * 是否记录日志至数据库
+     */
+    private boolean dbRecord;
 
     public String getLogType() {
         return logType;
@@ -56,5 +60,13 @@ public class LogRecordDTO {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public boolean isDbRecord() {
+        return dbRecord;
+    }
+
+    public void setDbRecord(boolean dbRecord) {
+        this.dbRecord = dbRecord;
     }
 }

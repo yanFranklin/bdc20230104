@@ -1,5 +1,6 @@
 var date = $.getUrlParam('date');
 var qxdm = $.getUrlParam('qxdm');
+var type = $.getUrlParam('type');
 layui.use(['table', 'laytpl', 'layer'], function () {
     var table = layui.table,
         $ = layui.jquery,
@@ -12,7 +13,7 @@ layui.use(['table', 'laytpl', 'layer'], function () {
             dataType: "json",
             type: "GET",
             async: false,
-            data: {'date': date, 'qxdm': qxdm},
+            data: {'date': date, 'qxdm': qxdm, 'type': type},
             success: function (data) {
                 var json = {
                     zd: data["qx"],

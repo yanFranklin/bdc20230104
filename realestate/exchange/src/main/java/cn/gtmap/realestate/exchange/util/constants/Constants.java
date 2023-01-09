@@ -2,7 +2,6 @@ package cn.gtmap.realestate.exchange.util.constants;
 
 import cn.gtmap.realestate.common.core.support.spring.EnvironmentConfig;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.woden.wsdl20.Interface;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,6 +21,8 @@ public class Constants {
      * 响应报文定时获取任务名称（redis分布式事务锁用）
      */
     public static final String ACCESS_XYBW_TASK_JOB_NAME = "accessResponseTaskJob";
+
+    public static final String ACCESS_SJXYBW_TASK_JOB_NAME = "accessCityResponseTaskJob";
 
     /**
      * 上报服务器检测状态任务名
@@ -90,6 +91,11 @@ public class Constants {
      * 上报类型 省级
      */
     public static final String ACCESS_TYPE_PROVINCE = "province";
+
+    /**
+     * 上报类型 市级
+     */
+    public static final String ACCESS_TYPE_CITY = "city";
 
     /**
      * 查封类型 代码

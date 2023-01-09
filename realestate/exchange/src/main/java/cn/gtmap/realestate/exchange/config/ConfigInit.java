@@ -2,7 +2,6 @@ package cn.gtmap.realestate.exchange.config;
 
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
@@ -25,6 +24,9 @@ public class ConfigInit {
      */
     @Value("${accessLog.provinceEnble:}")
     boolean provinceEnble;
+
+    @Value("${accessLog.cityEnable:false}")
+    boolean cityEnable;
     /**
      * @author <a href="mailto:zhuruijie@gtmap.cn">zhuruijie</a>
      * @description 判断是登簿还是办结上报日志
@@ -43,6 +45,9 @@ public class ConfigInit {
      */
     @Value("${accessLog.provinceUrl:}")
     String provinceUrl;
+
+    @Value("${accessLog.cityDbrzsbUrl:}")
+    String cityUrl;
     /**
      * @author <a href="mailto:lisongtao@gtmap.cn">lisongtao</a>
      * @description 根据各地区配置相应的名字 ex:standard ,anhui(目前只包含这几种，只能从以上中选择一个配置
@@ -129,14 +134,32 @@ public class ConfigInit {
         this.xmlPath = xmlPath;
     }
 
+    public boolean getCityEnable() {
+        return cityEnable;
+    }
+
+    public void setCityEnable(boolean cityEnable) {
+        this.cityEnable = cityEnable;
+    }
+
+    public String getCityUrl() {
+        return cityUrl;
+    }
+
+    public void setCityUrl(String cityUrl) {
+        this.cityUrl = cityUrl;
+    }
+
     @Override
     public String toString() {
         return "ConfigInit{" +
                 "nationalEnble=" + nationalEnble +
                 ", provinceEnble=" + provinceEnble +
+                ", cityEnable=" + cityEnable +
                 ", conditionTime='" + conditionTime + '\'' +
                 ", nationalUrl='" + nationalUrl + '\'' +
                 ", provinceUrl='" + provinceUrl + '\'' +
+                ", cityUrl='" + cityUrl + '\'' +
                 ", provinceType='" + provinceType + '\'' +
                 ", nationalType='" + nationalType + '\'' +
                 ", xmlPath='" + xmlPath + '\'' +

@@ -1055,6 +1055,11 @@ public class CommonConstantUtils {
     public static final Integer QLLX_JZQ = 92;
 
     /**
+     * 详见附记权利类型
+     */
+    public static final Integer QLLX_XJFJ = 38;
+
+    /**
      * 预告登记种类 预售商品房买卖预告登记
      */
     public static final Integer YGDJZL_YSSPFYG = 1;
@@ -2624,8 +2629,23 @@ public class CommonConstantUtils {
     //文件后缀-pdf
     public static final String WJHZ_PDF = ".pdf";
 
+    //文件后缀-pdf
+    public static final String WJHZ_DX_PDF = ".PDF";
+
     //文件后缀-jpg
     public static final String WJHZ_JPG = ".jpg";
+
+    //文件后缀-jpg
+    public static final String WJHZ_DX_JPG = ".JPG";
+
+    //文件后缀-zip
+    public static final String WJHZ_ZIP = ".zip";
+
+    //文件后缀-rar
+    public static final String WJHZ_RAR = ".rar";
+
+    //文件后缀-doc
+    public static final String WJHZ_DOC = ".doc";
 
     //文件后缀-fr3
     public static final String WJHZ_FR3 = ".fr3";

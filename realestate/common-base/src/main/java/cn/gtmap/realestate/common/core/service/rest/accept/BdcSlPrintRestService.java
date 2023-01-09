@@ -368,6 +368,6 @@ public interface BdcSlPrintRestService {
      * @date : 2022/12/13 9:54
      */
     @GetMapping("/realestate-accept/rest/v1.0/print/lyg/xml")
-    String generateSlMkXml(@RequestParam(name = "gzlslid") String gzlslid, @RequestParam(name = "djxl") String djxl, @RequestParam(name = "zxlc", required = false) String zxlc);
+    Map generateSlMkXml(@RequestParam(name = "gzlslid") String gzlslid, @RequestParam(name = "djxl") String djxl, @RequestParam(name = "zxlc", required = false) String zxlc);
 
 }

@@ -39,10 +39,18 @@ public interface AccessLogService {
     /**
      * @param
      * @author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
+     * @description 市级手动上报
+     * @date : 2023/1/6 15:24
+     */
+    void cityAccessLog(Date accessDate, String qxdm);
+
+    /**
+     * @param
+     * @author <a href="mailto:gaolining@gtmap.cn">gaolining</a>
      * @description 登簿日志明细预览
      * @date : 2022/10/13 9:19
      */
-    Map<String, Object> dbrzmxyl(Date accessDate, String qxdm);
+    Map<String, Object> dbrzmxyl(Date accessDate, String qxdm, String type);
 
     /**
      * @param pageable

@@ -33,6 +33,7 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -169,6 +170,34 @@ public class FwLpbRestController extends BaseController implements LpbRestServic
         if (fwHsDO != null) {
             FwHsResouce fwHsResouce = new FwHsResouce(fwHsDO);
             return fwHsResouce.withCode(code).convertDTO();
+        }
+        return null;
+    }
+
+    /**
+     * @param fwDcbIndex
+     * @param code
+     * @param qjgldm
+     * @return ResourceDTO
+     * @author <a href="mailto:liyinqiao@gtmap.cn">liyinqiao</a>
+     * @description 从户室基本信息实体查询预测信息
+     */
+    @Override
+    public ResourceDTO queryFwYcHsByIndexInFwhs(@PathVariable("fwDcbIndex") String fwDcbIndex,
+                                                @PathVariable("code") String code,
+                                                @RequestParam(name = "qjgldm", required = false) String qjgldm) {
+        List<FwHsDO> fwHsDOS = fwHsService.queryFwycHsByIndexAndScmj(fwDcbIndex);
+        if (CollectionUtils.isNotEmpty(fwHsDOS)) {
+            List<FwYchsDO> fwYchsDOList = new ArrayList<>();
+            for (FwHsDO fwHsDO : fwHsDOS) {
+                FwYchsDO fwYchsDO = new FwYchsDO();
+                BeanUtils.copyProperties(fwHsDO,fwYchsDO);
+                fwYchsDOList.add(fwYchsDO);
+            }
+            FwLjzDO fwLjzDO = fwLjzService.queryLjzByFwDcbIndex(fwDcbIndex);
+            FwYchsResource fwYchsResouce = new FwYchsResource(fwYchsDOList);
+            LpbResource lpbResource = new LpbResource(fwLjzDO, fwYchsResouce);
+            return lpbResource.withCode(code).convertDTO();
         }
         return null;
     }

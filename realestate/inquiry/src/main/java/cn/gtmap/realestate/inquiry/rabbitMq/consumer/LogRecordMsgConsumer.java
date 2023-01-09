@@ -4,6 +4,7 @@ import cn.gtmap.realestate.common.config.mq.consumer.MQConsumer;
 import cn.gtmap.realestate.common.core.dto.LogRecordDTO;
 import cn.gtmap.realestate.common.core.ex.AppException;
 import cn.gtmap.realestate.common.core.ex.ErrorCode;
+import cn.gtmap.realestate.common.util.LogConstans;
 import cn.gtmap.realestate.inquiry.core.service.log.LogCustomRecordService;
 import cn.gtmap.realestate.inquiry.core.service.log.LogRecordStrategyFactory;
 import com.alibaba.fastjson.JSON;
@@ -45,6 +46,9 @@ public class LogRecordMsgConsumer extends MQConsumer {
         if(StringUtils.isNotBlank(msg)){
             try{
                 LogRecordDTO logRecordDTO = JSON.parseObject(msg, LogRecordDTO.class);
+                if(StringUtils.isBlank(logRecordDTO.getLogType())){
+                    logRecordDTO.setLogType(LogConstans.LOG_TYPE_DEFAULT);
+                }
                 LogCustomRecordService logCustomRecordService = logRecordStrategyFactory.getCustomLogRecord(logRecordDTO.getLogType());
                 if(null == logCustomRecordService){
                     throw new AppException(ErrorCode.MISSING_ARG, "未获到日志类型：" + logRecordDTO.getLogType() + "的自定义实现类。");

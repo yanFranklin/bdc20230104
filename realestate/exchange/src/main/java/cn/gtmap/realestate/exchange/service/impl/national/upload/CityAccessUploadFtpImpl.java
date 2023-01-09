@@ -2,13 +2,21 @@ package cn.gtmap.realestate.exchange.service.impl.national.upload;
 
 import cn.gtmap.realestate.common.core.domain.exchange.MessageModel;
 import cn.gtmap.realestate.common.core.domain.exchange.uniformity.MessageModelBdc;
-import cn.gtmap.realestate.exchange.core.dto.common.MessageModelOld;
+import cn.gtmap.realestate.common.core.dto.exchange.access.MsgNoticeDTO;
+import cn.gtmap.realestate.common.core.enums.AccessWarningEnum;
 import cn.gtmap.realestate.exchange.core.national.CityAccess;
 import cn.gtmap.realestate.exchange.service.national.NationalAccessUpload;
+import cn.gtmap.realestate.exchange.service.national.access.AccessLogTypeService;
+import cn.gtmap.realestate.exchange.util.FtpUtil;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 /**
  * @Date 2022-05-17
@@ -62,15 +70,12 @@ public class CityAccessUploadFtpImpl extends AbstractCityAccessUpload implements
      */
     private String downResponseRetryTimes;
 
+    @Autowired
+    private AccessLogTypeService accessLogTypeService;
+
     @Override
     public Boolean upload(MessageModel messageModel) {
         return uploadFtp(ip, username, password, port, downResponseRetryTimes,
-                messageModel, xsdpath, path, respath, new CityAccess());
-    }
-
-    @Override
-    public Boolean uploadOld(MessageModelOld messageModel) {
-        return uploadFtpOld(ip, username, password, port, downResponseRetryTimes,
                 messageModel, xsdpath, path, respath, new CityAccess());
     }
 
@@ -110,7 +115,34 @@ public class CityAccessUploadFtpImpl extends AbstractCityAccessUpload implements
      */
     @Override
     public void checkStatus() {
+        FTPClient ftpClient = new FTPClient();
+        try {
+            ftpClient = FtpUtil.getFTPClient(ip, username, password, Integer.parseInt(port));
+            //FTP服务器连接回答
+            int reply = ftpClient.getReplyCode();
+            if (FTPReply.isPositiveCompletion(reply)) {
+                //连接成功
+                LOGGER.info("FTP连接成功，reply：{}", reply);
 
+            } else {
+                //连接失败，发送短信提醒相关人员
+                ftpClient.disconnect();
+                LOGGER.info("FTP连接失败，reply：{}，日期：{}", reply, new Date());
+                MsgNoticeDTO msgNoticeDTO = new MsgNoticeDTO();
+                msgNoticeDTO.setYjlx(AccessWarningEnum.STATUS_3.getYjlx());
+                accessLogTypeService.sendMsgByMsgType(msgNoticeDTO);
+
+            }
+
+        } catch (Exception e) {
+            LOGGER.error("FTPerrorMsg:{}", e);
+            //连接失败，发送短信提醒相关人员
+            LOGGER.info("FTP连接失败，日期：{}", new Date());
+            MsgNoticeDTO msgNoticeDTO = new MsgNoticeDTO();
+            msgNoticeDTO.setYjlx(AccessWarningEnum.STATUS_3.getYjlx());
+            accessLogTypeService.sendMsgByMsgType(msgNoticeDTO);
+            LOGGER.info("短信通知完成！");
+        }
     }
 
     public String getIp() {
