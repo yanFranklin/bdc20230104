@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.text.MessageFormat;
 
 /**
- * @author xuxueli 2020-10-30 20:43:10
+ * @author  2020-10-30 20:43:10
  */
 public class XxlJobCompleter {
     private static Logger logger = LoggerFactory.getLogger(XxlJobCompleter.class);

@@ -9,7 +9,7 @@ import java.net.ServerSocket;
 /**
  * net util
  *
- * @author xuxueli 2017-11-29 17:00:25
+ * @author  2017-11-29 17:00:25
  */
 public class NetUtil {
     private static Logger logger = LoggerFactory.getLogger(NetUtil.class);

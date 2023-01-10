@@ -16,7 +16,7 @@ import java.util.Arrays;
 /**
  * xxl-job config
  *
- * @author xuxueli 2017-04-28
+ * @author  2017-04-28
  */
 
 @Component

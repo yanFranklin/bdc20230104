@@ -3,7 +3,7 @@ package cn.gtmap.realestate.common.job.biz.model;
 import java.io.Serializable;
 
 /**
- * Created by xuxueli on 16/7/22.
+ * Created by  on 16/7/22.
  */
 public class TriggerParam implements Serializable{
     private static final long serialVersionUID = 42L;

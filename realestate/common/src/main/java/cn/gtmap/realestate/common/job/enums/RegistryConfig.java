@@ -1,7 +1,7 @@
 package cn.gtmap.realestate.common.job.enums;
 
 /**
- * Created by xuxueli on 17/5/10.
+ * Created by  on 17/5/10.
  */
 public class RegistryConfig {
 

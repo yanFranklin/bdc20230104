@@ -34,7 +34,7 @@ package cn.gtmap.realestate.config.job.old;//package com.xxl.job.admin.core.sche
 //
 ///**
 // * base quartz scheduler util
-// * @author xuxueli 2015-12-19 16:13:53
+// * @author  2015-12-19 16:13:53
 // */
 //public final class XxlJobDynamicScheduler {
 //    private static final Logger logger = LoggerFactory.getLogger(XxlJobDynamicScheduler_old.class);

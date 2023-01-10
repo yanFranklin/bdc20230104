@@ -4,7 +4,7 @@ package cn.gtmap.realestate.common.job.biz;
 import cn.gtmap.realestate.common.job.biz.model.*;
 
 /**
- * Created by xuxueli on 17/3/1.
+ * Created by  on 17/3/1.
  */
 public interface ExecutorBiz {
 

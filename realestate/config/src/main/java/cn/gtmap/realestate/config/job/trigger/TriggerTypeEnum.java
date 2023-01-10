@@ -5,7 +5,7 @@ import cn.gtmap.realestate.config.job.util.I18nUtil;
 /**
  * trigger type enum
  *
- * @author xuxueli 2018-09-16 04:56:41
+ * @author  2018-09-16 04:56:41
  */
 public enum TriggerTypeEnum {
 

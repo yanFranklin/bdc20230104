@@ -5,7 +5,7 @@ import cn.gtmap.realestate.config.job.route.strategy.*;
 import cn.gtmap.realestate.config.job.util.I18nUtil;
 
 /**
- * Created by xuxueli on 17/3/10.
+ * Created by  on 17/3/10.
  */
 public enum ExecutorRouteStrategyEnum {
 

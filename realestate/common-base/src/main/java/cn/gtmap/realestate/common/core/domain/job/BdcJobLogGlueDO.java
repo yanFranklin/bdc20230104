@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * xxl-job log for glue, used to track job code process
- * @author xuxueli 2016-5-19 17:57:46
+ * @author  2016-5-19 17:57:46
  */
 @Table(name = "BDC_JOB_GLUE")
 public class BdcJobLogGlueDO {

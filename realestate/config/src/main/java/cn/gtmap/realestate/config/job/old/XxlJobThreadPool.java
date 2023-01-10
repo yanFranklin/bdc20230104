@@ -6,7 +6,7 @@ package cn.gtmap.realestate.config.job.old;//package com.xxl.job.admin.core.quar
 ///**
 // * single thread pool, for async trigger
 // *
-// * @author xuxueli 2019-03-06
+// * @author  2019-03-06
 // */
 //public class XxlJobThreadPool implements ThreadPool {
 //

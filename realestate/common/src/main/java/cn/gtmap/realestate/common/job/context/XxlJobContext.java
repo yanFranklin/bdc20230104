@@ -3,7 +3,7 @@ package cn.gtmap.realestate.common.job.context;
 /**
  * xxl-job context
  *
- * @author xuxueli 2020-05-21
+ * @author  2020-05-21
  * [Dear hj]
  */
 public class XxlJobContext {

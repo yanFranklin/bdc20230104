@@ -5,7 +5,7 @@ import org.springframework.util.StringUtils;
 import javax.persistence.Table;
 
 /**
- * @author xuxueli 2019-05-04 16:43:12
+ * @author  2019-05-04 16:43:12
  */
 @Table(name = "BDC_JOB_USER")
 public class BdcJobUserDO {

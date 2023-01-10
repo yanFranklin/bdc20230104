@@ -14,7 +14,7 @@
 ///**
 // * push cookies to model as cookieMap
 // *
-// * @author xuxueli 2015-12-12 18:09:04
+// * @author  2015-12-12 18:09:04
 // */
 //@Component
 //public class CookieInterceptor implements AsyncHandlerInterceptor {

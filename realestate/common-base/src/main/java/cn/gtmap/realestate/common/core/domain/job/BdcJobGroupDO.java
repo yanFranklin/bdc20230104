@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * 执行器 表xxl_job_group 注册的执行器信息
- * Created by xuxueli on 16/9/30.
+ * Created by  on 16/9/30.
  */
 @Table(name = "BDC_JOB_GROUP")
 public class BdcJobGroupDO {

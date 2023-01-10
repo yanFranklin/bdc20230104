@@ -4,7 +4,7 @@ package cn.gtmap.realestate.config.job.scheduler;
 import cn.gtmap.realestate.config.job.util.I18nUtil;
 
 /**
- * @author xuxueli 2020-10-29 21:11:23
+ * @author  2020-10-29 21:11:23
  */
 public enum MisfireStrategyEnum {
 

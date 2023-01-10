@@ -24,9 +24,9 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.*;
 
 /**
- * Copy from : https://github.com/xuxueli/xxl-rpc
+ * Copy from : https://github.com//xxl-rpc
  *
- * @author xuxueli 2020-04-11 21:25
+ * @author  2020-04-11 21:25
  */
 public class EmbedServer {
     private static final Logger logger = LoggerFactory.getLogger(EmbedServer.class);
@@ -125,9 +125,9 @@ public class EmbedServer {
     /**
      * netty_http
      * <p>
-     * Copy from : https://github.com/xuxueli/xxl-rpc
+     * Copy from : https://github.com//xxl-rpc
      *
-     * @author xuxueli 2015-11-24 22:25:15
+     * @author  2015-11-24 22:25:15
      */
     public static class EmbedHttpServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         private static final Logger logger = LoggerFactory.getLogger(EmbedHttpServerHandler.class);

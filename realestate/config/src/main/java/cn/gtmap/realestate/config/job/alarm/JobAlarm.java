@@ -5,7 +5,7 @@ import cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO;
 import cn.gtmap.realestate.common.core.domain.job.BdcJobLogDO;
 
 /**
- * @author xuxueli 2020-01-19
+ * @author  2020-01-19
  */
 public interface JobAlarm {
 

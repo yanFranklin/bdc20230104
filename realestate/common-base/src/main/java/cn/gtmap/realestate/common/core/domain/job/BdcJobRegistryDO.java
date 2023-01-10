@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * 执行器注册表，维护在线的执行器和调度中心机器地址信息
- * Created by xuxueli on 16/9/30.
+ * Created by  on 16/9/30.
  */
 @Table(name = "BDC_JOB_REGISTRY")
 public class BdcJobRegistryDO {

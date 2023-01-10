@@ -7,7 +7,7 @@ import cn.gtmap.realestate.common.job.handler.IJobHandler;
 /**
  * glue job handler
  *
- * @author xuxueli 2016-5-19 21:05:45
+ * @author  2016-5-19 21:05:45
  */
 public class GlueJobHandler extends IJobHandler {
 

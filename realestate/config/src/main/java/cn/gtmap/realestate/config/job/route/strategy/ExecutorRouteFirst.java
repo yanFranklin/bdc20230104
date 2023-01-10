@@ -7,7 +7,7 @@ import cn.gtmap.realestate.config.job.route.ExecutorRouter;
 import java.util.List;
 
 /**
- * Created by xuxueli on 17/3/10.
+ * Created by  on 17/3/10.
  */
 public class ExecutorRouteFirst extends ExecutorRouter {
 

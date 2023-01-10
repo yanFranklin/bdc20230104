@@ -5,7 +5,7 @@ import cn.gtmap.realestate.common.job.handler.IJobHandler;
 import java.lang.reflect.Method;
 
 /**
- * @author xuxueli 2019-12-11 21:12:18
+ * @author  2019-12-11 21:12:18
  */
 public class MethodJobHandler extends IJobHandler {
 

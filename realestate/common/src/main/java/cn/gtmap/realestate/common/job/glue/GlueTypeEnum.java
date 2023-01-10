@@ -1,7 +1,7 @@
 package cn.gtmap.realestate.common.job.glue;
 
 /**
- * Created by xuxueli on 17/4/26.
+ * Created by  on 17/4/26.
  */
 public enum GlueTypeEnum {
 

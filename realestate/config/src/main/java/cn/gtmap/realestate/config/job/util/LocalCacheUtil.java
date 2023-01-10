@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * local cache tool
  *
- * @author xuxueli 2018-01-22 21:37:34
+ * @author  2018-01-22 21:37:34
  */
 public class LocalCacheUtil {
 

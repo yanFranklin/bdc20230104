@@ -14,7 +14,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 /**
- * @author xuxueli 2018-11-25 00:55:31
+ * @author  2018-11-25 00:55:31
  */
 public class XxlJobRemotingUtil {
     private static Logger logger = LoggerFactory.getLogger(XxlJobRemotingUtil.class);

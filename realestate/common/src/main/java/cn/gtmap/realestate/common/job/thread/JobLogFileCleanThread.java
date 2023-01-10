@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * job file clean thread
  *
- * @author xuxueli 2017-12-29 16:23:43
+ * @author  2017-12-29 16:23:43
  */
 public class JobLogFileCleanThread {
     private static Logger logger = LoggerFactory.getLogger(JobLogFileCleanThread.class);

@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * xxl-job-info 任务管理表 xxl_job_info 保存调度任务的信息
  *
- * @author xuxueli  2016-1-12 18:25:49
+ * @author   2016-1-12 18:25:49
  */
 @Table(name = "BDC_JOB_INFO")
 public class BdcJobInfoDO {

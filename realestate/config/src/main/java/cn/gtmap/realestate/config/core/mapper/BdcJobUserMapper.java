@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
- * @author xuxueli 2019-05-04 16:44:59
+ * @author  2019-05-04 16:44:59
  */
 @Mapper
 public interface BdcJobUserMapper {
