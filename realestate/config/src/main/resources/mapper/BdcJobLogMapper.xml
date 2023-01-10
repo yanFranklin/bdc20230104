@@ -28,7 +28,7 @@
 
 	<sql id="Base_Column_List">
 		t.id,
-		t.bdcJobGroupDO,
+		t.jobGroup,
 		t.jobId,
 		t.executorAddress,
 		t.executorHandler,
@@ -48,8 +48,8 @@
 		SELECT t.*
 		FROM bdc_job_log t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="jobId==0 and bdcJobGroupDO gt 0">
-				AND t.bdcJobGroupDO = #{bdcJobGroupDO}
+			<if test="jobId==0 and jobGroup gt 0">
+				AND t.jobGroup = #{jobGroup}
 			</if>
 			<if test="jobId gt 0">
 				AND t.jobId = #{jobId}
@@ -83,8 +83,8 @@
 		SELECT count(1)
 		FROM bdc_job_log t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="jobId==0 and bdcJobGroupDO gt 0">
-				AND t.bdcJobGroupDO = #{bdcJobGroupDO}
+			<if test="jobId==0 and jobGroup gt 0">
+				AND t.jobGroup = #{jobGroup}
 			</if>
 			<if test="jobId gt 0">
 				AND t.jobId = #{jobId}
@@ -120,13 +120,13 @@
 	
 	<insert id="save" parameterType="cn.gtmap.realestate.common.core.domain.job.BdcJobLogDO" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO bdc_job_log (
-		bdcJobGroupDO,
+		jobGroup,
 		jobId,
 		triggerTime,
 		triggerCode,
 		handleCode
 		) VALUES (
-			#{bdcJobGroupDO},
+			#{jobGroup},
 			#{jobId},
 			#{triggerTime},
 			#{triggerCode},
@@ -189,8 +189,8 @@
 	<select id="findClearLogIds" resultType="long" >
 		select b.id, ROWNUM from (SELECT id FROM bdc_job_log
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="bdcJobGroupDO gt 0">
-				AND bdcJobGroupDO = #{bdcJobGroupDO}
+			<if test="jobGroup gt 0">
+				AND jobGroup = #{jobGroup}
 			</if>
 			<if test="jobId gt 0">
 				AND jobId = #{jobId}
@@ -203,8 +203,8 @@
 				SELECT id, ROWNUM FROM(
 				SELECT id FROM bdc_job_log t
 				<trim prefix="WHERE" prefixOverrides="AND | OR" >
-					<if test="bdcJobGroupDO gt 0">
-						AND t.bdcJobGroupDO = #{bdcJobGroupDO}
+					<if test="jobGroup gt 0">
+						AND t.jobGroup = #{jobGroup}
 					</if>
 					<if test="jobId gt 0">
 						AND t.jobId = #{jobId}
