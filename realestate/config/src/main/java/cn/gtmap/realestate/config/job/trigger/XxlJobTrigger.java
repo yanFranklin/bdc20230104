@@ -1,8 +1,8 @@
 package cn.gtmap.realestate.config.job.trigger;
 
-import cn.gtmap.realestate.common.core.domain.job.JobGroup;
-import cn.gtmap.realestate.common.core.domain.job.JobInfo;
-import cn.gtmap.realestate.common.core.domain.job.JobLog;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDO;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobLogDO;
 import cn.gtmap.realestate.common.job.biz.ExecutorBiz;
 import cn.gtmap.realestate.common.job.biz.model.ReturnT;
 import cn.gtmap.realestate.common.job.biz.model.TriggerParam;
@@ -37,8 +37,8 @@ public class XxlJobTrigger {
      * @param executorParam
      *          null: use job param
      *          not null: cover job param
-     * @param addressList
-     *          null: use executor addressList
+     * @param addresslist
+     *          null: use executor addresslist
      *          not null: cover
      */
     public static void trigger(int jobId,
@@ -46,24 +46,24 @@ public class XxlJobTrigger {
                                int failRetryCount,
                                String executorShardingParam,
                                String executorParam,
-                               String addressList) {
+                               String addresslist) {
 
         // load data
-        JobInfo jobInfo = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().loadById(jobId);
-        if (jobInfo == null) {
+        BdcJobInfoDO bdcJobInfoDO = XxlJobAdminConfig.getAdminConfig().getBdcJobInfoMapper().loadById(jobId);
+        if (bdcJobInfoDO == null) {
             logger.warn(">>>>>>>>>>>> trigger fail, jobId invalid，jobId={}", jobId);
             return;
         }
         if (executorParam != null) {
-            jobInfo.setExecutorParam(executorParam);
+            bdcJobInfoDO.setExecutorParam(executorParam);
         }
-        int finalFailRetryCount = failRetryCount>=0?failRetryCount:jobInfo.getExecutorFailRetryCount();
-        JobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().load(jobInfo.getJobGroup());
+        int finalFailRetryCount = failRetryCount>=0?failRetryCount: bdcJobInfoDO.getExecutorFailRetryCount();
+        BdcJobGroupDO group = XxlJobAdminConfig.getAdminConfig().getBdcJobGroupMapper().load(bdcJobInfoDO.getJobGroup());
 
-        // cover addressList
-        if (addressList!=null && addressList.trim().length()>0) {
-            group.setAddressType(1);
-            group.setAddressList(addressList.trim());
+        // cover addresslist
+        if (addresslist!=null && addresslist.trim().length()>0) {
+            group.setAddresstype(1);
+            group.setAddresslist(addresslist.trim());
         }
 
         // sharding param
@@ -76,17 +76,17 @@ public class XxlJobTrigger {
                 shardingParam[1] = Integer.valueOf(shardingArr[1]);
             }
         }
-        if (ExecutorRouteStrategyEnum.SHARDING_BROADCAST==ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null)
+        if (ExecutorRouteStrategyEnum.SHARDING_BROADCAST==ExecutorRouteStrategyEnum.match(bdcJobInfoDO.getExecutorRouteStrategy(), null)
                 && group.getRegistryList()!=null && !group.getRegistryList().isEmpty()
                 && shardingParam==null) {
             for (int i = 0; i < group.getRegistryList().size(); i++) {
-                processTrigger(group, jobInfo, finalFailRetryCount, triggerType, i, group.getRegistryList().size());
+                processTrigger(group, bdcJobInfoDO, finalFailRetryCount, triggerType, i, group.getRegistryList().size());
             }
         } else {
             if (shardingParam == null) {
                 shardingParam = new int[]{0, 1};
             }
-            processTrigger(group, jobInfo, finalFailRetryCount, triggerType, shardingParam[0], shardingParam[1]);
+            processTrigger(group, bdcJobInfoDO, finalFailRetryCount, triggerType, shardingParam[0], shardingParam[1]);
         }
 
     }
@@ -102,39 +102,39 @@ public class XxlJobTrigger {
 
     /**
      * @param group                     job group, registry list may be empty
-     * @param jobInfo
+     * @param bdcJobInfoDO
      * @param finalFailRetryCount
      * @param triggerType
      * @param index                     sharding index
      * @param total                     sharding index
      */
-    private static void processTrigger(JobGroup group, JobInfo jobInfo, int finalFailRetryCount, TriggerTypeEnum triggerType, int index, int total){
+    private static void processTrigger(BdcJobGroupDO group, BdcJobInfoDO bdcJobInfoDO, int finalFailRetryCount, TriggerTypeEnum triggerType, int index, int total){
 
         // param
-        ExecutorBlockStrategyEnum blockStrategy = ExecutorBlockStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), ExecutorBlockStrategyEnum.SERIAL_EXECUTION);  // block strategy
-        ExecutorRouteStrategyEnum executorRouteStrategyEnum = ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null);    // route strategy
+        ExecutorBlockStrategyEnum blockStrategy = ExecutorBlockStrategyEnum.match(bdcJobInfoDO.getExecutorBlockStrategy(), ExecutorBlockStrategyEnum.SERIAL_EXECUTION);  // block strategy
+        ExecutorRouteStrategyEnum executorRouteStrategyEnum = ExecutorRouteStrategyEnum.match(bdcJobInfoDO.getExecutorRouteStrategy(), null);    // route strategy
         String shardingParam = (ExecutorRouteStrategyEnum.SHARDING_BROADCAST==executorRouteStrategyEnum)?String.valueOf(index).concat("/").concat(String.valueOf(total)):null;
 
         // 1、save log-id
-        JobLog jobLog = new JobLog();
-        jobLog.setJobGroup(jobInfo.getJobGroup());
-        jobLog.setJobId(jobInfo.getId());
-        jobLog.setTriggerTime(new Date());
-        XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().save(jobLog);
-        logger.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
+        BdcJobLogDO bdcJobLogDO = new BdcJobLogDO();
+        bdcJobLogDO.setJobGroup(bdcJobInfoDO.getJobGroup());
+        bdcJobLogDO.setJobId(bdcJobInfoDO.getId());
+        bdcJobLogDO.setTriggerTime(new Date());
+        XxlJobAdminConfig.getAdminConfig().getBdcJobLogMapper().save(bdcJobLogDO);
+        logger.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", bdcJobLogDO.getId());
 
         // 2、init trigger-param
         TriggerParam triggerParam = new TriggerParam();
-        triggerParam.setJobId(jobInfo.getId());
-        triggerParam.setExecutorHandler(jobInfo.getExecutorHandler());
-        triggerParam.setExecutorParams(jobInfo.getExecutorParam());
-        triggerParam.setExecutorBlockStrategy(jobInfo.getExecutorBlockStrategy());
-        triggerParam.setExecutorTimeout(jobInfo.getExecutorTimeout());
-        triggerParam.setLogId(jobLog.getId());
-        triggerParam.setLogDateTime(jobLog.getTriggerTime().getTime());
-        triggerParam.setGlueType(jobInfo.getGlueType());
-        triggerParam.setGlueSource(jobInfo.getGlueSource());
-        triggerParam.setGlueUpdatetime(jobInfo.getGlueUpdatetime().getTime());
+        triggerParam.setJobId(bdcJobInfoDO.getId());
+        triggerParam.setExecutorHandler(bdcJobInfoDO.getExecutorHandler());
+        triggerParam.setExecutorParams(bdcJobInfoDO.getExecutorParam());
+        triggerParam.setExecutorBlockStrategy(bdcJobInfoDO.getExecutorBlockStrategy());
+        triggerParam.setExecutorTimeout(bdcJobInfoDO.getExecutorTimeout());
+        triggerParam.setLogId(bdcJobLogDO.getId());
+        triggerParam.setLogDateTime(bdcJobLogDO.getTriggerTime().getTime());
+        triggerParam.setGlueType(bdcJobInfoDO.getGlueType());
+        triggerParam.setGlueSource(bdcJobInfoDO.getGlueSource());
+        triggerParam.setGlueUpdatetime(bdcJobInfoDO.getGlueUpdatetime().getTime());
         triggerParam.setBroadcastIndex(index);
         triggerParam.setBroadcastTotal(total);
 
@@ -171,31 +171,31 @@ public class XxlJobTrigger {
         triggerMsgSb.append(I18nUtil.getString("jobconf_trigger_type")).append("：").append(triggerType.getTitle());
         triggerMsgSb.append("<br>").append(I18nUtil.getString("jobconf_trigger_admin_adress")).append("：").append(IpUtil.getIp());
         triggerMsgSb.append("<br>").append(I18nUtil.getString("jobconf_trigger_exe_regtype")).append("：")
-                .append( (group.getAddressType() == 0)?I18nUtil.getString("jobgroup_field_addressType_0"):I18nUtil.getString("jobgroup_field_addressType_1") );
+                .append( (group.getAddresstype() == 0)?I18nUtil.getString("jobgroup_field_addresstype_0"):I18nUtil.getString("jobgroup_field_addresstype_1") );
         triggerMsgSb.append("<br>").append(I18nUtil.getString("jobconf_trigger_exe_regaddress")).append("：").append(group.getRegistryList());
         triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_executorRouteStrategy")).append("：").append(executorRouteStrategyEnum.getTitle());
         if (shardingParam != null) {
             triggerMsgSb.append("("+shardingParam+")");
         }
         triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_executorBlockStrategy")).append("：").append(blockStrategy.getTitle());
-        triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_timeout")).append("：").append(jobInfo.getExecutorTimeout());
+        triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_timeout")).append("：").append(bdcJobInfoDO.getExecutorTimeout());
         triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_executorFailRetryCount")).append("：").append(finalFailRetryCount);
 
         triggerMsgSb.append("<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_run") +"<<<<<<<<<<< </span><br>")
                 .append((routeAddressResult!=null&&routeAddressResult.getMsg()!=null)?routeAddressResult.getMsg()+"<br><br>":"").append(triggerResult.getMsg()!=null?triggerResult.getMsg():"");
 
         // 6、save log trigger-info
-        jobLog.setExecutorAddress(address);
-        jobLog.setExecutorHandler(jobInfo.getExecutorHandler());
-        jobLog.setExecutorParam(jobInfo.getExecutorParam());
-        jobLog.setExecutorShardingParam(shardingParam);
-        jobLog.setExecutorFailRetryCount(finalFailRetryCount);
+        bdcJobLogDO.setExecutorAddress(address);
+        bdcJobLogDO.setExecutorHandler(bdcJobInfoDO.getExecutorHandler());
+        bdcJobLogDO.setExecutorParam(bdcJobInfoDO.getExecutorParam());
+        bdcJobLogDO.setExecutorShardingParam(shardingParam);
+        bdcJobLogDO.setExecutorFailRetryCount(finalFailRetryCount);
         //jobLog.setTriggerTime();
-        jobLog.setTriggerCode(triggerResult.getCode());
-        jobLog.setTriggerMsg(triggerMsgSb.toString());
-        XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateTriggerInfo(jobLog);
+        bdcJobLogDO.setTriggerCode(triggerResult.getCode());
+        bdcJobLogDO.setTriggerMsg(triggerMsgSb.toString());
+        XxlJobAdminConfig.getAdminConfig().getBdcJobLogMapper().updateTriggerInfo(bdcJobLogDO);
 
-        logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
+        logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", bdcJobLogDO.getId());
     }
 
     /**

@@ -1,7 +1,7 @@
 package cn.gtmap.realestate.config.job.thread;
 
-import cn.gtmap.realestate.common.core.domain.job.JobGroup;
-import cn.gtmap.realestate.common.core.domain.job.JobRegistry;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDO;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobRegistryDO;
 import cn.gtmap.realestate.common.job.biz.model.RegistryParam;
 import cn.gtmap.realestate.common.job.biz.model.ReturnT;
 import cn.gtmap.realestate.common.job.enums.RegistryConfig;
@@ -59,29 +59,29 @@ public class JobRegistryHelper {
 				while (!toStop) {
 					try {
 						// auto registry group
-						List<JobGroup> groupList = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().findByAddressType(0);
+						List<BdcJobGroupDO> groupList = XxlJobAdminConfig.getAdminConfig().getBdcJobGroupMapper().findByAddresstype(0);
 						if (groupList!=null && !groupList.isEmpty()) {
 
 							// remove dead address (admin/executor)
-							List<Integer> ids = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().findDead(RegistryConfig.DEAD_TIMEOUT, new Date());
+							List<Integer> ids = XxlJobAdminConfig.getAdminConfig().getBdcJobRegistryMapper().findDead(RegistryConfig.DEAD_TIMEOUT, new Date());
 							if (ids!=null && ids.size()>0) {
-								XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().removeDead(ids);
+								XxlJobAdminConfig.getAdminConfig().getBdcJobRegistryMapper().removeDead(ids);
 							}
 
 							// fresh online address (admin/executor)
 							HashMap<String, List<String>> appAddressMap = new HashMap<String, List<String>>();
-							List<JobRegistry> list = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().findAll(RegistryConfig.DEAD_TIMEOUT, new Date());
+							List<BdcJobRegistryDO> list = XxlJobAdminConfig.getAdminConfig().getBdcJobRegistryMapper().findAll(RegistryConfig.DEAD_TIMEOUT, new Date());
 							if (list != null) {
-								for (JobRegistry item: list) {
-									if (RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
-										String appname = item.getRegistryKey();
+								for (BdcJobRegistryDO item: list) {
+									if (RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistrygroup())) {
+										String appname = item.getRegistrykey();
 										List<String> registryList = appAddressMap.get(appname);
 										if (registryList == null) {
 											registryList = new ArrayList<String>();
 										}
 
-										if (!registryList.contains(item.getRegistryValue())) {
-											registryList.add(item.getRegistryValue());
+										if (!registryList.contains(item.getRegistryvalue())) {
+											registryList.add(item.getRegistryvalue());
 										}
 										appAddressMap.put(appname, registryList);
 									}
@@ -89,22 +89,22 @@ public class JobRegistryHelper {
 							}
 
 							// fresh group address
-							for (JobGroup group: groupList) {
+							for (BdcJobGroupDO group: groupList) {
 								List<String> registryList = appAddressMap.get(group.getAppname());
-								String addressListStr = null;
+								String addresslistStr = null;
 								if (registryList!=null && !registryList.isEmpty()) {
 									Collections.sort(registryList);
-									StringBuilder addressListSB = new StringBuilder();
+									StringBuilder addresslistSB = new StringBuilder();
 									for (String item:registryList) {
-										addressListSB.append(item).append(",");
+										addresslistSB.append(item).append(",");
 									}
-									addressListStr = addressListSB.toString();
-									addressListStr = addressListStr.substring(0, addressListStr.length()-1);
+									addresslistStr = addresslistSB.toString();
+									addresslistStr = addresslistStr.substring(0, addresslistStr.length()-1);
 								}
-								group.setAddressList(addressListStr);
-								group.setUpdateTime(new Date());
+								group.setAddresslist(addresslistStr);
+								group.setUpdatetime(new Date());
 
-								XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().update(group);
+								XxlJobAdminConfig.getAdminConfig().getBdcJobGroupMapper().update(group);
 							}
 						}
 					} catch (Exception e) {
@@ -149,9 +149,9 @@ public class JobRegistryHelper {
 	public ReturnT<String> registry(RegistryParam registryParam) {
 
 		// valid
-		if (!StringUtils.hasText(registryParam.getRegistryGroup())
-				|| !StringUtils.hasText(registryParam.getRegistryKey())
-				|| !StringUtils.hasText(registryParam.getRegistryValue())) {
+		if (!StringUtils.hasText(registryParam.getRegistrygroup())
+				|| !StringUtils.hasText(registryParam.getRegistrykey())
+				|| !StringUtils.hasText(registryParam.getRegistryvalue())) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "Illegal Argument.");
 		}
 
@@ -159,9 +159,9 @@ public class JobRegistryHelper {
 		registryOrRemoveThreadPool.execute(new Runnable() {
 			@Override
 			public void run() {
-				int ret = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().registryUpdate(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
+				int ret = XxlJobAdminConfig.getAdminConfig().getBdcJobRegistryMapper().registryUpdate(registryParam.getRegistrygroup(), registryParam.getRegistrykey(), registryParam.getRegistryvalue(), new Date());
 				if (ret < 1) {
-					XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().registrySave(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
+					XxlJobAdminConfig.getAdminConfig().getBdcJobRegistryMapper().registrySave(registryParam.getRegistrygroup(), registryParam.getRegistrykey(), registryParam.getRegistryvalue(), new Date());
 
 					// fresh
 					freshGroupRegistryInfo(registryParam);
@@ -175,9 +175,9 @@ public class JobRegistryHelper {
 	public ReturnT<String> registryRemove(RegistryParam registryParam) {
 
 		// valid
-		if (!StringUtils.hasText(registryParam.getRegistryGroup())
-				|| !StringUtils.hasText(registryParam.getRegistryKey())
-				|| !StringUtils.hasText(registryParam.getRegistryValue())) {
+		if (!StringUtils.hasText(registryParam.getRegistrygroup())
+				|| !StringUtils.hasText(registryParam.getRegistrykey())
+				|| !StringUtils.hasText(registryParam.getRegistryvalue())) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "Illegal Argument.");
 		}
 
@@ -185,7 +185,7 @@ public class JobRegistryHelper {
 		registryOrRemoveThreadPool.execute(new Runnable() {
 			@Override
 			public void run() {
-				int ret = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().registryDelete(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue());
+				int ret = XxlJobAdminConfig.getAdminConfig().getBdcJobRegistryMapper().registryDelete(registryParam.getRegistrygroup(), registryParam.getRegistrykey(), registryParam.getRegistryvalue());
 				if (ret > 0) {
 					// fresh
 					freshGroupRegistryInfo(registryParam);

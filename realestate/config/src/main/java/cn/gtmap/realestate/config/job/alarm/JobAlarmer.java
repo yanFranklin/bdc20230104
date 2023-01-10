@@ -1,7 +1,7 @@
 package cn.gtmap.realestate.config.job.alarm;
 
-import cn.gtmap.realestate.common.core.domain.job.JobInfo;
-import cn.gtmap.realestate.common.core.domain.job.JobLog;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobLogDO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -38,10 +38,10 @@ public class JobAlarmer implements ApplicationContextAware, InitializingBean {
      * job alarm
      *
      * @param info
-     * @param jobLog
+     * @param bdcJobLogDO
      * @return
      */
-    public boolean alarm(JobInfo info, JobLog jobLog) {
+    public boolean alarm(BdcJobInfoDO info, BdcJobLogDO bdcJobLogDO) {
 
         boolean result = false;
         if (jobAlarmList!=null && jobAlarmList.size()>0) {
@@ -49,7 +49,7 @@ public class JobAlarmer implements ApplicationContextAware, InitializingBean {
             for (JobAlarm alarm: jobAlarmList) {
                 boolean resultItem = false;
                 try {
-                    resultItem = alarm.doAlarm(info, jobLog);
+                    resultItem = alarm.doAlarm(info, bdcJobLogDO);
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);
                 }

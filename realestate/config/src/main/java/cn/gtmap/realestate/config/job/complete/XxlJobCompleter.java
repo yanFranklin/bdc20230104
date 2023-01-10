@@ -1,7 +1,7 @@
 package cn.gtmap.realestate.config.job.complete;
 
-import cn.gtmap.realestate.common.core.domain.job.JobInfo;
-import cn.gtmap.realestate.common.core.domain.job.JobLog;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobLogDO;
 import cn.gtmap.realestate.common.job.biz.model.ReturnT;
 import cn.gtmap.realestate.common.job.context.XxlJobContext;
 import cn.gtmap.realestate.config.job.conf.XxlJobAdminConfig;
@@ -22,37 +22,37 @@ public class XxlJobCompleter {
     /**
      * common fresh handle entrance (limit only once)
      *
-     * @param jobLog
+     * @param bdcJobLogDO
      * @return
      */
-    public static int updateHandleInfoAndFinish(JobLog jobLog) {
+    public static int updateHandleInfoAndFinish(BdcJobLogDO bdcJobLogDO) {
 
         // finish
-        finishJob(jobLog);
+        finishJob(bdcJobLogDO);
 
         // text最大64kb 避免长度过长
-        if (jobLog.getHandleMsg().length() > 15000) {
-            jobLog.setHandleMsg( jobLog.getHandleMsg().substring(0, 15000) );
+        if (bdcJobLogDO.getHandleMsg().length() > 15000) {
+            bdcJobLogDO.setHandleMsg( bdcJobLogDO.getHandleMsg().substring(0, 15000) );
         }
 
         // fresh handle
-        return XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateHandleInfo(jobLog);
+        return XxlJobAdminConfig.getAdminConfig().getBdcJobLogMapper().updateHandleInfo(bdcJobLogDO);
     }
 
 
     /**
      * do somethind to finish job
      */
-    private static void finishJob(JobLog jobLog){
+    private static void finishJob(BdcJobLogDO bdcJobLogDO){
 
         // 1、handle success, to trigger child job
         String triggerChildMsg = null;
-        if (XxlJobContext.HANDLE_CODE_SUCCESS == jobLog.getHandleCode()) {
-            JobInfo jobInfo = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().loadById(jobLog.getJobId());
-            if (jobInfo !=null && jobInfo.getChildJobId()!=null && jobInfo.getChildJobId().trim().length()>0) {
+        if (XxlJobContext.HANDLE_CODE_SUCCESS == bdcJobLogDO.getHandleCode()) {
+            BdcJobInfoDO bdcJobInfoDO = XxlJobAdminConfig.getAdminConfig().getBdcJobInfoMapper().loadById(bdcJobLogDO.getJobId());
+            if (bdcJobInfoDO !=null && bdcJobInfoDO.getChildJobId()!=null && bdcJobInfoDO.getChildJobId().trim().length()>0) {
                 triggerChildMsg = "<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_child_run") +"<<<<<<<<<<< </span><br>";
 
-                String[] childJobIds = jobInfo.getChildJobId().split(",");
+                String[] childJobIds = bdcJobInfoDO.getChildJobId().split(",");
                 for (int i = 0; i < childJobIds.length; i++) {
                     int childJobId = (childJobIds[i]!=null && childJobIds[i].trim().length()>0 && isNumeric(childJobIds[i]))?Integer.valueOf(childJobIds[i]):-1;
                     if (childJobId > 0) {
@@ -79,7 +79,7 @@ public class XxlJobCompleter {
         }
 
         if (triggerChildMsg != null) {
-            jobLog.setHandleMsg( jobLog.getHandleMsg() + triggerChildMsg );
+            bdcJobLogDO.setHandleMsg( bdcJobLogDO.getHandleMsg() + triggerChildMsg );
         }
 
         // 2、fix_delay trigger next

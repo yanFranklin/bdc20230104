@@ -1,7 +1,6 @@
 package cn.gtmap.realestate.config.job.thread;
 
-import cn.gtmap.realestate.common.core.domain.job.JobLogReport;
-import cn.gtmap.realestate.common.util.UUIDGenerator;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobLogReportDO;
 import cn.gtmap.realestate.config.job.conf.XxlJobAdminConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,30 +63,30 @@ public class JobLogReportHelper {
                             Date todayTo = itemDay.getTime();
 
                             // refresh log-report every minute
-                            JobLogReport jobLogReport = new JobLogReport();
-                            jobLogReport.setTriggerDay(todayFrom);
-                            jobLogReport.setRunningCount(0);
-                            jobLogReport.setSucCount(0);
-                            jobLogReport.setFailCount(0);
+                            BdcJobLogReportDO bdcJobLogReportDO = new BdcJobLogReportDO();
+                            bdcJobLogReportDO.setTriggerDay(todayFrom);
+                            bdcJobLogReportDO.setRunningCount(0);
+                            bdcJobLogReportDO.setSucCount(0);
+                            bdcJobLogReportDO.setFailCount(0);
 
-                            Map<String, Object> triggerCountMap = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findLogReport(todayFrom, todayTo);
+                            Map<String, Object> triggerCountMap = XxlJobAdminConfig.getAdminConfig().getBdcJobLogMapper().findLogReport(todayFrom, todayTo);
                             if (triggerCountMap!=null && triggerCountMap.size()>0) {
                                 int triggerDayCount = triggerCountMap.containsKey("triggerDayCount")?Integer.valueOf(String.valueOf(triggerCountMap.get("triggerDayCount"))):0;
                                 int triggerDayCountRunning = triggerCountMap.containsKey("triggerDayCountRunning")?Integer.valueOf(String.valueOf(triggerCountMap.get("triggerDayCountRunning"))):0;
                                 int triggerDayCountSuc = triggerCountMap.containsKey("triggerDayCountSuc")?Integer.valueOf(String.valueOf(triggerCountMap.get("triggerDayCountSuc"))):0;
                                 int triggerDayCountFail = triggerDayCount - triggerDayCountRunning - triggerDayCountSuc;
 
-                                jobLogReport.setRunningCount(triggerDayCountRunning);
-                                jobLogReport.setSucCount(triggerDayCountSuc);
-                                jobLogReport.setFailCount(triggerDayCountFail);
+                                bdcJobLogReportDO.setRunningCount(triggerDayCountRunning);
+                                bdcJobLogReportDO.setSucCount(triggerDayCountSuc);
+                                bdcJobLogReportDO.setFailCount(triggerDayCountFail);
                             }
                             SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
                             secureRandom.setSeed(10000L);
-                            jobLogReport.setId(12);
+                            bdcJobLogReportDO.setId(12);
                             // do refresh
-                            int ret = XxlJobAdminConfig.getAdminConfig().getXxlJobLogReportDao().update(jobLogReport);
+                            int ret = XxlJobAdminConfig.getAdminConfig().getBdcJobLogReportMapper().update(bdcJobLogReportDO);
                             if (ret < 1) {
-                                XxlJobAdminConfig.getAdminConfig().getXxlJobLogReportDao().save(jobLogReport);
+                                XxlJobAdminConfig.getAdminConfig().getBdcJobLogReportMapper().save(bdcJobLogReportDO);
                             }
                         }
 
@@ -113,9 +112,9 @@ public class JobLogReportHelper {
                         // clean expired log
                         List<Long> logIds = null;
                         do {
-                            logIds = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findClearLogIds(0, 0, clearBeforeTime, 0, 1000);
+                            logIds = XxlJobAdminConfig.getAdminConfig().getBdcJobLogMapper().findClearLogIds(0, 0, clearBeforeTime, 0, 1000);
                             if (logIds!=null && logIds.size()>0) {
-                                XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().clearLog(logIds);
+                                XxlJobAdminConfig.getAdminConfig().getBdcJobLogMapper().clearLog(logIds);
                             }
                         } while (logIds!=null && logIds.size()>0);
 

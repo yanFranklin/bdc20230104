@@ -1,13 +1,13 @@
 package cn.gtmap.realestate.config.web.rest;
 
-import cn.gtmap.realestate.common.core.domain.job.JobGroup;
-import cn.gtmap.realestate.common.core.domain.job.JobInfo;
-import cn.gtmap.realestate.common.core.domain.job.JobUser;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDO;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobUserDO;
 import cn.gtmap.realestate.common.job.biz.model.ReturnT;
 import cn.gtmap.realestate.common.job.enums.ExecutorBlockStrategyEnum;
 import cn.gtmap.realestate.common.job.glue.GlueTypeEnum;
 import cn.gtmap.realestate.common.job.util.DateUtil;
-import cn.gtmap.realestate.config.core.mapper.XxlJobGroupDao;
+import cn.gtmap.realestate.config.core.mapper.BdcJobGroupMapper;
 import cn.gtmap.realestate.config.core.service.LoginService;
 import cn.gtmap.realestate.config.core.service.XxlJobService;
 import cn.gtmap.realestate.config.job.exception.XxlJobException;
@@ -40,7 +40,7 @@ public class JobInfoController {
 	private static Logger logger = LoggerFactory.getLogger(JobInfoController.class);
 
 	@Resource
-	private XxlJobGroupDao xxlJobGroupDao;
+	private BdcJobGroupMapper bdcJobGroupMapper;
 	@Resource
 	private XxlJobService xxlJobService;
 	
@@ -55,42 +55,42 @@ public class JobInfoController {
 		model.addAttribute("MisfireStrategyEnum", MisfireStrategyEnum.values());	    			// 调度过期策略
 
 		// 执行器列表
-		List<JobGroup> jobGroupList_all =  xxlJobGroupDao.findAll();
+		List<BdcJobGroupDO> bdcJobGroupDOList_all =  bdcJobGroupMapper.findAll();
 
 		// filter group
-		List<JobGroup> jobGroupList = filterJobGroupByRole(request, jobGroupList_all);
-		if (jobGroupList==null || jobGroupList.size()==0) {
+		List<BdcJobGroupDO> bdcJobGroupDOList = filterJobGroupByRole(request, bdcJobGroupDOList_all);
+		if (bdcJobGroupDOList ==null || bdcJobGroupDOList.size()==0) {
 			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
 		}
 
-		model.addAttribute("JobGroupList", jobGroupList);
+		model.addAttribute("JobGroupList", bdcJobGroupDOList);
 		model.addAttribute("jobGroup", jobGroup);
 
 		return "jobinfo/jobinfo.index";
 	}
 
-	public static List<JobGroup> filterJobGroupByRole(HttpServletRequest request, List<JobGroup> jobGroupList_all){
-		List<JobGroup> jobGroupList = new ArrayList<>();
-		if (jobGroupList_all!=null && jobGroupList_all.size()>0) {
-			JobUser loginUser = (JobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
+	public static List<BdcJobGroupDO> filterJobGroupByRole(HttpServletRequest request, List<BdcJobGroupDO> bdcJobGroupDOList_all){
+		List<BdcJobGroupDO> bdcJobGroupDOList = new ArrayList<>();
+		if (bdcJobGroupDOList_all !=null && bdcJobGroupDOList_all.size()>0) {
+			BdcJobUserDO loginUser = (BdcJobUserDO) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
 			if (loginUser.getRole() == 1) {
-				jobGroupList = jobGroupList_all;
+				bdcJobGroupDOList = bdcJobGroupDOList_all;
 			} else {
 				List<String> groupIdStrs = new ArrayList<>();
 				if (loginUser.getPermission()!=null && loginUser.getPermission().trim().length()>0) {
 					groupIdStrs = Arrays.asList(loginUser.getPermission().trim().split(","));
 				}
-				for (JobGroup groupItem:jobGroupList_all) {
+				for (BdcJobGroupDO groupItem: bdcJobGroupDOList_all) {
 					if (groupIdStrs.contains(String.valueOf(groupItem.getId()))) {
-						jobGroupList.add(groupItem);
+						bdcJobGroupDOList.add(groupItem);
 					}
 				}
 			}
 		}
-		return jobGroupList;
+		return bdcJobGroupDOList;
 	}
 	public static void validPermission(HttpServletRequest request, int jobGroup) {
-		JobUser loginUser = (JobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
+		BdcJobUserDO loginUser = (BdcJobUserDO) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
 		if (!loginUser.validPermission(jobGroup)) {
 			throw new RuntimeException(I18nUtil.getString("system_permission_limit") + "[username="+ loginUser.getUsername() +"]");
 		}
@@ -118,14 +118,14 @@ public class JobInfoController {
 	
 	@RequestMapping("/add")
 	@ResponseBody
-	public ReturnT<String> add(JobInfo jobInfo) {
-		return xxlJobService.add(jobInfo);
+	public ReturnT<String> add(BdcJobInfoDO bdcJobInfoDO) {
+		return xxlJobService.add(bdcJobInfoDO);
 	}
 	
 	@RequestMapping("/update")
 	@ResponseBody
-	public ReturnT<String> update(JobInfo jobInfo) {
-		return xxlJobService.update(jobInfo);
+	public ReturnT<String> update(BdcJobInfoDO bdcJobInfoDO) {
+		return xxlJobService.update(bdcJobInfoDO);
 	}
 
 	/**
@@ -154,13 +154,13 @@ public class JobInfoController {
 	@RequestMapping("/trigger")
 	@ResponseBody
 	//@PermissionLimit(limit = false)
-	public ReturnT<String> triggerJob(int id, String executorParam, String addressList) {
+	public ReturnT<String> triggerJob(int id, String executorParam, String addresslist) {
 		// force cover job param
 		if (executorParam == null) {
 			executorParam = "";
 		}
 
-		JobTriggerPoolHelper.trigger(id, TriggerTypeEnum.MANUAL, -1, null, executorParam, addressList);
+		JobTriggerPoolHelper.trigger(id, TriggerTypeEnum.MANUAL, -1, null, executorParam, addresslist);
 		return ReturnT.SUCCESS;
 	}
 
@@ -168,15 +168,15 @@ public class JobInfoController {
 	@ResponseBody
 	public ReturnT<List<String>> nextTriggerTime(String scheduleType, String scheduleConf) {
 
-		JobInfo paramJobInfo = new JobInfo();
-		paramJobInfo.setScheduleType(scheduleType);
-		paramJobInfo.setScheduleConf(scheduleConf);
+		BdcJobInfoDO paramBdcJobInfoDO = new BdcJobInfoDO();
+		paramBdcJobInfoDO.setScheduleType(scheduleType);
+		paramBdcJobInfoDO.setScheduleConf(scheduleConf);
 
 		List<String> result = new ArrayList<>();
 		try {
 			Date lastTime = new Date();
 			for (int i = 0; i < 5; i++) {
-				lastTime = JobScheduleHelper.generateNextValidTime(paramJobInfo, lastTime);
+				lastTime = JobScheduleHelper.generateNextValidTime(paramBdcJobInfoDO, lastTime);
 				if (lastTime != null) {
 					result.add(DateUtil.formatDateTime(lastTime));
 				} else {

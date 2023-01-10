@@ -1,9 +1,9 @@
 package cn.gtmap.realestate.config.job.alarm.impl;
 
 
-import cn.gtmap.realestate.common.core.domain.job.JobGroup;
-import cn.gtmap.realestate.common.core.domain.job.JobInfo;
-import cn.gtmap.realestate.common.core.domain.job.JobLog;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDO;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobLogDO;
 import cn.gtmap.realestate.common.job.biz.model.ReturnT;
 import cn.gtmap.realestate.config.job.alarm.JobAlarm;
 import cn.gtmap.realestate.config.job.conf.XxlJobAdminConfig;
@@ -31,26 +31,26 @@ public class EmailJobAlarm implements JobAlarm {
     /**
      * fail alarm
      *
-     * @param jobLog
+     * @param bdcJobLogDO
      */
     @Override
-    public boolean doAlarm(JobInfo info, JobLog jobLog){
+    public boolean doAlarm(BdcJobInfoDO info, BdcJobLogDO bdcJobLogDO){
         boolean alarmResult = true;
 
         // send monitor email
         if (info!=null && info.getAlarmEmail()!=null && info.getAlarmEmail().trim().length()>0) {
 
             // alarmContent
-            String alarmContent = "Alarm Job LogId=" + jobLog.getId();
-            if (jobLog.getTriggerCode() != ReturnT.SUCCESS_CODE) {
-                alarmContent += "<br>TriggerMsg=<br>" + jobLog.getTriggerMsg();
+            String alarmContent = "Alarm Job LogId=" + bdcJobLogDO.getId();
+            if (bdcJobLogDO.getTriggerCode() != ReturnT.SUCCESS_CODE) {
+                alarmContent += "<br>TriggerMsg=<br>" + bdcJobLogDO.getTriggerMsg();
             }
-            if (jobLog.getHandleCode()>0 && jobLog.getHandleCode() != ReturnT.SUCCESS_CODE) {
-                alarmContent += "<br>HandleCode=" + jobLog.getHandleMsg();
+            if (bdcJobLogDO.getHandleCode()>0 && bdcJobLogDO.getHandleCode() != ReturnT.SUCCESS_CODE) {
+                alarmContent += "<br>HandleCode=" + bdcJobLogDO.getHandleMsg();
             }
 
             // email info
-            JobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().load(Integer.valueOf(info.getJobGroup()));
+            BdcJobGroupDO group = XxlJobAdminConfig.getAdminConfig().getBdcJobGroupMapper().load(Integer.valueOf(info.getJobGroup()));
             String personal = I18nUtil.getString("admin_name_full");
             String title = I18nUtil.getString("jobconf_monitor");
             String content = MessageFormat.format(loadEmailJobAlarmTemplate(),
@@ -74,7 +74,7 @@ public class EmailJobAlarm implements JobAlarm {
 
                     XxlJobAdminConfig.getAdminConfig().getMailSender().send(mimeMessage);
                 } catch (Exception e) {
-                    logger.error(">>>>>>>>>>> xxl-job, job fail alarm email send error, JobLogId:{}", jobLog.getId(), e);
+                    logger.error(">>>>>>>>>>> xxl-job, job fail alarm email send error, JobLogId:{}", bdcJobLogDO.getId(), e);
 
                     alarmResult = false;
                 }

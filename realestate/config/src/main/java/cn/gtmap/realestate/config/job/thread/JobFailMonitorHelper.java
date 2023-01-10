@@ -1,7 +1,7 @@
 package cn.gtmap.realestate.config.job.thread;
 
-import cn.gtmap.realestate.common.core.domain.job.JobInfo;
-import cn.gtmap.realestate.common.core.domain.job.JobLog;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobLogDO;
 import cn.gtmap.realestate.config.job.conf.XxlJobAdminConfig;
 import cn.gtmap.realestate.config.job.trigger.TriggerTypeEnum;
 import cn.gtmap.realestate.config.job.util.I18nUtil;
@@ -38,24 +38,24 @@ public class JobFailMonitorHelper {
 				while (!toStop) {
 					try {
 
-						List<Long> failLogIds = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findFailJobLogIds(1000);
+						List<Long> failLogIds = XxlJobAdminConfig.getAdminConfig().getBdcJobLogMapper().findFailJobLogIds(1000);
 						if (failLogIds!=null && !failLogIds.isEmpty()) {
 							for (long failLogId: failLogIds) {
 
 								// lock log
-								int lockRet = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateAlarmStatus(failLogId, 0, -1);
+								int lockRet = XxlJobAdminConfig.getAdminConfig().getBdcJobLogMapper().updateAlarmStatus(failLogId, 0, -1);
 								if (lockRet < 1) {
 									continue;
 								}
-								JobLog log = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().load(failLogId);
-								JobInfo info = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().loadById(log.getJobId());
+								BdcJobLogDO log = XxlJobAdminConfig.getAdminConfig().getBdcJobLogMapper().load(failLogId);
+								BdcJobInfoDO info = XxlJobAdminConfig.getAdminConfig().getBdcJobInfoMapper().loadById(log.getJobId());
 
 								// 1、fail retry monitor
 								if (log.getExecutorFailRetryCount() > 0) {
 									JobTriggerPoolHelper.trigger(log.getJobId(), TriggerTypeEnum.RETRY, (log.getExecutorFailRetryCount()-1), log.getExecutorShardingParam(), log.getExecutorParam(), null);
 									String retryMsg = "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_type_retry") +"<<<<<<<<<<< </span><br>";
 									log.setTriggerMsg(log.getTriggerMsg() + retryMsg);
-									XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateTriggerInfo(log);
+									XxlJobAdminConfig.getAdminConfig().getBdcJobLogMapper().updateTriggerInfo(log);
 								}
 
 								// 2、fail alarm monitor
@@ -67,7 +67,7 @@ public class JobFailMonitorHelper {
 									newAlarmStatus = 1;
 								}
 
-								XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateAlarmStatus(failLogId, -1, newAlarmStatus);
+								XxlJobAdminConfig.getAdminConfig().getBdcJobLogMapper().updateAlarmStatus(failLogId, -1, newAlarmStatus);
 							}
 						}
 

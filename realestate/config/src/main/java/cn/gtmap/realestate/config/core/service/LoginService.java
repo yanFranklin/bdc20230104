@@ -1,8 +1,8 @@
 package cn.gtmap.realestate.config.core.service;
 
-import cn.gtmap.realestate.common.core.domain.job.JobUser;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobUserDO;
 import cn.gtmap.realestate.common.job.biz.model.ReturnT;
-import cn.gtmap.realestate.config.core.mapper.XxlJobUserDao;
+import cn.gtmap.realestate.config.core.mapper.BdcJobUserMapper;
 import cn.gtmap.realestate.config.job.util.CookieUtil;
 import cn.gtmap.realestate.config.job.util.I18nUtil;
 import cn.gtmap.realestate.config.job.util.JacksonUtil;
@@ -23,21 +23,21 @@ public class LoginService {
     public static final String LOGIN_IDENTITY_KEY = "XXL_JOB_LOGIN_IDENTITY";
 
     @Resource
-    private XxlJobUserDao xxlJobUserDao;
+    private BdcJobUserMapper bdcJobUserMapper;
 
 
-    private String makeToken(JobUser jobUser){
-        String tokenJson = JacksonUtil.writeValueAsString(jobUser);
+    private String makeToken(BdcJobUserDO bdcJobUserDO){
+        String tokenJson = JacksonUtil.writeValueAsString(bdcJobUserDO);
         String tokenHex = new BigInteger(tokenJson.getBytes()).toString(16);
         return tokenHex;
     }
-    private JobUser parseToken(String tokenHex){
-        JobUser jobUser = null;
+    private BdcJobUserDO parseToken(String tokenHex){
+        BdcJobUserDO bdcJobUserDO = null;
         if (tokenHex != null) {
             String tokenJson = new String(new BigInteger(tokenHex, 16).toByteArray());      // username_password(md5)
-            jobUser = JacksonUtil.readValue(tokenJson, JobUser.class);
+            bdcJobUserDO = JacksonUtil.readValue(tokenJson, BdcJobUserDO.class);
         }
-        return jobUser;
+        return bdcJobUserDO;
     }
 
 
@@ -49,16 +49,16 @@ public class LoginService {
         }
 
         // valid passowrd
-        JobUser jobUser = xxlJobUserDao.loadByUserName(username);
-        if (jobUser == null) {
+        BdcJobUserDO bdcJobUserDO = bdcJobUserMapper.loadByUserName(username);
+        if (bdcJobUserDO == null) {
             return new ReturnT<String>(500, I18nUtil.getString("login_param_unvalid"));
         }
         String passwordMd5 = DigestUtils.md5DigestAsHex(password.getBytes());
-        if (!passwordMd5.equals(jobUser.getPassword())) {
+        if (!passwordMd5.equals(bdcJobUserDO.getPassword())) {
             return new ReturnT<String>(500, I18nUtil.getString("login_param_unvalid"));
         }
 
-        String loginToken = makeToken(jobUser);
+        String loginToken = makeToken(bdcJobUserDO);
 
         // do login
         CookieUtil.set(response, LOGIN_IDENTITY_KEY, loginToken, ifRemember);
@@ -82,17 +82,17 @@ public class LoginService {
      * @param request
      * @return
      */
-    public JobUser ifLogin(HttpServletRequest request, HttpServletResponse response){
+    public BdcJobUserDO ifLogin(HttpServletRequest request, HttpServletResponse response){
         String cookieToken = CookieUtil.getValue(request, LOGIN_IDENTITY_KEY);
         if (cookieToken != null) {
-            JobUser cookieUser = null;
+            BdcJobUserDO cookieUser = null;
             try {
                 cookieUser = parseToken(cookieToken);
             } catch (Exception e) {
                 logout(request, response);
             }
             if (cookieUser != null) {
-                JobUser dbUser = xxlJobUserDao.loadByUserName(cookieUser.getUsername());
+                BdcJobUserDO dbUser = bdcJobUserMapper.loadByUserName(cookieUser.getUsername());
                 if (dbUser != null) {
                     if (cookieUser.getPassword().equals(dbUser.getPassword())) {
                         return dbUser;

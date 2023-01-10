@@ -1,17 +1,17 @@
 package cn.gtmap.realestate.config.web.rest;
 
-import cn.gtmap.realestate.common.core.domain.job.JobGroup;
-import cn.gtmap.realestate.common.core.domain.job.JobInfo;
-import cn.gtmap.realestate.common.core.domain.job.JobLog;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDO;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobLogDO;
 import cn.gtmap.realestate.common.job.biz.ExecutorBiz;
 import cn.gtmap.realestate.common.job.biz.model.KillParam;
 import cn.gtmap.realestate.common.job.biz.model.LogParam;
 import cn.gtmap.realestate.common.job.biz.model.LogResult;
 import cn.gtmap.realestate.common.job.biz.model.ReturnT;
 import cn.gtmap.realestate.common.job.util.DateUtil;
-import cn.gtmap.realestate.config.core.mapper.XxlJobGroupDao;
-import cn.gtmap.realestate.config.core.mapper.XxlJobInfoDao;
-import cn.gtmap.realestate.config.core.mapper.XxlJobLogDao;
+import cn.gtmap.realestate.config.core.mapper.BdcJobGroupMapper;
+import cn.gtmap.realestate.config.core.mapper.BdcJobInfoMapper;
+import cn.gtmap.realestate.config.core.mapper.BdcJobLogMapper;
 import cn.gtmap.realestate.config.job.complete.XxlJobCompleter;
 import cn.gtmap.realestate.config.job.exception.XxlJobException;
 import cn.gtmap.realestate.config.job.scheduler.XxlJobScheduler;
@@ -41,37 +41,37 @@ public class JobLogController {
 	private static Logger logger = LoggerFactory.getLogger(JobLogController.class);
 
 	@Resource
-	private XxlJobGroupDao xxlJobGroupDao;
+	private BdcJobGroupMapper bdcJobGroupMapper;
 	@Resource
-	public XxlJobInfoDao xxlJobInfoDao;
+	public BdcJobInfoMapper bdcJobInfoMapper;
 	@Resource
-	public XxlJobLogDao xxlJobLogDao;
+	public BdcJobLogMapper bdcJobLogMapper;
 
 	@RequestMapping
 	public String index(HttpServletRequest request, Model model, @RequestParam(required = false, defaultValue = "0") Integer jobId) {
 
 		// 执行器列表
-		List<JobGroup> jobGroupList_all =  xxlJobGroupDao.findAll();
+		List<BdcJobGroupDO> bdcJobGroupDOList_all =  bdcJobGroupMapper.findAll();
 
 		// filter group
-		List<JobGroup> jobGroupList = JobInfoController.filterJobGroupByRole(request, jobGroupList_all);
-		if (jobGroupList==null || jobGroupList.size()==0) {
+		List<BdcJobGroupDO> bdcJobGroupDOList = JobInfoController.filterJobGroupByRole(request, bdcJobGroupDOList_all);
+		if (bdcJobGroupDOList ==null || bdcJobGroupDOList.size()==0) {
 			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
 		}
 
-		model.addAttribute("JobGroupList", jobGroupList);
+		model.addAttribute("JobGroupList", bdcJobGroupDOList);
 
 		// 任务
 		if (jobId > 0) {
-			JobInfo jobInfo = xxlJobInfoDao.loadById(jobId);
-			if (jobInfo == null) {
+			BdcJobInfoDO bdcJobInfoDO = bdcJobInfoMapper.loadById(jobId);
+			if (bdcJobInfoDO == null) {
 				throw new RuntimeException(I18nUtil.getString("jobinfo_field_id") + I18nUtil.getString("system_unvalid"));
 			}
 
-			model.addAttribute("jobInfo", jobInfo);
+			model.addAttribute("jobInfo", bdcJobInfoDO);
 
 			// valid permission
-			JobInfoController.validPermission(request, jobInfo.getJobGroup());
+			JobInfoController.validPermission(request, bdcJobInfoDO.getJobGroup());
 		}
 
 		return "joblog/joblog.index";
@@ -79,9 +79,9 @@ public class JobLogController {
 
 	@RequestMapping("/getJobsByGroup")
 	@ResponseBody
-	public ReturnT<List<JobInfo>> getJobsByGroup(int jobGroup){
-		List<JobInfo> list = xxlJobInfoDao.getJobsByGroup(jobGroup);
-		return new ReturnT<List<JobInfo>>(list);
+	public ReturnT<List<BdcJobInfoDO>> getJobsByGroup(int jobGroup){
+		List<BdcJobInfoDO> list = bdcJobInfoMapper.getJobsByGroup(jobGroup);
+		return new ReturnT<List<BdcJobInfoDO>>(list);
 	}
 	
 	@RequestMapping("/pageList")
@@ -106,8 +106,8 @@ public class JobLogController {
 		}
 		
 		// page query
-		List<JobLog> list = xxlJobLogDao.pageList(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
-		int list_count = xxlJobLogDao.pageListCount(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
+		List<BdcJobLogDO> list = bdcJobLogMapper.pageList(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
+		int list_count = bdcJobLogMapper.pageListCount(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
 		
 		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();
@@ -122,16 +122,16 @@ public class JobLogController {
 
 		// base check
 		ReturnT<String> logStatue = ReturnT.SUCCESS;
-		JobLog jobLog = xxlJobLogDao.load(id);
-		if (jobLog == null) {
+		BdcJobLogDO bdcJobLogDO = bdcJobLogMapper.load(id);
+		if (bdcJobLogDO == null) {
             throw new RuntimeException(I18nUtil.getString("joblog_logid_unvalid"));
 		}
 
-        model.addAttribute("triggerCode", jobLog.getTriggerCode());
-        model.addAttribute("handleCode", jobLog.getHandleCode());
-        model.addAttribute("executorAddress", jobLog.getExecutorAddress());
-        model.addAttribute("triggerTime", jobLog.getTriggerTime().getTime());
-        model.addAttribute("logId", jobLog.getId());
+        model.addAttribute("triggerCode", bdcJobLogDO.getTriggerCode());
+        model.addAttribute("handleCode", bdcJobLogDO.getHandleCode());
+        model.addAttribute("executorAddress", bdcJobLogDO.getExecutorAddress());
+        model.addAttribute("triggerTime", bdcJobLogDO.getTriggerTime().getTime());
+        model.addAttribute("logId", bdcJobLogDO.getId());
 		return "joblog/joblog.detail";
 	}
 
@@ -144,8 +144,8 @@ public class JobLogController {
 
 			// is end
             if (logResult.getContent()!=null && logResult.getContent().getFromLineNum() > logResult.getContent().getToLineNum()) {
-                JobLog jobLog = xxlJobLogDao.load(logId);
-                if (jobLog.getHandleCode() > 0) {
+                BdcJobLogDO bdcJobLogDO = bdcJobLogMapper.load(logId);
+                if (bdcJobLogDO.getHandleCode() > 0) {
                     logResult.getContent().setEnd(true);
                 }
             }
@@ -161,9 +161,9 @@ public class JobLogController {
 	@ResponseBody
 	public ReturnT<String> logKill(int id){
 		// base check
-		JobLog log = xxlJobLogDao.load(id);
-		JobInfo jobInfo = xxlJobInfoDao.loadById(log.getJobId());
-		if (jobInfo==null) {
+		BdcJobLogDO log = bdcJobLogMapper.load(id);
+		BdcJobInfoDO bdcJobInfoDO = bdcJobInfoMapper.loadById(log.getJobId());
+		if (bdcJobInfoDO ==null) {
 			return new ReturnT<String>(500, I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
 		}
 		if (ReturnT.SUCCESS_CODE != log.getTriggerCode()) {
@@ -174,7 +174,7 @@ public class JobLogController {
 		ReturnT<String> runResult = null;
 		try {
 			ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(log.getExecutorAddress());
-			runResult = executorBiz.kill(new KillParam(jobInfo.getId()));
+			runResult = executorBiz.kill(new KillParam(bdcJobInfoDO.getId()));
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			runResult = new ReturnT<String>(500, e.getMessage());
@@ -221,9 +221,9 @@ public class JobLogController {
 
 		List<Long> logIds = null;
 		do {
-			logIds = xxlJobLogDao.findClearLogIds(jobGroup, jobId, clearBeforeTime, clearBeforeNum, 1000);
+			logIds = bdcJobLogMapper.findClearLogIds(jobGroup, jobId, clearBeforeTime, clearBeforeNum, 1000);
 			if (logIds!=null && logIds.size()>0) {
-				xxlJobLogDao.clearLog(logIds);
+				bdcJobLogMapper.clearLog(logIds);
 			}
 		} while (logIds!=null && logIds.size()>0);
 

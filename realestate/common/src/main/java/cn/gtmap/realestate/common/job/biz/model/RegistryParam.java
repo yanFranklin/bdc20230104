@@ -8,47 +8,47 @@ import java.io.Serializable;
 public class RegistryParam implements Serializable {
     private static final long serialVersionUID = 42L;
 
-    private String registryGroup;
-    private String registryKey;
-    private String registryValue;
+    private String registrygroup;
+    private String registrykey;
+    private String registryvalue;
 
     public RegistryParam(){}
-    public RegistryParam(String registryGroup, String registryKey, String registryValue) {
-        this.registryGroup = registryGroup;
-        this.registryKey = registryKey;
-        this.registryValue = registryValue;
+    public RegistryParam(String registrygroup, String registrykey, String registryvalue) {
+        this.registrygroup = registrygroup;
+        this.registrykey = registrykey;
+        this.registryvalue = registryvalue;
     }
 
-    public String getRegistryGroup() {
-        return registryGroup;
+    public String getRegistrygroup() {
+        return registrygroup;
     }
 
-    public void setRegistryGroup(String registryGroup) {
-        this.registryGroup = registryGroup;
+    public void setRegistrygroup(String registrygroup) {
+        this.registrygroup = registrygroup;
     }
 
-    public String getRegistryKey() {
-        return registryKey;
+    public String getRegistrykey() {
+        return registrykey;
     }
 
-    public void setRegistryKey(String registryKey) {
-        this.registryKey = registryKey;
+    public void setRegistrykey(String registrykey) {
+        this.registrykey = registrykey;
     }
 
-    public String getRegistryValue() {
-        return registryValue;
+    public String getRegistryvalue() {
+        return registryvalue;
     }
 
-    public void setRegistryValue(String registryValue) {
-        this.registryValue = registryValue;
+    public void setRegistryvalue(String registryvalue) {
+        this.registryvalue = registryvalue;
     }
 
     @Override
     public String toString() {
         return "RegistryParam{" +
-                "registryGroup='" + registryGroup + '\'' +
-                ", registryKey='" + registryKey + '\'' +
-                ", registryValue='" + registryValue + '\'' +
+                "registrygroup='" + registrygroup + '\'' +
+                ", registrykey='" + registrykey + '\'' +
+                ", registryvalue='" + registryvalue + '\'' +
                 '}';
     }
 }

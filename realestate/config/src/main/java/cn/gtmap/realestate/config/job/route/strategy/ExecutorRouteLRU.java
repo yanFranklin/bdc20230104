@@ -22,7 +22,7 @@ public class ExecutorRouteLRU extends ExecutorRouter {
     private static ConcurrentMap<Integer, LinkedHashMap<String, String>> jobLRUMap = new ConcurrentHashMap<Integer, LinkedHashMap<String, String>>();
     private static long CACHE_VALID_TIME = 0;
 
-    public String route(int jobId, List<String> addressList) {
+    public String route(int jobId, List<String> addresslist) {
 
         // cache clear
         if (System.currentTimeMillis() > CACHE_VALID_TIME) {
@@ -43,7 +43,7 @@ public class ExecutorRouteLRU extends ExecutorRouter {
         }
 
         // put new
-        for (String address: addressList) {
+        for (String address: addresslist) {
             if (!lruItem.containsKey(address)) {
                 lruItem.put(address, address);
             }
@@ -51,7 +51,7 @@ public class ExecutorRouteLRU extends ExecutorRouter {
         // remove old
         List<String> delKeys = new ArrayList<>();
         for (String existKey: lruItem.keySet()) {
-            if (!addressList.contains(existKey)) {
+            if (!addresslist.contains(existKey)) {
                 delKeys.add(existKey);
             }
         }
@@ -68,8 +68,8 @@ public class ExecutorRouteLRU extends ExecutorRouter {
     }
 
     @Override
-    public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
-        String address = route(triggerParam.getJobId(), addressList);
+    public ReturnT<String> route(TriggerParam triggerParam, List<String> addresslist) {
+        String address = route(triggerParam.getJobId(), addresslist);
         return new ReturnT<String>(address);
     }
 

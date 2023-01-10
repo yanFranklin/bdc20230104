@@ -16,9 +16,9 @@ import java.util.List;
 public class ExecutorRouteBusyover extends ExecutorRouter {
 
     @Override
-    public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
+    public ReturnT<String> route(TriggerParam triggerParam, List<String> addresslist) {
         StringBuffer idleBeatResultSB = new StringBuffer();
-        for (String address : addressList) {
+        for (String address : addresslist) {
             // beat
             ReturnT<String> idleBeatResult = null;
             try {

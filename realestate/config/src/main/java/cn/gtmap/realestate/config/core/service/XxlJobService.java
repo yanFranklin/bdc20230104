@@ -1,7 +1,7 @@
 package cn.gtmap.realestate.config.core.service;
 
 
-import cn.gtmap.realestate.common.core.domain.job.JobInfo;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO;
 import cn.gtmap.realestate.common.job.biz.model.ReturnT;
 
 
@@ -31,18 +31,18 @@ public interface XxlJobService {
 	/**
 	 * add job
 	 *
-	 * @param jobInfo
+	 * @param bdcJobInfoDO
 	 * @return
 	 */
-	public ReturnT<String> add(JobInfo jobInfo);
+	public ReturnT<String> add(BdcJobInfoDO bdcJobInfoDO);
 
 	/**
 	 * update job
 	 *
-	 * @param jobInfo
+	 * @param bdcJobInfoDO
 	 * @return
 	 */
-	public ReturnT<String> update(JobInfo jobInfo);
+	public ReturnT<String> update(BdcJobInfoDO bdcJobInfoDO);
 
 	/**
 	 * remove job

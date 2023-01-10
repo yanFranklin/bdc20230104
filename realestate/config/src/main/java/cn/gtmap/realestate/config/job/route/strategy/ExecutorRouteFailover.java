@@ -15,10 +15,10 @@ import java.util.List;
 public class ExecutorRouteFailover extends ExecutorRouter {
 
     @Override
-    public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
+    public ReturnT<String> route(TriggerParam triggerParam, List<String> addresslist) {
 
         StringBuffer beatResultSB = new StringBuffer();
-        for (String address : addressList) {
+        for (String address : addresslist) {
             // beat
             ReturnT<String> beatResult = null;
             try {

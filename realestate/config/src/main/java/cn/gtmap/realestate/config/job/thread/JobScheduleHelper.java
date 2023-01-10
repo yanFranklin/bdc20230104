@@ -1,6 +1,6 @@
 package cn.gtmap.realestate.config.job.thread;
 
-import cn.gtmap.realestate.common.core.domain.job.JobInfo;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO;
 import cn.gtmap.realestate.config.job.conf.XxlJobAdminConfig;
 import cn.gtmap.realestate.config.job.cron.CronExpression;
 import cn.gtmap.realestate.config.job.scheduler.MisfireStrategyEnum;
@@ -78,48 +78,48 @@ public class JobScheduleHelper {
 
                         // 1、pre read
                         long nowTime = System.currentTimeMillis();
-                        List<JobInfo> scheduleList = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleJobQuery(nowTime + PRE_READ_MS, preReadCount);
+                        List<BdcJobInfoDO> scheduleList = XxlJobAdminConfig.getAdminConfig().getBdcJobInfoMapper().scheduleJobQuery(nowTime + PRE_READ_MS, preReadCount);
                         if (scheduleList!=null && scheduleList.size()>0) {
                             // 2、push time-ring
-                            for (JobInfo jobInfo: scheduleList) {
+                            for (BdcJobInfoDO bdcJobInfoDO : scheduleList) {
 
                                 // time-ring jump
-                                if (nowTime > jobInfo.getTriggerNextTime() + PRE_READ_MS) {
+                                if (nowTime > bdcJobInfoDO.getTriggerNextTime() + PRE_READ_MS) {
                                     // 2.1、trigger-expire > 5s：pass && make next-trigger-time
-                                    logger.warn(">>>>>>>>>>> xxl-job, schedule misfire, jobId = " + jobInfo.getId());
+                                    logger.warn(">>>>>>>>>>> xxl-job, schedule misfire, jobId = " + bdcJobInfoDO.getId());
 
                                     // 1、misfire match
-                                    MisfireStrategyEnum misfireStrategyEnum = MisfireStrategyEnum.match(jobInfo.getMisfireStrategy(), MisfireStrategyEnum.DO_NOTHING);
+                                    MisfireStrategyEnum misfireStrategyEnum = MisfireStrategyEnum.match(bdcJobInfoDO.getMisfireStrategy(), MisfireStrategyEnum.DO_NOTHING);
                                     if (MisfireStrategyEnum.FIRE_ONCE_NOW == misfireStrategyEnum) {
                                         // FIRE_ONCE_NOW 》 trigger
-                                        JobTriggerPoolHelper.trigger(jobInfo.getId(), TriggerTypeEnum.MISFIRE, -1, null, null, null);
-                                        logger.debug(">>>>>>>>>>> xxl-job, schedule push trigger : jobId = " + jobInfo.getId() );
+                                        JobTriggerPoolHelper.trigger(bdcJobInfoDO.getId(), TriggerTypeEnum.MISFIRE, -1, null, null, null);
+                                        logger.debug(">>>>>>>>>>> xxl-job, schedule push trigger : jobId = " + bdcJobInfoDO.getId() );
                                     }
 
                                     // 2、fresh next
-                                    refreshNextValidTime(jobInfo, new Date());
+                                    refreshNextValidTime(bdcJobInfoDO, new Date());
 
-                                } else if (nowTime > jobInfo.getTriggerNextTime()) {
+                                } else if (nowTime > bdcJobInfoDO.getTriggerNextTime()) {
                                     // 2.2、trigger-expire < 5s：direct-trigger && make next-trigger-time
 
                                     // 1、trigger
-                                    JobTriggerPoolHelper.trigger(jobInfo.getId(), TriggerTypeEnum.CRON, -1, null, null, null);
-                                    logger.debug(">>>>>>>>>>> xxl-job, schedule push trigger : jobId = " + jobInfo.getId() );
+                                    JobTriggerPoolHelper.trigger(bdcJobInfoDO.getId(), TriggerTypeEnum.CRON, -1, null, null, null);
+                                    logger.debug(">>>>>>>>>>> xxl-job, schedule push trigger : jobId = " + bdcJobInfoDO.getId() );
 
                                     // 2、fresh next
-                                    refreshNextValidTime(jobInfo, new Date());
+                                    refreshNextValidTime(bdcJobInfoDO, new Date());
 
                                     // next-trigger-time in 5s, pre-read again
-                                    if (jobInfo.getTriggerStatus()==1 && nowTime + PRE_READ_MS > jobInfo.getTriggerNextTime()) {
+                                    if (bdcJobInfoDO.getTriggerStatus()==1 && nowTime + PRE_READ_MS > bdcJobInfoDO.getTriggerNextTime()) {
 
                                         // 1、make ring second
-                                        int ringSecond = (int)((jobInfo.getTriggerNextTime()/1000)%60);
+                                        int ringSecond = (int)((bdcJobInfoDO.getTriggerNextTime()/1000)%60);
 
                                         // 2、push time ring
-                                        pushTimeRing(ringSecond, jobInfo.getId());
+                                        pushTimeRing(ringSecond, bdcJobInfoDO.getId());
 
                                         // 3、fresh next
-                                        refreshNextValidTime(jobInfo, new Date(jobInfo.getTriggerNextTime()));
+                                        refreshNextValidTime(bdcJobInfoDO, new Date(bdcJobInfoDO.getTriggerNextTime()));
 
                                     }
 
@@ -127,21 +127,21 @@ public class JobScheduleHelper {
                                     // 2.3、trigger-pre-read：time-ring trigger && make next-trigger-time
 
                                     // 1、make ring second
-                                    int ringSecond = (int)((jobInfo.getTriggerNextTime()/1000)%60);
+                                    int ringSecond = (int)((bdcJobInfoDO.getTriggerNextTime()/1000)%60);
 
                                     // 2、push time ring
-                                    pushTimeRing(ringSecond, jobInfo.getId());
+                                    pushTimeRing(ringSecond, bdcJobInfoDO.getId());
 
                                     // 3、fresh next
-                                    refreshNextValidTime(jobInfo, new Date(jobInfo.getTriggerNextTime()));
+                                    refreshNextValidTime(bdcJobInfoDO, new Date(bdcJobInfoDO.getTriggerNextTime()));
 
                                 }
 
                             }
 
                             // 3、update trigger info
-                            for (JobInfo jobInfo: scheduleList) {
-                                XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleUpdate(jobInfo);
+                            for (BdcJobInfoDO bdcJobInfoDO : scheduleList) {
+                                XxlJobAdminConfig.getAdminConfig().getBdcJobInfoMapper().scheduleUpdate(bdcJobInfoDO);
                             }
 
                         } else {
@@ -246,7 +246,7 @@ public class JobScheduleHelper {
                         }
 
                         // ring trigger
-                        logger.debug(">>>>>>>>>>> xxl-job, time-ring beat : " + nowSecond + " = " + Arrays.asList(ringItemData) );
+//                        logger.debug(">>>>>>>>>>> xxl-job, time-ring beat : " + nowSecond + " = " + Arrays.asList(ringItemData) );
                         if (ringItemData.size() > 0) {
                             // do trigger
                             for (int jobId: ringItemData) {
@@ -270,17 +270,17 @@ public class JobScheduleHelper {
         ringThread.start();
     }
 
-    private void refreshNextValidTime(JobInfo jobInfo, Date fromTime) throws Exception {
-        Date nextValidTime = generateNextValidTime(jobInfo, fromTime);
+    private void refreshNextValidTime(BdcJobInfoDO bdcJobInfoDO, Date fromTime) throws Exception {
+        Date nextValidTime = generateNextValidTime(bdcJobInfoDO, fromTime);
         if (nextValidTime != null) {
-            jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
-            jobInfo.setTriggerNextTime(nextValidTime.getTime());
+            bdcJobInfoDO.setTriggerLastTime(bdcJobInfoDO.getTriggerNextTime());
+            bdcJobInfoDO.setTriggerNextTime(nextValidTime.getTime());
         } else {
-            jobInfo.setTriggerStatus(0);
-            jobInfo.setTriggerLastTime(0);
-            jobInfo.setTriggerNextTime(0);
+            bdcJobInfoDO.setTriggerStatus(0);
+            bdcJobInfoDO.setTriggerLastTime(0);
+            bdcJobInfoDO.setTriggerNextTime(0);
             logger.warn(">>>>>>>>>>> xxl-job, refreshNextValidTime fail for job: jobId={}, scheduleType={}, scheduleConf={}",
-                    jobInfo.getId(), jobInfo.getScheduleType(), jobInfo.getScheduleConf());
+                    bdcJobInfoDO.getId(), bdcJobInfoDO.getScheduleType(), bdcJobInfoDO.getScheduleConf());
         }
     }
 
@@ -356,13 +356,13 @@ public class JobScheduleHelper {
 
 
     // ---------------------- tools ----------------------
-    public static Date generateNextValidTime(JobInfo jobInfo, Date fromTime) throws Exception {
-        ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(jobInfo.getScheduleType(), null);
+    public static Date generateNextValidTime(BdcJobInfoDO bdcJobInfoDO, Date fromTime) throws Exception {
+        ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(bdcJobInfoDO.getScheduleType(), null);
         if (ScheduleTypeEnum.CRON == scheduleTypeEnum) {
-            Date nextValidTime = new CronExpression(jobInfo.getScheduleConf()).getNextValidTimeAfter(fromTime);
+            Date nextValidTime = new CronExpression(bdcJobInfoDO.getScheduleConf()).getNextValidTimeAfter(fromTime);
             return nextValidTime;
         } else if (ScheduleTypeEnum.FIX_RATE == scheduleTypeEnum /*|| ScheduleTypeEnum.FIX_DELAY == scheduleTypeEnum*/) {
-            return new Date(fromTime.getTime() + Integer.valueOf(jobInfo.getScheduleConf())*1000 );
+            return new Date(fromTime.getTime() + Integer.valueOf(bdcJobInfoDO.getScheduleConf())*1000 );
         }
         return null;
     }

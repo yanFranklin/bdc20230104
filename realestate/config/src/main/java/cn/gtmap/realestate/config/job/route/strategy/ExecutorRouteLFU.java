@@ -22,7 +22,7 @@ public class ExecutorRouteLFU extends ExecutorRouter {
     private static ConcurrentMap<Integer, HashMap<String, Integer>> jobLfuMap = new ConcurrentHashMap<Integer, HashMap<String, Integer>>();
     private static long CACHE_VALID_TIME = 0;
 
-    public String route(int jobId, List<String> addressList) {
+    public String route(int jobId, List<String> addresslist) {
 
         // cache clear
         if (System.currentTimeMillis() > CACHE_VALID_TIME) {
@@ -38,15 +38,15 @@ public class ExecutorRouteLFU extends ExecutorRouter {
         }
 
         // put new
-        for (String address: addressList) {
+        for (String address: addresslist) {
             if (!lfuItemMap.containsKey(address) || lfuItemMap.get(address) >1000000 ) {
-                lfuItemMap.put(address, new Random().nextInt(addressList.size()));  // 初始化时主动Random一次，缓解首次压力
+                lfuItemMap.put(address, new Random().nextInt(addresslist.size()));  // 初始化时主动Random一次，缓解首次压力
             }
         }
         // remove old
         List<String> delKeys = new ArrayList<>();
         for (String existKey: lfuItemMap.keySet()) {
-            if (!addressList.contains(existKey)) {
+            if (!addresslist.contains(existKey)) {
                 delKeys.add(existKey);
             }
         }
@@ -73,8 +73,8 @@ public class ExecutorRouteLFU extends ExecutorRouter {
     }
 
     @Override
-    public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
-        String address = route(triggerParam.getJobId(), addressList);
+    public ReturnT<String> route(TriggerParam triggerParam, List<String> addresslist) {
+        String address = route(triggerParam.getJobId(), addresslist);
         return new ReturnT<String>(address);
     }
 

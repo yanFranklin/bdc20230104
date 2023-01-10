@@ -1,10 +1,10 @@
 package cn.gtmap.realestate.config.web.rest;
 
-import cn.gtmap.realestate.common.core.domain.job.JobGroup;
-import cn.gtmap.realestate.common.core.domain.job.JobUser;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDO;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobUserDO;
 import cn.gtmap.realestate.common.job.biz.model.ReturnT;
-import cn.gtmap.realestate.config.core.mapper.XxlJobGroupDao;
-import cn.gtmap.realestate.config.core.mapper.XxlJobUserDao;
+import cn.gtmap.realestate.config.core.mapper.BdcJobGroupMapper;
+import cn.gtmap.realestate.config.core.mapper.BdcJobUserMapper;
 import cn.gtmap.realestate.config.core.service.LoginService;
 import cn.gtmap.realestate.config.job.annotation.PermissionLimit;
 import cn.gtmap.realestate.config.job.util.I18nUtil;
@@ -30,16 +30,16 @@ import java.util.Map;
 public class UserController {
 
     @Resource
-    private XxlJobUserDao xxlJobUserDao;
+    private BdcJobUserMapper bdcJobUserMapper;
     @Resource
-    private XxlJobGroupDao xxlJobGroupDao;
+    private BdcJobGroupMapper bdcJobGroupMapper;
 
     @RequestMapping
     @PermissionLimit(adminuser = true)
     public String index(Model model) {
 
         // 执行器列表
-        List<JobGroup> groupList = xxlJobGroupDao.findAll();
+        List<BdcJobGroupDO> groupList = bdcJobGroupMapper.findAll();
         model.addAttribute("groupList", groupList);
 
         return "user/user.index";
@@ -53,12 +53,12 @@ public class UserController {
                                         String username, int role) {
 
         // page list
-        List<JobUser> list = xxlJobUserDao.pageList(start, length, username, role);
-        int list_count = xxlJobUserDao.pageListCount(start, length, username, role);
+        List<BdcJobUserDO> list = bdcJobUserMapper.pageList(start, length, username, role);
+        int list_count = bdcJobUserMapper.pageListCount(start, length, username, role);
 
         // filter
         if (list!=null && list.size()>0) {
-            for (JobUser item: list) {
+            for (BdcJobUserDO item: list) {
                 item.setPassword(null);
             }
         }
@@ -74,63 +74,63 @@ public class UserController {
     @RequestMapping("/add")
     @ResponseBody
     @PermissionLimit(adminuser = true)
-    public ReturnT<String> add(JobUser jobUser) {
+    public ReturnT<String> add(BdcJobUserDO bdcJobUserDO) {
 
         // valid username
-        if (!StringUtils.hasText(jobUser.getUsername())) {
+        if (!StringUtils.hasText(bdcJobUserDO.getUsername())) {
             return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("system_please_input")+I18nUtil.getString("user_username") );
         }
-        jobUser.setUsername(jobUser.getUsername().trim());
-        if (!(jobUser.getUsername().length()>=4 && jobUser.getUsername().length()<=20)) {
+        bdcJobUserDO.setUsername(bdcJobUserDO.getUsername().trim());
+        if (!(bdcJobUserDO.getUsername().length()>=4 && bdcJobUserDO.getUsername().length()<=20)) {
             return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("system_lengh_limit")+"[4-20]" );
         }
         // valid password
-        if (!StringUtils.hasText(jobUser.getPassword())) {
+        if (!StringUtils.hasText(bdcJobUserDO.getPassword())) {
             return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("system_please_input")+I18nUtil.getString("user_password") );
         }
-        jobUser.setPassword(jobUser.getPassword().trim());
-        if (!(jobUser.getPassword().length()>=4 && jobUser.getPassword().length()<=20)) {
+        bdcJobUserDO.setPassword(bdcJobUserDO.getPassword().trim());
+        if (!(bdcJobUserDO.getPassword().length()>=4 && bdcJobUserDO.getPassword().length()<=20)) {
             return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("system_lengh_limit")+"[4-20]" );
         }
         // md5 password
-        jobUser.setPassword(DigestUtils.md5DigestAsHex(jobUser.getPassword().getBytes()));
+        bdcJobUserDO.setPassword(DigestUtils.md5DigestAsHex(bdcJobUserDO.getPassword().getBytes()));
 
         // check repeat
-        JobUser existUser = xxlJobUserDao.loadByUserName(jobUser.getUsername());
+        BdcJobUserDO existUser = bdcJobUserMapper.loadByUserName(bdcJobUserDO.getUsername());
         if (existUser != null) {
             return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("user_username_repeat") );
         }
 
         // write
-        xxlJobUserDao.save(jobUser);
+        bdcJobUserMapper.save(bdcJobUserDO);
         return ReturnT.SUCCESS;
     }
 
     @RequestMapping("/update")
     @ResponseBody
     @PermissionLimit(adminuser = true)
-    public ReturnT<String> update(HttpServletRequest request, JobUser jobUser) {
+    public ReturnT<String> update(HttpServletRequest request, BdcJobUserDO bdcJobUserDO) {
 
         // avoid opt login seft
-        JobUser loginUser = (JobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
-        if (loginUser.getUsername().equals(jobUser.getUsername())) {
+        BdcJobUserDO loginUser = (BdcJobUserDO) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
+        if (loginUser.getUsername().equals(bdcJobUserDO.getUsername())) {
             return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("user_update_loginuser_limit"));
         }
 
         // valid password
-        if (StringUtils.hasText(jobUser.getPassword())) {
-            jobUser.setPassword(jobUser.getPassword().trim());
-            if (!(jobUser.getPassword().length()>=4 && jobUser.getPassword().length()<=20)) {
+        if (StringUtils.hasText(bdcJobUserDO.getPassword())) {
+            bdcJobUserDO.setPassword(bdcJobUserDO.getPassword().trim());
+            if (!(bdcJobUserDO.getPassword().length()>=4 && bdcJobUserDO.getPassword().length()<=20)) {
                 return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("system_lengh_limit")+"[4-20]" );
             }
             // md5 password
-            jobUser.setPassword(DigestUtils.md5DigestAsHex(jobUser.getPassword().getBytes()));
+            bdcJobUserDO.setPassword(DigestUtils.md5DigestAsHex(bdcJobUserDO.getPassword().getBytes()));
         } else {
-            jobUser.setPassword(null);
+            bdcJobUserDO.setPassword(null);
         }
 
         // write
-        xxlJobUserDao.update(jobUser);
+        bdcJobUserMapper.update(bdcJobUserDO);
         return ReturnT.SUCCESS;
     }
 
@@ -140,12 +140,12 @@ public class UserController {
     public ReturnT<String> remove(HttpServletRequest request, int id) {
 
         // avoid opt login seft
-        JobUser loginUser = (JobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
+        BdcJobUserDO loginUser = (BdcJobUserDO) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
         if (loginUser.getId() == id) {
             return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("user_update_loginuser_limit"));
         }
 
-        xxlJobUserDao.delete(id);
+        bdcJobUserMapper.delete(id);
         return ReturnT.SUCCESS;
     }
 
@@ -166,12 +166,12 @@ public class UserController {
         String md5Password = DigestUtils.md5DigestAsHex(password.getBytes());
 
         // update pwd
-        JobUser loginUser = (JobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
+        BdcJobUserDO loginUser = (BdcJobUserDO) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
 
         // do write
-        JobUser existUser = xxlJobUserDao.loadByUserName(loginUser.getUsername());
+        BdcJobUserDO existUser = bdcJobUserMapper.loadByUserName(loginUser.getUsername());
         existUser.setPassword(md5Password);
-        xxlJobUserDao.update(existUser);
+        bdcJobUserMapper.update(existUser);
 
         return ReturnT.SUCCESS;
     }

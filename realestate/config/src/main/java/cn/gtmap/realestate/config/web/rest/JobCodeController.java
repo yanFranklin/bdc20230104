@@ -1,11 +1,11 @@
 package cn.gtmap.realestate.config.web.rest;
 
-import cn.gtmap.realestate.common.core.domain.job.JobInfo;
-import cn.gtmap.realestate.common.core.domain.job.JobLogGlue;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobLogGlueDO;
 import cn.gtmap.realestate.common.job.biz.model.ReturnT;
 import cn.gtmap.realestate.common.job.glue.GlueTypeEnum;
-import cn.gtmap.realestate.config.core.mapper.XxlJobInfoDao;
-import cn.gtmap.realestate.config.core.mapper.XxlJobLogGlueDao;
+import cn.gtmap.realestate.config.core.mapper.BdcJobInfoMapper;
+import cn.gtmap.realestate.config.core.mapper.BdcJobLogGlueMapper;
 import cn.gtmap.realestate.config.job.util.I18nUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,30 +26,30 @@ import java.util.List;
 public class JobCodeController {
 	
 	@Resource
-	private XxlJobInfoDao xxlJobInfoDao;
+	private BdcJobInfoMapper bdcJobInfoMapper;
 	@Resource
-	private XxlJobLogGlueDao xxlJobLogGlueDao;
+	private BdcJobLogGlueMapper bdcJobLogGlueMapper;
 
 	@RequestMapping
 	public String index(HttpServletRequest request, Model model, int jobId) {
-		JobInfo jobInfo = xxlJobInfoDao.loadById(jobId);
-		List<JobLogGlue> jobLogGlues = xxlJobLogGlueDao.findByJobId(jobId);
+		BdcJobInfoDO bdcJobInfoDO = bdcJobInfoMapper.loadById(jobId);
+		List<BdcJobLogGlueDO> bdcJobLogGlueDOS = bdcJobLogGlueMapper.findByJobId(jobId);
 
-		if (jobInfo == null) {
+		if (bdcJobInfoDO == null) {
 			throw new RuntimeException(I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
 		}
-		if (GlueTypeEnum.BEAN == GlueTypeEnum.match(jobInfo.getGlueType())) {
+		if (GlueTypeEnum.BEAN == GlueTypeEnum.match(bdcJobInfoDO.getGlueType())) {
 			throw new RuntimeException(I18nUtil.getString("jobinfo_glue_gluetype_unvalid"));
 		}
 
 		// valid permission
-		JobInfoController.validPermission(request, jobInfo.getJobGroup());
+		JobInfoController.validPermission(request, bdcJobInfoDO.getJobGroup());
 
 		// Glue类型-字典
 		model.addAttribute("GlueTypeEnum", GlueTypeEnum.values());
 
-		model.addAttribute("jobInfo", jobInfo);
-		model.addAttribute("jobLogGlues", jobLogGlues);
+		model.addAttribute("jobInfo", bdcJobInfoDO);
+		model.addAttribute("jobLogGlues", bdcJobLogGlueDOS);
 		return "jobcode/jobcode.index";
 	}
 	
@@ -63,32 +63,32 @@ public class JobCodeController {
 		if (glueRemark.length()<4 || glueRemark.length()>100) {
 			return new ReturnT<String>(500, I18nUtil.getString("jobinfo_glue_remark_limit"));
 		}
-		JobInfo exists_jobInfo = xxlJobInfoDao.loadById(id);
-		if (exists_jobInfo == null) {
+		BdcJobInfoDO exists_Bdc_jobInfoDO = bdcJobInfoMapper.loadById(id);
+		if (exists_Bdc_jobInfoDO == null) {
 			return new ReturnT<String>(500, I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
 		}
 		
 		// update new code
-		exists_jobInfo.setGlueSource(glueSource);
-		exists_jobInfo.setGlueRemark(glueRemark);
-		exists_jobInfo.setGlueUpdatetime(new Date());
+		exists_Bdc_jobInfoDO.setGlueSource(glueSource);
+		exists_Bdc_jobInfoDO.setGlueRemark(glueRemark);
+		exists_Bdc_jobInfoDO.setGlueUpdatetime(new Date());
 
-		exists_jobInfo.setUpdateTime(new Date());
-		xxlJobInfoDao.update(exists_jobInfo);
+		exists_Bdc_jobInfoDO.setUpdatetime(new Date());
+		bdcJobInfoMapper.update(exists_Bdc_jobInfoDO);
 
 		// log old code
-		JobLogGlue jobLogGlue = new JobLogGlue();
-		jobLogGlue.setJobId(exists_jobInfo.getId());
-		jobLogGlue.setGlueType(exists_jobInfo.getGlueType());
-		jobLogGlue.setGlueSource(glueSource);
-		jobLogGlue.setGlueRemark(glueRemark);
+		BdcJobLogGlueDO bdcJobLogGlueDO = new BdcJobLogGlueDO();
+		bdcJobLogGlueDO.setJobId(exists_Bdc_jobInfoDO.getId());
+		bdcJobLogGlueDO.setGlueType(exists_Bdc_jobInfoDO.getGlueType());
+		bdcJobLogGlueDO.setGlueSource(glueSource);
+		bdcJobLogGlueDO.setGlueRemark(glueRemark);
 
-		jobLogGlue.setAddTime(new Date());
-		jobLogGlue.setUpdateTime(new Date());
-		xxlJobLogGlueDao.save(jobLogGlue);
+		bdcJobLogGlueDO.setAddTime(new Date());
+		bdcJobLogGlueDO.setUpdatetime(new Date());
+		bdcJobLogGlueMapper.save(bdcJobLogGlueDO);
 
 		// remove code backup more than 30
-		xxlJobLogGlueDao.removeOld(exists_jobInfo.getId(), 30);
+		bdcJobLogGlueMapper.removeOld(exists_Bdc_jobInfoDO.getId(), 30);
 
 		return ReturnT.SUCCESS;
 	}

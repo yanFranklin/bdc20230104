@@ -12,8 +12,8 @@ import java.util.List;
 public class ExecutorRouteFirst extends ExecutorRouter {
 
     @Override
-    public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList){
-        return new ReturnT<String>(addressList.get(0));
+    public ReturnT<String> route(TriggerParam triggerParam, List<String> addresslist){
+        return new ReturnT<String>(addresslist.get(0));
     }
 
 }

@@ -1,7 +1,7 @@
 package cn.gtmap.realestate.config.job.thread;
 
 
-import cn.gtmap.realestate.common.core.domain.job.JobLog;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobLogDO;
 import cn.gtmap.realestate.common.job.biz.model.HandleCallbackParam;
 import cn.gtmap.realestate.common.job.biz.model.ReturnT;
 import cn.gtmap.realestate.common.job.util.DateUtil;
@@ -77,19 +77,20 @@ public class JobCompleteHelper {
 					try {
 						// 任务结果丢失处理：调度记录停留在 "运行中" 状态超过10min，且对应执行器心跳注册失败不在线，则将本地调度主动标记失败；
 						Date losedTime = DateUtil.addMinutes(new Date(), -10);
-						List<Long> losedJobIds  = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findLostJobIds(losedTime);
+
+						List<Long> losedJobIds  = XxlJobAdminConfig.getAdminConfig().getBdcJobLogMapper().findLostJobIds(losedTime);
 
 						if (losedJobIds!=null && losedJobIds.size()>0) {
 							for (Long logId: losedJobIds) {
 
-								JobLog jobLog = new JobLog();
-								jobLog.setId(logId);
+								BdcJobLogDO bdcJobLogDO = new BdcJobLogDO();
+								bdcJobLogDO.setId(logId);
 
-								jobLog.setHandleTime(new Date());
-								jobLog.setHandleCode(ReturnT.FAIL_CODE);
-								jobLog.setHandleMsg( I18nUtil.getString("joblog_lost_fail") );
+								bdcJobLogDO.setHandleTime(new Date());
+								bdcJobLogDO.setHandleCode(ReturnT.FAIL_CODE);
+								bdcJobLogDO.setHandleMsg( I18nUtil.getString("joblog_lost_fail") );
 
-								XxlJobCompleter.updateHandleInfoAndFinish(jobLog);
+								XxlJobCompleter.updateHandleInfoAndFinish(bdcJobLogDO);
 							}
 
 						}
@@ -154,7 +155,7 @@ public class JobCompleteHelper {
 
 	private ReturnT<String> callback(HandleCallbackParam handleCallbackParam) {
 		// valid log item
-		JobLog log = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().load(handleCallbackParam.getLogId());
+		BdcJobLogDO log = XxlJobAdminConfig.getAdminConfig().getBdcJobLogMapper().load(handleCallbackParam.getLogId());
 		if (log == null) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "log item not found.");
 		}
