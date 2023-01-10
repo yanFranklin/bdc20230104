@@ -3,8 +3,8 @@ info:
   component: Realestate Config Application
 
 app:
-  center: http://192.168.2.99:8000/eureka/
-  oauth: http://192.168.2.99:8002/account
+  center: http://192.168.2.70:8000/eureka/
+  oauth: http://192.168.2.70:8030/account
   security:
     moduleAuthPath: http://account/account
     ignores: /image/**,/css/**,/js/**,/webjars/**,/realestate-config/rest/v1.0/dysjZbPz/print
@@ -20,29 +20,65 @@ app:
 
 spring:
   rabbitmq:
-    host: 192.168.0.60
+    host: 192.168.2.72
     port: 5672
     username: guest
     password: guest
   redis:
     port: 6379
-    host: 192.168.0.60
+    host: 192.168.2.72
   datasource:
-      url: jdbc:oracle:thin:@192.168.2.86:1521/orcl
-      username: bdcdj_hefei
-      password: e/lWYHJj7d9rXmgsItIxLw2oWP4XasfqoDXA0AKNYHgeSJQK8IKgU8/+ia1ax4mr9ki4QZbrQrCW9WMkHDOPAA==
-      publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK8ev+xi3qANIZpQGhndeKtc2EOlsPd48VIhphnl3OoOKqynJuQo7qZrJekk8iqXHgvze3bnFrFyTtf3vxGIamsCAwEAAQ==
+      url: jdbc:oracle:thin:@192.168.2.111:1521/orcl
+      username: bdcdj_pz
+      password: WAZyOcKhvgDjnBbP0C70W3jkWKgpudwUsLH0ojka0XYZVrKr6bRgWyaPtoFAdJr1m025jullQJj0Q7h3JdJLVQ==
+      publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIkhcbmyW8IgYViVU/4dKr+FUy0P9mSYhYLIgtlf2arzKI0ohb6/H0aUf4zWsW+GSRwECGmQbSKzOplzfeSELqUCAwEAAQ==
   profiles:
       include: config  #引入配置文件 application-config.yml
   http:
     multipart:
       max-file-size: 500MB
       max-request-size: 1000MB
+  freemarker:
+    charset: UTF-8
+    request-context-attribute: request
+    settings:
+      number_format: 0.##########
+    suffix: .ftl
+    templateLoaderPath: classpath:/templates/
+  mail:
+    from: 3024059395@qq.com
+    host: smtp.qq.com
+    password: Vivad0ADDA
+    port: 25
+    properties:
+      mail:
+        smtp:
+          auth: true
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+          starttls:
+            enable: true
+            required: true
+    username: 3024059395@qq.com
+#  mvc:
+#    servlet:
+#      load-on-startup: 0
+#    static-path-pattern: /static/**
+#  web:
+#    resources:
+#      static-locations: classpath:/static/
+
+
 
 management:
   security:
     enabled: true
   context-path: /xxl-job-admin
+  health:
+    mail:
+      enabled: false
+#  server:
+#    base-path: /actuator
 
 endpoints:
   enabled: true
@@ -51,6 +87,9 @@ endpoints:
 
 server:
   port: ${port:8557}
+#  servlet:
+#    context-path: /xxl-job-admin
+
 
 logging:
   level:

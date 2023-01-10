@@ -28,8 +28,10 @@ import cn.gtmap.realestate.common.core.service.feign.init.BdcXmFeignService;
 import cn.gtmap.realestate.common.core.support.mybatis.mapper.EntityMapper;
 import cn.gtmap.realestate.common.core.vo.accept.ui.BdcYczfVO;
 import cn.gtmap.realestate.common.util.*;
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -40,6 +42,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -328,6 +331,7 @@ public class BdcYczfServiceImpl implements BdcYczfService {
         Map<String, Object> map = new HashMap<>(3);
         map.put("ittPartyJrnlNo", UUIDGenerator.generate16());
         map.put("pyOrdrNo", bdcSlSfssDdxxDO.getDsfddbh());
+        map.put("refNo", bdcSlSfssDdxxDO.getCkh());
         map.put("tAmt", bdcSlSfssDdxxDO.getDdje());
         LOGGER.info("调用政融支付平台支付成功通知接口，请求参数：{}", map.toString());
         Object response = exchangeInterfaceFeignService.requestInterface("zr_posPaySuccess", map);
@@ -420,6 +424,226 @@ public class BdcYczfServiceImpl implements BdcYczfService {
             }
         }
         return CommonResponse.fail("调用政融支付平台退款结果查询返回值为空");
+    }
+
+    /**
+     * 建总行商场MIS接口 5.1 消费交易
+     */
+    @Override
+    public Object posYhkzf(String gzlslid, String qlrlb) {
+        if(StringUtils.isAnyBlank(gzlslid, qlrlb)){
+            throw new AppException(ErrorCode.MISSING_ARG, "缺失参数：工作流实例ID或权利人类别");
+        }
+        Map<String, Object> resultMap = Maps.newHashMap();
+        PosInputDTO input = new PosInputDTO();
+        // 交易指令： 01 消费交易
+        input.setTransType("01");
+        BdcSlSfssDdxxDO bdcSlSfssDdxxDO = queryBdcSlSfssDdxx(gzlslid, qlrlb);
+        if (Objects.nonNull(bdcSlSfssDdxxDO)) {
+            input.setTransAmount(getPosJe(bdcSlSfssDdxxDO));
+            input.setMerOrderID(getPosZfddh(bdcSlSfssDdxxDO));
+        }
+        resultMap.put("input", getObjectToStr(input, "|"));
+        return resultMap;
+    }
+
+    /**
+     * 建总行商场MIS接口 5.8 广开聚合支付被扫交易
+     */
+    @Override
+    public Object posFkmzf(String gzlslid, String qlrlb, String fkm) {
+        if(StringUtils.isAnyBlank(gzlslid, qlrlb, fkm)){
+            throw new AppException(ErrorCode.MISSING_ARG, "缺失参数：工作流实例ID或权利人类别或付款码");
+        }
+        Map<String, Object> resultMap = Maps.newHashMap();
+        PosInputDTO input = new PosInputDTO();
+        // 交易指令： 92 广开聚合支付被扫交易
+        input.setTransType("92");
+        BdcSlSfssDdxxDO bdcSlSfssDdxxDO = queryBdcSlSfssDdxx(gzlslid, qlrlb);
+        if (Objects.nonNull(bdcSlSfssDdxxDO)) {
+            input.setTransAmount(getPosJe(bdcSlSfssDdxxDO));
+            input.setMerOrderID(getPosZfddh(bdcSlSfssDdxxDO));
+        }
+        input.setLongQRPay(fkm);
+        resultMap.put("input", getObjectToStr(input, "|"));
+        return resultMap;
+    }
+
+    /**
+     * 建总行商场MIS接口 5.2 当日撤销交易
+     */
+    @Override
+    public Object posYhkcx(String gzlslid, String qlrlb) {
+        if(StringUtils.isAnyBlank(gzlslid, qlrlb)){
+            throw new AppException(ErrorCode.MISSING_ARG, "缺失参数：工作流实例ID或权利人类别");
+        }
+        Map<String, Object> resultMap = Maps.newHashMap();
+        PosInputDTO input = new PosInputDTO();
+        // 交易指令： 02 当日撤销交易
+        input.setTransType("02");
+        BdcSlSfssDdxxDO bdcSlSfssDdxxDO = queryBdcSlSfssDdxx(gzlslid, qlrlb);
+        if (Objects.nonNull(bdcSlSfssDdxxDO)) {
+            input.setTransAmount(getPosJe(bdcSlSfssDdxxDO));
+            input.setOldPostrace(bdcSlSfssDdxxDO.getJypzh());
+        }
+        resultMap.put("input", getObjectToStr(input, "|"));
+        return resultMap;
+    }
+
+    /**
+     * 建总行商场MIS接口 5.3 退货交易
+     */
+    @Override
+    public Object posYhktk(String gzlslid, String qlrlb) {
+        if(StringUtils.isAnyBlank(gzlslid, qlrlb)){
+            throw new AppException(ErrorCode.MISSING_ARG, "缺失参数：工作流实例ID或权利人类别");
+        }
+        Map<String, Object> resultMap = Maps.newHashMap();
+        PosInputDTO input = new PosInputDTO();
+        // 交易指令： 03 退货交易
+        input.setTransType("03");
+        BdcSlSfssDdxxDO bdcSlSfssDdxxDO = queryBdcSlSfssDdxx(gzlslid, qlrlb);
+        if (Objects.nonNull(bdcSlSfssDdxxDO)) {
+            input.setTransAmount(getPosJe(bdcSlSfssDdxxDO));
+            // 原交易检索号(OldHostTrace) 12 位。对应参考号字段
+            input.setOldHostTrace(bdcSlSfssDdxxDO.getCkh());
+            input.setOldTransDate(DateUtil.format(bdcSlSfssDdxxDO.getDdscsj(), "MMdd"));
+            input.setMerOrderID(getPosZfddh(bdcSlSfssDdxxDO));
+        }
+        resultMap.put("input", getObjectToStr(input, "|"));
+        return resultMap;
+    }
+
+    /**
+     * 建总行商场MIS接口 5.10 广开聚合支付退货交易
+     */
+    @Override
+    public Object posFkmtk(String gzlslid, String qlrlb) {
+        if(StringUtils.isAnyBlank(gzlslid, qlrlb)){
+            throw new AppException(ErrorCode.MISSING_ARG, "缺失参数：工作流实例ID或权利人类别");
+        }
+        Map<String, Object> resultMap = Maps.newHashMap();
+        PosInputDTO input = new PosInputDTO();
+        // 交易指令： 94 广开聚合支付退货交易
+        input.setTransType("94");
+        BdcSlSfssDdxxDO bdcSlSfssDdxxDO = queryBdcSlSfssDdxx(gzlslid, qlrlb);
+        if (Objects.nonNull(bdcSlSfssDdxxDO)) {
+            input.setTransAmount(getPosJe(bdcSlSfssDdxxDO));
+            input.setMerOrderID(getPosZfddh(bdcSlSfssDdxxDO));
+        }
+        resultMap.put("input", getObjectToStr(input, "|"));
+        return resultMap;
+    }
+
+    /**
+     * 建总行商场MIS接口 5.7 重打印交易
+     */
+    @Override
+    public Object posCdxp(String gzlslid, String qlrlb) {
+        if(StringUtils.isAnyBlank(gzlslid, qlrlb)){
+            throw new AppException(ErrorCode.MISSING_ARG, "缺失参数：工作流实例ID或权利人类别");
+        }
+        Map<String, Object> resultMap = Maps.newHashMap();
+        PosInputDTO input = new PosInputDTO();
+        // 交易指令： 61 重打印交易
+        input.setTransType("61");
+        BdcSlSfssDdxxDO bdcSlSfssDdxxDO = queryBdcSlSfssDdxx(gzlslid, qlrlb);
+        if (Objects.nonNull(bdcSlSfssDdxxDO)) {
+            input.setOldPostrace(bdcSlSfssDdxxDO.getJypzh());
+        }
+        resultMap.put("input", getObjectToStr(input, "|"));
+        return resultMap;
+    }
+
+    @Override
+    public void posSaveJyxx(String gzlslid, String qlrlb, String output) {
+        if (StringUtils.isAnyBlank(gzlslid, qlrlb, output)) {
+            throw new AppException(ErrorCode.MISSING_ARG, "缺少参数：工作流实例ID或权利人类别或POS交易返回参数");
+        }
+        LOGGER.info("保存POS交易返回参数信息{}", output);
+        output = output + "|" + gzlslid;
+        String[] split = output.split("\\|");
+        int i = 0;
+        PosOutputDTO posOutputDTO = new PosOutputDTO();
+        for (Field field : PosOutputDTO.class.getDeclaredFields()) {
+            field.setAccessible(true);
+            try {
+                field.set(posOutputDTO, split[i]);
+            } catch (IllegalAccessException e) {
+                LOGGER.error("POS交易返回参数信息转换失败", e);
+            }
+            i++;
+        }
+        LOGGER.info("保存POS支付成功交易参数信息{}", JSONObject.toJSONString(posOutputDTO));
+        // 交易成功的返回码为00
+        if (Objects.nonNull(posOutputDTO) && "00".equals(posOutputDTO.getRspCode())) {
+            BdcSlSfssDdxxDO bdcSlSfssDdxxDO = queryBdcSlSfssDdxx(gzlslid, qlrlb);
+            bdcSlSfssDdxxDO.setCkh(posOutputDTO.getHostTrace());
+            bdcSlSfssDdxxDO.setJypzh(posOutputDTO.getPosTraceNum());
+            bdcSlSfssDdxxService.updateBdcSlSfssDdxx(bdcSlSfssDdxxDO);
+        }
+    }
+
+    /**
+     * @description 获取POS机金额
+     * @author <a href="mailto:jinfei@gtmap.cn">jinfei</a>
+     * @date 2023/1/9 9:18
+     * @param bdcSlSfssDdxxDO
+     * @return String
+     */
+    private String getPosJe(BdcSlSfssDdxxDO bdcSlSfssDdxxDO) {
+        BigDecimal posJe = BigDecimal.valueOf(Optional.ofNullable(bdcSlSfssDdxxDO.getDdje()).orElse(0.00));
+        // 转pos传输金额
+        String transAmount = posJe.multiply(BigDecimal.valueOf(100)).toBigInteger().toString();
+        if (StringUtils.isNotBlank(transAmount) && transAmount.length() < 12) {
+            transAmount = StringUtils.substring("000000000000", 0, 12 - transAmount.length()) + transAmount;
+        } else {
+            transAmount = "000000000000";
+        }
+        return transAmount;
+    }
+
+    /**
+     * @description 获取POS支付订单号
+     * @author <a href="mailto:jinfei@gtmap.cn">jinfei</a>
+     * @date 2023/1/9 9:18
+     * @param bdcSlSfssDdxxDO
+     * @return String
+     */
+    private String getPosZfddh(BdcSlSfssDdxxDO bdcSlSfssDdxxDO) {
+        return bdcSlSfssDdxxDO.getDsfddbh();
+    }
+
+    /**
+     * @description 对象转str
+     * @author <a href="mailto:jinfei@gtmap.cn">jinfei</a>
+     * @date 2022/8/16 11:31
+     * @param obj
+     * @param split 分隔符
+     * @return java.lang.String
+     **/
+    private String getObjectToStr(Object obj, String split){
+        StringBuilder sb = new StringBuilder();
+        Class<?> clazz = obj.getClass();
+        int i = 0;
+        try {
+            for (Field field : clazz.getDeclaredFields()) {
+                field.setAccessible(true);
+                Object value = field.get(obj);
+                if (value == null) {
+                    value = "";
+                }
+                if (i == 0) {
+                    sb.append(value);
+                } else {
+                    sb.append(split).append(value);
+                }
+                i++;
+            }
+        } catch (IllegalAccessException e) {
+            throw new AppException("POS参数转换异常：" + e);
+        }
+        return sb.toString();
     }
 
     private void modifyHsxxSfxxAndDdxxZt(String gzlslid, String qlrlb, Integer zfzt, Integer ddzt){

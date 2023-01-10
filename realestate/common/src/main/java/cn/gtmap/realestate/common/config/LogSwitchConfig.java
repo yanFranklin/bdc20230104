@@ -31,9 +31,9 @@ public class LogSwitchConfig {
     }
 
     public LogSwitchConfig() {
-        this.springSwitch = EnvironmentConfig.getEnvironment().getProperty("log.spring-switch", Boolean.class, false);
-        this.logbackSwitch = EnvironmentConfig.getEnvironment().getProperty("log.logback-switch", Boolean.class, false);
-        this.mybatisSwitch = EnvironmentConfig.getEnvironment().getProperty("log.mybatis-switch", Boolean.class, false);
+        this.springSwitch = false;
+        this.logbackSwitch = false;
+        this.mybatisSwitch = false;
     }
 
     public boolean isSpringSwitch() {

@@ -1,10 +1,12 @@
 package cn.gtmap.realestate.config.job.thread;
 
 import cn.gtmap.realestate.common.core.domain.job.JobLogReport;
+import cn.gtmap.realestate.common.util.UUIDGenerator;
 import cn.gtmap.realestate.config.job.conf.XxlJobAdminConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.security.SecureRandom;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -79,7 +81,9 @@ public class JobLogReportHelper {
                                 jobLogReport.setSucCount(triggerDayCountSuc);
                                 jobLogReport.setFailCount(triggerDayCountFail);
                             }
-
+                            SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+                            secureRandom.setSeed(10000L);
+                            jobLogReport.setId(12);
                             // do refresh
                             int ret = XxlJobAdminConfig.getAdminConfig().getXxlJobLogReportDao().update(jobLogReport);
                             if (ret < 1) {

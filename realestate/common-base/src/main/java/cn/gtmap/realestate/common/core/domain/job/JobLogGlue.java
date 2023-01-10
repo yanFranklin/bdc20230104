@@ -1,11 +1,13 @@
 package cn.gtmap.realestate.common.core.domain.job;
 
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
  * xxl-job log for glue, used to track job code process
  * @author xuxueli 2016-5-19 17:57:46
  */
+@Table(name = "BDC_JOB_GLUE")
 public class JobLogGlue {
 	
 	private int id;

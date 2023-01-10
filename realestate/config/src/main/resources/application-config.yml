@@ -67,20 +67,29 @@ config:
     ##巢湖市
     340181: 2
 
-### xxl-job, access token
-### 调度中心通讯TOKEN [选填]：非空时启用；
-#xxl.job.accessToken=default_token
-#xxl.job.accessToken=
-
-### xxl-job, i18n (default is zh_CN, and you can choose "zh_CN", "zh_TC" and "en")
-### 调度中心国际化配置 [必填]： 默认为 "zh_CN"/中文简体, 可选范围为 "zh_CN"/中文简体, "zh_TC"/中文繁体 and "en"/英文；
-xxl.job.i18n=zh_CN
-
-## xxl-job, triggerpool max size
-## 调度线程池最大线程配置【必填】
-xxl.job.triggerpool.fast.max=200
-xxl.job.triggerpool.slow.max=100
-
-### xxl-job, log retention days
-### 调度中心日志表数据保存天数 [必填]：过期日志自动清理；限制大于等于7时生效，否则, 如-1，关闭自动清理功能；
-xxl.job.logretentiondays=30
+spring:
+  mail:
+    from: 3024059395@qq.com
+    host: smtp.qq.com
+    password: Vivad0ADDA
+    port: 25
+    properties:
+      mail:
+        smtp:
+          auth: true
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+          starttls:
+            enable: true
+            required: true
+    username: 3024059395@qq.com
+xxl:
+  job:
+    accessToken: ''
+    i18n: zh_CN
+    logretentiondays: 30
+    triggerpool:
+      fast:
+        max: 200
+      slow:
+        max: 100

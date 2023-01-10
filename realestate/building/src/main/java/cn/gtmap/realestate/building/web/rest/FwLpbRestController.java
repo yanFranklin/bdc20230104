@@ -187,14 +187,14 @@ public class FwLpbRestController extends BaseController implements LpbRestServic
                                                 @PathVariable("code") String code,
                                                 @RequestParam(name = "qjgldm", required = false) String qjgldm) {
         List<FwHsDO> fwHsDOS = fwHsService.queryFwycHsByIndexAndScmj(fwDcbIndex);
-        if (CollectionUtils.isNotEmpty(fwHsDOS)) {
+        FwLjzDO fwLjzDO = fwLjzService.queryLjzByFwDcbIndex(fwDcbIndex);
+        if (CollectionUtils.isNotEmpty(fwHsDOS) && Objects.nonNull(fwLjzDO)) {
             List<FwYchsDO> fwYchsDOList = new ArrayList<>();
             for (FwHsDO fwHsDO : fwHsDOS) {
                 FwYchsDO fwYchsDO = new FwYchsDO();
                 BeanUtils.copyProperties(fwHsDO,fwYchsDO);
                 fwYchsDOList.add(fwYchsDO);
             }
-            FwLjzDO fwLjzDO = fwLjzService.queryLjzByFwDcbIndex(fwDcbIndex);
             FwYchsResource fwYchsResouce = new FwYchsResource(fwYchsDOList);
             LpbResource lpbResource = new LpbResource(fwLjzDO, fwYchsResouce);
             return lpbResource.withCode(code).convertDTO();

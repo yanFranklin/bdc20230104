@@ -1,5 +1,6 @@
 package cn.gtmap.realestate.common.core.domain.job;
 
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -7,6 +8,7 @@ import java.util.Date;
  *
  * @author xuxueli  2016-1-12 18:25:49
  */
+@Table(name = "BDC_JOB_INFO")
 public class JobInfo {
 	
 	private int id;				// 主键ID

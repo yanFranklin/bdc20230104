@@ -5,58 +5,60 @@
 	
 	<resultMap id="XxlJobLogReport" type="cn.gtmap.realestate.common.core.domain.job.JobLogReport" >
 		<result column="id" property="id" />
-	    <result column="trigger_day" property="triggerDay" />
-		<result column="running_count" property="runningCount" />
-	    <result column="suc_count" property="sucCount" />
-	    <result column="fail_count" property="failCount" />
+	    <result column="triggerDay" property="triggerDay" />
+		<result column="runningCount" property="runningCount" />
+	    <result column="sucCount" property="sucCount" />
+	    <result column="failCount" property="failCount" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
 		t.id,
-		t.trigger_day,
-		t.running_count,
-		t.suc_count,
-		t.fail_count
+		t.triggerDay,
+		t.runningCount,
+		t.sucCount,
+		t.failCount
 	</sql>
 	
-	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogReport" useGeneratedKeys="true" keyProperty="id" >
-		INSERT INTO xxl_job_log_report (
-			trigger_day,
-			running_count,
-			suc_count,
-			fail_count
+	<insert id="save" parameterType="cn.gtmap.realestate.common.core.domain.job.JobLogReport" >
+		INSERT INTO bdc_job_log_report (
+		id,
+		triggerDay,
+		runningCount,
+		sucCount,
+		failCount
 		) VALUES (
+		#{id},
 			#{triggerDay},
 			#{runningCount},
 			#{sucCount},
 			#{failCount}
-		);
+		)
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID() 
 		</selectKey>-->
 	</insert>
 
 	<update id="update" >
-        UPDATE xxl_job_log_report
-        SET running_count = #{runningCount},
-        	suc_count = #{sucCount},
-        	fail_count = #{failCount}
-        WHERE trigger_day = #{triggerDay}
+        UPDATE bdc_job_log_report
+        SET runningCount = #{runningCount},
+			sucCount = #{sucCount},
+			failCount = #{failCount}
+        WHERE triggerDay = #{triggerDay}
     </update>
 
 	<select id="queryLogReport" resultMap="XxlJobLogReport">
-		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_log_report AS t
-		WHERE t.trigger_day between #{triggerDayFrom} and #{triggerDayTo}
-		ORDER BY t.trigger_day ASC
+		SELECT t.*
+		FROM bdc_job_log_report t
+		WHERE t.triggerDay between #{triggerDayFrom} and #{triggerDayTo}
+		ORDER BY t.triggerDay ASC
 	</select>
 
 	<select id="queryLogReportTotal" resultMap="XxlJobLogReport">
 		SELECT
-			SUM(running_count) running_count,
-			SUM(suc_count) suc_count,
-			SUM(fail_count) fail_count
-		FROM xxl_job_log_report AS t
+			SUM(runningCount) running_count,
+			SUM(sucCount) suc_count,
+			SUM(failCount) fail_count
+		FROM bdc_job_log_report  t
 	</select>
 
 </mapper>

@@ -75,4 +75,83 @@ public interface BdcYczfRestService {
      */
     @PostMapping("/realestate-accept/rest/v1.0/yczf/xstkjgcx")
     CommonResponse xstkjgcx(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb);
+
+    /**
+     * @description POS银行卡支付
+     * @author <a href="mailto:jinfei@gtmap.cn">jinfei</a>
+     * @date 2023/1/9 8:44
+     * @param gzlslid
+     * @param qlrlb
+     * @return Object
+     */
+    @PostMapping("/realestate-accept/rest/v1.0/yczf/pos/yhkzf")
+    Object posYhkzf(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb);
+
+    /**
+     * @description POS付款码支付
+     * @author <a href="mailto:jinfei@gtmap.cn">jinfei</a>
+     * @date 2023/1/9 8:44
+     * @param gzlslid
+     * @param qlrlb
+     * @param fkm
+     * @return Object
+     */
+    @PostMapping("/realestate-accept/rest/v1.0/yczf/pos/fkmzf")
+    Object posFkmzf(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb, @RequestParam(value = "fkm") String fkm);
+
+    /**
+     * @description POS银行卡撤销
+     * @author <a href="mailto:jinfei@gtmap.cn">jinfei</a>
+     * @date 2023/1/9 8:44
+     * @param gzlslid
+     * @param qlrlb
+     * @return Object
+     */
+    @PostMapping("/realestate-accept/rest/v1.0/yczf/pos/yhkcx")
+    Object posYhkcx(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb);
+
+    /**
+     * @description POS银行卡退款
+     * @author <a href="mailto:jinfei@gtmap.cn">jinfei</a>
+     * @date 2023/1/9 8:44
+     * @param gzlslid
+     * @param qlrlb
+     * @return Object
+     */
+    @PostMapping("/realestate-accept/rest/v1.0/yczf/pos/yhktk")
+    Object posYhktk(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb);
+
+    /**
+     * @description POS付款码退款
+     * @author <a href="mailto:jinfei@gtmap.cn">jinfei</a>
+     * @date 2023/1/9 8:44
+     * @param gzlslid
+     * @param qlrlb
+     * @return Object
+     */
+    @PostMapping("/realestate-accept/rest/v1.0/yczf/pos/fkmtk")
+    Object posFkmtk(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb);
+
+    /**
+     * @description POS重打小票
+     * @author <a href="mailto:jinfei@gtmap.cn">jinfei</a>
+     * @date 2023/1/9 8:44
+     * @param gzlslid
+     * @param qlrlb
+     * @return Object
+     */
+    @PostMapping("/realestate-accept/rest/v1.0/yczf/pos/cdxp")
+    Object posCdxp(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb);
+
+    /**
+     * @description POS保存交易信息
+     * @author <a href="mailto:jinfei@gtmap.cn">jinfei</a>
+     * @date 2023/1/9 8:44
+     * @param gzlslid
+     * @param qlrlb
+     * @param output
+     * @return void
+     */
+    @PostMapping("/realestate-accept/rest/v1.0/yczf/pos/savejyxx")
+    void posSaveJyxx(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb, @RequestParam(value = "output") String output);
 }

@@ -95,4 +95,84 @@ public class BdcYczfRestController extends BaseController implements BdcYczfRest
     public CommonResponse xstkjgcx(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb) {
         return bdcYczfService.xstkjgcx(gzlslid, qlrlb);
     }
+
+    @Override
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "POS银行卡支付", notes = "POS银行卡支付")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "gzlslid", value = "工作流实例id", required = true, dataType = "String", paramType = "param"),
+            @ApiImplicitParam(name = "qlrlb", value = "权利人类别", required = true, dataType = "String", paramType = "param"),
+    })
+    public Object posYhkzf(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb) {
+        return bdcYczfService.posYhkzf(gzlslid, qlrlb);
+    }
+
+    @Override
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "POS付款码支付", notes = "POS付款码支付")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "gzlslid", value = "工作流实例id", required = true, dataType = "String", paramType = "param"),
+            @ApiImplicitParam(name = "qlrlb", value = "权利人类别", required = true, dataType = "String", paramType = "param"),
+            @ApiImplicitParam(name = "fkm", value = "付款码", required = true, dataType = "String", paramType = "param"),
+    })
+    public Object posFkmzf(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb, @RequestParam(value = "fkm") String fkm) {
+        return bdcYczfService.posFkmzf(gzlslid, qlrlb, fkm);
+    }
+
+    @Override
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "POS银行卡撤销", notes = "POS银行卡撤销")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "gzlslid", value = "工作流实例id", required = true, dataType = "String", paramType = "param"),
+            @ApiImplicitParam(name = "qlrlb", value = "权利人类别", required = true, dataType = "String", paramType = "param"),
+    })
+    public Object posYhkcx(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb) {
+        return bdcYczfService.posYhkcx(gzlslid, qlrlb);
+    }
+
+    @Override
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "POS银行卡退款", notes = "POS银行卡退款")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "gzlslid", value = "工作流实例id", required = true, dataType = "String", paramType = "param"),
+            @ApiImplicitParam(name = "qlrlb", value = "权利人类别", required = true, dataType = "String", paramType = "param"),
+    })
+    public Object posYhktk(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb) {
+        return bdcYczfService.posYhktk(gzlslid, qlrlb);
+    }
+
+    @Override
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "POS付款码退款", notes = "POS付款码退款")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "gzlslid", value = "工作流实例id", required = true, dataType = "String", paramType = "param"),
+            @ApiImplicitParam(name = "qlrlb", value = "权利人类别", required = true, dataType = "String", paramType = "param"),
+    })
+    public Object posFkmtk(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb) {
+        return bdcYczfService.posFkmtk(gzlslid, qlrlb);
+    }
+
+
+    @Override
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "POS重打小票", notes = "POS重打小票")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "gzlslid", value = "工作流实例id", required = true, dataType = "String", paramType = "param"),
+            @ApiImplicitParam(name = "qlrlb", value = "权利人类别", required = true, dataType = "String", paramType = "param"),
+    })
+    public Object posCdxp(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb) {
+        return bdcYczfService.posCdxp(gzlslid, qlrlb);
+    }
+
+    @Override
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "POS保存交易信息", notes = "POS保存交易信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "gzlslid", value = "工作流实例id", required = true, dataType = "String", paramType = "param"),
+            @ApiImplicitParam(name = "qlrlb", value = "权利人类别", required = true, dataType = "String", paramType = "param"),
+            @ApiImplicitParam(name = "output", value = "POS交易返回参数", required = true, dataType = "String", paramType = "param"),
+    })
+    public void posSaveJyxx(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb, @RequestParam(value = "output") String output) {
+        bdcYczfService.posSaveJyxx(gzlslid, qlrlb, output);
+    }
 }

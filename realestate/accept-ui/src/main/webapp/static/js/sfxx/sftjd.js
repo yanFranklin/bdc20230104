@@ -602,34 +602,39 @@ function printSftjd(qlrlb) {
 //银行卡支付 POS机
 function yhkzf(qlrlb) {
     console.log('银行卡支付');
-    // 获取5.1 消费交易参数
+    /**
+     * 建总行商场MIS接口 5.1 消费交易
+     */
     addModel();
     $.ajax({
         type: "POST",
-        url: getContextPath() + "/sf/getXfjyxxcs" + "?gzlslid=" + processInsId + "&qlrlb=" + qlrlb,
+        url: getContextPath() + "/rest/v1.0/yczf/pos/yhkzf" + "?gzlslid=" + processInsId + "&qlrlb=" + qlrlb,
         contentType: "application/json;charset=utf-8",
         success: function (data) {
-            if (data) {
+            if (isNotBlank(data) && isNotBlank(data.input)) {
                 var input = data.input;
-                var output = "";
-                try {
-                    output = callKeeperClient(input);
-                }
-                catch (e) {
-                    removeModal();
-                    warnMsg("调用pos机异常！");
-                }
+                var output = callKeeperClient(input);
                 if (isNotBlank(output)) {
-                    layer.alert('收费成功！', {title: '提示'},function() {
-                        console.log('确认');
-                        saveJyxx(qlrlb, output, processInsId);
-                    });
+                    var outputArr = output.split('|');
+                    // 00表示交易成功
+                    if (outputArr[1] == '00') {
+                        ityzl_SHOW_SUCCESS_LAYER(outputArr[2]);
+                        // 保存POS交易成功信息
+                        saveJyxx(output, qlrlb);
+                        // POS支付成功推送
+                        poszfcg(qlrlb);
+                    } else {
+                        ityzl_SHOW_WARN_LAYER(outputArr[2]);
+                    }
+                } else {
+                    ityzl_SHOW_WARN_LAYER("POS交易异常！");
                 }
+            } else {
+                ityzl_SHOW_WARN_LAYER("未获取到POS消费交易参数！");
             }
         }, error: function (e) {
             removeModal();
             delAjaxErrorMsg(e);
-
         }, complete: function () {
             removeModal();
         }
@@ -653,29 +658,35 @@ function fkmzf(qlrlb) {
                 ityzl_SHOW_INFO_LAYER("请输入付款码!");
                 return false;
             }
-            // 获取5.8 广开聚合支付被扫交易接口参数
+            /**
+             * 建总行商场MIS接口 5.8 广开聚合支付被扫交易
+             */
             addModel();
             $.ajax({
                 type: "POST",
-                url: getContextPath() + "/sf/gkjhZfJyCs" + "?gzlslid=" + processInsId + "&qlrlb=" + qlrlb + "&fkm=" + fkm,
+                url: getContextPath() + "/rest/v1.0/yczf/pos/fkmzf" + "?gzlslid=" + processInsId + "&qlrlb=" + qlrlb + "&fkm=" + fkm,
                 contentType: "application/json;charset=utf-8",
                 success: function (data) {
-                    if (data) {
+                    if (data && isNotBlank(data.input)) {
                         var input = data.input;
-                        var output = "";
-                        try {
-                            output = callKeeperClient(input);
-                        }
-                        catch (e) {
-                            removeModal();
-                            warnMsg("调用pos机异常！");
-                        }
+                        var output = callKeeperClient(input);
                         if (isNotBlank(output)) {
-                            layer.alert('收费成功！', {title: '提示'},function() {
-                                console.log('确认');
+                            var outputArr = output.split('|');
+                            // 00表示交易成功
+                            if (outputArr[1] == '00') {
+                                ityzl_SHOW_SUCCESS_LAYER(outputArr[2]);
+                                // 保存POS交易成功信息
+                                saveJyxx(output, qlrlb);
+                                // POS支付成功推送
                                 poszfcg(qlrlb);
-                            });
+                            } else {
+                                ityzl_SHOW_WARN_LAYER(outputArr[2]);
+                            }
+                        } else {
+                            ityzl_SHOW_WARN_LAYER("POS交易异常！");
                         }
+                    } else {
+                        ityzl_SHOW_WARN_LAYER("未获取到POS消费交易参数！");
                     }
                 }, error: function (e) {
                     delAjaxErrorMsg(e);
@@ -698,24 +709,21 @@ function fkmzf(qlrlb) {
 //银行卡撤销 POS机
 function yhkcx(qlrlb) {
     console.log('银行卡撤销');
-    // 获取5.2 当日撤销交易接口参数
+    /**
+     * 建总行商场MIS接口 5.2 当日撤销交易
+     */
     addModel();
     $.ajax({
         type: "POST",
-        url: getContextPath() + "/sf/drcxjyCs" + "?gzlslid=" + processInsId + "&qlrlb=" + qlrlb,
+        url: getContextPath() + "/rest/v1.0/yczf/pos/yhkcx" + "?gzlslid=" + processInsId + "&qlrlb=" + qlrlb,
         contentType: "application/json;charset=utf-8",
         success: function (data) {
-            if (data) {
+            if (isNotBlank(data) && isNotBlank(data.input)) {
                 var input = data.input;
-                var output = "";
-                try {
-                    output = callKeeperClient(input);
-                }
-                catch (e) {
-                    removeModal();
-                    warnMsg("调用pos机异常！");
-                }
+                var output = callKeeperClient(input);
                 console.log('银行卡撤销', output);
+            } else {
+                ityzl_SHOW_WARN_LAYER("未获取到POS银行卡撤销参数！");
             }
         }, error: function (e) {
             delAjaxErrorMsg(e);
@@ -728,24 +736,21 @@ function yhkcx(qlrlb) {
 //银行卡退款 POS机
 function yhktk(qlrlb) {
     console.log('银行卡退款');
-    // 获取5.3 退货交易接口参数
+    /**
+     * 建总行商场MIS接口 5.3 退货交易
+     */
     addModel();
     $.ajax({
         type: "POST",
-        url: getContextPath() + "/sf/tkjyCs" + "?gzlslid=" + processInsId + "&qlrlb=" + qlrlb,
+        url: getContextPath() + "/rest/v1.0/yczf/pos/yhktk" + "?gzlslid=" + processInsId + "&qlrlb=" + qlrlb,
         contentType: "application/json;charset=utf-8",
         success: function (data) {
-            if (data) {
+            if (isNotBlank(data) && isNotBlank(data.input)) {
                 var input = data.input;
-                var output = "";
-                try {
-                    output = callKeeperClient(input);
-                }
-                catch (e) {
-                    removeModal();
-                    warnMsg("调用pos机异常！");
-                }
+                var output = callKeeperClient(input);
                 console.log('银行卡退款', output);
+            } else {
+                ityzl_SHOW_WARN_LAYER("未获取到POS银行卡退款参数！");
             }
         }, error: function (e) {
             delAjaxErrorMsg(e);
@@ -758,24 +763,21 @@ function yhktk(qlrlb) {
 //付款码退款 POS机
 function fkmtk(qlrlb) {
     console.log('付款码退款');
-    // 获取5.10 广开聚合支付退货交易参数
+    /**
+     * 建总行商场MIS接口 5.10 广开聚合支付退货交易
+     */
     addModel();
     $.ajax({
         type: "POST",
-        url: getContextPath() + "/sf/gkjhthjyCs" + "?gzlslid=" + processInsId + "&qlrlb=" + qlrlb,
+        url: getContextPath() + "/rest/v1.0/yczf/pos/fkmtk" + "?gzlslid=" + processInsId + "&qlrlb=" + qlrlb,
         contentType: "application/json;charset=utf-8",
         success: function (data) {
-            if (data) {
+            if (isNotBlank(data) && isNotBlank(data.input)) {
                 var input = data.input;
-                var output = "";
-                try {
-                    output = callKeeperClient(input);
-                }
-                catch (e) {
-                    removeModal();
-                    warnMsg("调用pos机异常！");
-                }
+                var output = callKeeperClient(input);
                 console.log('付款码退款', output);
+            } else {
+                ityzl_SHOW_WARN_LAYER("未获取到POS付款码退款参数！");
             }
         }, error: function (e) {
             delAjaxErrorMsg(e);
@@ -792,20 +794,15 @@ function cdxp(qlrlb) {
     addModel();
     $.ajax({
         type: "POST",
-        url: getContextPath() + "/sf/rePrintJyCs" + "?gzlslid=" + processInsId + "&qlrlb=" + qlrlb,
+        url: getContextPath() + "/rest/v1.0/yczf/pos/cdxp" + "?gzlslid=" + processInsId + "&qlrlb=" + qlrlb,
         contentType: "application/json;charset=utf-8",
         success: function (data) {
-            if (data) {
+            if (isNotBlank(data) && isNotBlank(data.input)) {
                 var input = data.input;
-                var output = "";
-                try {
-                    output = callKeeperClient(input);
-                }
-                catch (e) {
-                    removeModal();
-                    warnMsg("调用pos机异常！");
-                }
+                var output = callKeeperClient(input);
                 console.log('重打小票', output);
+            } else {
+                ityzl_SHOW_WARN_LAYER("未获取到POS重打小票参数！");
             }
         }, error: function (e) {
             delAjaxErrorMsg(e);
@@ -816,11 +813,12 @@ function cdxp(qlrlb) {
 }
 
 //保存交易信息
-function saveJyxx(qlrlb, output, gzlslid) {
+function saveJyxx(output, qlrlb) {
+    output = encodeURI(output);
     addModel();
     $.ajax({
         type: "POST",
-        url: getContextPath() + "/sf/saveJyxx?qlrlb=" + qlrlb + "&gzlslid=" + gzlslid + "&output=" + output,
+        url: getContextPath() + "/rest/v1.0/yczf/pos/savejyxx?output=" + output + "&gzlslid=" + processInsId + "&qlrlb=" + qlrlb,
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             if (data) {
@@ -836,7 +834,13 @@ function saveJyxx(qlrlb, output, gzlslid) {
 
 // 调用pos机
 function callKeeperClient(input) {
-    var output = KeeperClient.misposTrans(input,"1,0,0,2");
+    var output = "";
+    try {
+        output = KeeperClient.misposTrans(input,"1,0,0,2");
+    } catch (e) {
+        removeModal();
+        ityzl_SHOW_WARN_LAYER("调用pos机异常！");
+    }
     return output;
 }
 

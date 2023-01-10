@@ -201,9 +201,9 @@ public class SlymController extends BaseController {
         }
         if (CommonConstantUtils.LCLX_PL.equals(xmlx)) {
             //批量流程一本证，权利类型不同的话，跳转受理批量组合页面
-            if(CollectionUtils.isNotEmpty(pllcybzGzldyidList)){
+            if(CollectionUtils.isNotEmpty(pllcybzGzldyidList) && StringUtils.isNotBlank(processDefKey) && pllcybzGzldyidList.contains(processDefKey)){
                 List<BdcXmDTO> bdcXmDTOList = bdcXmFeignService.listBdcXmBfxxByGzlslid(processInsId);
-                if(CollectionUtils.isNotEmpty(bdcXmDTOList) && bdcXmDTOList.get(0) != null && pllcybzGzldyidList.contains(bdcXmDTOList.get(0).getGzldyid())){
+                if(CollectionUtils.isNotEmpty(bdcXmDTOList)){
                     Set<Integer> qllxSet = new HashSet<>();
                     for(BdcXmDTO bdcxm : bdcXmDTOList) {
                         if(bdcxm.getQllx()!= null){

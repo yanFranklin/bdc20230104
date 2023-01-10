@@ -2,9 +2,12 @@ package cn.gtmap.realestate.common.core.domain.job;
 
 import org.springframework.util.StringUtils;
 
+import javax.persistence.Table;
+
 /**
  * @author xuxueli 2019-05-04 16:43:12
  */
+@Table(name = "BDC_JOB_USER")
 public class JobUser {
 	
 	private int id;

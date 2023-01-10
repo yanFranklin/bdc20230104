@@ -63,4 +63,76 @@ public interface BdcYczfService {
      * @return 退款结果（退款金额，退款时间）
      */
     CommonResponse xstkjgcx(String gzlslid, String qlrlb);
+
+    /**
+     * @description POS银行卡支付
+     * @author <a href="mailto:jinfei@gtmap.cn">jinfei</a>
+     * @date 2023/1/9 9:06
+     * @param gzlslid
+     * @param qlrlb
+     * @return Object
+     */
+    Object posYhkzf(String gzlslid, String qlrlb);
+
+    /**
+     * @description POS付款码支付
+     * @author <a href="mailto:jinfei@gtmap.cn">jinfei</a>
+     * @date 2023/1/9 9:06
+     * @param gzlslid
+     * @param qlrlb
+     * @param fkm
+     * @return Object
+     */
+    Object posFkmzf(String gzlslid, String qlrlb, String fkm);
+
+    /**
+     * @description POS银行卡撤销
+     * @author <a href="mailto:jinfei@gtmap.cn">jinfei</a>
+     * @date 2023/1/9 9:06
+     * @param gzlslid
+     * @param qlrlb
+     * @return Object
+     */
+    Object posYhkcx(String gzlslid, String qlrlb);
+
+    /**
+     * @description POS银行卡退款
+     * @author <a href="mailto:jinfei@gtmap.cn">jinfei</a>
+     * @date 2023/1/9 9:06
+     * @param gzlslid
+     * @param qlrlb
+     * @return Object
+     */
+    Object posYhktk(String gzlslid, String qlrlb);
+
+    /**
+     * @description POS付款码退款
+     * @author <a href="mailto:jinfei@gtmap.cn">jinfei</a>
+     * @date 2023/1/9 9:06
+     * @param gzlslid
+     * @param qlrlb
+     * @return Object
+     */
+    Object posFkmtk(String gzlslid, String qlrlb);
+
+    /**
+     * @description POS重打小票
+     * @author <a href="mailto:jinfei@gtmap.cn">jinfei</a>
+     * @date 2023/1/9 9:06
+     * @param gzlslid
+     * @param qlrlb
+     * @return Object
+     */
+    Object posCdxp(String gzlslid, String qlrlb);
+
+    /**
+     * @description POS保存交易信息
+     * @author <a href="mailto:jinfei@gtmap.cn">jinfei</a>
+     * @date 2023/1/9 9:06
+     * @param gzlslid
+     * @param qlrlb
+     * @param output
+     * @return void
+     */
+    void posSaveJyxx(String gzlslid, String qlrlb, String output);
 }

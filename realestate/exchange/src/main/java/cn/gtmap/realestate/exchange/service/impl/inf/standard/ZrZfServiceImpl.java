@@ -100,10 +100,22 @@ public class ZrZfServiceImpl {
     private String shdm;
 
     /**
+     * 政融支付pos支付接口，终端号
+     */
+    @Value("${zrzf.zfcg.zdh:}")
+    private String zdh;
+
+    /**
      * 政融支付公共字段： 发起方系统编号
      */
     @Value("${zrzf.payorder.ittpartystmid:}")
     private String fqfxtbh;
+
+    /**
+     * 政融支付公共字段： pos支付渠道代码
+     */
+    @Value("${zrzf.payorder.posPychnlcd:}")
+    private String posPychnlcd;
 
     @Autowired
     BdcZdFeignService zdFeignService;
@@ -122,6 +134,11 @@ public class ZrZfServiceImpl {
         LOGGER.info("政融生成支付订单参数{}", payMentInVo);
         if (payMentInVo == null) {
             return null;
+        }
+        // 为线下支付（POS、现金）时，设置支付渠道代码配置为zrzf.payorder.posPychnlcd
+        String onlnOflnIndCd = payMentInVo.getOnlnOflnIndCd();
+        if ("2".equals(onlnOflnIndCd) && StringUtils.isNotBlank(posPychnlcd)) {
+            payMentInVo.setPyChnlCd(posPychnlcd);
         }
         // 请求参数参与签名
         Set<String> requestSet = new HashSet<>();
@@ -258,10 +275,13 @@ public class ZrZfServiceImpl {
      * @description pos支付成功推送政融
      **/
     public PosPaySuccessVO posPaySuccess(PosPaySuccessQO posPaySuccessQo) {
-        LOGGER.info("pos支付成功推送政融参数{}", posPaySuccessQo);
         if(StringUtils.isNotBlank(shdm)){
             posPaySuccessQo.setMrchCd(shdm);
         }
+        if(StringUtils.isNotBlank(zdh)){
+            posPaySuccessQo.setTmnlNo(zdh);
+        }
+        LOGGER.info("pos支付成功推送政融参数{}", posPaySuccessQo);
         // 参与签名
         Set<String> set = new HashSet<>();
         String result = sendRequestToZr(posPaySuccessQo, set, set, posPaySuccessUrl);

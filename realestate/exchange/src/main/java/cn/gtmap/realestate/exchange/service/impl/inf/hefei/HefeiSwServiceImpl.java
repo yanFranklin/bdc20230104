@@ -191,6 +191,10 @@ public class HefeiSwServiceImpl {
                 }
                 MapUtils.getMap(param, "body").put("srfxxlb", srfList);
             }
+            if (param.get("tdcrj") != null) {
+                JSONObject tdcrj = (JSONObject) param.get("tdcrj");
+                MapUtils.getMap(param, "body").put("tdcrj", tdcrj);
+            }
             MapUtils.getMap(param, "body").put("sstpfjzs", param.get("sstpfjzs"));
             request.put("body", param.get("body"));
         }

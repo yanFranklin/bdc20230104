@@ -159,4 +159,121 @@ public class BdcYczfController extends BaseController {
         return this.bdcYczfFeignService.xstkjgcx(gzlslid, qlrlb);
     }
 
+    /**
+     * @description POS银行卡支付
+     * @author <a href="mailto:jinfei@gtmap.cn">jinfei</a>
+     * @date 2023/1/9 8:44
+     * @param gzlslid
+     * @param qlrlb
+     * @return Object
+     */
+    @PostMapping("/pos/yhkzf")
+    public Object posYhkzf(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb) {
+        if (StringUtils.isAnyBlank(gzlslid, qlrlb)) {
+            throw new AppException(ErrorCode.MISSING_ARG, "缺少参数：工作流实例ID或权利人类别");
+        }
+        return bdcYczfFeignService.posYhkzf(gzlslid, qlrlb);
+    }
+
+    /**
+     * @description POS付款码支付
+     * @author <a href="mailto:jinfei@gtmap.cn">jinfei</a>
+     * @date 2023/1/9 8:44
+     * @param gzlslid
+     * @param qlrlb
+     * @param fkm
+     * @return Object
+     */
+    @PostMapping("/pos/fkmzf")
+    public Object posFkmzf(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb, @RequestParam(value = "fkm") String fkm) {
+        if (StringUtils.isAnyBlank(gzlslid, qlrlb, fkm)) {
+            throw new AppException(ErrorCode.MISSING_ARG, "缺少参数：工作流实例ID或权利人类别或付款码");
+        }
+        return bdcYczfFeignService.posFkmzf(gzlslid, qlrlb, fkm);
+    }
+
+    /**
+     * @description POS银行卡撤销
+     * @author <a href="mailto:jinfei@gtmap.cn">jinfei</a>
+     * @date 2023/1/9 8:44
+     * @param gzlslid
+     * @param qlrlb
+     * @return Object
+     */
+    @PostMapping("/pos/yhkcx")
+    Object posYhkcx(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb) {
+        if (StringUtils.isAnyBlank(gzlslid, qlrlb)) {
+            throw new AppException(ErrorCode.MISSING_ARG, "缺少参数：工作流实例ID或权利人类别");
+        }
+        return bdcYczfFeignService.posYhkcx(gzlslid, qlrlb);
+    }
+
+    /**
+     * @description POS银行卡退款
+     * @author <a href="mailto:jinfei@gtmap.cn">jinfei</a>
+     * @date 2023/1/9 8:44
+     * @param gzlslid
+     * @param qlrlb
+     * @return Object
+     */
+    @ResponseBody
+    @PostMapping("/pos/yhktk")
+    Object posYhktk(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb) {
+        if (StringUtils.isAnyBlank(gzlslid, qlrlb)) {
+            throw new AppException(ErrorCode.MISSING_ARG, "缺少参数：工作流实例ID或权利人类别");
+        }
+        return bdcYczfFeignService.posYhktk(gzlslid, qlrlb);
+    }
+
+    /**
+     * @description POS付款码退款
+     * @author <a href="mailto:jinfei@gtmap.cn">jinfei</a>
+     * @date 2023/1/9 8:44
+     * @param gzlslid
+     * @param qlrlb
+     * @return Object
+     */
+    @ResponseBody
+    @PostMapping("/pos/fkmtk")
+    Object posFkmtk(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb) {
+        if (StringUtils.isAnyBlank(gzlslid, qlrlb)) {
+            throw new AppException(ErrorCode.MISSING_ARG, "缺少参数：工作流实例ID或权利人类别");
+        }
+        return bdcYczfFeignService.posFkmtk(gzlslid, qlrlb);
+    }
+
+    /**
+     * @description POS重打小票
+     * @author <a href="mailto:jinfei@gtmap.cn">jinfei</a>
+     * @date 2023/1/9 8:44
+     * @param gzlslid
+     * @param qlrlb
+     * @return Object
+     */
+    @ResponseBody
+    @PostMapping("/pos/cdxp")
+    Object posCdxp(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb) {
+        if (StringUtils.isAnyBlank(gzlslid, qlrlb)) {
+            throw new AppException(ErrorCode.MISSING_ARG, "缺少参数：工作流实例ID或权利人类别");
+        }
+        return bdcYczfFeignService.posCdxp(gzlslid, qlrlb);
+    }
+
+    /**
+     * @description POS保存交易信息
+     * @author <a href="mailto:jinfei@gtmap.cn">jinfei</a>
+     * @date 2023/1/9 8:44
+     * @param gzlslid
+     * @param qlrlb
+     * @param output
+     * @return CommonResponse
+     */
+    @ResponseBody
+    @PostMapping("/pos/savejyxx")
+    void posSaveJyxx(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb, @RequestParam(value = "output") String output) {
+        if (StringUtils.isAnyBlank(gzlslid, qlrlb, output)) {
+            throw new AppException(ErrorCode.MISSING_ARG, "缺少参数：工作流实例ID或权利人类别或POS交易返回参数");
+        }
+        bdcYczfFeignService.posSaveJyxx(gzlslid, qlrlb, output);
+    }
 }

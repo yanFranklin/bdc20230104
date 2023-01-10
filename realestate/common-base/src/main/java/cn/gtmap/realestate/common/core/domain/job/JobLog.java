@@ -1,11 +1,13 @@
 package cn.gtmap.realestate.common.core.domain.job;
 
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
  * xxl-job log, used to track trigger process
  * @author xuxueli  2015-12-19 23:19:09
  */
+@Table(name = "BDC_JOB_LOG")
 public class JobLog {
 	
 	private long id;

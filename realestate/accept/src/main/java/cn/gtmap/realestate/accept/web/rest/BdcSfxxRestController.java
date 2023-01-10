@@ -1,7 +1,6 @@
 package cn.gtmap.realestate.accept.web.rest;
 
 import cn.gtmap.realestate.accept.service.BdcSfxxService;
-import cn.gtmap.realestate.accept.service.PosService;
 import cn.gtmap.realestate.accept.web.BaseController;
 import cn.gtmap.realestate.common.core.domain.CommonResponse;
 import cn.gtmap.realestate.common.core.domain.accept.BdcSlSfxmDO;
@@ -37,9 +36,6 @@ public class BdcSfxxRestController extends BaseController implements BdcSfxxRest
 
     @Autowired
     BdcSfxxService bdcSfxxService;
-
-    @Autowired
-    PosService posService;
 
     @Override
     @ResponseStatus(HttpStatus.OK)
@@ -383,86 +379,4 @@ public class BdcSfxxRestController extends BaseController implements BdcSfxxRest
     public CommonResponse hqsp(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb) {
         return bdcSfxxService.hqsp(gzlslid, qlrlb);
     }
-
-    @Override
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "获取消费交易信息参数", notes = "获取消费交易信息参数")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "gzlslid", value = "工作流实例ID", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "qlrlb", value = "权利人类别", required = true, dataType = "String", paramType = "query"),
-    })
-    public Object getXfjyxxcs(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb) {
-        return posService.getXfjyxx(gzlslid, qlrlb);
-    }
-
-    @Override
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "保存交易信息", notes = "保存交易信息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "output", value = "pos机返回内容", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "gzlslid", value = "工作流实例ID", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "qlrlb", value = "权利人类别", required = true, dataType = "String", paramType = "query"),
-    })
-    public void saveJyxx(@RequestParam(value = "output") String output,
-                         @RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb) {
-        posService.saveJyxx(output, gzlslid, qlrlb);
-    }
-
-    @Override
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "广开聚合支付交易参数", notes = "广开聚合支付交易参数")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "gzlslid", value = "工作流实例ID", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "qlrlb", value = "权利人类别", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "fkm", value = "付款码", required = true, dataType = "String", paramType = "query"),
-    })
-    public Object gkjhZfJyCs(@RequestParam(value = "gzlslid") String gzlslid,
-                             @RequestParam(value = "qlrlb") String qlrlb,
-                             @RequestParam(value = "fkm") String fkm) {
-        return posService.gkjhZfJy(gzlslid, qlrlb, fkm);
-    }
-
-    @Override
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "当日撤销交易参数", notes = "当日撤销交易参数")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "gzlslid", value = "工作流实例ID", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "qlrlb", value = "权利人类别", required = true, dataType = "String", paramType = "query"),
-    })
-    public Object drcxjyCs(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb) {
-        return posService.drcxjy(gzlslid, qlrlb);
-    }
-
-    @Override
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "退货交易参数", notes = "退货交易参数")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "gzlslid", value = "工作流实例ID", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "qlrlb", value = "权利人类别", required = true, dataType = "String", paramType = "query"),
-    })
-    public Object thjyCs(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb) {
-        return posService.thjy(gzlslid, qlrlb);
-    }
-
-    @Override
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "广开聚合退货交易参数", notes = "广开聚合退货交易参数")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "gzlslid", value = "工作流实例ID", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "qlrlb", value = "权利人类别", required = true, dataType = "String", paramType = "query"),
-    })
-    public Object gkjhthjyCs(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb) {
-        return posService.gkjhthjy(gzlslid, qlrlb);
-    }
-
-    @Override
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "重打印参数", notes = "重打印参数")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "gzlslid", value = "工作流实例ID", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "qlrlb", value = "权利人类别", required = true, dataType = "String", paramType = "query"),
-    })
-    public Object rePrintJyCs(@RequestParam(value = "gzlslid") String gzlslid, @RequestParam(value = "qlrlb") String qlrlb) {
-        return posService.rePrintJy(gzlslid, qlrlb);
-    }
-    }
+}

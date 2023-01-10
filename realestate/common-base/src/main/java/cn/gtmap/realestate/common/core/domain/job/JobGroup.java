@@ -1,5 +1,6 @@
 package cn.gtmap.realestate.common.core.domain.job;
 
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -9,6 +10,7 @@ import java.util.List;
  * 执行器 表xxl_job_group 注册的执行器信息
  * Created by xuxueli on 16/9/30.
  */
+@Table(name = "BDC_JOB_GROUP")
 public class JobGroup {
 
     private int id;

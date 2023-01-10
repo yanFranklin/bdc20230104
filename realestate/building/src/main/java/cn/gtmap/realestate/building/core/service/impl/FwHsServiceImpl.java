@@ -222,7 +222,7 @@ public class FwHsServiceImpl extends InterfaceCodeBeanFactory implements FwHsSer
         if (StringUtils.isNotBlank(fwDcbIndex)) {
             Example example = new Example(FwHsDO.class);
             example.createCriteria().andEqualTo("fwDcbIndex", fwDcbIndex)
-                    .andEqualTo("scjzmj",0);
+                    .andEqualNvlTo("scjzmj",0,0);
             return entityMapper.selectByExample(example);
         }
         return null;

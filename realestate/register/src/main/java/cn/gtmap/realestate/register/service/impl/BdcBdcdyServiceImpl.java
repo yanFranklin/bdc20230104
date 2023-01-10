@@ -769,18 +769,18 @@ public class BdcBdcdyServiceImpl implements BdcBdcdyService{
             }
 
             // 计算分母乘积
-            int pro = 1;
+            BigDecimal pro = new BigDecimal(1);
             for (int fm : fmArr){
-                pro *= fm;
+                pro = new BigDecimal(fm).multiply(pro);
             }
 
             // 获取分子乘差和
-            int fzSum = 0;
+            BigDecimal fzSum = new BigDecimal(0);
             for (int j = 0; j < fzArr.length; j++){
-                fzSum = fzSum + (pro / fmArr[j]) * fzArr[j];
+                fzSum = fzSum.add(new BigDecimal(String.valueOf(pro.divide(new BigDecimal(fmArr[j])).multiply(new BigDecimal(fzArr[j])))));
             }
 
-            return fzSum == pro;
+            return fzSum.equals(pro);
         }else if (isAllInteger(qlblList)){
             int qlblSize = qlblList.size();
             int result = 0;

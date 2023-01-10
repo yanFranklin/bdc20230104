@@ -5,32 +5,32 @@
 	
 	<resultMap id="XxlJobLogGlue" type="cn.gtmap.realestate.common.core.domain.job.JobLogGlue" >
 		<result column="id" property="id" />
-	    <result column="job_id" property="jobId" />
-		<result column="glue_type" property="glueType" />
-	    <result column="glue_source" property="glueSource" />
-	    <result column="glue_remark" property="glueRemark" />
-	    <result column="add_time" property="addTime" />
-	    <result column="update_time" property="updateTime" />
+	    <result column="jobId" property="jobId" />
+		<result column="glueType" property="glueType" />
+	    <result column="glueSource" property="glueSource" />
+	    <result column="glueRemark" property="glueRemark" />
+	    <result column="addTime" property="addTime" />
+	    <result column="updateTime" property="updateTime" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
 		t.id,
-		t.job_id,
-		t.glue_type,
-		t.glue_source,
-		t.glue_remark,
-		t.add_time,
-		t.update_time
+		t.jobId,
+		t.glueType,
+		t.glueSource,
+		t.glueRemark,
+		t.addTime,
+		t.updateTime
 	</sql>
 	
-	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue" useGeneratedKeys="true" keyProperty="id" >
-		INSERT INTO xxl_job_logglue (
-			job_id,
-			glue_type,
-			glue_source,
-			glue_remark,
-			add_time,
-			update_time
+	<insert id="save" parameterType="cn.gtmap.realestate.common.core.domain.job.JobLogGlue" useGeneratedKeys="true" keyProperty="id" >
+		INSERT INTO bdc_job_logglue (
+		jobId,
+		glueType,
+		glueSource,
+		glueRemark,
+		addTime,
+		updateTime
 		) VALUES (
 			#{jobId},
 			#{glueType},
@@ -45,27 +45,27 @@
 	</insert>
 	
 	<select id="findByJobId" parameterType="java.lang.Integer" resultMap="XxlJobLogGlue">
-		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_logglue AS t
-		WHERE t.job_id = #{jobId}
+		SELECT t.*
+		FROM bdc_job_logglue t
+		WHERE t.jobId = #{jobId}
 		ORDER BY id DESC
 	</select>
 	
 	<delete id="removeOld" >
-		DELETE FROM xxl_job_logglue
+		DELETE FROM bdc_job_logglue
 		WHERE id NOT in(
 			SELECT id FROM(
-				SELECT id FROM xxl_job_logglue
-				WHERE job_id = #{jobId}
-				ORDER BY update_time desc
+				SELECT id FROM bdc_job_logglue
+				WHERE jobId = #{jobId}
+				ORDER BY updateTime desc
 -- 				LIMIT 0, #{limit}
 			) t1
-		) AND job_id = #{jobId}
+		) AND jobId = #{jobId}
 	</delete>
 	
 	<delete id="deleteByJobId" parameterType="java.lang.Integer" >
-		DELETE FROM xxl_job_logglue
-		WHERE job_id = #{jobId}
+		DELETE FROM bdc_job_logglue
+		WHERE jobId = #{jobId}
 	</delete>
 	
 </mapper>

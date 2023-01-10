@@ -82,6 +82,9 @@ public class BdcSlSfssDdxxDO {
     @ApiModelProperty(value = "合一支付缴费途径1.商业银行 2. 合一支付")
     private Integer hyzfjftj;
 
+    @ApiModelProperty(value = "交易凭证号")
+    private String jypzh;
+
     public String getJkm() {
         return jkm;
     }
@@ -250,6 +253,14 @@ public class BdcSlSfssDdxxDO {
         this.hyzfjftj = hyzfjftj;
     }
 
+    public String getJypzh() {
+        return jypzh;
+    }
+
+    public void setJypzh(String jypzh) {
+        this.jypzh = jypzh;
+    }
+
     @Override
     public String toString() {
         return "BdcSlSfssDdxxDO{" +
@@ -274,6 +285,7 @@ public class BdcSlSfssDdxxDO {
                 ", jkm='" + jkm + '\'' +
                 ", ddlx=" + ddlx +
                 ", hyzfjftj=" + hyzfjftj +
+                ", jypzh='" + jypzh + '\'' +
                 '}';
     }
 
