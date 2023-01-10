@@ -1,6 +1,6 @@
 package cn.gtmap.realestate.config.core.mapper;
 
-import cn.gtmap.realestate.common.core.domain.job.JobLogGlue;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobLogGlueDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -11,11 +11,11 @@ import java.util.List;
  * @author xuxueli 2016-5-19 18:04:56
  */
 @Mapper
-public interface XxlJobLogGlueDao {
+public interface BdcJobLogGlueMapper {
 	
-	public int save(JobLogGlue jobLogGlue);
+	public int save(BdcJobLogGlueDO bdcJobLogGlueDO);
 	
-	public List<JobLogGlue> findByJobId(@Param("jobId") int jobId);
+	public List<BdcJobLogGlueDO> findByJobId(@Param("jobId") int jobId);
 
 	public int removeOld(@Param("jobId") int jobId, @Param("limit") int limit);
 
