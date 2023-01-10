@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.gtmap.realestate.config.core.mapper.XxlJobLogDao">
+<mapper namespace="cn.gtmap.realestate.config.core.mapper.BdcJobLogMapper">
 	
-	<resultMap id="XxlJobLog" type="cn.gtmap.realestate.common.core.domain.job.JobLog" >
+	<resultMap id="XxlJobLog" type="cn.gtmap.realestate.common.core.domain.job.BdcJobLogDO" >
 		<result column="id" property="id" />
 
-		<result column="jobGroup" property="jobGroup" />
+		<result column="bdcJobGroupDO" property="bdcJobGroupDO" />
 		<result column="jobId" property="jobId" />
 
 		<result column="executorAddress" property="executorAddress" />
@@ -28,7 +28,7 @@
 
 	<sql id="Base_Column_List">
 		t.id,
-		t.jobGroup,
+		t.bdcJobGroupDO,
 		t.jobId,
 		t.executorAddress,
 		t.executorHandler,
@@ -48,8 +48,8 @@
 		SELECT t.*
 		FROM bdc_job_log t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="jobId==0 and jobGroup gt 0">
-				AND t.jobGroup = #{jobGroup}
+			<if test="jobId==0 and bdcJobGroupDO gt 0">
+				AND t.bdcJobGroupDO = #{bdcJobGroupDO}
 			</if>
 			<if test="jobId gt 0">
 				AND t.jobId = #{jobId}
@@ -83,8 +83,8 @@
 		SELECT count(1)
 		FROM bdc_job_log t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="jobId==0 and jobGroup gt 0">
-				AND t.jobGroup = #{jobGroup}
+			<if test="jobId==0 and bdcJobGroupDO gt 0">
+				AND t.bdcJobGroupDO = #{bdcJobGroupDO}
 			</if>
 			<if test="jobId gt 0">
 				AND t.jobId = #{jobId}
@@ -118,15 +118,15 @@
 	</select>
 
 	
-	<insert id="save" parameterType="cn.gtmap.realestate.common.core.domain.job.JobLog" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="cn.gtmap.realestate.common.core.domain.job.BdcJobLogDO" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO bdc_job_log (
-		jobGroup,
+		bdcJobGroupDO,
 		jobId,
 		triggerTime,
 		triggerCode,
 		handleCode
 		) VALUES (
-			#{jobGroup},
+			#{bdcJobGroupDO},
 			#{jobId},
 			#{triggerTime},
 			#{triggerCode},
@@ -189,8 +189,8 @@
 	<select id="findClearLogIds" resultType="long" >
 		select b.id, ROWNUM from (SELECT id FROM bdc_job_log
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="jobGroup gt 0">
-				AND jobGroup = #{jobGroup}
+			<if test="bdcJobGroupDO gt 0">
+				AND bdcJobGroupDO = #{bdcJobGroupDO}
 			</if>
 			<if test="jobId gt 0">
 				AND jobId = #{jobId}
@@ -203,8 +203,8 @@
 				SELECT id, ROWNUM FROM(
 				SELECT id FROM bdc_job_log t
 				<trim prefix="WHERE" prefixOverrides="AND | OR" >
-					<if test="jobGroup gt 0">
-						AND t.jobGroup = #{jobGroup}
+					<if test="bdcJobGroupDO gt 0">
+						AND t.bdcJobGroupDO = #{bdcJobGroupDO}
 					</if>
 					<if test="jobId gt 0">
 						AND t.jobId = #{jobId}
@@ -253,11 +253,11 @@
 			t.id
 		FROM
 			bdc_job_log t
-			LEFT JOIN bdc_job_registry t2 ON t.executorAddress = t2.registryValue
+			LEFT JOIN bdc_job_registry t2 ON t.executorAddress = t2.registryvalue
 		WHERE
 			t.triggerCode = 200
 				AND t.handleCode = 0
-		  AND to_char(t.triggerTime,'yyyy-MM-dd') <![CDATA[<=]]> #{losedTime}
+		  AND t.triggerTime <![CDATA[<=]]> to_date(#{losedTime}, 'yyyymmddhh24miss')
 				AND t2.id IS NULL
 	</select>
 	<!--

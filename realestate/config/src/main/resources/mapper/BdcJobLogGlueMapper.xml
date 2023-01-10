@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.gtmap.realestate.config.core.mapper.XxlJobLogGlueDao">
+<mapper namespace="cn.gtmap.realestate.config.core.mapper.BdcJobLogGlueMapper">
 	
-	<resultMap id="XxlJobLogGlue" type="cn.gtmap.realestate.common.core.domain.job.JobLogGlue" >
+	<resultMap id="XxlJobLogGlue" type="cn.gtmap.realestate.common.core.domain.job.BdcJobLogGlueDO" >
 		<result column="id" property="id" />
 	    <result column="jobId" property="jobId" />
 		<result column="glueType" property="glueType" />
 	    <result column="glueSource" property="glueSource" />
 	    <result column="glueRemark" property="glueRemark" />
 	    <result column="addTime" property="addTime" />
-	    <result column="updateTime" property="updateTime" />
+	    <result column="updatetime" property="updatetime" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -20,24 +20,24 @@
 		t.glueSource,
 		t.glueRemark,
 		t.addTime,
-		t.updateTime
+		t.updatetime
 	</sql>
 	
-	<insert id="save" parameterType="cn.gtmap.realestate.common.core.domain.job.JobLogGlue" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="cn.gtmap.realestate.common.core.domain.job.BdcJobLogGlueDO" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO bdc_job_logglue (
 		jobId,
 		glueType,
 		glueSource,
 		glueRemark,
 		addTime,
-		updateTime
+		updatetime
 		) VALUES (
 			#{jobId},
 			#{glueType},
 			#{glueSource},
 			#{glueRemark},
 			#{addTime},
-			#{updateTime}
+			#{updatetime}
 		);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID() 
@@ -57,7 +57,7 @@
 			SELECT id FROM(
 				SELECT id FROM bdc_job_logglue
 				WHERE jobId = #{jobId}
-				ORDER BY updateTime desc
+				ORDER BY updatetime desc
 -- 				LIMIT 0, #{limit}
 			) t1
 		) AND jobId = #{jobId}

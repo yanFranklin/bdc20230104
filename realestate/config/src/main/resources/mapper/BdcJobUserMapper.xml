@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.gtmap.realestate.config.core.mapper.XxlJobUserDao">
+<mapper namespace="cn.gtmap.realestate.config.core.mapper.BdcJobUserMapper">
 
-	<resultMap id="XxlJobUser" type="cn.gtmap.realestate.common.core.domain.job.JobUser" >
+	<resultMap id="XxlJobUser" type="cn.gtmap.realestate.common.core.domain.job.BdcJobUserDO" >
 		<result column="id" property="id" />
 		<result column="username" property="username" />
 	    <result column="password" property="password" />
@@ -53,7 +53,7 @@
 		WHERE t.username = #{username}
 	</select>
 
-	<insert id="save" parameterType="cn.gtmap.realestate.common.core.domain.job.JobUser" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="cn.gtmap.realestate.common.core.domain.job.BdcJobUserDO" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO bdc_job_user (
 			username,
 			password,
@@ -67,7 +67,7 @@
 		);
 	</insert>
 
-	<update id="update" parameterType="cn.gtmap.realestate.common.core.domain.job.JobUser" >
+	<update id="update" parameterType="cn.gtmap.realestate.common.core.domain.job.BdcJobUserDO" >
 		UPDATE bdc_job_user
 		SET
 			<if test="password != null and password != ''">

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gtmap.realestate.config.core.mapper.BdcJobRegistryMapper">
+	
+	<resultMap id="XxlJobRegistry" type="cn.gtmap.realestate.common.core.domain.job.BdcJobRegistryDO" >
+		<result column="id" property="id" />
+	    <result column="registrygroup" property="registrygroup" />
+	    <result column="registrykey" property="registrykey" />
+	    <result column="registryvalue" property="registryvalue" />
+		<result column="updatetime" property="updatetime" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		t.id,
+		t.registrygroup,
+		t.registrykey,
+		t.registryvalue,
+		t.updatetime
+	</sql>
+
+	<select id="findDead" parameterType="java.util.HashMap" resultType="java.lang.Integer" >
+		SELECT t.id
+		FROM bdc_job_registry t
+		<where>
+				  (sysdate + numtodsinterval(#{timeout},'second'))  >  updatetime
+		</where>
+	</select>
+	
+	<delete id="removeDead" parameterType="java.lang.Integer" >
+		DELETE FROM bdc_job_registry
+		WHERE id in
+		<foreach collection="ids" item="item" open="(" close=")" separator="," >
+			#{item}
+		</foreach>
+	</delete>
+
+	<select id="findAll" parameterType="java.util.HashMap" resultMap="XxlJobRegistry">
+		SELECT t.*
+		FROM bdc_job_registry t
+		<where>
+			(sysdate + numtodsinterval(#{timeout},'second')) > updatetime
+		</where>
+	</select>
+
+    <update id="registryUpdate" >
+        UPDATE bdc_job_registry
+        SET updatetime = #{updatetime}
+        WHERE registrygroup = #{registrygroup}
+          AND registrykey = #{registrykey}
+          AND registryvalue = #{registryvalue}
+    </update>
+
+    <insert id="registrySave" >
+        INSERT INTO bdc_job_registry( registrygroup , registrykey , registryvalue, updatetime)
+        VALUES( #{registrygroup}  , #{registrykey} , #{registryvalue}, #{updatetime})
+    </insert>
+
+	<delete id="registryDelete" >
+		DELETE FROM bdc_job_registry
+		WHERE registrygroup = #{registrygroup}
+			AND registrykey = #{registrykey}
+			AND registryvalue = #{registryvalue}
+	</delete>
+
+</mapper>
