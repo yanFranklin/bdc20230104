@@ -48,10 +48,10 @@ public interface XxlJobLogDao {
 									  @Param("jobId") int jobId,
 									  @Param("clearBeforeTime") Date clearBeforeTime,
 									  @Param("clearBeforeNum") int clearBeforeNum,
-									  @Param("pagesize") int pagesize);
+									  @Param("count") int count);
 	public int clearLog(@Param("logIds") List<Long> logIds);
 
-	public List<Long> findFailJobLogIds(@Param("pagesize") int pagesize);
+	public List<Long> findFailJobLogIds(@Param("count") int count);
 
 	public int updateAlarmStatus(@Param("logId") long logId,
 								 @Param("oldAlarmStatus") int oldAlarmStatus,

@@ -5,28 +5,30 @@
 	
 	<resultMap id="XxlJobRegistry" type="cn.gtmap.realestate.common.core.domain.job.JobRegistry" >
 		<result column="id" property="id" />
-	    <result column="registry_group" property="registryGroup" />
-	    <result column="registry_key" property="registryKey" />
-	    <result column="registry_value" property="registryValue" />
-		<result column="update_time" property="updateTime" />
+	    <result column="registryGroup" property="registryGroup" />
+	    <result column="registryKey" property="registryKey" />
+	    <result column="registryValue" property="registryValue" />
+		<result column="updateTime" property="updateTime" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
 		t.id,
-		t.registry_group,
-		t.registry_key,
-		t.registry_value,
-		t.update_time
+		t.registryGroup,
+		t.registryKey,
+		t.registryValue,
+		t.updateTime
 	</sql>
 
 	<select id="findDead" parameterType="java.util.HashMap" resultType="java.lang.Integer" >
-		SELECT id
-		FROM xxl_job_registry
-		WHERE update_time <![CDATA[ < ]]> DATE_ADD(#{nowTime},INTERVAL -#{timeout} SECOND)
+		SELECT t.id
+		FROM bdc_job_registry t
+		<where>
+				  (sysdate + numtodsinterval(#{timeout},'second'))  >  updateTime
+		</where>
 	</select>
 	
 	<delete id="removeDead" parameterType="java.lang.Integer" >
-		DELETE FROM xxl_job_registry
+		DELETE FROM bdc_job_registry
 		WHERE id in
 		<foreach collection="ids" item="item" open="(" close=")" separator="," >
 			#{item}
@@ -34,29 +36,31 @@
 	</delete>
 
 	<select id="findAll" parameterType="java.util.HashMap" resultMap="XxlJobRegistry">
-		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_registry AS t
-		WHERE t.update_time <![CDATA[ > ]]> DATE_ADD(#{nowTime},INTERVAL -#{timeout} SECOND)
+		SELECT t.*
+		FROM bdc_job_registry t
+		<where>
+			(sysdate + numtodsinterval(#{timeout},'second')) > updateTime
+		</where>
 	</select>
 
     <update id="registryUpdate" >
-        UPDATE xxl_job_registry
-        SET update_time = #{updateTime}
-        WHERE registry_group = #{registryGroup}
-          AND registry_key = #{registryKey}
-          AND registry_value = #{registryValue}
+        UPDATE bdc_job_registry
+        SET updateTime = #{updateTime}
+        WHERE registryGroup = #{registryGroup}
+          AND registryKey = #{registryKey}
+          AND registryValue = #{registryValue}
     </update>
 
     <insert id="registrySave" >
-        INSERT INTO xxl_job_registry( registry_group , registry_key , registry_value, update_time)
+        INSERT INTO bdc_job_registry( registryGroup , registryKey , registryValue, updateTime)
         VALUES( #{registryGroup}  , #{registryKey} , #{registryValue}, #{updateTime})
     </insert>
 
 	<delete id="registryDelete" >
-		DELETE FROM xxl_job_registry
-		WHERE registry_group = #{registryGroup}
-			AND registry_key = #{registryKey}
-			AND registry_value = #{registryValue}
+		DELETE FROM bdc_job_registry
+		WHERE registryGroup = #{registryGroup}
+			AND registryKey = #{registryKey}
+			AND registryValue = #{registryValue}
 	</delete>
 
 </mapper>

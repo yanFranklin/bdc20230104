@@ -1,6 +1,6 @@
 package cn.gtmap.realestate.config.core.mapper;
 
-import cn.gtmap.realestate.common.core.domain.job.LogReport;
+import cn.gtmap.realestate.common.core.domain.job.JobLogReport;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -14,13 +14,13 @@ import java.util.List;
 @Mapper
 public interface XxlJobLogReportDao {
 
-	public int save(LogReport logReport);
+	public int save(JobLogReport jobLogReport);
 
-	public int update(LogReport logReport);
+	public int update(JobLogReport jobLogReport);
 
-	public List<LogReport> queryLogReport(@Param("triggerDayFrom") Date triggerDayFrom,
-                                          @Param("triggerDayTo") Date triggerDayTo);
+	public List<JobLogReport> queryLogReport(@Param("triggerDayFrom") Date triggerDayFrom,
+                                             @Param("triggerDayTo") Date triggerDayTo);
 
-	public LogReport queryLogReportTotal();
+	public JobLogReport queryLogReportTotal();
 
 }
