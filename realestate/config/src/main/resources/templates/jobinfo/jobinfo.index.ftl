@@ -28,9 +28,9 @@
 	    		<div class="col-xs-3">
 	              	<div class="input-group">
 	                	<span class="input-group-addon">${I18n.jobinfo_field_jobgroup}</span>
-                		<select class="form-control" id="jobGroup" >
+                		<select class="form-control" id="bdcJobGroupDO" >
                 			<#list JobGroupList as group>
-                				<option value="${group.id}" <#if jobGroup==group.id>selected</#if> >${group.title}</option>
+                				<option value="${group.id}" <#if bdcJobGroupDO==group.id>selected</#if> >${group.title}</option>
                 			</#list>
 	                  	</select>
 	              	</div>
@@ -78,13 +78,13 @@
 				                <thead>
 					            	<tr>
 					            		<th name="id" >${I18n.jobinfo_field_id}</th>
-					                	<th name="jobGroup" >${I18n.jobinfo_field_jobgroup}</th>
+					                	<th name="bdcJobGroupDO" >${I18n.jobinfo_field_jobgroup}</th>
 					                  	<th name="jobDesc" >${I18n.jobinfo_field_jobdesc}</th>
                                         <th name="scheduleType" >${I18n.schedule_type}</th>
                                         <th name="glueType" >${I18n.jobinfo_field_gluetype}</th>
                                         <th name="executorParam" >${I18n.jobinfo_field_executorparam}</th>
 					                  	<th name="addTime" >addTime</th>
-					                  	<th name="updateTime" >updateTime</th>
+					                  	<th name="updatetime" >updatetime</th>
 					                  	<th name="author" >${I18n.jobinfo_field_author}</th>
 					                  	<th name="alarmEmail" >${I18n.jobinfo_field_alarmemail}</th>
 					                  	<th name="triggerStatus" >${I18n.system_status}</th>
@@ -119,9 +119,9 @@
 					<div class="form-group">
 						<label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_jobgroup}<font color="red">*</font></label>
 						<div class="col-sm-4">
-							<select class="form-control" name="jobGroup" >
+							<select class="form-control" name="bdcJobGroupDO" >
 		            			<#list JobGroupList as group>
-		            				<option value="${group.id}" <#if jobGroup==group.id>selected</#if> >${group.title}</option>
+		            				<option value="${group.id}" <#if bdcJobGroupDO==group.id>selected</#if> >${group.title}</option>
 		            			</#list>
 		                  	</select>
 						</div>
@@ -364,7 +364,7 @@ exit 0
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_jobgroup}<font color="red">*</font></label>
                         <div class="col-sm-4">
-                            <select class="form-control" name="jobGroup" >
+                            <select class="form-control" name="bdcJobGroupDO" >
                                 <#list JobGroupList as group>
                                     <option value="${group.id}" >${group.title}</option>
                                 </#list>
@@ -510,7 +510,7 @@ exit 0
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">${I18n.jobgroup_field_registryList}<font color="black">*</font></label>
                         <div class="col-sm-10">
-                            <textarea class="textarea form-control" name="addressList" placeholder="${I18n.jobinfo_opt_run_tips}" maxlength="512" style="height: 63px; line-height: 1.2;"></textarea>
+                            <textarea class="textarea form-control" name="addresslist" placeholder="${I18n.jobinfo_opt_run_tips}" maxlength="512" style="height: 63px; line-height: 1.2;"></textarea>
                         </div>
                     </div>
                     <hr>

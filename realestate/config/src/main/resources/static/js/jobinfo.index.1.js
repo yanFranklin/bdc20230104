@@ -82,7 +82,7 @@ $(function() {
 	                	}
 	                },
 	                {
-	                	"data": 'updateTime',
+	                	"data": 'updatetime',
 	                	"visible" : false,
 	                	"render": function ( data, type, row ) {
 	                		return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
@@ -276,7 +276,7 @@ $(function() {
             data : {
                 "id" : $("#jobTriggerModal .form input[name='id']").val(),
                 "executorParam" : $("#jobTriggerModal .textarea[name='executorParam']").val(),
-				"addressList" : $("#jobTriggerModal .textarea[name='addressList']").val()
+				"addresslist" : $("#jobTriggerModal .textarea[name='addresslist']").val()
             },
             dataType : "json",
             success : function(data){

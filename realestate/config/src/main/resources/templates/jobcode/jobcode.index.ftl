@@ -37,8 +37,8 @@
                         <ul class="nav navbar-nav">
                             <li class="active" ><a href="javascript:;">
                                 <span class="sr-only">(current)</span>
-                                【<#list GlueTypeEnum as item><#if item == jobInfo.glueType>${item.desc}</#if></#list>】
-                                ${jobInfo.jobDesc}
+                                【<#list GlueTypeEnum as item><#if item == bdcJobInfoDO.glueType>${item.desc}</#if></#list>】
+                                ${bdcJobInfoDO.jobDesc}
                             </a></li>
                         </ul>
                     </div>
@@ -49,14 +49,14 @@
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">${I18n.jobinfo_glue_rollback} <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li <#if jobLogGlues?exists && jobLogGlues?size gt 0 >style="display: none;"</#if> >
-                                        <a href="javascript:;" class="source_version" version="version_now" glueType="${jobInfo.glueType}" >
-                                            <#list GlueTypeEnum as item><#if item == jobInfo.glueType>${item.desc}</#if></#list>： ${jobInfo.glueRemark}
+                                    <li <#if bdcJobLogGlueDOS?exists && bdcJobLogGlueDOS?size gt 0 >style="display: none;"</#if> >
+                                        <a href="javascript:;" class="source_version" version="version_now" glueType="${bdcJobInfoDO.glueType}" >
+                                            <#list GlueTypeEnum as item><#if item == bdcJobInfoDO.glueType>${item.desc}</#if></#list>： ${bdcJobInfoDO.glueRemark}
                                         </a>
                                     </li>
-                                    <textarea id="version_now" style="display:none;" >${jobInfo.glueSource}</textarea>
-									<#if jobLogGlues?exists && jobLogGlues?size gt 0 >
-										<#list jobLogGlues as glue>
+                                    <textarea id="version_now" style="display:none;" >${bdcJobInfoDO.glueSource}</textarea>
+									<#if bdcJobLogGlueDOS?exists && bdcJobLogGlueDOS?size gt 0 >
+										<#list bdcJobLogGlueDOS as glue>
                                             <li>
                                                 <a href="javascript:;" class="source_version" version="version_${glue.id}" glueType="${glue.glueType}" >
                                                     <#list GlueTypeEnum as item><#if item == glue.glueType>${item.desc}</#if></#list>： ${glue.glueRemark}
@@ -124,23 +124,23 @@
     <#assign glueTypeModeSrc = "${request.contextPath}/static/plugins/codemirror/mode/clike/clike.js" />
     <#assign glueTypeIdeMode = "text/x-java" />
 
-    <#if jobInfo.glueType == "GLUE_GROOVY" >
+    <#if bdcJobInfoDO.glueType == "GLUE_GROOVY" >
         <#assign glueTypeModeSrc = "${request.contextPath}/static/plugins/codemirror/mode/clike/clike.js" />
         <#assign glueTypeIdeMode = "text/x-java" />
-    <#elseif jobInfo.glueType == "GLUE_SHELL" >
+    <#elseif bdcJobInfoDO.glueType == "GLUE_SHELL" >
         <#assign glueTypeModeSrc = "${request.contextPath}/static/plugins/codemirror/mode/shell/shell.js" />
         <#assign glueTypeIdeMode = "text/x-sh" />
-    <#elseif jobInfo.glueType == "GLUE_PYTHON" >
+    <#elseif bdcJobInfoDO.glueType == "GLUE_PYTHON" >
         <#assign glueTypeModeSrc = "${request.contextPath}/static/plugins/codemirror/mode/python/python.js" />
         <#assign glueTypeIdeMode = "text/x-python" />
-    <#elseif jobInfo.glueType == "GLUE_PHP" >
+    <#elseif bdcJobInfoDO.glueType == "GLUE_PHP" >
         <#assign glueTypeModeSrc = "${request.contextPath}/static/plugins/codemirror/mode/php/php.js" />
         <#assign glueTypeIdeMode = "text/x-php" />
         <#assign glueTypeModeSrc02 = "${request.contextPath}/static/plugins/codemirror/mode/clike/clike.js" />
-    <#elseif jobInfo.glueType == "GLUE_NODEJS" >
+    <#elseif bdcJobInfoDO.glueType == "GLUE_NODEJS" >
         <#assign glueTypeModeSrc = "${request.contextPath}/static/plugins/codemirror/mode/javascript/javascript.js" />
         <#assign glueTypeIdeMode = "text/javascript" />
-    <#elseif jobInfo.glueType == "GLUE_POWERSHELL" >
+    <#elseif bdcJobInfoDO.glueType == "GLUE_POWERSHELL" >
         <#assign glueTypeModeSrc = "${request.contextPath}/static/plugins/codemirror/mode/powershell/powershell.js" />
         <#assign glueTypeIdeMode = "powershell" />
     </#if>
@@ -155,7 +155,7 @@
 <script src="${request.contextPath}/static/plugins/codemirror/addon/hint/anyword-hint.js"></script>
 
 <script>
-var id = '${jobInfo.id}';
+var id = '${bdcJobInfoDO.id}';
 var ideMode = '${glueTypeIdeMode}';
 </script>
 <script src="${request.contextPath}/static/js/jobcode.index.1.js"></script>

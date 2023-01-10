@@ -36,14 +36,14 @@ $(function() {
 				"width":'30%'
 			},
 			{
-				"data": 'addressType',
+				"data": 'addresstype',
 				"width":'10%',
 				"visible" : true,
 				"render": function ( data, type, row ) {
-					if (row.addressType == 0) {
-						return I18n.jobgroup_field_addressType_0;
+					if (row.addresstype == 0) {
+						return I18n.jobgroup_field_addresstype_0;
 					} else {
-						return I18n.jobgroup_field_addressType_1;
+						return I18n.jobgroup_field_addresstype_1;
 					}
 				}
 			},
@@ -257,17 +257,17 @@ $(function() {
 		$("#addModal .form .form-group").removeClass("has-error");
 	});
 
-	// addressType change
-	$("#addModal input[name=addressType], #updateModal input[name=addressType]").click(function(){
-		var addressType = $(this).val();
-		var $addressList = $(this).parents("form").find("textarea[name=addressList]");
-		if (addressType == 0) {
-            $addressList.css("background-color", "#eee");	// 自动注册
-            $addressList.attr("readonly","readonly");
-			$addressList.val("");
+	// addresstype change
+	$("#addModal input[name=addresstype], #updateModal input[name=addresstype]").click(function(){
+		var addresstype = $(this).val();
+		var $addresslist = $(this).parents("form").find("textarea[name=addresslist]");
+		if (addresstype == 0) {
+            $addresslist.css("background-color", "#eee");	// 自动注册
+            $addresslist.attr("readonly","readonly");
+			$addresslist.val("");
 		} else {
-            $addressList.css("background-color", "white");
-			$addressList.removeAttr("readonly");
+            $addresslist.css("background-color", "white");
+			$addresslist.removeAttr("readonly");
 		}
 	});
 
@@ -281,10 +281,10 @@ $(function() {
 		$("#updateModal .form input[name='title']").val( row.title );
 
 		// 注册方式
-		$("#updateModal .form input[name='addressType']").removeAttr('checked');
-		$("#updateModal .form input[name='addressType'][value='"+ row.addressType +"']").click();
+		$("#updateModal .form input[name='addresstype']").removeAttr('checked');
+		$("#updateModal .form input[name='addresstype'][value='"+ row.addresstype +"']").click();
 		// 机器地址
-		$("#updateModal .form textarea[name='addressList']").val( row.addressList );
+		$("#updateModal .form textarea[name='addresslist']").val( row.addresslist );
 
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
