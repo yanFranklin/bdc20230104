@@ -8,7 +8,7 @@ import java.util.Date;
  * @author xuxueli 2016-5-19 17:57:46
  */
 @Table(name = "BDC_JOB_GLUE")
-public class JobLogGlue {
+public class BdcJobLogGlueDO {
 	
 	private int id;
 	private int jobId;				// 任务主键ID
@@ -16,7 +16,7 @@ public class JobLogGlue {
 	private String glueSource;
 	private String glueRemark;
 	private Date addTime;
-	private Date updateTime;
+	private Date updatetime;
 
 	public int getId() {
 		return id;
@@ -66,12 +66,12 @@ public class JobLogGlue {
 		this.addTime = addTime;
 	}
 
-	public Date getUpdateTime() {
-		return updateTime;
+	public Date getUpdatetime() {
+		return updatetime;
 	}
 
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
+	public void setUpdatetime(Date updatetime) {
+		this.updatetime = updatetime;
 	}
 
 }

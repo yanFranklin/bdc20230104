@@ -8,7 +8,7 @@ import java.util.Date;
  * @author xuxueli  2015-12-19 23:19:09
  */
 @Table(name = "BDC_JOB_LOG")
-public class JobLog {
+public class BdcJobLogDO {
 	
 	private long id;
 	

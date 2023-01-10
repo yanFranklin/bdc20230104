@@ -3,7 +3,7 @@ package cn.gtmap.realestate.common.core.domain.job;
 import javax.persistence.Table;
 import java.util.Date;
 @Table(name = "BDC_JOB_LOG_REPORT")
-public class JobLogReport {
+public class BdcJobLogReportDO {
 
     private int id;
 

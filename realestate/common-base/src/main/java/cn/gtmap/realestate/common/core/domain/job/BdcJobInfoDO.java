@@ -9,7 +9,7 @@ import java.util.Date;
  * @author xuxueli  2016-1-12 18:25:49
  */
 @Table(name = "BDC_JOB_INFO")
-public class JobInfo {
+public class BdcJobInfoDO {
 	
 	private int id;				// 主键ID
 	
@@ -17,7 +17,7 @@ public class JobInfo {
 	private String jobDesc;     // 调度任务描述信息 description
 	
 	private Date addTime;
-	private Date updateTime;
+	private Date updatetime;
 	
 	private String author;		// 负责人
 	private String alarmEmail;	// 报警邮件
@@ -77,12 +77,12 @@ public class JobInfo {
 		this.addTime = addTime;
 	}
 
-	public Date getUpdateTime() {
-		return updateTime;
+	public Date getUpdatetime() {
+		return updatetime;
 	}
 
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
+	public void setUpdatetime(Date updatetime) {
+		this.updatetime = updatetime;
 	}
 
 	public String getAuthor() {
