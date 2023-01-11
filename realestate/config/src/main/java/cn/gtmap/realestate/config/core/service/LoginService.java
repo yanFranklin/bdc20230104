@@ -1,7 +1,7 @@
 package cn.gtmap.realestate.config.core.service;
 
 import cn.gtmap.realestate.common.core.domain.job.BdcJobUserDO;
-import cn.gtmap.realestate.common.job.biz.model.ReturnT;
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 import cn.gtmap.realestate.config.core.mapper.BdcJobUserMapper;
 import cn.gtmap.realestate.config.job.util.CookieUtil;
 import cn.gtmap.realestate.config.job.util.I18nUtil;

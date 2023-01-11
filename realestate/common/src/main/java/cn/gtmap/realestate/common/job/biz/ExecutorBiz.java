@@ -1,6 +1,7 @@
 package cn.gtmap.realestate.common.job.biz;
 
 
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 import cn.gtmap.realestate.common.job.biz.model.*;
 
 /**

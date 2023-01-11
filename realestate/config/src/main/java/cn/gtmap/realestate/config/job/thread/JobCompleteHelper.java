@@ -3,7 +3,7 @@ package cn.gtmap.realestate.config.job.thread;
 
 import cn.gtmap.realestate.common.core.domain.job.BdcJobLogDO;
 import cn.gtmap.realestate.common.job.biz.model.HandleCallbackParam;
-import cn.gtmap.realestate.common.job.biz.model.ReturnT;
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 import cn.gtmap.realestate.common.job.util.DateUtil;
 import cn.gtmap.realestate.config.job.complete.XxlJobCompleter;
 import cn.gtmap.realestate.config.job.conf.XxlJobAdminConfig;

@@ -5,7 +5,7 @@ package cn.gtmap.realestate.common.job.biz.client;
 import cn.gtmap.realestate.common.job.biz.AdminBiz;
 import cn.gtmap.realestate.common.job.biz.model.HandleCallbackParam;
 import cn.gtmap.realestate.common.job.biz.model.RegistryParam;
-import cn.gtmap.realestate.common.job.biz.model.ReturnT;
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 import cn.gtmap.realestate.common.job.util.XxlJobRemotingUtil;
 
 import java.util.List;

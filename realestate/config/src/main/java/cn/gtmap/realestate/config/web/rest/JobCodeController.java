@@ -2,7 +2,7 @@ package cn.gtmap.realestate.config.web.rest;
 
 import cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO;
 import cn.gtmap.realestate.common.core.domain.job.BdcJobLogGlueDO;
-import cn.gtmap.realestate.common.job.biz.model.ReturnT;
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 import cn.gtmap.realestate.common.job.glue.GlueTypeEnum;
 import cn.gtmap.realestate.config.core.mapper.BdcJobInfoMapper;
 import cn.gtmap.realestate.config.core.mapper.BdcJobLogGlueMapper;

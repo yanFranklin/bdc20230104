@@ -1,6 +1,8 @@
 package cn.gtmap.realestate.common.core.service.rest.job;
 
 import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDO;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDTO;
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +29,35 @@ public interface BdcJobGroupRestService {
      * @return jobGroup
      */
     @PostMapping(value = "/realestate-config/rest/v1.0/job/group/save")
-    BdcJobGroupDO saveJobGroup(@RequestBody BdcJobGroupDO bdcJobGroupDO);
+    ReturnT<String> saveJobGroup(@RequestBody BdcJobGroupDO bdcJobGroupDO);
+
+    /**
+     * 更新执行器信息
+     * @author <a href="mailto:zxy@gtmap.cn">zxy</a>
+     * @param bdcJobGroupDO
+     * @return jobGroup
+     */
+    @PostMapping(value = "/realestate-config/rest/v1.0/job/group/update")
+    ReturnT<String> updateJobGroup(@RequestBody BdcJobGroupDO bdcJobGroupDO);
+
+
+    /**
+     * 删除 执行器
+     * @author <a href="mailto:zxy@gtmap.cn">zxy</a>
+     * @param id
+     * @return ReturnT
+     */
+    @PostMapping(value = "/realestate-config/rest/v1.0/job/group/remove")
+    ReturnT<String> removeJobGroup(@RequestParam(value = "id",required = false) Integer id);
+
+
+    /**
+     * 根据执行器id查询执行器信息
+     * @author <a href="mailto:zxy@gtmap.cn">zxy</a>
+     * @param id
+     * @return ReturnT
+     */
+    @PostMapping(value = "/realestate-config/rest/v1.0/job/group/loadById")
+    ReturnT<BdcJobGroupDTO> loadJobGroupById(@RequestParam(value = "id",required = false) Integer id);
 
 }

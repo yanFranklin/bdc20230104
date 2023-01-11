@@ -1,7 +1,7 @@
 package cn.gtmap.realestate.config.job.route;
 
 
-import cn.gtmap.realestate.common.job.biz.model.ReturnT;
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 import cn.gtmap.realestate.common.job.biz.model.TriggerParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

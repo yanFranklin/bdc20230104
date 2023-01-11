@@ -203,6 +203,7 @@ layui.use(['table','laytpl','laydate','layer', 'form'],function () {
      * 关闭弹出页面
      */
     window.closeWin = function(){
+        var index1=parent.layer;
         var index=parent.layer.getFrameIndex(window.name);
         parent.layer.close(index);
     };

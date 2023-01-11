@@ -3,7 +3,7 @@ package cn.gtmap.realestate.config.web.rest;
 import cn.gtmap.realestate.common.job.biz.AdminBiz;
 import cn.gtmap.realestate.common.job.biz.model.HandleCallbackParam;
 import cn.gtmap.realestate.common.job.biz.model.RegistryParam;
-import cn.gtmap.realestate.common.job.biz.model.ReturnT;
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 import cn.gtmap.realestate.common.job.util.GsonTool;
 import cn.gtmap.realestate.common.job.util.XxlJobRemotingUtil;
 import cn.gtmap.realestate.config.job.annotation.PermissionLimit;

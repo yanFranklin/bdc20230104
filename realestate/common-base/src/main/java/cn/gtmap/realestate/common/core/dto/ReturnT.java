@@ -1,10 +1,10 @@
-package cn.gtmap.realestate.common.job.biz.model;
+package cn.gtmap.realestate.common.core.dto;
 
 import java.io.Serializable;
 
 /**
- * common return
- * @author  2015-12-4 16:32:31
+ * 公共返回类
+ * @author  2022/01/01 15:12
  * @param <T>
  */
 public class ReturnT<T> implements Serializable {

@@ -1,10 +1,10 @@
 package cn.gtmap.realestate.config.job.alarm.impl;
 
 
-import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDO;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDTO;
 import cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO;
 import cn.gtmap.realestate.common.core.domain.job.BdcJobLogDO;
-import cn.gtmap.realestate.common.job.biz.model.ReturnT;
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 import cn.gtmap.realestate.config.job.alarm.JobAlarm;
 import cn.gtmap.realestate.config.job.conf.XxlJobAdminConfig;
 import cn.gtmap.realestate.config.job.util.I18nUtil;
@@ -50,7 +50,7 @@ public class EmailJobAlarm implements JobAlarm {
             }
 
             // email info
-            BdcJobGroupDO group = XxlJobAdminConfig.getAdminConfig().getBdcJobGroupMapper().load(Integer.valueOf(info.getJobGroup()));
+            BdcJobGroupDTO group = XxlJobAdminConfig.getAdminConfig().getBdcJobGroupMapper().load(Integer.valueOf(info.getJobGroup()));
             String personal = I18nUtil.getString("admin_name_full");
             String title = I18nUtil.getString("jobconf_monitor");
             String content = MessageFormat.format(loadEmailJobAlarmTemplate(),

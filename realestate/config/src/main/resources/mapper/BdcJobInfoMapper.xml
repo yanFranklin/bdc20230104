@@ -6,7 +6,7 @@
 	<resultMap id="XxlJobInfo" type="cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO" >
 		<result column="id" property="id" />
 
-		<result column="bdcJobGroupDO" property="bdcJobGroupDO" />
+		<result column="jobGroup" property="jobGroup" />
 	    <result column="jobDesc" property="jobDesc" />
 
 	    <result column="addTime" property="addTime" />
@@ -40,7 +40,7 @@
 
 	<sql id="Base_Column_List">
 		t.id,
-		t.bdcJobGroupDO,
+		t.bdcJobGroupDTO,
 		t.jobDesc,
 		t.addTime,
 		t.updatetime,
@@ -69,8 +69,8 @@
 		SELECT t.*
 		FROM bdc_job_info t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="bdcJobGroupDO gt 0">
-				AND t.bdcJobGroupDO = #{bdcJobGroupDO}
+			<if test="bdcJobGroupDTO gt 0">
+				AND t.bdcJobGroupDTO = #{bdcJobGroupDTO}
 			</if>
             <if test="triggerStatus gte 0">
                 AND t.triggerStatus = #{triggerStatus}
@@ -93,8 +93,8 @@
 		SELECT count(1)
 		FROM bdc_job_info t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="bdcJobGroupDO gt 0">
-				AND t.bdcJobGroupDO = #{bdcJobGroupDO}
+			<if test="jobGroup gt 0">
+				AND t.jobGroup = #{jobGroup}
 			</if>
             <if test="triggerStatus gte 0">
                 AND t.triggerStatus = #{triggerStatus}
@@ -113,7 +113,7 @@
 
 	<insert id="save" parameterType="cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO bdc_job_info (
-			bdcJobGroupDO,
+			bdcJobGroupDTO,
 			jobDesc,
 			addTime,
 			updatetime,
@@ -137,7 +137,7 @@
 			triggerLastTime,
 			triggerNextTime
 		) VALUES (
-			#{bdcJobGroupDO},
+			#{bdcJobGroupDTO},
 			#{jobDesc},
 			#{addTime},
 			#{updatetime},
@@ -176,7 +176,7 @@
 	<update id="update" parameterType="cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO" >
 		UPDATE bdc_job_info
 		SET
-			bdcJobGroupDO = #{bdcJobGroupDO},
+			bdcJobGroupDTO = #{bdcJobGroupDTO},
 			jobDesc = #{jobDesc},
 			updatetime = #{updatetime},
 			author = #{author},
@@ -210,7 +210,7 @@
 	<select id="getJobsByGroup" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT t.*
 		FROM bdc_job_info t
-		WHERE t.bdcJobGroupDO = #{bdcJobGroupDO}
+		WHERE t.bdcJobGroupDTO = #{bdcJobGroupDTO}
 	</select>
 
 	<select id="findAllCount" resultType="int">

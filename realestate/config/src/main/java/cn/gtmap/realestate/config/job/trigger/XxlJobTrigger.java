@@ -1,10 +1,10 @@
 package cn.gtmap.realestate.config.job.trigger;
 
-import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDO;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDTO;
 import cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO;
 import cn.gtmap.realestate.common.core.domain.job.BdcJobLogDO;
 import cn.gtmap.realestate.common.job.biz.ExecutorBiz;
-import cn.gtmap.realestate.common.job.biz.model.ReturnT;
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 import cn.gtmap.realestate.common.job.biz.model.TriggerParam;
 import cn.gtmap.realestate.common.job.enums.ExecutorBlockStrategyEnum;
 import cn.gtmap.realestate.common.job.util.IpUtil;
@@ -58,7 +58,7 @@ public class XxlJobTrigger {
             bdcJobInfoDO.setExecutorParam(executorParam);
         }
         int finalFailRetryCount = failRetryCount>=0?failRetryCount: bdcJobInfoDO.getExecutorFailRetryCount();
-        BdcJobGroupDO group = XxlJobAdminConfig.getAdminConfig().getBdcJobGroupMapper().load(bdcJobInfoDO.getJobGroup());
+        BdcJobGroupDTO group = XxlJobAdminConfig.getAdminConfig().getBdcJobGroupMapper().load(bdcJobInfoDO.getJobGroup());
 
         // cover addresslist
         if (addresslist!=null && addresslist.trim().length()>0) {
@@ -108,7 +108,7 @@ public class XxlJobTrigger {
      * @param index                     sharding index
      * @param total                     sharding index
      */
-    private static void processTrigger(BdcJobGroupDO group, BdcJobInfoDO bdcJobInfoDO, int finalFailRetryCount, TriggerTypeEnum triggerType, int index, int total){
+    private static void processTrigger(BdcJobGroupDTO group, BdcJobInfoDO bdcJobInfoDO, int finalFailRetryCount, TriggerTypeEnum triggerType, int index, int total){
 
         // param
         ExecutorBlockStrategyEnum blockStrategy = ExecutorBlockStrategyEnum.match(bdcJobInfoDO.getExecutorBlockStrategy(), ExecutorBlockStrategyEnum.SERIAL_EXECUTION);  // block strategy

@@ -1,6 +1,8 @@
 package cn.gtmap.realestate.config.service;
 
 import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDO;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDTO;
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -27,5 +29,29 @@ public interface BdcJobGroupService {
      * @param bdcJobGroupDO
      * @return jobGroup
      */
-    BdcJobGroupDO saveJobGroup(BdcJobGroupDO bdcJobGroupDO);
+    ReturnT<String> saveJobGroup(BdcJobGroupDO bdcJobGroupDO);
+
+    /**
+     * 更新执行器信息
+     * @author <a href="mailto:zxy@gtmap.cn">zxy</a>
+     * @param bdcJobGroupDO
+     * @return ReturnT
+     */
+    ReturnT<String> updateJobGroup(BdcJobGroupDO bdcJobGroupDO);
+
+    /**
+     * 删除执行器信息
+     * @author <a href="mailto:zxy@gtmap.cn">zxy</a>
+     * @param id
+     * @return ReturnT
+     */
+    ReturnT<String> removeJobGroup(Integer id);
+
+    /**
+     * 根据执行器id查询执行器信息
+     * @author <a href="mailto:zxy@gtmap.cn">zxy</a>
+     * @param id
+     * @return ReturnT
+     */
+    ReturnT<BdcJobGroupDTO> loadJobGroupById(Integer id);
 }

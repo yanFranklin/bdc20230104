@@ -28,9 +28,9 @@
 	    		<div class="col-xs-3">
 	              	<div class="input-group">
 	                	<span class="input-group-addon">${I18n.jobinfo_field_jobgroup}</span>
-                		<select class="form-control" id="bdcJobGroupDO" >
+                		<select class="form-control" id="bdcJobGroupDTO" >
                 			<#list JobGroupList as group>
-                				<option value="${group.id}" <#if bdcJobGroupDO==group.id>selected</#if> >${group.title}</option>
+                				<option value="${group.id}" <#if bdcJobGroupDTO==group.id>selected</#if> >${group.title}</option>
                 			</#list>
 	                  	</select>
 	              	</div>
@@ -78,7 +78,7 @@
 				                <thead>
 					            	<tr>
 					            		<th name="id" >${I18n.jobinfo_field_id}</th>
-					                	<th name="bdcJobGroupDO" >${I18n.jobinfo_field_jobgroup}</th>
+					                	<th name="bdcJobGroupDTO" >${I18n.jobinfo_field_jobgroup}</th>
 					                  	<th name="jobDesc" >${I18n.jobinfo_field_jobdesc}</th>
                                         <th name="scheduleType" >${I18n.schedule_type}</th>
                                         <th name="glueType" >${I18n.jobinfo_field_gluetype}</th>
@@ -119,9 +119,9 @@
 					<div class="form-group">
 						<label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_jobgroup}<font color="red">*</font></label>
 						<div class="col-sm-4">
-							<select class="form-control" name="bdcJobGroupDO" >
+							<select class="form-control" name="bdcJobGroupDTO" >
 		            			<#list JobGroupList as group>
-		            				<option value="${group.id}" <#if bdcJobGroupDO==group.id>selected</#if> >${group.title}</option>
+		            				<option value="${group.id}" <#if bdcJobGroupDTO==group.id>selected</#if> >${group.title}</option>
 		            			</#list>
 		                  	</select>
 						</div>
@@ -364,7 +364,7 @@ exit 0
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_jobgroup}<font color="red">*</font></label>
                         <div class="col-sm-4">
-                            <select class="form-control" name="bdcJobGroupDO" >
+                            <select class="form-control" name="bdcJobGroupDTO" >
                                 <#list JobGroupList as group>
                                     <option value="${group.id}" >${group.title}</option>
                                 </#list>

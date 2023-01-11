@@ -4,7 +4,7 @@ package cn.gtmap.realestate.common.job.biz;
 
 import cn.gtmap.realestate.common.job.biz.model.HandleCallbackParam;
 import cn.gtmap.realestate.common.job.biz.model.RegistryParam;
-import cn.gtmap.realestate.common.job.biz.model.ReturnT;
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 
 import java.util.List;
 

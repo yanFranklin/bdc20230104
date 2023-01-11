@@ -80,7 +80,9 @@
 
 <!--表格内部操作按钮-->
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="bjJobGroup">编辑</a>
+    <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="editJobGroup">编辑</a>
+    <a class="layui-btn layui-btn-xs bdc-major-btn" lay-event="deleteJobGroup">删除</a>
+
 </script>
 
 <script src="../../../static/lib/jquery/jquery.min.js"></script>
@@ -89,31 +91,11 @@
 <script src="../../../static/js/bjjk/base64.js"></script>
 <!--添加水印-->
 <script src="../../../static/lib/bdcui/js/common.js"></script>
-<script src="../../../static/js/engine/common.js"></script>
+<script src="../../../static/js/config/common.js"></script>
+<script src="../../../static/js/common.js"></script>
 <script src="../../../static/js/config/table.js"></script>
-<script src="../../../static/js/config/job/bdcJobGroupDOList.js"></script>
+<script src="../../../static/js/formCenter.js"></script>
+<script src="../../../static/js/config/job/jobGroupList.js"></script>
 
-<!--IE获取IP地址-->
-<object classid="CLSID:76A64158-CB41-11D1-8B02-00600806D9B6" id="locator" style="display:none;visibility:hidden"></object>
-<object classid="CLSID:75718C9A-F029-11d1-A1AC-00C04FB6C223" id="foo" style="display:none;visibility:hidden"></object>
-<script language="javascript">
-    try{
-        var service = locator.ConnectServer();
-        service.Security_.ImpersonationLevel = 3;
-        service.InstancesOfAsync(foo, 'Win32_NetworkAdapterConfiguration');
-    } catch(err) {
-        // do nothing
-    }
-</script>
-<script FOR="foo" EVENT="OnObjectReady(objObject,objAsyncContext)" LANGUAGE="JScript">
-    try{
-        if (objObject.IPEnabled != null && objObject.IPEnabled != "undefined" && objObject.IPEnabled == true) {
-            if (objObject.IPEnabled && objObject.IPAddress(0) != null && objObject.IPAddress(0) != "undefined")
-                $("#ipaddress").val( objObject.IPAddress(0));
-        }
-    } catch(err) {
-        // do nothing
-    }
-</script>
 </body>
 </html>

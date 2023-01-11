@@ -1,6 +1,6 @@
 package cn.gtmap.realestate.common.job.util;
 
-import cn.gtmap.realestate.common.job.biz.model.ReturnT;
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

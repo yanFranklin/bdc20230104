@@ -3,7 +3,7 @@ package cn.gtmap.realestate.common.job.thread;
 
 import cn.gtmap.realestate.common.job.biz.AdminBiz;
 import cn.gtmap.realestate.common.job.biz.model.RegistryParam;
-import cn.gtmap.realestate.common.job.biz.model.ReturnT;
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 import cn.gtmap.realestate.common.job.enums.RegistryConfig;
 import cn.gtmap.realestate.common.job.executor.XxlJobExecutor;
 import org.slf4j.Logger;

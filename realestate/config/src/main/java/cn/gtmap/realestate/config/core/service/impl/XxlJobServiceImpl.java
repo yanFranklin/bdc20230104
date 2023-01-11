@@ -1,7 +1,7 @@
 package cn.gtmap.realestate.config.core.service.impl;
 
 
-import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDO;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDTO;
 import cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO;
 import cn.gtmap.realestate.common.core.domain.job.BdcJobLogReportDO;
 import cn.gtmap.realestate.common.job.enums.ExecutorBlockStrategyEnum;
@@ -18,7 +18,7 @@ import cn.gtmap.realestate.config.job.util.I18nUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import cn.gtmap.realestate.common.job.biz.model.ReturnT;
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 
 import javax.annotation.Resource;
 import java.text.MessageFormat;
@@ -62,7 +62,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	public ReturnT<String> add(BdcJobInfoDO bdcJobInfoDO) {
 
 		// valid base
-		BdcJobGroupDO group = bdcJobGroupMapper.load(bdcJobInfoDO.getJobGroup());
+		BdcJobGroupDTO group = bdcJobGroupMapper.load(bdcJobInfoDO.getJobGroup());
 		//请选择执行器
 		if (group == null) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_choose")+I18nUtil.getString("jobinfo_field_jobgroup")) );
@@ -242,8 +242,8 @@ public class XxlJobServiceImpl implements XxlJobService {
 		}
 
 		// group valid
-		BdcJobGroupDO bdcJobGroupDO = bdcJobGroupMapper.load(bdcJobInfoDO.getJobGroup());
-		if (bdcJobGroupDO == null) {
+		BdcJobGroupDTO bdcJobGroupDTO = bdcJobGroupMapper.load(bdcJobInfoDO.getJobGroup());
+		if (bdcJobGroupDTO == null) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_jobgroup")+I18nUtil.getString("system_unvalid")) );
 		}
 
@@ -364,10 +364,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 		// executor count
 		Set<String> executorAddressSet = new HashSet<String>();
-		List<BdcJobGroupDO> groupList = bdcJobGroupMapper.findAll();
+		List<BdcJobGroupDTO> groupList = bdcJobGroupMapper.findAll();
 
 		if (groupList!=null && !groupList.isEmpty()) {
-			for (BdcJobGroupDO group: groupList) {
+			for (BdcJobGroupDTO group: groupList) {
 				if (group.getRegistryList()!=null && !group.getRegistryList().isEmpty()) {
 					executorAddressSet.addAll(group.getRegistryList());
 				}

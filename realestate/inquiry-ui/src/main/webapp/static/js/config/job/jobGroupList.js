@@ -11,8 +11,8 @@ layui.use(['table', 'laytpl', 'laydate', 'layer', 'form', 'upload'], function ()
     var unitTableTitle = [
         {type: 'checkbox', fixed: 'left'},
         {type: 'numbers', fixed:'left', title: '序号', width: 60 },
-        // {type: 'id', fixed:'left', title: 'id', width: 60 },
-        {field: 'appname', title: 'appname', hide: true},
+        {type: 'id', fixed:'left', title: 'id', width: 60, hide: true },
+        {field: 'appname', title: 'appname'},
         {field: 'title', sort: true, title: '执行器名称', align: 'center', width: 350, style: 'text-align:left'},
         {field: 'addresslist', title: 'OnLine 机器地址', align: 'center', style: 'text-align:left', minWidth: 250},
         {field: 'addresstype', title: '注册方式', align: 'center', width: 100,
@@ -109,17 +109,18 @@ layui.use(['table', 'laytpl', 'laydate', 'layer', 'form', 'upload'], function ()
 
 
     //监听工具条
-    table.on('tool(bjJobGroup)', function (obj) {
+    table.on('tool(barDemo)', function (obj) {
         var data = obj.data;
         if (isNullOrEmpty(data.gzid)) {
             warnMsg(" 没有信息，无法查看！");
             return;
         }
-        if (obj.event === 'bjJobGroup') {
-            window.open("zhgz.html?gzid="+data.gzid);
+        if (obj.event === 'editJobGroup') {
+            // window.open("zhgz.html?gzid="+data.gzid);
+            editJobGroup(data);
         }
-        if (obj.event === 'scJobGroup') {
-            window.open("zhgz.html?gzid="+data.gzid);
+        if (obj.event === 'deleteJobGroup') {
+            deleteJobGroup(data);
         }
     });
 
@@ -146,7 +147,7 @@ layui.use(['table', 'laytpl', 'laydate', 'layer', 'form', 'upload'], function ()
             offset: 'auto',
             content: ["jobGroupEdit.html" , 'yes'],
             end: function () {
-                table.reload('jobGroupTable');
+                tableReload('id', null, url);
             }
         });
     }
@@ -166,8 +167,11 @@ layui.use(['table', 'laytpl', 'laydate', 'layer', 'form', 'upload'], function ()
             shadeClose: true,
             isOutAnim: false,
             content: "../job/jobGroupEdit.html?jobGroupId=" + data[0].id,
-            area: ['960px', '600px'],
+            area: ['660px', '400px'],
             title: '修改执行器配置',
+            end: function () {
+                tableReload('id', null, url);
+            }
         });
 
         // window.open("jobGroupEdit.html?id=" + data[0].id);
@@ -188,29 +192,29 @@ layui.use(['table', 'laytpl', 'laydate', 'layer', 'form', 'upload'], function ()
             type: 1,
             title: '确认删除',
             area: ['320px'],
-            content: '确定要删除所选规则？',
+            content: '确定要删除？',
             btn: ['确定','取消'],
             skin: 'bdc-small-tips',
             btnAlign: 'c',
             yes: function(){
                 // 保存日志
-                var zgzIds = new Array();
+                var jobGroupIds = new Array();
                 $.each(data, function (key, value) {
-                    zgzIds.push(value.gzid);
+                    jobGroupIds.push(value.id);
                 });
-                saveLogs(zgzIds, "ZGZSC", "子规则配置-删除");
+                // saveLogs(zgzIds, "jobGroupSC", "jobGroup配置-删除");
 
                 $.ajax({
-                    url: "/realestate-inquiry-ui/zgz",
+                    url: "/realestate-inquiry-ui/job/group/remove?id=" +  jobGroupIds[0],
                     type: "DELETE",
-                    data: JSON.stringify(data),
-                    contentType: 'application/json',
+                    // data: JSON.stringify(jobGroupIds),
+                    // contentType: 'application/json',
                     dataType: "json",
                     success: function (data) {
                         layer.msg('<img src="../../../static/lib/bdcui/images/success-small.png" alt="">删除成功');
                         tableReload('gzid', null, url);
                         // 加载上传子规则事件绑定
-                        importZgz();
+                        // importZgz();
                     },
                     error:function($xhr,textStatus,errorThrown){
                         fail();

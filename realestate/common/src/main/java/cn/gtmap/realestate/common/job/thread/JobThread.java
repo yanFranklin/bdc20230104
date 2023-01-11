@@ -2,7 +2,7 @@ package cn.gtmap.realestate.common.job.thread;
 
 
 import cn.gtmap.realestate.common.job.biz.model.HandleCallbackParam;
-import cn.gtmap.realestate.common.job.biz.model.ReturnT;
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 import cn.gtmap.realestate.common.job.biz.model.TriggerParam;
 import cn.gtmap.realestate.common.job.context.XxlJobContext;
 import cn.gtmap.realestate.common.job.context.XxlJobHelper;

@@ -1,8 +1,8 @@
 package cn.gtmap.realestate.config.web.rest;
 
-import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDO;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDTO;
 import cn.gtmap.realestate.common.core.domain.job.BdcJobUserDO;
-import cn.gtmap.realestate.common.job.biz.model.ReturnT;
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 import cn.gtmap.realestate.config.core.mapper.BdcJobGroupMapper;
 import cn.gtmap.realestate.config.core.mapper.BdcJobUserMapper;
 import cn.gtmap.realestate.config.core.service.LoginService;
@@ -39,7 +39,7 @@ public class UserController {
     public String index(Model model) {
 
         // 执行器列表
-        List<BdcJobGroupDO> groupList = bdcJobGroupMapper.findAll();
+        List<BdcJobGroupDTO> groupList = bdcJobGroupMapper.findAll();
         model.addAttribute("groupList", groupList);
 
         return "user/user.index";

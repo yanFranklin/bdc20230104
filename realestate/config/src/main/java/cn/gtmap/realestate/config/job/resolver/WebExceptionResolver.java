@@ -1,6 +1,6 @@
 package cn.gtmap.realestate.config.job.resolver;
 
-import cn.gtmap.realestate.common.job.biz.model.ReturnT;
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 import cn.gtmap.realestate.config.job.exception.XxlJobException;
 import cn.gtmap.realestate.config.job.util.JacksonUtil;
 import org.slf4j.Logger;

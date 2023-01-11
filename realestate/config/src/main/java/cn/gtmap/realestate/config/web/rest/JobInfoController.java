@@ -1,9 +1,9 @@
 package cn.gtmap.realestate.config.web.rest;
 
-import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDO;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDTO;
 import cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO;
 import cn.gtmap.realestate.common.core.domain.job.BdcJobUserDO;
-import cn.gtmap.realestate.common.job.biz.model.ReturnT;
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 import cn.gtmap.realestate.common.job.enums.ExecutorBlockStrategyEnum;
 import cn.gtmap.realestate.common.job.glue.GlueTypeEnum;
 import cn.gtmap.realestate.common.job.util.DateUtil;
@@ -55,39 +55,39 @@ public class JobInfoController {
 		model.addAttribute("MisfireStrategyEnum", MisfireStrategyEnum.values());	    			// 调度过期策略
 
 		// 执行器列表
-		List<BdcJobGroupDO> bdcJobGroupDOList_all =  bdcJobGroupMapper.findAll();
+		List<BdcJobGroupDTO> bdcJobGroupDTOList_all =  bdcJobGroupMapper.findAll();
 
 		// filter group
-		List<BdcJobGroupDO> bdcJobGroupDOList = filterJobGroupByRole(request, bdcJobGroupDOList_all);
-		if (bdcJobGroupDOList ==null || bdcJobGroupDOList.size()==0) {
+		List<BdcJobGroupDTO> bdcJobGroupDTOList = filterJobGroupByRole(request, bdcJobGroupDTOList_all);
+		if (bdcJobGroupDTOList ==null || bdcJobGroupDTOList.size()==0) {
 			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
 		}
 
-		model.addAttribute("JobGroupList", bdcJobGroupDOList);
+		model.addAttribute("JobGroupList", bdcJobGroupDTOList);
 		model.addAttribute("jobGroup", jobGroup);
 
 		return "jobinfo/jobinfo.index";
 	}
 
-	public static List<BdcJobGroupDO> filterJobGroupByRole(HttpServletRequest request, List<BdcJobGroupDO> bdcJobGroupDOList_all){
-		List<BdcJobGroupDO> bdcJobGroupDOList = new ArrayList<>();
-		if (bdcJobGroupDOList_all !=null && bdcJobGroupDOList_all.size()>0) {
+	public static List<BdcJobGroupDTO> filterJobGroupByRole(HttpServletRequest request, List<BdcJobGroupDTO> bdcJobGroupDTOList_all){
+		List<BdcJobGroupDTO> bdcJobGroupDTOList = new ArrayList<>();
+		if (bdcJobGroupDTOList_all !=null && bdcJobGroupDTOList_all.size()>0) {
 			BdcJobUserDO loginUser = (BdcJobUserDO) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
 			if (loginUser.getRole() == 1) {
-				bdcJobGroupDOList = bdcJobGroupDOList_all;
+				bdcJobGroupDTOList = bdcJobGroupDTOList_all;
 			} else {
 				List<String> groupIdStrs = new ArrayList<>();
 				if (loginUser.getPermission()!=null && loginUser.getPermission().trim().length()>0) {
 					groupIdStrs = Arrays.asList(loginUser.getPermission().trim().split(","));
 				}
-				for (BdcJobGroupDO groupItem: bdcJobGroupDOList_all) {
+				for (BdcJobGroupDTO groupItem: bdcJobGroupDTOList_all) {
 					if (groupIdStrs.contains(String.valueOf(groupItem.getId()))) {
-						bdcJobGroupDOList.add(groupItem);
+						bdcJobGroupDTOList.add(groupItem);
 					}
 				}
 			}
 		}
-		return bdcJobGroupDOList;
+		return bdcJobGroupDTOList;
 	}
 	public static void validPermission(HttpServletRequest request, int jobGroup) {
 		BdcJobUserDO loginUser = (BdcJobUserDO) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);

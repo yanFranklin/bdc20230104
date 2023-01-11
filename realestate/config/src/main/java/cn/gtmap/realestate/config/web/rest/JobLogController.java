@@ -1,13 +1,13 @@
 package cn.gtmap.realestate.config.web.rest;
 
-import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDO;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDTO;
 import cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO;
 import cn.gtmap.realestate.common.core.domain.job.BdcJobLogDO;
 import cn.gtmap.realestate.common.job.biz.ExecutorBiz;
 import cn.gtmap.realestate.common.job.biz.model.KillParam;
 import cn.gtmap.realestate.common.job.biz.model.LogParam;
 import cn.gtmap.realestate.common.job.biz.model.LogResult;
-import cn.gtmap.realestate.common.job.biz.model.ReturnT;
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 import cn.gtmap.realestate.common.job.util.DateUtil;
 import cn.gtmap.realestate.config.core.mapper.BdcJobGroupMapper;
 import cn.gtmap.realestate.config.core.mapper.BdcJobInfoMapper;
@@ -51,15 +51,15 @@ public class JobLogController {
 	public String index(HttpServletRequest request, Model model, @RequestParam(required = false, defaultValue = "0") Integer jobId) {
 
 		// 执行器列表
-		List<BdcJobGroupDO> bdcJobGroupDOList_all =  bdcJobGroupMapper.findAll();
+		List<BdcJobGroupDTO> bdcJobGroupDTOList_all =  bdcJobGroupMapper.findAll();
 
 		// filter group
-		List<BdcJobGroupDO> bdcJobGroupDOList = JobInfoController.filterJobGroupByRole(request, bdcJobGroupDOList_all);
-		if (bdcJobGroupDOList ==null || bdcJobGroupDOList.size()==0) {
+		List<BdcJobGroupDTO> bdcJobGroupDTOList = JobInfoController.filterJobGroupByRole(request, bdcJobGroupDTOList_all);
+		if (bdcJobGroupDTOList ==null || bdcJobGroupDTOList.size()==0) {
 			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
 		}
 
-		model.addAttribute("JobGroupList", bdcJobGroupDOList);
+		model.addAttribute("JobGroupList", bdcJobGroupDTOList);
 
 		// 任务
 		if (jobId > 0) {

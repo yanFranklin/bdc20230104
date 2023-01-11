@@ -1,6 +1,7 @@
 package cn.gtmap.realestate.common.job.server;
 
 
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 import cn.gtmap.realestate.common.job.biz.ExecutorBiz;
 import cn.gtmap.realestate.common.job.biz.impl.ExecutorBizImpl;
 import cn.gtmap.realestate.common.job.biz.model.*;

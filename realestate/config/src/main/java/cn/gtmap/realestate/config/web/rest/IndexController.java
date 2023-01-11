@@ -1,6 +1,6 @@
 package cn.gtmap.realestate.config.web.rest;
 
-import cn.gtmap.realestate.common.job.biz.model.ReturnT;
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 import cn.gtmap.realestate.config.core.service.LoginService;
 import cn.gtmap.realestate.config.core.service.XxlJobService;
 import cn.gtmap.realestate.config.job.annotation.PermissionLimit;

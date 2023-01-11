@@ -2,7 +2,7 @@ package cn.gtmap.realestate.config.job.complete;
 
 import cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO;
 import cn.gtmap.realestate.common.core.domain.job.BdcJobLogDO;
-import cn.gtmap.realestate.common.job.biz.model.ReturnT;
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 import cn.gtmap.realestate.common.job.context.XxlJobContext;
 import cn.gtmap.realestate.config.job.conf.XxlJobAdminConfig;
 import cn.gtmap.realestate.config.job.thread.JobTriggerPoolHelper;

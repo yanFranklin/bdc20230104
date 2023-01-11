@@ -29,9 +29,9 @@
 	    		<div class="col-xs-2">
  					<div class="input-group">
 	                	<span class="input-group-addon">${I18n.jobinfo_field_jobgroup}</span>
-                		<select class="form-control" id="bdcJobGroupDO"  paramVal="<#if bdcJobInfoDO?exists>${bdcJobInfoDO.bdcJobGroupDO}</#if>" >
+                		<select class="form-control" id="bdcJobGroupDTO"  paramVal="<#if bdcJobInfoDO?exists>${bdcJobInfoDO.bdcJobGroupDTO}</#if>" >
                             <#if Request["XXL_JOB_LOGIN_IDENTITY"].role == 1>
-                                <option value="0" >${I18n.system_all}</option>  <#-- 仅管理员支持查询全部；普通用户仅支持查询有权限的 bdcJobGroupDO -->
+                                <option value="0" >${I18n.system_all}</option>  <#-- 仅管理员支持查询全部；普通用户仅支持查询有权限的 bdcJobGroupDTO -->
                             </#if>
                 			<#list JobGroupList as group>
                 				<option value="${group.id}" >${group.title}</option>
@@ -87,7 +87,7 @@
 				                <thead>
 					            	<tr>
                                         <th name="jobId" >${I18n.jobinfo_field_id}</th>
-                                        <th name="bdcJobGroupDO" >bdcJobGroupDO</th>
+                                        <th name="bdcJobGroupDTO" >bdcJobGroupDTO</th>
 										<#--<th name="executorAddress" >执行器地址</th>
 										<th name="glueType" >运行模式</th>
                                       	<th name="executorParam" >任务参数</th>-->
@@ -126,7 +126,7 @@
                         <label class="col-sm-3 control-label">${I18n.jobinfo_field_jobgroup}：</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control jobGroupText" readonly >
-							<input type="hidden" name="bdcJobGroupDO" >
+							<input type="hidden" name="bdcJobGroupDTO" >
 						</div>
                     </div>
 

@@ -1,13 +1,15 @@
 package cn.gtmap.realestate.config.job.thread;
 
 import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDO;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDTO;
 import cn.gtmap.realestate.common.core.domain.job.BdcJobRegistryDO;
 import cn.gtmap.realestate.common.job.biz.model.RegistryParam;
-import cn.gtmap.realestate.common.job.biz.model.ReturnT;
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 import cn.gtmap.realestate.common.job.enums.RegistryConfig;
 import cn.gtmap.realestate.config.job.conf.XxlJobAdminConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
@@ -59,7 +61,7 @@ public class JobRegistryHelper {
 				while (!toStop) {
 					try {
 						// auto registry group
-						List<BdcJobGroupDO> groupList = XxlJobAdminConfig.getAdminConfig().getBdcJobGroupMapper().findByAddresstype(0);
+						List<BdcJobGroupDTO> groupList = XxlJobAdminConfig.getAdminConfig().getBdcJobGroupMapper().findByAddresstype(0);
 						if (groupList!=null && !groupList.isEmpty()) {
 
 							// remove dead address (admin/executor)
@@ -89,7 +91,7 @@ public class JobRegistryHelper {
 							}
 
 							// fresh group address
-							for (BdcJobGroupDO group: groupList) {
+							for (BdcJobGroupDTO group: groupList) {
 								List<String> registryList = appAddressMap.get(group.getAppname());
 								String addresslistStr = null;
 								if (registryList!=null && !registryList.isEmpty()) {
@@ -103,8 +105,9 @@ public class JobRegistryHelper {
 								}
 								group.setAddresslist(addresslistStr);
 								group.setUpdatetime(new Date());
-
-								XxlJobAdminConfig.getAdminConfig().getBdcJobGroupMapper().update(group);
+								BdcJobGroupDO bdcJobGroupDO = new BdcJobGroupDO();
+								BeanUtils.copyProperties(group, bdcJobGroupDO);
+								XxlJobAdminConfig.getAdminConfig().getBdcJobGroupMapper().update(bdcJobGroupDO);
 							}
 						}
 					} catch (Exception e) {

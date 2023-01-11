@@ -2,8 +2,6 @@
  * 执行器配置修改新增 js
  */
 var jobGroupId =  $.getUrlParam('jobGroupId');
-var jglbZd = [];
-var zjzlZd = [];
 var form;
 var moduleCode = $.getUrlParam('moduleCode');
 var isSubmit = true;
@@ -44,18 +42,18 @@ layui.use(['layer', 'table', 'jquery', 'form'], function () {
 
 
 function generateJobGroup(){
-    if (isNotBlank(id)){
+    if (isNotBlank(jobGroupId)){
         $.ajax({
-            url: "/realestate-inquiry-ui/rest/v1.0/jgpz/query",
+            url: "/realestate-inquiry-ui/job/group/loadById",
             type: 'GET',
             dataType: 'json',
             async: false,
-            data: {jgid: jgid},
+            data: {id: jobGroupId},
             success: function (data) {
-                if (moduleCode){
-                    setElementAttrByModuleAuthority(moduleCode);
-                }
-                form.val("searchform", data);
+                // if (moduleCode){
+                //     setElementAttrByModuleAuthority(moduleCode);
+                // }
+                form.val("searchform", data.content);
                 form.render();
             },
             error: function (xhr, status, error) {
@@ -63,8 +61,7 @@ function generateJobGroup(){
             }
         })
     }else{
-        var nf = (new Date).getFullYear();
-        $("input[name='nf']").val(nf);
+      // layer.warn("id为空，缺少主键！");
     }
 }
 
@@ -90,19 +87,26 @@ function saveJobGroup(){
         data: JSON.stringify(obj),
         success: function (data) {
             removeModal();
-            var index = parent.layer.getFrameIndex(window.name);
-            setTimeout(removeModal(), 100);
-            parent.layui.table.reload('pageTable',{page:{curr:1}});
-            parent.initUploadInst();
+            if (data.code == "200") {
 
-            layer.confirm('保存成功，是否添加机构默认领证人?', {
-                btn: ['是', '否']
-            }, function(index, layero){
-                window.open("/realestate-inquiry-ui/view/jglzr/jglzr.html")
-                cancel();
-            }, function(index){
-                cancel();
-            });
+                layer.msg('更新成功', {
+                    icon: 1,
+                    time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                }, function(){
+                    cancel();
+                });
+            } else {
+                // layer.msg(data.msg);
+
+                layer.msg(data.msg, {
+                    icon: 1,
+                    time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                }, function(){
+                    //do something
+                    // cancel();
+                });
+            }
+
 
         }, error: function (xhr, status, error) {
             removeModal();
@@ -110,10 +114,7 @@ function saveJobGroup(){
     });
 }
 
-// function cancel(){
-//     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-//     parent.layer.close(index); //再执行关闭
-// }
-function cancel() {
-    window.parent.cancelEdit();
+function cancel(){
+    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+    parent.layer.close(index); //再执行关闭
 }

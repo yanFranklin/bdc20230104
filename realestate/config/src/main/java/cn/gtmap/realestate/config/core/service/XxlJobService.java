@@ -2,7 +2,7 @@ package cn.gtmap.realestate.config.core.service;
 
 
 import cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO;
-import cn.gtmap.realestate.common.job.biz.model.ReturnT;
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 
 
 import java.util.Date;

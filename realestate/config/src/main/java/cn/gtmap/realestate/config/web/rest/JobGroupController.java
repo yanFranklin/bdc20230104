@@ -1,13 +1,15 @@
 package cn.gtmap.realestate.config.web.rest;
 
 import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDO;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDTO;
 import cn.gtmap.realestate.common.core.domain.job.BdcJobRegistryDO;
-import cn.gtmap.realestate.common.job.biz.model.ReturnT;
+import cn.gtmap.realestate.common.core.dto.ReturnT;
 import cn.gtmap.realestate.common.job.enums.RegistryConfig;
 import cn.gtmap.realestate.config.core.mapper.BdcJobGroupMapper;
 import cn.gtmap.realestate.config.core.mapper.BdcJobInfoMapper;
 import cn.gtmap.realestate.config.core.mapper.BdcJobRegistryMapper;
 import cn.gtmap.realestate.config.job.util.I18nUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,7 +61,7 @@ public class JobGroupController {
 										String appname, String title) {
 
 		// page query
-		List<BdcJobGroupDO> list = bdcJobGroupMapper.pageList(start, length, appname, title);
+		List<BdcJobGroupDTO> list = bdcJobGroupMapper.pageList(start, length, appname, title);
 		int list_count = bdcJobGroupMapper.pageListCount(start, length, appname, title);
 
 		// package result
@@ -72,38 +74,38 @@ public class JobGroupController {
 
 	/**
 	 * 新增 执行器信息
-	 * @param xxlBdcJobGroupDO
+	 * @param xxlBdcJobGroupDTO
 	 * @return
 	 */
 	@RequestMapping("/save")
 	@ResponseBody
-	public ReturnT<String> save(BdcJobGroupDO xxlBdcJobGroupDO){
+	public ReturnT<String> save(BdcJobGroupDTO bdcJobGroupDTO){
 
 		// valid
-		if (xxlBdcJobGroupDO.getAppname()==null || xxlBdcJobGroupDO.getAppname().trim().length()==0) {
+		if (bdcJobGroupDTO.getAppname()==null || bdcJobGroupDTO.getAppname().trim().length()==0) {
 			return new ReturnT<String>(500, (I18nUtil.getString("system_please_input")+"AppName") );
 		}
-		if (xxlBdcJobGroupDO.getAppname().length()<4 || xxlBdcJobGroupDO.getAppname().length()>64) {
+		if (bdcJobGroupDTO.getAppname().length()<4 || bdcJobGroupDTO.getAppname().length()>64) {
 			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_appname_length") );
 		}
-		if (xxlBdcJobGroupDO.getAppname().contains(">") || xxlBdcJobGroupDO.getAppname().contains("<")) {
+		if (bdcJobGroupDTO.getAppname().contains(">") || bdcJobGroupDTO.getAppname().contains("<")) {
 			return new ReturnT<String>(500, "AppName"+I18nUtil.getString("system_unvalid") );
 		}
-		if (xxlBdcJobGroupDO.getTitle()==null || xxlBdcJobGroupDO.getTitle().trim().length()==0) {
+		if (bdcJobGroupDTO.getTitle()==null || bdcJobGroupDTO.getTitle().trim().length()==0) {
 			return new ReturnT<String>(500, (I18nUtil.getString("system_please_input") + I18nUtil.getString("jobgroup_field_title")) );
 		}
-		if (xxlBdcJobGroupDO.getTitle().contains(">") || xxlBdcJobGroupDO.getTitle().contains("<")) {
+		if (bdcJobGroupDTO.getTitle().contains(">") || bdcJobGroupDTO.getTitle().contains("<")) {
 			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_title")+I18nUtil.getString("system_unvalid") );
 		}
-		if (xxlBdcJobGroupDO.getAddresstype()!=0) {
-			if (xxlBdcJobGroupDO.getAddresslist()==null || xxlBdcJobGroupDO.getAddresslist().trim().length()==0) {
+		if (bdcJobGroupDTO.getAddresstype()!=0) {
+			if (bdcJobGroupDTO.getAddresslist()==null || bdcJobGroupDTO.getAddresslist().trim().length()==0) {
 				return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_addresstype_limit") );
 			}
-			if (xxlBdcJobGroupDO.getAddresslist().contains(">") || xxlBdcJobGroupDO.getAddresslist().contains("<")) {
+			if (bdcJobGroupDTO.getAddresslist().contains(">") || bdcJobGroupDTO.getAddresslist().contains("<")) {
 				return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_registryList")+I18nUtil.getString("system_unvalid") );
 			}
 
-			String[] addresss = xxlBdcJobGroupDO.getAddresslist().split(",");
+			String[] addresss = bdcJobGroupDTO.getAddresslist().split(",");
 			for (String item: addresss) {
 				if (item==null || item.trim().length()==0) {
 					return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_registryList_unvalid") );
@@ -112,33 +114,40 @@ public class JobGroupController {
 		}
 
 		// process
-		xxlBdcJobGroupDO.setUpdatetime(new Date());
+		bdcJobGroupDTO.setUpdatetime(new Date());
 
-		int ret = bdcJobGroupMapper.save(xxlBdcJobGroupDO);
+		BdcJobGroupDO bdcJobGroupDO = new BdcJobGroupDO();
+		bdcJobGroupDO.setAddresslist(bdcJobGroupDTO.getAddresslist());
+		bdcJobGroupDO.setId(bdcJobGroupDTO.getId());
+		bdcJobGroupDO.setAddresstype(bdcJobGroupDTO.getAddresstype());
+		bdcJobGroupDO.setUpdatetime(bdcJobGroupDTO.getUpdatetime());
+		bdcJobGroupDO.setAppname(bdcJobGroupDTO.getAppname());
+		bdcJobGroupDO.setTitle(bdcJobGroupDTO.getTitle());
+		int ret = bdcJobGroupMapper.save(bdcJobGroupDO);
 		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
 	}
 
 	/**
 	 * 更新 执行器信息
-	 * @param xxlBdcJobGroupDO
+	 * @param xxlBdcJobGroupDTO
 	 * @return
 	 */
 	@RequestMapping("/update")
 	@ResponseBody
-	public ReturnT<String> update(BdcJobGroupDO xxlBdcJobGroupDO){
+	public ReturnT<String> update(BdcJobGroupDTO xxlBdcJobGroupDTO){
 		// valid
-		if (xxlBdcJobGroupDO.getAppname()==null || xxlBdcJobGroupDO.getAppname().trim().length()==0) {
+		if (xxlBdcJobGroupDTO.getAppname()==null || xxlBdcJobGroupDTO.getAppname().trim().length()==0) {
 			return new ReturnT<String>(500, (I18nUtil.getString("system_please_input")+"AppName") );
 		}
-		if (xxlBdcJobGroupDO.getAppname().length()<4 || xxlBdcJobGroupDO.getAppname().length()>64) {
+		if (xxlBdcJobGroupDTO.getAppname().length()<4 || xxlBdcJobGroupDTO.getAppname().length()>64) {
 			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_appname_length") );
 		}
-		if (xxlBdcJobGroupDO.getTitle()==null || xxlBdcJobGroupDO.getTitle().trim().length()==0) {
+		if (xxlBdcJobGroupDTO.getTitle()==null || xxlBdcJobGroupDTO.getTitle().trim().length()==0) {
 			return new ReturnT<String>(500, (I18nUtil.getString("system_please_input") + I18nUtil.getString("jobgroup_field_title")) );
 		}
-		if (xxlBdcJobGroupDO.getAddresstype() == 0) {
+		if (xxlBdcJobGroupDTO.getAddresstype() == 0) {
 			// 0=自动注册
-			List<String> registryList = findRegistryByAppName(xxlBdcJobGroupDO.getAppname());
+			List<String> registryList = findRegistryByAppName(xxlBdcJobGroupDTO.getAppname());
 			String addresslistStr = null;
 			if (registryList!=null && !registryList.isEmpty()) {
 				Collections.sort(registryList);
@@ -148,13 +157,13 @@ public class JobGroupController {
 				}
 				addresslistStr = addresslistStr.substring(0, addresslistStr.length()-1);
 			}
-			xxlBdcJobGroupDO.setAddresslist(addresslistStr);
+			xxlBdcJobGroupDTO.setAddresslist(addresslistStr);
 		} else {
 			// 1=手动录入
-			if (xxlBdcJobGroupDO.getAddresslist()==null || xxlBdcJobGroupDO.getAddresslist().trim().length()==0) {
+			if (xxlBdcJobGroupDTO.getAddresslist()==null || xxlBdcJobGroupDTO.getAddresslist().trim().length()==0) {
 				return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_addresstype_limit") );
 			}
-			String[] addresss = xxlBdcJobGroupDO.getAddresslist().split(",");
+			String[] addresss = xxlBdcJobGroupDTO.getAddresslist().split(",");
 			for (String item: addresss) {
 				if (item==null || item.trim().length()==0) {
 					return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_registryList_unvalid") );
@@ -163,9 +172,10 @@ public class JobGroupController {
 		}
 
 		// process
-		xxlBdcJobGroupDO.setUpdatetime(new Date());
-
-		int ret = bdcJobGroupMapper.update(xxlBdcJobGroupDO);
+		xxlBdcJobGroupDTO.setUpdatetime(new Date());
+		BdcJobGroupDO bdcJobGroupDO = new BdcJobGroupDO();
+		BeanUtils.copyProperties(xxlBdcJobGroupDTO, bdcJobGroupDO);
+		int ret = bdcJobGroupMapper.update(bdcJobGroupDO);
 		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
 	}
 
@@ -214,7 +224,7 @@ public class JobGroupController {
 			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_del_limit_0") );
 		}
 
-		List<BdcJobGroupDO> allList = bdcJobGroupMapper.findAll();
+		List<BdcJobGroupDTO> allList = bdcJobGroupMapper.findAll();
 		if (allList.size() == 1) {
 			//拒绝删除, 系统至少保留一个执行器
 			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_del_limit_1") );
@@ -231,9 +241,9 @@ public class JobGroupController {
 	 */
 	@RequestMapping("/loadById")
 	@ResponseBody
-	public ReturnT<BdcJobGroupDO> loadById(int id){
-		BdcJobGroupDO bdcJobGroupDO = bdcJobGroupMapper.load(id);
-		return bdcJobGroupDO !=null?new ReturnT<BdcJobGroupDO>(bdcJobGroupDO):new ReturnT<BdcJobGroupDO>(ReturnT.FAIL_CODE, null);
+	public ReturnT<BdcJobGroupDTO> loadById(int id){
+		BdcJobGroupDTO bdcJobGroupDTO = bdcJobGroupMapper.load(id);
+		return bdcJobGroupDTO !=null?new ReturnT<BdcJobGroupDTO>(bdcJobGroupDTO):new ReturnT<BdcJobGroupDTO>(ReturnT.FAIL_CODE, null);
 	}
 
 }
