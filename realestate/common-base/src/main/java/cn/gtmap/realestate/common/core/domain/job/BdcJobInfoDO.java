@@ -11,9 +11,9 @@ import java.util.Date;
 @Table(name = "BDC_JOB_INFO")
 public class BdcJobInfoDO {
 	
-	private int id;				// 主键ID
+	private Integer id;				// 主键ID
 	
-	private int jobGroup;		// 执行器主键ID
+	private Integer jobGroup;		// 执行器主键ID
 	private String jobDesc;     // 调度任务描述信息 description
 	
 	private Date addTime;
@@ -30,8 +30,8 @@ public class BdcJobInfoDO {
 	private String executorHandler;		    // 执行器，任务Handler名称
 	private String executorParam;		    // 执行器，任务参数
 	private String executorBlockStrategy;	// 阻塞处理策略
-	private int executorTimeout;     		// 任务执行超时时间，单位秒
-	private int executorFailRetryCount;		// 失败重试次数
+	private Integer executorTimeout;     		// 任务执行超时时间，单位秒
+	private Integer executorFailRetryCount;		// 失败重试次数
 	
 	private String glueType;		// GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
 	private String glueSource;		// GLUE源代码
@@ -40,24 +40,24 @@ public class BdcJobInfoDO {
 
 	private String childJobId;		// 子任务ID，多个逗号分隔
 
-	private int triggerStatus;		// 调度状态：0-停止，1-运行
+	private Integer triggerStatus;		// 调度状态：0-停止，1-运行
 	private long triggerLastTime;	// 上次调度时间
 	private long triggerNextTime;	// 下次调度时间
 
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public int getJobGroup() {
+	public Integer getJobGroup() {
 		return jobGroup;
 	}
 
-	public void setJobGroup(int jobGroup) {
+	public void setJobGroup(Integer jobGroup) {
 		this.jobGroup = jobGroup;
 	}
 
@@ -157,19 +157,19 @@ public class BdcJobInfoDO {
 		this.executorBlockStrategy = executorBlockStrategy;
 	}
 
-	public int getExecutorTimeout() {
+	public Integer getExecutorTimeout() {
 		return executorTimeout;
 	}
 
-	public void setExecutorTimeout(int executorTimeout) {
+	public void setExecutorTimeout(Integer executorTimeout) {
 		this.executorTimeout = executorTimeout;
 	}
 
-	public int getExecutorFailRetryCount() {
+	public Integer getExecutorFailRetryCount() {
 		return executorFailRetryCount;
 	}
 
-	public void setExecutorFailRetryCount(int executorFailRetryCount) {
+	public void setExecutorFailRetryCount(Integer executorFailRetryCount) {
 		this.executorFailRetryCount = executorFailRetryCount;
 	}
 
@@ -213,11 +213,11 @@ public class BdcJobInfoDO {
 		this.childJobId = childJobId;
 	}
 
-	public int getTriggerStatus() {
+	public Integer getTriggerStatus() {
 		return triggerStatus;
 	}
 
-	public void setTriggerStatus(int triggerStatus) {
+	public void setTriggerStatus(Integer triggerStatus) {
 		this.triggerStatus = triggerStatus;
 	}
 

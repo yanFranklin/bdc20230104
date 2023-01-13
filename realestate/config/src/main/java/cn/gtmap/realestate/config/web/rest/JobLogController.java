@@ -70,7 +70,7 @@ public class JobLogController {
 
 			model.addAttribute("jobInfo", bdcJobInfoDO);
 
-			// valid permission
+			// valid permission 验证用户是否对该jobGroup有权限
 			JobInfoController.validPermission(request, bdcJobInfoDO.getJobGroup());
 		}
 
@@ -91,7 +91,7 @@ public class JobLogController {
 										@RequestParam(required = false, defaultValue = "10") int length,
 										int jobGroup, int jobId, int logStatus, String filterTime) {
 
-		// valid permission
+		// valid permission 验证用户是否对该jobGroup有权限
 		JobInfoController.validPermission(request, jobGroup);	// 仅管理员支持查询全部；普通用户仅支持查询有权限的 jobGroup
 		
 		// parse param

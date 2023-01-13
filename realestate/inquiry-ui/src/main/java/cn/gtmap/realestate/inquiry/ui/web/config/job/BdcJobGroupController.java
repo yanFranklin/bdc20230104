@@ -42,6 +42,16 @@ public class BdcJobGroupController extends BaseController {
     }
 
     /**
+     * 查询所有执行器列表
+     * @author <a href="mailto:zxy@gtmap.cn">zxy</a>
+     * @return Object Object
+     */
+    @GetMapping("/all")
+    public List<BdcJobGroupDTO> listBdcJobGroupAll(){
+         return bdcJobGroupFeignService.listBdcJobGroupAll();
+    }
+
+    /**
      * 保存执行器信息 没有记录则新增
      * @author <a href="mailto:zxy@gtmap.cn">zxy</a>
      * @param bdcJobGroupDO jobGroup

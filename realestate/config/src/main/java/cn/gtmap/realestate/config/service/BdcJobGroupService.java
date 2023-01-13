@@ -6,6 +6,8 @@ import cn.gtmap.realestate.common.core.dto.ReturnT;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 
 /**
  * @author <a href="mailto:zxy@gtmap.cn">zxy</a>
@@ -22,6 +24,15 @@ public interface BdcJobGroupService {
      * @return JobGroup
      */
     Page<BdcJobGroupDO> listBdcJobGroupPage(Pageable pageable, BdcJobGroupDO bdcJobGroupDO);
+
+    /**
+     * 查询所有执行器列表
+     *
+     * @return Object Object
+     * @author <a href="mailto:zxy@gtmap.cn">zxy</a>
+     */
+
+    List<BdcJobGroupDTO> listBdcJobGroupAll();
 
     /**
      * 保存执行器信息 没有记录则新增

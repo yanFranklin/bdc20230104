@@ -55,12 +55,23 @@ public class BdcJobGroupRestController implements BdcJobGroupRestService {
      */
     @Override
     @ResponseStatus(code = HttpStatus.OK)
-    @ApiOperation("分页查询子规则列表服务")
+    @ApiOperation("分页查询服务")
     @ApiImplicitParams({@ApiImplicitParam(name = "pageable", value = "分页参数", required = true, paramType = "body"),
-            @ApiImplicitParam(name = "zgzParamJson", value = "子规则查询参数Json", dataType = "BdcGzZgzDO", required = false, paramType = "query")})
+            @ApiImplicitParam(name = "jobGroupParamJson", value = "查询参数Json", dataType = "String", required = false, paramType = "query")})
     public Page<BdcJobGroupDO> listBdcJobGroupPage(Pageable pageable,
-                                                    @RequestParam(name = "jobParamJson",required = false) String jobParamJson) {
-        return bdcJobGroupService.listBdcJobGroupPage(pageable, JSON.parseObject(jobParamJson, BdcJobGroupDO.class));
+                                                    @RequestParam(name = "jobGroupParamJson",required = false) String jobGroupParamJson) {
+        return bdcJobGroupService.listBdcJobGroupPage(pageable, JSON.parseObject(jobGroupParamJson, BdcJobGroupDO.class));
+    }
+
+    /**
+     * 查询所有执行器列表
+     *
+     * @return Object Object
+     * @author <a href="mailto:zxy@gtmap.cn">zxy</a>
+     */
+    @Override
+    public List<BdcJobGroupDTO> listBdcJobGroupAll() {
+        return bdcJobGroupService.listBdcJobGroupAll();
     }
 
     /**

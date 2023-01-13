@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 public interface BdcJobGroupRestService {
     /**
      * 分页获取执行器数据列表
@@ -21,6 +23,15 @@ public interface BdcJobGroupRestService {
     @GetMapping("/realestate-config/rest/v1.0/job/group/page")
     Page<BdcJobGroupDO> listBdcJobGroupPage(Pageable pageable,
                                             @RequestParam(name = "jobParamJson",required = false) String jobParamJson);
+
+
+    /**
+     * 查询所有执行器列表
+     * @author <a href="mailto:zxy@gtmap.cn">zxy</a>
+     * @return Object Object
+     */
+    @GetMapping("/realestate-config/rest/v1.0/job/group/all")
+    List<BdcJobGroupDTO> listBdcJobGroupAll();
 
     /**
      * 保存执行器信息 没有记录则新增

@@ -40,7 +40,7 @@
 
 	<sql id="Base_Column_List">
 		t.id,
-		t.bdcJobGroupDTO,
+		t.jobGroup,
 		t.jobDesc,
 		t.addTime,
 		t.updatetime,
@@ -64,6 +64,91 @@
 		t.triggerLastTime,
 		t.triggerNextTime
 	</sql>
+
+	<!--分页查询-->
+	<select id="listBdcJobInfoByPage" parameterType="java.util.Map"
+			resultType="cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO">
+		SELECT
+		t.*
+		FROM BDC_JOB_INFO t
+		where 1 = 1
+		<if test="id != null ">
+			AND t.id = #{id}
+		</if>
+		<if test="jobGroup != null">
+			AND t.jobGroup = #{jobGroup}
+		</if>
+		<if test="jobDesc != null and jobDesc != ''">
+			AND instr(t.jobDesc,#{jobDesc})>0
+		</if>
+		<if test="author != null and author != ''">
+			AND instr(t.author,#{author})>0
+		</if>
+		<if test="alarmEmail != null and alarmEmail != ''">
+			AND instr(t.alarmEmail,#{alarmEmail})>0
+		</if>
+
+		<if test="addTime != null">
+			AND t.addTime = #{addTime}
+		</if>
+		<if test="updatetime != null">
+			AND t.updatetime = #{updatetime}
+		</if>
+		<if test="scheduleType != null and scheduleType != ''">
+			AND t.scheduleType = #{scheduleType}
+		</if>
+		<if test="scheduleConf != null and scheduleConf != ''">
+			AND t.scheduleConf = #{scheduleConf}
+		</if>
+		<if test="misfireStrategy != null">
+			AND t.misfireStrategy = #{misfireStrategy}
+		</if>
+		<if test="executorRouteStrategy != null and executorRouteStrategy != ''">
+			AND t.executorRouteStrategy = #{executorRouteStrategy}
+		</if>
+		<if test="executorHandler != null and executorHandler != ''">
+			AND t.executorHandler = #{executorHandler}
+		</if>
+		<if test="executorParam != null">
+			AND t.executorParam = #{executorParam}
+		</if>
+		<if test="executorBlockStrategy != null">
+			AND t.executorBlockStrategy = #{executorBlockStrategy}
+		</if>
+		<if test="executorTimeout != null">
+			AND t.executorTimeout = #{executorTimeout}
+		</if>
+		<if test="executorFailRetryCount != null">
+			AND t.executorFailRetryCount = #{executorFailRetryCount}
+		</if>
+		<if test="glueType != null">
+			AND t.glueType = #{glueType}
+		</if>
+		<if test="glueSource != null">
+			AND t.glueSource = #{glueSource}
+		</if>
+		<if test="glueRemark != null">
+			AND t.glueRemark = #{glueRemark}
+		</if>
+
+		<if test="glueUpdatetime != null">
+			AND t.glueUpdatetime = #{glueUpdatetime}
+		</if>
+		<if test="childJobId != null">
+			AND t.childJobId = #{childJobId}
+		</if>
+		<if test="triggerStatus != null">
+			AND t.triggerStatus = #{triggerStatus}
+		</if>
+<!--		<if test="triggerLastTime != null">-->
+<!--			AND t.triggerLastTime = #{triggerLastTime}-->
+<!--		</if>-->
+<!--		<if test="triggerNextTime != null">-->
+<!--			AND t.triggerNextTime = #{triggerNextTime}-->
+<!--		</if>-->
+		order by t.id desc
+	</select>
+
 
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT t.*
@@ -111,9 +196,10 @@
 		</trim>
 	</select>
 
-	<insert id="save" parameterType="cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO"  >
 		INSERT INTO bdc_job_info (
-			bdcJobGroupDTO,
+		    id,
+			jobGroup,
 			jobDesc,
 			addTime,
 			updatetime,
@@ -137,8 +223,9 @@
 			triggerLastTime,
 			triggerNextTime
 		) VALUES (
-			#{bdcJobGroupDTO},
-			#{jobDesc},
+			#{id, jdbcType=INTEGER},
+			#{jobGroup, jdbcType=INTEGER},
+			#{jobDesc, jdbcType=VARCHAR},
 			#{addTime},
 			#{updatetime},
 			#{author},
@@ -150,17 +237,17 @@
 			#{executorHandler},
 			#{executorParam},
 			#{executorBlockStrategy},
-			#{executorTimeout},
-			#{executorFailRetryCount},
-			#{glueType},
-			#{glueSource},
-			#{glueRemark},
+			#{executorTimeout, jdbcType=INTEGER},
+			#{executorFailRetryCount, jdbcType=INTEGER},
+			#{glueType, jdbcType=VARCHAR},
+			#{glueSource, jdbcType=VARCHAR},
+			#{glueRemark, jdbcType=VARCHAR},
 			#{glueUpdatetime},
-			#{childJobId},
-			#{triggerStatus},
+			#{childJobId, jdbcType=VARCHAR},
+			#{triggerStatus, jdbcType=INTEGER},
 			#{triggerLastTime},
 			#{triggerNextTime}
-		);
+		)
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID()
 			/*SELECT @@IDENTITY AS id*/
@@ -176,26 +263,26 @@
 	<update id="update" parameterType="cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO" >
 		UPDATE bdc_job_info
 		SET
-			bdcJobGroupDTO = #{bdcJobGroupDTO},
-			jobDesc = #{jobDesc},
+			jobGroup = #{jobGroup, jdbcType=INTEGER},
+			jobDesc = #{jobDesc, jdbcType=VARCHAR},
 			updatetime = #{updatetime},
-			author = #{author},
-			alarmEmail = #{alarmEmail},
-			scheduleType = #{scheduleType},
-			scheduleConf = #{scheduleConf},
-			misfireStrategy = #{misfireStrategy},
-			executorRouteStrategy = #{executorRouteStrategy},
-			executorHandler = #{executorHandler},
-			executorParam = #{executorParam},
-			executorBlockStrategy = #{executorBlockStrategy},
-			executorTimeout = ${executorTimeout},
-			executorFailRetryCount = ${executorFailRetryCount},
-			glueType = #{glueType},
-			glueSource = #{glueSource},
-			glueRemark = #{glueRemark},
+			author = #{author, jdbcType=VARCHAR},
+			alarmEmail = #{alarmEmail, jdbcType=VARCHAR},
+			scheduleType = #{scheduleType, jdbcType=VARCHAR},
+			scheduleConf = #{scheduleConf, jdbcType=VARCHAR},
+			misfireStrategy = #{misfireStrategy, jdbcType=VARCHAR},
+			executorRouteStrategy = #{executorRouteStrategy, jdbcType=VARCHAR},
+			executorHandler = #{executorHandler, jdbcType=VARCHAR},
+			executorParam = #{executorParam, jdbcType=VARCHAR},
+			executorBlockStrategy = #{executorBlockStrategy, jdbcType=VARCHAR},
+			executorTimeout = #{executorTimeout, jdbcType=INTEGER},
+			executorFailRetryCount = #{executorFailRetryCount, jdbcType=INTEGER},
+			glueType = #{glueType, jdbcType=VARCHAR},
+			glueSource = #{glueSource, jdbcType=VARCHAR},
+			glueRemark = #{glueRemark, jdbcType=VARCHAR},
 			glueUpdatetime = #{glueUpdatetime},
-			childJobId = #{childJobId},
-			triggerStatus = #{triggerStatus},
+			childJobId = #{childJobId, jdbcType=VARCHAR},
+			triggerStatus = #{triggerStatus, jdbcType=INTEGER},
 			triggerLastTime = #{triggerLastTime},
 			triggerNextTime = #{triggerNextTime}
 		WHERE id = #{id}

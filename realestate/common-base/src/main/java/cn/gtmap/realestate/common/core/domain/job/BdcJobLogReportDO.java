@@ -5,19 +5,19 @@ import java.util.Date;
 @Table(name = "BDC_JOB_LOG_REPORT")
 public class BdcJobLogReportDO {
 
-    private int id;
+    private Integer id;
 
     private Date triggerDay;
 
-    private int runningCount;
-    private int sucCount;
-    private int failCount;
+    private Integer runningCount;
+    private Integer sucCount;
+    private Integer failCount;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -29,27 +29,27 @@ public class BdcJobLogReportDO {
         this.triggerDay = triggerDay;
     }
 
-    public int getRunningCount() {
+    public Integer getRunningCount() {
         return runningCount;
     }
 
-    public void setRunningCount(int runningCount) {
+    public void setRunningCount(Integer runningCount) {
         this.runningCount = runningCount;
     }
 
-    public int getSucCount() {
+    public Integer getSucCount() {
         return sucCount;
     }
 
-    public void setSucCount(int sucCount) {
+    public void setSucCount(Integer sucCount) {
         this.sucCount = sucCount;
     }
 
-    public int getFailCount() {
+    public Integer getFailCount() {
         return failCount;
     }
 
-    public void setFailCount(int failCount) {
+    public void setFailCount(Integer failCount) {
         this.failCount = failCount;
     }
 }

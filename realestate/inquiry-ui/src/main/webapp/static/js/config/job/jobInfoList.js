@@ -5,40 +5,67 @@ layui.use(['table', 'laytpl', 'laydate', 'layer', 'form', 'upload'], function ()
         upload = layui.upload,
         form = layui.form;
     var BASE_URL = '/realestate-inquiry-ui';
-    var url = BASE_URL + "/job/group/page";
+    var url = BASE_URL + "/job/info/page";
+
+    $.ajax({
+        url: '/realestate-inquiry-ui/job/group/all',
+        type: "GET",
+        dataType: "json",
+        timeout : 10000,
+        success: function(data) {
+            if(data && data.length > 0){
+                // 渲染字典项
+                $.each(data, function(index,item) {
+                    $('#jobGroup').append('<option value="'+item.id +'">'+item.title + '</option>');
+                });
+            }
+
+            form.render('select');
+            // 下拉选择添加删除按钮
+            renderSelectClose(form);
+        }
+    });
+
 
     //表格
     var unitTableTitle = [
         {type: 'checkbox', fixed: 'left'},
-        {type: 'numbers', fixed:'left', title: '序号', width: 60 },
-        {type: 'id', fixed:'left', title: 'id', width: 60, hide: true },
-        {field: 'appname', title: 'appname'},
-        {field: 'title', sort: true, title: '执行器名称', align: 'center', width: 350, style: 'text-align:left'},
-        {field: 'addresslist', title: 'OnLine 机器地址', align: 'center', style: 'text-align:left', minWidth: 250},
-        {field: 'addresstype', title: '注册方式', align: 'center', width: 100,
+        // {type: 'numbers', fixed:'left', title: '序号', width: 60 },
+        {field: 'id',  fixed:'left', title: '任务id', width: 200  },
+        {field: 'jobDesc', title: '任务描述'},
+        //
+        {field: 'scheduleType', sort: true, title: '调度类型', align: 'center', width: 200, style: 'text-align:left'},
+        {field: 'scheduleConf', title: '调度配置', align: 'center', style: 'text-align:left', minWidth: 360},
+
+        {field: 'glueType', title: '运行模式', align: 'center', style: 'text-align:left', minWidth: 250},
+        {field: 'executorHandler', title: '运行配置', align: 'center', style: 'text-align:left', minWidth: 250},
+        {field: 'executorParam', title: '任务参数', align: 'center', style: 'text-align:left', minWidth: 250},
+
+        {field: 'author', title: '负责人', align: 'center', style: 'text-align:left', minWidth: 250},
+        {field: 'triggerStatus', title: '运行状态', align: 'center', width: 100,
             templet: function (d) {
-                return formatZcfs(d.addresstype);
+                return formatYxzt(d.triggerStatus);
             }
         },
-        // {field: 'pzr', sort: true, title: '配置人', align: 'center', width: 120},
         {
             field: 'updatetime', sort: true, title: '配置日期', align: 'center', width: 200,
             templet: function (d) {
                 return format(d.updatetime);
             }
         },
-        {title: '操作', fixed: 'right', toolbar: '#barDemo', width: 130}
+        {title: '操作', fixed: 'right', toolbar: '#barDemo', width: 360}
     ]
 
-    function formatZcfs(addresstype){
-        if(isNullOrEmpty(addresstype)){
+    function formatYxzt(triggerStatus){
+
+        if(triggerStatus == 0) {
+            return '<span class="" style="color:blue;">stopped</span>';
+        } else if(triggerStatus == 1) {
+            return '<span class="" style="color:red;">running</span>';
+        }else if(isNullOrEmpty(triggerStatus)){
             return "";
-        } else if(addresstype == 0) {
-            return '<span class="" style="color:blue;">自动注册</span>';
-        } else if(addresstype == 1) {
-            return '<span class="" style="color:red;">手动录入</span>';
         }else {
-            return yxj;
+            return triggerStatus;
         }
     }
 
@@ -49,9 +76,9 @@ layui.use(['table', 'laytpl', 'laydate', 'layer', 'form', 'upload'], function ()
         cols: [unitTableTitle]
     }
     //加载表格
-    loadDataTablbeByUrl('#jobGroupTable', tableConfig);
+    loadDataTablbeByUrl('#jobInfoTable', tableConfig);
     //表格初始化
-    table.init('jobGroupTable', tableConfig)
+    table.init('jobInfoTable', tableConfig)
     tableReload('id', null, url);
     //查询表单信息
     form.on("submit(search)", function (data) {
@@ -69,17 +96,17 @@ layui.use(['table', 'laytpl', 'laydate', 'layer', 'form', 'upload'], function ()
     });
 
     //头工具栏事件
-    table.on('toolbar(jobGroupTable)', function (obj) {
+    table.on('toolbar(jobInfoTable)', function (obj) {
         var checkStatus = table.checkStatus(obj.config.id);
         switch (obj.event) {
             case 'add':
-                addJobGroup();
+                addJobInfo();
                 break;
             case 'edit':
-                editJobGroup(checkStatus.data);
+                editJobInfo(checkStatus.data);
                 break;
             case 'delete':
-                deleteJobGroup(checkStatus.data);
+                deleteJobInfo(checkStatus.data);
                 break;
             case 'copy':
                 copyJobGroup(checkStatus.data);
@@ -94,11 +121,12 @@ layui.use(['table', 'laytpl', 'laydate', 'layer', 'form', 'upload'], function ()
     /**
      * 行双击编辑
      */
-    table.on('rowDouble(jobGroupTable)', function (obj) {
+    table.on('rowDouble(jobInfoTable)', function (obj) {
         var array = new Array();
         array.push(obj.data);
+        startJobInfo(array);
 
-        editJobGroup(array);
+        // editJobInfo(array);
     });
 
 
@@ -109,12 +137,12 @@ layui.use(['table', 'laytpl', 'laydate', 'layer', 'form', 'upload'], function ()
             warnMsg(" 没有信息，无法查看！");
             return;
         }
-        if (obj.event === 'editJobGroup') {
+        if (obj.event === 'startJobInfo') {
             // window.open("zhgz.html?gzid="+data.gzid);
-            editJobGroup(data);
+            startJobInfo(data);
         }
-        if (obj.event === 'deleteJobGroup') {
-            deleteJobGroup(data);
+        if (obj.event === 'triggerJobInfo') {
+            triggerJobInfo(data);
         }
     });
 
@@ -129,17 +157,17 @@ layui.use(['table', 'laytpl', 'laydate', 'layer', 'form', 'upload'], function ()
     /**
      * 新增执行器
      */
-    function addJobGroup() {
+    function addJobInfo() {
         layer.open({
             type: 2,
-            title: '新增执行器',
+            title: '新增任务',
             anim: -1,
             shadeClose: true,
             maxmin: true,
             shade: false,
             area: ['960px', '400px'],
             offset: 'auto',
-            content: ["jobGroupEdit.html" , 'yes'],
+            content: ["jobInfoEdit.html" , 'yes'],
             end: function () {
                 tableReload('id', null, url);
             }
@@ -150,7 +178,7 @@ layui.use(['table', 'laytpl', 'laydate', 'layer', 'form', 'upload'], function ()
      * 编辑执行器
      * @param data
      */
-    function editJobGroup(data){
+    function editJobInfo(data){
         if(!data || data.length != 1){
             layer.alert("<div style='text-align: center'>请选择需要编辑的某一条记录！</div>", {title: '提示'});
             return;
@@ -160,9 +188,14 @@ layui.use(['table', 'laytpl', 'laydate', 'layer', 'form', 'upload'], function ()
             shade: false,
             shadeClose: true,
             isOutAnim: false,
-            content: "../job/jobGroupEdit.html?jobGroupId=" + data[0].id,
+            content: "../job/jobInfoEdit.html?jobInfoId=" + data[0].id,
+            // content: ["jobInfoEdit.html", 'yes'],
             area: ['660px', '400px'],
-            title: '修改执行器配置',
+            title: '修改任务配置',
+            // success: function (layero, index) {
+            //     var iframe = window['layui-layer-iframe' + index];
+            //     iframe.setData(data[0]);
+            // },
             end: function () {
                 tableReload('id', null, url);
             }
@@ -176,7 +209,7 @@ layui.use(['table', 'laytpl', 'laydate', 'layer', 'form', 'upload'], function ()
      * 删除 执行器
      * @param data
      */
-    function deleteJobGroup(data){
+    function deleteJobInfo(data){
         if(!data || data.length == 0){
             layer.alert("<div style='text-align: center'>请选择需要删除的记录！</div>", {title: '提示'});
             return;
@@ -191,15 +224,13 @@ layui.use(['table', 'laytpl', 'laydate', 'layer', 'form', 'upload'], function ()
             skin: 'bdc-small-tips',
             btnAlign: 'c',
             yes: function(){
-                // 保存日志
                 var jobGroupIds = new Array();
                 $.each(data, function (key, value) {
                     jobGroupIds.push(value.id);
                 });
-                // saveLogs(zgzIds, "jobGroupSC", "jobGroup配置-删除");
 
                 $.ajax({
-                    url: "/realestate-inquiry-ui/job/group/remove?id=" +  jobGroupIds[0],
+                    url: "/realestate-inquiry-ui/job/info/remove?id=" +  jobGroupIds[0],
                     type: "POST",
                     // data: JSON.stringify(jobGroupIds),
                     // contentType: 'application/json',
@@ -209,7 +240,7 @@ layui.use(['table', 'laytpl', 'laydate', 'layer', 'form', 'upload'], function ()
                             layer.open({
                                 title: '系统提示' ,
                                 btn: [ '确定' ],
-                                content: '删除执行器成功',
+                                content: '删除任务v成功',
                                 icon: '1',
                                 end: function () {
                                     tableReload('id', null, url);
@@ -219,7 +250,7 @@ layui.use(['table', 'laytpl', 'laydate', 'layer', 'form', 'upload'], function ()
                             layer.open({
                                 title: '系统提示',
                                 btn: [ '确定' ],
-                                content: (data.msg || "删除执行器成功"),
+                                content: (data.msg || "删除任务成功"),
                                 icon: '2'
                             });
                         }
@@ -241,7 +272,30 @@ layui.use(['table', 'laytpl', 'laydate', 'layer', 'form', 'upload'], function ()
         });
     }
 
+    function startJobInfo(data) {
+        var obj = data;
+        $.ajax({
+            url: "/realestate-inquiry-ui/job/info/start",
+            type: 'GET',
+            dataType: 'json',
+            async: false,
+            data: {id: data[0].id},
+            success: function (data) {
+                // if (moduleCode){
+                //     setElementAttrByModuleAuthority(moduleCode);
+                // }
 
+                // form.val("searchform", data.content);
+                // jobGroupId = data.content.jobGroup;
+                // form.render();
+            },
+            error: function (xhr, status, error) {
+                delAjaxErrorMsg(xhr)
+            }
+        })
+
+
+    }
     /**
      * 提交成功提示
      */

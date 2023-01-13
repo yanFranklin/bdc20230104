@@ -69,6 +69,12 @@ public class JobInfoController {
 		return "jobinfo/jobinfo.index";
 	}
 
+	/**
+	 * 筛选出所有的该用户拥有权限的定时任务List
+	 * @param request
+	 * @param bdcJobGroupDTOList_all
+	 * @return
+	 */
 	public static List<BdcJobGroupDTO> filterJobGroupByRole(HttpServletRequest request, List<BdcJobGroupDTO> bdcJobGroupDTOList_all){
 		List<BdcJobGroupDTO> bdcJobGroupDTOList = new ArrayList<>();
 		if (bdcJobGroupDTOList_all !=null && bdcJobGroupDTOList_all.size()>0) {
@@ -77,6 +83,7 @@ public class JobInfoController {
 				bdcJobGroupDTOList = bdcJobGroupDTOList_all;
 			} else {
 				List<String> groupIdStrs = new ArrayList<>();
+				//执行器按照","分割， 获取执行器list
 				if (loginUser.getPermission()!=null && loginUser.getPermission().trim().length()>0) {
 					groupIdStrs = Arrays.asList(loginUser.getPermission().trim().split(","));
 				}
@@ -89,6 +96,12 @@ public class JobInfoController {
 		}
 		return bdcJobGroupDTOList;
 	}
+
+	/**
+	 *验证用户是否对该jobGroup有权限
+	 * @param request
+	 * @param jobGroup
+	 */
 	public static void validPermission(HttpServletRequest request, int jobGroup) {
 		BdcJobUserDO loginUser = (BdcJobUserDO) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
 		if (!loginUser.validPermission(jobGroup)) {

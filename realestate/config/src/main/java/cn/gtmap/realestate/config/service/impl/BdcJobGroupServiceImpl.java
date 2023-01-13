@@ -2,6 +2,7 @@ package cn.gtmap.realestate.config.service.impl;
 
 import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDO;
 import cn.gtmap.realestate.common.core.domain.job.BdcJobGroupDTO;
+import cn.gtmap.realestate.common.core.domain.job.BdcJobInfoDO;
 import cn.gtmap.realestate.common.core.domain.job.BdcJobRegistryDO;
 import cn.gtmap.realestate.common.core.ex.AppException;
 import cn.gtmap.realestate.common.core.support.mybatis.mapper.EntityMapper;
@@ -60,7 +61,20 @@ public class BdcJobGroupServiceImpl implements BdcJobGroupService {
      */
     @Override
     public Page<BdcJobGroupDO> listBdcJobGroupPage(Pageable pageable, BdcJobGroupDO bdcJobGroupDO) {
-        return repo.selectPaging("listBdcJobGroupByPage", bdcJobGroupDO,pageable);
+         repo.selectList("listBdcJobGroupByPage", bdcJobGroupDO);
+
+        return repo.selectPaging("listBdcJobGroupByPage1", bdcJobGroupDO,pageable);
+    }
+
+    /**
+     * 查询所有执行器列表
+     *
+     * @return Object Object
+     * @author <a href="mailto:zxy@gtmap.cn">zxy</a>
+     */
+    @Override
+    public List<BdcJobGroupDTO> listBdcJobGroupAll() {
+        return bdcJobGroupMapper.findAll();
     }
 
     /**
@@ -184,9 +198,13 @@ public class BdcJobGroupServiceImpl implements BdcJobGroupService {
     @Override
     public ReturnT<String> removeJobGroup(Integer id) {
         // valid 查看执行器任务表，查看改该执行器是否在执行任务 （不管该任务的调度状态是运行还是停止）
+        BdcJobInfoDO bdcJobGroupDO = new BdcJobInfoDO();
+        bdcJobGroupDO.setId(id);
+        repo.selectList("listBdcJobInfoByPage", bdcJobGroupDO);
+
         int count = bdcJobInfoMapper.pageListCount(0, 10, id, -1,  null, null, null);
         if (count > 0) {
-            //拒绝删除，该执行器使用中 在XxlJobInfo表中有改执行器在执行任务
+            //拒绝删除，该执行器使用中 在JobInfo表中有改执行器在执行任务
             return new ReturnT<String>(500, I18nUtil.getString("jobgroup_del_limit_0") );
         }
 

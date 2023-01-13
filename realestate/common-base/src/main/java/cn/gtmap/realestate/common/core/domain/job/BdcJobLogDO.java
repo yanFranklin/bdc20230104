@@ -13,28 +13,28 @@ public class BdcJobLogDO {
 	private long id;
 	
 	// job info
-	private int jobGroup;
-	private int jobId;
+	private Integer jobGroup;
+	private Integer jobId;
 
 	// execute info
 	private String executorAddress;
 	private String executorHandler;
 	private String executorParam;
 	private String executorShardingParam;
-	private int executorFailRetryCount;
+	private Integer executorFailRetryCount;
 	
 	// trigger info
 	private Date triggerTime;
-	private int triggerCode;
+	private Integer triggerCode;
 	private String triggerMsg;
 	
 	// handle info
 	private Date handleTime;
-	private int handleCode;
+	private Integer handleCode;
 	private String handleMsg;
 
 	// alarm info
-	private int alarmStatus;
+	private Integer alarmStatus;
 
 	public long getId() {
 		return id;
@@ -44,19 +44,19 @@ public class BdcJobLogDO {
 		this.id = id;
 	}
 
-	public int getJobGroup() {
+	public Integer getJobGroup() {
 		return jobGroup;
 	}
 
-	public void setJobGroup(int jobGroup) {
+	public void setJobGroup(Integer jobGroup) {
 		this.jobGroup = jobGroup;
 	}
 
-	public int getJobId() {
+	public Integer getJobId() {
 		return jobId;
 	}
 
-	public void setJobId(int jobId) {
+	public void setJobId(Integer jobId) {
 		this.jobId = jobId;
 	}
 
@@ -92,11 +92,11 @@ public class BdcJobLogDO {
 		this.executorShardingParam = executorShardingParam;
 	}
 
-	public int getExecutorFailRetryCount() {
+	public Integer getExecutorFailRetryCount() {
 		return executorFailRetryCount;
 	}
 
-	public void setExecutorFailRetryCount(int executorFailRetryCount) {
+	public void setExecutorFailRetryCount(Integer executorFailRetryCount) {
 		this.executorFailRetryCount = executorFailRetryCount;
 	}
 
@@ -108,11 +108,11 @@ public class BdcJobLogDO {
 		this.triggerTime = triggerTime;
 	}
 
-	public int getTriggerCode() {
+	public Integer getTriggerCode() {
 		return triggerCode;
 	}
 
-	public void setTriggerCode(int triggerCode) {
+	public void setTriggerCode(Integer triggerCode) {
 		this.triggerCode = triggerCode;
 	}
 
@@ -132,11 +132,11 @@ public class BdcJobLogDO {
 		this.handleTime = handleTime;
 	}
 
-	public int getHandleCode() {
+	public Integer getHandleCode() {
 		return handleCode;
 	}
 
-	public void setHandleCode(int handleCode) {
+	public void setHandleCode(Integer handleCode) {
 		this.handleCode = handleCode;
 	}
 
@@ -148,11 +148,11 @@ public class BdcJobLogDO {
 		this.handleMsg = handleMsg;
 	}
 
-	public int getAlarmStatus() {
+	public Integer getAlarmStatus() {
 		return alarmStatus;
 	}
 
-	public void setAlarmStatus(int alarmStatus) {
+	public void setAlarmStatus(Integer alarmStatus) {
 		this.alarmStatus = alarmStatus;
 	}
 

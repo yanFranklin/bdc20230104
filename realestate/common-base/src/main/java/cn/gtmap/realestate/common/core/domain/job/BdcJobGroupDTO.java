@@ -18,14 +18,14 @@ public class BdcJobGroupDTO {
 
     @Id
     @ApiModelProperty(value = "ID")
-    private int id;
+    private Integer id;
     @ApiModelProperty(value = "appname")
     private String appname;
     @ApiModelProperty(value = "title")
     private String title;
     @ApiModelProperty(value = "addresstype")
-    private int addresstype;
-    @ApiModelProperty(value = "addresslist")// 执行器地址类型：0=自动注册、1=手动录入
+    private Integer addresstype;// 执行器地址类型：0=自动注册、1=手动录入
+    @ApiModelProperty(value = "addresslist")
     private String addresslist;     // 执行器地址列表，多地址逗号分隔(手动录入)
     @ApiModelProperty(value = "updatetime")
     private Date updatetime;
@@ -39,11 +39,11 @@ public class BdcJobGroupDTO {
         return registryList;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -63,11 +63,11 @@ public class BdcJobGroupDTO {
         this.title = title;
     }
 
-    public int getAddresstype() {
+    public Integer getAddresstype() {
         return addresstype;
     }
 
-    public void setAddresstype(int addresstype) {
+    public void setAddresstype(Integer addresstype) {
         this.addresstype = addresstype;
     }
 

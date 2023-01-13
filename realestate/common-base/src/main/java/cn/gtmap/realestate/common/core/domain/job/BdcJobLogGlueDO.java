@@ -10,27 +10,27 @@ import java.util.Date;
 @Table(name = "BDC_JOB_GLUE")
 public class BdcJobLogGlueDO {
 	
-	private int id;
-	private int jobId;				// 任务主键ID
+	private Integer id;
+	private Integer jobId;				// 任务主键ID
 	private String glueType;		// GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
 	private String glueSource;
 	private String glueRemark;
 	private Date addTime;
 	private Date updatetime;
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public int getJobId() {
+	public Integer getJobId() {
 		return jobId;
 	}
 
-	public void setJobId(int jobId) {
+	public void setJobId(Integer jobId) {
 		this.jobId = jobId;
 	}
 

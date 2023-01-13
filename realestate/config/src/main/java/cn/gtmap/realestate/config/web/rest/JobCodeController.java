@@ -43,6 +43,7 @@ public class JobCodeController {
 		}
 
 		// valid permission
+		//验证用户是否对该jobGroup有权限
 		JobInfoController.validPermission(request, bdcJobInfoDO.getJobGroup());
 
 		// Glue类型-字典

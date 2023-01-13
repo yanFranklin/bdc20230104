@@ -114,11 +114,11 @@
 	<select id="load" parameterType="java.lang.Long" resultMap="XxlJobLog">
 		SELECT t.*
 		FROM bdc_job_log t
-		WHERE t.id = #{id}
+		WHERE t.id = #{id,jdbcType=INTEGER}
 	</select>
 
 	
-	<insert id="save" parameterType="cn.gtmap.realestate.common.core.domain.job.BdcJobLogDO" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="cn.gtmap.realestate.common.core.domain.job.BdcJobLogDO"  keyColumn="ID" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO bdc_job_log (
 		jobGroup,
 		jobId,
@@ -126,12 +126,12 @@
 		triggerCode,
 		handleCode
 		) VALUES (
-			#{jobGroup},
-			#{jobId},
+			#{jobGroup,jdbcType=INTEGER},
+			#{jobId,jdbcType=INTEGER},
 			#{triggerTime},
-			#{triggerCode},
-			#{handleCode}
-		);
+			#{triggerCode,jdbcType=INTEGER},
+			#{handleCode,jdbcType=INTEGER}
+		)
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID() 
 		</selectKey>-->

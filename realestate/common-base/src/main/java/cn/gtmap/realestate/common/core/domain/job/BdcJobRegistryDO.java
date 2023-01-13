@@ -10,7 +10,7 @@ import java.util.Date;
 @Table(name = "BDC_JOB_REGISTRY")
 public class BdcJobRegistryDO {
 
-    private int id;
+    private Integer id;
     private String registrygroup; //注册器 注册类型 枚举值 { EXECUTOR, ADMIN }
     private String registrykey; //注册执行器的appname
     private String registryvalue; //执行器注册机器地址
@@ -18,11 +18,11 @@ public class BdcJobRegistryDO {
     // 每过30秒客户端执行器会发送一次注册请求，服务端接收到请求也会更新xxl_job_registry表
     private Date updatetime; //更新时间，自动更新
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

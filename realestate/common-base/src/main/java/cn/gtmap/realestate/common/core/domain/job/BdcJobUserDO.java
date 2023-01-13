@@ -10,17 +10,17 @@ import javax.persistence.Table;
 @Table(name = "BDC_JOB_USER")
 public class BdcJobUserDO {
 	
-	private int id;
+	private Integer id;
 	private String username;		// 账号
 	private String password;		// 密码
-	private int role;				// 角色：0-普通用户、1-管理员
+	private Integer role;				// 角色：0-普通用户、1-管理员
 	private String permission;	// 权限：执行器ID列表，多个逗号分割
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -40,11 +40,11 @@ public class BdcJobUserDO {
 		this.password = password;
 	}
 
-	public int getRole() {
+	public Integer getRole() {
 		return role;
 	}
 
-	public void setRole(int role) {
+	public void setRole(Integer role) {
 		this.role = role;
 	}
 
@@ -57,7 +57,7 @@ public class BdcJobUserDO {
 	}
 
 	// plugin
-	public boolean validPermission(int jobGroup){
+	public boolean validPermission(Integer jobGroup){
 		if (this.role == 1) {
 			return true;
 		} else {
